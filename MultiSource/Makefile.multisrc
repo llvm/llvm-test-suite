@@ -13,6 +13,7 @@ LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
 
 ## libraries that must be linked with llc-generated code
+# FIXME: LIBS SHOULD BE SPECIFIED
 LIBS = -lm
 
 all:: 
@@ -27,16 +28,21 @@ LObjects := $(addprefix Output/,$(LObjs))
 NObjs    := $(sort $(addsuffix .o, $(basename $(Source))))
 NObjects := $(addprefix Output/,$(NObjs))
 
-.PRECIOUS: $(LObjects) $(NObjects)
+.PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.bc
 
 Output/%.o: %.c Output/.dir
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
+# Output/*.linked.bc is all of the bytecode files of the program linked together
+# without any libraries linked in...
+#
+Output/%.linked.bc: $(LObjects)
+	$(LLINK) $(LObjects) -o $@
 
-# Link the program, then perform postlink optimization...
-# FIXME: LIBS SHOULD BE SPECIFIED
-Output/%.llvm: $(LObjects)
-	$(LGCCLD) $(LObjects) -lgcc -lc -lm -o $@
+# Link the program to the libraries it uses, then perform postlink
+# optimization...
+Output/%.llvm: Output/%.linked.bc
+	$(LGCCLD) $< -lgcc -lc $(LIBS) -o $@
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
