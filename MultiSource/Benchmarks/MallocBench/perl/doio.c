@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/06/25 08:07:12  lattner
+ * fix the test on FreeBSD, contributed by Vladimir Merzliakov
+ *
  * Revision 1.1  2004/02/17 22:21:16  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -2689,7 +2692,9 @@ int *arglast;
     char *mbuf, *shm;
     int id, mpos, msize;
     struct shmid_ds shmds;
+#if !defined(__FreeBSD__)
     extern char *shmat();
+#endif
 
     id = (int)str_gnum(st[++sp]);
     mstr = st[++sp];
