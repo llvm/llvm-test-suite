@@ -3,4 +3,4 @@
 LEVEL = ../../..
 PARALLEL_DIRS  := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
 
-include ${LEVEL}/Makefile.common
+include $(LEVEL)/test/Programs/Makefile.programs
