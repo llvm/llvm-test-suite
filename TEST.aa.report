@@ -16,11 +16,63 @@ sub Ratio {
   }
 }
 
-# Sort by program name...
-$SortCol = 1;
+sub OnlyMayInfo {
+  $_[0] =~ m|/([0-9]+)%/|;
+  return $1."\\%";
+}
+
+# Sort by ds time...
+$SortCol = 15;
 
 # Sort in ascending order
 $SortReverse = 0;
+
+# For latex output, limit benchmarks and rename as appropriate
+@LatexRowMapOrder = (
+            'treeadd'    => 'Olden-treeadd',
+            'bisort'     => 'Olden-bisort',
+            'mst'        => 'Olden-mst',
+            'perimeter'  => 'Olden-perimeter',
+            'health'     => 'Olden-health',
+            'tsp'        => 'Olden-tsp',
+            'power'      => 'Olden-power',
+            'em3d'       => 'Olden-em3d',
+            'voronoi'    => 'Olden-voronoi',
+            'bh'         => 'Olden-bh',
+            '-' => '-',
+            'anagram'    => 'ptrdist-anagram',
+            'ks'         => 'ptrdist-ks',
+            'ft'         => 'ptrdist-ft',
+            'yacr2'      => 'ptrdist-yacr2',
+            'bc'         => 'ptrdist-bc',
+            '-' => '-',
+            '181.mcf'    => '181.mcf',
+            '256.bzip2'  => '256.bzip2',
+            '164.gzip'   => '164.gzip',
+            '197.parser' => '197.parser',
+            '300.twolf'  => '300.twolf',
+            '255.vortex' => '255.vortex',
+            '-' => '-',
+            'sgefa'      => 'sgefa',
+            'sim'        => 'sim',
+            'burg'       => 'burg',
+            'gnuchess'   => 'gnuchess',
+            'larn'       => 'larn',
+            'flex'       => 'flex',
+            'moria'      => 'moria',
+            'povray31'   => 'povray31'
+           );
+
+@LatexColumns = (2, 3, 4, 6, 7, 5);
+
+# Specify how to reformat columns to be presentable...
+%LatexColumnFormat = (
+                      2 => \&OnlyMayInfo,
+                      3 => \&OnlyMayInfo,
+                      4 => \&OnlyMayInfo,
+                      5 => \&OnlyMayInfo,
+                      6 => \&OnlyMayInfo,
+                      7 => \&OnlyMayInfo);
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
