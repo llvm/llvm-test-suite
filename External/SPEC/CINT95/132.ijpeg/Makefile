@@ -1,6 +1,7 @@
 LEVEL = ../../../../../..
 STDIN_FILENAME  := specmun.ppm
 STDOUT_FILENAME := specmun.out
+RUN_OPTIONS := -image_file specmun.ppm -compression.quality 90 -compression.optimize_coding 0 -compression.smoothing_factor 90 -difference.image 1 -difference.x_stride 10 -difference.y_stride 10 -verbose 1 -GO.findoptcomp
 
 # This line nukes the __const's found in /usr/include/stdio.h that prevent the
 # extern char * sys_errlist variable from linking properly.
