@@ -1,3 +1,5 @@
+PROJECT_NAME = @PACKAGE_NAME@
+PROJ_VERSION = @PACKAGE_VERSION@
 #
 # Set this variable to the top of the LLVM source tree.
 #
@@ -9,17 +11,17 @@ LLVM_SRC_ROOT = @LLVM_SRC@
 #
 LLVM_OBJ_ROOT = @LLVM_OBJ@
 
-#
-# Include the LLVM configuration file
-#
+# Set the directory root of this project's source files
+PROJ_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
+
+# Set the root directory of this project's object files
+PROJ_OBJ_ROOT := $(subst //,/,@abs_top_builddir@)
+
+# Set the root directory of this project's install prefix
+PROJ_INSTALL_ROOT := @prefix@
+
+# Include LLVM's Master Makefile.
 include $(LLVM_OBJ_ROOT)/Makefile.config
-
-#
-# Set the source root and source directory pathnames
-#
-BUILD_SRC_DIR := $(subst //,/,@abs_top_srcdir@/$(patsubst $(BUILD_OBJ_ROOT)%,%,$(BUILD_OBJ_DIR)))
-
-BUILD_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
 
 #Set SourceDir for backwards compatbility.
 ifndef SourceDir
