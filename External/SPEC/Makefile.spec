@@ -49,7 +49,7 @@ include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 LCCFLAGS  := -O2
 LCXXFLAGS := -O2
 
-CPPFLAGS += -DSPEC_CPU2000
+CPPFLAGS += -DSPEC_CPU2000 -I $(SPEC_BENCH_DIR)/src/
 SPEC_SANDBOX := $(LLVM_SRC_ROOT)/test/Programs/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
