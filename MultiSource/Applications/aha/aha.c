@@ -410,7 +410,7 @@ search(void)
          num_solutions += 1;
          printf("\nFound a %d-operation program:\n", numi);
          print_pgm(3);
-         if (num_solutions == 10) return num_solutions; // bail out early
+         if (num_solutions == 5) return num_solutions; // bail out early
       }
       i = increment();          // Increment to next program.
    } while (i >= 0);
