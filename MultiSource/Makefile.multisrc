@@ -1,5 +1,4 @@
-##-----------------------------------------------------------*-Makefile-*-
-#                   test/Programs/MultiSource/Makefile.multisrc
+##- test/Programs/MultiSource/Makefile.multisrc ---------------*- Makefile -*-##
 #
 # This makefile should be used by subdirectories that have multiple source files
 # to be linked together.  This contains all of the common makefile code required
@@ -9,7 +8,7 @@
 #
 # 1. LEVEL - Must be set as per normal semantics: The depth from the top of tree
 #
-##------------------------------------------------------------------------
+##----------------------------------------------------------------------------##
 
 LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
@@ -58,7 +57,7 @@ Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
 Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
-	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o $(<:.linked.bc=.llvm)
+	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)

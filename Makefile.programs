@@ -151,16 +151,16 @@ Output/%.out-cbe: Output/%.cbe
 
 # Rules to diff test output...
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
-	$(DIFFPROG) lli $(subst Output/,,$(@:.diff-lli=))
+	$(DIFFPROG) lli $*
 
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
-	$(DIFFPROG) jit $(subst Output/,,$(@:.diff-jit=))
+	$(DIFFPROG) jit $*
 
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
-	$(DIFFPROG) llc $(subst Output/,,$(@:.diff-llc=))
+	$(DIFFPROG) llc $*
 
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
-	$(DIFFPROG) cbe $(subst Output/,,$(@:.diff-cbe=))
+	$(DIFFPROG) cbe $*
 
 # Support for the TEST= option... when TEST= is specified on the command line,
 # the default target is the test target.  Here we dispatch to a specific set of
