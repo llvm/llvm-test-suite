@@ -66,7 +66,7 @@ char *argv[];
 
 
     /* parse command line options*/
-    while ((i = getopt(argc, argv, "D:S:de:o:r:stv:x")) != EOF) {
+    while ((i = espresso_getopt(argc, argv, "D:S:de:o:r:stv:x")) != EOF) {
 	switch(i) {
 	    case 'D':		/* -Dcommand invokes a subcommand */
 		for(j = 0; option_table[j].name != 0; j++) {

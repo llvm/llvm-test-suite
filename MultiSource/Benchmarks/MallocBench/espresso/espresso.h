@@ -620,7 +620,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* gasp.c */	extern pcover last_gasp();
 /* gasp.c */	extern pcover super_gasp();
 /* gasp.c */	extern void expand1_gasp();
-/* getopt.c */	extern int getopt();
+/* getopt.c */	extern int espresso_getopt();
 /* hack.c */	extern find_dc_inputs();
 /* hack.c */	extern find_inputs();
 /* hack.c */	extern form_bitvector();

@@ -9,7 +9,7 @@
 char	*optarg;	/* Global argument pointer. */
 int	optind = 0;	/* Global argv index. */
 
-int getopt(argc, argv, optstring)
+int espresso_getopt(argc, argv, optstring)
     int argc;
     char *argv[];
     char *optstring;
