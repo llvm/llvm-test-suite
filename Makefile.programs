@@ -182,6 +182,13 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 
+# Rule to get the tracing version of the llvm.bc file for tracing:
+ifeq ($(DOTRACING), yes)
+$(PROGRAMS_TO_TEST:%=Output/%.llvm.trace.bc): \
+Output/%.llvm.trace.bc: Output/%.llvm.bc
+	$(LOPT) $(TRACEFLAGS) $< -o $@
+endif
+
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/gccas-pass-args: $(LGCCAS)
 	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
@@ -229,7 +236,7 @@ Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.trace.llc.s): \
-Output/%.trace.llc.s: Output/%.llvm.bc $(LLC)
+Output/%.trace.llc.s: Output/%.llvm.trace.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
 # Assemble (and link) an LLVM-linked program using the system assembler...
