@@ -368,12 +368,12 @@ C      where TIME is in seconds.
 C--------------------------------------------------------------------
 */
 	printf("\n");
+#if 0
 	if (finisec-startsec <= 0) {
 		printf("Insufficient duration- Increase the LOOP count\n");
 		return(1);
 	}
 
-#if 0
 	printf("Loops: %ld, Iterations: %d, Duration: %ld sec.\n",
 			LOOP, II, finisec-startsec);
 
