@@ -15,6 +15,8 @@ REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 TIMEOPT = -time-passes -stats -info-output-file=$@.info
 EXTRA_LLI_OPTS = $(TIMEOPT)
 
+INFO_PREFIX = Output/$*.*-
+
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
@@ -29,12 +31,12 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	  grep "Number of bytecode bytes written" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep "Number of instructions" $@.info >> $@;\
+	  grep 'Number of instructions$$' $@.info >> $@;\
 	  echo >> $@;\
 	else \
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\
 	fi
-	-@rm -f $@.info
+	-rm -f $@.info
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
@@ -51,7 +53,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
-	-@rm -f $@.info
+	-rm -f $@.info
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
@@ -61,7 +63,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
           echo "TEST-RESULT-cbe: YES" >> $@;\
 	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
-	  grep "^real" Output/$*.out-cbe.time >> $@;\
+	  grep "^real" $(INFO_PREFIX)cbe.time >> $@;\
 	  echo >> $@;\
         else  \
 	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
@@ -74,14 +76,15 @@ Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.exe-lli $(LLI)
 	@if test -e Output/$*.exe-lli; then \
           echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
-	  grep "^real" Output/$*.out-lli.time >> $@;\
+	  grep "^real" $(INFO_PREFIX)lli.time >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-lli-dyninst: " >> $@;\
-	  grep "Number of dynamic inst" Output/$*.out-lli.info >> $@;\
+	  grep "Number of dynamic inst" $(INFO_PREFIX)lli.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: lli $(RELDIR)/$*" >> $@;\
 	fi
+	-rm -f $(INFO_PREFIX)lli.info
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
@@ -90,17 +93,18 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	@if test -f Output/$*.exe-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
-	  grep "^real" Output/$*.out-jit.time >> $@;\
+	  grep "^real" $(INFO_PREFIX)jit.time >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-jit-comptime: " >> $@;\
-	  grep "Total Execution Time" Output/$*.out-jit.info >> $@;\
+	  grep "Total Execution Time" $(INFO_PREFIX)jit.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-jit-machcode: " >> $@;\
-	  grep "bytes of machine code compiled" Output/$*.out-jit.info >> $@;\
+	  grep "bytes of machine code compiled" $(INFO_PREFIX)jit.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi
+	-rm -f $(INFO_PREFIX)jit.info
 
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
