@@ -3,6 +3,7 @@
 LEVEL = ../../../..
 include $(LEVEL)/Makefile.config
 
-PARALLEL_DIRS  := $(basename $(shell ls $(SourceDir) | grep -v CVS | grep -v Makefile))
+PARALLEL_DIRS := Fhourstones McCat Olden OptimizerEval Ptrdist llubenchmark sim FreeBench
+
 
 include $(LEVEL)/test/Programs/Makefile.programs
