@@ -72,14 +72,15 @@ int main(int argc, char *argv[])
         res[0] = (res[1] + res[2] + res[3] + res[4] + res[5]) / 5;
 
         /* print out results  */
-        printf("Composite Score:        %8.2f\n" ,res[0]);
-        printf("FFT             Mflops: %8.2f    (N=%d)\n", res[1], FFT_size);
+        printf("NOTE!!! All Mflops disabled to prevent diffs from failing!\n");
+        printf("Composite Score:        %8.2f\n" ,res[0]/10000000);
+        printf("FFT             Mflops: %8.2f    (N=%d)\n", res[1]/10000000, FFT_size);
         printf("SOR             Mflops: %8.2f    (%d x %d)\n", 		
-				res[2], SOR_size, SOR_size);
-        printf("MonteCarlo:     Mflops: %8.2f\n", res[3]);
-        printf("Sparse matmult  Mflops: %8.2f    (N=%d, nz=%d)\n", res[4], 
+				res[2]/10000000, SOR_size, SOR_size);
+        printf("MonteCarlo:     Mflops: %8.2f\n", res[3]/10000000);
+        printf("Sparse matmult  Mflops: %8.2f    (N=%d, nz=%d)\n", res[4]/10000000, 
 					Sparse_size_M, Sparse_size_nz);
-        printf("LU              Mflops: %8.2f    (M=%d, N=%d)\n", res[5],
+        printf("LU              Mflops: %8.2f    (M=%d, N=%d)\n", res[5]/10000000,
 				LU_size, LU_size);
 
 
