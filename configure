@@ -465,7 +465,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL PYTHON SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH F2C F2C_INC F2C_LIB USE_F2C DISABLE_LLC_DIFFS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL PYTHON SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH BOXEDSIM_ROOT USE_BOXEDSIM F2C F2C_INC F2C_LIB USE_F2C DISABLE_LLC_DIFFS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1035,6 +1035,7 @@ Optional Features:
   --enable-namd=ARG       Use namd as a benchmark (srcs in DIR)
   --enable-sweep3d=ARG    Use sweep3d as a benchmark (srcs in DIR)
   --enable-fpgrowth=ARG   Use fpgrowth as a benchmark (srcs in DIR)
+  --enable-boxedsim=ARG   Use boxedsim as a benchmark (srcs in DIR)
   --enable-llc_diffs      Enable LLC Diffs when testing (default is YES)
 
 Optional Packages:
@@ -2971,13 +2972,6 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-gccmajor=`$CC --version | head -n 1 | awk '{print $NF;}' | cut -d. -f1`
-if test "$gccmajor" -lt "3"
-then
-	{ { echo "$as_me:$LINENO: error: gcc 3.x required, but you have a lower version" >&5
-echo "$as_me: error: gcc 3.x required, but you have a lower version" >&2;}
-   { (exit 1); exit 1; }; }
-fi
 
  echo "$as_me:$LINENO: checking for GNU make" >&5
 echo $ECHO_N "checking for GNU make... $ECHO_C" >&6
@@ -3969,7 +3963,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 3972 "configure"' > conftest.$ac_ext
+  echo '#line 3966 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -4843,7 +4837,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:4846:" \
+echo "$as_me:4840:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -5900,11 +5894,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5903: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5897: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5907: \$? = $ac_status" >&5
+   echo "$as_me:5901: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6143,11 +6137,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6146: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6140: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:6150: \$? = $ac_status" >&5
+   echo "$as_me:6144: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6203,11 +6197,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6206: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6200: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:6210: \$? = $ac_status" >&5
+   echo "$as_me:6204: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8388,7 +8382,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8391 "configure"
+#line 8385 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8486,7 +8480,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8489 "configure"
+#line 8483 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10679,11 +10673,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10682: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10676: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10686: \$? = $ac_status" >&5
+   echo "$as_me:10680: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10739,11 +10733,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10742: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10736: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10746: \$? = $ac_status" >&5
+   echo "$as_me:10740: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -12100,7 +12094,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12103 "configure"
+#line 12097 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12198,7 +12192,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12201 "configure"
+#line 12195 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13035,11 +13029,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13038: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13032: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13042: \$? = $ac_status" >&5
+   echo "$as_me:13036: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -13095,11 +13089,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13098: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13092: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13102: \$? = $ac_status" >&5
+   echo "$as_me:13096: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15134,11 +15128,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15137: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15131: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15141: \$? = $ac_status" >&5
+   echo "$as_me:15135: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15377,11 +15371,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15380: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15374: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15384: \$? = $ac_status" >&5
+   echo "$as_me:15378: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15437,11 +15431,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15440: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15434: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15444: \$? = $ac_status" >&5
+   echo "$as_me:15438: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17622,7 +17616,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17625 "configure"
+#line 17619 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -17720,7 +17714,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17723 "configure"
+#line 17717 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -19400,6 +19394,53 @@ echo "${ECHO_T}$checkresult" >&6
 
 
 
+ # Check whether --enable-boxedsim or --disable-boxedsim was given.
+if test "${enable_boxedsim+set}" = set; then
+  enableval="$enable_boxedsim"
+  checkresult=$enableval
+else
+  checkresult=auto
+fi;
+echo "$as_me:$LINENO: checking for boxedsim benchmark sources" >&5
+echo $ECHO_N "checking for boxedsim benchmark sources... $ECHO_C" >&6
+case "$checkresult" in
+auto|yes)
+    defaultdir=/home/vadve/shared/benchmarks/boxed-sim
+	if test -d "$defaultdir"
+	then
+		BOXEDSIM_ROOT=$defaultdir
+
+		USE_BOXEDSIM=USE_BOXEDSIM=1
+
+        checkresult="yes, found in $defaultdir"
+    else
+        checkresult=no
+    fi
+    ;;
+no)
+
+
+    checkresult=no
+    ;;
+*)  if test -d "$checkresult"
+    then
+        BOXEDSIM_ROOT="$checkresult"
+
+        USE_BOXEDSIM=USE_BOXEDSIM=1
+
+        checkresult="yes, in $checkresult"
+    else
+
+
+        checkresult="no, not found in $checkresult"
+    fi
+    ;;
+esac
+echo "$as_me:$LINENO: result: $checkresult" >&5
+echo "${ECHO_T}$checkresult" >&6
+
+
+
 
 # Check whether --with-f2c or --without-f2c was given.
 if test "${with_f2c+set}" = set; then
@@ -20373,6 +20414,8 @@ s,@SWEEP3D_ROOT@,$SWEEP3D_ROOT,;t t
 s,@USE_SWEEP3D@,$USE_SWEEP3D,;t t
 s,@FPGROWTH_ROOT@,$FPGROWTH_ROOT,;t t
 s,@USE_FPGROWTH@,$USE_FPGROWTH,;t t
+s,@BOXEDSIM_ROOT@,$BOXEDSIM_ROOT,;t t
+s,@USE_BOXEDSIM@,$USE_BOXEDSIM,;t t
 s,@F2C@,$F2C,;t t
 s,@F2C_INC@,$F2C_INC,;t t
 s,@F2C_LIB@,$F2C_LIB,;t t

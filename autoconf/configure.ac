@@ -62,11 +62,6 @@ AC_PROG_CC(gcc)
 AC_PROG_CPP
 
 dnl Verify that GCC is version 3.0 or higher
-gccmajor=`$CC --version | head -n 1 | awk '{print $NF;}' | cut -d. -f1`
-if test "$gccmajor" -lt "3"
-then
-	AC_MSG_ERROR([gcc 3.x required, but you have a lower version])
-fi
 
 dnl Check for GNU Make.  We use its extensions too, so don't build without it
 AC_CHECK_GNU_MAKE
@@ -119,6 +114,7 @@ EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
 EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
 EXTERNAL_BENCHMARK(sweep3d,/home/vadve/criswell/umt2k)
 EXTERNAL_BENCHMARK(fpgrowth,/home/vadve/shared/benchmarks/fpgrowth)
+EXTERNAL_BENCHMARK(boxedsim,/home/vadve/shared/benchmarks/boxed-sim)
 
 dnl Check for f2c
 CHECK_F2C_ALL()
