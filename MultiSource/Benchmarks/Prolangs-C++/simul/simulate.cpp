@@ -248,7 +248,7 @@ public:
   }
 };
 
-main() {
+int main() {
   screen.clear_screen();
   int pop_factor = 1;
   int crawl_factor = 2;
@@ -263,7 +263,7 @@ main() {
     }
   int xrand = 5;
   int yrand = 6;
-  while (1) {
+  for (int i = 0; i != 1000000; ++i) {
     int x_location = xrand;
     int y_location = yrand;
     if (s_grid[x_location][y_location])
