@@ -1,0 +1,42 @@
+#                   test/Programs/MultiSource/Makefile.multisrc
+#
+# This makefile should be used by subdirectories that have multiple source files
+# to be linked together.  This contains all of the common makefile code required
+# to link an application together based on the $(Source) variable.
+#
+# Variables to be defined before including this makefile:
+#
+# 1. LEVEL - Must be set as per normal semantics: The depth from the top of tree
+#
+
+LCFLAGS := $(CFLAGS) $(CPPFLAGS)
+PROGRAMS_TO_TEST := $(PROG)
+
+all:: 
+	@echo "-----> Running '$(PROG)' test"
+
+include $(LEVEL)/test/Programs/Makefile.programs
+
+#all:: Output/$(PROG).linked.bc Output/$(PROG).native
+
+# Figure out what object files we want to build...
+LObjs    := $(sort $(addsuffix .bc, $(basename $(Source))))
+LObjects := $(addprefix Output/,$(LObjs))
+
+NObjs    := $(sort $(addsuffix .o, $(basename $(Source))))
+NObjects := $(addprefix Output/,$(NObjs))
+
+.PRECIOUS: $(LObjects) $(NObjects)
+
+Output/%.o: %.c Output/.dir
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+
+# Link the program, then perform postlink optimization...
+Output/%.linked.bc: $(LObjects)
+	$(LLINK) -f $(LObjects) | \
+	   $(LOPT) -f -cleangcc -raise -constprop -dce -o $@
+
+Output/%.native: $(NObjects)
+	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
+
