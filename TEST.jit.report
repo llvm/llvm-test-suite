@@ -6,6 +6,7 @@
 
 # Sort by total execution time
 $SortCol = 2;
+$TrimRepeatedPrefix = 1;
 
 # Sort in descending order
 $SortReverse = 1;
