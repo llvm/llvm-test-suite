@@ -47,7 +47,6 @@ include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
 CPPFLAGS += -DSPEC_CPU2000
 SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
-SPEC_SANDBOX_COV := $(LEVEL)/test/Programs/External/SPEC/Sandbox_cov.sh
 
 # Information about testing the program...
 REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
