@@ -28,4 +28,4 @@ Output/%.native: %.c Output/.dir
 #
 # FIXME: LIBS should be specified, not hardcoded to -lc -lm
 Output/%.llvm: Output/%.bc
-	$(LGCCLD) $< -lc -lm -o $@
+	$(LGCCLD) $< -lgcc -lc -lm -o $@

@@ -33,7 +33,7 @@ Output/%.o: %.c Output/.dir
 # Link the program, then perform postlink optimization...
 # FIXME: LIBS SHOULD BE SPECIFIED
 Output/%.llvm: $(LObjects)
-	$(LGCCLD) $(LObjects) -lc -lm -o $@
+	$(LGCCLD) $(LObjects) -lgcc -lc -lm -o $@
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
