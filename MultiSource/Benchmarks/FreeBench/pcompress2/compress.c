@@ -37,7 +37,7 @@ unsigned int do_ari(unsigned int insize); /* In "arithmetic.c" */
 void compress(int argc, char *argv[]) 
 {
   char *filename;
-  char outname[100];
+  char outname[1000];
   struct stat buf; 
   unsigned int filesize, outsize;
 

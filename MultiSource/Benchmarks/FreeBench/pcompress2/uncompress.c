@@ -40,7 +40,7 @@ void uncompress(int argc, char *argv[])
   FILE *fpi;
 #ifndef BENCHMARK
   FILE *fpo;
-  char outname[100];
+  char outname[1000];
 #endif
   unsigned int insize, outsize;
 

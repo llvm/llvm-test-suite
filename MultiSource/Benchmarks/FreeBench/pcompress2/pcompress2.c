@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 #ifndef BENCHMARK 
   const char* argv0;
 #else
-  char filename[100];
+  char filename[1000];
 #endif  
 
 #ifdef BENCHMARK  
