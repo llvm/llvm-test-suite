@@ -4,7 +4,7 @@
 const int N=40, STATES=4;			// size of square board
 const int DRAB=3;
 const int DFOX=8;
-const int CYCLES=10;
+const int CYCLES=10000;
 enum state { EMPTY, GRASS, RABBIT, FOX };
 
 class living;					// forward decl
@@ -141,8 +141,8 @@ void dele(world w)
 {
   int i,j;
 
-  for (i = 1; i < N; ++i)
-    for (j = 1; j < N; ++j)
+  for (i = 1; i < N-1; ++i)
+    for (j = 1; j < N-1; ++j)
       delete (w[i][j]);
 }
 
@@ -150,8 +150,8 @@ void eden(world w)
 {
   int i,j;
 
-  for (i = 1; i < N; ++i)
-    for (j = 1; j < N; ++j) {
+  for (i = 0; i < N; ++i)
+    for (j = 0; j < N; ++j) {
       if (i == j) w[i][j] = new fox(i,j);
       else if (i < j) w[i][j] = new rabbit(i,j);
       else w[i][j] = new grass(i,j);
@@ -164,7 +164,6 @@ main ()
   int i;
 
   init(odd);
-  init(even);
 
   eden(even);
 
