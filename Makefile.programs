@@ -48,7 +48,8 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Generated code for llc (which does not require the target platform)
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
-
+CBECODEGEN := $(addsuffix .cbe.c,   $(PREFIXED_PROGRAMS_TO_TEST))
+  
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$(Source:.c=)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
@@ -89,6 +90,12 @@ all:: $(LLCDIFFS)
 endif
 
 ifndef DISABLE_CBE
+all:: $(CBECODEGEN)
+else
+DISABLE_CBE_DIFFS = 1
+endif
+
+ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
 endif
 
