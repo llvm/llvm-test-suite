@@ -3,11 +3,14 @@
 //  distributed freely, provided this comment is displayed at the top.
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#include <cstdio>
+
 class True {
 public:
  True() {}
  virtual True *and_m (True *arg)
  {
+   printf("T\n");
    return arg;
  }
 } tru;
@@ -20,6 +23,7 @@ public:
 
 True *False::and_m (True *arg)
 {
+   printf("F\n");
    return &fals;
 }
 
