@@ -2,7 +2,7 @@ LEVEL = ../../../..
 RUN_OPTIONS     = chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook
 STDOUT_FILENAME = cook_log.out
 STDERR_FILENAME = cook_log.err
-FP_TOLERANCE := 0.0001
+FP_ABSTOLERANCE := 0.005
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
 CPPFLAGS = -include errno.h -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
