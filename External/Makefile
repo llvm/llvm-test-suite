@@ -8,7 +8,7 @@ include ${LEVEL}/Makefile.config
 #
 # Create the list of directories to compile
 #
-DIRS := $(sort $(filter-out CVS/, $(wildcard */)))
+DIRS := SPEC
 ifndef USE_SPEC
 DIRS := $(filter-out SPEC/, $(DIRS))
 endif
