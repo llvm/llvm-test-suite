@@ -60,7 +60,7 @@ fi
 
 if ls | egrep "^core" > /dev/null
 then
-    corefile=`ls core* | head -1`
+    corefile=`ls core* | head -n 1`
     echo "where" > StackTrace.$$
     $GDB -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
     rm -f StackTrace.$$ $corefile
