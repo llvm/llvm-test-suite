@@ -40,10 +40,9 @@ ulimit -f 10485760
 #
 (time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
-/^real/   { /* IGNORE */; print }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
-!/^real/ && !/^user/ && !/^sys/  { print }
+!/^user/ && !/^sys/  { print }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time1
 
 if test $? -eq 0
