@@ -107,6 +107,10 @@ LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCLSDIFFS  := $(addsuffix .diff-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
+# Profiles for the program.
+PROFOUTPUT := $(addsuffix .prof, $(PREFIXED_PROGRAMS_TO_TEST))
+PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Build Program outputs:
 .PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-ls
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe
@@ -119,6 +123,9 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 # Regardless of what other options are specified, build the program's bytecode
 # representation.
 all:: $(BYTECODE)
+profile:: $(PROFOUTPUT)
+print-profile:: $(PRINTPROFOUTPUT)
+
 
 ifdef RUN_GCC_ONLY
 DISABLE_DIFFS = 1
@@ -376,6 +383,27 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS)
 
 endif
+
+
+#
+# Rules to generate profiling information
+#
+$(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
+Output/%.llvm-prof.bc: Output/%.llvm.bc
+	$(LOPT) -insert-block-profiling $< -o $@ -f
+
+$(PROGRAMS_TO_TEST:%=Output/%.prof): \
+Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat
+	@rm -f $@
+	-$(RUNSAFELY) $(STDIN_FILENAME) Output/$*.out-prof $(LLI) $(JIT_OPTS) \
+            -fake-argv0 'Output/$*.llvm.bc' -load $(LEVEL)/lib/Debug/libprofile_rt.so $< -llvmprof-output $@ $(RUN_OPTIONS)
+	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
+		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
+
+$(PROGRAMS_TO_TEST:%=Output/%.printprof): \
+Output/%.printprof: Output/%.llvm.bc Output/%.prof
+	$(LPROF) $< Output/$*.prof
+
 
 #
 # Rules to diff test output...
