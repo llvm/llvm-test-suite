@@ -84,7 +84,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
 Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) jit-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  $(LLI) -regalloc=linearscan $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
+                  $(LLI) -regalloc=iterativescan $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/jit-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -161,7 +161,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
 Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS) \
-	    -regalloc=linearscan $(BUGPOINT_ARGS)
+	    -regalloc=iterativescan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
@@ -174,7 +174,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-ls): \
 Output/%.bugpoint-jit-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS) \
-	    -regalloc=linearscan $(BUGPOINT_ARGS)
+	    -regalloc=iterativescan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 
