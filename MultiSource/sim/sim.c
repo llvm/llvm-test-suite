@@ -84,7 +84,22 @@ programs.
 /***********************/
 
 #include   <stdio.h>
+#include   <stdlib.h>
+#include   <string.h>
 #define long int
+
+/* ckalloc - allocate space; check for success */
+#if 1
+#define ckalloc(x) malloc(x)
+#else
+static char *ckalloc(long amount) {
+	char *malloc(), *p;
+
+	if ((p = malloc( (unsigned) amount)) == NULL)
+		fatal("Ran out of memory.");
+	return(p);
+}
+#endif
 
 static char *name1, *name2;             /* names of sequence files    */
 
@@ -101,7 +116,6 @@ main(argc, argv) int argc; char *argv[];
   double parm_M, parm_I, parm_V, parm_O, parm_E, v;
   double atof();
   FILE *Bp, *Ap, *Cp, *ckopen();
-  char *ckalloc();                      /* space-allocating function  */
   char *arg1, *arg2, *arg3;
 
   if ((Cp = fopen("sim.res","a+")) == NULL)
@@ -109,6 +123,7 @@ main(argc, argv) int argc; char *argv[];
 	printf("Can not open sim.res\n\n");
 	exit(1);
     }
+
 
   starttime = dtime();      
   
@@ -122,6 +137,7 @@ main(argc, argv) int argc; char *argv[];
 		arg2 = argv[2];
 		arg3 = argv[3];
 	}
+
 	/* read k: the number of local alignments to find */
 	sscanf(arg1,"%d", &K);
 	if (K == 0)
@@ -177,6 +193,7 @@ main(argc, argv) int argc; char *argv[];
 			default: fatal("options are M, I, V, O and E.");
 		}
 	}
+
 	printf("\t\tSIM output with parameters:\n");
 	printf("\t\tM = %g, I = %g, V = %g\n\t\tO = %g, E = %g\n\n",
 	   parm_M, parm_I, parm_V, parm_O, parm_E);
@@ -209,7 +226,6 @@ main(argc, argv) int argc; char *argv[];
   fprintf(Cp,"  Run Time: %9.1lf (sec)\n",benchtime);
   fprintf(Cp,"#######################################################\n");
   fclose(Cp);
-
 	exit(0);
 }
 
@@ -319,7 +335,6 @@ SIM(A,B,M,N,K,V,Q,R,nseq)
   long  score;                          /* the max score in LIST */
   long count;                           /* maximum size of list */      
   register  long  i, j;                 /* row and column indices */
-  char *ckalloc();                      /* space-allocating function */
   long  *S;                             /* saving operations for diff */
   vertexptr cur;                        /* temporary pointer */
   vertexptr findmax();                 /* return the largest score node */
@@ -402,9 +417,9 @@ SIM(A,B,M,N,K,V,Q,R,nseq)
   printf("      Number %d Local Alignment\n", K - count);
   printf("      Similarity Score : %g\n",score/10.0);
   printf("      Match Percentage : %d%%\n", (100*no_mat)/al_len);
-  printf("      Number of Matches : %d%\n", no_mat);
-  printf("      Number of Mismatches : %d%\n", no_mis);
-  printf("      Total Length of Gaps : %d%\n", al_len-no_mat-no_mis);
+  printf("      Number of Matches : %d\n", no_mat);
+  printf("      Number of Mismatches : %d\n", no_mis);
+  printf("      Total Length of Gaps : %d\n", al_len-no_mat-no_mis);
   printf("      Begins at (%d, %d) and Ends at (%d, %d)\n",
 			stari,starj, endi,endj);
 	    display(&A[stari]-1,&B[starj]-1,rl,cl,S,stari,starj);
@@ -903,7 +918,6 @@ long diff(A,B,M,N,tb,te) char *A, *B; long M, N; long tb, te;
 { register long   i, j;
   register long c, e, d, s;
 	   long t, *va;
-	   char  *ckalloc();
 
 /* Boundary cases: M <= 1 or N == 0 */
 
@@ -1133,16 +1147,6 @@ char *name, *mode;
 	return(fp);
 }
 
-/* ckalloc - allocate space; check for success */
-char *ckalloc(amount)
-long amount;
-{
-	char *malloc(), *p;
-
-	if ((p = malloc( (unsigned) amount)) == NULL)
-		fatal("Ran out of memory.");
-	return(p);
-}
 
 /*****************************************************/
 /* Various timer routines.                           */
