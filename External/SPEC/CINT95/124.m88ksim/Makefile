@@ -2,18 +2,13 @@ LEVEL = ../../../../../..
 RUN_OPTIONS = -c
 
 ifeq ($(ENDIAN),big)
-EXTENSION := big
+STDIN_FILENAME := ctl.big
 else
-EXTENSION := lit
+STDIN_FILENAME := ctl.lit
+CPPFLAGS += -DLEHOST
 endif
 
-ifeq ($(RUN_TYPE),test)
-STDIN_FILENAME := ctl.$(EXTENSION)
-else
-STDIN_FILENAME := dcrand.$(EXTENSION)
-endif
-
-STDOUT_FILENAME := test.out
+STDOUT_FILENAME = $(RUN_TYPE).out
 
 Source := addd.c \
           adds.c \
@@ -113,3 +108,7 @@ Source := addd.c \
           updstat.c
 
 include ../../Makefile.spec95
+
+$(REF_IN_DIR)/ctl.$(EXTENSION): $(REF_IN_DIR)/ctl.raw
+	$(SED) -e s/%endian%/$(EXTENSION)/ < $< > $@
+
