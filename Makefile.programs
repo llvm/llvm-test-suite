@@ -226,7 +226,7 @@ endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 Output/gccas-pass-args: $(LGCCAS)
 	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
-Output/gccld-pass-args: $(TOOLS)/gccld
+Output/gccld-pass-args: $(LGCCLDPROG)
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
 	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
