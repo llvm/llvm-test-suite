@@ -3,7 +3,7 @@
 
 #define CUTOFF 2.552
 
-#define SLOW_FACTOR 2.0
+#define SLOW_FACTOR 10.0
 /* SLOW_FACTOR was 100.0 for stock benchmark */
 
 clock_t ticks_per_sec = 0;
