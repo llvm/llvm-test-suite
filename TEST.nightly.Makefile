@@ -19,7 +19,7 @@ EXTRA_LLI_OPTS = $(TIMEOPT)
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1'
-	-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
+	@if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
@@ -40,7 +40,7 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
 Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 	@echo 'time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1'
-	@-if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1; then \
+	@if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
