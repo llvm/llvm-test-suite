@@ -12,7 +12,7 @@
 LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
 
-## libraries that must be linked with llc-generated code
+## LLVM bytecode libraries that must be linked with an application
 # FIXME: LIBS SHOULD BE SPECIFIED
 LIBS = -lm
 
