@@ -47,20 +47,20 @@ bugpoint-llc-ls: Output/$(PROG).bugpoint-llc-ls
 # GCC frontend, without running any optimizations.
 #
 Output/%.rbc: Output/%.ll $(LGCCAS)
-	$(LGCCAS) -disable-opt $< -o $@
+	-$(LGCCAS) -disable-opt $< -o $@
 
 ifndef USE_PRECOMPILED_BYTECODE
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.rbc): \
 Output/%.linked.rbc: $(LObjects) $(LGCCLDPROG)
-	$(LGCCLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
+	-$(LGCCLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
 
 # Output/*.linked.ll is all of the bytecode files of the program linked together
 # without any libraries linked in...
 #
 $(PROGRAMS_TO_TEST:%=Output/%.linked.rll): \
 Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
-	$(LDIS) $< -o $@ -f
+	-$(LDIS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)
