@@ -11,7 +11,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <malloc.h>
+#if !defined(__FreeBSD__)
+#  include <malloc.h>
+#endif
 #include <string.h>
 
 
