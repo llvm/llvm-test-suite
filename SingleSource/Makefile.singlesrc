@@ -21,8 +21,10 @@ PROGRAMS_TO_TEST = $(Source:.c=)
 include $(LEVEL)/test/Programs/Makefile.programs
 .PRECIOUS: Output/%.linked.rll
 
+ifndef USE_PRECOMPILED_BYTECODE
 Output/%.linked.rll: Output/%.ll
 	cp -f $< $@
+endif
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: %.c Output/.dir

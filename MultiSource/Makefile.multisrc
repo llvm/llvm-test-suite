@@ -41,11 +41,15 @@ Output/%.rbc: Output/%.ll $(LAS)
 	$(LAS) -f $< -o $@
 
 
+ifndef USE_PRECOMPILED_BYTECODE
+
 # Output/*.linked.ll is all of the bytecode files of the program linked together
 # without any libraries linked in...
 #
 Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
 	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve | $(LDIS) > $@
+
+endif
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
