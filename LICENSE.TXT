@@ -92,3 +92,5 @@ Dhrystone:          llvm-test/SingleSource/Benchmarks/Dhrystone
 SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
                     llvm-test/SingleSource/Gizmos
+zlib:               llvm-test/Runtime/zlib
+libpng:             llvm-test/Runtime/libpng
