@@ -3,18 +3,20 @@
 # Program:  GenerateReport.pl
 #
 # Synopsis: Summarize a big log file into a table of values, commonly used for
-#           testing.  This can generate either a plaintext table or HTML table
-#           depending on whether the -html option is specified.
+#           testing.  This can generate either a plaintext table, HTML table,
+#           or Latex table, depending on whether the -html or -latex options are
+#           specified.
 #
 #           This script reads a report description file to specify the fields
 #           and descriptions for the columns of interest.  In reads the raw log
 #           input from stdin and writes the table to stdout.
 #
-# Syntax:   GenerateReport.pl [-html] <ReportDesc> < Input > Output
+# Syntax:   GenerateReport.pl [-html] [-latex] <ReportDesc> < Input > Output
 #
 
 # Default values for arguments
-$HTML = 0;
+my $HTML = 0;
+my $LATEX = 0;
 
 # Parse arguments...
 while ($_ = $ARGV[0], /^[-+]/) {
@@ -22,7 +24,8 @@ while ($_ = $ARGV[0], /^[-+]/) {
   last if /^--$/;  # Stop processing arguments on --
 
   # List command line options here...
-  if (/^-html$/) { $HTML = 1; next; }
+  if (/^-html$/)  { $HTML = 1; next; }
+  if (/^-latex$/) { $LATEX = 1; next; }
 
   print "Unknown option: $_ : ignoring!\n";
 }
@@ -69,6 +72,7 @@ my $ReportFN = $ARGV[0];
 open(REPORTDESC, $ReportFN) or
   die "Couldn't open report description '$ReportFN'!";
 
+my @LatexColumns;  # Filled in by report if it supports Latex mode
 my @Fields = eval <REPORTDESC>;
 
 
@@ -175,15 +179,33 @@ if ($HTML) {
     }
   }
 
-  #
-  # Print out the table now...
-  #
-  foreach $Value (@Values) {
-    for ($i = 0; $i < @$Value-1; $i++) {
-      printf "%-$FieldWidths[$i]s ", $$Value[$i];
+  if ($LATEX) {
+    #
+    # Print out the latexified table...
+    #
+    shift @Values;  # Don't print the header...
+    foreach $Row (@Values) {
+      my $First = 1;
+      
+      for $ColNum (@LatexColumns) {
+        # Print a seperator...
+        print " & " if ($First == 0);
+        $First = 0;
+        printf "%-$FieldWidths[$ColNum]s", $Row->[$ColNum];
+      }
+      print "\\\\\n";
     }
-
-    # Print the assertion message if existant...
-    print "$$Value[@$Value-1]\n";
-  }
+  } else {
+    #
+    # Print out the table in plaintext format now...
+    #
+    foreach $Value (@Values) {
+      for ($i = 0; $i < @$Value-1; $i++) {
+        printf "%-$FieldWidths[$i]s ", $$Value[$i];
+      }
+      
+      # Print the assertion message if existant...
+      print "$$Value[@$Value-1]\n";
+    }
+}
 }
