@@ -1,0 +1,27 @@
+#                  test/Programs/LLVMSource/Makefile
+#
+# This directory contains regression tests for LLVM backends written in LLVM
+# assembly language.
+#
+LEVEL = ../../..
+DISABLE_FOR_LLVM_PROGRAMS := 1
+PROGRAM_REQUIRED_TO_EXIT_OK := 1
+PROGRAMS_TO_TEST := $(basename $(wildcard *.ll))
+include $(LEVEL)/test/Programs/Makefile.programs
+
+LLVM_SOURCE_BYTECODES := $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc)
+
+$(LLVM_SOURCE_BYTECODES): \
+Output/%.llvm.bc: %.ll $(LAS) Output/.dir
+	$(LAS) $< -f -o $@
+
+all:: $(CBEOUTPUT)
+
+ifdef TARGET_HAS_JIT
+all:: $(JITOUTPUT)
+endif
+
+ifndef DISABLE_LLC_DIFFS
+all:: $(LLCOUTPUT)
+endif
+
