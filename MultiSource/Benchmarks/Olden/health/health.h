@@ -21,13 +21,13 @@
 #define IR 2836
 #define MASK 123459876
 
-extern int       max_level;
-extern long long max_time, seed;
+extern int  max_level;
+extern long max_time, seed;
 
 struct Results {
-  double                  total_patients;
-  double                  total_time;
-  double                  total_hosps; 
+  float                   total_patients;
+  float                   total_time;
+  float                   total_hosps; 
 };
 
 struct Patient {
@@ -70,10 +70,10 @@ struct Village {
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
-  long long              seed;
+  long                   seed;
 #else
   struct Hosp            hosp;   
-  long long              seed;
+  long                   seed;
   struct Village         *forward[4];
   int                    label;
   struct List            returned;
@@ -84,7 +84,7 @@ struct Village {
 struct Village *alloc_tree(int level, int lo, int proc, 
                            int label, struct Village *back);
 void dealwithargs(int argc, char *argv[]);
-double my_rand(long long idum);
+float my_rand(long idum);
 struct Patient *generate_patient(struct Village *village);
 void put_in_hosp(struct Hosp *hosp, struct Patient *patient);
 void addList(struct List *list, struct Patient *patient);
@@ -93,9 +93,9 @@ struct List *sim(struct Village *village);
 void check_patients_inside(struct Village *village, struct List *list);
 struct List *check_patients_assess(struct Village *village, struct List *list);
 void check_patients_waiting(struct Village *village, struct List *list);
-double get_num_people(struct Village *village);
-double get_total_time(struct Village *village);
-double get_total_hosps(struct Village *village);
+float get_num_people(struct Village *village);
+float get_total_time(struct Village *village);
+float get_total_hosps(struct Village *village);
 struct Results get_results(struct Village *village);
 
 #endif

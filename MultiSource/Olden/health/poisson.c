@@ -9,10 +9,10 @@
 #include "health.h"
 
 
-double my_rand(long long idum) 
+float my_rand(long idum) 
 {
-  long long                   k;
-  double                  answer;
+  long  k;
+  float answer;
   
   idum ^= MASK;
   k = idum / IQ;

@@ -11,7 +11,7 @@
 #include <assert.h>
 
 int  max_level;
-long long max_time, seed;
+long max_time, seed;
 
 
 struct Village *alloc_tree(int level, int lo, int proc, 
@@ -92,8 +92,8 @@ struct Results get_results(struct Village *village) {
   list = village->returned.forward;
   while (list != NULL) {
     p = list->patient;
-    r1.total_hosps += (double)(p->hosps_visited);
-    r1.total_time += (double)(p->time); 
+    r1.total_hosps += (float)(p->hosps_visited);
+    r1.total_time += (float)(p->time); 
     r1.total_patients += 1.0;
     list = list->forward;
   }
@@ -123,10 +123,10 @@ void check_patients_inside(struct Village *village, struct List *list)
 }
 
 struct List *check_patients_assess(struct Village *village, struct List *list) {
-  double rand;
+  float rand;
   struct Patient *p;
   struct List *up = NULL;
-  long long s;
+  long s;
   int label, t;
 
   while (list != NULL) {
@@ -137,7 +137,7 @@ struct List *check_patients_assess(struct Village *village, struct List *list) {
     if (p->time_left == 0) { 
       s = village->seed;
       rand = my_rand(s);
-      village->seed = (long long)(rand * IM);
+      village->seed = (long)(rand * IM);
       label = village->label;
       if (rand > 0.1 || label == 0) {
         removeList(&village->hosp.assess, p);
@@ -201,14 +201,14 @@ void put_in_hosp(struct Hosp *hosp, struct Patient *patient) {
 
 struct Patient *generate_patient(struct Village *village) 
 {
-  long long            s,newseed; 
+  long            s,newseed; 
   struct Patient *patient;
-  double rand;
+  float rand;
   int label;
   
   s = village->seed;
   rand = my_rand(s);
-  village->seed = (long long)(rand * IM);
+  village->seed = (long)(rand * IM);
   newseed = village->seed;
   label = village->label;
   if (rand > 0.666) {
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
   struct Results         results;
   struct Village         *top = 0;
   int                    i;
-  double total_time, total_patients, total_hosps;  
+  float total_time, total_patients, total_hosps;  
   
   dealwithargs(argc, argv);
   top = alloc_tree(max_level, 0, 0, 0, top);
