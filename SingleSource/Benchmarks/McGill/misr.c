@@ -32,7 +32,6 @@ prob described above.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <mp.h>
 
 #define INF 10000
 #define MAX_REG_LN 100
