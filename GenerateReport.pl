@@ -47,6 +47,7 @@ my $SortNumeric = 0;   # Sort numerically or textually?
 # If the report wants us to trim repeated path prefixes off of the start of the
 # strings in the first column of the report, we can do that.
 my $TrimRepeatedPrefix = 0;
+my $TrimAllDirectories = 0;
 
 # Helper functions which may be called by the report description files...
 sub SumCols {
@@ -165,6 +166,15 @@ if ($TrimRepeatedPrefix and scalar(@Values)) {
     }
   }
 }
+
+# If the report wants it, we can trim of all of the directories part of the
+# first column.
+if ($TrimAllDirectories and scalar(@Values)) {
+  foreach $Row (@Values) {
+    $Row->[0] =~ s|^.*/||g;
+  }
+}
+
 
 #
 # Sort table now...
