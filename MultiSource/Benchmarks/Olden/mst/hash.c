@@ -10,6 +10,9 @@
 static int remaining = 0;
 static char *temp;
 
+#ifdef __llvm__
+#define localmalloc malloc
+#else
 static char *localmalloc(int size) 
 {
   char *blah;
@@ -25,6 +28,7 @@ static char *localmalloc(int size)
   remaining -= size;
   return blah;
 }
+#endif
 
 #define localfree(sz)
 
