@@ -11,10 +11,18 @@ using namespace std;
 
 const size_t SIZE = 10000;
 
+template <class _ForwardIterator, class _Tp>
+void 
+iota(_ForwardIterator __first, _ForwardIterator __last, _Tp __value)
+{
+  while (__first != __last)
+    *__first++ = __value++;
+}
+
 size_t test_lists() {
     std::list<size_t> li1(SIZE);
 
-    std::iota(li1.begin(), li1.end(), 1);
+    iota(li1.begin(), li1.end(), 1);
 
     std::list<size_t> li2(li1);
 

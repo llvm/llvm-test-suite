@@ -6,6 +6,14 @@
 #include <list>
 #include <numeric>
 
+template <class _ForwardIterator, class _Tp>
+void 
+iota(_ForwardIterator __first, _ForwardIterator __last, _Tp __value)
+{
+  while (__first != __last)
+    *__first++ = __value++;
+}
+
 using namespace std;
 
 void list_print_n (list<int> L, int n) {
