@@ -16,10 +16,34 @@ sub Ratio {
 }
 
 # Sort by total analyze time
-$SortCol = 2;
+$SortCol = 7;
 
 # Sort in descending order
 $SortReverse = 1;
+
+%NameMap = (
+            treeadd   => 'Olden-treeadd',
+            bisort    => 'Olden-bisort',
+            mst       => 'Olden-mst',
+            perimeter => 'Olden-perimeter',
+            health    => 'Olden-health',
+            tsp       => 'Olden-tsp',
+            power     => 'Olden-power',
+            em3d      => 'Olden-em3d',
+            voronoi   => 'Olden-voronoi',
+            bh        => 'Olden-bh',
+
+            ks        => 'ptrdist-ks',
+            anagram   => 'ptrdist-anagram',
+            yacr2     => 'ptrdist-yacr2',
+            ft        => 'ptrdist-ft',
+            bc        => 'ptrdist-bc');
+
+@LatexColumns = (0, 1, 26, 19, # Program, LOC, #Instrs, MaxSCC
+                 4, 5, 6, 7,   # Execution times
+                 13,           # Memory BU+TD
+                 16, 17,       # Total, Max Nodes
+                 15);          # NumFolded
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
@@ -27,6 +51,7 @@ $SortReverse = 1;
 (
 # Name
             ["Name:" , '\'([^\']+)\' Program'],
+            ["LOC:"  , 'LOC: *([0-9]+)'],
             [],
 # Times
             ["Anlyz:", '([0-9.]+) \([^)]+\)[ 0-9]+TOTAL'],
