@@ -1,8 +1,8 @@
 // Listings 7.1 and 7.2 from "The C++ Workbook" by Wiener and Pinson.
 // Addison-Wesley 1990.
 
-void strcpy(char *nam1, char *nam2) {*nam1 = *nam2;}
-int strlen(char *nam1) { return 0;}
+#include <string.h>
+#include <stdio.h>
 
 class Parent {
 protected:
@@ -31,7 +31,7 @@ public:
   }
 
   virtual void answerName(void) {
-    lastName;
+    printf("%s\n", lastName);
   }
 
   ~Parent(void) {
@@ -74,7 +74,7 @@ public:
 
   virtual void answerName(void) {
     Parent::answerName();
-    firstName;
+    printf("%s\n", firstName);
   }
 };
 
@@ -92,7 +92,7 @@ public:
 
   virtual void answerName(void) {
     Child::answerName();
-    grandFatherName;
+    printf("GCN: %s\n", grandFatherName);
   }
 };
 
