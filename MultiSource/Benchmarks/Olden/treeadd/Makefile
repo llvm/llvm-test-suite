@@ -1,3 +1,5 @@
+HERE = ../../..
+
 PROG = treeadd
 LOCAL_CFLAGS=
 LOCAL_LIBS= 

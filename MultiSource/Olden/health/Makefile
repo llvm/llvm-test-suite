@@ -1,3 +1,5 @@
+HERE = ../../..
+
 PROG = health
 LOCAL_CFLAGS=
 LOCAL_LIBS= -lm

@@ -1,3 +1,5 @@
+HERE = ../../..
+
 PROG = bh
 LOCAL_CFLAGS=
 LOCAL_LIBS= -lm

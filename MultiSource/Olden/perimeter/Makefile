@@ -1,3 +1,5 @@
+HERE = ../../..
+
 PROG = perimeter
 LOCAL_CFLAGS=
 LOCAL_LIBS= 

@@ -1,3 +1,5 @@
+HERE = ../../..
+
 PROG = mst
 LOCAL_CFLAGS=
 LOCAL_LIBS=
