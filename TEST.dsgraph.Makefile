@@ -14,8 +14,9 @@ PASS := td
 ANALYZE_OPTS := -stats -time-passes -only-print-main-ds -dsstats -instcount
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
-Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
+Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE) $(LOPT)
 	-(time -p $(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@ 2>&1
+	-($(LOPT) -steens-aa -time-passes > /dev/null < $<) >> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
@@ -27,4 +28,5 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 # Define REPORT_DEPENDENCIES so that the report is regenerated if analyze or
 # dummylib is updated.
 #
-REPORT_DEPENDENCIES := $(DUMMYLIB) $(LANALYZE)
+REPORT_DEPENDENCIES := $(DUMMYLIB) $(LANALYZE) $(LOPT)
+

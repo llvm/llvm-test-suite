@@ -34,6 +34,7 @@ $SortReverse = 1;
             ["BUTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Bottom'],
             ["TDTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Top'],
             ["SumTm:", sub { return SumCols(@_, 3); }],
+            ["SteTm:", '([0-9.]+) \([^)]+\)[ 0-9]+Steensgaard'],
             [],
 # Sizes
             ["LcSize:" , '([0-9]+)  Local'],
