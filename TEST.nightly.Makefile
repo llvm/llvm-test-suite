@@ -8,8 +8,9 @@
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+CFLAGS  := -O3
 
-REPORTS_TO_GEN := compile llc cbe jit
+REPORTS_TO_GEN := compile nat llc cbe jit
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
 TIMEOPT = -time-passes -stats -info-output-file=$@.info
@@ -37,6 +38,12 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\
 	fi
 	-rm -f $@.info
+
+# NAT tests
+$(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
+Output/%.nightly.nat.report.txt: Output/%.out-nat
+	echo -n "TEST-RESULT-nat-time: " >> $@
+	-grep "^real" Output/$*.out-nat.time >> $@
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
