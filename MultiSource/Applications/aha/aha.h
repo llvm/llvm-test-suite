@@ -52,7 +52,7 @@ int unacceptable;               // Code below sets this to 1 for an
 
 /* Collection of simulator routines for the instructions in the isa. */
 int neg(int x, int y, int z) {return -x;}
-int _not(int x, int y, int z) {return ~x;}
+int Not(int x, int y, int z) {return ~x;}
 int pop(int xx, int y, int z) {
    unsigned x = xx;
    x = x - ((x >> 1) & 0x55555555);
@@ -99,9 +99,9 @@ int divide (int x, int y, int z) {
 int divu(int x, int y, int z) {
    if (y == 0) {unacceptable = 1; return 0;}
    else return (unsigned)x/(unsigned)y;}
-int _and(int x, int y, int z) {return x & y;}
-int _or (int x, int y, int z) {return x | y;}
-int _xor(int x, int y, int z) {return x ^ y;}
+int And(int x, int y, int z) {return x & y;}
+int Or (int x, int y, int z) {return x | y;}
+int Xor(int x, int y, int z) {return x ^ y;}
 int rotl(int x, int y, int z) {int s = y & NBSM;
    return x << s | (unsigned)x >> (32 - s);}
 int shl (int x, int y, int z) {int s = y & NBSM;
@@ -129,7 +129,7 @@ struct {
    char *op_name;               // Operator name, for printing.
 } isa[] = {
    {neg,    1, 0, {RX,  0,  0}, "neg",   "-(",   ""     },  // Negate.
-   {_not,   1, 0, {RX,  0,  0}, "not",   "~(",   ""     },  // One's-complement.
+   {Not,   1, 0, {RX,  0,  0}, "not",   "~(",   ""     },  // One's-complement.
 // {pop,    1, 0, {RX,  0,  0}, "pop",   "pop(", ""     },  // Population count.
 // {nlz,    1, 0, {RX,  0,  0}, "nlz",   "nlz(", ""     },  // Num leading 0's.
 // {rev,    1, 0, {RX,  0,  0}, "rev",   "rev(", ""     },  // Bit reversal.
@@ -138,9 +138,9 @@ struct {
    {mul,    2, 1, {RX,  3,  0}, "mul",   "(",    "*"    },  // Multiply.
    {divide, 2, 0, { 1,  3,  0}, "div",   "(",    "/"    },  // Divide signed.
    {divu,   2, 0, { 1,  1,  0}, "divu",  "(",    " /u " },  // Divide unsigned.
-   {_and,   2, 1, {RX,  2,  0}, "and",   "(",    " & "  },  // AND.
-   {_or,    2, 1, {RX,  2,  0}, "or",    "(",    " | "  },  // OR.
-   {_xor,   2, 1, {RX,  2,  0}, "xor",   "(",    " ^ "  },  // XOR.
+   {And,   2, 1, {RX,  2,  0}, "and",   "(",    " & "  },  // AND.
+   {Or,    2, 1, {RX,  2,  0}, "or",    "(",    " | "  },  // OR.
+   {Xor,   2, 1, {RX,  2,  0}, "xor",   "(",    " ^ "  },  // XOR.
 // {rotl,   2, 0, { 1,NIM,  0}, "rotl",  "(",    " <<r "},  // Rotate shift left.
    {shl,    2, 0, { 1,NIM,  0}, "shl",   "(",    " << " },  // Shift left.
    {shr,    2, 0, { 1,NIM,  0}, "shr",   "(",    " >>u "},  // Shift right.
