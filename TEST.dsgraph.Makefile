@@ -5,6 +5,10 @@
 #
 ##===----------------------------------------------------------------------===##
 
+CURDIR  := $(shell cd .; pwd)
+PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+
 # We require the programs to be linked with libdummy
 include $(LEVEL)/test/Programs/Makefile.dummylib
 
@@ -25,7 +29,7 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LANALYZE) $(LOPT
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$*' Program"
+	@echo ">>> ========= '$(RELDIR)/$*' Program"
 	@echo "---------------------------------------------------------------"
 	@cat $<
 
