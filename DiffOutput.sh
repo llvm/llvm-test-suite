@@ -44,9 +44,9 @@ fi
 # Diff the two files.
 $DIFF -u $GOODOUTPUT $TESTOUTPUT > $DIFFOUTPUT || (
   # They are different!
-  echo "******************** TEST '$PROG' FAILED! ********************"
+  echo "******************** TEST ($WHICHOUTPUT) '$PROG' FAILED! ********************"
   echo "Execution Context Diff:"
   head -n 200 $DIFFOUTPUT | cat -v
   rm $DIFFOUTPUT
-  echo "******************** TEST '$PROG' FAILED! ********************"
+  echo "******************** TEST ($WHICHOUTPUT) '$PROG' ****************************"
 )
