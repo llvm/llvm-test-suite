@@ -1,7 +1,8 @@
 /* this program is taken from Section 6.4
    in Bjarne Stroustrup's book "The C++ Programming Language" 2nd Edition. */
-#include <iostream.h>
+#include <iostream>
 #include "bjarne.h"
+using namespace std;
 
 enum color {black='*', white=' '};
 
