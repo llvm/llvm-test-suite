@@ -228,10 +228,6 @@ Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
-ifneq ($(TRACE)$(TRACEM),)
-	$(LLINK) -f $@.tmp $(LEVEL)/test/Libraries/Output/libinstr.bc > $@.tmp2
-	$(MV) -f $@.tmp2 $@.tmp
-endif
 	$(MV) -f $@.tmp $@
 endif
 
