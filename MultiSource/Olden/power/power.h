@@ -29,10 +29,17 @@ typedef struct demand {
 #define BRANCHES_PER_LATERAL 2
 #define LEAVES_PER_BRANCH 4
 #else
+#if 0  /* DEFAULT SETTINGS */
 #define NUM_FEEDERS 10
 #define LATERALS_PER_FEEDER 20
 #define BRANCHES_PER_LATERAL 5
 #define LEAVES_PER_BRANCH 10
+#else  /* SCALED UP SETTINGS */
+#define NUM_FEEDERS 11
+#define LATERALS_PER_FEEDER 21
+#define BRANCHES_PER_LATERAL 6
+#define LEAVES_PER_BRANCH 12
+#endif
 #endif
 
 #define F_EPSILON 0.000001
