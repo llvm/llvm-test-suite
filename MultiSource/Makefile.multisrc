@@ -32,7 +32,7 @@ NObjects := $(addprefix Output/,$(NObjs))
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
 
 Output/%.o: %.c Output/.dir
-	$(CC) $(CPPFLAGS) -O $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 bugpoint-gccas: Output/$(PROG).bugpoint-gccas
 bugpoint-gccld: Output/$(PROG).bugpoint-gccld
