@@ -7,7 +7,6 @@
 
 LEVEL = ../..
 PARALLEL_DIRS = SingleSource MultiSource External
-#LLVMSource 
 
 include ${LEVEL}/test/Programs/Makefile.programs
 
