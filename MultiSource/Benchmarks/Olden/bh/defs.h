@@ -200,7 +200,7 @@ global nodeptr root;
 
 global vector rmin;		/* lower-left corner of coordinate box      */
 
-global real rsize;		/* side-length of integer coordinate box    */
+global real xxxrsize;		/* side-length of integer coordinate box    */
 
 #define IMAX_SHIFT (8 * sizeof(int) - 2)
 #define IMAX  (1 << (8 * sizeof(int) - 2))    /* highest bit of int coord */

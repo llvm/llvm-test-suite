@@ -9,28 +9,12 @@
 
 #define global  /* nada */
 
-
-#ifndef TORONTO
-#include <cm/cmmd.h>
-#ifdef PLAIN
-#include <fcntl.h>
-#endif
-#endif
-
-#ifndef TORONTO
-#include "future-cell.h"
-#include "mem-ref.h"
-#endif
-
 #include "defs.h"
 #include "code.h"
 
 
 int nbody;
 char *malloc();
-#ifdef TORONTO
-#define ALLOC(proc,sz) malloc(sz)
-#endif
 
 double sqrt(), xrand(), my_rand(), exp, log;
 real pow();
@@ -41,10 +25,8 @@ void computegrav(treeptr t, int nstep);
 nodeptr maketree(bodyptr btab, int nbody, treeptr t, int nsteps, int proc);
 void vp(bodyptr q, int nstep);
 
-#ifdef TORONTO
 void gravstep(real rsize, nodeptr rt, bodyptr p, int nstep, real dthf);
 void ptree(nodeptr n, int level);
-#endif
 
 typedef struct {
 	vector cmr;
@@ -52,24 +34,6 @@ typedef struct {
 	bodyptr list;
    bodyptr tail;
 } datapoints;
-
-
-#ifdef OLD_FC
-typedef struct fc_datapoints {
-    int     state;     
-    struct fc_datapoints *next;
-    word_t  returnPC;
-    word_t  fp;
-    datapoints value;
-} future_cell_datapoints;
-#else
-typedef struct fc_datapoints {
-#ifndef TORONTO
-    future_cell_impl impl;
-#endif
-    datapoints value;
-} future_cell_datapoints;
-#endif
 
 
 bodyptr testdata();
@@ -85,59 +49,20 @@ void freetree1(nodeptr n);
 int arg1;
 
 /* Used to setup runtime system, get arguments-- see old_main */
-main(int argc, char **argv)
-{
+main(int argc, char **argv) {
   treeptr t;
 
   /* Initialize the runtime system */
-#ifndef PLAIN
-  SPMDInit(argc,argv);
-#else
-#ifndef TORONTO
-  CMMD_fset_io_mode(stdout, CMMD_independent);
-  filestuff();
-#endif
   dealwithargs(argc, argv);
-#ifndef TORONTO
-  __MyNodeId = CMMD_self_address();
-  __InitRegs(__MyNodeId);
-#endif
-#ifndef TORONTO
-  if (CMMD_self_address() == 0)
-  {
-#else
-  if (1){
-#endif
-#endif
-
   chatting("nbody = %d, numnodes = %d\n", nbody, NumNodes);
 
-#ifndef TORONTO
-  CMMD_node_timer_clear(0);
-  CMMD_node_timer_start(0);
-#endif
-
   t = old_main();
-
-#ifndef TORONTO
-  CMMD_node_timer_stop(0);
-
-  chatting("Time = %f seconds\n", CMMD_node_timer_elapsed(0));
-#endif
-
-#ifndef PLAIN
-  __ShutDown();
-#else
-  }
-#endif
-
 }
 
 /* global! */
 
 /* Main routine from original program */
-treeptr old_main()
-{
+treeptr old_main() {
   real tnow;
   real tout;
   int i, nsteps, nprocs;
@@ -149,12 +74,11 @@ treeptr old_main()
   int tmp=0, range=((1<<NDIM) << NDIM) / NumNodes;
   int bodiesper[MAX_NUM_NODES];
   bodyptr ptrper[MAX_NUM_NODES];
-  future_cell_datapoints fc[32];
 
   srand(123);					/*   set random generator   */
 
 /* Tree data structure is global, points to root, and bodylist, has size info */
-  t = (treeptr) ALLOC(0,sizeof(tree));
+  t = (treeptr)malloc(sizeof(tree));
   Root(t) = NULL;
   t->rmin[0] = -2.0;
   t->rmin[1] = -2.0;
@@ -165,7 +89,6 @@ treeptr old_main()
   CLRV(cmv);
 
 /* Creates a list of bodies */
-#ifdef PLAIN
   for (i=0; i < 32; i++)
     {
     datapoints points;
@@ -180,28 +103,6 @@ treeptr old_main()
     ADDV(cmr,cmr,points.cmr);
     ADDV(cmv,cmv,points.cmv);
     }
-#else
-  for (i=31; i >=0 ; i--)
-    {
-    int processor= i/(32/NumNodes);
-    FUTURE(processor, nbody/32, i+1, uniform_testdata, &(fc[i]));
-    }
-    
-  for (i=31; i>=0; i--)
-    {
-    TOUCH(&fc[i]);
-    t->bodytab[i]=fc[i].value.list;
-    ADDV(cmr,cmr,fc[i].value.cmr);
-    ADDV(cmv,cmv,fc[i].value.cmv);
-    }
-    
-  for (i=0; i<32; i++)
-    {
-    if (prev) 
-       Next(prev)=fc[i].value.list;
-    prev = fc[i].value.tail;
-    }
-#endif
 
   chatting("bodies created \n");
   DIVVS(cmr, cmr, (real) nbody);		/* normalize cm coords */
@@ -228,22 +129,11 @@ treeptr old_main()
     ptrper[tmp] = p;
     Proc(p) = tmp;
   }
-  MLOCAL(t);
   for (tmp=0; tmp<NumNodes; tmp++) 
     {
      chatting("Bodies per %d = %d\n",tmp ,bodiesper[tmp]);
      t->bodiesperproc[tmp]=ptrper[tmp];
     }
-
-#ifndef PLAIN
-  for (tmp=NumNodes-1; tmp >=0 ; tmp--)
-    {
-     bodyptr list;
-     list = t->bodiesperproc[tmp];
-     list = movebodies(list,tmp);
-     t->bodiesperproc[tmp]=list;
-    }
-#endif
 
 #ifdef DEBUG
   { int i=0;
@@ -387,78 +277,31 @@ bodyptr testdata()
  */
 extern int EventCount;
 
-void stepsystem(treeptr t, int nstep)
-{ bodyptr bt, bt0, q;
+void stepsystem(treeptr t, int nstep) {
+  bodyptr bt, bt0, q;
   int i;
   nodeptr root;
-
-#ifndef TORONTO
-  future_cell_int fc[MAX_NUM_NODES];
-#endif
 
   int barge,cflctdiff,misstemp,diff;
   /*unsigned long t5, t1, t2, t3, t4; */
 
   /*chatting("Entered stepsystem with t = 0x%x\n",t);*/
-  MLOCAL(t);
   if (Root(t) != NULL) {
     freetree1(Root(t));
     Root(t) = NULL;
   }
 
   /*chatting("Tree freed\n");*/
-#ifndef TORONTO
-  CMMD_node_timer_clear(1);
-  CMMD_node_timer_start(1);
-#endif
 
   root = maketree(bt, nbody, t, nstep, 0);
   /*chatting("Done maketree\n");*/
   /*BhDebug = 0;*/
   Root(t)=root;
 
-#ifndef TORONTO
-  CMMD_node_timer_stop(1);
-  /*chatting("EventCount after = %d\n",EventCount);*/
-
-  CMMD_node_timer_clear(2);
-  CMMD_node_timer_start(2);
-#endif
-
   computegrav(t, nstep);
   /*chatting("Done cg\n");*/
 
-#ifndef TORONTO
-  CMMD_node_timer_stop(2);
-
-  CMMD_node_timer_clear(3);
-  CMMD_node_timer_start(3);
-#endif
-
-#ifndef PLAIN
-  for (i=NumNodes-1; i>=0; i--)
-   {
-    bt=t->bodiesperproc[i];
-    FUTURE(bt,nstep,vp,&(fc[i]));
-    /*vp(bt,nstep);*/
-   }
-  for (i=0; i<NumNodes; i++)
-    TOUCH(&(fc[i]));
-#else
-   vp(t->bodiesperproc[0],nstep);
-#endif
-
-#ifndef TORONTO
-  CMMD_node_timer_stop(3);
-#endif
-
-#ifndef TORONTO
-   chatting("M %f, CG %f, VP %f, sp 0x%x,\n", 
-    CMMD_node_timer_elapsed(1),CMMD_node_timer_elapsed(2),
-    CMMD_node_timer_elapsed(3),__getsp());
-   /*chatting("CG Cmisses = %d\n",cflctdiff);*/
-#endif
-
+  vp(t->bodiesperproc[0],nstep);
 }
 
 
@@ -475,11 +318,6 @@ void freetree(nodeptr n)
 {
   register nodeptr r;
   register int i;
-#ifndef PLAIN
-#ifdef FREEFUTURE
-  future_cell_int fc[NSUB];
-#endif
-#endif
   
   /*NOTEST();*/
   if ((n == NULL) || (Type(n) == BODY))
@@ -489,24 +327,9 @@ void freetree(nodeptr n)
   for (i=NSUB-1; i >= 0; i--) {
     r = Subp((cellptr) n)[i];
     if (r != NULL) {
-#if ((defined(FREEFUTURE)) && !(defined(PLAIN)))
-      RPC(r,r,freetree,&(fc[i]));
-      /*FUTURE(r,freetree,&(fc[i]));*/
-#else
       freetree(r);
-#endif
     }
   }
-
-#if ((defined(FREEFUTURE)) && !(defined(PLAIN)))
-  for (i=0; i < NSUB; i++) {
-    r = Subp((cellptr) n)[i];
-    if (r != NULL) {
-      RTOUCH(&(fc[i]));
-      /*TOUCH(&(fc[i]));*/
-      }
-  }
-#endif
 
   my_free(n);
   RETEST();
@@ -531,41 +354,10 @@ void my_free(nodeptr n)
 }
     
 
-/* This function is NEVER used */
-#ifndef TORONTO
-bodyptr body_alloc(int p, real p0, real p1, real p2, real v0, real v1, real v2, real a0, real a1, real a2, real mass, bodyptr ob)
-{ register bodyptr tmp;
-
-  if (bp_free_list != NULL) {
-    tmp = bp_free_list;
-    bp_free_list = Next(bp_free_list);
-  }
-  else
-    {
-      tmp = (bodyptr) ALLOC(p,sizeof(body));
-    }
-  Type(tmp) = BODY;
-  Proc(tmp) = p;
-  Pos(tmp)[0] = p0; 
-  Pos(tmp)[1] = p1;
-  Pos(tmp)[2] = p2;
-  Vel(tmp)[0] = v0;
-  Vel(tmp)[1] = v1;
-  Vel(tmp)[2] = v2;
-  Acc(tmp)[0] = a0;
-  Acc(tmp)[1] = a1;
-  Acc(tmp)[2] = a2;
-  Mass(tmp) = mass;
-
-  return tmp;
-  
-}
-#endif
-
 bodyptr ubody_alloc(int p)
 { register bodyptr tmp;
 
-  tmp = (bodyptr) ALLOC(p,sizeof(body));
+  tmp = (bodyptr)malloc(sizeof(body));
 
   Type(tmp) = BODY;
   Proc(tmp) = p;
@@ -586,7 +378,7 @@ cellptr cell_alloc(int p)
   }
   else 
     {
-      tmp = (cellptr) ALLOC(p,sizeof(cell));
+      tmp = (cellptr)malloc(sizeof(cell));
     }
   Type(tmp) = CELL;
   Proc(tmp) = p;
@@ -600,7 +392,7 @@ cellptr cell_alloc(int p)
 #define MFRAC  0.999		/* mass cut off at MFRAC of total */
 #define DENSITY 0.5
 
-datapoints uniform_testdata(int proc, int nbody, int seedfactor)
+datapoints uniform_testdata(int proc, int nbodyx, int seedfactor)
 {
   datapoints retval;
   real rsc, vsc, r, v, x, y;
@@ -613,11 +405,6 @@ datapoints uniform_testdata(int proc, int nbody, int seedfactor)
   real rad;
   real coeff;
 
-  /* Go to the desired processor */
-#ifndef PLAIN
-  if (NONLOCAL(proc)) MIGRATE(TO_PTR(proc));
-#endif
-
   /*NOTEST();*/
   rsc = 3 * PI / 16;				/* set length scale factor  */
   vsc = sqrt(1.0 / rsc);			/* and recip. speed scale   */
@@ -626,7 +413,7 @@ datapoints uniform_testdata(int proc, int nbody, int seedfactor)
   head = (bodyptr) ubody_alloc(proc);
   prev = head;
 
-  for (i = 0; i < nbody; i++) {	        /* loop over particles      */
+  for (i = 0; i < nbodyx; i++) {	        /* loop over particles      */
     p = ubody_alloc(proc);
 						/* alloc space for bodies   */
     if (p == NULL)  			/* check space is available */
@@ -634,14 +421,14 @@ datapoints uniform_testdata(int proc, int nbody, int seedfactor)
     Next(prev) = p;
     prev = p;
     Type(p) = BODY;				/*   tag as a body          */
-    Mass(p) = 1.0 / nbody;			/*   set masses equal       */
+    Mass(p) = 1.0 / nbodyx;			/*   set masses equal       */
     seed = my_rand(seed);
     t1 = xrand(0.0, MFRAC, seed);
     temp = pow(t1,	                        /*   pick r in struct units */
 			 -2.0/3.0) - 1;
     r = 1 / sqrt(temp);
     
-    coeff = 4.0; /* exp(log(nbody/DENSITY)/3.0); */
+    coeff = 4.0; /* exp(log(nbodyx/DENSITY)/3.0); */
     for (k=0; k < NDIM; k++) {
       seed = my_rand(seed);
       r = xrand(0.0, MFRAC, seed);
@@ -714,9 +501,6 @@ void hackgrav(bodyptr p, real rsize, nodeptr rt);
 
 void computegrav(treeptr t, int nstep)
 {  register int i;
-#ifndef TORONTO
-   future_cell_int fc[MAX_NUM_NODES];
-#endif
    real rsize;
    real dthf;
    nodeptr root;
@@ -727,24 +511,11 @@ void computegrav(treeptr t, int nstep)
 
    dthf = 0.5 * dtime;
 
-NOTEST();
- for (i=NumNodes-1; i>=0; i--) {
-   root = Root(t);
-   blist = t->bodiesperproc[i];
-#ifdef PLAIN
-   grav(rsize,root,blist,nstep,dthf);
-#else
-   FUTURE(rsize,root,blist,nstep,dthf,grav,&(fc[i]));
-#endif
-  }
-
-#ifndef PLAIN
-   for (i=0; i < NumNodes; i++) {
-     TOUCH(&fc[i]);
+   for (i=NumNodes-1; i>=0; i--) {
+     root = Root(t);
+     blist = t->bodiesperproc[i];
+     grav(rsize,root,blist,nstep,dthf);
    }
-#endif
-RETEST();
-
 }
 
 
@@ -756,7 +527,7 @@ void grav(real rsize, nodeptr rt, bodyptr bodies, int nstep, real dthf)
 
   /* get it to move to the right processor! */
   if (bodies!= NULL) {
-    bodyptr foo = LOCAL(bodies);
+    bodyptr foo = bodies;
   }
   q = bodies;
 
@@ -781,15 +552,12 @@ void vp(bodyptr q, int nstep)
 
   /* move to the correct processor */
   if (q!= NULL) {
-    bodyptr foo = LOCAL(q);
+    bodyptr foo = q;
   }
 
   NOTEST();
 
   for (; q != NULL; q = Proc_Next(q))  {
-#ifndef PLAIN
-    assert((PID(q) == PID(__MyNodeId)),99);
-#endif
     SETV(acc1, New_Acc(q));
     if (nstep > 0) {			/*   past the first step?   */
       SUBV(dacc, acc1, Acc(q));   /*     use change in accel  */
@@ -956,12 +724,12 @@ hgstruct gravsub(nodeptr p, hgstruct hg)
 
  bool subdivp(nodeptr p, real dsq, real tolsq, hgstruct hg)
 {
-  register local nodeptr local_p;
+  register nodeptr local_p;
   vector dr;
   vector pos;
   real drsq;
 
-  local_p = (nodeptr) LOCAL(p);
+  local_p = (nodeptr)p;
   if (Type(local_p) == BODY) /*<-- 27% load penalty */                  /* at tip of tree? */
     return (FALSE);                           /*   then cant subdivide */
 
@@ -977,21 +745,6 @@ hgstruct gravsub(nodeptr p, hgstruct hg)
  * Copyright (c) 1991, Joshua E. Barnes, Honolulu, HI.
  * 	    It's free because it's yours.
  */
-#ifndef TORONTO
-#define global extern
-#endif
-/***********
-#include <cm/cmmd.h>
-#include "mem-ref.h"
-extern int NumNodes;
-
-
-#include "defs.h"
-***********/
-
-private cellptr ctab = NULL;	/* cells are allocated from here */
-private int  maxcell;     	/* count cells in use, max available */
-
 
 double ceil();
 
@@ -1043,9 +796,6 @@ nodeptr maketree(bodyptr btab, int nb, treeptr t, int nsteps, int proc)
  for (tmp=NumNodes-1; tmp>=0; tmp--) {
   btab = t->bodiesperproc[tmp];
 
-#ifndef PLAIN
-  MLOCAL(btab); 
-#endif
   /*chatting("Entering inner loop \n");*/
   for (q = btab; q != NULL; q=Proc_Next(q)) { 	/* loop over all bodies  */
     if (Mass(q) != 0.0) {			/*   only load massive ones */
@@ -1134,53 +884,6 @@ void expandbox(bodyptr p, treeptr t, int nsteps, int proc)
     } /* while !inbox */
 }
 
-/* movebody -- move the body to its correct location */
-#ifndef PLAIN
-bodyptr movebodies(bodyptr p,int proc)
-{
-  bodyptr tmpptr;
-  bodyptr end=NULL;
-  real p0,p1,p2,v0,v1,v2,a0,a1,a2,mass;
-
-  if (NONLOCAL(proc)) MIGRATE(TO_PTR(proc));
-
-  for (; p!=NULL; )
-  {
-  if (ISLOCPTR(p)) {
-    tmpptr = Proc_Next(p);
-    Proc_Next(p) = end;
-    end = p;
-    p = tmpptr;
-    }
-  else {
-    p0 = Pos(p)[0];
-    p1 = Pos(p)[1];
-    p2 = Pos(p)[2];
-    v0 = Vel(p)[0];
-    v1 = Vel(p)[1];
-    v2 = Vel(p)[2];
-    a0 = Acc(p)[0];
-    a1 = Acc(p)[1];
-    a2 = Acc(p)[2];
-    mass = Mass(p);
-    tmpptr = Proc_Next(p);
-    
-    /*chatting("Moving body 0x%x to \n",p);*/
-    p=body_alloc(proc,p0,p1,p2,v0,v1,v2,a0,a1,a2,mass,p); 
-    Proc_Next(p) = end;
-    end = p;
-    /*p0 = Pos(p)[0];*/
-    /*p1 = Pos(p)[1];*/
-    /*p2 = Pos(p)[2];*/
-    /*chatting("0x%x,%f,%f,%f\n",p,p0,p1,p2);*/
-    p = tmpptr;
-    }
-  }
-  return end;
-}
-#endif
-
-  
 /*
  * New LOADTREE: descend tree and insert particle.
  * p - body to be loaded 
@@ -1424,21 +1127,14 @@ real hackcofm(nodeptr q)
 {
     register int i;
     register nodeptr r;
-#ifndef PLAIN
-    future_cell_double fc[NSUB];
-#endif
     vector tmpv;
     vector tmp_pos;
     register real mq, mr;
 
     /*chatting("Entered hackcofm, q=0x%x,fp=0x%x,sp=0x%x\n",q,__getfp(),__getsp());*/
-#ifdef RPC
-/*NOTEST();*/
-#endif
     if (Type(q) == CELL) {                      /* is this a cell?          */
       mq = 0.0;
       CLRV(tmp_pos);				/*   and c. of m.           */
-#ifndef FUTURES
       for (i=0; i < NSUB; i++) {
 	     r = Subp((cellptr) q)[i];
 	     if (r != NULL) {
@@ -1448,29 +1144,7 @@ real hackcofm(nodeptr q)
 	       ADDV(tmp_pos, tmp_pos, tmpv);     /*       sum tot. moment    */
 	     }
       }
-#else
-      /*chatting("Spinning children\n");*/
-      for (i=0; i < NSUB; i++) {
-	     r = Subp((cellptr) q)[i];
-        /*chatting("Spinning %d\n",i);*/
-	     if (r != NULL) {
-	       RPC(r,r,hackcofm,&(fc[i]));
-	       /*FUTURE(r,hackcofm,&(fc[i]));*/
-        }
-      }
-      /*chatting("Touching chilren\n");*/
-      for (i=0; i < NSUB; i++) {
-        r = Subp((cellptr) q)[i];
-        /*chatting("Touch future %d\n",i);*/
-        if (r != NULL) {
-          RTOUCH(&(fc[i]));
-          /*TOUCH(&(fc[i]));*/
-	       mq = fc[i].value + mq;
-	       MULVS(tmpv, Pos(r), fc[i].value);   /*       find moment        */
-	       ADDV(tmp_pos, tmp_pos, tmpv);     /*       sum tot. moment    */
-	     }
-      }
-#endif
+
       Mass(q) = mq;
       NOTEST();
       Pos(q)[0] = tmp_pos[0];
@@ -1488,9 +1162,6 @@ real hackcofm(nodeptr q)
     /*chatting("leaving hackcofm body\n");*/
     /*chatting("leaving hackcofm body,q=0x%x,fp=0x%x,sp=0x%x\n",*/
         /*q,__getfp(),__getsp());*/
-#ifdef RPC
-RETEST();
-#endif
     return mq;
   }
 
