@@ -5,7 +5,7 @@ STDERR_FILENAME = cook_log.err
 FP_TOLERANCE := 0.0001
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
-CPPFLAGS = -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
+CPPFLAGS = -include errno.h -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             ggCoverageSolidTexture.cc ggPathDielectricMaterial.cc ggBox2.cc \
