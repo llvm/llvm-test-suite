@@ -572,6 +572,9 @@ report.$(TEST).html: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
 report.$(TEST).tex: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
 	$(GENERATEREPORT) -latex $(TestReport) < $< > $@
 
+report.$(TEST).csv: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
+	$(GENERATEREPORT) -csv $(TestReport) < $< > $@
+
 report.graphs: report.$(TEST).raw.out $(TestReport) $(TestGnuPlot) $(GENERATEREPORT)
 	$(GENERATEREPORT) -graphs $(TestReport) < $<
 	gnuplot $(TestGnuPlot)
@@ -581,9 +584,11 @@ report: report.$(TEST).txt
 
 report.html: report.$(TEST).html
 
+report.csv: report.$(TEST).csv
+
 report.tex: report.$(TEST).tex
 	@cat $<
 endif
 
 clean::
-	rm -f report.*.raw.out report.*.txt report.*.html report.*.tex
+	rm -f report.*.raw.out report.*.txt report.*.html report.*.tex report.*.csv
