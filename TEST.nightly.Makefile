@@ -21,8 +21,9 @@ INFO_PREFIX = Output/$*.*-
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
-	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1'
-	@if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
+	@echo > $@
+	@echo '$(LGCCAS) Output/$*.linked.rll -o/dev/null $(TIMEOPT) >> $@ 2>&1'
+	@if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >> $@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
@@ -42,14 +43,16 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 # NAT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
 Output/%.nightly.nat.report.txt: Output/%.out-nat
+	@echo > $@
 	echo -n "TEST-RESULT-nat-time: " >> $@
 	-grep "^real" Output/$*.out-nat.time >> $@
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
 Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
+	@echo > $@
 	@echo 'time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1'
-	@if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1; then \
+	@if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) >> $@ 2>&1; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
@@ -65,7 +68,8 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
-	-head -n 100 Output/$*.exe-cbe > $@
+	@echo > $@
+	-head -n 100 Output/$*.exe-cbe >> $@
 	@if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
           echo "TEST-RESULT-cbe: YES" >> $@;\
@@ -79,7 +83,8 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
 Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
-	-head -n 100 Output/$*.exe-jit > $@
+	@echo > $@
+	-head -n 100 Output/$*.exe-jit >> $@
 	@if test -f Output/$*.exe-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
