@@ -16,6 +16,7 @@
 #define CMMD_node_timer_start(x);
 #define CMMD_node_timer_stop(x);
 
+#if 1
 struct Village *alloc_tree(int level, int lo, int proc, 
                            int label, struct Village *back) 
 {  
@@ -32,6 +33,7 @@ struct Village *alloc_tree(int level, int lo, int proc,
 
     new = (struct Village *)malloc(sizeof(struct Village));
 
+#if 1
     for (i = 3; i > 0; i--) {
       struct Village *V = alloc_tree(level - 1, lo + (proc*(i))/4, 
                                      proc / 4, (label * 4) + i + 1, new); 
@@ -39,7 +41,7 @@ struct Village *alloc_tree(int level, int lo, int proc,
     }
 
     setValN(fval, 0, alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new));
-
+#endif
     new->back = back;
     new->label = label;
     new->seed = label * (IQ + seed); 
@@ -61,13 +63,13 @@ struct Village *alloc_tree(int level, int lo, int proc,
     new->returned.back = NULL;
     new->returned.forward = NULL;
 
-    for (i = 0; i < 4; i++)       
+    for (i = 0; i < 4; i++)
       setValN(new->forward, i, getValN(fval, i));
 
     return new;
   }
 }
-
+#endif
 
 struct Results get_results(struct Village *village)
 {
@@ -102,12 +104,13 @@ struct Results get_results(struct Village *village)
     r1.total_hosps += (double)(p->hosps_visited);
     r1.total_time += (double)(p->time); 
     r1.total_patients += 1.0;
-    list = list->forward; }            /* :) adt_pf detected */
-  
+    list = list->forward;
+  }
+
   return r1; 
 }
 
-
+#if 1
 void check_patients_inside(struct Village *village, struct List *list) 
 {
   struct List            *l;
@@ -287,7 +290,7 @@ struct List *sim(struct Village *village)
 #endif
   
   int label;
-
+#if 1
   if (village == NULL) return NULL;
  
   label = village->label;
@@ -297,7 +300,7 @@ struct List *sim(struct Village *village)
     struct List *L = sim(V);
     setValN(val, i, L);
   }
-  
+#endif  
   setValN(val, 0, sim(getValN(village->forward, 0)));
   h = &village->hosp;
 
@@ -312,7 +315,8 @@ struct List *sim(struct Village *village)
       }
     }
   }
-  
+
+#if 1
   check_patients_inside(village, village->hosp.inside.forward);
   up = check_patients_assess(village, village->hosp.assess.forward);
   check_patients_waiting(village, village->hosp.waiting.forward);
@@ -324,4 +328,7 @@ struct List *sim(struct Village *village)
   }
 
   return up;
+#endif
+  return 0;
 }
+#endif

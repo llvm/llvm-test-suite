@@ -7,6 +7,7 @@
 
 #ifndef _HEALTH
 #define _HEALTH
+#define USE_ARRAY_CODE 1
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,9 +45,10 @@ struct List {
   struct List            *forward;
   struct Patient         *patient;
   struct List            *back;
- };
+};
 
 struct Hosp {
+#if 0
   int                    personnel; 
   int                    free_personnel; 
   int                    num_waiting_patients; 
@@ -54,9 +56,19 @@ struct Hosp {
   struct List            assess; 
   struct List            inside;
   struct List            up;
+#else
+  int                    free_personnel; 
+  struct List            waiting;
+  struct List            assess;
+  struct List            inside;
+  struct List            up;
+  int                    personnel; 
+  int                    num_waiting_patients; 
+#endif
 };
   
 struct Village {
+#if 0
 #if USE_ARRAY_CODE
   struct Village         *forward[4];
 #else
@@ -66,7 +78,15 @@ struct Village {
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
-  long long                   seed;
+  long long              seed;
+#else
+  struct Hosp            hosp;   
+  long long              seed;
+  struct Village         *forward[4];
+  int                    label;
+  struct List            returned;
+  struct Village         *back;
+#endif
 };
 
 #if USE_ARRAY_CODE
