@@ -477,4 +477,4 @@ report.tex: report.$(TEST).tex
 endif
 
 clean::
-	rm -f report.*.raw.out report.*.txt
+	rm -f report.*.raw.out report.*.txt report.*.html report.*.tex
