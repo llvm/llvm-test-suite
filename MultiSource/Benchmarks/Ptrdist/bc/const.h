@@ -38,6 +38,7 @@
 /* Define constants in some reasonable size.  The next 4 constants are
    POSIX constants. */
 
+#ifndef BC_BASE_MAX
 #define BC_BASE_MAX   INT_MAX
 #define BC_SCALE_MAX  INT_MAX
 #define BC_STRING_MAX INT_MAX
@@ -46,6 +47,7 @@
 /* Definitions for arrays. */
 
 #define BC_DIM_MAX    65535       /* this should be NODE_SIZE^NODE_DEPTH-1 */
+#endif
 
 #define   NODE_SIZE        16     /* Must be a power of 2. */
 #define   NODE_MASK       0xf     /* Must be NODE_SIZE-1. */
