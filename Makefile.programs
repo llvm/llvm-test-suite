@@ -53,10 +53,10 @@ PROGDIR = $(LEVEL)/test/Programs
 #
 
 # TIMEPROG - The program used to get timing results for a program
-TIMEPROG = $(PROGDIR)/TimeProgram.sh
+TIMEPROG := $(PROGDIR)/TimeProgram.sh
 
 # DIFFPROG - The program used to diff the output
-DIFFPROG = $(PROGDIR)/DiffOutput.sh
+DIFFPROG := $(PROGDIR)/DiffOutput.sh
 
 # RUNTIMELIMIT - The number of seconds we should wait before certain events
 # timeout.  This is overridable on the commandline.
@@ -234,9 +234,8 @@ Output/%.out-cbe: Output/%.cbe
 # Rules to diff test output...
 #
 ifdef PROGRAM_IS_NONDETERMINISTIC
-# If the program is non-deterministic, just save the diff to the .diff file,
-# don't print out a bunch of stuff.
-HIDEDIFF = > /dev/null 2>&1 
+# If the program is non-deterministic, just output something to $@
+DIFFPROG = echo > $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
