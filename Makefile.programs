@@ -1,4 +1,4 @@
-##-----------------------------------------------------------*-Makefile-*-
+#===-----------------------------------------------------------*-Makefile-*-===#
 #                        test/Programs/Makefile.programs
 #
 # This makefile contains all of the makefile machinery that is common to
@@ -14,14 +14,16 @@
 # are flagged.
 #
 # Input to this makefile should be the PROGRAMS_TO_TEST variable, which contains
-# a list of programs that should be run.
+# a list of programs that should be run.  The makefile can also optionally
+# specify a INPUT_FILENAME variable, which contains a filename that is piped
+# into the program as it is being executed.
 #
 # If the user of this script specified 'make ENABLE_LLI=1', then the program is
 # interpreted with LLI and diff'd as well.
 #
 #  FIXME: There should be a way to specify the command line for a program
 #
-##------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 # Dependencies on header files need to be determined explicitly because
 # we do not automatically compute dependencies
@@ -100,15 +102,19 @@ Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
 Output/%.cbe: Output/%.cbe.c
 	$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
 
+ifdef INPUT_FILENAME
+RUN_OPTIONS += < $(INPUT_FILENAME)
+endif
+
 # Rules to build the test output...
 Output/%.out-nat: Output/%.native
-	-$< > $@ 2>&1
+	-$< > $@ 2>&1 $(RUN_OPTIONS)
 Output/%.out-lli: Output/%.llvm $(LLI)
-	-$< > $@ 2>&1
+	-$< > $@ 2>&1 $(RUN_OPTIONS)
 Output/%.out-llc: Output/%.llc
-	-$< > $@ 2>&1
+	-$< > $@ 2>&1 $(RUN_OPTIONS)
 Output/%.out-cbe: Output/%.cbe
-	-$< > $@ 2>&1
+	-$< > $@ 2>&1 $(RUN_OPTIONS)
 
 # Rules to diff test output...
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
