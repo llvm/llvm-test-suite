@@ -11,8 +11,9 @@ STDIN_FILENAME  := scrabbl.in
 STDOUT_FILENAME := scrabbl.out
 endif
 
-ifneq ($(ARCH),Sparc)
+include ../../Makefile.spec2000
+
+ifeq ($(ENDIAN),little)
 CPPFLAGS += -D__LITTLE_ENDIAN__
 endif
 
-include ../../Makefile.spec2000
