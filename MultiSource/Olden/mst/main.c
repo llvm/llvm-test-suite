@@ -31,7 +31,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
   retval.dist = vlist->mindist;
   hash = vlist->edgehash;
   dist = (int) HashLookup((unsigned int) inserted, hash);
-  /*chatting("Found %d at 0x%x for 0x%x\n",dist,inserted,vlist);*/
+  /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,vlist);*/
   if (dist) 
     {
       if (dist<retval.dist) 
@@ -40,7 +40,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
           retval.dist = dist;
         }
     }
-  else chatting("Not found\n");
+  else printf("Not found\n");
   
   count = 0;
   /* We are guaranteed that inserted is not first in list */
@@ -59,7 +59,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
           hash = tmp->edgehash; /* <------  6% miss in tmp->edgehash */ 
           dist2 = tmp->mindist;
           dist = (int) HashLookup((unsigned int) inserted, hash);
-          /*chatting("Found %d at 0x%x for 0x%x\n",dist,inserted,tmp);*/
+          /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,tmp);*/
           if (dist) 
             {
               if (dist<dist2) 
@@ -68,7 +68,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
                   dist2 = dist;
                 }
             }
-          else chatting("Not found\n");
+          else printf("Not found\n");
           if (dist2<retval.dist) 
             {
               retval.vert = tmp;
@@ -76,7 +76,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
             }
         } /* else */
     } /* for */
-  /*chatting("Count was %d\n",count);*/
+  /*printf("Count was %d\n",count);*/
   return retval;
 }
 
@@ -111,7 +111,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   int cost=0,dist;
 
   /* make copy of graph */
-  chatting("Compute phase 1\n");
+  printf("Compute phase 1\n");
 
   /* Insert first node */
   inserted = graph->vlist[0];
@@ -120,7 +120,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */
-  chatting("Compute phase 2\n");
+  printf("Compute phase 2\n");
   while (numvert) 
     {
       BlueReturn br;
@@ -141,15 +141,15 @@ int main(int argc, char *argv[])
   int size;
  
   size = dealwithargs(argc,argv);
-  chatting("Making graph of size %d\n",size);
+  printf("Making graph of size %d\n",size);
 
   graph = MakeGraph(size,NumNodes);
-  chatting("Graph completed\n");
+  printf("Graph completed\n");
 
-  chatting("About to compute mst \n");
+  printf("About to compute mst \n");
 
   dist = ComputeMst(graph,NumNodes,size);
 
-  chatting("MST has cost %d\n",dist);
+  printf("MST has cost %d\n",dist);
   exit(0);
 }
