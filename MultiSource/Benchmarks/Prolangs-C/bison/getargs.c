@@ -28,7 +28,9 @@ int nolinesflag;
 extern int fixed_outfiles;/* JF */
 
 extern void fatal(char *s);
+#ifndef __sun__
 extern int getopt(int argc,char **argv,char *optstring);
+#endif
 
 void getargs(int argc,char *argv[])
 {

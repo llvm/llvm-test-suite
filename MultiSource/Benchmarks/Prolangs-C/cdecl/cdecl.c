@@ -99,7 +99,9 @@ void free(), exit(), perror();
 
 #if __STDC__
   char *ds(char *), *cat(char *, ...), *visible(int);
+#ifndef __sun__
   int getopt(int,char **,char *);
+#endif
   int main(int, char **);
   int yywrap_nasko(void);
   int dostdin(void);

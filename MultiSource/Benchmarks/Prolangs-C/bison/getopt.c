@@ -261,6 +261,7 @@ static void exchange(char **argv)
    non-option ARGV-elements.  See the comments about RETURN_IN_ORDER, above. 
 */
 
+#ifndef __sun__
 int getopt(int argc,char **argv,char *optstring)
 {
   /* Initialize the internal data when the first call is made.
@@ -422,6 +423,7 @@ int getopt(int argc,char **argv,char *optstring)
     return c;
   }
 }
+#endif /* __sun__ */
 
 #ifdef TEST
 
