@@ -1,4 +1,5 @@
 LEVEL = ../../../../..
+CXXFLAGS += -Wno-deprecated
 CPPFLAGS += -Wno-deprecated
 LDFLAGS += -lpthread -lstdc++
 LIBS += -lstdc++
