@@ -1,7 +1,7 @@
 
 /* An example that finds all primes between 2 and limit. */
 
-    limit = 1500000;
+    limit = 2047;
 
     /* auto prime[], num, p, root, i */
 
@@ -11,7 +11,8 @@
     if (limit >= 2) print "prime 1 = 2\n"
     if (limit >= 3) print "prime 2 = 3\n";
     scale = 0;
-
+for (timeloop = 0; timeloop < 50; timeloop += 1) {
+    num = 2;
     for ( p=5; p <= limit; p += 2)  {
 	root = sqrt(p);
 	isprime = 1;
@@ -27,4 +28,4 @@
 	    print "prime ", num, " = ", p, "\n"
 	}
      }
-
+}
