@@ -219,11 +219,11 @@ main(argc, argv) int argc; char *argv[];
 		SIM(A,A,M,M,K,V,Q,R,1L);
 
   benchtime = dtime() - starttime;
-  printf("\nRun Time (sec) = %9.1lf\n",benchtime);
+  /*printf("\nRun Time (sec) = %9.1lf\n",benchtime);*/
   
   fprintf(Cp,"\n");
   fprintf(Cp,"  Run Line: sim 8 tob.38-44 liv.42-48\n");
-  fprintf(Cp,"  Run Time: %9.1lf (sec)\n",benchtime);
+  /*fprintf(Cp,"  Run Time: %9.1lf (sec)\n",benchtime);*/
   fprintf(Cp,"#######################################################\n");
   fclose(Cp);
 	exit(0);
