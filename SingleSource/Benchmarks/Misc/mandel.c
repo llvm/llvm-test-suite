@@ -14,7 +14,12 @@ int main() { return 0; }
 
 #define I 1.0iF
 
+#if defined(__FreeBSD__)
+#include <stdio.h>
+#include <complex.h>
+#else
 #include <tgmath.h>
+#endif
 
 volatile double __complex__ accum;
 void emit(double __complex__ X) {
