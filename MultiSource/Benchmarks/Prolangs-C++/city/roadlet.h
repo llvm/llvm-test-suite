@@ -24,8 +24,12 @@ protected:
     move_function the_moves[8];
 
 public:
-    roadlet() : occupant(NULL) { neighbors[0] = neighbors[1] = neighbors[2] = neighbors[3] = neighbors[4] = neighbors[5] = neighbors[6] = neighbors[7] = 0;  init("unnamed");};
-    roadlet(char *n)         { init(n);};
+    roadlet() {
+      init("unnamed");
+    };
+    roadlet(char *n)         {
+      init(n);
+    };
     int occupied()           { return(occupiedby() != NULL);};
     vehicle *occupiedby()    {return(occupant);};
     void arrive(vehicle *v)  {occupant = v;};
