@@ -91,3 +91,17 @@ Output/%.out-cbe: Output/%.cbe
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
+Output/%.trace-out-llc: Output/%.trace.llc
+	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../../$< $(RUN_OPTIONS)
+	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
+Output/%.trace-out-cbe: Output/%.trace.cbe
+	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../../$< $(RUN_OPTIONS)
+	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
