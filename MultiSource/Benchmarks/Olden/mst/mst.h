@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "hash.h"
 #define MAXPROC 1
-#define NULL 0
 
 #define chatting printf
 extern int NumNodes;

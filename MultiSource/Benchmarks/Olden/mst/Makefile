@@ -1,9 +1,7 @@
-LEVEL = ../../..
+LEVEL = ../../../..
 
-PROG = mst
-LOCAL_CFLAGS=
-LOCAL_LDFLAGS=
+PROG       = mst
+CPPFLAGS   = -DTORONTO
+LDFLAGS    = 
 
-OBJS = args.o hash.o main.o makegraph.o
-
-include	../makefile
+include	../Makefile.multisrc
