@@ -12,6 +12,9 @@
 LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
 
+## libraries that must be linked with llc-generated code
+LIBS = -lm
+
 all:: 
 	@echo "-----> Running '$(PROG)' test"
 
