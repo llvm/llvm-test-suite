@@ -58,8 +58,6 @@ int main(int argc,char *argv[])
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
-  printf("%d %d %d %d\n", sizeof(struct root), sizeof(struct lateral), sizeof(struct branch), sizeof(struct leaf));
-
   printf("Past initialization\n");
 
   /* initial pass */
