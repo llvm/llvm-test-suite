@@ -21,6 +21,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.3  2004/10/05 00:57:47  lattner
+** Don't use unitiialized values
+**
 ** Revision 1.2  2004/10/05 00:37:32  lattner
 ** Stop using deprecated headers
 **
@@ -72,6 +75,7 @@ CommissionedWorker::CommissionedWorker(const char *first, const char *last,
                                      float startSalary, float startCommission) 
  : Employee(first, last)        // this will call Employee's constructor
 {
+    thisWeekSales = 0;
     SetWeeklySalary(startSalary);
     SetCommissionRate(startCommission);
     dollarsToRaise = 10.0;
