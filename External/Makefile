@@ -20,6 +20,8 @@ endif
 
 ifndef USE_FPGROWTH
 PARALLEL_DIRS := $(filter-out FPGrowth, $(PARALLEL_DIRS))
+else
+PARALLEL_DIRS := $(filter-out FPGrowth, $(PARALLEL_DIRS))
 endif
 
 # Sparc can't handle Namd: infinite loop, cause unknown
