@@ -45,6 +45,10 @@ SourceDir := $(SPEC_BENCH_DIR)/src/
 
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
+# Do not pass -Wall to compile commands...
+LCCFLAGS  := -O2
+LCXXFLAGS := -O2
+
 CPPFLAGS += -DSPEC_CPU2000
 SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
 
