@@ -102,6 +102,10 @@ $SortReverse = 1;
                       16 => \&NoCallNodes
                      );
 
+@Graphs = (["scatter", "timeVmem.txt", 27, 7],
+           ["scatter", "timeVloc.txt", 1, 7]);
+
+
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
 # seperators, and closures may be put in for custom processing.
