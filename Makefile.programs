@@ -101,7 +101,7 @@ CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
 LLCBYTECODE := $(addsuffix .llc.bc,   $(PREFIXED_PROGRAMS_TO_TEST))
 TRACINGCODEGEN := $(addsuffix .run.bc,   $(PREFIXED_PROGRAMS_TO_TEST))
 TRACINGLLCCODEGEN := $(addsuffix .run.s,   $(PREFIXED_PROGRAMS_TO_TEST))
-TRACINGEXCEUTABLE := $(addsuffix .trace,   $(PREFIXED_PROGRAMS_TO_TEST))
+TRACINGEXECUTABLE := $(addsuffix .trace,   $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
@@ -183,8 +183,11 @@ endif
 ifdef GET_LLVM_TRACE
 all:: $(TRACINGCODEGEN)
 all:: $(TRACINGLLCCODEGEN)
-all:: $(TRACINGEXCEUTABLE)
-all:: $(TRACINGDIFFS)
+all:: $(TRACINGEXECUTABLE)
+#all:: $(TRACINGDIFFS)
+# TRACINGDIFFS does not work - it wants to diff llc against tracing,
+# but DiffOutput always diffs against native, and GET_LLVM_TRACE disables
+# native.
 all:: $(GETTIMECOMPARISON)
 
 DISABLE_CBE = 1
@@ -389,7 +392,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
-	-$(DIFFPROG) lli $*  $(HIDEDIFF)
+	-$(DIFFPROG) lli $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
@@ -405,7 +408,7 @@ Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-tracing): \
 Output/%.diff-tracing: Output/%.out-llc Output/%.out-tracing
-	$(DIFFPROG) tracing $* $(HIDEDIFF)
+	-$(DIFFPROG) tracing $* $(HIDEDIFF)
 
 ifndef DISABLE_DIFFS
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
