@@ -15,5 +15,5 @@ LDFLAGS = -lm -lstdc++
 #
 RUNTIMELIMIT := 1000
 
-RUN_OPTIONS = --iterations 5 --input $(NAMD_ROOT)/apoa1.input
+RUN_OPTIONS = --iterations 2 --input $(NAMD_ROOT)/apoa1.input
 include $(LEVEL)/MultiSource/Makefile.multisrc
