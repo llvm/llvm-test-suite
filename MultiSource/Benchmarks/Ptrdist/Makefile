@@ -1,6 +1,7 @@
 # MultiSource/Ptrdist Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../../../..
-PARALLEL_DIRS  := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
+PARALLEL_DIRS  := anagram bc ft ks yacr2
+
 
 include $(LEVEL)/test/Programs/Makefile.programs

@@ -1,6 +1,6 @@
 # MultiSource/Olden Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../../../..
-PARALLEL_DIRS  := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
+PARALLEL_DIRS  := distray mason pcompress2 analyzer fourinarow neural pifft
 
 include $(LEVEL)/test/Programs/Makefile.programs
