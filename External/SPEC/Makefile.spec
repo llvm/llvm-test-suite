@@ -45,7 +45,7 @@ LCCFLAGS  := -O3
 LCXXFLAGS := -O3
 
 CPPFLAGS += -I $(SPEC_BENCH_DIR)/src/
-SPEC_SANDBOX := $(LEVEL)/External/SPEC/Sandbox.sh
+SPEC_SANDBOX := $(PROGDIR)/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
 REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
