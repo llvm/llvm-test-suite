@@ -23,7 +23,7 @@ ObjPtr
 Oalloc(char name[57])
 {
   ObjPtr o=NULL;
-  o = (ObjPtr) malloc(sizeof(object));
+  o = (ObjPtr) calloc(sizeof(object), 1);
   strcpy(o->Name,name);
   o->Color.R = 1;
   o->Color.G = 1;
