@@ -1,0 +1,3 @@
+LEVEL = ../../../..
+
+include ../Makefile.singlesrc
