@@ -35,6 +35,12 @@ BUILD_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
 SPEC2000_ROOT := @SPEC2000_ROOT@
 SPEC95_ROOT := @SPEC95_ROOT@
 
+# F2C: Enable LLVM to run Fortran benchmarks without a Fortran front-end
+@USE_F2C@
+F2C     := @F2C@
+F2C_INC := @F2C_INC@
+F2C_LIB := @F2C_LIB@
+
 # Path to the Povray source code.
 @USE_POVRAY@
 POVRAY_ROOT := @POVRAY_ROOT@
