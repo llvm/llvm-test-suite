@@ -7,7 +7,7 @@ LDFLAGS  =
 
 ExtraSource := y.tab.c
 
-INPUT_FILENAME = sample.gr
+STDIN_FILENAME = sample.gr
 
 Source  := $(ExtraSource) $(wildcard *.c)
 

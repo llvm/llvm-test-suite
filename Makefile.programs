@@ -18,7 +18,7 @@
 #
 # Input to this makefile should be the PROGRAMS_TO_TEST variable, which contains
 # a list of programs that should be run.  The makefile can also optionally
-# specify a INPUT_FILENAME variable, which contains a filename that is piped
+# specify a STDIN_FILENAME variable, which contains a filename that is piped
 # into the program as it is being executed.
 #
 #  FIXME: There should be a way to specify the command line for a program
@@ -70,6 +70,11 @@ endif
 # stack trace of a core dump.  It always returns "successful" so that tests will
 # continue to be run.
 RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT)
+
+ifndef STDIN_FILENAME
+STDIN_FILENAME := /dev/null
+endif
+
 
 #
 # Targets to build for the default target...
@@ -178,12 +183,12 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
 Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS) \
-                     -output=Output/$*.out-nat
+                     -input=$(STDIN_FILENAME) -output=Output/$*.out-nat
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
 Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS) \
-                     -output=Output/$*.out-nat
+                     -input=$(STDIN_FILENAME) -output=Output/$*.out-nat
 #
 # Rules to compile the program for the C Back End
 #
@@ -212,10 +217,6 @@ Output/%.llc: Output/%.llc.s
 #
 # Rules to execute the program
 #
-ifdef INPUT_FILENAME
-RUN_OPTIONS += < $(INPUT_FILENAME)
-BUGPOINT_OPTIONS += -input $(INPUT_FILENAME)
-endif
 
 # EXTRA_LLI_OPTS is used by the nightly tester to add arguments to invocations
 # of the JIT and LLI in order to get timing info and statistics.
@@ -225,10 +226,6 @@ LLI_OPTS = -q -abort-on-exception -force-interpreter=true $(EXTRA_LLI_OPTS)
 JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
 
 ifndef PROGRAMS_HAVE_CUSTOM_RUN_RULES
-
-ifndef STDIN_FILENAME
-STDIN_FILENAME = /dev/null
-endif
 
 # Rules to build the test output...
 ifndef USE_PRECOMPILED_BYTECODE
