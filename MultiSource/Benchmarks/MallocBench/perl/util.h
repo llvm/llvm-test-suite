@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/07/21 14:09:51  brukman
+ * Add missing function declarations.
+ *
  * Revision 1.1  2004/02/17 22:21:17  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -45,3 +48,5 @@ char	*bzero();
 #endif
 unsigned long scanoct();
 unsigned long scanhex();
+void fatal(char*,long,long,long,long);
+void fatal(va_list);

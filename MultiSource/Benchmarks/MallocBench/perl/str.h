@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/07/21 14:09:51  brukman
+ * Add missing function declarations.
+ *
  * Revision 1.1  2004/02/17 22:21:16  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -120,6 +123,7 @@ struct lstring {
 	stabset((x)->str_magic,(x))
 #endif
 
+str_sset(STR *dstr, register STR *sstr);
 #define STR_SSET(dst,src) if (dst != src) str_sset(dst,src)
 
 EXT STR **tmps_list;
