@@ -5,5 +5,8 @@ LEVEL = ../../../..
 include $(LEVEL)/Makefile.config
 
 PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d
+ifeq ($(OS),Linux)
+PARALLEL_DIRS += hbd
+endif
 
 include $(LEVEL)/test/Programs/Makefile.programs
