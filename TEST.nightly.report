@@ -62,7 +62,6 @@ sub GCCLLC_LSRatio {
 # Times
  ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
- ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
  ["LLC<br>compile" , "TEST-RESULT-llc: $WallTimeRE"],
  ["LLC-LS<br>compile" , "TEST-RESULT-llc-ls: $WallTimeRE"],
  ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: $WallTimeRE"],
