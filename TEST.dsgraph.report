@@ -15,35 +15,83 @@ sub Ratio {
   }
 }
 
+sub FormatSize {
+  my $Size = shift;
+  if ($Size > 10*1024*1024) {
+    return (int $Size*10 / (1024*1024))/10 . "MB";
+  } elsif ($Size > 10*1024) {
+    return (int $Size / 1024);
+  } else {
+    return $Size . "B";
+  }
+}
+
+sub NoStar {
+  return "0" if ($_[0] eq '*');
+  return $_[0];
+}
+
+sub NoCallNodes {
+  $_[0] =~ m/([0-9]+)\+/;
+  return $1;
+}
+
 # Sort by total analyze time
 $SortCol = 7;
 
 # Sort in descending order
 $SortReverse = 1;
 
-%NameMap = (
-            treeadd   => 'Olden-treeadd',
-            bisort    => 'Olden-bisort',
-            mst       => 'Olden-mst',
-            perimeter => 'Olden-perimeter',
-            health    => 'Olden-health',
-            tsp       => 'Olden-tsp',
-            power     => 'Olden-power',
-            em3d      => 'Olden-em3d',
-            voronoi   => 'Olden-voronoi',
-            bh        => 'Olden-bh',
+# For latex output, limit benchmarks and rename as appropriate
+@LatexRowMapOrder = (
+            'treeadd'    => 'Olden-treeadd',
+            'bisort'     => 'Olden-bisort',
+            'mst'        => 'Olden-mst',
+            'perimeter'  => 'Olden-perimeter',
+            'health'     => 'Olden-health',
+            'tsp'        => 'Olden-tsp',
+            'power'      => 'Olden-power',
+            'em3d'       => 'Olden-em3d',
+            'voronoi'    => 'Olden-voronoi',
+            'bh'         => 'Olden-bh',
+            '-' => '-',
+            'anagram'    => 'ptrdist-anagram',
+            'ks'         => 'ptrdist-ks',
+            'ft'         => 'ptrdist-ft',
+            'yacr2'      => 'ptrdist-yacr2',
+            'bc'         => 'ptrdist-bc',
+            '-' => '-',
+            '181.mcf'    => '181.mcf',
+            '256.bzip2'  => '256.bzip2',
+            '164.gzip'   => '164.gzip',
+            '197.parser' => '197.parser',
+            '300.twolf'  => '300.twolf',
+            '255.vortex' => '255.vortex',
+            '-' => '-',
+            'sgefa'      => 'sgefa',
+            'sim'        => 'sim',
+            'burg'       => 'burg',
+            'gnuchess'   => 'gnuchess',
+            'larn'       => 'larn',
+            'flex'       => 'flex',
+            'moria'      => 'moria',
+            'povray31'   => 'povray31'
+           );
 
-            ks        => 'ptrdist-ks',
-            anagram   => 'ptrdist-anagram',
-            yacr2     => 'ptrdist-yacr2',
-            ft        => 'ptrdist-ft',
-            bc        => 'ptrdist-bc');
-
-@LatexColumns = (0, 1, 26, 19, # Program, LOC, #Instrs, MaxSCC
+@LatexColumns = (1, 27, 19,    # LOC, #Instrs, MaxSCC
                  4, 5, 6, 7,   # Execution times
-                 13,           # Memory BU+TD
+                 11,           # Memory BU
+                 12,           # Memory TD
                  16, 17,       # Total, Max Nodes
                  15);          # NumFolded
+
+# Specify how to format columns nicely for printing...
+%LatexColumnFormat = (
+                      11 => \&FormatSize,
+                      12 => \&FormatSize,
+                      15 => \&NoStar,
+                      16 => \&NoCallNodes
+                     );
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
@@ -65,7 +113,7 @@ $SortReverse = 1;
             ["LcSize:" , '([0-9]+)  Local'],
             ["BUSize:" , '([0-9]+)  Bottom-up'],
             ["TDSize:" , '([0-9]+)  Top-down'],
-            ["BUTDSz:" , sub { return SumCols(@_, 3); }],
+            ["BUTDSz:" , sub { return SumCols(@_, 2); }],
             [],
 # Misc stuff
             ["NumFold" , '([0-9]+).*Number of folded nodes '],
@@ -79,7 +127,8 @@ $SortReverse = 1;
             ["Calls"   , '([0-9]+).*Number of Call insts'],
             ["Allca"   , '([0-9]+).*Number of Alloca insts'],
             ["Mallc"   , '([0-9]+).*Number of Malloc insts'],
-            ["Sum"   , sub { return SumCols(@_, 5); }],
+            ["GEP"     , '([0-9]+).*Number of GetElementPtr insts'],
+            ["Sum"   , sub { return SumCols(@_, 6); }],
             [],
             ["num/ind" , '([0-9]+).*number of indirect call sites'],
             ["indcallee",'([0-9]+).*number of callee functions at'],
