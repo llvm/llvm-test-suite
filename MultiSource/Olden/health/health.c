@@ -13,10 +13,6 @@
 int  max_level;
 long max_time, seed;
 
-static float saveprec(int intval) {
-  return (float) intval;
-}
-
 struct Village *alloc_tree(int level, int label, struct Village *back) {
   if (level == 0)
     return NULL;
@@ -133,7 +129,7 @@ struct List *check_patients_assess(struct Village *village, struct List *list) {
     if (p->time_left == 0) { 
       s = village->seed;
       rand = my_rand(s);
-      village->seed = (long)(rand * saveprec(IM));
+      village->seed = (long)(rand * IM);
       label = village->label;
       if (rand > 0.1 || label == 0) {
         removeList(&village->hosp.assess, p);
@@ -204,7 +200,7 @@ struct Patient *generate_patient(struct Village *village)
   
   s = village->seed;
   rand = my_rand(s);
-  village->seed = (long)(rand * saveprec(IM));
+  village->seed = (long)(rand * IM);
   newseed = village->seed;
   label = village->label;
   if (rand > 0.666) {
