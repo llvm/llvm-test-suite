@@ -1,4 +1,4 @@
-HERE = ../../..
+LEVEL = ../../..
 
 PROG = mst
 LOCAL_CFLAGS=

@@ -1,4 +1,4 @@
-HERE = ../../..
+LEVEL = ../../..
 
 PROG = perimeter
 LOCAL_CFLAGS=

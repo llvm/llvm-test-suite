@@ -1,4 +1,4 @@
-HERE = ../../..
+LEVEL = ../../..
 
 PROG = bh
 LOCAL_CFLAGS=
