@@ -22,15 +22,15 @@
 #define MASK 123459876
 
 int                      max_level;
-long                     max_time,
+long long                     max_time,
                          seed;
 
 int dealwithargs(int argc, char *argv[]);
 
 struct Results {
-  float                  total_patients;
-  float                  total_time;
-  float                  total_hosps; 
+  double                  total_patients;
+  double                  total_time;
+  double                  total_hosps; 
 };
 
 struct Patient {
@@ -66,7 +66,7 @@ struct Village {
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
-  long                   seed;
+  long long                   seed;
 };
 
 #if USE_ARRAY_CODE
@@ -85,7 +85,7 @@ struct Village {
 struct Village *alloc_tree(int level, int lo, int proc, 
                            int label, struct Village *back);
 int dealwithargs(int argc, char *argv[]);
-float my_rand(long idum);
+double my_rand(long long idum);
 struct Patient *generate_patient(struct Village *village);
 void put_in_hosp(struct Hosp *hosp, struct Patient *patient);
 void addList(struct List *list, struct Patient *patient);
@@ -94,9 +94,9 @@ struct List *sim(struct Village *village);
 void check_patients_inside(struct Village *village, struct List *list);
 struct List *check_patients_assess(struct Village *village, struct List *list);
 void check_patients_waiting(struct Village *village, struct List *list);
-float get_num_people(struct Village *village);
-float get_total_time(struct Village *village);
-float get_total_hosps(struct Village *village);
+double get_num_people(struct Village *village);
+double get_total_time(struct Village *village);
+double get_total_hosps(struct Village *village);
 struct Results get_results(struct Village *village);
 
 #endif
