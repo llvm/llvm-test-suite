@@ -226,22 +226,27 @@ Output/%.out-cbe: Output/%.cbe
 #
 # Rules to diff test output...
 #
+ifdef PROGRAM_IS_NONDETERMINISTIC
+# If the program is non-deterministic, just save the diff to the .diff file,
+# don't print out a bunch of stuff.
+HIDEDIFF = > /dev/null 2>&1 
+endif
+
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
-	$(DIFFPROG) lli $*
+	$(DIFFPROG) lli $*  $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
-	$(DIFFPROG) jit $*
+	$(DIFFPROG) jit $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
-	$(DIFFPROG) llc $*
+	$(DIFFPROG) llc $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
-	$(DIFFPROG) cbe $*
-
+	$(DIFFPROG) cbe $* $(HIDEDIFF)
 
 # Rules to support the USE_PRECOMPILED_BYTECODE setting If set, submakefiles
 # will not know how to make output bytecode files for the programs in this
