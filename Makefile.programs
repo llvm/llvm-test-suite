@@ -5,10 +5,11 @@
 # building stuff in the Programs directory.  The main job of this is to take
 # executables for the following targets:
 #
-#   1. The native Sun Sparc compiler
+#   1. The native platform compiler
 #   2. LLVM Bytecode Compiler + LLI interpreter (if ENABLE_LLI is enabled)
 #   3. LLVM Bytecode Compiler + LLC Sparc machine code backend
 #   4. LLVM Bytecode Compiler + C Backend + Native Sun Compiler
+#   5. LLVM Bytecode Compiler + LLI Just-In-Time Compiler
 #
 # Running them, and then diffing the output.  If there are any failures, they
 # are flagged.
@@ -49,24 +50,28 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 # Generated code for llc (which does not require the target platform)
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe.c,   $(PREFIXED_PROGRAMS_TO_TEST))
-  
+
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$(Source:.c=)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
+JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
+JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-llc Output/%.out-nat Output/%.out-cbe
+.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc
+.PRECIOUS: Output/%.out-nat Output/%.out-cbe
 
-# Build diffs for LLI and LLC output...
-.PRECIOUS: Output/%.diff-lli Output/%.diff-llc Output/%.diff-cbe
+# Build diffs from the output...
+.PRECIOUS: Output/%.diff-lli Output/%.diff-jit
+.PRECIOUS: Output/%.diff-llc Output/%.diff-cbe
 
 # Regardless of what other options are specified, build the program's bytecode
 # representation.
@@ -75,6 +80,7 @@ all:: $(BYTECODE)
 ifdef RUN_GCC_ONLY
 DISABLE_LLC = 1
 DISABLE_CBE = 1
+DISABLE_JIT = 1
 ENABLE_LLI  =
 all:: $(GCCOUTPUT)
 endif
@@ -99,6 +105,12 @@ ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
 endif
 
+ifdef TARGET_HAS_JIT
+ifndef DISABLE_JIT
+all:: $(JITDIFFS)
+endif
+endif
+
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
@@ -116,8 +128,10 @@ endif
 # Rules to build the test output...
 Output/%.out-nat: Output/%.native
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
-Output/%.out-lli: Output/%.llvm $(LLI)
-	-$< > $@ 2>&1 $(RUN_OPTIONS)
+Output/%.out-lli: Output/%.llvm.bc $(LLI)
+	-$(LLI) -q -abort-on-exception -force-interpreter=true $< > $@ 2>&1 $(RUN_OPTIONS)
+Output/%.out-jit: Output/%.llvm.bc $(LLI)
+	-$(LLI) -force-interpreter=false $< > $@ 2>&1 $(RUN_OPTIONS)
 Output/%.out-llc: Output/%.llc
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
 Output/%.out-cbe: Output/%.cbe
@@ -126,6 +140,9 @@ Output/%.out-cbe: Output/%.cbe
 # Rules to diff test output...
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
 	$(DIFFPROG) lli $(subst Output/,,$(@:.diff-lli=))
+
+Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
+	$(DIFFPROG) jit $(subst Output/,,$(@:.diff-jit=))
 
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	$(DIFFPROG) llc $(subst Output/,,$(@:.diff-llc=))
