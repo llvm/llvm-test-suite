@@ -382,15 +382,6 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS)
 
-endif
-
-
-#
-# Rules to generate profiling information
-#
-$(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
-Output/%.llvm-prof.bc: Output/%.llvm.bc
-	$(LOPT) -insert-block-profiling $< -o $@ -f
 
 LIBPROFILESO := $(LEVEL)/lib/Debug/libprofile_rt.so
 
@@ -401,6 +392,16 @@ Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
             -fake-argv0 'Output/$*.llvm.bc' -load $(LIBPROFILESO) $< -llvmprof-output $@ $(RUN_OPTIONS)
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
 		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
+
+endif
+
+
+#
+# Rules to generate profiling information
+#
+$(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
+Output/%.llvm-prof.bc: Output/%.llvm.bc
+	$(LOPT) -insert-block-profiling $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.printprof): \
 Output/%.printprof: Output/%.llvm.bc Output/%.prof $(LPROF)
