@@ -25,8 +25,23 @@ fftw_real A[2048];
 int main(int argc, char **argv)
 {
      int i;
+
+     fftw_real sum = 0.0;
+     for (i = 0; i < 2048; ++i) {
+       A[i] = i;
+       sum = sum + A[i];
+     }
+     printf("Checksum before = %lf\n", sum);
+    
      for (i = 0; i < 10; ++i) {
        complex_transpose(A, A+1, 32, 2, 64);
      }
+    
+     sum = 0.0;
+     for (i = 0; i < 2048; ++i)
+       sum = sum + A[i];
+     printf("Checksum  after = %lf\n", sum);
+
+     return 0;
 }
 
