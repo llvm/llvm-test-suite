@@ -68,8 +68,8 @@ struct EDGE_STACK {
 #define destv(a) dest(a)->v
 
 
-#define SIZE sizeof(struct edge_rec)
-#define ANDF (4*sizeof(struct edge_rec) - 1)
+#define SIZE ((uint64_t) sizeof(struct edge_rec))
+#define ANDF ((uint64_t) 4*sizeof(struct edge_rec) - 1)
 
 #define sym(a) ((QUAD_EDGE) (((uint64_t) (a)) ^ 2*SIZE))
 #define rot(a) ((QUAD_EDGE) ( (((uint64_t) (a) + 1*SIZE) & ANDF) | ((uint64_t) (a) & ~ANDF) ))
