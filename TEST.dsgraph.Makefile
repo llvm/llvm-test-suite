@@ -20,10 +20,10 @@ MEM := -track-memory -time-passes
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LANALYZE) $(LOPT)
 	@# Gather data
-	-($(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)>> $@.time.1 2>&1
+	-($(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@.time.1 2>&1
 	-($(LANALYZE) $(MEM) -$(PASS)datastructure -disable-verify $<)> $@.mem.1 2>&1
-	-($(LOPT) -steens-aa -time-passes -disable-output $<) >> $@.time.2 2>&1
-	-($(LOPT) -steens-aa $(MEM) -disable-output $<) >> $@.mem.2 2>&1
+	-($(LOPT) -steens-aa -time-passes -disable-output $<) > $@.time.2 2>&1
+	-($(LOPT) -steens-aa $(MEM) -disable-output $<) > $@.mem.2 2>&1
 	@# Emit data.
 	@echo -n "LOC: " > $@
 	@cat Output/$*.LOC.txt >> $@
