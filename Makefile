@@ -15,8 +15,10 @@ include ${LEVEL}/test/Makefile.tests
 # test.<testname>.%  given input from Output/%.llvm.bc
 #
 ifdef TEST
-TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile)
-TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report)
+TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
+                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
+TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
+                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).report)
 ifneq ($(TestMakefile),)
 -include $(TestMakefile)
 endif
@@ -29,21 +31,24 @@ endif
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	gmake TEST=$(TEST) 2>&1 | tee $@
 
-
+ifneq ($(TestReport),)
 report.$(TEST).txt: report.$(TEST).raw.out $(TestReport)
-	./GenerateReport.pl TEST.$(TEST).report < $< > $@
+	./GenerateReport.pl $(TestReport) < $< > $@
 
 report.$(TEST).html: report.$(TEST).raw.out $(TestReport)
-	./GenerateReport.pl -html TEST.$(TEST).report < $< > $@
+	./GenerateReport.pl -html $(TestReport) < $< > $@
 
 report.$(TEST).tex: report.$(TEST).raw.out $(TestReport)
-	./GenerateReport.pl -latex TEST.$(TEST).report < $< > $@
+	./GenerateReport.pl -latex $(TestReport) < $< > $@
 
 report: report.$(TEST).txt
 	@cat $<
 
+report.html: report.$(TEST).html
+
 report.tex: report.$(TEST).tex
 	@cat $<
+endif
 
 clean::
 	rm -f report.*.raw.out report.*.txt
