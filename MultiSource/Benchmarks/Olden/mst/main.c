@@ -154,7 +154,6 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   graph->vlist[0] = tmp;
   MyVertexList = tmp;
   numvert--;
-
   /* Announce insertion and find next one */
   chatting("Compute phase 2\n");
   while (numvert) 
@@ -223,15 +222,3 @@ int main(int argc, char *argv[])
 #endif
   exit(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
