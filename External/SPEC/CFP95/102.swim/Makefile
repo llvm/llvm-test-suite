@@ -1,6 +1,4 @@
 LEVEL = ../../../..
-
-Source = swim.f
 include $(LEVEL)/Makefile.f2c
 
 STDIN_FILENAME  = swim.in
