@@ -173,9 +173,8 @@ main( argc, argv)
 int argc;
 char **argv;
 {
-	printf( "%s: calculate floating dhrystones using doubles size %d\n",
-		argv[0], sizeof(extended)
-	);
+  printf("calculate floating dhrystones using doubles size %d\n",
+         sizeof(extended));
 	//fflush( stdout);
 	Proc0();
 #if 0
@@ -293,6 +292,7 @@ Proc0()
 -- Stop Timer --
 *****************/
 
+#if 0
 #ifdef CLOCK
 	benchtime = ( clock() - starttime - nulltime )/ CLK_TCK;
 	printf("Dhrystone(%s) time for %ld passes = %ld\n",
@@ -307,8 +307,8 @@ Proc0()
 	printf("Dhrystone(%s) time for %ld passes = %ld\n",
 		Version,
 		(long) LOOPS, benchtime);
-	printf("This machine benchmarks at %ld floating dhrystones/second\n",
-		((long) LOOPS) / benchtime);
+        printf("This machine benchmarks at %ld floating dhrystones/second\n",
+               ((long) LOOPS) / benchtime);
 #endif
 #ifdef TIMES
 	times(&tms);
@@ -319,7 +319,7 @@ Proc0()
 	printf("This machine benchmarks at %ld floating dhrystones/second\n",
 		((long) LOOPS) * HZ / benchtime);
 #endif
-
+#endif
 }
 
 Proc1(PtrParIn)
