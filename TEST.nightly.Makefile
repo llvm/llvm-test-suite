@@ -104,7 +104,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: $(addprefix Output/%.nightly., $(REPORTS_SUFFIX))
-	cat $(addprefix Output/$*.nightly., $(REPORTS_SUFFIX)) > $@
+	-cat $(addprefix Output/$*.nightly., $(REPORTS_SUFFIX)) > $@
 
 
 
