@@ -529,9 +529,9 @@ ifdef TEST
 TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
 TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
-                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).report)
+                $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).report)
 TestGnuPlot  := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).gnuplot) \
-                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).gnuplot)
+                $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).gnuplot)
 ifneq ($(strip $(TestMakefile)),)
 -include $(TestMakefile)
 else
