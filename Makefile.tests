@@ -41,7 +41,8 @@ LLVMGCCLIBDIR=$(dir $(shell $(LLVMGCC) -print-file-name=libgcc.a))
 LLI      = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
 LLC      = $(LLVMTOOLCURRENT)/llc$(EXEEXT)
 LGCCAS   = $(LLVMTOOLCURRENT)/gccas$(EXEEXT)
-LGCCLD   = $(LGCCLDPROG) -L$(LLVMGCCLIBDIR) -L$(LLVMGCCDIR)/lib
+LGCCLD   = $(LGCCLDPROG) -L$(LLVMGCCLIBDIR) -L$(LLVMGCCDIR)/lib \
+                         -L$(LLVMGCCDIR)/bytecode-libs
 LDIS     = $(LLVMTOOLCURRENT)/llvm-dis$(EXEEXT)
 LOPT     = $(LLVMTOOLCURRENT)/opt$(EXEEXT)
 LLINK    = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
