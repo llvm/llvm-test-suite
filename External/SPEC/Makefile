@@ -1,5 +1,5 @@
 LEVEL = ../..
-PARALLEL_DIRS := CFP2000 CINT2000 CINT95
+PARALLEL_DIRS := CFP2000 CINT2000 CFP95 CINT95
 include $(LEVEL)/Makefile.config
 
 #
@@ -11,6 +11,7 @@ PARALLEL_DIRS := $(filter-out CINT2000/, $(PARALLEL_DIRS))
 endif
 
 ifndef USE_SPEC95
+PARALLEL_DIRS := $(filter-out CFP95/, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out CINT95/, $(PARALLEL_DIRS))
 endif
 
