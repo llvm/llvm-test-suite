@@ -49,6 +49,9 @@ ifndef USE_PRECOMPILED_BYTECODE
 Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
 	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve -deadtypeelim | $(LDIS) > $@
 
+Output/%.LOC.txt: $(Source)
+	cat $(Source) $(wildcard *.h) | wc -l > $@
+
 endif
 
 Output/%.native: $(NObjects)

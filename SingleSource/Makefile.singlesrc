@@ -24,6 +24,9 @@ include $(LEVEL)/test/Programs/Makefile.programs
 ifndef USE_PRECOMPILED_BYTECODE
 Output/%.linked.rll: Output/%.ll
 	cp -f $< $@
+
+Output/%.LOC.txt: %.c
+	cat $< | wc -l > $@
 endif
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
