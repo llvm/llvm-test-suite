@@ -34,7 +34,7 @@ while ($_ = $ARGV[0], /^[-+]/) {
 # Parameters which may be overriden by the report description file.
 #
 
-# The column to sort by, to be overridden as neccesary by the report description
+# The column to sort by, to be overridden as necessary by the report description
 my $SortCol = 0;
 my $SortReverse = 0;
 my $SortNumeric = 0;   # Sort numerically or textually?

@@ -12,7 +12,7 @@
 DUMMYLIB := $(LEVEL)/test/Libraries/Output/libdummy.bc
 DUMMYSRC := $(LEVEL)/test/Libraries/libdummy
 
-# Rebuild dummylib if neccesary...
+# Rebuild dummylib if necessary...
 $(DUMMYLIB) : $(wildcard $(DUMMYSRC)/*.c)
 	cd $(DUMMYSRC); $(MAKE)
 
