@@ -34,15 +34,14 @@ SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 PROG := $(BENCH_NAME)
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c)
 
-# Pseudo target to build just the bytecode file.
-bytecode: Output/$(PROG).llvm.bc
-
-
 # Disable the default Output/%.out-* targets...
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
 SourceDir := $(SPEC_BENCH_DIR)/src/
 
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+
+# Pseudo target to build just the bytecode file.
+bytecode: Output/$(PROG).llvm.bc
 
 LCCFLAGS := -DSPEC_CPU2000 -O2
 CFLAGS := -DSPEC_CPU2000 -O2
