@@ -14,8 +14,8 @@ RUN_TYPE  := test
 ifndef STDOUT_FILENAME
 STDOUT_FILENAME := standard.out
 endif
-ifndef LIBS
-LIBS = -lm
+ifndef LDFLAGS
+LDFLAGS = -lm
 endif
 
 # Get the current directory, the name of the benchmark, and the current
@@ -34,14 +34,14 @@ SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 PROG := $(BENCH_NAME)
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c)
 
-SourceDir := $(SPEC_BENCH_DIR)/src/
-LCCFLAGS := -DSYS_IS_USG -O2
-CFLAGS := -DSYS_IS_USG -DSPEC_CPU2000 -O2
-
 # Disable the default Output/%.out-* targets...
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
+SourceDir := $(SPEC_BENCH_DIR)/src/
 
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+
+LCCFLAGS := -DSPEC_CPU2000 -O2
+CFLAGS := -DSPEC_CPU2000 -O2
 
 SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
 
