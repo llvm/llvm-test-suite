@@ -5,12 +5,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 
 #define SIZE 100
+#define inline static
 
-// a simple Double Linked List
-// the head node is special, it's val is length of list
+/* a simple Double Linked List
+// the head node is special, it's val is length of list*/
 typedef struct DLL {
     int val;
     struct DLL *next;	/* points to next or head (if at tail) */
@@ -63,7 +64,7 @@ DLL *list_pop_head(DLL *head) {
 
 int list_equal(DLL *x, DLL *y) {
     DLL *xp, *yp;
-    // first val's checked will be list lengths
+    /* first val's checked will be list lengths*/
     for (xp=x, yp=y; xp->next != x; xp=xp->next, yp=yp->next) {
 	if (xp->val != yp->val) return(0);
     }
@@ -140,14 +141,14 @@ void list_reverse (DLL *head) {
 
 int test_lists() {
     int len = 0;
-    // create a list of integers (li1) from 1 to SIZE
+    /* create a list of integers (li1) from 1 to SIZE*/
     DLL *li1 = list_sequence(1, SIZE);
-    // copy the list to li2
+    /* copy the list to li2*/
     DLL *li2 = list_copy(li1);
-    // remove each individual item from left side of li2 and
-    // append to right side of li3 (preserving order)
+    /* remove each individual item from left side of li2 and
+    // append to right side of li3 (preserving order)*/
     DLL *li3 = list_new();
-    // compare li2 and li1 for equality
+    /* compare li2 and li1 for equality*/
     if (!list_equal(li2, li1)) {
 	fprintf(stderr, "li2 and li1 are not equal\n");
 	exit(1);
@@ -155,54 +156,54 @@ int test_lists() {
     while (!list_empty(li2)) {
 	list_push_tail(li3, list_pop_head(li2));
     }
-    // li2 must now be empty
+    /* li2 must now be empty*/
     if (!list_empty(li2)) {
 	fprintf(stderr, "li2 should be empty now\n");
 	exit(1);
     }
-    // remove each individual item from right side of li3 and
-    // append to right side of li2 (reversing list)
+    /* remove each individual item from right side of li3 and
+    // append to right side of li2 (reversing list)*/
     while (!list_empty(li3)) {
 	list_push_tail(li2, list_pop_tail(li3));
     }
-    // li3 must now be empty
+    /* li3 must now be empty */
     if (!list_empty(li3)) {
 	fprintf(stderr, "li3 should be empty now\n");
 	exit(1);
     }
-    // reverse li1 in place
+    /* reverse li1 in place */
     list_reverse(li1);
-    // check that li1's first item is now SIZE
+    /* check that li1's first item is now SIZE */
     if (list_first(li1)->val != SIZE) {
 	fprintf(stderr, "li1 first value wrong, wanted %d, got %d\n",
 		SIZE, list_first(li1)->val);
 	exit(1);
     }
-    // check that li1's last item is now 1
+    /* check that li1's last item is now 1 */
     if (list_last(li1)->val != 1) {
 	fprintf(stderr, "last value wrong, wanted %d, got %d\n",
 		SIZE, list_last(li1)->val);
 	exit(1);
     }
-    // check that li2's first item is now SIZE
+    /* check that li2's first item is now SIZE */
     if (list_first(li2)->val != SIZE) {
 	fprintf(stderr, "li2 first value wrong, wanted %d, got %d\n",
 		SIZE, list_first(li2)->val);
 	exit(1);
     }
-    // check that li2's last item is now 1
+    /* check that li2's last item is now 1 */
     if (list_last(li2)->val != 1) {
 	fprintf(stderr, "last value wrong, wanted %d, got %d\n",
 		SIZE, list_last(li2)->val);
 	exit(1);
     }
-    // check that li1's length is still SIZE
+    /* check that li1's length is still SIZE */
     if (list_length(li1) != SIZE) {
 	fprintf(stderr, "li1 size wrong, wanted %d, got %d\n",
 		SIZE, list_length(li1));
 	exit(1);
     }
-    // compare li1 and li2 for equality
+    /* compare li1 and li2 for equality */
     if (!list_equal(li1, li2)) {
 	fprintf(stderr, "li1 and li2 are not equal\n");
 	exit(1);
@@ -211,7 +212,7 @@ int test_lists() {
     free(li1);
     free(li2);
     free(li3);
-    // return the length of the list
+    /* return the length of the list */
     return(len);
 }
 

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#define SIZE 30
+/*#define SIZE 30*/
 #define SIZE 10
 
 int **mkmatrix(int rows, int cols) {
