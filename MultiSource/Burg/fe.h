@@ -1,5 +1,7 @@
 /* $Id$ */
 
+#include <stdio.h>
+
 struct binding {
 	char	*name;
 	int	opnum;

@@ -2,6 +2,8 @@
 
 #define MAX_ARITY	2
 
+#include <stdio.h>
+
 typedef int ItemSetNum;
 typedef int OperatorNum;
 typedef int NonTerminalNum;
