@@ -1362,7 +1362,7 @@ log_working_directory (entering)
   if (print_data_base_flag)
     fputs ("# ", stdout);
 
-  if (makelevel == 0)
+  if (1 || makelevel == 0)
     printf ("%s: %s ", "make", message);
   else
     printf ("%s[%u]: %s ", "make", makelevel, message);
