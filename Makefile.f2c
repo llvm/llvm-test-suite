@@ -29,7 +29,11 @@ clean::
 
 %.c: %.f
 	$(F2C) $< > /dev/null 2>&1
-	
+
 CPPFLAGS = -I$(F2C_INC) 
 LDFLAGS += -L$(F2C_LIB) -lf2c
 
+
+# 'main' is defined in the f2c runtime library.  The function exported from the
+# program is named MAIN__
+EXTRA_LINKTIME_OPT_FLAGS += -internalize-public-api-list=MAIN__
