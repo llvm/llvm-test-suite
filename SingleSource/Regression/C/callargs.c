@@ -79,9 +79,9 @@ printVarArgs(int a1, ...)
   a15 = va_arg(ap, char*);
   
   printf("\nprintVarArgs with 15 arguments:\n");
-  printf("\tArgs 1-5  : %d %f %c %lf %c\n", a1,  a2,  a3,  a4,  *a5);
-  printf("\tArgs 6-10 : %d %f %c %lf %c\n", a6,  a7,  a8,  a9,  *a10);
-  printf("\tArgs 11-14: %d %f %c %lf %c\n", a11, a12, a13, a14, *a15);
+  printf("\tArgs 1-5  : %d %f %c %f %c\n", a1,  a2,  a3,  a4,  *a5);
+  printf("\tArgs 6-10 : %d %f %c %f %c\n", a6,  a7,  a8,  a9,  *a10);
+  printf("\tArgs 11-14: %d %f %c %f %c\n", a11, a12, a13, a14, *a15);
   printf("\n");
   return;
 }
@@ -94,9 +94,9 @@ printArgsNoRet(int a1,  float a2,  char a3,  double a4,  char* a5,
                int a11, float a12, char a13, double a14, char* a15)
 {
   printf("\nprintArgsNoRet with 15 arguments:\n");
-  printf("\tArgs 1-5  : %d %f %c %lf %c\n", a1,  a2,  a3,  a4,  *a5);
-  printf("\tArgs 6-10 : %d %f %c %lf %c\n", a6,  a7,  a8,  a9,  *a10);
-  printf("\tArgs 11-14: %d %f %c %lf %c\n", a11, a12, a13, a14, *a15);
+  printf("\tArgs 1-5  : %d %f %c %f %c\n", a1,  a2,  a3,  a4,  *a5);
+  printf("\tArgs 6-10 : %d %f %c %f %c\n", a6,  a7,  a8,  a9,  *a10);
+  printf("\tArgs 11-14: %d %f %c %f %c\n", a11, a12, a13, a14, *a15);
   printf("\n");
   return;
 }
