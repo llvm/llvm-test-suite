@@ -425,6 +425,8 @@ TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
 TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).report)
+TestGnuPlot  := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).gnuplot) \
+                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).gnuplot)
 ifneq ($(strip $(TestMakefile)),)
 -include $(TestMakefile)
 else
@@ -456,7 +458,11 @@ report.$(TEST).html: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
 	$(GENERATEREPORT) -html $(TestReport) < $< > $@
 
 report.$(TEST).tex: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
-	$(GENERATEREPORT)  -latex $(TestReport) < $< > $@
+	$(GENERATEREPORT) -latex $(TestReport) < $< > $@
+
+report.graphs: report.$(TEST).raw.out $(TestReport) $(TestGnuPlot) $(GENERATEREPORT)
+	$(GENERATEREPORT) -graphs $(TestReport) < $<
+	gnuplot $(TestGnuPlot)
 
 report: report.$(TEST).txt
 	@cat $<
