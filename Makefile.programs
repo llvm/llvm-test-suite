@@ -127,35 +127,46 @@ ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
 
+#
+# Rules to compile the program for the C Back End
+#
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
 	$(LDIS) -c < $< > $@
 
 Output/%.cbe: Output/%.cbe.c
 	$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
 
+#
+# Rules to execute the program
+#
+RUN_OPTIONS += 2>&1
 ifdef INPUT_FILENAME
 RUN_OPTIONS += < $(INPUT_FILENAME)
 endif
 
 # Rules to build the test output...
+ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
+endif
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	-$(LLI) -q -abort-on-exception -force-interpreter=true $< > $@ 2>&1 $(RUN_OPTIONS)
+	-$(LLI) -q -abort-on-exception -force-interpreter=true $< > $@ $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	-$(LLI) -force-interpreter=false $< > $@ 2>&1 $(RUN_OPTIONS)
+	-$(LLI) -force-interpreter=false $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	-$< > $@ 2>&1 $(RUN_OPTIONS)
+	-$< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	-$< > $@ 2>&1 $(RUN_OPTIONS)
+	-$< > $@ $(RUN_OPTIONS)
 
+#
 # Rules to diff test output...
+#
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
 	$(DIFFPROG) lli $*
@@ -186,7 +197,13 @@ CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)
 SRCDIR  := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
-# To Make a file up-to-date, just copy it over.
+# Because we don't have source code, we cannot build a native version of the
+# executable.  Copy over pregenerated reference output.
+$(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
+Output/%.out-nat: $(SRCDIR)/%.reference_output Output/.dir
+	cp $< $@
+
+# To make a bytecode file up-to-date, just copy it over.
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: $(SRCDIR)/%.bc Output/.dir
 	cp $< $@
