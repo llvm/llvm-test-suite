@@ -478,7 +478,7 @@ endif
 #
 # Rules for building a report from 'make report TEST=<x>'
 #
-GENERATEREPORT := $(LEVEL)/test/Programs/GenerateReport.pl
+GENERATEREPORT := $(LLVM_SRC_ROOT)/test/Programs/GenerateReport.pl
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	gmake TEST=$(TEST) 2>&1 | tee $@
