@@ -1,0 +1,45 @@
+##=== TEST.dsprecision.report - Report for precision tests -----*- perl -*-===##
+#
+# This file defines a report to be generated for the precision comparison
+# test.
+#
+##===----------------------------------------------------------------------===##
+
+# Helper function
+sub Ratio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[$Col-2] ne "*" and
+      $Cols->[$Col-2] != "0") {
+    return $Cols->[$Col-1]/$Cols->[$Col-2];
+  } else {
+    return "n/a";
+  }
+}
+
+$SortCol = 0;
+#$SortNumeric = 1;
+$TrimRepeatedPrefix = 1;
+
+# Sort in ascending order
+$SortReverse = 0;
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+            ["Name:",     '\'([^\']+)\' Program'],
+            [],
+# AA Precision
+            ["basic",     'BASIC MA:.* \((.*)\)'],
+            ["steens-fi", 'STEENS-FI MA:.* \((.*)\)'],
+            ["steens-fs", 'STEENS-FS MA:.* \((.*)\)'],
+            ["ds",        'DS MA:.* \((.*)\)'],
+            [],
+# MR Precision
+            ["basic",     'BASIC MR:.* \((.*)\)'],
+            ["steens-fi", 'STEENS-FI MR:.* \((.*)\)'],
+            ["steens-fs", 'STEENS-FS MR:.* \((.*)\)'],
+            ["ds",        'DS MR:.* \((.*)\)'],
+            [],
+);
