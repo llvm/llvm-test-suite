@@ -4,19 +4,16 @@
  *  Health.c : Model of the Columbian Health Care System           *
  *******************************************************************/ 
 
-#undef JUMP
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include "health.h"
 #include <assert.h>
 
-#define CMMD_node_timer_clear(x);
-#define CMMD_node_timer_start(x);
-#define CMMD_node_timer_stop(x);
+int  max_level;
+long long max_time, seed;
 
-#if 1
+
 struct Village *alloc_tree(int level, int lo, int proc, 
                            int label, struct Village *back) 
 {  
@@ -25,23 +22,18 @@ struct Village *alloc_tree(int level, int lo, int proc,
   else {
     struct Village       *new;
     int                  i;
-#if USE_ARRAY_CODE
     struct Village       *fval[4];
-#else
-    struct Village *fval0=0, *fval1=0, *fval2=0, *fval3=0;
-#endif
 
     new = (struct Village *)malloc(sizeof(struct Village));
 
-#if 1
     for (i = 3; i > 0; i--) {
       struct Village *V = alloc_tree(level - 1, lo + (proc*(i))/4, 
                                      proc / 4, (label * 4) + i + 1, new); 
-      setValN(fval, i, V);
+      fval[i] = V;
     }
 
-    setValN(fval, 0, alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new));
-#endif
+    fval[0] = alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new);
+
     new->back = back;
     new->label = label;
     new->seed = label * (IQ + seed); 
@@ -64,15 +56,14 @@ struct Village *alloc_tree(int level, int lo, int proc,
     new->returned.forward = NULL;
 
     for (i = 0; i < 4; i++)
-      setValN(new->forward, i, getValN(fval, i));
+      new->forward[i] = fval[i];
 
     return new;
   }
 }
-#endif
 
-struct Results get_results(struct Village *village)
-{
+
+struct Results get_results(struct Village *village) {
   int                    i;
   struct List            *list;
   struct Patient         *p;
@@ -86,11 +77,11 @@ struct Results get_results(struct Village *village)
   if (village == NULL) return r1;
 
   for (i = 3; i > 0; i--) {
-    struct Village *V = getValN(village->forward, i);
+    struct Village *V = village->forward[i];
     fval[i] = get_results(V);
   }
 
-  fval[0] = get_results(getValN(village->forward, 0));
+  fval[0] = get_results(village->forward[0]);
 
   for (i = 3; i >= 0; i--) {
     r1.total_hosps    += fval[i].total_hosps;
@@ -110,7 +101,6 @@ struct Results get_results(struct Village *village)
   return r1; 
 }
 
-#if 1
 void check_patients_inside(struct Village *village, struct List *list) 
 {
   struct List            *l;
@@ -132,50 +122,47 @@ void check_patients_inside(struct Village *village, struct List *list)
   } 
 }
 
-struct List *check_patients_assess(struct Village *village, struct List *list) 
-{
-  double                 rand;
-  struct Patient          *p;
-  struct List             *up = NULL;
-  long long                     s;
-  int                      label, t;
+struct List *check_patients_assess(struct Village *village, struct List *list) {
+  double rand;
+  struct Patient *p;
+  struct List *up = NULL;
+  long long s;
+  int label, t;
 
-  while (list != NULL) 
-    {
-      p = list->patient;
-      t = p->time_left;
-      p->time_left = t - 1;
+  while (list != NULL) {
+    p = list->patient;
+    t = p->time_left;
+    p->time_left = t - 1;
+    label = village->label;
+    if (p->time_left == 0) { 
+      s = village->seed;
+      rand = my_rand(s);
+      village->seed = (long long)(rand * IM);
       label = village->label;
-      if (p->time_left == 0) { 
-        s = village->seed;
-        rand = my_rand(s);
-        village->seed = (long long)(rand * IM);
-        label = village->label;
-        if (rand > 0.1 || label == 0) {
-          removeList(&village->hosp.assess, p);
-          addList(&village->hosp.inside, p);
-          p->time_left = 10;
-          t = p->time;
-          p->time = t + 10; 
-        } else {
-          t = village->hosp.free_personnel;
-          village->hosp.free_personnel = t+1;
-
-          removeList(&village->hosp.assess, p);
-          up = &village->hosp.up;
-          addList(up, p);
-        }
+      if (rand > 0.1 || label == 0) {
+        removeList(&village->hosp.assess, p);
+        addList(&village->hosp.inside, p);
+        p->time_left = 10;
+        t = p->time;
+        p->time = t + 10; 
+      } else {
+        t = village->hosp.free_personnel;
+        village->hosp.free_personnel = t+1;
+        
+        removeList(&village->hosp.assess, p);
+        up = &village->hosp.up;
+        addList(up, p);
       }
-      
-      list = list->forward;             /* :) adt_pf detected */
-    } 
+    }
+    
+    list = list->forward;             /* :) adt_pf detected */
+  }
   return up;
 }
 
-void check_patients_waiting(struct Village *village, struct List *list) 
-{
-  int                      i, t;
-  struct Patient           *p;
+void check_patients_waiting(struct Village *village, struct List *list) {
+  int i, t;
+  struct Patient *p;
   
   while (list != NULL) {
     i = village->hosp.free_personnel;
@@ -196,11 +183,9 @@ void check_patients_waiting(struct Village *village, struct List *list)
 }
 
 
-void put_in_hosp(struct Hosp *hosp, struct Patient *patient) 
-{  
-  int                        t;
-  
-  t = patient->hosps_visited;
+void put_in_hosp(struct Hosp *hosp, struct Patient *patient) {
+  int t = patient->hosps_visited;
+
   patient->hosps_visited = t + 1;
   if (hosp->free_personnel > 0) {
     t = hosp->free_personnel;
@@ -232,8 +217,8 @@ struct Patient *generate_patient(struct Village *village)
     patient->time = 0;
     patient->time_left = 0;
     patient->home_village = village; 
-
-    return patient; }
+    return patient;
+  }
   return NULL; 
 }
 
@@ -242,13 +227,9 @@ int main(int argc, char *argv[])
   struct Results         results;
   struct Village         *top = 0;
   int                    i;
-  double                  total_time,
-                         total_patients,
-                         total_hosps;  
+  double total_time, total_patients, total_hosps;  
   
   dealwithargs(argc, argv);
-  CMMD_node_timer_clear(0);
-  CMMD_node_timer_start(0);
   top = alloc_tree(max_level, 0, 0, 0, top);
   
   chatting("\n\n    Columbian Health Care Simulator\n\n");
@@ -256,14 +237,14 @@ int main(int argc, char *argv[])
   
   for (i = 0; i < max_time; i++) {
     if ((i % 50) == 0) chatting("%d\n", i);
-    sim(top);   }                          /* :) adt_pf detected */
+    sim(top);
+  }                          /* :) adt_pf detected */
   
   printf("Getting Results\n");
   results = get_results(top);              /* :) adt_pf detected */
   total_patients = results.total_patients;
   total_time = results.total_time;
   total_hosps = results.total_hosps;
-  CMMD_node_timer_stop(0);
 
   chatting("Done.\n\n");
   chatting("# of people treated:              %f people\n",
@@ -283,29 +264,24 @@ struct List *sim(struct Village *village)
   struct Patient         *patient;
   struct List            *l, *up;
   struct Hosp            *h;
-#if USE_ARRAY_CODE
   struct List            *val[4];
-#else
-  struct List            *val0=0, *val1=0, *val2=0, *val3=0;
-#endif
   
   int label;
-#if 1
   if (village == NULL) return NULL;
  
   label = village->label;
 
   for (i = 3; i > 0; i--) {
-    struct Village *V = getValN(village->forward, i);
+    struct Village *V = village->forward[i];
     struct List *L = sim(V);
-    setValN(val, i, L);
+    val[i] = L;
   }
-#endif  
-  setValN(val, 0, sim(getValN(village->forward, 0)));
+
+  val[0] = sim(village->forward[0]);
   h = &village->hosp;
 
   for (i = 3; i >= 0; i--) {
-    struct List *valI = l = getValN(val, i);
+    struct List *valI = l = val[i];
     if (l != NULL) {
       l = l->forward;
       while (l != NULL) {
@@ -316,7 +292,6 @@ struct List *sim(struct Village *village)
     }
   }
 
-#if 1
   check_patients_inside(village, village->hosp.inside.forward);
   up = check_patients_assess(village, village->hosp.assess.forward);
   check_patients_waiting(village, village->hosp.waiting.forward);
@@ -328,7 +303,4 @@ struct List *sim(struct Village *village)
   }
 
   return up;
-#endif
-  return 0;
 }
-#endif
