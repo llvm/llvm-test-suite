@@ -88,7 +88,7 @@ void free(void*);
 /*#define MYSTRFNS */
 
 /* Accuracy of timings and human fatigue controlled by next two lines */
-#define LOOPS	300000		/* Use this for slow or 16 bit machines */
+#define LOOPS	10000		/* Use this for slow or 16 bit machines */
 /*#define LOOPS	900000		/* Use this for faster machines */
 
 /* Compiler dependent options */
@@ -96,8 +96,8 @@ void free(void*);
 #undef	NOSTRUCTASSIGN		/* Define if compiler can't assign structures */
 
 /* define only one of the next three defines */
-/*#define CLOCK */
-#define TIMES			/* Use times(2) time function */
+#define CLOCK
+/*#define TIMES			/* Use times(2) time function */
 /*#define TIME			/* Use time(2) time function */
 
 /* define the granularity of your times(2) function (when used) */
@@ -256,6 +256,7 @@ Proc0()
 #endif
 	for (i = 0; i < LOOPS; ++i)
 	{
+          if ((i & 127) == 0) printf("making progress: %d\n", i);
 		Proc5();
 		Proc4();
 		IntLoc1 = 2;
