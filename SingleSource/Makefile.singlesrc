@@ -1,5 +1,4 @@
-##-----------------------------------------------------------*-Makefile-*-
-#                        test/Programs/SingleSource/Makefile
+##===- test/Programs/SingleSource/Makefile -----------------*- Makefile -*-===##
 #
 # This makefile builds all of the C programs in this directory in three
 # different configurations:
@@ -15,22 +14,16 @@
 #
 #  IDEA: This could be specified in the start of the .c file, in a comment block
 #
-##------------------------------------------------------------------------
+##===----------------------------------------------------------------------===##
 
 PROGRAMS_TO_TEST = $(Source:.c=)
 
 include $(LEVEL)/test/Programs/Makefile.programs
+.PRECIOUS: Output/%.linked.rll
+
+Output/%.linked.rll: Output/%.ll
+	cp -f $< $@
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: %.c Output/.dir
 	$(CC) $(CFLAGS) $< -lm -o $@
-
-ifndef USE_PRECOMPILED_BYTECODE
-
-# Since this is just a single source program, the linked version of the program
-# is the same as the unlinked version...
-#
-# FIXME: LIBS should be specified, not hardcoded to -lc -lm
-Output/%.llvm Output/%.llvm.bc: Output/%.bc
-	$(LGCCLD) $(STATS) $< -lgcc -lc -lm -o Output/$*.llvm
-endif

@@ -44,6 +44,7 @@ include $(LEVEL)/test/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
+.PRECIOUS: Output/%.linked.bc
 
 PROGDIR = $(LEVEL)/test/Programs
 
@@ -61,7 +62,8 @@ DIFFPROG = $(PROGDIR)/DiffOutput.sh
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
 # continue to be run.
-RUNSAFELY = $(PROGDIR)/RunSafely.sh
+ULIMIT   := ulimit -t 30
+RUNSAFELY = $(ULIMIT); $(PROGDIR)/RunSafely.sh
 
 #
 # Targets to build for the default target...
@@ -141,6 +143,21 @@ ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
 
+# Given a version of the entire program linked together into a single unit of
+# raw output from the C frontend, optimize it.
+Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
+	$(LGCCAS) $(STATS) $< -o $@
+
+# Rule to produce final program bytecode file from linked, optimized, bytecode.
+ifndef USE_PRECOMPILED_BYTECODE
+
+# Link the program to the libraries it uses, then perform postlink
+# optimization...
+Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
+	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
+
+endif
+
 #
 # Rules to compile the program for the C Back End
 #
@@ -162,23 +179,25 @@ endif
 ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
-	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 endif
 
 LLI_OPTS := -q -abort-on-exception -force-interpreter=true
+JIT_OPTS := -force-interpreter=false
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(LLI) $(LLI_OPTS) $< > $@ $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(LLI) $(LLI_OPTS) $< > $@ $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(LLI) -force-interpreter=false $< > $@ $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(LLI) $(JIT_OPTS) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 
 #
 # Rules to diff test output...
