@@ -1,6 +1,6 @@
 LEVEL = ../../../..
 
-Source = Output/tomcatv.c
+Source = tomcatv.c
 include $(LEVEL)/Makefile.f2c
 
 STDIN_FILENAME  = tomcatv.in
