@@ -231,7 +231,7 @@ typedef struct {
 
 
 
-#define assert(b,n) if (!(b)) {chatting("Assertion Failure #%d", (n)); exit(0);}
+#define assert(b,n) if (!(b)) {chatting("Assertion Failure #%d", (n)); abort();}
 
 
 #define TASKLIMIT 256
