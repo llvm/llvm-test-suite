@@ -22,17 +22,24 @@ struct Village *alloc_tree(int level, int lo, int proc,
   if (level == 0) 
     return NULL;
   else {
-    int                  i;
     struct Village       *new;
+    int                  i;
+#if USE_ARRAY_CODE
     struct Village       *fval[4];
+#else
+    struct Village *fval0=0, *fval1=0, *fval2=0, *fval3=0;
+#endif
 
     new = (struct Village *)malloc(sizeof(struct Village));
 
-    for (i = 3; i > 0; i--)
-      fval[i] = alloc_tree(level - 1, lo + (proc*(i))/4, 
-                           proc / 4, (label * 4) + i + 1, new); 
+    for (i = 3; i > 0; i--) {
+      struct Village *V = alloc_tree(level - 1, lo + (proc*(i))/4, 
+                                     proc / 4, (label * 4) + i + 1, new); 
+      setValN(fval, i, V);
+    }
 
-    fval[0] = alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new);
+    setValN(fval, 0, alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new));
+
     new->back = back;
     new->label = label;
     new->seed = label * (IQ + seed); 
@@ -55,7 +62,8 @@ struct Village *alloc_tree(int level, int lo, int proc,
     new->returned.forward = NULL;
 
     for (i = 0; i < 4; i++)       
-      new->forward[i] = fval[i];
+      setValN(new->forward, i, getValN(fval, i));
+
     return new;
   }
 }
@@ -75,10 +83,12 @@ struct Results get_results(struct Village *village)
 
   if (village == NULL) return r1;
 
-  for (i = 3; i > 0; i--)
-    fval[i] = get_results(village->forward[i]);    /* :) adt_pf detected */
+  for (i = 3; i > 0; i--) {
+    struct Village *V = getValN(village->forward, i);
+    fval[i] = get_results(V);
+  }
 
-  fval[0] = get_results(village->forward[0]);        /* :) adt_pf detected */
+  fval[0] = get_results(getValN(village->forward, 0));
 
   for (i = 3; i >= 0; i--) {
     r1.total_hosps    += fval[i].total_hosps;
@@ -269,9 +279,12 @@ struct List *sim(struct Village *village)
   int                    i;
   struct Patient         *patient;
   struct List            *l, *up;
-  struct Village         *v;
   struct Hosp            *h;
+#if USE_ARRAY_CODE
   struct List            *val[4];
+#else
+  struct List            *val0=0, *val1=0, *val2=0, *val3=0;
+#endif
   
   int label;
 
@@ -280,21 +293,22 @@ struct List *sim(struct Village *village)
   label = village->label;
 
   for (i = 3; i > 0; i--) {
-    v = village->forward[i];
-    val[i] = sim(v); }  /* :) adt_pf detected */
+    struct Village *V = getValN(village->forward, i);
+    struct List *L = sim(V);
+    setValN(val, i, L);
+  }
   
-  v = village->forward[0];
-  val[0] = sim(v); /* :) adt_pf detected */
+  setValN(val, 0, sim(getValN(village->forward, 0)));
   h = &village->hosp;
 
   for (i = 3; i >= 0; i--) {
-    l = val[i];
+    struct List *valI = l = getValN(val, i);
     if (l != NULL) {
-      l = l->forward; /* :) adt_pf detected but the pf distance is too short */
+      l = l->forward;
       while (l != NULL) {
 	put_in_hosp(h, l->patient);
-	removeList(val[i], l->patient);     /* :) adt_pf detected */
-        l = l->forward;                           /* :) adt_pf detected */
+	removeList(valI, l->patient);
+        l = l->forward;
       }
     }
   }

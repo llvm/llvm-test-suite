@@ -57,13 +57,30 @@ struct Hosp {
 };
   
 struct Village {
-  struct Village         *forward[4],
-                         *back;
+#if USE_ARRAY_CODE
+  struct Village         *forward[4];
+#else
+  struct Village         *forward0, *forward1, *forward2, *forward3;
+#endif
+  struct Village         *back;
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
   long                   seed;
 };
+
+#if USE_ARRAY_CODE
+#define getValN(P, n) P[n]
+#define setValN(P, n, v) P[n] = v
+#else
+#define getValN(P, n) \
+   ((n == 0) ? P##0 : ((n == 1) ? P##1 : ((n == 2) ? P##2 : P##3)))
+#define setValN(P, n, v) \
+  do { if (n == 0) { P##0 = v; } else if (n == 1) { P##1 = v; } else \
+       if (n == 2) { P##2 = v; } else             { P##3 = v; } } while (0)
+#endif
+
+
 
 struct Village *alloc_tree(int level, int lo, int proc, 
                            int label, struct Village *back);
