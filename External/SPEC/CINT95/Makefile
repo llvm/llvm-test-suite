@@ -1,6 +1,7 @@
 LEVEL = ../../../../..
 PARALLEL_DIRS := \
   099.go \
+  126.gcc \
   129.compress \
   130.li \
   132.ijpeg \
