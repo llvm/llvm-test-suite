@@ -22,8 +22,8 @@ INFO_PREFIX = Output/$*.*-
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	@echo > $@
-	@echo '$(LGCCAS) Output/$*.linked.rll -o/dev/null $(TIMEOPT) >> $@ 2>&1'
-	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >> $@ 2>&1)\
+	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >>$@ 2>&1'
+	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >>$@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
@@ -55,6 +55,9 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	-head -n 100 Output/$*.exe-llc >> $@
 	@-if test -f Output/$*.exe-llc; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
+	  $(LLC) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  printf "TEST-RESULT-llc: " >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)llc.time >> $@;\
 	  echo >> $@;\
