@@ -6,9 +6,9 @@
 #include <cstdio>
 #include <cctype>
 #include <cstring>
-#include <ext/hash_map>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -58,7 +58,7 @@ int word_reader::operator()(char const **w)
     return len;
 }
 
-typedef hash_map<char const *, int> counter;
+typedef map<char const *, int> counter;
 typedef pair<char const *, int> hpair;
 
 namespace std
