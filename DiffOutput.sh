@@ -12,7 +12,7 @@
 DIFFOUTPUT=Output/$2.diff.$1
 
 # Diff the two files.
-diff -c Output/$2.out.nat Output/$2.out.$1 > $DIFFOUTPUT || (
+gdiff -u Output/$2.out.nat Output/$2.out.$1 > $DIFFOUTPUT || (
   # They are different!
   echo "******************** TEST '$2' FAILED! ********************"
   echo "Execution Context Diff:"
