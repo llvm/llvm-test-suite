@@ -7,6 +7,7 @@
 #   1. The native Sun Sparc compiler
 #   2. LLVM Bytecode Compiler + LLI interpreter (if ENABLE_LLI is enabled)
 #   3. LLVM Bytecode Compiler + LLC Sparc machine code backend
+#   4. LLVM Bytecode Compiler + C Backend + Native Sun Compiler
 #
 # Running them, and then diffing the output.  If there are any failures, they
 # are flagged.
@@ -23,6 +24,7 @@
 include $(LEVEL)/test/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
+.PRECIOUS: Output/%.cbe Output/%.cbe.c
 
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG = $(LEVEL)/test/Programs/TimeProgram.sh
@@ -37,22 +39,30 @@ PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
+CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
+CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-llc Output/%.out-nat
+.PRECIOUS: Output/%.out-lli Output/%.out-llc Output/%.out-nat Output/%.out-cbe
 
 # Build diffs for LLI and LLC output...
-.PRECIOUS: Output/%.diff-lli Output/%.diff-llc
+.PRECIOUS: Output/%.diff-lli Output/%.diff-llc Output/%.diff-cbe
 all:: $(LLCDIFFS)
+all:: $(CBEDIFFS)
 
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
 
+Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
+	$(LDIS) -c < $< > $@
+
+Output/%.cbe: Output/%.cbe.c
+	$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
 
 # Rules to build the test output...
 Output/%.out-nat: Output/%.native
@@ -61,12 +71,16 @@ Output/%.out-lli: Output/%.llvm $(LLI)
 	-$< > $@ 2>&1
 Output/%.out-llc: Output/%.llc
 	-$< > $@ 2>&1
+Output/%.out-cbe: Output/%.cbe
+	-$< > $@ 2>&1
 
 # Rules to diff test output...
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
 	$(DIFFPROG) lli $(subst Output/,,$(@:.diff-lli=))
 
-# Rules to diff test output...
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	$(DIFFPROG) llc $(subst Output/,,$(@:.diff-llc=))
+
+Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
+	$(DIFFPROG) cbe $(subst Output/,,$(@:.diff-cbe=))
 
