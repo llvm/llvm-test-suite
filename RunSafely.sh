@@ -14,13 +14,10 @@
 # Syntax:  ./RunSafely.sh <ulimit> <stdinfile> <stdoutfile> <program> <args...>
 #
 ULIMIT=$1
-shift
-INFILE=$1
-shift
-OUTFILE=$1
-shift
-PROGRAM=$1
-shift
+INFILE=$2
+OUTFILE=$3
+PROGRAM=$4
+shift 4
 
 ulimit -t $ULIMIT
 rm -f core core.*
@@ -28,18 +25,6 @@ ulimit -c unlimited
 # To prevent infinite loops which fill up the disk, specify a limit on size of
 # files being output by the tests. 10 MB should be enough for anybody. ;)
 ulimit -f 10485760
-
-#
-# If we are on a sun4u machine (UltraSparc), then the code we're generating
-# is 64 bit code.  In that case, use gdb-64 instead of gdb.
-#
-myarch=`uname -m`
-if [ "$myarch" = "sun4u" ]
-then
-	GDB="gdb-64"
-else
-	GDB=gdb
-fi
 
 #
 # Run the command, timing its execution.
@@ -55,11 +40,21 @@ fi
 
 if test $? -eq 0
 then
-  touch $OUTFILE.exitok
+    touch $OUTFILE.exitok
 fi
 
 if ls | egrep "^core" > /dev/null
 then
+    # If we are on a sun4u machine (UltraSparc), then the code we're generating
+    # is 64 bit code.  In that case, use gdb-64 instead of gdb.
+    myarch=`uname -m`
+    if [ "$myarch" = "sun4u" ]
+    then
+	GDB="gdb-64"
+    else
+	GDB=gdb
+    fi
+
     corefile=`ls core* | head -n 1`
     echo "where" > StackTrace.$$
     $GDB -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
