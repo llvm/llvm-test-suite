@@ -238,8 +238,8 @@ test:: test-setup $(PROGRAMS_TO_TEST:%=test.$(TEST).%) test-finish
 
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #
-TEST_FILES = $(filter-out %~, $(wildcard $(PROGDIR)/Makefile.TEST.*))
-AVAILABLE_TESTS = $(subst $(PROGDIR)/Makefile.TEST.,,$(TEST_FILES))
+TEST_FILES = $(filter-out %~, $(wildcard $(PROGDIR)/TEST.*.Makefile))
+AVAILABLE_TESTS = $(TEST_FILES:$(PROGDIR)/TEST.%.Makefile=%)
 
 # If they just say 'make test' then we print out an error telling the user to
 # specify a TEST= option.
