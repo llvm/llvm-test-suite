@@ -22,8 +22,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -157,6 +155,8 @@ int main(int argc, char *argv[])
 	int level = 4;
 	int time = 12;
 	
+  int llvm_index;
+
 	printf("Hexxagon board game.\n");
 	printf("Copyright 2001.\n");
 	printf("Erik Jonsson.\n");
@@ -167,11 +167,10 @@ int main(int argc, char *argv[])
 	
 	char *input = 0;
 	
-	while(!quit)
+	for (llvm_index = 0; llvm_index < 1; llvm_index++)
 	{
-		char *tmp = readline("Hexxagon (\"help\" for help):");
-		stripFromDblSpace(tmp);
-		
+    char * tmp = "newgame CC";
+
 		int len = strlen(tmp);
 		if(len && tmp[len - 1] == ' ')
 			tmp[len - 1] = 0;
@@ -180,11 +179,9 @@ int main(int argc, char *argv[])
 		{
 			if(input)
 				printf("Repeating last command.\n");
-			free(tmp);
 		}
 		else
 		{
-			free(input);
 			input = tmp;
 		}
 		
@@ -431,6 +428,4 @@ int main(int argc, char *argv[])
 		else
 			printf("Unknown command, try \"help\" for a list of commands.\n");
 	}
-	
-	free(input);
 }
