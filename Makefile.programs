@@ -184,9 +184,11 @@ Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) Output/gccld-pass-args
 #
 # Rules to compile the program for the C Back End
 #
+$(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
 	$(LDIS) -c < $< > $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
 	$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
 
