@@ -1,0 +1,56 @@
+#                        test/Programs/SingleSource/Makefile
+#
+# This makefile builds all of the C programs in this directory in three
+# different configurations:
+#   1. By the native GCC compiler
+#   2. To LLVM bytecode
+#   3. To Sparc machine code, from bytecode, using LLC
+#
+# After building all of these different forms, the programs are run and the
+# output is diff'd
+#
+#  FIXME: There should be a way to specify libraries to link programs against
+#  FIXME: If the diff output is not empty, an error should be flaged!
+#  FIXME: There should be a way to specify the command line for a program
+#
+#  IDEA: This could be specified in the start of the .c file, in a comment block
+#
+
+LEVEL = ../../..
+include $(LEVEL)/test/Makefile.tests
+
+PROGRAMS  = $(Source:.c=)
+NATFILES  = $(addsuffix .native, $(addprefix Output/,$(PROGRAMS)))
+LLCFILES  = $(addprefix Output/,$(PROGRAMS))
+BCFILES   = $(addsuffix .linked.bc, $(addprefix Output/,$(PROGRAMS)))
+
+NATOUTPUT = $(addsuffix .nat.out, $(addprefix Output/,$(PROGRAMS)))
+LLIOUTPUT = $(addsuffix .lli.out, $(addprefix Output/,$(PROGRAMS)))
+LLCOUTPUT = $(addsuffix .llc.out, $(addprefix Output/,$(PROGRAMS)))
+
+LLIDIFFS  = $(addsuffix .lli.diff, $(addprefix Output/,$(PROGRAMS)))
+LLCDIFFS  = $(addsuffix .llc.diff, $(addprefix Output/,$(PROGRAMS)))
+
+.PRECIOUS: Output/%.nat.out Output/%.lli.out Output/%.llc.out
+.PRECIOUS: Output/%.lli.diff Output/%.llc.diff
+
+all:: Output/.dir $(LLIDIFFS)  # $(LLCDIFFS)
+
+# Rules to build the test output...
+Output/%.nat.out: Output/%.native
+	-$< > $@ 2>&1
+Output/%.lli.out: Output/%.linked.bc
+	-lli -q $< > $@ 2>&1
+Output/%.llc.out: Output/%
+	-$< > $@ 2>&1
+
+
+# Rules to diff test output...
+Output/%.lli.diff: Output/%.nat.out Output/%.lli.out
+	diff $+ > $@
+	@cat $@
+
+# Rules to diff test output...
+Output/%.llc.diff: Output/%.nat.out Output/%.llc.out
+	diff $+ > $@
+	@cat $@
