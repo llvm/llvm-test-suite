@@ -10,6 +10,7 @@ AC_CONFIG_SRCDIR(["Makefile.config.in"])
 dnl Do special configuration of Makefiles
 AC_CONFIG_MAKEFILE(Makefile)
 AC_CONFIG_MAKEFILE(Makefile.common)
+AC_CONFIG_MAKEFILE(Makefile.f2c)
 AC_CONFIG_MAKEFILE(Makefile.programs)
 AC_CONFIG_MAKEFILE(Makefile.tests)
 AC_CONFIG_MAKEFILE(TEST.aa.Makefile)
@@ -34,6 +35,7 @@ AC_CONFIG_MAKEFILE(External/SPEC/Makefile.spec2000)
 AC_CONFIG_MAKEFILE(External/SPEC/Makefile.spec95)
 AC_CONFIG_MAKEFILE(External/SPEC/CFP2000/Makefile)
 AC_CONFIG_MAKEFILE(External/SPEC/CINT2000/Makefile)
+AC_CONFIG_MAKEFILE(External/SPEC/CFP95/Makefile)
 AC_CONFIG_MAKEFILE(External/SPEC/CINT95/Makefile)
 AC_CONFIG_MAKEFILE(MultiSource/Makefile)
 AC_CONFIG_MAKEFILE(MultiSource/Makefile.multisrc)
@@ -114,6 +116,15 @@ dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,/home/vadve/shared/benchmarks/spec95/benchspec)
 EXTERNAL_BENCHMARK(spec2000,/home/vadve/shared/benchmarks/speccpu2000/benchspec)
 EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
+
+dnl Check for f2c
+CHECK_F2C_ALL()
+if test "x${F2C}" = "x"; then
+  CHECK_F2C_BIN()
+  CHECK_F2C_H()
+  CHECK_F2C_LIB()
+  CHECK_F2C_ENABLE()
+fi
 
 dnl LLC Diff Option
 AC_ARG_ENABLE(llc_diffs,AC_HELP_STRING([--enable-llc_diffs],[Enable LLC Diffs
