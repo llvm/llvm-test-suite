@@ -37,7 +37,7 @@ Output/%.o: %.c Output/.dir
 # without any libraries linked in...
 #
 Output/%.linked.bc: $(LObjects)
-	$(LLINK) -f $(LObjects) | opt -cleangcc > $@
+	$(LLINK) -f $(LObjects) | opt -funcresolve > $@
 
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
