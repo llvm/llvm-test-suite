@@ -45,7 +45,7 @@ void main(void)
   int I1,I2;    /* temp storage */
   double D1;    /* temp storage */
 /* intialization */
-  LEXEME = (char *) calloc(LEX_LEN,1);
+  LEXEME = (char *) calloc(1+LEX_LEN,1);
   FLUSH();
 
 /* main */
