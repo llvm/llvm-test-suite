@@ -297,7 +297,7 @@ static  void processargs(int argc, char *argv[])
     };
 
     int c;
-    while ((c = getopt_long (argc, argv,
+    while ((c = getopt (argc, argv,
 		"c"     
 		"r"     
 		"u"     
@@ -320,7 +320,7 @@ static  void processargs(int argc, char *argv[])
 		"W::"   
 		"h"	    
 		"V"	    
-		, long_options, 0)) != -1)
+		)) != -1)
     switch (c) {
 	case 'V':
 	print_version();
