@@ -287,7 +287,6 @@ EXTRA_LLI_OPTS =
 
 LLI_OPTS = -force-interpreter=true $(EXTRA_LLI_OPTS)
 JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
-JIT_LS_OPTS = -force-interpreter=false -regalloc=linearscan $(EXTRA_LLI_OPTS)
 
 
 # If the program requires exception handling support, enable (potentially
@@ -321,7 +320,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
 Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_LS_OPTS) $< $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=linearscan $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST (jit-ls): $* FAILED!"; rm -f $@; fi
 endif
