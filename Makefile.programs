@@ -58,11 +58,16 @@ TIMEPROG = $(PROGDIR)/TimeProgram.sh
 # DIFFPROG - The program used to diff the output
 DIFFPROG = $(PROGDIR)/DiffOutput.sh
 
+# RUNTIMELIMIT - The number of seconds we should wait before certain events
+# timeout.  This is overridable on the commandline.
+#
+RUNTIMELIMIT := 30
+
 # RUNSAFELY - This program simply runs another program.  If the program works
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
 # continue to be run.
-ULIMIT   := ulimit -t 30
+ULIMIT   := ulimit -t $(RUNTIMELIMIT)
 RUNSAFELY = $(ULIMIT); $(PROGDIR)/RunSafely.sh
 
 #
