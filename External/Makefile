@@ -8,7 +8,7 @@ include ${LEVEL}/Makefile.config
 #
 # Create the list of directories to compile
 #
-DIRS := Povray SPEC
+DIRS := SPEC Povray 
 
 ifndef USE_POVRAY
 DIRS := $(filter-out Povray/, $(DIRS))
