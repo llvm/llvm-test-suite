@@ -1,0 +1,50 @@
+##=== TEST.jit.report - Report description for jit tests -------*- perl -*-===##
+#
+# This file defines a report to be generated for the jit test.
+#
+##===----------------------------------------------------------------------===##
+
+# Sort by name
+$SortCol = 1;
+$TrimRepeatedPrefix = 1;
+
+sub TotalInstrEliminations {
+  my ($Cols, $Col) = @_;
+  $iMov = $Cols->[$Col-2];
+  $peep = $Cols->[$Col-1];
+  if ($iMov eq "*") { $iMov = 0; }
+  if ($peep eq "*") { $peep = 0; }
+
+  return $iMov + $peep;
+}
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+ ["Name:" , '\'([^\']+)\' Program'],
+ [],
+# Times
+ ["Total"  , 'real ([0-9.]+)'],
+ ["CodeGen", 'Total Execution Time: ([0-9.]+)'],
+ ["InstSel", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Instruction Selection'],
+ ["LiveVar", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Live Variable'],
+ ["RA"     , '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Register Allocator'],
+ ["FPStack", '([0-9.]+) \([^)]+\)[ 0-9]+X86 FP Stackifier'],
+ ["Peep"   , '([0-9.]+) \([^)]+\)[- 0-9]+X86 Peephole Optimizer'],
+ [],
+# Sizes
+ ["#MCInsts", '([0-9]+).*Number of machine instrs printed'],
+ ["#Int"   ,  '([0-9]+).*Number of intervals'],
+ [],
+# Number of transformations
+ ["#spill" , '([0-9]+).*Number of registers spilled'],
+ ["#reload", '([0-9]+).*Number of registers reloaded'],
+ ["#fp"    , '([0-9]+).*Number of floating point instructions'],
+ ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
+ ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
+ ["#peep"  , '([0-9]+).*Number of peephole optimization performed'],
+ ["#tot-el", \&TotalInstrEliminations],
+ []
+);
