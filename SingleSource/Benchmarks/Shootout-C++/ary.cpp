@@ -2,13 +2,13 @@
 // $Id$
 // http://www.bagley.org/~doug/shootout/
 
-#include <iostream.h>
+#include <iostream>
 #include <vector>
 
 int
 main(int argc, char *argv[]) {
     int i, n = ((argc == 2) ? atoi(argv[1]) : 1);
-    typedef vector<int> ARY;
+    typedef std::vector<int> ARY;
     ARY x(n);
     ARY y(n);
 
@@ -19,5 +19,5 @@ main(int argc, char *argv[]) {
         y[i] = x[i];
     }
 
-    cout << y.back() << endl;
+    std::cout << y.back() << std::endl;
 }
