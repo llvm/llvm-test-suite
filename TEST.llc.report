@@ -41,7 +41,8 @@ sub TotalInstrEliminations {
  [],
 # Number of transformations
  ["#store" , '([0-9]+).*Number of stores added'],
- ["#load"  , '([0-9]+).*Number of load added'],
+ ["#load"  , '([0-9]+).*Number of loads added'],
+ ["#fold"  , '([0-9]+).*Number of loads/stores folded into instructions'],
  ["#fp"    , '([0-9]+).*Number of floating point instructions'],
  ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
  ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
