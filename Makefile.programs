@@ -186,11 +186,25 @@ Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) Output/gccld-pass-args
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
-	$(LDIS) -c < $< > $@
+	-$(LDIS) -c < $< > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
+	-$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
+
+#
+# Compile a linked program to machine code with LLC.
+#
+$(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
+Output/%.llc.s: Output/%.llvm.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -f $< -o $@
+
+# Assemble (and link) an LLVM-linked program using the system assembler...
+#
+$(PROGRAMS_TO_TEST:%=Output/%.llc): \
+Output/%.llc: Output/%.llc.s
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) -o $@
+
 
 #
 # Rules to execute the program
