@@ -1,5 +1,5 @@
 LEVEL = ../../../../../..
-RUN_OPTIONS     = cccp.i -o cccp.s
+RUN_OPTIONS     = cp-decl.i -o cp-decl.s
 STDOUT_FILENAME = cccp.out
 include ../../Makefile.spec2000
 ifeq ($(ARCH),Sparc)
