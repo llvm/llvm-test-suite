@@ -10,4 +10,4 @@ endif
 STDOUT_FILENAME = $(RUN_TYPE).out
 CPPFLAGS =
 
-include $(LEVEL)/External/SPEC/Makefile.spec2000
+include ../../Makefile.spec2000
