@@ -13,16 +13,52 @@ include $(LEVEL)/Makefile.dummylib
 # PASS - The dsgraph pass to run: ds, bu, td
 PASS := td
 
-ANALYZE_OPTS := -stats -time-passes -only-print-main-ds -dsstats -instcount
-
-MEM := -track-memory
+ANALYZE_OPTS := -stats -time-passes -only-print-main-ds -dsstats
+ANALYZE_OPTS +=  -instcount -disable-verify
+MEM := -track-memory -time-passes
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LANALYZE) $(LOPT)
+	@# Gather data
+	-($(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)>> $@.time.1 2>&1
+	-($(LANALYZE) $(MEM) -$(PASS)datastructure -disable-verify $<)> $@.mem.1 2>&1
+	-($(LOPT) -steens-aa -time-passes -disable-output $<) >> $@.time.2 2>&1
+	-($(LOPT) -steens-aa $(MEM) -disable-output $<) >> $@.mem.2 2>&1
+	@# Emit data.
 	@echo -n "LOC: " > $@
 	@cat Output/$*.LOC.txt >> $@
-	-(time -p $(LANALYZE) $(MEM) -$(PASS)datastructure $(ANALYZE_OPTS) $<)>> $@ 2>&1
-	-($(LOPT) -steens-aa $(MEM) -time-passes > /dev/null < $<) >> $@ 2>&1
+	@echo -n "MEMINSTS: " >> $@
+	-@grep 'Number of memory instructions' $@.time.1 >> $@
+	@echo -n "FOLDEDNODES: " >> $@
+	-@grep 'Number of folded nodes' $@.time.1 >> $@
+	@echo -n "TOTALNODES: " >> $@
+	-@grep 'Graphs contain.*nodes total' $@.time.1 >> $@
+	@echo -n "MAXGRAPHSIZE: " >> $@
+	-@grep 'Maximum graph size' $@.time.1 >> $@
+	@echo -n "GLOBALSGRAPH: " >> $@
+	-@grep 'td.GlobalsGraph.dot' $@.time.1 >> $@
+	@echo -n "SCCSIZE: " >> $@
+	-@grep 'Maximum SCC Size in Call Graph' $@.time.1 >> $@
+	@# Emit timing data.
+	@echo -n "TIME: " >> $@
+	-@grep '  Local Data Structure' $@.time.1 >> $@
+	@echo -n "TIME: " >> $@
+	-@grep '  Bottom-up Data Structure' $@.time.1 >> $@
+	@echo -n "TIME: " >> $@
+	-@grep '  Top-down Data Structure' $@.time.1 >> $@
+	@echo -n "TIME: " >> $@
+	-@grep '  Steensgaard.s alias analysis' $@.time.2 >> $@
+	@# Emit space data.
+	@echo -n "MEM: " >> $@
+	-@grep '  Local Data Structure' $@.mem.1 >> $@
+	@echo -n "MEM: " >> $@
+	-@grep '  Bottom-up Data Structure' $@.mem.1 >> $@
+	@echo -n "MEM: " >> $@
+	-@grep '  Top-down Data Structure' $@.mem.1 >> $@
+	@echo -n "MEM: " >> $@
+	-@grep '  Steensgaard.s alias analysis' $@.mem.2 >> $@
+
+
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt

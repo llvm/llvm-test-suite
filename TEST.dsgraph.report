@@ -111,18 +111,20 @@ $SortReverse = 1;
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
 # seperators, and closures may be put in for custom processing.
+
+my $USERSYSTTIME = '([0-9.]+)[ 0-9.]+\([^)]+\)[ 0-9.]+\([^)]+\) +';
 (
 # Name
             ["Name:" , '\'([^\']+)\' Program'],
             ["LOC:"  , 'LOC: *([0-9]+)'],
+            ["MemInsts", '([0-9]+).*Number of memory instructions'],
             [],
 # Times
-            ["Anlyz:", '([0-9.]+) \([^)]+\)[ 0-9]+TOTAL'],
-            ["LocTm:", '([0-9.]+) \([^)]+\)[ 0-9]+Local'],
-            ["BUTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Bottom'],
-            ["TDTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Top'],
+            ["LocTm:", "${USERSYSTTIME}Local"],
+            ["BUTim:", "${USERSYSTTIME}Bottom"],
+            ["TDTim:", "${USERSYSTTIME}Top"],
             ["SumTm:", sub { return SumCols(@_, 3); }],
-            ["SteTm:", '([0-9.]+) \([^)]+\)[ 0-9]+Steensgaard'],
+            ["SteTm:", "${USERSYSTTIME}Steensgaard"],
             [],
 # Sizes
             ["LcSize:" , '([0-9]+)  Local'],
@@ -136,17 +138,5 @@ $SortReverse = 1;
             ["MaxSz"   , '([0-9]+).*Maximum graph size'],
             ["GlobGr"  , '\\.GlobalsGraph\\.dot\'... \\[([0-9+]+)\\]'],
             ["MaxSCC"  , '([0-9]+).*Maximum SCC Size in Call Graph'],
-            [],
-            ["Loads"   , '([0-9]+).*Number of Load insts'],
-            ["Store"   , '([0-9]+).*Number of Store insts'],
-            ["Calls"   , '([0-9]+).*Number of Call insts'],
-            ["Allca"   , '([0-9]+).*Number of Alloca insts'],
-            ["Mallc"   , '([0-9]+).*Number of Malloc insts'],
-            ["GEP"     , '([0-9]+).*Number of GetElementPtr insts'],
-            ["Sum"   , sub { return SumCols(@_, 6); }],
-            [],
-            ["num/ind" , '([0-9]+).*number of indirect call sites'],
-            ["indcallee",'([0-9]+).*number of callee functions at'],
-            ["ratio"   , \&Ratio],  # indcallee / num/ind
             []
            );
