@@ -1,4 +1,4 @@
-##===- test/Programs/Makefile.TEST.buildrepo ---------------*- Makefile -*-===##
+##===- test/Programs/TEST.buildrepo.Makefile ---------------*- Makefile -*-===##
 #
 # This "test" is used to copy all compiled bytecode files into the repository.
 #

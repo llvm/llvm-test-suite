@@ -242,7 +242,7 @@ test..%:
 # test.<testname>.%  given input from Output/%.llvm.bc
 #
 ifdef TEST
-TestMakefile := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.$(TEST))
+TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile)
 ifneq ($(TestMakefile),)
 -include $(TestMakefile)
 else

@@ -5,9 +5,8 @@
 #
 ##===----------------------------------------------------------------------===##
 
-
 LEVEL = ../..
-PARALLEL_DIRS  = SingleSource MultiSource
+PARALLEL_DIRS = SingleSource MultiSource
 
 include ${LEVEL}/test/Makefile.tests
 
@@ -15,7 +14,7 @@ include ${LEVEL}/test/Makefile.tests
 # test.<testname>.%  given input from Output/%.llvm.bc
 #
 ifdef TEST
-TestMakefile := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.$(TEST))
+TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile)
 ifneq ($(TestMakefile),)
 -include $(TestMakefile)
 endif
@@ -29,7 +28,7 @@ report.$(TEST).raw.out: $(REPORT_DEPENDENCIES)
 	gmake TEST=$(TEST) 2>&1 | tee $@
 
 report: report.$(TEST).raw.out
-	./generate_report.pl TEST.$(TEST).report < $< | tee report.$(TEST).txt
+	./GenerateReport.pl TEST.$(TEST).report < $< | tee report.$(TEST).txt
 
 clean::
 	rm -f report.*.raw.out report.*.txt

@@ -1,4 +1,4 @@
-##===- test/Programs/Makefile.TEST.example -----------------*- Makefile -*-===##
+##===- test/Programs/TEST.example.Makefile -----------------*- Makefile -*-===##
 #
 # Example to show a custom test.  This test just prints the size of the bytecode
 # file for each program.

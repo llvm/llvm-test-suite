@@ -1,4 +1,4 @@
-##===- test/Programs/Makefile.TEST.poolalloc ---------------*- Makefile -*-===##
+##===- test/Programs/TEST.poolalloc.Makefile ---------------*- Makefile -*-===##
 #
 # Old tests for pool allocation.  These will almost certainly have to be updated
 # to be useful in the future.

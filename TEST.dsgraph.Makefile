@@ -1,4 +1,4 @@
-##===- test/Programs/Makefile.TEST.dsgraph -----------------*- Makefile -*-===##
+##===- test/Programs/TEST.dsgraph.Makefile -----------------*- Makefile -*-===##
 #
 # This recursively traverses the programs, computing DSGraphs for each of the
 # programs in the testsuite.
