@@ -133,22 +133,29 @@ if ($HTML) {
       print "<td><table border='0' cellspacing='0' cellpadding='3'><tr><td>$Str</td></tr></table></td>\n";
     }; "";
   }
+  sub printLine {
+    print "<td bgcolor='" . ($_[0] ? "#DDDDDD" : "#AAAAAA") . "' width=1>\n";
+  }
 
   print "<table border='0' cellspacing='0' cellpadding='0'>\n";
   print "<tr bgcolor=#FFCC99>\n";
-  map { $_ = "<b><a href=\"#$_\">$_</a></b>" if $_ ne "|"; printCell $_ } @Header;
+  map {
+    print "<td bgcolor='#DDAA77' width='1'></td>";
+    $_ = "<b><a href=\"#$_\">$_</a></b>"
+      if $_ ne "|"; printCell $_
+  } @Header;
+  print "<td bgcolor='#DDAA77' width='1'></td>";
   print "\n</tr><tr bgcolor='black'>";
-  print "<td height=1></td>" x @Header;
+  print "<td height=1></td>" x (2*@Header+1);
   print "</tr>\n";
   my $RowCount = 0;
   foreach $Row (@Values) {
-    if (++$RowCount <= 2) {
-      print "<tr bgcolor='white'>\n";
-    } else {
-      print "<tr bgcolor='#CCCCCC'>\n";
-      $RowCount = 0 if ($RowCount > 3);
-    }
-    map { printCell $_ } @$Row;
+    my $IsWhite;
+    $IsWhite = ++$RowCount <= 2;
+    print "<tr bgcolor='" . ($IsWhite ? "white" : "#CCCCCC") . "'>\n";
+    $RowCount = 0 if ($RowCount > 3);
+    map { printLine($IsWhite); printCell $_ } @$Row;
+    printLine($IsWhite);
     print "\n</tr>\n";
   }
   print "\n</table>\n";
@@ -167,7 +174,6 @@ if ($HTML) {
       }
     }
   }
-
 
   #
   # Print out the table now...
