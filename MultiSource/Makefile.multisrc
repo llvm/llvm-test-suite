@@ -1,4 +1,4 @@
-##- test/Programs/MultiSource/Makefile.multisrc ---------------*- Makefile -*-##
+##==- test/Programs/MultiSource/Makefile.multisrc ----------*- Makefile -*-===##
 #
 # This makefile should be used by subdirectories that have multiple source files
 # to be linked together.  This contains all of the common makefile code required
@@ -8,7 +8,7 @@
 #
 # 1. LEVEL - Must be set as per normal semantics: The depth from the top of tree
 #
-##----------------------------------------------------------------------------##
+##===----------------------------------------------------------------------===##
 
 LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
@@ -62,10 +62,3 @@ Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
 
-
-
-# Hackish productions that are useful for testing stuff.
-final: Output/$(PROG).llvm
-	-ls -l Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.bc
-	-cp $(HOME)/LLVMPrograms/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.old.bc
-	cp Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms
