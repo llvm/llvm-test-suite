@@ -1,5 +1,3 @@
-target endian = little
-target pointersize = 32
 %Sp = linkonce global int 0		; <int*> [#uses=1]
 
 implementation   ; Functions:
