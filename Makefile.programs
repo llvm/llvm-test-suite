@@ -241,6 +241,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
+## Alternative command to run llc remotely on another machine:
+## This is very useful when debugging:
+##	-rsh psmith "cd `/bin/pwd`; llc $(LLCFLAGS) -f $< -o $@"
+
 # Assemble (and link) an LLVM-linked program using the system assembler...
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
@@ -328,6 +332,10 @@ Output/%.exe-llc: Output/%.diff-llc
 $(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \
 Output/%.exe-cbe: Output/%.diff-cbe
 	-cp $< $@
+
+# Pseudo target to build just the bytecode file.
+bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc)
+
 endif
 
 # Rules to support the USE_PRECOMPILED_BYTECODE setting If set, submakefiles
@@ -358,10 +366,6 @@ $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
 endif
-
-# Pseudo target to build just the bytecode file.
-bytecode: $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc)
-
 
 # Support for the TEST= option... when TEST= is specified on the command line,
 # the default target is the test target.  Here we dispatch to a specific set of
