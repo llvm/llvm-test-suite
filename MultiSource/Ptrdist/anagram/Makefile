@@ -1,6 +1,8 @@
 LEVEL=../../../..
 PROG=anagram
 #OBJS = anagram.o
+RUN_OPTIONS = words 
+STDIN_FILENAME = input.OUT
 
 include ../Makefile.multisrc
 
