@@ -5,7 +5,8 @@
 #
 ##===----------------------------------------------------------------------===##
 
-#include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.common
+include $(LLVM_SRC_ROOT)/Makefile.rules
 
 ## Information the test should have provided...
 ifndef STDOUT_FILENAME

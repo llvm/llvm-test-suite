@@ -1,6 +1,6 @@
 LEVEL = ../..
 PARALLEL_DIRS := CFP2000 CINT2000 CINT95
-#include $(LEVEL)/../../Makefile.config
+include $(LLVM_OBJ_ROOT)/Makefile.config
 
 #
 # Remove SPEC95 and SPEC2000 per the user's configuration
