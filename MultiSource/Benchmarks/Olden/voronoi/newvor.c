@@ -160,6 +160,10 @@ QUAD_EDGE next_edge, avail_edge;
 
 void delete_all_edges() { next_edge= 0; avail_edge = NYL;}
 
+#if defined(__POWERPC__)
+#define MEMALIGN_IS_NOT_AVAILABLE
+#endif
+
 /* memalign() on my SGI doesn't work. Thus, I have to write my own */
 void* myalign(int align_size, int alloc_size)
 {   
