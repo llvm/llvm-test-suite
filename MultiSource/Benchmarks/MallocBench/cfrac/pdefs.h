@@ -24,7 +24,7 @@ extern char *gc_malloc_atomic();
 #define allocate(size)	(char *) gc_malloc_atomic(size)
 
 #    else
-extern char *malloc();
+extern void *malloc();
 #define allocate(size)	(char *) malloc(size)
 #    endif
 
