@@ -6,6 +6,10 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/04/05 16:35:52  lattner
+ * Finally, fix the last perl bug that prevented it from working with LLVM:
+ *   No, memcpy is NOT allowed when the src & dest overlap!
+ *
  * Revision 1.1  2004/02/17 22:21:16  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -108,7 +112,7 @@ void safexfree();
 long xcount[MAXXCOUNT];
 long lastxcount[MAXXCOUNT];
 #endif /* LEAKTEST */
-#define Copy(s,d,n,t) (void)bcopy((char*)(s),(char*)(d), (n) * sizeof(t))
+#define Copy(s,d,n,t) (void)memmove((char*)(d),(char*)(s), (n) * sizeof(t))
 #define Zero(d,n,t) (void)bzero((char*)(d), (n) * sizeof(t))
 #else /* lint */
 #define New(x,v,n,s) (v = Null(s *))
