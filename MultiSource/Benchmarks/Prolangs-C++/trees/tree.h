@@ -50,7 +50,7 @@ private:
 
   RealNode(float k, char* ch=0);
 
-  ~RealNode(void) {delete symbol; this->Node::~Node();}
+  ~RealNode(void) {delete symbol; }
 
   float nodeValue();
 };
@@ -66,7 +66,7 @@ private:
 
   UnaryNode(char* a, Tree b);
 
-  ~UnaryNode(void) {delete op; delete opnd; this->Node::~Node();}
+  ~UnaryNode(void) {delete op; delete opnd; }
 
   float nodeValue();
 };
@@ -84,7 +84,7 @@ private:
 
   BinaryNode(char* a, Tree b, Tree c);
 
-  ~BinaryNode(void) {delete op; delete left; delete right; this->Node::~Node();}
+  ~BinaryNode(void) {delete op; delete left; delete right; }
 
   float nodeValue();
 };

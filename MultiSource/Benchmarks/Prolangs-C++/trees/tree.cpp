@@ -86,7 +86,7 @@ float UnaryNode::nodeValue() {
 
 // RealNode.cc
 
-RealNode::RealNode(float k, char* ch) {
+RealNode::RealNode(float k, char* ch) : symbol(0) {
   n = k;
   if (ch) {
     strlen(ch), symbol = new char;
@@ -107,7 +107,7 @@ float RealNode::nodeValue() {
 
 // main.cc
 
-main () {
+int main () {
   Tree t1(1), t2("u"), t3(5);
   Tree t4(t1,"*",t2);
   Tree t5("-",t3);
