@@ -194,7 +194,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
+	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) crtend.o -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -202,7 +202,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
+	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) crtend.o -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -215,7 +215,7 @@ Output/gccas-pass-args: $(LGCCAS)
 	sed 's/Pass Arguments: //' < $@.1 > $@
 Output/gccld-pass-args: $(TOOLS)/gccld
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
-	$(LGCCLD) Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
+	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
 
 
