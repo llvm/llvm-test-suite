@@ -21,6 +21,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.2  2004/10/05 00:37:32  lattner
+** Stop using deprecated headers
+**
 ** Revision 1.1  2004/10/04 20:01:13  lattner
 ** Initial checkin of all of the source
 **
@@ -33,8 +36,9 @@
 #ifndef _EMPLOYEE_H
 #define _EMPLOYEE_H
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
+using namespace std;
 
 #define EMPLOYEE_ID 0
 

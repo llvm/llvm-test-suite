@@ -21,6 +21,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.2  2004/10/05 00:37:32  lattner
+** Stop using deprecated headers
+**
 ** Revision 1.1  2004/10/04 20:01:13  lattner
 ** Initial checkin of all of the source
 **
@@ -37,8 +40,9 @@
 
 #define WAGE_WORKER_ID 3
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
+using namespace std;
 
 /* A wage worker  gets paid for every (item, hour, etc) worked/produced */
 

@@ -16,6 +16,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.2  2004/10/05 00:37:32  lattner
+** Stop using deprecated headers
+**
 ** Revision 1.1  2004/10/04 20:01:13  lattner
 ** Initial checkin of all of the source
 **
@@ -30,7 +33,9 @@
 
 #include "employee.h"
 
-#include <iostream.h>
+#include <iostream>
+using namespace std;
+
 
 class EmployeeNode {
 
