@@ -1,5 +1,5 @@
 # Shootout/Makefile
 
-LEVEL = ../../../..
-include ../Makefile.singlesrc
+LEVEL = ../../../../..
+include ../../Makefile.singlesrc
 

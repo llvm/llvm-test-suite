@@ -1,3 +1,3 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
-include ../Makefile.singlesrc
+include ../../Makefile.singlesrc
