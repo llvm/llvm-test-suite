@@ -4,7 +4,7 @@ STDOUT_FILENAME = cook_log.out
 STDERR_FILENAME = cook_log.err
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
-CPPFLAGS = -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DSPEC_STDCPP -DNDEBUG
+CPPFLAGS = -Wno-deprecated -Wno-non-template-friend -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             ggCoverageSolidTexture.cc ggPathDielectricMaterial.cc ggBox2.cc \
