@@ -162,26 +162,26 @@ void openfiles(void)
   if (verboseflag)
     {
       outfile = stringappend(name_base, short_base_length, ".output");
-      foutput = tryopen(outfile, "w");
+      foutput = stdout; /*tryopen(outfile, "w");*/
     }
 
   if (definesflag)
     {
       defsfile = stringappend(name_base, base_length, ".h");
-      fdefines = tryopen(defsfile, "w");
+      fdefines = stdout; /*tryopen(defsfile, "w");*/
     }
 
   actfile = mktemp(stringappend(tmp_base, tmp_len, "act.XXXXXX"));
-  faction = tryopen(actfile, "w+");
-  unlink(actfile);
+  faction = stdout; /*tryopen(actfile, "w+");
+  unlink(actfile);*/
 
   tmpattrsfile = mktemp(stringappend(tmp_base, tmp_len, "attrs.XXXXXX"));
-  fattrs = tryopen(tmpattrsfile,"w+");
-  unlink(tmpattrsfile);
+  fattrs = stdout; /*tryopen(tmpattrsfile,"w+");
+  unlink(tmpattrsfile);*/
 
   tmptabfile = mktemp(stringappend(tmp_base, tmp_len, "tab.XXXXXX"));
-  ftable = tryopen(tmptabfile, "w+");
-  unlink(tmptabfile);
+  ftable = stdout; /*tryopen(tmptabfile, "w+");
+  unlink(tmptabfile);*/
 
 	/* These are opened by `done' or `open_extra_files', if at all */
   if (spec_outfile)
@@ -218,7 +218,7 @@ void open_extra_files(void)
   rewind(fattrs);
   while((c=getc(fattrs))!=EOF)	/* Thank god for buffering */
     putc(c,ftmp);
-  fclose(fattrs);
+  /*fclose(fattrs);*/
   fattrs=ftmp;
 
   fguard = tryopen(guardfile, "w");
@@ -243,6 +243,7 @@ FILE *tryopen(char *name,char *mode)
 
 void done(int k)
 {
+  return;
   if (faction)
     fclose(faction);
 
