@@ -1,0 +1,3 @@
+
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+
