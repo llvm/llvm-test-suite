@@ -80,8 +80,8 @@ MakeSphere( ObjPtr o,int sli, int pol, double r)
   /*printf("MakeSphere");*/
   dfi    = 2*PI/sli;    /* The step in the slices */
   dtheta = 2*PI/pol;    /* The step in the amount of polys in a slice */
-  for(fi=-PI;fi<PI;fi=fi+dfi){ /* The slices */
-    for(theta=-PI;theta<PI;theta=theta+dtheta){   /* The polys in the slices */
+  for(fi=-PI;fi<PI+0.000001;fi=fi+dfi){ /* The slices */
+    for(theta=-PI;theta<PI+0.000001;theta=theta+dtheta){   /* The polys in the slices */
       /*printf(".");
       fflush(stdout);*/
       p[0].x = cos(theta)*cos(fi)*r;
