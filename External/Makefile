@@ -11,16 +11,16 @@ include $(LEVEL)/Makefile.config
 PARALLEL_DIRS := SPEC Povray Namd
 
 ifndef USE_POVRAY
-PARALLEL_DIRS := $(filter-out Povray/, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out Povray, $(PARALLEL_DIRS))
 endif
 
 ifndef USE_NAMD
-PARALLEL_DIRS := $(filter-out Namd/, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out Namd, $(PARALLEL_DIRS))
 endif
 
 # Sparc can't handle Namd: infinite loop, cause unknown
 ifeq ($(ARCH),Sparc)
-PARALLEL_DIRS := $(filter-out Namd/, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out Namd, $(PARALLEL_DIRS))
 endif
 
 include Makefile.external
