@@ -79,7 +79,7 @@ endif
 # continue to be run.
 RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT)
 
-RUNSAFELY_TRACE_EXECS := $(PROGDIR)/RunSafely_trace_execs.sh $(RUNTIMELIMIT)
+RUNSAFELY_TRACE_EXECS := $(RUNSAFELY)
 
 ifndef STDIN_FILENAME
 STDIN_FILENAME := /dev/null
