@@ -12,7 +12,7 @@ PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
-Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
+Output/%.$(TEST).report.txt: Output/%.llvm.bc $(LLI)
 	-(time -p $(LLI) -force-interpreter=false $(JIT_OPTS) $< > /dev/null) > $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
@@ -24,4 +24,4 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 
 # Define REPORT_DEPENDENCIES so that the report is regenerated if lli changes
 #
-REPORT_DEPENDENCIES := $(DUMMYLIB) $(LLI)
+REPORT_DEPENDENCIES := $(LLI)
