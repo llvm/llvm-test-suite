@@ -61,7 +61,7 @@ DIFFPROG = $(PROGDIR)/DiffOutput.sh
 # RUNTIMELIMIT - The number of seconds we should wait before certain events
 # timeout.  This is overridable on the commandline.
 #
-RUNTIMELIMIT := 30
+RUNTIMELIMIT := 40
 
 # RUNSAFELY - This program simply runs another program.  If the program works
 # correctly, this script has no effect, otherwise it will do things like print a
