@@ -7,6 +7,7 @@
 
 TESTNAME = $*
 
+$(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.llvm.bc
 	@echo "========================================="
 	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"

@@ -5,5 +5,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
+$(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.llvm.bc
 	$(LANALYZE) -unsafepointertypes $<
