@@ -53,6 +53,11 @@ Output/%.native: $(NObjects)
 
 # Hackish productions that are useful for testing stuff.
 final: Output/$(PROG).llvm
+	-ls -l Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.bc
+	-cp $(HOME)/LLVMPrograms/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.old.bc
+	cp Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms
+	
+
 ds: Output/$(PROG).linked.bc
 	$(LANALYZE) -datastructure $< -t
 
