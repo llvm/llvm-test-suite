@@ -86,6 +86,14 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
+Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
+	$(SPEC_SANDBOX) jit-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  $(LLI) -regalloc=linearscan $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
+	-(cd Output/jit-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/jit-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
