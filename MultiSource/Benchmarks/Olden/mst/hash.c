@@ -5,12 +5,12 @@
 
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
-static int remaining = 0;
-static char *temp;
-
 #ifdef __llvm__
 #define localmalloc malloc
 #else
+static int remaining = 0;
+static char *temp;
+
 static char *localmalloc(int size) 
 {
   char *blah;
@@ -75,15 +75,17 @@ void HashInsert(void *entry,unsigned int key,Hash hash)
   ent->entry = entry;
 }
 
-void HashDelete(unsigned int key,Hash hash)
-{
-  HashEntry *ent;
+void HashDelete(unsigned key, Hash hash) {
   HashEntry tmp;
-  int j;
+  int j = (hash->mapfunc)(key);
+  HashEntry *ent = &hash->array[j];
 
-  j = (hash->mapfunc)(key);
-  for (ent=&(hash->array[j]); (*ent) && (*ent)->key!=key; ent=&((*ent)->next));
-  assert(4,*ent);
+  while (*ent && (*ent)->key != key) {
+    ent = &(*ent)->next;
+  }
+
+  assert(4, *ent);
+
   tmp = *ent;
   *ent = (*ent)->next;
   localfree(tmp);
