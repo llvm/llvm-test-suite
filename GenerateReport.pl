@@ -11,7 +11,7 @@
 #           and descriptions for the columns of interest.  In reads the raw log
 #           input from stdin and writes the table to stdout.
 #
-# Syntax:   GenerateReport.pl [-html] [-latex] [-graphs] <ReportDesc>
+# Syntax:   GenerateReport.pl [-html] [-latex] [-graphs] [-csv] <ReportDesc>
 #                    < Input > Output
 #
 
