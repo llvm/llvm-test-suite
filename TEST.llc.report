@@ -36,8 +36,8 @@ sub TotalInstrEliminations {
  [],
 # Sizes
  ["#MCInsts", '([0-9]+).*Number of machine instrs printed'],
- ["#Int"    , '([0-9]+).*Number of original intervals'],
- ["#IntJoin", '([0-9]+).*Number of intervals after coalescing'],
+ ["#IntOrig", '([0-9]+).*Number of original intervals'],
+ ["#IntCoal", '([0-9]+).*Number of intervals after coalescing'],
  [],
 # Number of transformations
  ["#store" , '([0-9]+).*Number of stores added'],
