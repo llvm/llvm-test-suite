@@ -259,7 +259,7 @@ Output/gccld-pass-args: $(LGCCLDPROG)
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
-	-$(LDIS) -c < $< > $@
+	-$(LDIS) -c $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
@@ -383,7 +383,7 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS)
 
 
-LIBPROFILESO := $(LEVEL)/lib/Debug/libprofile_rt.so
+LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
 
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
