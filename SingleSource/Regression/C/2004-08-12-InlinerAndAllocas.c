@@ -1,7 +1,11 @@
 // A compiler cannot inline Callee into main unless it is prepared to reclaim
 // the stack memory allocated in it.
 
+#ifdef __FreeBSD__
+#include <stdlib.h>
+#else
 #include <alloca.h>
+#endif
 #include <stdio.h>
 
 static int Callee(int i) {
