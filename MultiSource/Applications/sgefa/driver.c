@@ -49,7 +49,7 @@ main()
 
     /* For a successful return from SGEFA test SGESL. */
     if( retval ) 
-      printf("Zero Column %d found \n", retval );
+      ;//printf("Zero Column %d found \n", retval );
     else {
       /* Solve system. */
       (void)sgesl( &a, ipvt, b, 0 );
