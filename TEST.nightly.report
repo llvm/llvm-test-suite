@@ -75,5 +75,5 @@ sub GCCLLC_BETARatio {
  ["JIT-BETA" , 'TEST-RESULT-jit-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
- ["GCC/LLC-Beta"  , \&GCCLLC_BETARatio]
+ ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio]
 );
