@@ -45,9 +45,8 @@ bugpoint-llc:   Output/$(PROG).bugpoint-llc
 # Raw bytecode files are files created by simply linking the output of the GCC
 # frontend without running gccas.
 #
-Output/%.rbc: Output/%.ll $(LAS)
-	$(LAS) -f $< -o - | $(LOPT) -f -q -funcresolve -o $@
-
+Output/%.rbc: Output/%.ll $(LLVMAS)
+	$(LLVMAS) -f $< -o - | $(LOPT) -f -q -funcresolve -o $@
 
 ifndef USE_PRECOMPILED_BYTECODE
 
@@ -65,4 +64,3 @@ endif
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
-
