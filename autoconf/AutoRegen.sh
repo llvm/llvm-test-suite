@@ -23,8 +23,8 @@ else
 fi
 echo "Regenerating aclocal.m4 with aclocal"
 rm -f aclocal.m4
-aclocal -I $cwd/m4 -I $llvm_m4 || die "aclocal failed"
+aclocal --force -I $cwd/m4 -I $llvm_m4 || die "aclocal failed"
 echo "Regenerating configure with autoconf 2.5x"
-autoconf -o ../configure configure.ac || die "autoconf failed"
+autoconf --force --warnings=all -o ../configure configure.ac || die "autoconf failed"
 cd ..
 exit 0
