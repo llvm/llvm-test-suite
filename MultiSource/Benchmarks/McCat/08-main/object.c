@@ -24,7 +24,6 @@ Oalloc(char name[57])
 {
   ObjPtr o=NULL;
   o = (ObjPtr) malloc(sizeof(object));
-  printf(o->Name);
   strcpy(o->Name,name);
   o->Color.R = 1;
   o->Color.G = 1;
