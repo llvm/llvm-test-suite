@@ -16,7 +16,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-PROGRAMS_TO_TEST = $(basename $(Source))
+PROGRAMS_TO_TEST = $(patsubst $(SourceDir)%,%,$(basename $(Source)))
 
 include $(LEVEL)/test/Programs/Makefile.programs
 .PRECIOUS: Output/%.linked.rll
@@ -25,14 +25,14 @@ ifndef USE_PRECOMPILED_BYTECODE
 Output/%.linked.rll: Output/%.ll
 	cp -f $< $@
 
-Output/%.LOC.txt: %.c
+Output/%.LOC.txt: $(SourceDir)/%.c
 	cat $< | wc -l > $@
-Output/%.LOC.txt: %.cpp
+Output/%.LOC.txt: $(SourceDir)/%.cpp
 	cat $< | wc -l > $@
 endif
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
-Output/%.native: %.c Output/.dir
+Output/%.native: $(SourceDir)/%.c Output/.dir
 	$(CC) $(CFLAGS) -O2 $< -lm -o $@
-Output/%.native: %.cpp Output/.dir
+Output/%.native: $(SourceDir)/%.cpp Output/.dir
 	$(CXX) $(CXXFLAGS) -O2 $< -lm -o $@

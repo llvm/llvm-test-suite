@@ -31,13 +31,22 @@ NObjects := $(addprefix Output/,$(NObjs))
 
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
 
-Output/%.o: $(SourceDir)%.c Output/.dir
+Output/%.o: $(SourceDir)/%.c Output/.dir
 	$(CC) $(CPPFLAGS) $(CFLAGS) -O2 -c $< -o $@
 
-Output/%.o: $(SourceDir)%.cpp Output/.dir
+Output/%.o: $(SourceDir)/%.cpp Output/.dir
 	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
 
-Output/%.o: $(SourceDir)%.cc Output/.dir
+Output/%.o: $(SourceDir)/%.cc Output/.dir
+	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
+
+Output/%.o: %.c Output/.dir
+	$(CC) $(CPPFLAGS) $(CFLAGS) -O2 -c $< -o $@
+
+Output/%.o: %.cpp Output/.dir
+	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
+
+Output/%.o: %.cc Output/.dir
 	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
 
 bugpoint-gccas: Output/$(PROG).bugpoint-gccas

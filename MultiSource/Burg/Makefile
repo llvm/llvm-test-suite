@@ -1,34 +1,34 @@
 LEVEL = ../../../..
 
+include $(LEVEL)/Makefile.config
+
 PROG     = burg
-CPPFLAGS = -DDEBUG 
+CPPFLAGS = -DDEBUG
 LDFLAGS  = 
 
 ExtraSource := y.tab.c
 
-STDIN_FILENAME = sample.gr
+STDIN_FILENAME = $(BUILD_SRC_DIR)/sample.gr
 
-Source  := $(ExtraSource) $(wildcard *.c)
+include $(LEVEL)/Makefile.config
 
-## $(BUILD_OBJ_ROOT)/Depend/y.tab.d:: y.tab.c $(BUILD_OBJ_ROOT)/Depend/.dir
-
-%.cpp %.h : %.y
-	yacc -d $<
-	$(VERB) cp -p y.tab.c $(basename $@).cpp
-	$(VERB) cp -p y.tab.h $(basename $@).h
-
-##	$(VERB) mv -f $(basename $@).tab.c $(basename $@).cpp
-##	$(VERB) mv -f $(basename $@).tab.h $(basename $@).h
+Source  := $(ExtraSource) $(wildcard $(BUILD_SRC_DIR)/*.c)
 
 include	../Makefile.multisrc
 
-y.tab.c y.tab.h: gram.y
+#
+# JTC -
+#	This is stupid.  I bet we'll yacc twice because of this, but for now it
+#	seems to work.  Ideally, these yacc rules should be in a master rule
+#	file for the test suite, separate from the LLVM build rules.
+# 
+y.tab.h:: $(SourceDir)/gram.y
 	yacc -d $<
 
-lex.c: y.tab.h
-Source := $(patsubst gram.%,,$(Source))
+y.tab.c: $(SourceDir)/gram.y
+	yacc -d $<
 
-## $(BUILD_OBJ_ROOT)/Depend/gram.d: gram.y
+$(SourceDir)/lex.c: y.tab.h
 
 src:
 	echo Sources = $(Source)
