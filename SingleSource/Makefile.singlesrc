@@ -16,7 +16,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-PROGRAMS_TO_TEST = $(Source:.c=)
+PROGRAMS_TO_TEST = $(basename $(Source))
 
 include $(LEVEL)/test/Programs/Makefile.programs
 .PRECIOUS: Output/%.linked.rll
@@ -32,3 +32,5 @@ endif
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: %.c Output/.dir
 	$(CC) $(CFLAGS) $< -lm -o $@
+Output/%.native: %.cpp Output/.dir
+	$(CXX) $(CXXFLAGS) $< -lm -o $@
