@@ -8,8 +8,5 @@ ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 802400 20 0 7
 endif
 
-# This program is adversely effected by the underlying precision of the machine
-PROGRAM_IS_NONDETERMINISTIC = 1
-
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
