@@ -160,7 +160,7 @@ QUAD_EDGE next_edge, avail_edge;
 
 void delete_all_edges() { next_edge= 0; avail_edge = NYL;}
 
-#if defined(__POWERPC__)
+#if defined(__POWERPC__) || defined(__FreeBSD__)
 #define MEMALIGN_IS_NOT_AVAILABLE
 #endif
 
