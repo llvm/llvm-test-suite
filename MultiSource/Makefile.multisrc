@@ -54,10 +54,14 @@ Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 	$(LGCCAS) $(STATS) $< -o $@
 
+ifndef USE_PRECOMPILED_BYTECODE
+
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
 Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
+
+endif
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
