@@ -8,9 +8,7 @@ static char *sccsid = "@(#)pw.c	2.5 (smail) 9/15/87";
 #include <pwd.h>
 #include "defs.h"
 #include <ctype.h>
-
-char *malloc();
-void free();
+#include <stdlib.h>
 
 typedef struct pw_node pwlist;
 

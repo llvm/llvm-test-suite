@@ -506,7 +506,7 @@ void strip_comments(char *p)
 
 node *add_vert(node *head,char *str)
 {
-	char *p, *malloc();
+	char *p;
 /*	void free();         */
 	node *new;
 
@@ -537,7 +537,6 @@ node *add_vert(node *head,char *str)
 
 void add_horz(node *head,char *str)
 {
-	char *malloc();
 	node *new;
 
 	if((new = (node *) malloc(sizeof(node))) != NNULL) {

@@ -12,9 +12,6 @@
 char responce[MAX_RESP_LEN+1];
 BOOL got_unused_responce = NO;
 
-extern char *strcat(char *s1, const char *s2);
-extern int strncmp(const char *s1, const char *s2, size_t n);
-
 void prompt(FILE *output,FILE *input)
 {
   extern char *get_responce(FILE *input);

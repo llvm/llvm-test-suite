@@ -59,8 +59,9 @@ static char copyright[] = "@(#) Copyright (c) 1990 Regents of the University of 
 #define DXI_SETSIZELIMIT(x, y) { (void) memcpy( &y[DXI_H_SIZELIMIT], \
 			(char *) &x, sizeof(short));}
 
-extern void *memset(void *s, int c, size_t n);
-extern int errno, dxi_debug, dxi_timeout, dxi_retries;
+#include <string.h>
+#include <errno.h>
+extern int dxi_debug, dxi_timeout, dxi_retries;
 extern char dxi_options;
 
 #ifndef INADDR_LOOPBACK

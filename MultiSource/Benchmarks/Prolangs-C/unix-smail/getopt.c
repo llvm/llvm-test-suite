@@ -24,10 +24,9 @@
 
 /* This include is needed only to get "index" defined as "strchr" on Sys V. */
 #include "defs.h"
+#include <strings.h>
 
 /*LINTLIBRARY*/
-#define NULL	0
-#define EOF	(-1)
 #define ERR(s, c)	if(opterr){\
 	extern int write();\
 	char errbuf[2];\
@@ -36,12 +35,11 @@
 	(void) write(2, s, (unsigned)strlen(s));\
 	(void) write(2, errbuf, 2);}
 
-extern char *index();
-
 int	opterr = 1;
 int	optind = 1;
 int	optopt;
 char	*optarg;
+#define EOF (-1)
 
 int getopt(int argc,char **argv,char *opts)
 {
