@@ -2,7 +2,7 @@ LEVEL = ../..
 
 include $(LEVEL)/Makefile.config
 
-PROG = spec_namd
+PROG = namd
 SourceDir := $(NAMD_ROOT)
 
 CFLAGS += -Wno-deprecated
