@@ -1,0 +1,12 @@
+LEVEL = ../../../..
+
+PROG     = np
+#CPPFLAGS = -DVERSION='"1.00"' -DCOMPDATE="\"today\"" -DCFLAGS='""' -DHOSTNAME="\"thishost\"" 
+LDFLAGS  = -lstdc++
+ifdef LARGE_PROBLEM_SIZE
+#RUN_OPTIONS = ref.in
+else
+#RUN_OPTIONS = test.in
+endif
+include $(LEVEL)/MultiSource/Makefile.multisrc
+
