@@ -5,8 +5,14 @@ STDIN_FILENAME  = $(RUN_TYPE).in
 
 # We need to include unistd.h because something with Fedora Core 1 is broken,
 # and we need the sysconf() macros.
-CPPFLAGS = -include unistd.h -DSYS_IS_USG -DSYS_HAS_CALLOC_PROTO -DSYS_HAS_IOCTL_PROTO -DSYS_HAS_TIME_PROTO -DSYS_HAS_READ_PROTO
+CPPFLAGS = -include unistd.h -DSYS_HAS_CALLOC_PROTO -DSYS_HAS_IOCTL_PROTO -DSYS_HAS_TIME_PROTO -DSYS_HAS_READ_PROTO
 include ../../Makefile.spec2000
 ifeq ($(ARCH),Sparc)
 CPPFLAGS+= -DSPEC_CPU2000_LP64
+endif
+
+ifeq ($(OS),Darwin)
+CPPFLAGS += -DSYS_IS_BSD
+else
+CPPFLAGS += -DSYS_IS_USG
 endif
