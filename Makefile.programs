@@ -384,7 +384,7 @@ Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
 Output/%.bugpoint-gccld: Output/%.nogccldopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
-	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
+	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
