@@ -7,7 +7,7 @@
 # Sort by program name
 $SortCol = 0;
 
-my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
+my $WallTimeRE = "[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock";
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
@@ -20,14 +20,12 @@ my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
  ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
- ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
- ["LLC"      , "TEST-RESULT-llc: $WallTimeRE"],
+ ["LLC<br>compile" , "TEST-RESULT-llc: $WallTimeRE"],
+ ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: $WallTimeRE"],
+ ["Machine<br>code", 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  [],
- ["NAT"      , 'TEST-RESULT-nat-time: real\s*([.0-9m]+)'],
+ ["GCC"      , 'TEST-RESULT-nat-time: real\s*([.0-9m]+)'],
  ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m]+)'],
  ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m]+)'],
- ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)'],
- [],
- ["MachCode" , 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
- ["CompTime" , "TEST-RESULT-jit-comptime: $WallTimeRE"]
+ ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)']
 );
