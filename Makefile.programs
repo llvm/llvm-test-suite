@@ -113,10 +113,7 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 all:: $(BYTECODE)
 
 ifdef RUN_GCC_ONLY
-DISABLE_LLC = 1
-DISABLE_CBE = 1
-DISABLE_JIT = 1
-ENABLE_LLI  =
+DISABLE_DIFFS = 1
 all:: $(GCCOUTPUT)
 endif
 
@@ -126,14 +123,15 @@ else
 DISABLE_LLC_DIFFS = 1
 endif
 
-ifndef DISABLE_LLC_DIFFS
-all:: $(LLCDIFFS)
-endif
-
 ifndef DISABLE_CBE
 all:: $(CBECODEGEN)
 else
 DISABLE_CBE_DIFFS = 1
+endif
+
+ifndef DISABLE_DIFFS
+ifndef DISABLE_LLC_DIFFS
+all:: $(LLCDIFFS)
 endif
 
 ifndef DISABLE_CBE_DIFFS
@@ -148,6 +146,7 @@ endif
 
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
+endif
 endif
 
 # Given a version of the entire program linked together into a single unit of
