@@ -30,6 +30,6 @@ clean::
 %.c: %.f
 	$(F2C) $< >& /dev/null
 	
-CPPFLAGS = -I $(F2C_INC) 
-LDFLAGS += -L $(F2C_LIB) -lf2c
+CPPFLAGS = -I$(F2C_INC) 
+LDFLAGS += -L$(F2C_LIB) -lf2c
 
