@@ -131,6 +131,7 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
 
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
+BUGPOINT_OPTIONS += -timeout=$(RUNTIMELIMIT)
 BUGPOINT_OPTIONS += --tool-args $(LLCFLAGS)
 BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 
