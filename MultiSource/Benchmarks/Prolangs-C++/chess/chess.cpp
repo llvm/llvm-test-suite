@@ -37,12 +37,12 @@ Board::Board ()
 		config [1][i] = new Pawn(CH_BLACK);
 		config [6][i] = new Pawn(CH_WHITE);
 	}
-	for (i=0;i<8;i++)
+	for (int i=0;i<8;i++)
 		for (int j=2;j<6;j++)
 			config [j][i] = 0;
 }
 
-Board :: Move (Pos *f, Pos *t)
+int Board :: Move (Pos *f, Pos *t)
 {
 	config [t->x][t->y] = config [f->x][f->y];
 	config [f->x][f->y] = 0;
@@ -74,7 +74,7 @@ Player :: Player(char *contestant,enum Colour c) : myCol (c)
 	PaintBoard ();
 } 
 
-Player :: Move (Pos *f, Pos *t)
+int Player :: Move (Pos *f, Pos *t)
 {
 	board->Move (f, t);
 	board->Dump ();
@@ -186,7 +186,7 @@ void Player :: CreateScratch ()
 char gameNotOver = 1;
 char firstMove = 0;
 
-main ()
+int main ()
 {
 //	struct stat Stat;
 //	FILE *fp;
