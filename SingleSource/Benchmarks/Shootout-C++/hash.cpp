@@ -16,7 +16,7 @@ struct eqstr {
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 3500000);
     char buf[16];
     typedef hash_map<const char*, int, hash<const char*>, eqstr> HM;
     HM X;

@@ -26,7 +26,7 @@ void sieve(list<int>& unknown, vector<int>& primes)
 int main(int argc, char *argv[]) 
 {
     size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 
-1);
+                  500);
 
 	vector<int> primes;
 

@@ -15,7 +15,7 @@ unsigned long fib(unsigned long n) {
 }
 
 int main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 43);
 
     cout << fib(n) << endl;
     return(0);

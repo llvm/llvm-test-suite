@@ -19,7 +19,7 @@ inline double gen_random(double max) {
 }
 
 int main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 1);
+    int N = ((argc == 2) ? atoi(argv[1]) : 400000000);
     double result = 0;
     
     while (N--) {

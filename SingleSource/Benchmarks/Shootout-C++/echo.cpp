@@ -146,7 +146,7 @@ echo_server (int n) {
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 100000);
     echo_server(n);
     return(0);
 }

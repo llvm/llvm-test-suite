@@ -43,7 +43,7 @@ private:
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 1000000000);
 
     bool val = true;
     Toggle *toggle = new Toggle(val);

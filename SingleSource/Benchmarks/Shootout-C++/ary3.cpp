@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    int i, k, n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int i, k, n = ((argc == 2) ? atoi(argv[1]) : 1500000);
     typedef vector<int> ARY;
     ARY x(n);
     ARY y(n);

@@ -46,7 +46,7 @@ size_t test_lists() {
 }
 
 int main(int argc, char* argv[]) {
-    size_t ITER = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 1);
+    size_t ITER = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 3000);
 
     size_t result = 0;
     while (ITER > 0) {

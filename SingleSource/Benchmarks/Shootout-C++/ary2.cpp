@@ -7,7 +7,7 @@
 
 int
 main(int argc, char *argv[]) {
-    int i, n = 10*((argc == 2) ? atoi(argv[1]) : 1);
+    int i, n = 10*((argc == 2) ? atoi(argv[1]) : 9000000);
     typedef std::vector<int> ARY;
     ARY x(n);
     ARY y(n);

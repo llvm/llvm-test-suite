@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int i, n = ((argc == 2) ? atoi(argv[1]) : 50000000);
     string str;
     size_t capacity = 31;
     str.reserve(capacity); // as per C-string

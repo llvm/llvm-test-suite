@@ -40,7 +40,7 @@ private:
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 70000000);
 
     Toggle *toggle1 = new Toggle(true);
     for (int i=0; i<5; i++) {

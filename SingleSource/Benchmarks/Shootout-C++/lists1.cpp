@@ -27,7 +27,7 @@ void list_print_n (list<int> L, int n) {
 }
 
 int main(int argc, char* argv[]) {
-    int N = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 1);
+    int N = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 10000000);
     list<int>::iterator i;
 
     // create empty list B

@@ -65,11 +65,12 @@ mid);
     T kurtosis;
 };
 
-int main() {
+int main(int argc, char**argv) {
+    int n = ((argc == 2) ? atoi(argv[1]) : 50000000);
     vector<double> v;
     double d;
 
-    for (unsigned i = 0; i != 500; ++i) v.push_back(i);
+    for (unsigned i = 0; i != n; ++i) v.push_back(i);
     moments<double> m(v.begin(), v.end());
 
     printf("n:                  %d\n", v.end() - v.begin());
