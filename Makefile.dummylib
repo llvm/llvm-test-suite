@@ -10,7 +10,7 @@
 # external functions for dsanalysis.
 #
 DUMMYLIB := $(DESTLIBBYTECODE)/libdummy.bc
-DUMMYSRC := $(LEVEL)/runtime/libdummy
+DUMMYSRC := $(LLVM_SRC_ROOT)/runtime/libdummy
 
 # Rebuild dummylib if necessary...
 $(DUMMYLIB) : $(wildcard $(DUMMYSRC)/*.c)

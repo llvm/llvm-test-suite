@@ -401,7 +401,7 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 
-LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
+LIBPROFILESO = $(LLVM_OBJ_ROOT)/lib/Debug/libprofile_rt.so
 
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
@@ -529,7 +529,7 @@ test:: test-setup $(PROGRAMS_TO_TEST:%=test.$(TEST).%) test-finish
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #
 TEST_FILES = $(wildcard $(PROGDIR)/TEST.*.Makefile) \
-             $(wildcard $(LEVEL)/projects/*/test/TEST.*.Makefile)
+             $(wildcard $(LLVM_SRC_ROOT)/projects/*/test/TEST.*.Makefile)
 AVAILABLE_TESTS = $(patsubst TEST.%.Makefile,%,$(notdir $(TEST_FILES)))
 
 # If they just say 'make test' then we print out an error telling the user to
@@ -551,7 +551,7 @@ test..%:
 #
 ifdef TEST
 TestMakefile := $(wildcard $(PROGDIR)/TEST.$(TEST).Makefile) \
-                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
+                $(wildcard $(LLVM_SRC_ROOT)/projects/*/test/TEST.$(TEST).Makefile)
 TestReport   := $(wildcard $(PROGDIR)/TEST.$(TEST).report) \
                 $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).report)
 TestGnuPlot  := $(wildcard $(PROGDIR)/TEST.$(TEST).gnuplot) \
