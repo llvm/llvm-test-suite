@@ -48,16 +48,16 @@ struct Village *alloc_tree(int level, int lo, int proc,
     new->hosp.num_waiting_patients = 0;
     new->hosp.assess.forward = NULL;
     new->hosp.assess.back = NULL;
-    new->hosp.assess.patient = NULL;  // ADDED FOR LLVM [OLDEN BUGS!]
+    new->hosp.assess.patient = NULL;  /* ADDED FOR LLVM [OLDEN BUGS!] */
     new->hosp.waiting.forward = NULL;
     new->hosp.waiting.back = NULL;
-    new->hosp.waiting.patient = NULL; // ADDED FOR LLVM [OLDEN BUGS!]
+    new->hosp.waiting.patient = NULL; /* ADDED FOR LLVM [OLDEN BUGS!] */
     new->hosp.inside.forward = NULL;
     new->hosp.inside.back = NULL;
-    new->hosp.inside.patient = NULL;  // ADDED FOR LLVM [OLDEN BUGS!]
-    new->hosp.up.forward = NULL;      // ADDED FOR LLVM [OLDEN BUGS!]
-    new->hosp.up.back = NULL;         // ADDED FOR LLVM [OLDEN BUGS!]
-    new->hosp.up.patient = NULL;      // ADDED FOR LLVM [OLDEN BUGS!]
+    new->hosp.inside.patient = NULL;  /* ADDED FOR LLVM [OLDEN BUGS!] */
+    new->hosp.up.forward = NULL;      /* ADDED FOR LLVM [OLDEN BUGS!] */
+    new->hosp.up.back = NULL;         /* ADDED FOR LLVM [OLDEN BUGS!] */
+    new->hosp.up.patient = NULL;      /* ADDED FOR LLVM [OLDEN BUGS!] */
     new->returned.back = NULL;
     new->returned.forward = NULL;
 
