@@ -14,6 +14,8 @@ int main() { return 0; }
 
 #define I 1.0iF
 
+#include <tgmath.h>
+
 void emit(double __complex__ X) {
   printf("%f\n", (double)X);
 }
