@@ -11,6 +11,8 @@
 #define A	16807.0
 #define M	2147483647.0
 
+void exit(int);
+
 /* random:
  * return a random number, which is also the next seed.
  */
@@ -61,11 +63,11 @@ double cputime()
  * ERROR: scream and die quickly.
  */
 
-error(char *msg, char *a1, char *a2, char *a3, char *a4)
+error(char *msg)
 {
     extern int errno;
 
-    fprintf(stderr, msg, a1, a2, a3, a4);
+    fprintf(stderr, msg);
     if (errno != 0)
         perror("Error");
     exit(0);
