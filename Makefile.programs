@@ -171,7 +171,7 @@ all:: $(LLCDIFFS)
 ifdef ENABLE_LINEARSCAN
 all:: $(LLCLSDIFFS)
 endif
-endif
+endif#DISABLE_LLC_DIFFS
 
 ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
@@ -180,16 +180,16 @@ endif
 ifdef TARGET_HAS_JIT
 ifndef DISABLE_JIT
 all:: $(JITDIFFS)
-endif
 ifdef ENABLE_LINEARSCAN
 all:: $(JITLSDIFFS)
 endif
-endif
+endif#DISABLE_JIT
+endif#TARGET_HAS_JIT
 
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
-endif
+endif#DISABLE_DIFFS
 
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
