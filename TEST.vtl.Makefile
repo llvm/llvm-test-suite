@@ -39,7 +39,11 @@ $(PROGRAMS_TO_TEST:%=test.$(TEST).pa.%): \
 test.$(TEST).pa.%: Output/%.poolalloc.cbe
 	@echo "========================================="
 	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
-	$(VERB) $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+ifeq ($(RUN_OPTIONS),)
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+else
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<,"$(RUN_OPTIONS)"
+endif
 	-$(VERB) $(VTL) run $*
 	-$(VERB) $(VTL) view > $@
 	$(VERB)  $(VTL) delete $* -f
@@ -51,7 +55,11 @@ $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.cbe
 	@echo "========================================="
 	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
-	$(VERB) $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+ifeq ($(RUN_OPTIONS),)
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+else
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<,"$(RUN_OPTIONS)"
+endif
 	-$(VERB) $(VTL) run $*
 	-$(VERB) $(VTL) view > $@
 	$(VERB)  $(VTL) delete $* -f
