@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include "defines.h"
 
+#if defined(__alpha__)
+#include <malloc.h>
+#endif
+
+
 VERTEX_PTR *vp ;
 struct VERTEX *va ;
 EDGE_PTR *next ;
