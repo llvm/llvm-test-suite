@@ -84,6 +84,7 @@ programs.
 /***********************/
 
 #include   <stdio.h>
+#define long int
 
 static char *name1, *name2;             /* names of sequence files    */
 
@@ -312,7 +313,8 @@ static long al_len;                        /* length of alignment */
    V[a][b] is the score of aligning a and b, and -(Q+R*i) is the score
    of an i-symbol indel.                                               */
 
-SIM(A,B,M,N,K,V,Q,R,nseq) char A[],B[]; long M,N,K,V[][CMAX],Q,R,nseq;
+SIM(A,B,M,N,K,V,Q,R,nseq)
+  char A[],B[]; long M,N,K,V[][CMAX],Q,R,nseq;
 { long endi, endj, stari, starj;        /* endpoint and startpoint */ 
   long  score;                          /* the max score in LIST */
   long count;                           /* maximum size of list */      
@@ -1195,7 +1197,7 @@ double dtime()
 	return q;
 }
 #endif
-
+#undef long
 /*****************************************************/
 /*  UNIX dtime(). This is the preferred UNIX timer.  */
 /*  Provided by: Markku Kolkka, mk59200@cc.tut.fi    */
