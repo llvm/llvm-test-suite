@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #endif
 
+extern int atoi(const char *);
+
 #ifdef TORONTO
 int NumNodes;
 #else
