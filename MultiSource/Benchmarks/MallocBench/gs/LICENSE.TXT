@@ -2,7 +2,8 @@ gs - Part of the Malloc Benchmark Suite
 -------------------------------------------------------------------------------
 This is a *modified* version of GhostScript (gs).  The Makefile has been
 replaced with one used for the LLVM test suite, and source files have been
-tweaked to compile correctly on Linux.
+tweaked to compile correctly on Linux.  Some unnecessary source files have been
+removed.
 
 The program may also have other modifications made by
 ftp://ftp.cs.colorado.edu/pub/cs/misc/malloc-benchmarks.
