@@ -59,5 +59,6 @@ sub GCCCBERatio {
  ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["GCC/LLC"  , \&GCCLLCRatio],
- ["GCC/CBE"  , \&GCCCBERatio]
+ ["GCC/CBE"  , \&GCCCBERatio],
+ ["LLC-LS"   , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime]
 );
