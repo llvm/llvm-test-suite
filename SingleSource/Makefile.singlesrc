@@ -24,6 +24,8 @@ include $(LEVEL)/test/Programs/Makefile.programs
 ifndef USE_PRECOMPILED_BYTECODE
 Output/%.linked.rbc: Output/%.ll
 	-$(LLVMAS) < $< > $@
+Output/%.linked.rll: Output/%.ll
+	-cp -f $< $@
 
 Output/%.LOC.txt: $(SourceDir)/%.c
 	cat $< | wc -l > $@
