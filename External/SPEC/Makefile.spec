@@ -50,7 +50,7 @@ LCCFLAGS  := -O2
 LCXXFLAGS := -O2
 
 CPPFLAGS += -DSPEC_CPU2000
-SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
+SPEC_SANDBOX := $(LLVM_SRC_ROOT)/test/Programs/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
 REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
@@ -65,7 +65,7 @@ LOCAL_OUTPUTS := $(notdir $(wildcard $(REF_OUT_DIR)/*))
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -73,7 +73,7 @@ Output/%.out-nat: Output/%.native
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLI_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/lli-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -81,7 +81,7 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) jit-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -89,7 +89,7 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -97,7 +97,7 @@ Output/%.out-llc: Output/%.llc
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -105,7 +105,7 @@ Output/%.out-cbe: Output/%.cbe
 $(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
 Output/%.trace-out-llc: Output/%.trace.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -113,7 +113,7 @@ Output/%.trace-out-llc: Output/%.trace.llc
 $(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
 Output/%.trace-out-cbe: Output/%.trace.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
@@ -121,7 +121,7 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
 $(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
 Output/%.out-tracing: Output/%.trace
 	$(SPEC_SANDBOX) trace-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/trace-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/trace-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time

@@ -31,15 +31,6 @@ NObjects := $(addprefix Output/,$(NObjs))
 
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
 
-Output/%.o: $(SourceDir)/%.c Output/.dir
-	$(CC) $(CPPFLAGS) $(CFLAGS) -O2 -c $< -o $@
-
-Output/%.o: $(SourceDir)/%.cpp Output/.dir
-	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
-
-Output/%.o: $(SourceDir)/%.cc Output/.dir
-	$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 -c $< -o $@
-
 Output/%.o: %.c Output/.dir
 	$(CC) $(CPPFLAGS) $(CFLAGS) -O2 -c $< -o $@
 
@@ -71,7 +62,7 @@ Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)
-	cat $(Source) $(wildcard $(SourceDir)/*.h) | wc -l > $@
+	cat $^ $(wildcard $(SourceDir)/*.h) | wc -l > $@
 
 endif
 
