@@ -61,24 +61,25 @@ $SortReverse = 1;
             'yacr2'      => 'ptrdist-yacr2',
             'bc'         => 'ptrdist-bc',
             '-' => '-',
+            '179.art'    => '179.art',
+            '183.equake' => '183.equake',
             '181.mcf'    => '181.mcf',
             '256.bzip2'  => '256.bzip2',
             '164.gzip'   => '164.gzip',
             '197.parser' => '197.parser',
+            '188.ammp'   => '188.ammp',
+            '175.vpr'    => '175.vpr',
             '300.twolf'  => '300.twolf',
+            '186.crafty' => '186.crafty',
             '255.vortex' => '255.vortex',
+            '254.gap'    => '254.gap',
             '-' => '-',
             'sgefa'      => 'sgefa',
             'sim'        => 'sim',
-            'burg'       => 'burg',
-            'gnuchess'   => 'gnuchess',
-            'larn'       => 'larn',
-            'flex'       => 'flex',
-            'moria'      => 'moria',
-            'povray31'   => 'povray31'
+            'burg'       => 'burg'
            );
 
-@LatexColumns = (1, 27, 19,    # LOC, #Instrs, MaxSCC
+@LatexColumns = (1, 27, 19,    # LOC, #MemInstrs, MaxSCC
                  4, 5, 6, 7,   # Execution times
                  11,           # Memory BU
                  12,           # Memory TD
