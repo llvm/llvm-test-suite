@@ -15,9 +15,6 @@
 
 #define PLAIN         /* Toronto uses the "plain" version */
 #define chatting printf
-#define NOTEST();
-#define RETEST();
-
 #endif
 
 #define IA 16807

@@ -11,39 +11,31 @@
 #include <stdlib.h>
 #include "health.h"
 
-#ifndef PLAIN
-#include "mem-ref.h"
-#else
-#define MIGRPH(); 
-#endif
-
 void addList(struct List *list, struct Patient *patient) {
   struct List *b;
 
-  /*MIGRPH();*/
   while (list != NULL) {
     b = list;
     list = list->forward; }
   
   list = (struct List *)malloc(sizeof(struct List));
 
-  NOTEST();
   list->patient = patient;
   list->forward = NULL;
   list->back = b;
-  RETEST();
-  b->forward = list; } 
+  b->forward = list;
+} 
 
 
 void removeList(struct List *list, struct Patient *patient) {
   struct List          *l1,*l2;
   struct Patient       *p;
-  
-  /*MIGRPH();*/
+
   p = list->patient;
   while(p != patient) {
       list = list->forward; 
-      p = list->patient; }
+      p = list->patient;
+  }
     
   l1 = list->back;
   l2 = list->forward;
