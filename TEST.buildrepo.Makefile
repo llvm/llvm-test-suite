@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.buildrepo.Makefile ---------------*- Makefile -*-===##
+##===- TEST.buildrepo.Makefile -----------------------------*- Makefile -*-===##
 #
 # This "test" is used to copy all compiled bytecode files into the repository.
 #
@@ -12,7 +12,7 @@ endif
 # relative to BYTECODE_REPOSITORY and the current directory this program is in.
 #
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)
+PROGDIR := $(BUILD_SRC_ROOT)
 DESTDIR := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
 .PRECIOUS: $(DESTDIR)/.dir $(DESTDIR)/%.bc

@@ -1,4 +1,4 @@
-# Programs/SingleSource/UnitTests/Makefile
+# SingleSource/UnitTests/Makefile
 
 DIRS = SetjmpLongjmp
 LEVEL = ../..

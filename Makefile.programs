@@ -1,7 +1,7 @@
-##===- test/Programs/Makefile.programs ---------------------*- Makefile -*-===##
+##===- llvm-test/Makefile.programs -------------------------*- Makefile -*-===##
 #
 # This makefile contains all of the makefile machinery that is common to
-# building stuff in the Programs directory.  This script can be used in two
+# building stuff in this directory.  This script can be used in two
 # different ways.  The main job of this is to take executables for the following
 # targets:
 #
@@ -29,7 +29,7 @@
 #
 # This makefile provides facilities for defining custom tests that are to be run
 # on all of the programs in the test suite.  In order to define one of these
-# tests, create a llvm/test/Programs/Makefile.TEST.<testname> file.  This file
+# tests, create a llvm-test/Makefile.TEST.<testname> file.  This file
 # should define a rule 'test.<testname>.%' which is run once for each program in
 # the suite (the % passed in is the program name).  For a simple example, see
 # Makefile.TEST.example.
@@ -49,7 +49,7 @@ include $(LEVEL)/Makefile.tests
 PROGDIR = $(BUILD_SRC_ROOT)
 
 #
-# Scripts in the Programs directory...
+# Scripts in the this directory...
 #
 
 # TIMEPROG - The program used to get timing results for a program
@@ -498,7 +498,7 @@ ifdef USE_PRECOMPILED_BYTECODE
 # relative to BYTECODE_REPOSITORY and the current directory this program is in.
 #
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)
+PROGDIR := $(shell cd $(LEVEL); pwd)
 SRCDIR  := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
 # Because we don't have source code, we cannot build a native version of the
@@ -550,11 +550,11 @@ test..%:
 # test.<testname>.%  given input from Output/%.llvm.bc
 #
 ifdef TEST
-TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
+TestMakefile := $(wildcard $(PROGDIR)/TEST.$(TEST).Makefile) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
-TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
+TestReport   := $(wildcard $(PROGDIR)/TEST.$(TEST).report) \
                 $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).report)
-TestGnuPlot  := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).gnuplot) \
+TestGnuPlot  := $(wildcard $(PROGDIR)/TEST.$(TEST).gnuplot) \
                 $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).gnuplot)
 ifneq ($(strip $(TestMakefile)),)
 -include $(TestMakefile)
@@ -564,7 +564,10 @@ test.$(TEST).%:
 	@echo
 	@echo "***************************************************************"
 	@echo "  ERROR: Test '$(TEST)' is not a known test!"
-	@echo "  Tests available: $(AVAILABLE_TESTS)"
+	@echo "  Tests Available: $(AVAILABLE_TESTS)"
+	@echo "  Test Program: $*"
+	@echo "  Test Makefile: $(TestMakefile)"
+	@echo "  Test Report: $(TestReport)"
 	@echo "***************************************************************"
 	@echo
 	@exit 1
@@ -574,7 +577,7 @@ endif
 #
 # Rules for building a report from 'make report TEST=<x>'
 #
-GENERATEREPORT := $(LLVM_SRC_ROOT)/test/Programs/GenerateReport.pl
+GENERATEREPORT := $(BUILD_SRC_ROOT)/GenerateReport.pl
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	gmake TEST=$(TEST) 2>&1 | tee $@

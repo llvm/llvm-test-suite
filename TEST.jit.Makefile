@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.jit.Makefile ---------------------*- Makefile -*-===##
+##===- TEST.jit.Makefile ----------------------------------*- Makefile -*-===##
 #
 # This test tries running the Just-In-Time compiler on all of the programs to
 # see which ones work and which ones don't.  It provides a report to tabulate
@@ -8,7 +8,7 @@
 
 JIT_OPTS = -force-interpreter=false -stats -time-passes
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+PROGDIR := $(BUILD_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \

@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.dsgraph.Makefile -----------------*- Makefile -*-===##
+##===- TEST.dsgraph.Makefile -------------------------------*- Makefile -*-===##
 #
 # This recursively traverses the programs, computing DSGraphs for each of the
 # programs in the testsuite.
@@ -6,11 +6,11 @@
 ##===----------------------------------------------------------------------===##
 
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+PROGDIR := $(BUILD_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 # We require the programs to be linked with libdummy
-include $(LEVEL)/test/Programs/Makefile.dummylib
+include $(LEVEL)/Makefile.dummylib
 
 # PASS - The dsgraph pass to run: ds, bu, td
 PASS := td

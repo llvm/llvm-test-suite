@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.llc.Makefile ---------------------*- Makefile -*-===##
+##===- TEST.llc.Makefile -----------------------------------*- Makefile -*-===##
 #
 # This test tries running the compiler on all of the programs and
 # reports on detailed pass execution times and register allocation and
@@ -8,7 +8,7 @@
 
 LLC_OPTS = -f -o=/dev/null -stats -time-passes -regalloc=linearscan
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+PROGDIR := $(BUILD_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \

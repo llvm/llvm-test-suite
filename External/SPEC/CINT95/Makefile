@@ -11,4 +11,4 @@ PARALLEL_DIRS := \
 
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
-include ${LEVEL}/test/Programs/Makefile.programs
+include ${LEVEL}/Makefile.programs

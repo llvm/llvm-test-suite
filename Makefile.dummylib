@@ -1,4 +1,4 @@
-##===- test/Programs/Makefile.dummylib ---------------------*- Makefile -*-===##
+##===- Makefile.dummylib -----------------------------------*- Makefile -*-===##
 #
 # This makefile fragment is to be used by program tests which require the
 # program to be linked with libdummy.  The output program is named:

@@ -23,5 +23,5 @@ PARALLEL_DIRS = SingleSource MultiSource External
 #
 # Include the Master Makefile that knows how to build all.
 #
-include $(LEVEL)/Makefile.common
+include $(LEVEL)/Makefile.programs
 

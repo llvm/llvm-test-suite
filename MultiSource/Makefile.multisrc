@@ -1,4 +1,4 @@
-##==- test/Programs/MultiSource/Makefile.multisrc ----------*- Makefile -*-===##
+##==- MultiSource/Makefile.multisrc ------------------------*- Makefile -*-===##
 #
 # This makefile should be used by subdirectories that have multiple source files
 # to be linked together.  This contains all of the common makefile code required

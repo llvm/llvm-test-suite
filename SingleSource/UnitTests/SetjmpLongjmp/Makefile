@@ -1,4 +1,4 @@
-# Programs/SingleSource/UnitTests/SetjmpLongjmp/Makefile
+# SingleSource/UnitTests/SetjmpLongjmp/Makefile
 
 DIRS = C C++
 LEVEL = ../../..

@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.aa.Makefile ----------------------*- Makefile -*-===##
+##===- TEST.aa.Makefile ------------------------------------*- Makefile -*-===##
 #
 # This recursively traverses the programs, computing the precision of various
 # alias analysis passes on the programs.
@@ -6,7 +6,7 @@
 ##===----------------------------------------------------------------------===##
 
 # We require the programs to be linked with libdummy
-include $(LEVEL)/test/Programs/Makefile.dummylib
+include $(LEVEL)/Makefile.dummylib
 
 AA_IMPLS := basic steens-fi steens ds-fi ds
 

@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.vtl.Makefile ---------------------*- Makefile -*-===##
+##===- TEST.vtl.Makefile -----------------------------------*- Makefile -*-===##
 #
 # Makefile for getting performance metrics using Intel's VTune.
 #

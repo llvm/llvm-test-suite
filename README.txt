@@ -1,5 +1,5 @@
-test/Programs Heirarchy
------------------------
+llvm-test Heirarchy
+-------------------
 
 Files in this heirarchy comprise complete programs that are to be compiled from
 source, linked (optionally), and then compiled to machine code.  Since these

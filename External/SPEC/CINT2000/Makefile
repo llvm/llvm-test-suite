@@ -21,4 +21,4 @@ ifeq ($(ARCH), Sparc)
 PARALLEL_DIRS := $(filter-out 186.crafty, $(PARALLEL_DIRS))
 endif
 
-include ${LEVEL}/test/Programs/Makefile.programs
+include ${LEVEL}/Makefile.programs

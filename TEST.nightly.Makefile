@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.nightly.Makefile ----------------*- Makefile -*--===##
+##===- TEST.nightly.Makefile ------------------------------*- Makefile -*--===##
 #
 # This test is used in conjunction with the llvm/utils/NightlyTest* stuff to
 # generate information about program status for the nightly report.
@@ -6,7 +6,7 @@
 ##===----------------------------------------------------------------------===##
 
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+PROGDIR := $(BUILD_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 CFLAGS  := -O3
 

@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.typesafe.Makefile ----------------*- Makefile -*-===##
+##===- TEST.typesafe.Makefile ------------------------------*- Makefile -*-===##
 #
 # This test simply checks to see if programs are typesafe according to the
 # -unsafepointertypes analysis.
