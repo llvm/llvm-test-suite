@@ -392,16 +392,18 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
 Output/%.llvm-prof.bc: Output/%.llvm.bc
 	$(LOPT) -insert-block-profiling $< -o $@ -f
 
+LIBPROFILESO := $(LEVEL)/lib/Debug/libprofile_rt.so
+
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
-Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat
+Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
 	@rm -f $@
 	-$(RUNSAFELY) $(STDIN_FILENAME) Output/$*.out-prof $(LLI) $(JIT_OPTS) \
-            -fake-argv0 'Output/$*.llvm.bc' -load $(LEVEL)/lib/Debug/libprofile_rt.so $< -llvmprof-output $@ $(RUN_OPTIONS)
+            -fake-argv0 'Output/$*.llvm.bc' -load $(LIBPROFILESO) $< -llvmprof-output $@ $(RUN_OPTIONS)
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
 		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
 
 $(PROGRAMS_TO_TEST:%=Output/%.printprof): \
-Output/%.printprof: Output/%.llvm.bc Output/%.prof
+Output/%.printprof: Output/%.llvm.bc Output/%.prof $(LPROF)
 	$(LPROF) $< Output/$*.prof
 
 
