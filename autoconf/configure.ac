@@ -1,13 +1,14 @@
 dnl Initialize autoconf
-AC_INIT([[LLVM-TEST]],[[1.4]],[llvmbugs@cs.uiuc.edu])
+AC_INIT([[LLVM-TEST]],[[1.5]],[llvmbugs@cs.uiuc.edu])
 
 dnl Place all of the extra autoconf files into the config subdirectory
 AC_CONFIG_AUX_DIR([autoconf])
 
 dnl Verify that the source directory is valid
-AC_CONFIG_SRCDIR(["Makefile.config.in"])
+AC_CONFIG_SRCDIR([SingleSource/Benchmarks/Makefile])
 
 dnl Do special configuration of Makefiles
+AC_CONFIG_FILES([Makefile.config])
 AC_CONFIG_MAKEFILE(Makefile)
 AC_CONFIG_MAKEFILE(Makefile.common)
 AC_CONFIG_MAKEFILE(Makefile.f2c)
@@ -43,7 +44,7 @@ AC_CONFIG_MAKEFILE(SingleSource/Makefile)
 AC_CONFIG_MAKEFILE(SingleSource/Makefile.singlesrc)
 
 dnl **************************************************************************
-dnl * Set the location of various third-party software packages
+dnl * Get command line options
 dnl **************************************************************************
 
 dnl Location of LLVM source code
@@ -51,6 +52,18 @@ AC_ARG_WITH(llvmsrc,AS_HELP_STRING(--with-llvmsrc,Location of LLVM Source Code),
 
 dnl Location of LLVM object code
 AC_ARG_WITH(llvmobj,AS_HELP_STRING(--with-llvmobj,Location of LLVM Object Code),AC_SUBST(LLVM_OBJ,[$withval]),AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
+
+dnl LLC Diff Option
+AC_ARG_ENABLE(llc_diffs,
+  AS_HELP_STRING(--enable-llc_diffs,
+                 [Enable LLC Diffs when testing (default is YES)]),,
+              enableval=yes)
+if test ${enableval} = "no"
+then
+      AC_SUBST(DISABLE_LLC_DIFFS,[DISABLE_LLC_DIFFS:=1])
+else
+      AC_SUBST(DISABLE_LLC_DIFFS,[[]])
+fi
 
 dnl **************************************************************************
 dnl * Check for things needed by the test suite programs
@@ -74,12 +87,6 @@ dnl Checks for other tools
 AC_PROG_FLEX
 AC_PROG_BISON
 AC_PROG_LIBTOOL
-
-AC_PATH_PROG(PYTHON,[python],[true python])
-if test "$PYTHON" = "false"
-then
-  AC_MSG_WARN([Python is required for the test suite, but it was not found])
-fi
 
 dnl Checks for header files.
 dnl We don't check for ancient stuff or things that are guaranteed to be there
@@ -108,17 +115,5 @@ if test "x${F2C}" = "x"; then
   CHECK_F2C_ENABLE()
 fi
 
-dnl LLC Diff Option
-AC_ARG_ENABLE(llc_diffs,AS_HELP_STRING(--enable-llc_diffs,Enable LLC Diffs
-                                        when testing (default is
-                                                      YES)),,enableval=yes)
-if test ${enableval} = "no"
-then
-      AC_SUBST(DISABLE_LLC_DIFFS,[DISABLE_LLC_DIFFS:=1])
-else
-      AC_SUBST(DISABLE_LLC_DIFFS,[[]])
-fi
-
 dnl Create the output files
-AC_CONFIG_FILES([Makefile.config])
 AC_OUTPUT
