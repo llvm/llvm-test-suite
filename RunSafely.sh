@@ -27,6 +27,18 @@ rm -f core core.*
 ulimit -c unlimited
 
 #
+# If we are on a sun4u machine (UltraSparc), then the code we're generating
+# is 64 bit code.  In that case, use gdb-64 instead of gdb.
+#
+myarch=`uname -m`
+if [ "$myarch" = "sun4u" ]
+then
+	GDB="gdb-64"
+else
+	GDB=gdb
+fi
+
+#
 # Run the command, timing its execution.
 # The standard output and standard error of $PROGRAM should go in $OUTFILE,
 # and the standard error of time should go in $OUTFILE.time.
@@ -36,7 +48,7 @@ ulimit -c unlimited
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-(time sh -c "$PROGRAM $* >& $OUTFILE < $INFILE") >& $OUTFILE.time
+(time sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") > $OUTFILE.time 2>&1
 
 if test $? -eq 0
 then
@@ -47,7 +59,7 @@ if ls | egrep "^core" > /dev/null
 then
     corefile=`ls core* | head -1`
     echo "where" > StackTrace.$$
-    gdb -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
+    $GDB -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
     rm -f StackTrace.$$ $corefile
 fi
 
