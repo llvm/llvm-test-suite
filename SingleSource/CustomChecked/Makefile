@@ -34,19 +34,19 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-lli): \
 Output/%.run-lli: Output/%.llvm.bc $(LLI)
-	-$(TESTRUNR) $(filter $(SourceDir)$*.%, $(Source)) "$(LLI) $(LLI_OPTS) $<" $@
+	-$(TESTRUNR) $(filter $*.%, $(Source)) "$(LLI) $(LLI_OPTS) $<" $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-jit): \
 Output/%.run-jit: Output/%.llvm.bc $(LLI)
-	-$(TESTRUNR) $(filter $(SourceDir)$*.%, $(Source)) "$(LLI) $(JIT_OPTS) $<" $@
+	-$(TESTRUNR) $(filter $*.%, $(Source)) "$(LLI) $(JIT_OPTS) $<" $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-llc): \
 Output/%.run-llc: Output/%.llc
-	-$(TESTRUNR) $(filter $(SourceDir)$*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+	-$(TESTRUNR) $(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-cbe): \
 Output/%.run-cbe: Output/%.cbe
-	-$(TESTRUNR) $(filter $(SourceDir)$*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+	-$(TESTRUNR) $(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
 
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
