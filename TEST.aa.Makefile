@@ -8,13 +8,7 @@
 # We require the programs to be linked with libdummy
 include $(LEVEL)/test/Programs/Makefile.dummylib
 
-ifdef ENABLE_OPTIMIZED
-AND_LIB := $(LIBRELEASE)/libAndersens.so
-else
-AND_LIB := $(LIBDEBUG)/libAndersens.so
-endif
-
-AA_IMPLS := basic steens-fi andersens steens ds-fi ds
+AA_IMPLS := basic steens-fi steens ds-fi ds
 
 SUFFIX = -aa-eval -time-passes -disable-output -disable-verify < $< 2> $@
 
@@ -29,10 +23,6 @@ Output/%.aa.steens-fi.txt: Output/%.lib.bc $(LOPT)
 $(PROGRAMS_TO_TEST:%=Output/%.aa.steens.txt): \
 Output/%.aa.steens.txt: Output/%.lib.bc $(LOPT)
 	-$(LOPT) -steens-aa $(SUFFIX)
-
-$(PROGRAMS_TO_TEST:%=Output/%.aa.andersens.txt): \
-Output/%.aa.andersens.txt: Output/%.lib.bc $(LOPT) $(AND_LIB)
-	-$(LOPT) -load $(AND_LIB) -andersens-aa $(SUFFIX)
 
 $(PROGRAMS_TO_TEST:%=Output/%.aa.ds-fi.txt): \
 Output/%.aa.ds-fi.txt: Output/%.lib.bc $(LOPT)
