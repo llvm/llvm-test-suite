@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#define heapsort benchmark_heapsort
 
 #define IM 139968
 #define IA   3877
