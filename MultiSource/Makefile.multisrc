@@ -17,9 +17,6 @@ PROGRAMS_TO_TEST := $(PROG)
 # FIXME: LIBS SHOULD BE SPECIFIED
 LIBS = -lm
 
-all:: 
-	@echo "-----> Running '$(PROG)' test"
-
 include $(LEVEL)/test/Programs/Makefile.programs
 
 # Figure out what object files we want to build...
