@@ -16,7 +16,7 @@
  *
  *	Defines:	Defines are provided for old C compiler's
  *			which don't have enums, and can't assign structures.
- *			The time(2) function is library dependant; Most
+ *			The time(2) function is library dependent; Most
  *			return the time in seconds, but beware of some, like
  *			Aztec C, which return other units.
  *			The LOOPS define is initially set for 50000 loops.
