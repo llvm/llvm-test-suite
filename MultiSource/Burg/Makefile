@@ -25,6 +25,7 @@ include	../Makefile.multisrc
 y.tab.c y.tab.h: gram.y
 	yacc -d $<
 
+lex.c: y.tab.h
 Source := $(patsubst gram.%,,$(Source))
 
 ## $(BUILD_OBJ_ROOT)/Depend/gram.d: gram.y
