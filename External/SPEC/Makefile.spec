@@ -145,7 +145,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
 Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
+	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
@@ -172,6 +172,7 @@ Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
             -fake-argv0 '../$*.llvm.bc' -load ../../$(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
 	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > Output/$*.out-prof
 	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+	-cp Output/profile-$(RUN_TYPE)/llvmprof.out $@
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
 		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
 
