@@ -1,10 +1,18 @@
 LEVEL = ../../../../../..
 RUN_OPTIONS = -c
+
 ifeq ($(ENDIAN),big)
-STDIN_FILENAME := ctl.big
+EXTENSION := big
 else
-STDIN_FILENAME := ctl.lit
+EXTENSION := lit
 endif
+
+ifeq ($(RUN_TYPE),test)
+STDIN_FILENAME := ctl.$(EXTENSION)
+else
+STDIN_FILENAME := dcrand.$(EXTENSION)
+endif
+
 STDOUT_FILENAME := test.out
 
 Source := addd.c \
