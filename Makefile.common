@@ -16,4 +16,4 @@ include $(LEVEL)/Makefile.config
 #
 # Include LLVM's Master Makefile.
 #
-include $(LEVEL)/Makefile.rules
+include $(BUILD_SRC_ROOT)/Makefile.rules
