@@ -5,9 +5,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(PROJ_SRC_ROOT)
-RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+RELDIR  := $(subst $(PROJ_OBJ_ROOT),,$(PROJ_OBJ_DIR))
 
 # We require the programs to be linked with libdummy
 include $(LEVEL)/Makefile.dummylib
