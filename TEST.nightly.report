@@ -9,6 +9,25 @@ $SortCol = 0;
 
 my $WallTimeRE = "[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock";
 
+# FormatTime - Convert a time from 1m23.45 into 83.45
+sub FormatTime {
+  my $Time = shift;
+  if ($Time =~ m/([0-9]+)m([0-9.]+)/) {
+    $Time = sprintf("%7.4f", $1*60.0+$2);
+  }
+  return $Time;
+}
+
+sub GCCLLCRatio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[$Col-2] ne "*" and $Cols->[$Col-4] ne "*" and
+      $Cols->[$Col-2] != "0") {
+    return sprintf("%3.2f%%", $Cols->[$Col-4]/$Cols->[$Col-2]);
+  } else {
+    return "n/a";
+  }
+}
+
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
 # separators, and closures may be put in for custom processing.
@@ -24,8 +43,9 @@ my $WallTimeRE = "[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock";
  ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: $WallTimeRE"],
  ["Machine<br>code", 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  [],
- ["GCC"      , 'TEST-RESULT-nat-time: real\s*([.0-9m]+)'],
- ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m]+)'],
- ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m]+)'],
- ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)']
+ ["GCC"      , 'TEST-RESULT-nat-time: real\s*([.0-9m]+)', \&FormatTime],
+ ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m]+)', \&FormatTime],
+ ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m]+)', \&FormatTime],
+ ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)', \&FormatTime],
+ ["GCC/LLC"  , \&GCCLLCRatio]
 );
