@@ -20,7 +20,7 @@ else
 fi
 
 # Diff the two files.
-$DIFF -C 2 --speed-large-files Output/$2.out-nat Output/$2.out-$1 > $DIFFOUTPUT || (
+$DIFF -u Output/$2.out-nat Output/$2.out-$1 > $DIFFOUTPUT || (
   # They are different!
   echo "******************** TEST '$2' FAILED! ********************"
   echo "Execution Context Diff:"
