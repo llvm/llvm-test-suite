@@ -3,6 +3,6 @@ LEVEL = ../../../..
 PROG     = voronoi
 INCLUDES = defines.h
 CPPFLAGS = -DTORONTO
-LDFLAGS  = -ll -lm
+LDFLAGS  = -lm
 
 include	../Makefile.multisrc
