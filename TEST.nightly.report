@@ -22,7 +22,7 @@ sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
   if ($Cols->[$Col-2] ne "*" and $Cols->[$Col-4] ne "*" and
       $Cols->[$Col-2] != "0") {
-    return sprintf("%3.2f%%", $Cols->[$Col-4]/$Cols->[$Col-2]);
+    return sprintf("%3.2f", $Cols->[$Col-4]/$Cols->[$Col-2]);
   } else {
     return "n/a";
   }
