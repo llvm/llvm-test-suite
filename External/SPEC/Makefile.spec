@@ -113,23 +113,6 @@ Output/%.out-cbe: Output/%.cbe
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
-$(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
-Output/%.trace-out-llc: Output/%.trace.llc
-	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../$*.trace.llc $(RUN_OPTIONS)
-	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
-
-$(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
-Output/%.trace-out-cbe: Output/%.trace.cbe
-	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../$*.trace.cbe $(RUN_OPTIONS)
-	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
-
-
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
 BUGPOINT_OPTIONS += -timeout=$(RUNTIMELIMIT)
@@ -194,18 +177,3 @@ Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
 	-cp Output/profile-$(RUN_TYPE)/llvmprof.out $@
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
 		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
-
-
-
-
-$(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
-Output/%.out-tracing: Output/%.trace
-	$(SPEC_SANDBOX) trace-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
-	-(cd Output/trace-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/trace-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
-
-$(PROGRAMS_TO_TEST:%=Output/%.performance): \
-Output/%.performance: Output/%.out-llc Output/%.out-tracing
-	-$(TIMESCRIPT) $* Output/$*.out-llc.time Output/$*.out-tracing.time $@
