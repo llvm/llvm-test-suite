@@ -7,7 +7,11 @@
 include $(LEVEL)/Makefile.config
 
 # RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
+ifdef LARGE_PROBLEM_SIZE
+RUN_TYPE  := train
+else
 RUN_TYPE  := test
+endif
 
 ## Information the test should have provided...
 ifndef STDOUT_FILENAME
@@ -41,9 +45,6 @@ SourceDir := $(SPEC_BENCH_DIR)/src/
 
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
-# Pseudo target to build just the bytecode file.
-bytecode: Output/$(PROG).llvm.bc
-
 LCCFLAGS := -DSPEC_CPU2000 -O2
 CFLAGS := -DSPEC_CPU2000 -O2
 
@@ -65,6 +66,7 @@ Output/%.out-nat: Output/%.native
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
@@ -72,6 +74,7 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLI_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/lli-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
@@ -79,6 +82,7 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
@@ -86,6 +90,7 @@ Output/%.out-llc: Output/%.llc
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
@@ -93,6 +98,7 @@ Output/%.out-cbe: Output/%.cbe
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
 Output/%.trace-out-llc: Output/%.trace.llc
@@ -100,6 +106,7 @@ Output/%.trace-out-llc: Output/%.trace.llc
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
 Output/%.trace-out-cbe: Output/%.trace.cbe
@@ -107,7 +114,4 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-
-# Pseudo target to build just the bytecode file.
-bytecode: Output/$(PROG).llvm.bc
-
+	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
