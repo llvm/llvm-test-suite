@@ -25,7 +25,7 @@ shift
 ulimit -t $ULIMIT
 rm -f core core.*
 ulimit -c unlimited
-(time -p $PROGRAM $* > $OUTFILE < $INFILE) 2> $OUTFILE.time
+(time -p $PROGRAM $* 2> $OUTFILE > $OUTFILE < $INFILE) 2> $OUTFILE.time
 if ls | egrep "^core" > /dev/null
 then
     corefile=`ls core* | head -1`
