@@ -73,6 +73,7 @@ open(REPORTDESC, $ReportFN) or
   die "Couldn't open report description '$ReportFN'!";
 
 my @LatexColumns;  # Filled in by report if it supports Latex mode
+my %LatexColumnFormat;  # Filled in by report if supports latex mode
 my @Fields = eval <REPORTDESC>;
 
 
@@ -184,16 +185,41 @@ if ($HTML) {
     # Print out the latexified table...
     #
     shift @Values;  # Don't print the header...
-    foreach $Row (@Values) {
-      my $First = 1;
-      
-      for $ColNum (@LatexColumns) {
-        # Print a seperator...
-        print " & " if ($First == 0);
-        $First = 0;
-        printf "%-$FieldWidths[$ColNum]s", $Row->[$ColNum];
+
+    # Make sure the benchmark name field is wide enough for any aliases.
+    foreach $Name (@LatexRowMapOrder) {
+      $FieldWidths[0] = length $Name if (length($Name) > $FieldWidths[0]);
+    }
+
+    # Print out benchmarks listed in the LatexRowMapOrder
+    for ($i = 0; $i < @LatexRowMapOrder; $i += 2) {
+      my $Name = $LatexRowMapOrder[$i];
+      if ($Name eq '-') {
+        print "\\hline\n";
+      } else {
+        # Output benchmark name...
+        printf "%-$FieldWidths[0]s", $LatexRowMapOrder[$i+1];
+
+        # Find the row that this benchmark name corresponds to...
+        foreach $Row (@Values) {
+          if ($Row->[0] eq $Name) {
+            for $ColNum (@LatexColumns) {
+              # Print a seperator...
+              my $Val = $Row->[$ColNum];
+              if (exists $LatexColumnFormat{$ColNum}) {
+                # If a column format routine has been specified, run it now...
+                $Val = &{$LatexColumnFormat{$ColNum}}($Val);
+              }
+
+              printf " & %-$FieldWidths[$ColNum]s", $Val;
+            }
+            goto Done;
+          }
+        }
+        print "UNKNOWN Benchmark name: " . $Name;
+      Done:
+        print "\\\\\n";
       }
-      print "\\\\\n";
     }
   } else {
     #
