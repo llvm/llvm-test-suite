@@ -9,8 +9,8 @@
 # DUMMYLIB - The path to the library of stub functions which is used to resolve
 # external functions for dsanalysis.
 #
-DUMMYLIB := $(LEVEL)/test/Libraries/Output/libdummy.bc
-DUMMYSRC := $(LEVEL)/test/Libraries/libdummy
+DUMMYLIB := $(DESTLIBBYTECODE)/libdummy.bc
+DUMMYSRC := $(LEVEL)/runtime/libdummy
 
 # Rebuild dummylib if necessary...
 $(DUMMYLIB) : $(wildcard $(DUMMYSRC)/*.c)
