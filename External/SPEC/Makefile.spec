@@ -129,10 +129,10 @@ Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
+Output/%.bugpoint-gccld: Output/%.nogccldopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/gccld-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) ../$*.nogccldopt-llvm.bc `cat Output/gccld-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
