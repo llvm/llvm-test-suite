@@ -1,7 +1,8 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
 PROG     = power
 CPPFLAGS = -DTORONTO
 LDFLAGS  = -lm
 
-include	../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+

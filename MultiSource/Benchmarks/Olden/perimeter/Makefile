@@ -1,4 +1,4 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
 PROG     = perimeter
 CPPFLAGS = -DTORONTO
@@ -9,4 +9,5 @@ else
 RUN_OPTIONS = 4
 endif
 
-include	../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+

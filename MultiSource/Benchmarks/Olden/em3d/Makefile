@@ -1,4 +1,4 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
 PROG       = em3d
 CPPFLAGS   = -DTORONTO
@@ -8,4 +8,5 @@ ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 1024 1000 125
 endif
 
-include	../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+
