@@ -94,6 +94,7 @@ GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
 JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
+JITLSOUTPUT := $(addsuffix .out-jit-ls,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCLSOUTPUT := $(addsuffix .out-llc-ls,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
@@ -101,6 +102,7 @@ CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
+JITLSDIFFS  := $(addsuffix .diff-jit-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCLSDIFFS  := $(addsuffix .diff-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
@@ -166,6 +168,9 @@ endif
 ifndef DISABLE_DIFFS
 ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
+ifdef ENABLE_LINEARSCAN
+all:: $(LLCLSDIFFS)
+endif
 endif
 
 ifndef DISABLE_CBE_DIFFS
@@ -176,10 +181,9 @@ ifdef TARGET_HAS_JIT
 ifndef DISABLE_JIT
 all:: $(JITDIFFS)
 endif
-endif
-
 ifdef ENABLE_LINEARSCAN
-all:: $(LLCLSDIFFS)
+all:: $(JITLSDIFFS)
+endif
 endif
 
 ifdef ENABLE_LLI
@@ -276,6 +280,7 @@ EXTRA_LLI_OPTS =
 
 LLI_OPTS = -force-interpreter=true $(EXTRA_LLI_OPTS)
 JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
+JIT_LS_OPTS = -force-interpreter=false -regalloc=linearscan $(EXTRA_LLI_OPTS)
 
 native: $(PROGRAMS_TO_TEST:%=Output/%.native)
 stripped-bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc)
@@ -297,7 +302,14 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
-	@if test \! -f $@.exitok; then echo "TEST: $* FAILED!"; rm -f $@; fi
+	@if test \! -f $@.exitok; then echo "TEST (jit): $* FAILED!"; rm -f $@; fi
+endif
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
+Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_LS_OPTS) $< $(RUN_OPTIONS)
+ifdef PROGRAM_REQUIRED_TO_EXIT_OK
+	@if test \! -f $@.exitok; then echo "TEST (jit-ls): $* FAILED!"; rm -f $@; fi
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
@@ -354,6 +366,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
 	-$(DIFFPROG) jit $* $(HIDEDIFF)
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-jit-ls): \
+Output/%.diff-jit-ls: Output/%.out-nat Output/%.out-jit-ls
+	-$(DIFFPROG) jit-ls $* $(HIDEDIFF)
+
 $(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	-$(DIFFPROG) llc $* $(HIDEDIFF)
@@ -373,6 +389,10 @@ Output/%.exe-lli: Output/%.diff-lli
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-jit): \
 Output/%.exe-jit: Output/%.diff-jit
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-jit-ls): \
+Output/%.exe-jit-ls: Output/%.diff-jit-ls
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
