@@ -49,5 +49,13 @@ POVRAY_ROOT := @POVRAY_ROOT@
 @USE_NAMD@
 NAMD_ROOT := @NAMD_ROOT@
 
+# Path to the Sweep3d source code
+@USE_SWEEP3D@
+SWEEP3D_ROOT := @SWEEP3D_ROOT@
+
+# Path to the fpgrowth source code
+@USE_FPGROWTH@
+FPGROWTH_ROOT := @FPGROWTH_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
