@@ -4,7 +4,7 @@ LEVEL=../../../..
 
 PROG = anagram
 #OBJS = anagram.o
-RUN_OPTIONS = $(BUILD_SRC_DIR)/words 
+RUN_OPTIONS = $(BUILD_SRC_DIR)/words 2
 STDIN_FILENAME = $(BUILD_SRC_DIR)/input.OUT
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
