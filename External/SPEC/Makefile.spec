@@ -61,7 +61,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.native $(RUN_OPTIONS)
 	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -69,7 +69,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  $(LLI) $(LLI_OPTS) ../../$< $(RUN_OPTIONS)
+                  $(LLI) $(LLI_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/lli-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -77,7 +77,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) jit-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  $(LLI) $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
+                  $(LLI) $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -85,7 +85,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
 Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) jit-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  $(LLI) -regalloc=iterativescan $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
+                  $(LLI) -regalloc=iterativescan $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/jit-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -93,7 +93,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.llc $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -101,7 +101,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-llc-ls): \
 Output/%.out-llc-ls: Output/%.llc-ls
 	$(SPEC_SANDBOX) llc-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.llc-ls $(RUN_OPTIONS)
 	-(cd Output/llc-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -109,7 +109,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.cbe $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -117,7 +117,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
 Output/%.trace-out-llc: Output/%.trace.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.trace.llc $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -125,7 +125,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
 Output/%.trace-out-cbe: Output/%.trace.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../../$< $(RUN_OPTIONS)
+                  ../$*.trace.cbe $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
@@ -141,7 +141,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
 Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/gccas-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
@@ -149,33 +149,33 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
 Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/gccld-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
 Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS) \
+	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) \
 	    -regalloc=iterativescan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-ls): \
 Output/%.bugpoint-jit-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS) \
+	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) \
 	    -regalloc=iterativescan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
@@ -188,7 +188,7 @@ Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
 	@rm -f $@
 	$(SPEC_SANDBOX) profile-$(RUN_TYPE) Output/$*.out-prof $(REF_IN_DIR) \
 	  $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) $(LLI) $(JIT_OPTS)\
-            -fake-argv0 '../$*.llvm.bc' -load ../../$(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
+            -fake-argv0 '../$*.llvm.bc' -load $(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
 	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > Output/$*.out-prof
 	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 	-cp Output/profile-$(RUN_TYPE)/llvmprof.out $@
