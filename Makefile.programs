@@ -98,7 +98,7 @@ PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
-LLCLSCODEGEN := $(addsuffix .llc-ls.s,   $(PREFIXED_PROGRAMS_TO_TEST))
+LLCBETACODEGEN := $(addsuffix .llc-beta.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
@@ -106,17 +106,17 @@ GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
 JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
-JITLSOUTPUT := $(addsuffix .out-jit-ls,  $(PREFIXED_PROGRAMS_TO_TEST))
+JITBETAOUTPUT := $(addsuffix .out-jit-beta,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
-LLCLSOUTPUT := $(addsuffix .out-llc-ls,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLCBETAOUTPUT := $(addsuffix .out-llc-beta,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
-JITLSDIFFS  := $(addsuffix .diff-jit-ls, $(PREFIXED_PROGRAMS_TO_TEST))
+JITBETADIFFS  := $(addsuffix .diff-jit-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
-LLCLSDIFFS  := $(addsuffix .diff-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
+LLCBETADIFFS  := $(addsuffix .diff-llc-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Profiles for the program.
@@ -124,12 +124,12 @@ PROFOUTPUT := $(addsuffix .prof, $(PREFIXED_PROGRAMS_TO_TEST))
 PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-ls
+.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-beta
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe
 
 # Build diffs from the output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-jit
-.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-ls Output/%.diff-cbe
+.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe
 
 
 # Regardless of what other options are specified, build the program's bytecode
@@ -163,8 +163,8 @@ endif
 ifndef DISABLE_DIFFS
 ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
-ifdef ENABLE_LINEARSCAN
-all:: $(LLCLSDIFFS)
+ifdef ENABLE_LLCBETA
+all:: $(LLCBETADIFFS)
 endif
 endif#DISABLE_LLC_DIFFS
 
@@ -175,8 +175,8 @@ endif
 ifdef TARGET_HAS_JIT
 ifndef DISABLE_JIT
 all:: $(JITDIFFS)
-ifdef ENABLE_LINEARSCAN
-all:: $(JITLSDIFFS)
+ifdef ENABLE_LLCBETA
+all:: $(JITBETADIFFS)
 endif
 endif#DISABLE_JIT
 endif#TARGET_HAS_JIT
@@ -270,8 +270,8 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.llc-ls.s): \
-Output/%.llc-ls.s: Output/%.llvm.bc $(LLC)
+$(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
+Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f -regalloc=iterativescan $< -o $@
 
 
@@ -285,8 +285,8 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
 	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.llc-ls): \
-Output/%.llc-ls: Output/%.llc-ls.s
+$(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
+Output/%.llc-beta: Output/%.llc-beta.s
 	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
 
 
@@ -331,19 +331,19 @@ ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST (jit): $* FAILED!"; rm -f $@; fi
 endif
 
-$(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
-Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
+Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=iterativescan $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
-	@if test \! -f $@.exitok; then echo "TEST (jit-ls): $* FAILED!"; rm -f $@; fi
+	@if test \! -f $@.exitok; then echo "TEST (jit-beta): $* FAILED!"; rm -f $@; fi
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
-$(PROGRAMS_TO_TEST:%=Output/%.out-llc-ls): \
-Output/%.out-llc-ls: Output/%.llc-ls
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
+Output/%.out-llc-beta: Output/%.llc-beta
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
@@ -372,8 +372,8 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
-Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
+Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) -regalloc=iterativescan $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
@@ -422,17 +422,17 @@ $(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
 	-$(DIFFPROG) jit $* $(HIDEDIFF)
 
-$(PROGRAMS_TO_TEST:%=Output/%.diff-jit-ls): \
-Output/%.diff-jit-ls: Output/%.out-nat Output/%.out-jit-ls
-	-$(DIFFPROG) jit-ls $* $(HIDEDIFF)
+$(PROGRAMS_TO_TEST:%=Output/%.diff-jit-beta): \
+Output/%.diff-jit-beta: Output/%.out-nat Output/%.out-jit-beta
+	-$(DIFFPROG) jit-beta $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	-$(DIFFPROG) llc $* $(HIDEDIFF)
 
-$(PROGRAMS_TO_TEST:%=Output/%.diff-llc-ls): \
-Output/%.diff-llc-ls: Output/%.out-nat Output/%.out-llc-ls
-	-$(DIFFPROG) llc-ls $* $(HIDEDIFF)
+$(PROGRAMS_TO_TEST:%=Output/%.diff-llc-beta): \
+Output/%.diff-llc-beta: Output/%.out-nat Output/%.out-llc-beta
+	-$(DIFFPROG) llc-beta $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
@@ -447,16 +447,16 @@ $(PROGRAMS_TO_TEST:%=Output/%.exe-jit): \
 Output/%.exe-jit: Output/%.diff-jit
 	-cp $< $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.exe-jit-ls): \
-Output/%.exe-jit-ls: Output/%.diff-jit-ls
+$(PROGRAMS_TO_TEST:%=Output/%.exe-jit-beta): \
+Output/%.exe-jit-beta: Output/%.diff-jit-beta
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
 Output/%.exe-llc: Output/%.diff-llc
 	-cp $< $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.exe-llc-ls): \
-Output/%.exe-llc-ls: Output/%.diff-llc-ls
+$(PROGRAMS_TO_TEST:%=Output/%.exe-llc-beta): \
+Output/%.exe-llc-beta: Output/%.diff-llc-beta
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \

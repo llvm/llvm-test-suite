@@ -20,8 +20,8 @@ endif
 ifndef DISABLE_CBE
 REPORTS_TO_GEN +=  cbe
 endif
-ifdef ENABLE_LINEARSCAN
-REPORTS_TO_GEN += llc-ls
+ifdef ENABLE_LLCBETA
+REPORTS_TO_GEN += llc-beta
 endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
@@ -72,20 +72,20 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	fi
 
 # LLC experimental tests
-$(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-ls.report.txt): \
-Output/%.nightly.llc-ls.report.txt: Output/%.llvm.bc Output/%.exe-llc-ls $(LLC)
+$(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-beta.report.txt): \
+Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(LLC)
 	@echo > $@
-	-head -n 100 Output/$*.exe-llc-ls >> $@
-	@-if test -f Output/$*.exe-llc-ls; then \
-	  echo "TEST-PASS: llc-ls $(RELDIR)/$*" >> $@;\
+	-head -n 100 Output/$*.exe-llc-beta >> $@
+	@-if test -f Output/$*.exe-llc-beta; then \
+	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
 	  $(LLC) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
-	  printf "TEST-RESULT-llc-ls: " >> $@;\
+	  printf "TEST-RESULT-llc-beta: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
-	  printf "TEST-RESULT-llc-ls-time: " >> $@;\
-	  grep "^program" Output/$*.out-llc-ls.time >> $@;\
+	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
+	  grep "^program" Output/$*.out-llc-beta.time >> $@;\
 	  echo >> $@;\
 	else  \
-	  echo "TEST-FAIL: llc-ls $(RELDIR)/$*" >> $@;\
+	  echo "TEST-FAIL: llc-beta $(RELDIR)/$*" >> $@;\
 	fi
 
 
