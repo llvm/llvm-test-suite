@@ -1,0 +1,13 @@
+LEVEL = ../../../..
+
+include $(LEVEL)/Makefile.config
+
+PROG = povray
+CPPFLAGS += -I$(BUILD_SRC_ROOT)/runtime/libpng -DPREFIX=\"$(BUILD_OBJ_DIR)\" -DSYSCONFDIR=\"$(POVRAY_ROOT)\" -DPOV_LIB_DIR=\"$(BUILD_OBJ_DIR)/lib\" -IOutput/src -UHAVE_LIBVGA
+LIBS += -lz -lpng -ltiff -ljpeg -lX11 -lstdc++
+LDFLAGS += -L/usr/X11R6/lib -lz -lpng -ltiff -ljpeg -lX11 -lstdc++
+
+SourceDir = $(POVRAY_ROOT)/src
+
+RUN_OPTIONS = -I$(POVRAY_ROOT)/scenes/advanced/chess2.pov -L$(POVRAY_ROOT)/include
+include ../../MultiSource/Makefile.multisrc
