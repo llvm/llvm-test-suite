@@ -202,14 +202,11 @@ int test_lists() {
 		SIZE, list_length(li1));
 	exit(1);
     }
-    printf("Test disabled because LLI got stuck.  FIXME\n");
-#if 0
     // compare li1 and li2 for equality
     if (!list_equal(li1, li2)) {
 	fprintf(stderr, "li1 and li2 are not equal\n");
 	exit(1);
     }
-#endif
     len = list_length(li1);
     free(li1);
     free(li2);
