@@ -82,7 +82,6 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
-ifndef GET_LLVM_TRACE
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
@@ -90,15 +89,6 @@ Output/%.out-llc: Output/%.llc
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
-else
-$(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
-Output/%.out-llc: Output/%.llc
-	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY_TRACE_EXECS) $(STDIN_FILENAME) \
-	$(STDOUT_FILENAME) ../../$< $(RUN_OPTIONS)
-	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
-endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
@@ -127,7 +117,7 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
 $(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
 Output/%.out-tracing: Output/%.trace
 	$(SPEC_SANDBOX) trace-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-             ../../$(RUNSAFELY_TRACE_EXECS) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+             ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/trace-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/trace-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
