@@ -161,10 +161,10 @@ Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 # optimization...
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc
-	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc
-	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/gccas-pass-args: $(LGCCAS)
