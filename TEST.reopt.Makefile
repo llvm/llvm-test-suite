@@ -50,7 +50,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.reopt-llc.s): \
 Output/%.reopt-llc.s: Output/%.llvm.bc
 	@echo "========================================="
 	@echo "Compiling Reoptimizer version of '$(TESTNAME)'"
-	-$(LOPT) -q -inline -lowerswitch -branch-combine -emitfuncs -instloops $< | $(LLC) $(LLCFLAGS) -disable-sched -f -emitmaps -o $@
+	-$(LOPT) -q -inline -lowerswitch -branch-combine -emitfuncs -instloops $< | $(LLC) $(LLCFLAGS) -disable-sched -f -enable-maps -o $@
 
 # 2. Link the instrumented binary with the necessary parts of the
 # compiler.
