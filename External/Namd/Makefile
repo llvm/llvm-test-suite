@@ -2,7 +2,6 @@ LEVEL = ../..
 
 include $(LEVEL)/Makefile.config
 
-NAMD_ROOT := /home/vadve/shared/benchmarks/spec_namd
 PROG = spec_namd
 SourceDir := $(NAMD_ROOT)
 
