@@ -1,25 +1,17 @@
 ##===- Makefile.spec ---------------------------------------*- Makefile -*-===##
 #
-# This makefile contains information for building SPEC as an external test.
+# This makefile is a template for building SPEC as an external
+# test. It is included by Makefile.spec2000 and Makefile.spec95.
 #
 ##===----------------------------------------------------------------------===##
 
 include $(LEVEL)/Makefile.config
 
-# RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
-ifdef LARGE_PROBLEM_SIZE
-RUN_TYPE  := train
-else
-RUN_TYPE  := test
-endif
-
 ## Information the test should have provided...
 ifndef STDOUT_FILENAME
 STDOUT_FILENAME := standard.out
 endif
-ifndef LDFLAGS
-LDFLAGS = -lm
-endif
+LDFLAGS += -lm
 
 # Get the current directory, the name of the benchmark, and the current
 # subdirectory of the SPEC directory we are in (ie, CINT2000/164.gzip)
@@ -46,10 +38,10 @@ SourceDir := $(SPEC_BENCH_DIR)/src/
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
 # Do not pass -Wall to compile commands...
-LCCFLAGS  := -O2
-LCXXFLAGS := -O2
+LCCFLAGS  := -O3
+LCXXFLAGS := -O3
 
-CPPFLAGS += -DSPEC_CPU2000 -I $(SPEC_BENCH_DIR)/src/
+CPPFLAGS += -I $(SPEC_BENCH_DIR)/src/
 SPEC_SANDBOX := $(LLVM_SRC_ROOT)/test/Programs/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
@@ -85,6 +77,14 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
                   $(LLI) $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
+Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
+	$(SPEC_SANDBOX) jit-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  $(LLI) -regalloc=linearscan $(JIT_OPTS) ../../$< $(RUN_OPTIONS)
+	-(cd Output/jit-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/jit-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
@@ -133,14 +133,14 @@ BUGPOINT_OPTIONS += --args -- $(RUN_OPTIONS)
 
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
-Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) \
+Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
+Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
@@ -160,6 +160,20 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 
 
+LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
+
+$(PROGRAMS_TO_TEST:%=Output/%.prof): \
+Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
+	@rm -f $@
+	$(SPEC_SANDBOX) profile-$(RUN_TYPE) Output/$*.out-prof $(REF_IN_DIR) \
+	  $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) $(LLI) $(JIT_OPTS)\
+            -fake-argv0 '../$*.llvm.bc' -load ../../$(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
+	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > Output/$*.out-prof
+	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
+		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
+
+
 
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
@@ -173,4 +187,3 @@ Output/%.out-tracing: Output/%.trace
 $(PROGRAMS_TO_TEST:%=Output/%.performance): \
 Output/%.performance: Output/%.out-llc Output/%.out-tracing
 	-$(TIMESCRIPT) $* Output/$*.out-llc.time Output/$*.out-tracing.time $@
-

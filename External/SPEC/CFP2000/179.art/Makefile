@@ -8,4 +8,4 @@ endif
 STDOUT_FILENAME = $(RUN_TYPE).out
 
 CPPFLAGS =
-include ../../Makefile.spec
+include ../../Makefile.spec2000

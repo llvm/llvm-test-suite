@@ -5,7 +5,7 @@ LDFLAGS  = -lm
 ifdef LARGE_PROBLEM_SIZE
 CPPFLAGS = -DSCALE=50
 else
-CPPFLAGS = -DSCALE=30
+CPPFLAGS = -DSCALE=40
 endif
 
 # This program is adversely effected by the underlying precision of the machine

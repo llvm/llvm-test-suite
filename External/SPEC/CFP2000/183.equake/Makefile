@@ -3,4 +3,4 @@ RUN_OPTIONS     =
 STDIN_FILENAME  = inp.in
 STDOUT_FILENAME = inp.out
 CPPFLAGS =
-include ../../Makefile.spec
+include ../../Makefile.spec2000

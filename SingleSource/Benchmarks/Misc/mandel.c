@@ -6,7 +6,7 @@ int main() { return 0; }
 #else /* sparc */
 
 #define ESCAPE 2
-#define IMAGE_SIZE 10
+#define IMAGE_SIZE 5000
 #define START_X -2.0
 #define START_Y START_X
 #define MAX_ITER 10
@@ -16,8 +16,9 @@ int main() { return 0; }
 
 #include <tgmath.h>
 
+volatile double __complex__ accum;
 void emit(double __complex__ X) {
-  printf("%f\n", (double)X);
+  accum += X;
 }
 
 void mandel() {
@@ -39,6 +40,7 @@ void mandel() {
 
 int main() {
   mandel();
+  printf("%d\n", (int)accum);
   return 0;
 }
 

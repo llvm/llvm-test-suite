@@ -88,8 +88,7 @@
 /*#define MYSTRFNS*/
 
 /* Accuracy of timings and human fatigue controlled by next two lines */
-#define LOOPS	15000		/* Use this for slow or 16 bit machines */
-//#define LOOPS	900000		/* Use this for faster machines */
+#define LOOPS	20000000
 
 /* Compiler dependent options */
 #undef	NOENUM			/* Define if compiler has no enum's */
@@ -264,7 +263,6 @@ Proc0()
 #endif
 	for (i = 0; i < LOOPS; ++i)
 	{
-          if ((i & 255) == 0) printf("Making progress: %d\n", i);
 		Proc5();
 		Proc4();
 		IntLoc1 = 2.0;

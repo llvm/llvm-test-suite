@@ -21,8 +21,8 @@ sub FormatTime {
 
 sub GCCCBERatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-5];
-  my $CBE = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-6];
+  my $CBE = $Cols->[$Col-5];
   if ($GCC ne "*" and $CBE ne "*" and $CBE != "0") {
     return sprintf("%3.2f", $GCC/$CBE);
   } else {
@@ -32,8 +32,8 @@ sub GCCCBERatio {
 
 sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-6];
-  my $LLC = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-7];
+  my $LLC = $Cols->[$Col-5];
   if ($GCC ne "*" and $LLC ne "*" and $LLC != "0") {
     return sprintf("%3.2f", $GCC/$LLC);
   } else {
@@ -43,8 +43,8 @@ sub GCCLLCRatio {
 
 sub GCCLLC_LSRatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-7];
-  my $LLC_LS = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-8];
+  my $LLC_LS = $Cols->[$Col-5];
   if ($GCC ne "*" and $LLC_LS ne "*" and $LLC_LS != "0") {
     return sprintf("%3.2f", $GCC/$LLC_LS);
   } else {
@@ -73,6 +73,7 @@ sub GCCLLC_LSRatio {
  ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-LS"   , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m:]+)', \&FormatTime],
+ ["JIT-LS"   , 'TEST-RESULT-jit-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
  ["GCC/LLC-LS"  , \&GCCLLC_LSRatio]

@@ -107,6 +107,10 @@ LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCLSDIFFS  := $(addsuffix .diff-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
+# Profiles for the program.
+PROFOUTPUT := $(addsuffix .prof, $(PREFIXED_PROGRAMS_TO_TEST))
+PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Build Program outputs:
 .PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-ls
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe
@@ -119,6 +123,9 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 # Regardless of what other options are specified, build the program's bytecode
 # representation.
 all:: $(BYTECODE)
+profile:: $(PROFOUTPUT)
+print-profile:: $(PRINTPROFOUTPUT)
+
 
 ifdef RUN_GCC_ONLY
 DISABLE_DIFFS = 1
@@ -171,7 +178,7 @@ all:: $(LLCDIFFS)
 ifdef ENABLE_LINEARSCAN
 all:: $(LLCLSDIFFS)
 endif
-endif
+endif#DISABLE_LLC_DIFFS
 
 ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
@@ -180,16 +187,16 @@ endif
 ifdef TARGET_HAS_JIT
 ifndef DISABLE_JIT
 all:: $(JITDIFFS)
-endif
 ifdef ENABLE_LINEARSCAN
 all:: $(JITLSDIFFS)
 endif
-endif
+endif#DISABLE_JIT
+endif#TARGET_HAS_JIT
 
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
-endif
+endif#DISABLE_DIFFS
 
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
@@ -201,6 +208,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 	$(LOPT) -mstrip $< -o $@ -f
 
+
 ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
 # Link the program to the libraries it uses, then perform postlink
@@ -208,7 +216,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -216,29 +224,42 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
 endif
+
+$(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
+Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
+	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+
+$(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
+Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
+	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Targets to get the pass arguments that gccas and gccld are using...
-Output/gccas-pass-args: $(LGCCAS)
+Output/gccas-pass-args: $(LGCCAS) Output/.dir
 	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
-Output/gccld-pass-args: $(LGCCLDPROG)
+Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
-	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
+	$(LGCCLD) Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
 
+# If the program requires exception handling support, enable (potentially
+# expensive) support for it.
+ifdef REQUIRES_EH_SUPPORT
+LLCFLAGS += -enable-correct-eh-support
+endif
 
 #
 # Rules to compile the program for the C Back End
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
-Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
-	-$(LDIS) -c < $< > $@
+Output/%.cbe.c: Output/%.llvm.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -march=c $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
@@ -281,7 +302,13 @@ EXTRA_LLI_OPTS =
 
 LLI_OPTS = -force-interpreter=true $(EXTRA_LLI_OPTS)
 JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
-JIT_LS_OPTS = -force-interpreter=false -regalloc=linearscan $(EXTRA_LLI_OPTS)
+
+
+# If the program requires exception handling support, enable (potentially
+# expensive) support for it.
+ifdef REQUIRES_EH_SUPPORT
+JIT_OPTS += -enable-correct-eh-support
+endif
 
 native: $(PROGRAMS_TO_TEST:%=Output/%.native)
 stripped-bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc)
@@ -308,7 +335,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
 Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_LS_OPTS) $< $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=linearscan $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST (jit-ls): $* FAILED!"; rm -f $@; fi
 endif
@@ -332,12 +359,12 @@ BUGPOINT_OPTIONS += --args -- $(RUN_OPTIONS)
 
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
-Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) \
+Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
+Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
 
@@ -349,7 +376,31 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS)
 
+
+LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
+
+$(PROGRAMS_TO_TEST:%=Output/%.prof): \
+Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
+	@rm -f $@
+	-$(RUNSAFELY) $(STDIN_FILENAME) Output/$*.out-prof $(LLI) $(JIT_OPTS) \
+            -fake-argv0 'Output/$*.llvm.bc' -load $(LIBPROFILESO) $< -llvmprof-output $@ $(RUN_OPTIONS)
+	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
+		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
+
 endif
+
+
+#
+# Rules to generate profiling information
+#
+$(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
+Output/%.llvm-prof.bc: Output/%.llvm.bc
+	$(LOPT) -insert-block-profiling $< -o $@ -f
+
+$(PROGRAMS_TO_TEST:%=Output/%.printprof): \
+Output/%.printprof: Output/%.llvm.bc Output/%.prof $(LPROF)
+	$(LPROF) $< Output/$*.prof
+
 
 #
 # Rules to diff test output...
@@ -478,9 +529,9 @@ ifdef TEST
 TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
 TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
-                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).report)
+                $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).report)
 TestGnuPlot  := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).gnuplot) \
-                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).gnuplot)
+                $(wildcard $(BUILD_SRC_ROOT)/projects/*/test/TEST.$(TEST).gnuplot)
 ifneq ($(strip $(TestMakefile)),)
 -include $(TestMakefile)
 else

@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
       yran = 5813.0;
       ymult = 1307.0;
       ymod = 5471.0;
-      itot = 1200;
+      itot = 40000000;
 
       for(j=1; j<=itot; j++) {
 /*

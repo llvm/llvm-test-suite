@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define                Count           10000*100
+#define                Count           10000*1000
 #define                Qpktcountval    2326410
 #define                Holdcountval     930563
 

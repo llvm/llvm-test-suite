@@ -1,4 +1,4 @@
 LEVEL = ../../../../../..
 RUN_OPTIONS         := inp.in
 STDOUT_FILENAME := inp.out
-include ../../Makefile.spec
+include ../../Makefile.spec2000

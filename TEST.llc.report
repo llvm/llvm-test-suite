@@ -36,11 +36,14 @@ sub TotalInstrEliminations {
  [],
 # Sizes
  ["#MCInsts", '([0-9]+).*Number of machine instrs printed'],
- ["#Int"   ,  '([0-9]+).*Number of intervals'],
+ ["#IntOrig", '([0-9]+).*Number of original intervals'],
+ ["#IntCoal", '([0-9]+).*Number of intervals after coalescing'],
  [],
 # Number of transformations
- ["#spill" , '([0-9]+).*Number of registers spilled'],
- ["#reload", '([0-9]+).*Number of registers reloaded'],
+ ["#store" , '([0-9]+).*Number of stores added'],
+ ["#load"  , '([0-9]+).*Number of loads added'],
+ ["#fold"  , '([0-9]+).*Number of loads/stores folded into instructions'],
+ ["#spill" , '([0-9]+).*Number of register spills'],
  ["#fp"    , '([0-9]+).*Number of floating point instructions'],
  ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
  ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
