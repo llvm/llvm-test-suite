@@ -50,16 +50,16 @@ Output/%.nightly.nat.report.txt: Output/%.out-nat
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
-Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
+Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	@echo > $@
-	@echo 'time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1'
-	@-if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) >> $@ 2>&1; then \
+	-head -n 100 Output/$*.exe-llc >> $@
+	@-if test -f Output/$*.exe-llc; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
-	  printf "TEST-RESULT-llc: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
-	  echo >> $@;\
-	  printf "TEST-RESULT-llc: " >> $@;\
+	  printf "TEST-RESULT-llc-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
+	  echo >> $@;\
+	  printf "TEST-RESULT-llc-comptime: " >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
@@ -73,13 +73,13 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	-head -n 100 Output/$*.exe-cbe >> $@
 	@-if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
-          echo "TEST-RESULT-cbe: YES" >> $@;\
+	  echo "TEST-RESULT-cbe: YES" >> $@;\
 	  printf "TEST-RESULT-cbe-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)cbe.time >> $@;\
 	  echo >> $@;\
-        else  \
+	else  \
 	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
-        fi
+	fi
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
@@ -87,7 +87,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	@echo > $@
 	-head -n 100 Output/$*.exe-jit >> $@
 	@-if test -f Output/$*.exe-jit; then \
-          echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
+	  echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)jit.time >> $@;\
 	  echo >> $@;\
