@@ -32,7 +32,7 @@ SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
 BENCH_NAME  := $(patsubst /%,%,$(BENCH_NAME))
 SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
 
-SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
+SPEC_BENCH_DIR := $(SPEC2000_ROOT)/$(SPEC_SUBDIR)
 
 PROG := $(BENCH_NAME)
 ifndef Source

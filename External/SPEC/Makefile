@@ -5,7 +5,7 @@ include ${LEVEL}/Makefile.config
 #
 # Remove SPEC95 and SPEC2000 per the user's configuration
 #
-ifndef USE_SPEC
+ifndef USE_SPEC2000
 DIRS := $(filter-out CFP2000/, $(DIRS))
 DIRS := $(filter-out CINT2000/, $(DIRS))
 endif
