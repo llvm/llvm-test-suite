@@ -184,6 +184,11 @@ QUAD_EDGE alloc_edge() {
     }
   } else
     ans = (QUAD_EDGE) avail_edge, avail_edge = onext(avail_edge);
+
+  ans[0].wasseen = 0;
+  ans[1].wasseen = 0;
+  ans[2].wasseen = 0;
+  ans[3].wasseen = 0;
   return ans;
 }
 
