@@ -18,9 +18,7 @@ endif
 ifndef STDOUT_FILENAME
 STDOUT_FILENAME := standard.out
 endif
-ifndef LDFLAGS
-LDFLAGS = -lm
-endif
+LDFLAGS += -lm
 
 # Get the current directory, the name of the benchmark, and the current
 # subdirectory of the SPEC directory we are in (ie, CINT2000/164.gzip)
