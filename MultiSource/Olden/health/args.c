@@ -25,7 +25,7 @@ int dealwithargs(int argc, char *argv[]) {
     seed = atol(argv[3]);
   }
 
-  printf("max_level=%d  max_time=%ld  seed=%ld \n", max_level, max_time, seed);
+  printf("max_level=%d  max_time=%lld  seed=%lld \n", max_level, max_time, seed);
 }
 #else
 int dealwithargs(int argc, char *argv[]) { 
