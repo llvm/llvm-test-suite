@@ -179,7 +179,7 @@ int PGM_LoadImage(ImgP img)
 {
   int rc;
   unsigned char byte;
-  int n, c, pixel;
+  int n = 0, c, pixel;
 
   /* Open the image file for processing. */
   if ((rc = PGM_Open(img)) != PGM_OK)
