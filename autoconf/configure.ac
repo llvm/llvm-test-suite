@@ -47,10 +47,10 @@ dnl * Set the location of various third-party software packages
 dnl **************************************************************************
 
 dnl Location of LLVM source code
-AC_ARG_WITH(llvmsrc,AC_HELP_STRING([--with-llvmsrc],[Location of LLVM Source Code]),AC_SUBST(LLVM_SRC,[$withval]),AC_SUBST(LLVM_SRC,[`cd ${srcdir}/../..; pwd`]))
+AC_ARG_WITH(llvmsrc,AS_HELP_STRING(--with-llvmsrc,Location of LLVM Source Code),AC_SUBST(LLVM_SRC,[$withval]),AC_SUBST(LLVM_SRC,[`cd ${srcdir}/../..; pwd`]))
 
 dnl Location of LLVM object code
-AC_ARG_WITH(llvmobj,AC_HELP_STRING([--with-llvmobj],[Location of LLVM Object Code]),AC_SUBST(LLVM_OBJ,[$withval]),AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
+AC_ARG_WITH(llvmobj,AS_HELP_STRING(--with-llvmobj,Location of LLVM Object Code),AC_SUBST(LLVM_OBJ,[$withval]),AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
 
 dnl **************************************************************************
 dnl * Check for things needed by the test suite programs
@@ -65,7 +65,7 @@ dnl Verify that GCC is version 3.0 or higher
 
 dnl Check for GNU Make.  We use its extensions too, so don't build without it
 AC_CHECK_GNU_MAKE
-if test -z "$_cv_gnu_make_command"
+if test -z "$llvm_cv_gnu_make_command"
 then
 	AC_MSG_ERROR([GNU Make required but not found])
 fi
@@ -78,24 +78,7 @@ AC_PROG_LIBTOOL
 AC_PATH_PROG(PYTHON,[python],[true python])
 if test "$PYTHON" = "false"
 then
-	AC_MSG_WARN([Python is required for the test suite, but it was not found])
-fi
-dnl Verify that the version of python available is high enough for qmtest
-pyversion=`$PYTHON -V 2>&1 | cut -d\  -f2`
-pymajor=`echo $pyversion | cut -d. -f1`
-pyminor=`echo $pyversion | cut -d. -f2`
-
-if test "$pymajor" -ge "2"
-then
-	if test "$pymajor" -eq "2"
-	then
-		if test "$pyminor" -lt "2"
-		then
-			AC_MSG_WARN([QMTest requires Python 2.2 or later])
-		fi
-	fi
-else
-	AC_MSG_WARN([QMTest requires Python 2.2 or later])
+  AC_MSG_WARN([Python is required for the test suite, but it was not found])
 fi
 
 dnl Checks for header files.
@@ -126,9 +109,9 @@ if test "x${F2C}" = "x"; then
 fi
 
 dnl LLC Diff Option
-AC_ARG_ENABLE(llc_diffs,AC_HELP_STRING([--enable-llc_diffs],[Enable LLC Diffs
+AC_ARG_ENABLE(llc_diffs,AS_HELP_STRING(--enable-llc_diffs,Enable LLC Diffs
                                         when testing (default is
-                                                      YES)]),,enableval=yes)
+                                                      YES)),,enableval=yes)
 if test ${enableval} = "no"
 then
       AC_SUBST(DISABLE_LLC_DIFFS,[DISABLE_LLC_DIFFS:=1])
@@ -137,4 +120,5 @@ else
 fi
 
 dnl Create the output files
-AC_OUTPUT(Makefile.config)
+AC_CONFIG_FILES([Makefile.config])
+AC_OUTPUT
