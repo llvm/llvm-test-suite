@@ -19,8 +19,8 @@ PROGRAM=$1
 shift
 
 rm -f core core.*
-ulimit -c hard
-(time -p $PROGRAM $* > $OUTFILE 2>&1) 2> $OUTFILE.time
+ulimit -c unlimited
+(time -p $PROGRAM $* > $OUTFILE) 2> $OUTFILE.time
 if ls | egrep "^core" > /dev/null
 then
     corefile=`ls core* | head -1`
