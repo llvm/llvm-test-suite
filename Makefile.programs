@@ -87,7 +87,7 @@ LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe.c,   $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
-GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$(Source:.c=)))
+GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
 JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
