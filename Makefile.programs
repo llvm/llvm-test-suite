@@ -41,6 +41,9 @@ DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 
+# Generated code for llc (which does not require the target platform)
+LLCCODEGEN := $(addsuffix .llc.s,  $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$(Source:.c=)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
@@ -67,7 +70,7 @@ all:: $(GCCOUTPUT)
 endif
 
 ifndef DISABLE_LLC
-all:: $(LLCOUTPUT)
+all:: $(LLCCODEGEN)
 else
 DISABLE_LLC_DIFFS = 1
 endif
