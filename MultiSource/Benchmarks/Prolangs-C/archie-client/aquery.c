@@ -72,7 +72,6 @@ extern char p_warn_string[];
  *                AQ_NOTRANS     Don't translate results
  */
 
-extern void bzero(char *b,int length);
 extern int get_vdir(char *dhost,char *dfile,char *components,VDIR1 dir,
                     long flags,VLINK filters,char *acomp);
 
