@@ -10,7 +10,7 @@ PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 CFLAGS  := -O3
 
-REPORTS_TO_GEN := compile nat
+REPORTS_TO_GEN := compile nat llc-beta
 ifndef DISABLE_LLC
 REPORTS_TO_GEN +=  llc
 endif
@@ -78,7 +78,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 	-head -n 100 Output/$*.exe-llc-beta >> $@
 	@-if test -f Output/$*.exe-llc-beta; then \
 	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  $(LLC) $< $(LLCBETAOPTION) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
