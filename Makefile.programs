@@ -1,3 +1,4 @@
+##-----------------------------------------------------------*-Makefile-*-
 #                        test/Programs/Makefile.programs
 #
 # This makefile contains all of the makefile machinery that is common to
@@ -20,6 +21,7 @@
 #
 #  FIXME: There should be a way to specify the command line for a program
 #
+##------------------------------------------------------------------------
 
 include $(LEVEL)/test/Makefile.tests
 
@@ -51,9 +53,17 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build diffs for LLI and LLC output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-llc Output/%.diff-cbe
+
+ifndef DISABLE_LLC
+all:: $(LLCOUTPUT)
+else
+DISABLE_LLC_DIFFS = 1
+endif
+
 ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
 endif
+
 ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
 endif
