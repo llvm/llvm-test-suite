@@ -44,7 +44,9 @@ include $(LEVEL)/test/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
-.PRECIOUS: Output/%.linked.bc
+.PRECIOUS: Output/%.linked.bc 
+.PRECIOUS: Output/%.run.bc Output/%.run.s Output/%.tracing Output/%.trace
+.PRECIOUS: Output/%.out-tracing  Output/%.diff-tracing
 
 PROGDIR = $(LEVEL)/test/Programs
 
@@ -55,6 +57,8 @@ PROGDIR = $(LEVEL)/test/Programs
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG := $(PROGDIR)/TimeProgram.sh
 
+TIMESCRIPT := $(PROGDIR)/GetTraceTime.pl
+
 # DIFFPROG - The program used to diff the output
 DIFFPROG := $(PROGDIR)/DiffOutput.sh
 
@@ -63,7 +67,7 @@ DIFFPROG := $(PROGDIR)/DiffOutput.sh
 #
 ifndef RUNTIMELIMIT
   ifeq ($(ARCH),Sparc)
-    RUNTIMELIMIT := 300
+    RUNTIMELIMIT := 500
   else
     RUNTIMELIMIT := 40
   endif
@@ -75,10 +79,11 @@ endif
 # continue to be run.
 RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT)
 
+RUNSAFELY_TRACE_EXECS := $(PROGDIR)/RunSafely_trace_execs.sh $(RUNTIMELIMIT)
+
 ifndef STDIN_FILENAME
 STDIN_FILENAME := /dev/null
 endif
-
 
 #
 # Targets to build for the default target...
@@ -94,6 +99,12 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
 
+#programs generated for tracing framework
+LLCBYTECODE := $(addsuffix .llc.bc,   $(PREFIXED_PROGRAMS_TO_TEST))
+TRACINGCODEGEN := $(addsuffix .run.bc,   $(PREFIXED_PROGRAMS_TO_TEST))
+TRACINGLLCCODEGEN := $(addsuffix .run.s,   $(PREFIXED_PROGRAMS_TO_TEST))
+TRACINGEXCEUTABLE := $(addsuffix .trace,   $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
 NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
@@ -102,18 +113,25 @@ JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
+#output for tracing framework
+TRACINGOUTPUT := $(addsuffix .out-tracing,  $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
+#Diffs for tracing framework
+TRACINGDIFFS  := $(addsuffix .diff-tracing, $(PREFIXED_PROGRAMS_TO_TEST))
+GETTIMECOMPARISON := $(addsuffix .performance, $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc
-.PRECIOUS: Output/%.out-nat Output/%.out-cbe
+.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-tracing 
+.PRECIOUS: Output/%.out-nat Output/%.out-cbe Output/%.llc.bc
 
 # Build diffs from the output...
-.PRECIOUS: Output/%.diff-lli Output/%.diff-jit
+.PRECIOUS: Output/%.diff-lli Output/%.diff-jit Output/%.diff-tracing
 .PRECIOUS: Output/%.diff-llc Output/%.diff-cbe
 
 
@@ -154,10 +172,27 @@ endif
 .PRECIOUS: $(LLIOUTPUT) $(JITOUTPUT) $(LLCOUTPUT) $(CBEOUTPUT)
 endif
 
+ifdef GET_LLVM_TRACE
+all:: $(LLCBYTECODE)
+endif
+
 ifndef DISABLE_LLC
 all:: $(LLCCODEGEN)
 else
 DISABLE_LLC_DIFFS = 1
+endif
+
+ifdef GET_LLVM_TRACE
+all:: $(TRACINGCODEGEN)
+all:: $(TRACINGLLCCODEGEN)
+all:: $(TRACINGEXCEUTABLE)
+all:: $(TRACINGDIFFS)
+all:: $(GETTIMECOMPARISON)
+
+DISABLE_CBE = 1
+DISABLE_LLC_DIFFS = 1
+DISABLE_CBE_DIFFS = 1
+DISABLE_JIT = 1
 endif
 
 ifndef DISABLE_CBE
@@ -244,9 +279,20 @@ Output/%.cbe: Output/%.cbe.c
 #
 # Compile a linked program to machine code with LLC.
 #
+
+$(PROGRAMS_TO_TEST:%=Output/%.llc.bc): \
+Output/%.llc.bc: Output/%.llvm.bc $(LOPT)
+	-$(LOPT) -f $< -inline -lowerswitch -branch-combine -emitfuncs -o $@
+
+ifndef GET_LLVM_TRACE
 $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
+else
+$(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
+Output/%.llc.s: Output/%.llc.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -f $< -o $@
+endif
 
 ## Alternative command to run llc remotely on another machine:
 ## This is very useful when debugging:
@@ -257,6 +303,34 @@ Output/%.llc.s: Output/%.llvm.bc $(LLC)
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
 	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace.llc): \
+Output/%.trace.llc: Output/%.trace.llc.s
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(TRACELIBS) -o $@
+
+##compile and create traced executables
+$(PROGRAMS_TO_TEST:%=Output/%.run.bc): \
+Output/%.run.bc: Output/%.llc.bc $(LOPT)
+	-$(LOPT) -instloops $< > $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.run.s): \
+Output/%.run.s: Output/%.run.bc $(LLC)
+	-$(LLC) -f $< -o $@
+
+STATIC_TRACE_LIBS = ${DESTLIBDEBUG}/firstTrigger.o ${DESTLIBDEBUG}/tracecache.o \
+	${DESTLIBCURRENT}/mapinfo.o ${DESTLIBDEBUG}/scratchmemory.o
+
+DYNAMIC_TRACE_LIBS = ${DESTLIBCURRENT}/libscalaropts.a \
+	${DESTLIBCURRENT}/libtransformutils.a ${DESTLIBCURRENT}/vmcore.o \
+	${DESTLIBCURRENT}/libsupport.a ${DESTLIBCURRENT}/bcreader.o \
+	${DESTLIBCURRENT}/libanalysis.a
+
+OPTIMIZER_TRACE_LIBS = ${STATIC_TRACE_LIBS} $(DYNAMIC_TRACE_LIBS) -lcpc -lm -lrt -lmalloc
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace): \
+Output/%.trace: Output/%.run.s $(STATIC_TRACE_LIBS) ${DYNAMIC__TRACE_LIBS}
+	-$(CXX) $(CFLAGS) $< -o $@ ${OPTIMIZER_TRACE_LIBS}
+
 
 #
 # Rules to execute the program
@@ -289,13 +363,27 @@ ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST: $* FAILED!"; rm -f $@; fi
 endif
 
+ifndef GET_LLVM_TRACE
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+else
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
+Output/%.out-llc: Output/%.llc
+	-$(RUNSAFELY_TRACE_EXECS) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
+Output/%.out-tracing: Output/%.trace
+	-$(RUNSAFELY_TRACE_EXECS) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.performance): \
+Output/%.performance: Output/%.out-llc.time Output/%.out-tracing.time
+	-$(TIMESCRIPT) $* Output/$*.out-llc.time Output/$*.out-tracing.time $@
 
 endif
 
@@ -322,6 +410,10 @@ Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	-$(DIFFPROG) cbe $* $(HIDEDIFF)
+
+$(PROGRAMS_TO_TEST:%=Output/%.diff-tracing): \
+Output/%.diff-tracing: Output/%.out-llc Output/%.out-tracing
+	$(DIFFPROG) tracing $* $(HIDEDIFF)
 
 ifndef DISABLE_DIFFS
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
@@ -419,3 +511,10 @@ test.$(TEST).%:
 	@exit 1
 endif
 endif
+
+
+
+
+
+
+
