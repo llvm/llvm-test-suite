@@ -18,3 +18,13 @@ ifeq ($(ARCH),Sparc)
   ## SPEC portability note for GCC says to use these flags and cross fingers:
   CPPFLAGS += -DSPEC_CPU2000_LP64
 endif
+ifeq ($(ARCH),Alpha)
+  ## SPEC portability note for GCC says to use these flags and cross fingers:
+  CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
+ifeq ($(ARCH),IA64)
+  ## SPEC portability note for GCC says to use these flags and cross fingers:
+  CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
+
+
