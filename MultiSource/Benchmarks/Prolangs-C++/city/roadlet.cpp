@@ -1,6 +1,6 @@
 // roadlet.cc
 
-#include <stream.h>
+#include <iostream>
 #include "roadlet.h"
 
 void roadlet::init(char *n)      
@@ -11,7 +11,7 @@ void roadlet::init(char *n)
 }
 
 
-ostream& operator<<(ostream& o, roadlet r)
+std::ostream& operator<<(std::ostream& o, roadlet r)
 {
     o << "roadlet " << r.name;
     return (o);

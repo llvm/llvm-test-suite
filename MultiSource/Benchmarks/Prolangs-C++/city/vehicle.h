@@ -8,7 +8,7 @@
 class vehicle
 {
 private:
-    const int DEFAULT_SPEED = 100;
+    enum { DEFAULT_SPEED = 100 };
     roadlet *location;
     char *name;
     int speed;

@@ -19,12 +19,12 @@ private:
 
 protected:
     char *name;
-    vehicle *occupant = NULL;
-    roadlet *neighbors[8] = { NULL };
+    vehicle *occupant;
+    roadlet *neighbors[8];
     move_function the_moves[8];
 
 public:
-    roadlet()                { init("unnamed");};
+    roadlet() : occupant(NULL) { neighbors[0] = neighbors[1] = neighbors[2] = neighbors[3] = neighbors[4] = neighbors[5] = neighbors[6] = neighbors[7] = 0;  init("unnamed");};
     roadlet(char *n)         { init(n);};
     int occupied()           { return(occupiedby() != NULL);};
     vehicle *occupiedby()    {return(occupant);};

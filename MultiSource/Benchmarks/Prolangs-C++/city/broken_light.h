@@ -5,7 +5,7 @@
 
 #include "light.h"
 #include "stream.h"
-extern "C" random();
+#include <cstdlib>
 
 #define BROKEN_LIGHT_ID 1
 
@@ -17,7 +17,7 @@ public:
     broken_light(int t1, int t2, int t3, int t4) : light (t1,t2,t3,t4){};
 };
 
-inline virtual int broken_light::next_state()
+inline int broken_light::next_state()
 {
     cout << "next state called\n";
     if ((random() % 4) == 1)

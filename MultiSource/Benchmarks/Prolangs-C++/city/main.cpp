@@ -7,11 +7,7 @@
 #include "roadlet.h"
 #include "check_functions.h"
 #include "intersection.h"
-extern "C" 
-{
-    void *malloc();
-    void srandom(int);
-}
+#include <cstdlib>
 
 
 // connect r1->d1 to r2->d2

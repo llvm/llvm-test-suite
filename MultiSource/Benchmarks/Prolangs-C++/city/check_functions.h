@@ -18,4 +18,4 @@ extern roadlet *strait_or_right(roadlet *, vehicle *, direction);
 extern roadlet *green_light(intersection_roadlet*, vehicle*, direction);
 extern roadlet *green_OR_plan_rightONred(intersection_roadlet*, vehicle*, direction);
 
-#endif _check_function
+#endif 
