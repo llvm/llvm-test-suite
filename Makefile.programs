@@ -263,7 +263,7 @@ endif
 # Rules to compile the program for the C Back End
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
-Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
+Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -march=c $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
