@@ -7,7 +7,7 @@
 #
 #   1. The native platform compiler
 #   2. LLVM Bytecode Compiler + LLI interpreter (if ENABLE_LLI is enabled)
-#   3. LLVM Bytecode Compiler + LLC Sparc machine code backend
+#   3. LLVM Bytecode Compiler + LLC static compiler
 #   4. LLVM Bytecode Compiler + C Backend + Native Sun Compiler
 #   5. LLVM Bytecode Compiler + LLI Just-In-Time Compiler
 #
@@ -46,7 +46,6 @@ include $(LEVEL)/test/Makefile.tests
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 .PRECIOUS: Output/%.linked.bc 
 .PRECIOUS: Output/%.run.bc Output/%.run.s Output/%.tracing Output/%.trace
-.PRECIOUS: Output/%.out-tracing  Output/%.diff-tracing
 
 PROGDIR = $(LEVEL)/test/Programs
 
@@ -121,7 +120,6 @@ LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 #Diffs for tracing framework
-TRACINGDIFFS  := $(addsuffix .diff-tracing, $(PREFIXED_PROGRAMS_TO_TEST))
 GETTIMECOMPARISON := $(addsuffix .performance, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
@@ -129,7 +127,7 @@ GETTIMECOMPARISON := $(addsuffix .performance, $(PREFIXED_PROGRAMS_TO_TEST))
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe Output/%.llc.bc
 
 # Build diffs from the output...
-.PRECIOUS: Output/%.diff-lli Output/%.diff-jit Output/%.diff-tracing
+.PRECIOUS: Output/%.diff-lli Output/%.diff-jit
 .PRECIOUS: Output/%.diff-llc Output/%.diff-cbe
 
 
@@ -146,7 +144,7 @@ ifdef DISABLE_FOR_LLVM_PROGRAMS
   DISABLE_DIFFS := 1
 endif
 
-ifdef DOTRACING
+ifneq ($(TRACE)$(TRACEM),)
   ## When tracing is enabled do the following:
   ## -- disable output diffs
   ## -- generate llc output if not disabled
@@ -184,10 +182,6 @@ ifdef GET_LLVM_TRACE
 all:: $(TRACINGCODEGEN)
 all:: $(TRACINGLLCCODEGEN)
 all:: $(TRACINGEXECUTABLE)
-#all:: $(TRACINGDIFFS)
-# TRACINGDIFFS does not work - it wants to diff llc against tracing,
-# but DiffOutput always diffs against native, and GET_LLVM_TRACE disables
-# native.
 all:: $(GETTIMECOMPARISON)
 
 DISABLE_CBE = 1
@@ -405,10 +399,6 @@ Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	-$(DIFFPROG) cbe $* $(HIDEDIFF)
-
-$(PROGRAMS_TO_TEST:%=Output/%.diff-tracing): \
-Output/%.diff-tracing: Output/%.out-llc Output/%.out-tracing
-	-$(DIFFPROG) tracing $* $(HIDEDIFF)
 
 ifndef DISABLE_DIFFS
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
