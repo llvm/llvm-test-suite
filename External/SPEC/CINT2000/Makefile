@@ -18,8 +18,12 @@ include $(LEVEL)/Makefile.config
 
 # Disable crafty until it stops infinite-looping on Sparc
 ifeq ($(ARCH), Sparc)
+PARALLEL_DIRS := $(filter-out 176.gcc, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out 186.crafty, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out 252.eon, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 253.perlbmk, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 254.gap, $(PARALLEL_DIRS))
+
 endif
 
 include $(LEVEL)/Makefile.programs
