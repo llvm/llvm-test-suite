@@ -7,8 +7,13 @@
 
 # FIXME: This would be autoconf'd
 include $(LEVEL)/Makefile.config
+
+all::
+
+.PRECIOUS: %.c
+
 ifeq ($(ARCH),x86)
-	F2C_DIR = /home/vadve/shared/localtools/x86
+F2C_DIR = /home/vadve/shared/localtools/x86
 else
 	ifeq ($(ARCH),Sparc)
 		F2C_DIR = /usr/dcs/software/unsupported
@@ -19,8 +24,12 @@ F2C     = $(F2C_DIR)/bin/f2c
 F2C_INC = $(F2C_DIR)/include
 F2C_LIB = $(F2C_DIR)/lib
 
+clean::
+	rm -f $(Source:%.f=%.c)
+
 %.c: %.f
 	$(F2C) $< >& /dev/null
 	
 CPPFLAGS = -I $(F2C_INC) 
 LDFLAGS += -L $(F2C_LIB) -lf2c
+
