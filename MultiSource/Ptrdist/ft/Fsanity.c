@@ -158,7 +158,7 @@ PrettyPrint(HeapP * h)
   h1 = h;
   do
   {
-    PrintItem(ITEM(h1));
+    //PrintItem(ITEM(h1));
     printf("[%u] ", RANK(h1));
     PrettyPrint(CHILD(h1));
     h1 = FORWARD(h1);
