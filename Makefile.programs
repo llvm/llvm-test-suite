@@ -387,7 +387,7 @@ endif
 #
 ifdef PROGRAM_IS_NONDETERMINISTIC
 # If the program is non-deterministic, just output something to $@
-DIFFPROG = echo > $@
+DIFFPROG = touch $@ \#
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
