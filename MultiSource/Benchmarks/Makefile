@@ -1,6 +1,8 @@
 # MultiSource/Benchmarks Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../../..
-PARALLEL_DIRS  := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
+include $(LEVEL)/Makefile.config
+
+PARALLEL_DIRS  := $(basename $(shell ls $(SourceDir) | grep -v CVS | grep -v Makefile))
 
 include $(LEVEL)/test/Programs/Makefile.programs
