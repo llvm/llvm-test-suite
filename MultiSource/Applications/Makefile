@@ -1,6 +1,6 @@
-# MultiSource/Ptrdist Makefile:  Build all subdirectories automatically
+# MultiSource/Applications Makefile:  Build all subdirectories automatically
 
-LEVEL = ../../../../..
+LEVEL = ../../../..
 PARALLEL_DIRS  := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
 
 include $(LEVEL)/test/Programs/Makefile.programs

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 PROG = bisect
 LDFLAGS = -lm
 #RUN_OPTIONS += 

@@ -1,5 +1,5 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 PROG = aha
 CPPFLAGS = 
 LDFLAGS =
-include ../Makefile.multisrc
+include ../../Makefile.multisrc

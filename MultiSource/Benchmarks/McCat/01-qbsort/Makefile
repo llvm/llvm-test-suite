@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 PROG = qbsort
 LDFLAGS = -lm
 #RUN_OPTIONS += 

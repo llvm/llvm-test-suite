@@ -1,7 +1,7 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
 PROG     = sim
 CPPFLAGS = -DUNIX
 LDFLAGS  = 
 
-include	../Makefile.multisrc
+include	../../Makefile.multisrc

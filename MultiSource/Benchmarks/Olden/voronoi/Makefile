@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 
 PROG     = voronoi
 INCLUDES = defines.h

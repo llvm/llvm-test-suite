@@ -1,4 +1,4 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 
 include $(LEVEL)/Makefile.config
 
@@ -14,7 +14,7 @@ include $(LEVEL)/Makefile.config
 
 Source  := $(ExtraSource) $(wildcard $(BUILD_SRC_DIR)/*.c)
 
-include	../Makefile.multisrc
+include	../../Makefile.multisrc
 
 #
 # JTC -

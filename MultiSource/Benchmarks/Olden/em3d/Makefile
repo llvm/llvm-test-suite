@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 
 PROG       = em3d
 CPPFLAGS   = -DTORONTO

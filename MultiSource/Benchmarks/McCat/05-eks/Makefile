@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 PROG = eks
 LDFLAGS = -lm
 #RUN_OPTIONS += 

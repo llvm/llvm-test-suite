@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 
 PROG     = bh
 CPPFLAGS = -DTORONTO

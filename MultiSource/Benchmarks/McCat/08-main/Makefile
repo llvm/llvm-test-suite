@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 PROG = main
 LDFLAGS = -lm
 
