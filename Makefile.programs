@@ -73,8 +73,8 @@ all:: $(BYTECODE)
 
 ifdef RUN_GCC_ONLY
 DISABLE_LLC = 1
-DISABLE_CBE_DIFFS = 1
-ENABLE_LLI_DIFFS =
+DISABLE_CBE = 1
+ENABLE_LLI  =
 all:: $(GCCOUTPUT)
 endif
 
@@ -88,11 +88,11 @@ ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
 endif
 
-ifndef DISABLE_CBE_DIFFS
+ifndef DISABLE_CBE
 all:: $(CBEDIFFS)
 endif
 
-ifdef ENABLE_LLI_DIFFS
+ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
 
