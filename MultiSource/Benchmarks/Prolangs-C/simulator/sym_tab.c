@@ -7,7 +7,7 @@
 #include "sym_tab.h"
 #include <string.h>
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 /* -------------------------------- INIT_SYM_TAB --------------------------- */
 /* Initialize the symbol table TABLE.                                        */

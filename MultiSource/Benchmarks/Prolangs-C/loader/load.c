@@ -9,7 +9,7 @@
 /*                stringI.o print.o -g -lm                                   */
        
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include "constants.h"
 #include "sym_tab.h"

@@ -13,7 +13,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 /* Constants used to determine if being used to store modify records or      */
 /* error messages.                                                           */

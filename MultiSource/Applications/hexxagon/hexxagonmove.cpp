@@ -23,9 +23,13 @@
 #include "hexxagonboard.h"
 #include "hexxagonmove.h"
 
-#include <sys/timeb.h>
 #include <iostream>
 #include <stdlib.h>
+#ifdef __FreeBSD__
+#include <sys/time.h>
+#else
+#include <sys/timeb.h>
+#endif
 #include <string.h>
 
 using namespace std;
@@ -83,10 +87,17 @@ void HexxagonMoveList::sortList()
 
 int getTime()
 {
+#ifdef __FreeBSD__
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+#else
 	struct timeb tb;
 	
 	ftime(&tb);
 	return (tb.time * 1000) + tb.millitm;
+#endif
 }
 
 HexxagonMove *HexxagonMoveList::getMove(int i)

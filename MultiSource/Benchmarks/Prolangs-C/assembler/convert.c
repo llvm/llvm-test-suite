@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "sym_tab.h"
 #include "constants.h"
 #include "scan_line.h"

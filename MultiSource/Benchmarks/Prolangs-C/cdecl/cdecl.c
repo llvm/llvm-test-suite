@@ -115,7 +115,7 @@ void free(), exit(), perror();
   void docast(char*, char*, char*, char*);
   void dodexplain(char*, char*, char*, char*);
   void docexplain(char*, char*, char*, char*);
-  void setprogname(char *);
+  void setprogname(const char *);
   int dotmpfile(int, char**), dofileargs(int, char**);
 #else
   char *ds(), *cat(), *visible();
@@ -155,7 +155,7 @@ int CplusplusFlag = 0;		/* -+, assume C++ language */
 int OnATty = 0;			/* stdin is coming from a terminal */
 int Interactive = 0;		/* -i, overrides OnATty */
 int KeywordName = 0;		/* $0 is a keyword (declare, explain, cast) */
-char *progname = "cdecl";	/* $0 */
+const char *progname = "cdecl";	/* $0 */
 
 #if dodebug
 int DebugFlag = 0;		/* -d, output debugging trace info */
@@ -616,7 +616,7 @@ void prompt()
 
 /* Save away the name of the program from argv[0] */
 void setprogname(argv0)
-char *argv0;
+const char *argv0;
 {
 #ifdef DOS
     char *dot;

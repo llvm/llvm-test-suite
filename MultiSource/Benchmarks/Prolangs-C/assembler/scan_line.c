@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "stringI.h"
 #include "assem.h"
 #include "buffer.h"

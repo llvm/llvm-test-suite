@@ -10,7 +10,7 @@
 /* and this does (most of) the code generation.                              */
 
 #include <math.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "pass1.h"
