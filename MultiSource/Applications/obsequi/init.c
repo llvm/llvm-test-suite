@@ -57,7 +57,7 @@ initialize_solver()
   if(g_trans_table == NULL){
 
     // first time initialization stuff.
-    g_trans_table = malloc(HASHSIZE*sizeof(Hash_Entry));
+    g_trans_table = calloc(HASHSIZE,sizeof(Hash_Entry));
   
     // initialize zobrist values
     srandom(1);

@@ -3,7 +3,10 @@
 #ifndef OBSEQUI_UTILS_H
 #define OBSEQUI_UTILS_H
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE  //Need this so that __USE_GNU is defined
+#endif
+
 #include <features.h>
 
 #include <stdlib.h>
