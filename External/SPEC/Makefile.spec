@@ -180,7 +180,7 @@ Output/%.bugpoint-jit-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 
 
-LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
+LIBPROFILESO = $(LLVM_OBJ_ROOT)/lib/Debug/libprofile_rt.so
 
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
