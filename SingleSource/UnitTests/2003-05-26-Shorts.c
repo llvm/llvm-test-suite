@@ -27,10 +27,10 @@ main(int argc, char** argv)
   unsigned short us = (unsigned short) UL;      /*     0xb8a3 =  47267 */
            short  s =          (short) UL;      /*     0xb8a3 = -18269 */
 
-  unsigned char        ub = (unsigned char) UL;             /*       0xa3 =  163 */
-  signed char           b = (  signed char) UL;             /*       0xa3 = -93 */
+  unsigned char        ub = (unsigned char) UL;         /*       0xa3 =  163 */
+  signed char           b = (  signed char) UL;         /*       0xa3 = -93 */
 
-  printf("   ui = %u (0x%x)\t\tUL-ui = %lld (0x%llx)\n",   ui, ui, UL-ui, UL-ui);
+  printf("   ui = %u (0x%x)\t\tUL-ui = %lld (0x%llx)\n", ui, ui, UL-ui, UL-ui);
   printf("ui*ui = %u (0x%x)\t  UL/ui = %lld (0x%llx)\n\n",
          (unsigned int) ui*ui, (unsigned int) ui*ui, UL/ui, UL/ui);
 
@@ -38,7 +38,7 @@ main(int argc, char** argv)
   printf(" i* i = %d (0x%x)\tL/ i = %lld (0x%llx)\n\n",
          (int) i*i,  (int) i*i, L/i, L/i);
 
-  printf("us    = %u (0x%x)\t\tUL-us = %lld (0x%llx)\n",   us, us, UL-us, UL-us);
+  printf("us    = %u (0x%x)\t\tUL-us = %lld (0x%llx)\n", us, us, UL-us, UL-us);
   printf("us*us = %u (0x%x)\t  UL/us = %lld (0x%llx)\n\n",
          (unsigned short) us*us, (unsigned short) us*us, UL/us, UL/us);
 
@@ -46,11 +46,11 @@ main(int argc, char** argv)
   printf(" s* s = %d (0x%x)\tL/ s = %lld (0x%llx)\n\n",
          (short) s*s, (short) s*s, L/s, L/s);
 
-  printf("ub    = %u (0x%x)\t\tUL-ub = %lld (0x%llx)\n",   ub, ub, UL-ub, UL-ub);
+  printf("ub    = %u (0x%x)\t\tUL-ub = %lld (0x%llx)\n", ub, ub, UL-ub, UL-ub);
   printf("ub*ub = %u (0x%x)\t\tUL/ub = %lld (0x%llx)\n\n",
          (unsigned char) ub*ub, (unsigned char) ub*ub, UL/ub, UL/ub);
 
-  printf(" b    = %d (0x%x)\t\tL-b = %lld (0x%llx)\n",     b, b, L-b, L-b);
+  printf(" b    = %d (0x%x)\t\tL-b = %lld (0x%llx)\n",   b, b, L-b, L-b);
   printf(" b* b = %d (0x%x)\t\t\tL/b = %lld (0x%llx)\n\n",
          (signed char) b*b, (signed char) b*b, L/b, L/b);
 
