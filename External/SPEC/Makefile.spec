@@ -24,7 +24,9 @@ SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
 BENCH_NAME  := $(patsubst /%,%,$(BENCH_NAME))
 SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
 
+ifndef SPEC_BENCH_DIR
 SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
+endif
 
 PROG := $(BENCH_NAME)
 ifndef Source

@@ -395,7 +395,7 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
 Output/%.llvm-prof.bc: Output/%.llvm.bc
-	$(LOPT) -insert-block-profiling $< -o $@ -f
+	$(LOPT) -insert-edge-profiling $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.printprof): \
 Output/%.printprof: Output/%.llvm.bc Output/%.prof $(LPROF)

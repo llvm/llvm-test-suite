@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
   chatting("Done.\n\n");
   chatting("# of people treated:              %f people\n",
 	   total_patients);
-  chatting("Average length of stay:           %f time units\n", 
+  chatting("Average length of stay:           %0.2f time units\n", 
 	   total_time / total_patients);
   chatting("Average # of hospitals visited:   %f hospitals\n\n",
 	   total_hosps / total_patients);

@@ -63,7 +63,7 @@ int next_free = ALLOC_SIZE;
 int element_size = 32;
 int num_allocated = 0;
 
-#if 1
+#if 0
 struct element *
 allocate() {
   if (next_free == ALLOC_SIZE) {
