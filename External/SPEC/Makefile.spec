@@ -138,14 +138,16 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
 Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
+	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(OPTPASSES) \
+	    $(BUGPOINT_OPTIONS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
 Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS)
+	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(OPTPASSES) \
+	    $(BUGPOINT_OPTIONS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
