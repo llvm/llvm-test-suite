@@ -5,8 +5,15 @@ LEVEL = ../..
 include $(LEVEL)/Makefile.common
 
 PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc kimwitu++ 
+
+# All platforms except Darwin should be able to handle hexxagon
+ifneq ($(OS),Darwin)
+PARALLEL_DIRS += hexxagon
+endif
+
+# Obsequi uses Linux-only features; need to fix that
 ifeq ($(OS),Linux)
-PARALLEL_DIRS += obsequi hexxagon
+PARALLEL_DIRS += obsequi
 endif
 
 include $(LEVEL)/Makefile.programs
