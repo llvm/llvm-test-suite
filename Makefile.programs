@@ -1,0 +1,64 @@
+#                        test/Programs/Makefile.programs
+#
+# This makefile contains all of the makefile machinery that is common to
+# building stuff in the Programs directory.  The main job of this is to take
+# executables for the following targets:
+#
+#   1. The native Sun Sparc compiler
+#   2. LLVM Bytecode Compiler + LLI interpreter
+#   3. LLVM Bytecode Compiler + LLC Sparc machine code backend
+#
+# Running them, and then diffing the output.  If there are any failures, they
+# are flagged.
+#
+# Input to this makefile should be the PROGRAMS_TO_TEST variable, which contains
+# a list of programs that should be run.
+#
+#  FIXME: There should be a way to specify the command line for a program
+#
+
+include $(LEVEL)/test/Makefile.tests
+
+.PRECIOUS: Output/%.linked.bc Output/%.native Output/%.llc
+
+# We will be working in the Output directory... 
+PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
+
+# Output produced by programs run
+NATOUTPUT := $(addsuffix .out.nat,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLIOUTPUT := $(addsuffix .out.lli,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLCOUTPUT := $(addsuffix .out.llc,  $(PREFIXED_PROGRAMS_TO_TEST))
+
+# Diffs of program runs vs the native program
+LLIDIFFS  := $(addsuffix .diff.lli, $(PREFIXED_PROGRAMS_TO_TEST))
+LLCDIFFS  := $(addsuffix .diff.llc, $(PREFIXED_PROGRAMS_TO_TEST))
+
+# Build Program outputs:
+.PRECIOUS: Output/%.out.lli  Output/%.out.llc  Output/%.out.nat
+all:: $(NATOUTPUT) $(LLIOUTPUT) #$(LLCOUTPUT)
+
+# Build diffs for LLI and LLC output...
+#.PRECIOUS: Output/%.diff.lli Output/%.diff.llc
+all:: $(LLIDIFFS)  # $(LLCDIFFS)
+
+
+# Rules to build the test output...
+Output/%.out.nat: Output/%.native
+	-$< > $@ 2>&1
+Output/%.out.lli: Output/%.linked.bc
+	-$(LLI) -q $< > $@ 2>&1
+Output/%.out.llc: Output/%.llc
+	-$< > $@ 2>&1
+
+
+# DIFFPROG - The program used to diff the output
+DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
+
+# Rules to diff test output...
+Output/%.diff.lli: Output/%.out.nat Output/%.out.lli
+	$(DIFFPROG) lli $(subst Output/,,$(@:.diff.lli=))
+
+# Rules to diff test output...
+Output/%.diff.llc: Output/%.out.nat Output/%.out.llc
+	$(DIFFPROG) llc $(subst Output/,,$(@:.diff.llc=))
+
