@@ -120,7 +120,7 @@
 //      OOPACK performance figures for KAI's C++ and some other compilers
 //	can be found in http://www.kai.com/oopack/oopack.html.
 //
-// Revison History
+// Revision History
 //	9/17/93		Version 1.0 released
 //	10/5/93		Allow results to be printed even if checksums do not match.
 //	10/5/93		Increased ``Tolerance'' to allow 10-second runs on RS/6000.  
