@@ -49,6 +49,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc $(LDIS)
 # LLI tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
 Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
+	@echo > $@  # Make sure something ends up in the file...
 	@if test -e Output/$*.diff-lli; then \
 	  ($(ULIMIT); time -p $(LLI) -stats $(LLI_OPTS) $< $(RUN_OPTIONS)) >$@ 2>&1;\
           echo "TEST-RESULT-lli-diffmatch: YES" >> $@;\
@@ -63,6 +64,7 @@ Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
 Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.diff-jit $(LLI)
+	@echo > $@  # Make sure something ends up in the file...
 	@if test -e Output/$*.diff-jit; then \
 	  ($(ULIMIT); time -p $(LLI) $(JIT_OPTS) $(TIMEOPT) $< $(RUN_OPTIONS)) > $@ 2>&1;\
           echo "TEST-RESULT-jit-diffmatch: YES" >> $@;\
