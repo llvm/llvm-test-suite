@@ -37,12 +37,12 @@ Output/%.o: %.c Output/.dir
 # without any libraries linked in...
 #
 Output/%.linked.bc: $(LObjects)
-	$(LLINK) $(LObjects) -o $@
+	$(LLINK) -f $(LObjects) -o $@
 
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
-Output/%.llvm: Output/%.linked.bc
-	$(LGCCLD) $< -lgcc -lc $(LIBS) -o $@
+Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
+	$(LGCCLD) $< -lgcc -lc $(LIBS) -o $(<:.linked.bc=.llvm)
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
