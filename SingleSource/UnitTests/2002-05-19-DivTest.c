@@ -1,8 +1,8 @@
 extern int printf(const char *, ...);
 
-void testL(long Arg) {
-  printf("%ld\n", Arg / (1LL << 4));
-  printf("%ld\n", Arg / (1LL << 46));
+void testL(long long Arg) {
+  printf("%lld\n", Arg / (1LL << 4));
+  printf("%lld\n", Arg / (1LL << 46));
 }
 
 void test(int Arg) {
