@@ -6,6 +6,8 @@ DISABLE_DIFFS = 1
 
 include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
 
+LIBS += -lsupc++ -lexception
+
 LLI_RUN  := $(addsuffix .run-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JIT_RUN  := $(addsuffix .run-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLC_RUN  := $(addsuffix .run-llc, $(PREFIXED_PROGRAMS_TO_TEST))
