@@ -29,7 +29,7 @@ void testInt(int X) {
 }
 
 void testLong(long long X) {
-  printf("%ld ", X);
+  printf("%lld ", X);
   testBool(X != 0);
 }
 
