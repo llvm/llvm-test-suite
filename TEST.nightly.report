@@ -70,10 +70,10 @@ sub GCCLLC_LSRatio {
  ["GCC"      , 'TEST-RESULT-nat-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m:]+)', \&FormatTime],
- ["LLC-LS"   , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
+ ["LLC-BETA" , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m:]+)', \&FormatTime],
- ["JIT-LS"   , 'TEST-RESULT-jit-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
+ ["JIT-BETA" , 'TEST-RESULT-jit-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
- ["GCC/LLC-LS"  , \&GCCLLC_LSRatio]
+ ["GCC/LLC-Beta"  , \&GCCLLC_LSRatio]
 );

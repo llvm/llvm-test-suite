@@ -71,7 +71,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
 
-# LLC-linearscan tests
+# LLC experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-ls.report.txt): \
 Output/%.nightly.llc-ls.report.txt: Output/%.llvm.bc Output/%.exe-llc-ls $(LLC)
 	@echo > $@
@@ -124,7 +124,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi
 
-# JIT-linearscan tests
+# JIT experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit-ls.report.txt): \
 Output/%.nightly.jit-ls.report.txt: Output/%.llvm.bc Output/%.exe-jit-ls $(JIT)
 	@echo > $@
