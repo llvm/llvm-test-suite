@@ -209,11 +209,6 @@ Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 	$(LOPT) -mstrip $< -o $@ -f
 
 
-$(PROGRAMS_TO_TEST:%=Output/%.noopt-linked.bc): \
-Output/%.noopt-linked.bc: Output/%.linked.rll $(LGCCAS)
-	$(LGCCAS) $(STATS) -disable-opt $< -o $@
-
-
 ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
 # Link the program to the libraries it uses, then perform postlink
@@ -236,19 +231,19 @@ ifneq ($(OPTPASSES),)
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
-Output/%.noopt-llvm.bc: Output/%.noopt-linked.bc $(LGCCLDPROG)
+Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
 	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
-Output/%.noopt-llvm: Output/%.noopt-linked.bc $(LGCCLDPROG)
+Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
 	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Targets to get the pass arguments that gccas and gccld are using...
-Output/gccas-pass-args: $(LGCCAS)
+Output/gccas-pass-args: $(LGCCAS) Output/.dir
 	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
-Output/gccld-pass-args: $(LGCCLDPROG)
+Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
 	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
