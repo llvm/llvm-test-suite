@@ -176,10 +176,10 @@ Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
-Output/%.llvm.bc: Output/%.linked.bc
+Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
-Output/%.llvm: Output/%.linked.bc
+Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
 
 # Rule to get the tracing version of the llvm.bc file for tracing:
