@@ -5,18 +5,6 @@
  *    You may distribute under the terms of the GNU General Public License
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
- * $Log$
- * Revision 1.1  2004/02/17 22:21:17  criswell
- * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
- * generating the yacc output files and committing them directly, but it was
- * easier than disabling the Bison Voodoo that gets executed by default.
- *
- * Revision 4.0.1.1  91/04/12  09:19:25  lwall
- * patch1: random cleanup in cpp namespace
- * 
- * Revision 4.0  91/03/20  01:56:39  lwall
- * 4.0 baseline.
- * 
  */
 
 #include "EXTERN.h"
@@ -810,6 +798,7 @@ long a1, a2, a3, a4;
 }
 
 /*VARARGS1*/
+#if 0
 fatal(pat,a1,a2,a3,a4)
 char *pat;
 long a1, a2, a3, a4;
@@ -851,6 +840,7 @@ long a1, a2, a3, a4;
     statusvalue >>= 8;
     exit((int)((errno&255)?errno:((statusvalue&255)?statusvalue:255)));
 }
+#endif
 
 /*VARARGS1*/
 warn(pat,a1,a2,a3,a4)
