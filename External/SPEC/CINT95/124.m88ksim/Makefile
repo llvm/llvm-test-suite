@@ -1,6 +1,6 @@
 LEVEL = ../../../../../..
 RUN_OPTIONS = -c
-ifeq ($(ARCH),Sparc)
+ifeq ($(ENDIAN),big)
 STDIN_FILENAME := ctl.big
 else
 STDIN_FILENAME := ctl.lit
