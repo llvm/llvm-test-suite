@@ -197,6 +197,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 	$(LGCCAS) $(STATS) $< -o $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 	$(LOPT) -mstrip $< -o $@ -f
 
