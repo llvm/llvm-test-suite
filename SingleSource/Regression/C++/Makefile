@@ -4,7 +4,7 @@
 # These tests are C++ source files that are input to GCC and compiled to .ll
 # files. After that, the files are assembled and executed by the LLVM backends.
 #
-LEVEL = ../../../..
+LEVEL = ../../../../..
 include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
 CFLAGS += -std=c99
 
