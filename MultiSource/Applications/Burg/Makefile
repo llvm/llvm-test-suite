@@ -23,10 +23,10 @@ include	../../Makefile.multisrc
 #	file for the test suite, separate from the LLVM build rules.
 # 
 y.tab.h:: gram.y
-	bison -y -d $<
+	$(YACC) -d $<
 
 y.tab.c: gram.y
-	bison -y -d $<
+	$(YACC) -d $<
 
 lex.c: y.tab.h
 
