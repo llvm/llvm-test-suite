@@ -25,29 +25,29 @@ include $(LEVEL)/test/Makefile.tests
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 
 # Output produced by programs run
-NATOUTPUT := $(addsuffix .out.nat,  $(PREFIXED_PROGRAMS_TO_TEST))
-LLIOUTPUT := $(addsuffix .out.lli,  $(PREFIXED_PROGRAMS_TO_TEST))
-LLCOUTPUT := $(addsuffix .out.llc,  $(PREFIXED_PROGRAMS_TO_TEST))
+NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
-LLIDIFFS  := $(addsuffix .diff.lli, $(PREFIXED_PROGRAMS_TO_TEST))
-LLCDIFFS  := $(addsuffix .diff.llc, $(PREFIXED_PROGRAMS_TO_TEST))
+LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
+LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out.lli  Output/%.out.llc  Output/%.out.nat
-all:: $(NATOUTPUT) $(LLIOUTPUT) #$(LLCOUTPUT)
+.PRECIOUS: Output/%.out.lli Output/%.out.llc  Output/%.out.nat
+all:: $(NATOUTPUT) $(LLCOUTPUT) $(LLIOUTPUT)
 
 # Build diffs for LLI and LLC output...
-#.PRECIOUS: Output/%.diff.lli Output/%.diff.llc
-all:: $(LLIDIFFS)  $(LLCDIFFS)
+.PRECIOUS: Output/%.diff-lli Output/%.diff-llc
+all:: $(LLCDIFFS) $(LLIDIFFS)
 
 
 # Rules to build the test output...
-Output/%.out.nat: Output/%.native
+Output/%.out-nat: Output/%.native
 	-$< > $@ 2>&1
-Output/%.out.lli: Output/%.llvm
+Output/%.out-lli: Output/%.llvm
 	-$< > $@ 2>&1
-Output/%.out.llc: Output/%.llc
+Output/%.out-llc: Output/%.llc
 	-$< > $@ 2>&1
 
 
@@ -55,10 +55,10 @@ Output/%.out.llc: Output/%.llc
 DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
 
 # Rules to diff test output...
-Output/%.diff.lli: Output/%.out.nat Output/%.out.lli
-	$(DIFFPROG) lli $(subst Output/,,$(@:.diff.lli=))
+Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
+	$(DIFFPROG) lli $(subst Output/,,$(@:.diff-lli=))
 
 # Rules to diff test output...
-Output/%.diff.llc: Output/%.out.nat Output/%.out.llc
-	$(DIFFPROG) llc $(subst Output/,,$(@:.diff.llc=))
+Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
+	$(DIFFPROG) llc $(subst Output/,,$(@:.diff-llc=))
 
