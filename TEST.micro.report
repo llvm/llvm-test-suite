@@ -1,6 +1,6 @@
-##=== TEST.jit.report - Report description for jit tests -------*- perl -*-===##
+##=== TEST.micro.report - Report for the MICRO'03 paper --------*- perl -*-===##
 #
-# This file defines a report to be generated for the jit test.
+# This file defines a report to be generated for the micro paper.
 #
 # This report should be generated with the following command:
 #    gmake ENABLE_OPTIMIZED=1 TEST=micro RUNTIMELIMIT=120 LARGE_PROBLEM_SIZE=1 CFLAGS=-O3
