@@ -194,7 +194,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) crtend.a -o Output/$*.llvm
+	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -202,7 +202,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) crtend.a -o Output/$*.llvm
+	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
