@@ -9,4 +9,5 @@ int main() {
 		*((int*)Pointer)++;
 		printf("0x%d\n", (int)Pointer-(int)&Array[0]);
 	}
+	return 0;
 }
