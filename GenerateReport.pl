@@ -87,7 +87,7 @@ foreach $Record (@Records) {
   my $Col = 0;
   for $Row (@Fields) {
     if (scalar(@$Row)) {            # An actual value to read?
-      if (ref ($Row->[1])) {          # Code to be executed?
+      if (ref ($Row->[1])) {        # Code to be executed?
         push @RowValues, &{$Row->[1]}(\@RowValues, $Col);
       } else {                      # Field to be read...
         $Record =~ m/$Row->[1]/;
@@ -151,7 +151,7 @@ if ($HTML) {
   print "<tr bgcolor=#FFCC99>\n";
   map {
     print "<td bgcolor='#DDAA77' width='1'></td>";
-    $_ = "<b><a href=\"#$_\">$_</a></b>"
+    $_ = "<center><b><a href=\"#$_\">$_</a></b></center>"
       if $_ ne "|"; printCell $_
   } @Header;
   print "<td bgcolor='#DDAA77' width='1'></td>";
