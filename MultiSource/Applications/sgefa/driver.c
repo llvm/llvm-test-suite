@@ -282,7 +282,7 @@ int	    **ipvt, test_case, scale;
 
   /* Generate solution. */
   **x = 1.0;
-  if( n>1 ) **(x+1) = 0.0;
+  if( n>1 ) **bt = 0.0;
   if( n>2 ) {
     for( i=2, col=(*x)+2; i<n; i++, col++ )
       *col = - *(col-2);
