@@ -6,10 +6,10 @@ ifeq ($(RUN_TYPE),test)
 RUN_OPTIONS     = test.pl
 STDOUT_FILENAME := test.out
 else
-RUN_OPTIONS     = scrabble.pl
-STDOUT_FILENAME := scrabble.out
+RUN_OPTIONS      = scrabbl.pl
+STDIN_FILENAME  := scrabbl.in
+STDOUT_FILENAME := scrabbl.out
 endif
-
 
 ifneq ($(ARCH),Sparc)
 CPPFLAGS += -D__LITTLE_ENDIAN__
