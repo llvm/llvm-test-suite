@@ -101,6 +101,7 @@ main(argc, argv) int argc; char *argv[];
   double atof();
   FILE *Bp, *Ap, *Cp, *ckopen();
   char *ckalloc();                      /* space-allocating function  */
+  char *arg1, *arg2, *arg3;
 
   if ((Cp = fopen("sim.res","a+")) == NULL)
     {
@@ -110,41 +111,48 @@ main(argc, argv) int argc; char *argv[];
 
   starttime = dtime();      
   
-	if ( argc < 4)
-		fatal("SIM k file1 file2 [M=] [I=] [V=] [O=] [E=]");
-
+	if ( argc < 4) {
+		/*fatal("SIM k file1 file2 [M=] [I=] [V=] [O=] [E=]");*/
+		arg1 = "8";
+		arg2 = "tob.38-44";
+		arg3 = "liv.42-48";
+	} else {
+		arg1 = argv[1];
+		arg2 = argv[2];
+		arg3 = argv[3];
+	}
 	/* read k: the number of local alignments to find */
-	sscanf(argv[1],"%d", &K);
+	sscanf(arg1,"%d", &K);
 	if (K == 0)
 		fatal("specified 0 alignments");
 
 	/* determine the sequence lengths */
-	Ap = ckopen(argv[2], "r");
+	Ap = ckopen(arg2, "r");
 	for (M = 0; ( symbol = getc(Ap)) != EOF ; )
 	   if ( symbol != '\n' )
 		++M;
 	fclose(Ap);
-	name1 = argv[2];
+	name1 = arg2;
 
 	/* allocate space for A */
 	A = ( char * ) ckalloc( (M + 1) * sizeof(char));
 
 	/* read the first sequence into A */
-	Ap = ckopen(argv[2], "r");
+	Ap = ckopen(arg2, "r");
 	for (M = 0; ( symbol = getc(Ap)) != EOF ; )
 	   if ( symbol != '\n' )
 		A[++M] = symbol;
 
-	if (strcmp(argv[2],argv[3])) {  /* sequences are different */
+	if (strcmp(arg2,arg3)) {  /* sequences are different */
 		/* read the second sequence into B */
-		Bp = ckopen(argv[3], "r");
+		Bp = ckopen(arg3, "r");
 		for (N = 0; ( symbol = getc(Bp)) != EOF ; )
 			if ( symbol != '\n' )
 				++N;
 		fclose(Bp);
-		name2 = argv[3];
+		name2 = arg3;
 		B = ( char * ) ckalloc( (N + 1) * sizeof(char));
-		Bp = ckopen(argv[3], "r");
+		Bp = ckopen(arg3, "r");
 		for (N = 0; ( symbol = getc(Bp)) != EOF ; )
 			if ( symbol != '\n' )
 				B[++N] = symbol;
@@ -187,7 +195,7 @@ main(argc, argv) int argc; char *argv[];
 	Q = round (10*parm_O);
 	R = round (10*parm_E);
 
-	if (strcmp(argv[2], argv[3]))
+	if (strcmp(arg2, arg3))
 		SIM(A,B,M,N,K,V,Q,R,2L);
 	else
 		SIM(A,A,M,M,K,V,Q,R,1L);
