@@ -13,6 +13,9 @@ PARALLEL_DIRS := \
 	256.bzip2 \
 	300.twolf
 
+# Get the $(ARCH) setting
+include $(LEVEL)/Makefile.config
+
 # Disable crafy yntil it stops infinite-looping on Sparc
 ifeq ($(ARCH), Sparc)
 PARALLEL_DIRS := $(filter-out 186.crafty, $(PARALLEL_DIRS))
