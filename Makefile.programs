@@ -39,7 +39,7 @@ all:: $(NATOUTPUT) $(LLIOUTPUT) #$(LLCOUTPUT)
 
 # Build diffs for LLI and LLC output...
 #.PRECIOUS: Output/%.diff.lli Output/%.diff.llc
-all:: $(LLIDIFFS)  # $(LLCDIFFS)
+all:: $(LLIDIFFS)  $(LLCDIFFS)
 
 
 # Rules to build the test output...
