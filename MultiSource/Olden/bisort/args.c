@@ -18,7 +18,7 @@ int dealwithargs(int argc, char *argv[])
   if (argc > 3)
     flag = atoi(argv[3]);
   else
-    flag = 0;
+    flag = 1;
 
   if (argc > 2) 
     NumNodes = atoi(argv[2]);
