@@ -12,7 +12,9 @@
 #define SMALL	 1.0e-45	/* Smallest (in absolute value) representable float. */
 #define MATPRINT 7		/* Matricies of size <= MATPRINT are printed out. */
 #define VECPRINT 7	    	/* Vectors of size <= VECPRINT are printed out. */
+#ifndef SCALE
 #define SCALE	 1		/* System sizes are scaled by this amount. */
+#endif
 main()
 {
   register int i, j, k;
