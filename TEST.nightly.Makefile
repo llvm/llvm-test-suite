@@ -16,8 +16,6 @@ REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
 EXTRA_LLI_OPTS = $(TIMEOPT)
 
-INFO_PREFIX = Output/$*.*-
-
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
@@ -39,7 +37,6 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	else \
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\
 	fi
-	-rm -f $@.info
 
 # NAT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
@@ -59,12 +56,11 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
-	  grep "^real" $(INFO_PREFIX)llc.time >> $@;\
+	  grep "^real" Output/$*.out-llc.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
-	-rm -f $@.info
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
@@ -74,7 +70,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	@-if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-cbe-time: " >> $@;\
-	  grep "^real" $(INFO_PREFIX)cbe.time >> $@;\
+	  grep "^real" Output/$*.out-cbe.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
@@ -88,18 +84,17 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	@-if test -f Output/$*.exe-jit; then \
 	  echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-jit-time: " >> $@;\
-	  grep "^real" $(INFO_PREFIX)jit.time >> $@;\
+	  grep "^real" Output/$*.out-jit.time >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-jit-comptime: " >> $@;\
-	  grep "Total Execution Time" $(INFO_PREFIX)jit.info >> $@;\
+	  grep "Total Execution Time" Output/$*.out-jit.info >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-jit-machcode: " >> $@;\
-	  grep "bytes of machine code compiled" $(INFO_PREFIX)jit.info >> $@;\
+	  grep "bytes of machine code compiled" Output/$*.out-jit.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi
-	-rm -f $(INFO_PREFIX)jit.info
 
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
