@@ -1,4 +1,4 @@
 LEVEL = ../../..
-DIRS  = UnitTests Shootout
+DIRS  = UnitTests Shootout Ptrdist-anagram
 
 include Makefile.singlesrc
