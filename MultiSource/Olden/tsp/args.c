@@ -32,7 +32,7 @@ int dealwithargs(int argc, char *argv[])
   if (argc > 1)
     num = atoi(argv[1]);
   else
-    num = 15;
+    num = 50;
 
   return num;
 }

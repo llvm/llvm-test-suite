@@ -9,6 +9,7 @@ extern int flag;
 
 double drand48(void);
 int atoi(const char *);
+int dealwithargs(int argc, char *argv[]);
 
   
 /* For copyright information, see olden_v1.0/COPYRIGHT */
