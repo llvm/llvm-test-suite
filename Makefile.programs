@@ -93,8 +93,6 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 # Generated code for llc (which does not require the target platform)
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
-LLCTRACECODEGEN := $(addsuffix .trace.llc.s, $(PREFIXED_PROGRAMS_TO_TEST))
-CBETRACECODEGEN := $(addsuffix .trace.cbe.c, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
@@ -129,27 +127,23 @@ all:: $(GCCOUTPUT)
 endif
 
 ifdef DISABLE_FOR_LLVM_PROGRAMS
-DISABLE_DIFFS := 1
+  DISABLE_DIFFS := 1
+endif
+
+ifdef DOTRACING
+    DISABLE_DIFFS  = 1
+    OPTPASSES     += $(TRACEFLAGS)
+    LDFLAGS       += $(TRACELIBS)
 endif
 
 ifndef DISABLE_LLC
-ifeq ($(DOTRACING), yes)
-all:: $(LLCTRACECODEGEN)
-DISABLE_LLC_DIFFS = 1
-else
 all:: $(LLCCODEGEN)
-endif
 else
 DISABLE_LLC_DIFFS = 1
 endif
 
 ifndef DISABLE_CBE
-ifeq ($(DOTRACING), yes)
-all:: $(CBETRACECODEGEN)
-DISABLE_CBE_DIFFS = 1
-else
 all:: $(CBECODEGEN)
-endif
 else
 DISABLE_CBE_DIFFS = 1
 endif
@@ -184,19 +178,18 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
+
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
+	$(LOPT) $(OPTPASSES) < $@ > $@.tmp
+	$(MV) -f $@.tmp $@
+
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
-endif
-
-# Rule to get the tracing version of the llvm.bc file for tracing:
-ifeq ($(DOTRACING), yes)
-$(PROGRAMS_TO_TEST:%=Output/%.llvm.trace.bc): \
-Output/%.llvm.trace.bc: Output/%.llvm.bc
-	$(LOPT) $(TRACEFLAGS) $< -o $@
+	$(LOPT) $(OPTPASSES) < $@ > $@.tmp
+	$(MV) -f $@.tmp $@
 endif
 
 # Targets to get the pass arguments that gccas and gccld are using...
@@ -228,15 +221,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
-
-$(PROGRAMS_TO_TEST:%=Output/%.trace.cbe.c): \
-Output/%.trace.cbe.c: Output/%.llvm.trace.bc $(LDIS)
-	-$(LDIS) -c < $< > $@
-
-$(PROGRAMS_TO_TEST:%=Output/%.trace.cbe): \
-Output/%.trace.cbe: Output/%.trace.cbe.c
-	-$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TRACELIBS)
+	-$(CC) $< $(LDFLAGS) $(CFLAGS) -o $@
 
 #
 # Compile a linked program to machine code with LLC.
@@ -245,20 +230,11 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.trace.llc.s): \
-Output/%.trace.llc.s: Output/%.llvm.trace.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f $< -o $@
-
 # Assemble (and link) an LLVM-linked program using the system assembler...
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) -o $@
-
-$(PROGRAMS_TO_TEST:%=Output/%.trace.llc): \
-Output/%.trace.llc: Output/%.trace.llc.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(TRACELIBS) -o $@
-
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
 
 #
 # Rules to execute the program
@@ -299,13 +275,6 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
-$(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
-Output/%.trace-out-llc: Output/%.trace.llc
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-
-$(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
-Output/%.trace-out-cbe: Output/%.trace.cbe
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 endif
 
 #
