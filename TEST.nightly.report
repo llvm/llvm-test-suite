@@ -14,9 +14,10 @@ my $WallTimeRE = "[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock";
 sub FormatTime {
   my $Time = shift;
   if ($Time =~ m/([0-9]+)[m:]([0-9.]+)/) {
-    $Time = sprintf("%7.3f", $1*60.0+$2);
+    return sprintf("%7.3f", $1*60.0+$2);
   }
-  return $Time;
+
+  return sprintf("%7.2f", $Time);
 }
 
 sub GCCCBERatio {
