@@ -1,9 +1,7 @@
-LEVEL = ../../..
+LEVEL = ../../../..
 
-PROG = perimeter
-LOCAL_CFLAGS=
-LOCAL_LDFLAGS= 
+PROG     = perimeter
+CPPFLAGS = -DTORONTO
+LDFLAGS  = 
 
-OBJS = args.o main.o maketree.o
-
-include	../makefile
+include	../Makefile.multisrc
