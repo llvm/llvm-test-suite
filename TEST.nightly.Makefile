@@ -52,7 +52,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
 Output/%.nightly.nat.report.txt: Output/%.out-nat
 	@echo > $@
 	printf "TEST-RESULT-nat-time: " >> $@
-	-grep "^real" Output/$*.out-nat.time >> $@
+	-grep "^program" Output/$*.out-nat.time >> $@
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
@@ -65,7 +65,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
-	  grep "^real" Output/$*.out-llc.time >> $@;\
+	  grep "^program" Output/$*.out-llc.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
@@ -82,7 +82,7 @@ Output/%.nightly.llc-ls.report.txt: Output/%.llvm.bc Output/%.exe-llc-ls $(LLC)
 	  printf "TEST-RESULT-llc-ls: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-ls-time: " >> $@;\
-	  grep "^real" Output/$*.out-llc-ls.time >> $@;\
+	  grep "^program" Output/$*.out-llc-ls.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc-ls $(RELDIR)/$*" >> $@;\
@@ -98,7 +98,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	@-if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-cbe-time: " >> $@;\
-	  grep "^real" Output/$*.out-cbe.time >> $@;\
+	  grep "^program" Output/$*.out-cbe.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
@@ -112,7 +112,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	@-if test -f Output/$*.exe-jit; then \
 	  echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-jit-time: " >> $@;\
-	  grep "^real" Output/$*.out-jit.time >> $@;\
+	  grep "^program" Output/$*.out-jit.time >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-jit-comptime: " >> $@;\
 	  grep "Total Execution Time" Output/$*.out-jit.info >> $@;\
@@ -134,7 +134,7 @@ Output/%.nightly.jit-ls.report.txt: Output/%.llvm.bc Output/%.exe-jit-ls $(JIT)
 	  printf "TEST-RESULT-jit-ls: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-jit-ls-time: " >> $@;\
-	  grep "^real" Output/$*.out-jit-ls.time >> $@;\
+	  grep "^program" Output/$*.out-jit-ls.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit-ls $(RELDIR)/$*" >> $@;\
