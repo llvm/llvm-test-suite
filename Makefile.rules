@@ -165,23 +165,23 @@ endif
 ###########################################################################
 
 # Libraries that are being built
-DESTLIBDEBUG    := $(BUILD_OBJ_ROOT)/lib/Debug
-DESTLIBRELEASE  := $(BUILD_OBJ_ROOT)/lib/Release
-DESTLIBPROFILE  := $(BUILD_OBJ_ROOT)/lib/Profile
-DESTLIBBYTECODE := $(BUILD_OBJ_ROOT)/lib/BytecodeLibs
-DESTLIBCURRENT  := $(BUILD_OBJ_ROOT)/lib/$(CONFIGURATION)
+DESTLIBDEBUG    := $(BUILD_OBJ_ROOT)/Debug/lib
+DESTLIBRELEASE  := $(BUILD_OBJ_ROOT)/Release/lib
+DESTLIBPROFILE  := $(BUILD_OBJ_ROOT)/Profile/lib
+DESTLIBBYTECODE := $(BUILD_OBJ_ROOT)/BytecodeLibs/lib
+DESTLIBCURRENT  := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 # LLVM libraries used for linking
-LLVMLIBDEBUGSOURCE    := $(LLVM_OBJ_ROOT)/lib/Debug
-LLVMLIBRELEASESOURCE  := $(LLVM_OBJ_ROOT)/lib/Release
-LLVMLIBPROFILESOURCE  := $(LLVM_OBJ_ROOT)/lib/Profile
-LLVMLIBCURRENTSOURCE  := $(LLVM_OBJ_ROOT)/lib/$(CONFIGURATION)
+LLVMLIBDEBUGSOURCE    := $(LLVM_OBJ_ROOT)/Debug/lib
+LLVMLIBRELEASESOURCE  := $(LLVM_OBJ_ROOT)/Release/lib
+LLVMLIBPROFILESOURCE  := $(LLVM_OBJ_ROOT)/Profile/lib
+LLVMLIBCURRENTSOURCE  := $(LLVM_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 # Libraries that were built that will now be used for linking
-PROJLIBDEBUGSOURCE    := $(BUILD_OBJ_ROOT)/lib/Debug
-PROJLIBRELEASESOURCE  := $(BUILD_OBJ_ROOT)/lib/Release
-PROJLIBPROFILESOURCE  := $(BUILD_OBJ_ROOT)/lib/Profile
-PROJLIBCURRENTSOURCE  := $(BUILD_OBJ_ROOT)/lib/$(CONFIGURATION)
+PROJLIBDEBUGSOURCE    := $(BUILD_OBJ_ROOT)/Debug/lib
+PROJLIBRELEASESOURCE  := $(BUILD_OBJ_ROOT)/Release/lib
+PROJLIBPROFILESOURCE  := $(BUILD_OBJ_ROOT)/Profile/lib
+PROJLIBCURRENTSOURCE  := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 ###########################################################################
 # Tool Locations
@@ -192,20 +192,20 @@ PROJLIBCURRENTSOURCE  := $(BUILD_OBJ_ROOT)/lib/$(CONFIGURATION)
 #	PROJ* = Location of previously built tools used for linking.
 ###########################################################################
 
-DESTTOOLDEBUG   := $(BUILD_OBJ_ROOT)/tools/Debug
-DESTTOOLRELEASE := $(BUILD_OBJ_ROOT)/tools/Release
-DESTTOOLPROFILE := $(BUILD_OBJ_ROOT)/tools/Profile
-DESTTOOLCURRENT := $(BUILD_OBJ_ROOT)/tools/$(CONFIGURATION)
+DESTTOOLDEBUG   := $(BUILD_OBJ_ROOT)/Debug/tools
+DESTTOOLRELEASE := $(BUILD_OBJ_ROOT)/Release/tools
+DESTTOOLPROFILE := $(BUILD_OBJ_ROOT)/Profile/tools
+DESTTOOLCURRENT := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/tools
 
-LLVMTOOLDEBUG   := $(LLVM_OBJ_ROOT)/tools/Debug
-LLVMTOOLRELEASE := $(LLVM_OBJ_ROOT)/tools/Release
-LLVMTOOLPROFILE := $(LLVM_OBJ_ROOT)/tools/Profile
-LLVMTOOLCURRENT := $(LLVM_OBJ_ROOT)/tools/$(CONFIGURATION)
+LLVMTOOLDEBUG   := $(LLVM_OBJ_ROOT)/Debug/tools
+LLVMTOOLRELEASE := $(LLVM_OBJ_ROOT)/Release/tools
+LLVMTOOLPROFILE := $(LLVM_OBJ_ROOT)/Profile/tools
+LLVMTOOLCURRENT := $(LLVM_OBJ_ROOT)/$(CONFIGURATION)/tools
 
-PROJTOOLDEBUG   := $(BUILD_OBJ_ROOT)/tools/Debug
-PROJTOOLRELEASE := $(BUILD_OBJ_ROOT)/tools/Release
-PROJTOOLPROFILE := $(BUILD_OBJ_ROOT)/tools/Profile
-PROJTOOLCURRENT := $(BUILD_OBJ_ROOT)/tools/$(CONFIGURATION)
+PROJTOOLDEBUG   := $(BUILD_OBJ_ROOT)/Debug/tools
+PROJTOOLRELEASE := $(BUILD_OBJ_ROOT)/Release/tools
+PROJTOOLPROFILE := $(BUILD_OBJ_ROOT)/Profile/tools
+PROJTOOLCURRENT := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/tools
 
 #
 # Libtool is found in the current directory.
