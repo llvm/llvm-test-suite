@@ -216,7 +216,7 @@ PrintRUsage(struct rusage * rUBuf1, struct rusage * rUBuf2)
   assert(sec >= 0);
   assert(usec >= 0);
 
-  fprintf(stderr, "User time: %d%06d usec\n", sec, usec); 
+  /*fprintf(stderr, "User time: %d%06d usec\n", sec, usec); */
 
   sec = (*rUBuf2).ru_stime.tv_sec - (*rUBuf1).ru_stime.tv_sec;
   usec = (*rUBuf2).ru_stime.tv_usec - (*rUBuf1).ru_stime.tv_usec;
@@ -229,5 +229,5 @@ PrintRUsage(struct rusage * rUBuf1, struct rusage * rUBuf2)
   assert(sec >= 0);
   assert(usec >= 0);
 
-  fprintf(stderr, "Sys time:  %d%06d usec\n", sec, usec); 
+  /*fprintf(stderr, "Sys time:  %d%06d usec\n", sec, usec); */
 }
