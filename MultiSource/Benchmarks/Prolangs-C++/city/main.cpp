@@ -79,7 +79,7 @@ int main()
 
     for(i=0; i< 100000; i++)
     {
-        i1.light()->tick();
+        i1.get_light()->tick();
     }
 
 

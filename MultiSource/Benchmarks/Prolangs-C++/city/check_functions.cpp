@@ -27,7 +27,7 @@ roadlet * is_empty(roadlet *r, vehicle *v, direction d)
 //check both left and right.  This makes sense for roads of two or fewer lanes.
 roadlet * lane_switch_ok(roadlet *r, vehicle *v, direction d)
 {
-    direction dir = v->direction();
+    direction dir = v->get_direction();
     //cout << "dir = " << dir << "\n";
     cout << "lane switch for " << *v << " at " << *r <<'\n';
 
@@ -55,7 +55,7 @@ cout << "lane switch said true \n";
 //f from notes
 roadlet * strait (roadlet *r, vehicle *v, direction d)
 {
-    if (!r->occupied() && (v->direction() == d))
+    if (!r->occupied() && (v->get_direction() == d))
 	return(r);
     else
 	return(NULL);
@@ -68,7 +68,7 @@ roadlet * strait (roadlet *r, vehicle *v, direction d)
 roadlet * strait_or_left (roadlet *r, vehicle *v, direction d)
 {
     if (!r->occupied() && 
-          ((v->direction() == d) || (v->direction().left() == d)))
+          ((v->get_direction() == d) || (v->get_direction().left() == d)))
 	return(r);
     else
 	return(NULL);
@@ -79,7 +79,7 @@ roadlet * strait_or_left (roadlet *r, vehicle *v, direction d)
 roadlet * strait_or_right (roadlet *r, vehicle *v, direction d)
 {
     if (!r->occupied() && 
-          ((v->direction() == d) || (v->direction().right() == d)))
+          ((v->get_direction() == d) || (v->get_direction().right() == d)))
 	return(r);
     else
 	return(NULL);
@@ -89,14 +89,14 @@ roadlet * green_light(intersection_roadlet* r, vehicle* v, direction d)
 {
     if ((d == N) || (d == S))
     {
-	if (!r->occupied() && (r->light()->greenNS()))
+	if (!r->occupied() && (r->get_light()->greenNS()))
 	    return(r);
         else
 	    return(NULL);
     }
     else
     {
-	if (!r->occupied() && (r->light()->greenEW()))
+	if (!r->occupied() && (r->get_light()->greenEW()))
 	    return(r);
         else
 	    return(NULL);
@@ -115,13 +115,13 @@ roadlet * green_light(intersection_roadlet* r, vehicle* v, direction d)
 
     if ((d == N) || (d == S))
     {
-        right_on_red = (r->light()->redNS()) ; // && no on coming traffic 
-	green_light = r->light()->greenNS();
+        right_on_red = (r->get_light()->redNS()) ; // && no on coming traffic 
+	green_light = r->get_light()->greenNS();
     }
     else
     {
-        right_on_red = (r->light()->redEW()) ; // && no on coming traffic 
-	green_light = r->light()->greenEW();
+        right_on_red = (r->get_light()->redEW()) ; // && no on coming traffic 
+	green_light = r->get_light()->greenEW();
     }
        
 

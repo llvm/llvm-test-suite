@@ -30,7 +30,7 @@ public:
 
     int plan;
 
-    direction direction() {return (dir);};
+    direction get_direction() {return (dir);};
     void set_location(roadlet *r)  {location = r;};
 
     void tick();

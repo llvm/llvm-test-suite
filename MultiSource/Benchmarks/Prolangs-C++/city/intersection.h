@@ -16,12 +16,14 @@ extern void connect(roadlet *, direction,
 	            roadlet *, direction, 
 	            roadlet * (*r1_to_r2_filter_function)(roadlet *, vehicle *, direction));
 
+typedef roadlet * (*filter_fn)(roadlet *, vehicle *, direction);
+
 class intersection
 {
 protected:
     light *the_light;
 public:
-    light *light() {return (the_light);};
+    light *get_light() {return (the_light);};
 };
 
 class intersection_2x2 : public intersection

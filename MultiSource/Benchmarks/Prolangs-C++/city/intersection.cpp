@@ -1,56 +1,56 @@
 // build_intersection.cc
 
 #include "intersection.h"
-extern "C" char *malloc();
+#include <cstdlib>
 
 
 void intersection_4x4::connectNin (roadlet *leftlane, roadlet *rightlane)
 {
-    connect(leftlane, S, roadlets[0][1], N, green_light);
-    connect(rightlane, S, roadlets[0][0], N, green_OR_plan_rightONred);
+    connect(leftlane, S, roadlets[0][1], N, (filter_fn)green_light);
+    connect(rightlane, S, roadlets[0][0], N, (filter_fn)green_OR_plan_rightONred);
 }
 
 void intersection_4x4::connectEin (roadlet *leftlane, roadlet *rightlane)
 {
-    connect(leftlane, W, roadlets[1][3], E, green_light);
-    connect(rightlane, W, roadlets[0][3], E, green_OR_plan_rightONred);
+    connect(leftlane, W, roadlets[1][3], E, (filter_fn)green_light);
+    connect(rightlane, W, roadlets[0][3], E, (filter_fn)green_OR_plan_rightONred);
 }
 
 void intersection_4x4::connectSin (roadlet *leftlane, roadlet *rightlane)
 {
-    connect(leftlane, N, roadlets[3][2], S, green_light);
-    connect(rightlane, N, roadlets[3][3], S, green_OR_plan_rightONred);
+    connect(leftlane, N, roadlets[3][2], S, (filter_fn)green_light);
+    connect(rightlane, N, roadlets[3][3], S, (filter_fn)green_OR_plan_rightONred);
 }
 
 void intersection_4x4::connectWin (roadlet *leftlane, roadlet *rightlane)
 {
-    connect(leftlane, E, roadlets[2][0], W, green_light);
-    connect(rightlane, E, roadlets[3][0], W, green_OR_plan_rightONred);
+    connect(leftlane, E, roadlets[2][0], W, (filter_fn)green_light);
+    connect(rightlane, E, roadlets[3][0], W, (filter_fn)green_OR_plan_rightONred);
 }
 
 void intersection_4x4::connectNout(roadlet *leftlane, roadlet *rightlane)
 {
-    connect(roadlets[0][2], N, leftlane, S, strait);
-    connect(roadlets[0][3], N, rightlane, S, strait_or_right);
+    connect(roadlets[0][2], N, leftlane, S,(filter_fn) strait);
+    connect(roadlets[0][3], N, rightlane, S, (filter_fn)strait_or_right);
 }
 void intersection_4x4::connectEout(roadlet *leftlane, roadlet *rightlane)
 {
-    connect(roadlets[2][3], E, leftlane, W, strait);
-    connect(roadlets[3][3], E, rightlane, W, strait_or_right);
+    connect(roadlets[2][3], E, leftlane, W, (filter_fn)strait);
+    connect(roadlets[3][3], E, rightlane, W, (filter_fn)strait_or_right);
 }
 void intersection_4x4::connectSout(roadlet *leftlane, roadlet *rightlane)
 {
-    connect(roadlets[3][1], S, leftlane, N, strait);
-    connect(roadlets[3][0], S, rightlane, N, strait_or_right);
+    connect(roadlets[3][1], S, leftlane, N, (filter_fn)strait);
+    connect(roadlets[3][0], S, rightlane, N, (filter_fn)strait_or_right);
 }
 void intersection_4x4::connectWout(roadlet *leftlane, roadlet *rightlane)
 {
-    connect(roadlets[1][0], W, leftlane, E, strait);
-    connect(roadlets[0][0], W, rightlane, E, strait_or_right);
+    connect(roadlets[1][0], W, leftlane, E, (filter_fn)strait);
+    connect(roadlets[0][0], W, rightlane, E, (filter_fn)strait_or_right);
 }
 
 
-intersection_4x4::intersection_4x4(char *name)
+intersection_4x4::intersection_4x4(char *name)
 {
     char *buff;
 
@@ -64,7 +64,7 @@ void intersection_4x4::connectWout(roadlet *leftlane, roadlet *rightlane)
     for(i=0; i<4; i++)
 	for(j=0; j<4; j++)
 	{
-	    buff = malloc(strlen(name) + 7);
+	    buff = (char*)malloc(strlen(name) + 7);
 	    sprintf(buff, "%s %d %d", name, i, j);
 	    roadlets[i][j] = new intersection_roadlet(buff, l);
 	}

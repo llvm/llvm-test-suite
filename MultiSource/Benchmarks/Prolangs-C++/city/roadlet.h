@@ -49,7 +49,7 @@ protected:
 
 public:
     intersection_roadlet(char *name, light *alight) : roadlet(name) {l = alight;} ;
-    light *light() { return(l);};
+    light *get_light() { return(l);};
 };
 
 #endif

@@ -13,7 +13,7 @@
 
 ostream& operator<<(ostream& o, vehicle v)
 {
-    o << v.name << " at " << *(v.location) << " going " << v.direction();
+    o << v.name << " at " << *(v.location) << " going " << v.get_direction();
     return (o);
 }
 
@@ -68,7 +68,7 @@ direction vehicle::select_move()
 
     possible_moves = location->moves();
 
-    for(used=0, dir=N; dir<=NW; dir ++)
+    for(used=0, dir=N; dir<=NW; ++dir)
     {
 	// cout << "possible_moves[" << dir << "] " << possible_moves[dir.as_int()] << '\n';
 	if (possible_moves[dir.as_int()](location->neighbor(dir), this, dir) != NULL)
