@@ -63,16 +63,23 @@
     (newline))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fibonacci test
+
+(define (fib n)
+  (if (< n 2)
+     n
+     (+ (fib (- n 1)) (fib (- n 2)))))
+
+(define (fib-test)
+  (display "the 33rd Fibonacci number is ")
+  (display (fib 33))
+  (newline))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Run some simple tests
 (print-countdown 10)
 (print-signum -42)
 (print-signum 0)
 (print-signum 42)
 (simple-proplist-test)
-
-(define (fib  n)
-  (if (< n 2) n
-    (+ (fib (- n 1)) (fib (- n 2)))
-))
-
-(fib 33)
+(fib-test)
