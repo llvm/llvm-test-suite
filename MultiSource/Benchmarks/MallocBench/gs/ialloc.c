@@ -1,3 +1,11 @@
+/*
+ * Changes:
+ *
+ * 1) Date Unknown
+ *    It appears this file has the NOMEMOPT option added to disable memory
+ *    use optimizations.  This change was probably introduced by the
+ *    researchers from ftp://ftp.cs.colorado.edu/pub/cs/misc/malloc-benchmarks
+ */
 /* Copyright (C) 1989, 1990 Aladdin Enterprises.  All rights reserved.
    Distributed by Free Software Foundation, Inc.
 
