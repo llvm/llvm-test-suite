@@ -30,10 +30,11 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep "Number of bytecode bytes written" $@.info >> $@;\
+	  wc -c $< >> $@;\
 	  echo >> $@;\
+	  $(LANALYZE) -stats -instcount $< -info-output-file=Output/$*.ic;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep 'Number of instructions$$' $@.info >> $@;\
+	  grep 'Number of instructions (of all types)$$' Output/$*.ic >> $@;\
 	  echo >> $@;\
 	else \
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\

@@ -18,7 +18,7 @@ my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
  [],
 # Times
  ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
- ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+).*Number of bytecode bytes'],
+ ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
  ["LLC"      , "TEST-RESULT-llc: $WallTimeRE"],
  [],
