@@ -7,7 +7,7 @@
 # Sort by program name
 $SortCol = 0;
 
-my $WallTimeRE = '[^(]+\\(([0-9.]+) wall clock';
+my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
