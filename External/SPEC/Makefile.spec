@@ -131,7 +131,8 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
 
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
-BUGPOINT_OPTIONS += --args -- $(RUN_OPTIONS)
+BUGPOINT_OPTIONS += --tool-args $(LLCFLAGS)
+BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
@@ -139,7 +140,7 @@ Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(OPTPASSES) \
-	    $(BUGPOINT_OPTIONS)
+	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
@@ -147,19 +148,33 @@ Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(OPTPASSES) \
-	    $(BUGPOINT_OPTIONS)
+	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS)
+	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
+Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS) \
+	    -regalloc=linearscan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS)
+	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-ls): \
+Output/%.bugpoint-jit-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS) \
+	    -regalloc=linearscan $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 
