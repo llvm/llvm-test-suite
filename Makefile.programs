@@ -237,11 +237,11 @@ Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $< -run-llc -mode=codegen $(BUGPOINT_OPTIONS)
+	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $< -run-jit -mode=codegen $(BUGPOINT_OPTIONS)
+	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS)
 
 #
 # Rules to compile the program for the C Back End
