@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.nightly.Makefile -----------------*- Makefile -*-===##
+##===- test/Programs/TEST.nightly.Makefile --*- Makefile -*-=======- vim:ft=make
 #
 # This test is used in conjunction with the llvm/utils/NightlyTest* stuff to
 # generate information about program status for the nightly report.
@@ -26,14 +26,14 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >> $@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
-	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  printf "TEST-RESULT-compile: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
-	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  printf "TEST-RESULT-compile: " >> $@;\
 	  wc -c $< >> $@;\
 	  echo >> $@;\
 	  $(LANALYZE) -stats -instcount $< -info-output-file=Output/$*.ic;\
-	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  printf "TEST-RESULT-compile: " >> $@;\
 	  grep 'Number of instructions (of all types)$$' Output/$*.ic >> $@;\
 	  echo >> $@;\
 	else \
@@ -45,7 +45,7 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
 Output/%.nightly.nat.report.txt: Output/%.out-nat
 	@echo > $@
-	echo -n "TEST-RESULT-nat-time: " >> $@
+	printf "TEST-RESULT-nat-time: " >> $@
 	-grep "^real" Output/$*.out-nat.time >> $@
 
 # LLC tests
@@ -55,10 +55,10 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 	@echo 'time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1'
 	@-if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) >> $@ 2>&1; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
-	  echo -n "TEST-RESULT-llc: " >> $@;\
+	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
-	  echo -n "TEST-RESULT-llc: " >> $@;\
+	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
 	else  \
@@ -74,7 +74,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	@-if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
           echo "TEST-RESULT-cbe: YES" >> $@;\
-	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
+	  printf "TEST-RESULT-cbe-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)cbe.time >> $@;\
 	  echo >> $@;\
         else  \
@@ -88,13 +88,13 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	-head -n 100 Output/$*.exe-jit >> $@
 	@-if test -f Output/$*.exe-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
-	  echo -n "TEST-RESULT-jit-time: " >> $@;\
+	  printf "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)jit.time >> $@;\
 	  echo >> $@;\
-	  echo -n "TEST-RESULT-jit-comptime: " >> $@;\
+	  printf "TEST-RESULT-jit-comptime: " >> $@;\
 	  grep "Total Execution Time" $(INFO_PREFIX)jit.info >> $@;\
 	  echo >> $@;\
-	  echo -n "TEST-RESULT-jit-machcode: " >> $@;\
+	  printf "TEST-RESULT-jit-machcode: " >> $@;\
 	  grep "bytes of machine code compiled" $(INFO_PREFIX)jit.info >> $@;\
 	  echo >> $@;\
 	else  \
