@@ -366,6 +366,9 @@ Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
 endif
 
+# Pseudo target to build just the bytecode file.
+bytecode: Output/$(PROG).llvm.bc
+
 
 # Support for the TEST= option... when TEST= is specified on the command line,
 # the default target is the test target.  Here we dispatch to a specific set of
