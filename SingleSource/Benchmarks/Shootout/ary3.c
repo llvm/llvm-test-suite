@@ -5,7 +5,7 @@
  * this program is modified from:
  *   http://cm.bell-labs.com/cm/cs/who/bwk/interps/pap.html
  * Timing Trials, or, the Trials of Timing: Experiments with Scripting
- * and User-Interface Languages</a> by Brian W. Kernighan and
+ * and User-Interface Languages by Brian W. Kernighan and
  * Christopher J. Van Wyk.
  *
  * I added free() to deallocate memory.
