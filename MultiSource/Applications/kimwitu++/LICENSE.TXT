@@ -39,3 +39,7 @@ copyright (C) 1991, GrammaTech, Inc. Used with permission.
 GrammaTech and Synthesizer Generator, are tradenames of GrammaTech, Inc.,
 One Hopkins Place, Ithaca, NY 14850, (607) 273-7340.
 
+The kimwitu++ source base has been changed to accomodate LLVM testing.
+The bootstrapping process has been removed.  Long option support has also been
+removed to aid in portability to other platforms.
+
