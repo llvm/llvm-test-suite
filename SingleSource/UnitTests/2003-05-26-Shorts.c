@@ -9,10 +9,16 @@
  */
 #include <stdio.h>
 
+/* Move the value here to prevent constant folding */
+unsigned long long getL()
+{
+  return 0xafafafafc5c5b8a3ull;
+}
+
 int
 main(int argc, char** argv)
 {
-  unsigned long long  UL = 0xafafafafc5c5b8a3ULL;
+  unsigned long long  UL = getL();                   /* 0xafafafafc5c5b8a3 */
            long long   L = (long long) UL;
 
   unsigned int   ui = (unsigned int) UL;        /* 0xc5c5b8a3 =  3318069411 */
