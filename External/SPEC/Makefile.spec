@@ -34,6 +34,10 @@ SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 PROG := $(BENCH_NAME)
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c)
 
+# Pseudo target to build just the bytecode file.
+bytecode: Output/$(PROG).llvm.bc
+
+
 # Disable the default Output/%.out-* targets...
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
 SourceDir := $(SPEC_BENCH_DIR)/src/
@@ -49,6 +53,7 @@ SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
 REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
 REF_OUT_DIR := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/output/
 LOCAL_OUTPUTS := $(notdir $(wildcard $(REF_OUT_DIR)/*))
+
 
 # Specify how to generate output from the SPEC programs.  Basically we just run
 # the program in a sandbox (a special directory we create), then we cat all of
