@@ -49,7 +49,7 @@ class var_expr : public expr {
 private:
   char *name;
  public:
-  var_expr(strng str) {strcpy(name,str);}
+  var_expr(strng str) {name = strdup(str);}
 			/* Copy the initialization string
                        into the name buffer. To read the documentation for
                        strcpy() and other C string manipulation functions,

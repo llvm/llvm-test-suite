@@ -1,7 +1,8 @@
 // Written for undergraduate C++ course project at Dept of
 // Computer Science, Rutgers University.
 
-#include <stream.h>
+#include <iostream>
+using namespace std;
 #include <string.h>
 #include "student2.h"
 void bin_op_expr::print_me()
