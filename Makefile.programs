@@ -399,11 +399,13 @@ test:: test-setup $(PROGRAMS_TO_TEST:%=test.$(TEST).%) test-finish
 
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #
-TEST_FILES = $(filter-out %~, $(wildcard $(PROGDIR)/TEST.*.Makefile))
-AVAILABLE_TESTS = $(TEST_FILES:$(PROGDIR)/TEST.%.Makefile=%)
+TEST_FILES = $(wildcard $(PROGDIR)/TEST.*.Makefile) \
+             $(wildcard $(LEVEL)/projects/*/test/TEST.*.Makefile)
+AVAILABLE_TESTS = $(patsubst TEST.%.Makefile,%,$(notdir $(TEST_FILES)))
 
 # If they just say 'make test' then we print out an error telling the user to
 # specify a TEST= option.
+$(PROGRAMS_TO_TEST:%=test..%): \
 test..%:
 	@echo
 	@echo "***************************************************************"
@@ -421,9 +423,12 @@ test..%:
 ifdef TEST
 TestMakefile := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).Makefile) \
                 $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).Makefile)
-ifneq ($(TestMakefile),)
+TestReport   := $(wildcard $(LEVEL)/test/Programs/TEST.$(TEST).report) \
+                $(wildcard $(LEVEL)/projects/*/test/TEST.$(TEST).report)
+ifneq ($(strip $(TestMakefile)),)
 -include $(TestMakefile)
 else
+$(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%:
 	@echo
 	@echo "***************************************************************"
@@ -434,3 +439,33 @@ test.$(TEST).%:
 	@exit 1
 endif
 endif
+
+#
+# Rules for building a report from 'make report TEST=<x>'
+#
+GENERATEREPORT := $(LEVEL)/test/Programs/GenerateReport.pl
+
+report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
+	gmake TEST=$(TEST) 2>&1 | tee $@
+
+ifneq ($(TestReport),)
+report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
+	$(GENERATEREPORT) $(TestReport) < $< > $@
+
+report.$(TEST).html: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
+	$(GENERATEREPORT) -html $(TestReport) < $< > $@
+
+report.$(TEST).tex: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
+	$(GENERATEREPORT)  -latex $(TestReport) < $< > $@
+
+report: report.$(TEST).txt
+	@cat $<
+
+report.html: report.$(TEST).html
+
+report.tex: report.$(TEST).tex
+	@cat $<
+endif
+
+clean::
+	rm -f report.*.raw.out report.*.txt
