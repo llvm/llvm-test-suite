@@ -45,5 +45,9 @@ F2C_LIB := @F2C_LIB@
 @USE_POVRAY@
 POVRAY_ROOT := @POVRAY_ROOT@
 
+# Path to the Namd source code
+@USE_NAMD@
+NAMD_ROOT := @NAMD_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@

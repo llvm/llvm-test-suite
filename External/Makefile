@@ -8,10 +8,14 @@ include $(LEVEL)/Makefile.config
 #
 # Create the list of directories to compile
 #
-PARALLEL_DIRS := SPEC Povray 
+PARALLEL_DIRS := SPEC Povray Namd
 
 ifndef USE_POVRAY
 PARALLEL_DIRS := $(filter-out Povray/, $(PARALLEL_DIRS))
+endif
+
+ifndef USE_NAMD
+PARALLEL_DIRS := $(filter-out Namd/, $(PARALLEL_DIRS))
 endif
 
 include Makefile.external
