@@ -130,5 +130,16 @@ AC_ARG_WITH(bcrepos,AC_HELP_STRING([--with-bcrepos],[Location of Bytecode Reposi
 dnl Location of PAPI
 AC_ARG_WITH(papi,AC_HELP_STRING([--with-papi],[Location of PAPI]),AC_SUBST(PAPIDIR,[$withval]),AC_SUBST(PAPIDIR,[/home/vadve/shared/Sparc/papi-2.3.4.1]))
 
+dnl LLC Diff Option
+AC_ARG_ENABLE(llc_diffs,AC_HELP_STRING([--enable-llc_diffs],[Enable LLC Diffs
+                                        when testing (default is
+                                                      YES)]),,enableval=yes)
+if test ${enableval} = "no"
+then
+      AC_SUBST(DISABLE_LLC_DIFFS,[DISABLE_LLC_DIFFS:=1])
+else
+      AC_SUBST(DISABLE_LLC_DIFFS,[[]])
+fi
+
 dnl Create the output files
 AC_OUTPUT(Makefile.config)
