@@ -70,6 +70,10 @@
 #include <limits.h>
 #endif
 
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
+
 #if defined(hpux)
 #define PATH_MAX MAXPATHLEN
 #endif
@@ -286,15 +290,6 @@ LISP lsetpwfile(LISP fname)
  no_interrupt(iflag);
  return(NIL);}
 #endif
-
-LISP lputpwent(LISP alist,LISP file)
-{int iflag = no_interrupt(1);
- int status;
- struct passwd p;
- lencode_pwent(alist,&p);
- status = putpwent(&p,get_c_file(file,NULL));
- no_interrupt(iflag);
- return(NIL);}
 
 LISP laccess_problem(LISP lfname,LISP lacc)
 {char *fname = get_c_string(lfname);
@@ -2171,7 +2166,6 @@ void __stdcall init_slibu(void)
 #if defined(__osf__)
  init_subr_1("setpwfile",lsetpwfile);
 #endif
- init_subr_2("putpwent",lputpwent);
  init_subr_2("access-problem?",laccess_problem);
  init_subr_3("utime",lutime);
  init_subr_2("fchmod",lfchmod);
