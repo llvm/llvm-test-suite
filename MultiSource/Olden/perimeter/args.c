@@ -35,13 +35,13 @@ int dealwithargs(int argc, char *argv[])
 #else
     NumNodes = atoi(argv[2]);
   else
-    NumNodes = 4;
+    NumNodes = 1;
 #endif
 
   if (argc > 1)
     level = atoi(argv[1]);
   else
-    level = 5;
+    level = 11;
 
   return level;
 
