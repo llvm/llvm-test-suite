@@ -79,7 +79,7 @@ float pfKnuthEx28(p, d)
    return res;
 }
 
-float logf(p, n, k)
+float logf_(p, n, k)
    precision n;
    unsigned p, k;
 {
@@ -138,7 +138,7 @@ unsigned findk(n, m, aborts, maxk)
       sum = 0.0;
       primePtr = primes;
       while (*primePtr <= maxpm) {
-	 sum += logf((unsigned) *primePtr++, n, k);
+	 sum += logf_((unsigned) *primePtr++, n, k);
       }
       sum -= log((double) k) * 0.5;
       if (verbose > 2) fprintf(stdout, "%u: %5.2f", k, sum);
