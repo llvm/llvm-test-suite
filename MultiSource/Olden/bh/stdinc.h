@@ -18,6 +18,9 @@
 #endif
 #endif
 
+#include <math.h>
+#include <stdlib.h>
+
 /*
  * STREAM: a replacement for FILE *.
  */

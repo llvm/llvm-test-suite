@@ -16,7 +16,7 @@
 int nbody;
 char *malloc();
 
-double sqrt(), xrand(), my_rand(), exp, log;
+double sqrt(), xrand(), my_rand();
 real pow();
 extern icstruct intcoord(bodyptr p, treeptr t);
 extern int BhDebug;
