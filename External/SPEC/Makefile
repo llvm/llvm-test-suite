@@ -1,5 +1,5 @@
 LEVEL = ../../../..
-DIRS := CINT95 CFP2000 CINT2000
+DIRS := CFP2000 CINT2000 CINT95
 include ${LEVEL}/Makefile.config
 
 #
