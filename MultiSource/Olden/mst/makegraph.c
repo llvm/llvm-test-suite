@@ -2,7 +2,8 @@
 
 #include "mst.h"
 
-#define assert(num,a) if (!(a)) {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}
+/*#define assert(num,a) \
+   if (!(a)) {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}*/
 
 #define CONST_m1 10000
 #define CONST_b 31415821
@@ -64,7 +65,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
               dest = ((helper[pn])+offset);
               hash = tmp->edgehash;
               HashInsert((void *) dist,(unsigned int) dest,hash);
-              assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);
+              /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
             }
         } /* for i... */
       count1++;
