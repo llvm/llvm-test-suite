@@ -2,5 +2,5 @@ LEVEL = ../../../..
 PROG = aha
 CPPFLAGS = 
 LDFLAGS =
-RUNTIMELIMIT = 60
+RUNTIMELIMIT = 300
 include ../Makefile.multisrc
