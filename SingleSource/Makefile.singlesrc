@@ -10,48 +10,17 @@
 # output is diff'd
 #
 #  FIXME: There should be a way to specify libraries to link programs against
-#  FIXME: If the diff output is not empty, an error should be flaged!
 #  FIXME: There should be a way to specify the command line for a program
 #
 #  IDEA: This could be specified in the start of the .c file, in a comment block
 #
 
-LEVEL = ../../..
-include $(LEVEL)/test/Makefile.tests
+PROGRAMS_TO_TEST = $(Source:.c=)
 
-PROGRAMS  = $(Source:.c=)
-NATFILES  = $(addsuffix .native, $(addprefix Output/,$(PROGRAMS)))
-LLCFILES  = $(PROGRAMS)
-BCFILES   = $(addsuffix .linked.bc, $(PROGRAMS))
+include $(LEVEL)/test/Programs/Makefile.programs
 
-NATOUTPUT = $(addsuffix .nat.out, $(addprefix Output/,$(PROGRAMS)))
-LLIOUTPUT = $(addsuffix .lli.out, $(addprefix Output/,$(PROGRAMS)))
-LLCOUTPUT = $(addsuffix .llc.out, $(addprefix Output/,$(PROGRAMS)))
-
-LLIDIFFS  = $(addsuffix .lli.diff, $(addprefix Output/,$(PROGRAMS)))
-LLCDIFFS  = $(addsuffix .llc.diff, $(addprefix Output/,$(PROGRAMS)))
-
-.PRECIOUS: Output/%.nat.out Output/%.lli.out Output/%.llc.out
-.PRECIOUS: Output/%.lli.diff Output/%.llc.diff
-.PRECIOUS: Output/%.native Output/%.linked.bc
-
-all:: Output/.dir $(LLIDIFFS)  # $(LLCDIFFS)
-
-# Rules to build the test output...
-Output/%.nat.out: %.native
-	-$< > $@ 2>&1
-Output/%.lli.out: %.linked.bc
-	-$(LLI) -q $< > $@ 2>&1
-Output/%.llc.out: %
-	-$< > $@ 2>&1
-
-
-# Rules to diff test output...
-Output/%.lli.diff: Output/%.nat.out Output/%.lli.out
-	diff $+ > $@
-	@cat $@
-
-# Rules to diff test output...
-Output/%.llc.diff: Output/%.nat.out Output/%.llc.out
-	diff $+ > $@
-	@cat $@
+# Since this is just a single source program, the linked version of the program
+# is the same as the unlinked version...
+#
+Output/%.linked.bc: Output/%.bc
+	$(CP) $< $@
