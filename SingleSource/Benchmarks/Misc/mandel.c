@@ -14,12 +14,15 @@ int main() { return 0; }
 
 #define I 1.0iF
 
-#if defined(__FreeBSD__) || defined(__APPLE__)
-#include <stdio.h>
+#if defined(__FreeBSD__)
+#include <complex.h>
+#elif defined(__APPLE__)
 #include <math.h>
 #else
 #include <tgmath.h>
 #endif
+
+#include <stdio.h>
 
 volatile double __complex__ accum;
 void emit(double __complex__ X) {
