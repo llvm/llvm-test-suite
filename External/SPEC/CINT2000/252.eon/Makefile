@@ -1,9 +1,13 @@
 LEVEL = ../../../../../..
-#RUN_OPTIONS     = cccp.i -o cccp.s
-#STDOUT_FILENAME = cccp.out
+RUN_OPTIONS     = chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook
+STDOUT_FILENAME = cook_log.out
+STDERR_FILENAME = cook_log.err
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
-CPPFLAGS = -Wno-deprecated -Wno-non-template-friend
+CPPFLAGS = -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DSPEC_STDCPP -DNDEBUG
+LDFLAGS = -lstdc++ 
+LIBS    = -lsupc++
+
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             ggCoverageSolidTexture.cc ggPathDielectricMaterial.cc ggBox2.cc \
@@ -49,4 +53,3 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             mrSolidTexture.cc mrSphere.cc mrSurface.cc mrSurfaceTexture.cc \
             mrXYRectangle.cc mrXZRectangle.cc mrYZRectangle.cc myrand.cc)
 include ../../Makefile.spec
-
