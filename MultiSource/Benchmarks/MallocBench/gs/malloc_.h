@@ -20,21 +20,13 @@ copies.  */
 /* malloc_.h */
 /* Generic substitute for Unix malloc.h */
 
+#include <stdlib.h>
+
 #ifdef __MSDOS__
 #  include <alloc.h>
 #else
 #  ifdef VMS
      extern char *malloc();
      extern void free();
-#  else
-#    ifdef BSD4_2
-       extern char *malloc();
-#    else
-#      if defined(__FreeBSD__) || defined(__APPLE__)
-#        include <stdlib.h>
-#      else
-#        include <malloc.h>
-#      endif
-#    endif
 #  endif
 #endif
