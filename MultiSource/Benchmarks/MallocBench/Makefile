@@ -1,3 +1,3 @@
 LEVEL = ../../..
-PARALLEL_DIRS  := cfrac espresso gs make perl
+PARALLEL_DIRS  := cfrac espresso gs make
 include $(LEVEL)/Makefile.programs
