@@ -124,6 +124,10 @@ DISABLE_DIFFS = 1
 all:: $(GCCOUTPUT)
 endif
 
+ifdef DISABLE_FOR_LLVM_PROGRAMS
+DISABLE_DIFFS := 1
+endif
+
 ifndef DISABLE_LLC
 ifeq ($(DOTRACING), yes)
 all:: $(LLCTRACECODEGEN)
@@ -172,6 +176,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 	$(LGCCAS) $(STATS) $< -o $@
 
+ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
@@ -181,6 +186,7 @@ Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) crtend.o -o Output/$*.llvm
+endif
 
 # Rule to get the tracing version of the llvm.bc file for tracing:
 ifeq ($(DOTRACING), yes)
@@ -277,6 +283,9 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
+ifdef PROGRAM_REQUIRED_TO_EXIT_OK
+	@if test \! -f $@.exitok; then echo "TEST: $* FAILED!"; rm -f $@; fi
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
