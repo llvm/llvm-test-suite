@@ -1,0 +1,10 @@
+PROG = mst
+LOCAL_CFLAGS=
+LOCAL_LIBS=
+
+OBJS = args.o hash.o main.o makegraph.o
+
+mst.bc : $(OBJS)
+        link -f $(OBJS) -o $@
+
+include	../makefile
