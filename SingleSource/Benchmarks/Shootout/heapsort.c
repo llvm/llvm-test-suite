@@ -56,7 +56,7 @@ heapsort(int n, double *ra) {
 
 int
 main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 10);
+    int N = ((argc == 2) ? atoi(argv[1]) : 8000000);
     double *ary;
     int i;
     

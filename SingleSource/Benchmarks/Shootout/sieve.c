@@ -8,7 +8,7 @@
 
 int
 main(int argc, char *argv[]) {
-    int NUM = ((argc == 2) ? atoi(argv[1]) : 1);
+    int NUM = ((argc == 2) ? atoi(argv[1]) : 170000);
     static char flags[8192 + 1];
     long i, k;
     int count = 0;

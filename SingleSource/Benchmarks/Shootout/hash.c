@@ -9,7 +9,7 @@
 #include "simple_hash.h"
 
 int main(int argc, char *argv[]) {
-    int i, c=0, n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int i, c=0, n = ((argc == 2) ? atoi(argv[1]) : 3500000);
     char buf[32];
 	
     struct ht_ht *ht = ht_create(n);

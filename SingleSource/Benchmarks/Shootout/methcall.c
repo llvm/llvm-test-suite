@@ -66,7 +66,7 @@ NthToggle *new_NthToggle(char start_state, int max_count) {
 
 
 int main(int argc, char *argv[]) {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int i, n = ((argc == 2) ? atoi(argv[1]) : 500000000);
     Toggle *tog;
     NthToggle *ntog;
     char val = true;

@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  int n = ((argc == 2) ? atoi(argv[1]) : 1);
+  int n = ((argc == 2) ? atoi(argv[1]) : 1500000);
   int i, k, *x, *y;
 
   x = (int *) calloc(n, sizeof(int));

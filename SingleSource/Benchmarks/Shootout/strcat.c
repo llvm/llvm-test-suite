@@ -11,7 +11,7 @@
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1);
+    int n = ((argc == 2) ? atoi(argv[1]) : 10000000);
     int i, buflen = 32;
     char *strbuf = calloc(sizeof(char), buflen);
     char *strend = strbuf;
