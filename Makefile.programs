@@ -292,7 +292,7 @@ Output/%.llc.s: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-ls.s): \
 Output/%.llc-ls.s: Output/%.llvm.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f -regalloc=linearscan $< -o $@
+	-$(LLC) $(LLCFLAGS) -f -regalloc=iterativescan $< -o $@
 
 
 ## Alternative command to run llc remotely on another machine:
@@ -353,7 +353,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
 Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=linearscan $(JIT_OPTS) $< $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=iterativescan $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST (jit-ls): $* FAILED!"; rm -f $@; fi
 endif
@@ -393,7 +393,7 @@ Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
 Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) -regalloc=linearscan $(BUGPOINT_ARGS)
+	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) -regalloc=iterativescan $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
