@@ -4,7 +4,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-#include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.common
 
 SPEC_ROOT := $(SPEC2000_ROOT)
 CPPFLAGS += -DSPEC_CPU2000
