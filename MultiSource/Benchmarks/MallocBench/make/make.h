@@ -82,8 +82,8 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #endif
 
 
-#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
-	 || defined (POSIX) || defined(__FreeBSD__))
+#if	(defined(STDC_HEADERS) || defined(__GNU_LIBRARY__) || \
+	   defined(POSIX) || defined(__FreeBSD__) || defined(__APPLE__))
 #include <stdlib.h>
 #include <string.h>
 #define	ANSI_STRING
@@ -216,7 +216,7 @@ extern void user_access (), make_access (), child_access ();
 #endif	/* USG and don't have vfork.  */
 
 #if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__) || \
-        defined(__FreeBSD__)
+    defined(__FreeBSD__) || defined(__APPLE__)
 
 #include <unistd.h>
 #include <signal.h>

@@ -22,7 +22,8 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include "variable.h"
 
 /* This is POSIX.2, but most systems using -DPOSIX probably don't have it.  */
-#if defined(__GNU_LIBRARY__) || defined(__CYGWIN__) || defined(__FreeBSD__)
+#if defined(__GNU_LIBRARY__) || defined(__CYGWIN__) || defined(__FreeBSD__) || \
+    defined(__APPLE__)
 #include <glob.h>
 #else
 #include "glob/glob.h"

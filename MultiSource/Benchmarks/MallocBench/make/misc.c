@@ -476,7 +476,8 @@ dep_name (dep)
 }
 #endif
 
-#if	!defined(POSIX) && !defined(__GNU_LIBRARY__) && !defined(__CYGWIN__) && !defined(__FreeBSD__)
+#if	!defined(POSIX) && !defined(__GNU_LIBRARY__) && !defined(__CYGWIN__) && \
+    !defined(__FreeBSD__) && !defined(__APPLE__)
 extern int getuid (), getgid (), geteuid (), getegid ();
 #ifdef	USG
 extern int setuid (), setgid ();
