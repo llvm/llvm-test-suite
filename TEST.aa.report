@@ -22,7 +22,8 @@ sub OnlyMayInfo {
 }
 
 # Sort by ds time...
-$SortCol = 15;
+$SortCol = 12;
+$SortNumeric = 1;
 
 # Sort in ascending order
 $SortReverse = 0;
@@ -46,21 +47,22 @@ $SortReverse = 0;
             'yacr2'      => 'ptrdist-yacr2',
             'bc'         => 'ptrdist-bc',
             '-' => '-',
+            '179.art'    => '179.art',
+            '183.equake' => '183.equake',
             '181.mcf'    => '181.mcf',
             '256.bzip2'  => '256.bzip2',
             '164.gzip'   => '164.gzip',
             '197.parser' => '197.parser',
+            '188.ammp'   => '188.ammp',
+            '175.vpr'    => '175.vpr',
             '300.twolf'  => '300.twolf',
+            '186.crafty' => '186.crafty',
             '255.vortex' => '255.vortex',
+            '254.gap'    => '254.gap',
             '-' => '-',
             'sgefa'      => 'sgefa',
             'sim'        => 'sim',
-            'burg'       => 'burg',
-            'gnuchess'   => 'gnuchess',
-            'larn'       => 'larn',
-            'flex'       => 'flex',
-            'moria'      => 'moria',
-            'povray31'   => 'povray31'
+            'burg'       => 'burg'
            );
 
 @LatexColumns = (2, 3, 4, 5, 6);
@@ -92,7 +94,6 @@ $SortReverse = 0;
             ["basic",     '.basic.txt: [^(]*\(([-e0-9.]+) wall'],
             ["steens-fi", '.steens-fi.txt: [^(]*\(([-e0-9.]+) wall'],
             ["steens",    '.steens.txt: [^(]*\(([-e0-9.]+) wall'],
-            ["andersens", '.andersens.txt: [^(]*\(([-e0-9.]+) wall'],
             ["ds-fi",     '.ds-fi.txt: [^(]*\(([-e0-9.]+) wall'],
             ["ds",        '.ds.txt: [^(]*\(([-e0-9.]+) wall'],
             []
