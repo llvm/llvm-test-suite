@@ -41,6 +41,8 @@ main(int argc,
     ulong	net;
     ulong	insert;
     int		netsLeft;
+int TIMELOOP;
+for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 
     Option(argc, argv);
 
@@ -138,5 +140,6 @@ main(int argc,
     PrintDerefStats(stderr);
     PrintHeapSize(stderr);
 #endif /* PLUS_STATS */
+}
     exit(0);
 }
