@@ -26,5 +26,6 @@ Output/%.native: %.c Output/.dir
 # Since this is just a single source program, the linked version of the program
 # is the same as the unlinked version...
 #
-Output/%.linked.bc: Output/%.bc
-	$(CP) $< $@
+# FIXME: LIBS should be specified, not hardcoded to -lc -lm
+Output/%.llvm: Output/%.bc
+	$(LGCCLD) $< -lc -lm -o $@
