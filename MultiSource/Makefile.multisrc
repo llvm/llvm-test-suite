@@ -41,6 +41,7 @@ bugpoint-gccas: Output/$(PROG).bugpoint-gccas
 bugpoint-gccld: Output/$(PROG).bugpoint-gccld
 bugpoint-jit:   Output/$(PROG).bugpoint-jit
 bugpoint-llc:   Output/$(PROG).bugpoint-llc
+bugpoint-llc-ls: Output/$(PROG).bugpoint-llc-ls
 
 # Raw bytecode files are files created by simply assembling the output of the
 # GCC frontend, without running any optimizations.
