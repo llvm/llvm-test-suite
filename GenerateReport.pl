@@ -94,7 +94,13 @@ foreach $Record (@Records) {
         if (!defined($1)) {
           push @RowValues, "*";
         } else {
-          push @RowValues, $1;
+          # If there is a formatting function, run it now...
+          my $Val = $1;
+          if (scalar(@$Row) > 2) {
+            $Val = &{$Row->[2]}($Val);
+          }
+
+          push @RowValues, $Val;
         }
       }
     } else {                        # Just add a seperator...
