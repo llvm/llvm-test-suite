@@ -1,4 +1,31 @@
 #!/usr/dcs/software/supported/bin/perl -w
+#
+# Program:  GenerateReport.pl
+#
+# Synopsis: Summarize a big log file into a table of values, commonly used for
+#           testing.  This can generate either a plaintext table or HTML table
+#           depending on whether the -html option is specified.
+#
+#           This script reads a report description file to specify the fields
+#           and descriptions for the columns of interest.  In reads the raw log
+#           input from stdin and writes the table to stdout.
+#
+# Syntax:   GenerateReport.pl [-html] <ReportDesc> < Input > Output
+#
+
+# Default values for arguments
+$HTML = 0;
+
+# Parse arguments...
+while ($_ = $ARGV[0], /^[-+]/) {
+  shift;
+  last if /^--$/;  # Stop processing arguments on --
+
+  # List command line options here...
+  if (/^-html$/) { $HTML = 1; next; }
+
+  print "Unknown option: $_ : ignoring!\n";
+}
 
 #
 # Parameters which may be overriden by the report description file.
@@ -86,7 +113,7 @@ foreach $Record (@Records) {
 @Values = reverse @Values if ($SortReverse);
 
 #
-# Add the header for the report to the table after sorting...
+# Condense the header into an easier to access array...
 #
 my @Header;
 for $Row (@Fields) {
@@ -96,29 +123,61 @@ for $Row (@Fields) {
     push @Header, "|";
   }
 }
-unshift @Values, [@Header];
 
-#
-# Figure out how wide each field should be...
-#
-my @FieldWidths = (0) x scalar(@Fields);
-foreach $Value (@Values) {
-  for ($i = 0; $i < @$Value-1; $i++) {
-    if (length($$Value[$i]) > $FieldWidths[$i]) {
-      $FieldWidths[$i] = length($$Value[$i])
+if ($HTML) {
+  sub printCell {
+    my $Str = shift;
+    if ($Str eq '|') {
+      print "<td bgcolor='black' width='1'></td>";
+    } else {
+      print "<td><table border='0' cellspacing='0' cellpadding='3'><tr><td>$Str</td></tr></table></td>\n";
+    }; "";
+  }
+
+  print "<table border='0' cellspacing='0' cellpadding='0'>\n";
+  print "<tr bgcolor=#FFCC99>\n";
+  map { $_ = "<b><a href=\"#$_\">$_</a></b>" if $_ ne "|"; printCell $_ } @Header;
+  print "\n</tr><tr bgcolor='black'>";
+  print "<td height=1></td>" x @Header;
+  print "</tr>\n";
+  my $RowCount = 0;
+  foreach $Row (@Values) {
+    if (++$RowCount <= 2) {
+      print "<tr bgcolor='white'>\n";
+    } else {
+      print "<tr bgcolor='#CCCCCC'>\n";
+      $RowCount = 0 if ($RowCount > 3);
+    }
+    map { printCell $_ } @$Row;
+    print "\n</tr>\n";
+  }
+  print "\n</table>\n";
+} else {
+  # Add the header for the report to the table after sorting...
+  unshift @Values, [@Header];
+
+  #
+  # Figure out how wide each field should be...
+  #
+  my @FieldWidths = (0) x scalar(@Fields);
+  foreach $Value (@Values) {
+    for ($i = 0; $i < @$Value-1; $i++) {
+      if (length($$Value[$i]) > $FieldWidths[$i]) {
+        $FieldWidths[$i] = length($$Value[$i])
+      }
     }
   }
-}
 
 
-#
-# Print out the table now...
-#
-foreach $Value (@Values) {
-  for ($i = 0; $i < @$Value-1; $i++) {
-    printf "%-$FieldWidths[$i]s ", $$Value[$i];
+  #
+  # Print out the table now...
+  #
+  foreach $Value (@Values) {
+    for ($i = 0; $i < @$Value-1; $i++) {
+      printf "%-$FieldWidths[$i]s ", $$Value[$i];
+    }
+
+    # Print the assertion message if existant...
+    print "$$Value[@$Value-1]\n";
   }
-
-  # Print the assertion message if existant...
-  print "$$Value[@$Value-1]\n";
 }

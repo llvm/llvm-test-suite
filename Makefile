@@ -28,6 +28,7 @@ report.$(TEST).raw.out: $(REPORT_DEPENDENCIES)
 	gmake TEST=$(TEST) 2>&1 | tee $@
 
 report: report.$(TEST).raw.out
+	./GenerateReport.pl -html TEST.$(TEST).report < $< > report.$(TEST).html
 	./GenerateReport.pl TEST.$(TEST).report < $< | tee report.$(TEST).txt
 
 clean::
