@@ -3,7 +3,6 @@
 #include <math.h>
 
 typedef int BOOLEAN;
-typedef unsigned long long uint64_t;
 typedef unsigned long      uptrint;
 
 struct edge_rec {
