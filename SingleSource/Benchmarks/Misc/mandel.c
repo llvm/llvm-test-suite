@@ -14,9 +14,9 @@ int main() { return 0; }
 
 #define I 1.0iF
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__APPLE__)
 #include <stdio.h>
-#include <complex.h>
+#include <math.h>
 #else
 #include <tgmath.h>
 #endif
@@ -35,7 +35,7 @@ void mandel() {
 
       for (n = 0; n < MAX_ITER; ++n) {
         z = z * z + c;
-        if (cabs(z) >= ESCAPE)
+        if (hypot(__real__ z, __imag__ z) >= ESCAPE)
           break;
       }
       emit(z);
