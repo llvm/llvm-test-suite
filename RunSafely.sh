@@ -11,9 +11,11 @@
 #           first argument specified, and outputs a <outputfile>.time file which
 #           contains a timing of the program.
 #
-# Syntax:  ./RunSafely.sh <ulimit> <outputfile> <program> <arguments>
+# Syntax:  ./RunSafely.sh <ulimit> <stdinfile> <stdoutfile> <program> <args...>
 #
 ULIMIT=$1
+shift
+INFILE=$1
 shift
 OUTFILE=$1
 shift
@@ -23,7 +25,7 @@ shift
 ulimit -t $ULIMIT
 rm -f core core.*
 ulimit -c unlimited
-(time -p $PROGRAM $* > $OUTFILE) 2> $OUTFILE.time
+(time -p $PROGRAM $* > $OUTFILE < $INFILE) 2> $OUTFILE.time
 if ls | egrep "^core" > /dev/null
 then
     corefile=`ls core* | head -1`
