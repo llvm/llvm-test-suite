@@ -250,6 +250,9 @@ if ($HTML) {
                 $Val = &{$LatexColumnFormat{$ColNum}}($Val);
               }
 
+              # Escape illegal latex characters
+              $Val =~ s/([%#])/\\$1/g;
+
               printf " & %-$FieldWidths[$ColNum]s", $Val;
             }
             goto Done;
