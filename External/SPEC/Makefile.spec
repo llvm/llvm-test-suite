@@ -31,7 +31,9 @@ SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
 SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 
 PROG := $(BENCH_NAME)
-Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c $(SPEC_BENCH_DIR)/src/*.cc) \
+ifndef Source
+Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c $(SPEC_BENCH_DIR)/src/*.cc)
+endif
 
 # Disable the default Output/%.out-* targets...
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
@@ -105,3 +107,7 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
              ../../$(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../../$< $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+
+# Pseudo target to build just the bytecode file.
+bytecode: Output/$(PROG).llvm.bc
+
