@@ -38,7 +38,6 @@ test.dsgraph.%: Output/%.report.txt
 	@echo "---------------------------------------------------------------"
 	@cat $<
 
-
 #
 # Rules for building a report from 'make report TEST=dsgraph' at Programs level
 #
@@ -49,9 +48,7 @@ report.raw.out: $(DUMMYLIB) $(LANALYZE)
 ## FIXME: This should be genericized and put into Programs/Makefile as a nice
 ## report target.
 report: report.raw.out
-	./generate_report.pl report.raw.out > report.txt
-	@head -n1 report.txt
-	@sed '/^Name:/d' < report.txt | sort --key=2 -r -g
+	./generate_report.pl report.raw.out | tee report.txt
 
 clean::
 	rm -f report.raw.out report.txt
