@@ -17,8 +17,6 @@ all::
 
 include $(LEVEL)/test/Programs/Makefile.programs
 
-#all:: Output/$(PROG).linked.bc Output/$(PROG).native
-
 # Figure out what object files we want to build...
 LObjs    := $(sort $(addsuffix .bc, $(basename $(Source))))
 LObjects := $(addprefix Output/,$(LObjs))
@@ -33,9 +31,9 @@ Output/%.o: %.c Output/.dir
 
 
 # Link the program, then perform postlink optimization...
-Output/%.linked.bc: $(LObjects)
-	$(LLINK) -f $(LObjects) | \
-	   $(LOPT) -f -cleangcc -raise -constprop -dce -o $@
+# FIXME: LIBS SHOULD BE SPECIFIED
+Output/%.llvm: $(LObjects)
+	$(LGCCLD) $(LObjects) -lc -lm -o $@
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
