@@ -8,7 +8,7 @@
 #include <string.h>
 
 enum { ht_num_primes = 28 };
-
+#define inline static
 static unsigned long ht_prime_list[ht_num_primes] = {
     53ul,         97ul,         193ul,       389ul,       769ul,
     1543ul,       3079ul,       6151ul,      12289ul,     24593ul,
