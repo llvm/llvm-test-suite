@@ -5,9 +5,9 @@
 #
 ##===----------------------------------------------------------------------===##
 
-TESTNAME = $(subst test.example.,,$@)
+TESTNAME = $(subst test.$(TEST).,,$@)
 
-test.example.%: Output/%.llvm.bc
+test.$(TEST).%: Output/%.llvm.bc
 	@echo "========================================="
-	@echo "Running 'example' test on '$(TESTNAME)' program"
+	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
 	wc $<
