@@ -47,11 +47,25 @@ include $(LEVEL)/test/Makefile.tests
 
 PROGDIR = $(LEVEL)/test/Programs
 
+#
+# Scripts in the Programs directory...
+#
+
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG = $(PROGDIR)/TimeProgram.sh
 
 # DIFFPROG - The program used to diff the output
 DIFFPROG = $(PROGDIR)/DiffOutput.sh
+
+# RUNSAFELY - This program simply runs another program.  If the program works
+# correctly, this script has no effect, otherwise it will do things like print a
+# stack trace of a core dump.  It always returns "successful" so that tests will
+# continue to be run.
+RUNSAFELY = $(PROGDIR)/RunSafely.sh
+
+#
+# Targets to build for the default target...
+#
 
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
@@ -148,21 +162,23 @@ endif
 ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
-	-$< > $@ 2>&1 $(RUN_OPTIONS)
+	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 endif
+
+LLI_OPTS := -q -abort-on-exception -force-interpreter=true
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	-$(LLI) -q -abort-on-exception -force-interpreter=true $< > $@ $(RUN_OPTIONS)
+	$(RUNSAFELY) $(LLI) $(LLI_OPTS) $< > $@ $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	-$(LLI) -force-interpreter=false $< > $@ $(RUN_OPTIONS)
+	$(RUNSAFELY) $(LLI) -force-interpreter=false $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	-$< > $@ $(RUN_OPTIONS)
+	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	-$< > $@ $(RUN_OPTIONS)
+	$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 
 #
 # Rules to diff test output...
