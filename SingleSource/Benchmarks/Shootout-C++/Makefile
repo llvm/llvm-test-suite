@@ -1,7 +1,7 @@
 LEVEL = ../../../../..
 CXXFLAGS += -Wno-deprecated
 CPPFLAGS += -Wno-deprecated
-LDFLAGS += -lpthread -lstdc++
+LDFLAGS += -lm
 LIBS += -lstdc++
 
 include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
