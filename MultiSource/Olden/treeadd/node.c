@@ -76,7 +76,9 @@ main (int argc, char *argv[])
 #ifndef TORONTO
     CMMD_node_timer_start(1);
 #endif
+{ int i; for (i = 0; i < 100; ++i)
     result = TreeAdd (root);
+}
 #ifndef TORONTO
     CMMD_node_timer_stop(1);
 #endif
