@@ -69,7 +69,7 @@ int main() {
     vector<double> v;
     double d;
 
-    while (scanf(" %lf", &d) == 1) v.push_back(d);
+    for (unsigned i = 0; i != 500; ++i) v.push_back(i);
     moments<double> m(v.begin(), v.end());
 
     printf("n:                  %d\n", v.end() - v.begin());
