@@ -9,6 +9,11 @@
 #include <stdlib.h>
 #include "health.h"
 
+/* LevelRaiseHack - Level raise is having issues with addList.  This is a gross
+   hack to get health working better.
+ */
+static void LevelRaiseHack(struct List *L) {}
+
 void addList(struct List *list, struct Patient *patient) {
   struct List *b;
 
@@ -17,7 +22,7 @@ void addList(struct List *list, struct Patient *patient) {
     list = list->forward; }
   
   list = (struct List *)malloc(sizeof(struct List));
-
+  LevelRaiseHack(list);
   list->patient = patient;
   list->forward = NULL;
   list->back = b;
