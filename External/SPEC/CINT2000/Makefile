@@ -16,7 +16,7 @@ PARALLEL_DIRS := \
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 
-# Disable crafy until it stops infinite-looping on Sparc
+# Disable crafty until it stops infinite-looping on Sparc
 ifeq ($(ARCH), Sparc)
 PARALLEL_DIRS := $(filter-out 186.crafty, $(PARALLEL_DIRS))
 endif
