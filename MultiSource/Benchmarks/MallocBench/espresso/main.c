@@ -164,8 +164,8 @@ char *argv[];
     /* provide version information and summaries */
     if (summary || trace) {
 	/* echo command line and arguments */
-	printf("#");
-	for(i = 0; i < argc; i++) {
+	printf("# espresso");
+	for(i = 1; i < argc; i++) {
 	    printf(" %s", argv[i]);
 	}
 	printf("\n");
@@ -570,6 +570,7 @@ runtime()
     for(i = 0; i < TIME_COUNT; i++) {
 	if (total_calls[i] != 0) {
 	    temp = 100 * total_time[i];
+            temp = 0;
 	    printf("# %s\t%2d call(s) for %s (%2ld.%01ld%%)\n",
 		total_name[i], total_calls[i], print_time(total_time[i]),
 		    temp/total, (10 * (temp%total)) / total);

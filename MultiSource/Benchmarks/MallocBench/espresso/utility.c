@@ -124,7 +124,7 @@ util_print_time(t)
 long t;
 {
     static char s[40];
-
+    return "";
     (void) sprintf(s, "%ld.%02ld sec", t/1000, (t%1000)/10);
     return s;
 }
