@@ -16,7 +16,7 @@ endif
 
 AA_IMPLS := basic steens-fi andersens steens ds-fi ds
 
-SUFFIX = -aa-eval -time-passes -no-output -no-verify < $< 2> $@
+SUFFIX = -aa-eval -time-passes -disable-output -disable-verify < $< 2> $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.aa.basic.txt): \
 Output/%.aa.basic.txt: Output/%.lib.bc $(LOPT)
