@@ -1,4 +1,4 @@
 LEVEL = ../../..
-PARALLEL_DIRS  = UnitTests Shootout Ptrdist-anagram
+PARALLEL_DIRS  = UnitTests Shootout
 
 include Makefile.singlesrc
