@@ -4,7 +4,7 @@
 #     DiffOutput.sh
 #
 # SYNOPSIS
-#     DiffOutput.sh <testtype> <testname> [<goodoutput>]
+#     DiffOutput.sh <diff&opts> <testtype> <testname> [<goodoutput>]
 #
 # DESCRIPTION
 #     DiffOutput.sh looks for a file named Output/<testname>.out-<testtype>
@@ -21,28 +21,18 @@
 #
 
 # Command line parameters:
-WHICHOUTPUT=$1
-PROG=$2
-GOODOUTPUT=${3-nat}
+DIFF=$1
+WHICHOUTPUT=$2
+PROG=$3
+GOODOUTPUT=${4-nat}
 # Output filename:
 DIFFOUTPUT=Output/${PROG}.diff-${WHICHOUTPUT}
 # Input filenames:
 TESTOUTPUT=Output/${PROG}.out-${WHICHOUTPUT}
 GOODOUTPUT=Output/${PROG}.out-${GOODOUTPUT}
 
-# Find gnu diff
-DIFF=diff
-if which gdiff > /dev/null 2>&1
-then
-  where=`which gdiff 2>&1`
-  if [ -x "$where" ]
-  then
-    DIFF=gdiff
-  fi
-fi
-
 # Diff the two files.
-$DIFF -u $GOODOUTPUT $TESTOUTPUT > $DIFFOUTPUT || (
+$DIFF $GOODOUTPUT $TESTOUTPUT > $DIFFOUTPUT || (
   # They are different!
   echo "******************** TEST ($WHICHOUTPUT) '$PROG' FAILED! ********************"
   echo "Execution Context Diff:"

@@ -55,8 +55,13 @@ PROGDIR = $(LLVM_SRC_ROOT)/test/Programs
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG := $(PROGDIR)/TimeProgram.sh
 
+TOLERANCEOPT :=
+ifdef FP_TOLERANCE
+TOLERANCEOPT := -r$(FP_TOLERANCE)
+endif
+
 # DIFFPROG - The program used to diff the output
-DIFFPROG := $(PROGDIR)/DiffOutput.sh
+DIFFPROG := $(PROGDIR)/DiffOutput.sh "$(LLVMTOOLCURRENT)/spiff $(TOLERANCEOPT)"
 
 # RUNTIMELIMIT - The number of seconds we should wait before certain events
 # timeout.  This is overridable on the commandline or in tests makefiles.
