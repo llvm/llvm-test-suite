@@ -6,7 +6,7 @@ int main() {
 	unsigned i;
 
 	for (i = 0; i < 10; ++i) {
-		*((int*)Pointer)++ = 1234;
+		*((int*)Pointer)++;
 		printf("0x%d\n", (int)Pointer-(int)&Array[0]);
 	}
 }
