@@ -44,7 +44,7 @@ bugpoint-gccld: Output/$(PROG).bugpoint-gccld
 # frontend without running gccas.
 #
 Output/%.rbc: Output/%.ll $(LAS)
-	$(LAS) -f $< -o $@
+	$(LAS) -f $< -o - | $(LOPT) -f -q -funcresolve -o $@
 
 
 ifndef USE_PRECOMPILED_BYTECODE
