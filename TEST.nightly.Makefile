@@ -73,7 +73,7 @@ Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
 	@if test -e Output/$*.diff-lli; then \
           echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
-	  grep "^real" Output/$*.out-jit.time >> $@;\
+	  grep "^real" Output/$*.out-lli.time >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-lli-dyninst: " >> $@;\
 	  grep "Number of dynamic inst" Output/$*.out-lli.info >> $@;\
