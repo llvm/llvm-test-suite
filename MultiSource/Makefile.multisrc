@@ -9,7 +9,7 @@
 # 1. LEVEL - Must be set as per normal semantics: The depth from the top of tree
 #
 
-LCFLAGS := $(CFLAGS) $(CPPFLAGS)
+LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
 
 all:: 
