@@ -16,8 +16,8 @@
 /*----------------------------------------------------------------------*/
 /* Leaf optimization 'global' variables               */
 
-    static double     P=1.0;
-    static double     Q=1.0;
+static double P=1.0;
+static double Q=1.0;
 
 
 /*----------------------------------------------------------------------*/
@@ -26,27 +26,22 @@
 void optimize_node (double pi_R, double pi_I);
 double find_g ();
 double find_h ();
-double find_gradient_f (double pi_R, double pi_I, local double* gradient);
-double find_gradient_g (local double* gradient);
-double find_gradient_h (local double* gradient);
-void find_dd_grad_f (double pi_R, double pi_I, local double* dd_grad);
-double make_orthogonal (local double* v_mod, local double* v_static);
+double find_gradient_f (double pi_R, double pi_I, double* gradient);
+double find_gradient_g (double* gradient);
+double find_gradient_h (double* gradient);
+void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad);
+double make_orthogonal (double* v_mod, double* v_static);
 
 
 void Compute_Tree(Root r) {
-  register int i;
+  int i;
   Lateral l;
-#ifndef FUTURES
   Demand a;
-#else
-  future_cell_demand fc[NUM_FEEDERS];
-#endif
   Demand tmp;
   double theta_R,theta_I;
 
   tmp.P = 0.0;
   tmp.Q = 0.0;
-#ifndef FUTURES
   for (i=0; i<NUM_FEEDERS; i++) {
     l = r->feeders[i];
     theta_R = r->theta_R;
@@ -54,32 +49,14 @@ void Compute_Tree(Root r) {
     a = Compute_Lateral(l,theta_R,theta_I,theta_R,theta_I);
     tmp.P += a.P;
     tmp.Q += a.Q;
-
   }
-#else
-  for (i=0; i<NUM_FEEDERS; i++) {
-    l = r->feeders[i];
-    theta_R = r->theta_R;
-    theta_I = r->theta_I;
-    FUTURE(l,theta_R,theta_I,theta_R,theta_I,Compute_Lateral,&fc[i]);
-  }
-  for (i=NUM_FEEDERS-1; i>=0; i--) {
-    TOUCH(&fc[i]);
-    tmp.P += fc[i].value.P;
-    tmp.Q += fc[i].value.Q;
-  }
-#endif
   r->D.P = tmp.P;
   r->D.Q = tmp.Q;
 }
 
 Demand Compute_Lateral(Lateral l, double theta_R, double theta_I, 
                        double pi_R, double pi_I) {
-#ifndef FUTURES
   Demand a1;
-#else
-  future_cell_demand fc;
-#endif
   Demand a2;
   double new_pi_R, new_pi_I;
   double a,b,c,root;
@@ -91,24 +68,14 @@ Demand Compute_Lateral(Lateral l, double theta_R, double theta_I,
 
   next = l->next_lateral;
   if (next != NULL) 
-#ifndef FUTURES
     a1 = Compute_Lateral(next,theta_R,theta_I,new_pi_R,new_pi_I);
-#else
-    FUTURE(next,theta_R,theta_I,new_pi_R,new_pi_I,Compute_Lateral,&fc);
-#endif
 
   br = l->branch;
   a2 = Compute_Branch(br,theta_R,theta_I,new_pi_R,new_pi_I);
 
   if (next != NULL) {
-#ifndef FUTURES
     l->D.P = a1.P + a2.P;
     l->D.Q = a1.Q + a2.Q;
-#else
-    TOUCH(&fc);
-    l->D.P = a2.P + fc.value.P;
-    l->D.Q = a2.Q + fc.value.Q;
-#endif
   } else {
     l->D.P = a2.P;
     l->D.Q = a2.Q;
@@ -139,22 +106,14 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
   Leaf l;
   Branch next;
   int i;
-#ifdef FUTURES
-  future_cell_demand fc;
-#else
   Demand a1;
-#endif
   
   new_pi_R = pi_R + br->alpha*(theta_R+(theta_I*br->X)/br->R);
   new_pi_I = pi_I + br->beta*(theta_I+(theta_R*br->R)/br->X);
 
   next = br->next_branch;
   if (next != NULL)  {
-#ifndef FUTURES
     a1 = Compute_Branch(next,theta_R,theta_I,new_pi_R,new_pi_I);
-#else
-    FUTURE(next,theta_R,theta_I,new_pi_R,new_pi_I,Compute_Branch,&fc);
-#endif
   }
 
   /* Initialize tmp */
@@ -167,14 +126,8 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
     tmp.Q += a2.Q;
   }
   if (next != NULL) {
-#ifndef FUTURES
     br->D.P = a1.P + tmp.P;
     br->D.Q = a1.Q + tmp.Q;
-#else
-    TOUCH(&fc);
-    br->D.P = fc.value.P + tmp.P;
-    br->D.Q = fc.value.Q + tmp.Q;
-#endif
   } else {
     br->D.P = tmp.P;
     br->D.Q = tmp.Q;
@@ -291,7 +244,7 @@ double find_h ()
     return (P-5*Q);
 }
 
-double find_gradient_f (double pi_R, double pi_I, local double* gradient)
+double find_gradient_f (double pi_R, double pi_I, double* gradient)
 {
     int		    i;
     double	    magnitude=0.0;
@@ -307,7 +260,7 @@ double find_gradient_f (double pi_R, double pi_I, local double* gradient)
     return magnitude;
 }
 
-double find_gradient_g (local double* gradient)
+double find_gradient_g (double* gradient)
 {
     int		    i;
     double	    magnitude=0.0;
@@ -323,7 +276,7 @@ double find_gradient_g (local double* gradient)
     return magnitude;
 }
 
-double find_gradient_h (local double* gradient)
+double find_gradient_h (double* gradient)
 {
     int		    i;
     double	    magnitude=0.0;
@@ -339,7 +292,7 @@ double find_gradient_h (local double* gradient)
     return magnitude;
 }
 
-void find_dd_grad_f (double pi_R, double pi_I, local double* dd_grad)
+void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad)
 {
     double	    P_plus_1_inv=1/(P+1);
     double	    Q_plus_1_inv=1/(Q+1);
@@ -353,7 +306,7 @@ void find_dd_grad_f (double pi_R, double pi_I, local double* dd_grad)
     dd_grad[1]=-Q_plus_1_inv*Q_plus_1_inv*Q_grad_term/grad_mag;
 }
 
-double make_orthogonal (local double* v_mod, local double* v_static)
+double make_orthogonal (double* v_mod, double* v_static)
 {
     int		    i;
     double	    total=0.0;

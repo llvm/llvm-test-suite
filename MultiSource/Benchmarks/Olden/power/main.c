@@ -58,11 +58,13 @@ int main(int argc,char *argv[])
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
-  chatting("Past initialization\n");
+  printf("%d %d %d %d\n", sizeof(struct root), sizeof(struct lateral), sizeof(struct branch), sizeof(struct leaf));
+
+  printf("Past initialization\n");
 
   /* initial pass */
   r = build_tree();
-  chatting("Built tree\n");
+  printf("Built tree\n");
   Compute_Tree(r);
   printf("COMPUTED TREE\n");
   r->last.P = r->D.P;
@@ -74,7 +76,7 @@ int main(int argc,char *argv[])
   
   while (!finished) {
     Compute_Tree(r);
-    chatting("TR=%f, TI=%f, P0=%f, Q0=%f\n",
+    printf("TR=%f, TI=%f, P0=%f, Q0=%f\n",
            r->theta_R,r->theta_I,r->D.P,r->D.Q);
     if (fabs(r->D.P/10000.0 - r->theta_R) < ROOT_EPSILON &&
         fabs(r->D.Q/10000.0 - r->theta_I) < ROOT_EPSILON) {
@@ -92,7 +94,7 @@ int main(int argc,char *argv[])
       d_theta_I = -(r->theta_I - r->D.Q/10000.0) /
         (1 - (map_Q[i+1] - map_Q[i]) / (PER_INDEX_I * 10000.0));
  
-      chatting("D TR-%f, TI=%f\n", d_theta_R,d_theta_I);
+      printf("D TR-%f, TI=%f\n", d_theta_R,d_theta_I);
       r->last.P = r->D.P;
       r->last.Q = r->D.Q;
       r->last_theta_R = r->theta_R;

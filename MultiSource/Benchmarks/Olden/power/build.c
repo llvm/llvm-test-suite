@@ -14,32 +14,17 @@
 
 Root build_tree() 
 {
-  register int i;
-  register Root t;
-#ifdef FUTURES
-  int j;
-  future_cell_int fc[NUM_FEEDERS];
-#else
-  register Lateral l;
-#endif
+  int i;
+  Root t;
+  Lateral l;
 
-  t = (Root) ALLOC(0,sizeof(*t));
+  t = (Root) malloc(sizeof(*t));
 
-#ifdef FUTURES
-  for (i=0,j=0; i<NUM_FEEDERS; i++,j+=LATERALS_PER_FEEDER) {
-    FUTURE(j,LATERALS_PER_FEEDER,build_lateral,&fc[i]);
-  }
-  for (i=0; i<NUM_FEEDERS; i++) {
-    TOUCH(&fc[i]);
-    t->feeders[i]=(Lateral) fc[i].value;
-  }
-#else
   for (i=0; i<NUM_FEEDERS; i++) {
     /* Insert future here, split into two loops */
     l = build_lateral(i*LATERALS_PER_FEEDER,LATERALS_PER_FEEDER);
     t->feeders[i]=l;
   }
-#endif
   t->theta_R = 0.8;
   t->theta_I = 0.16;
   return t;
@@ -47,33 +32,18 @@ Root build_tree()
 
 Lateral build_lateral(int i, int num)
 {
-  register Lateral l;
-  register Branch b;
-#ifdef FUTURES
-  future_cell_int fc;
-#else
-  register Lateral next;
-#endif
+  Lateral l;
+  Branch b;
+  Lateral next;
  
   if (num == 0) return NULL;
-  l = (Lateral) ALLOC(0,sizeof(*l));
+  l = (Lateral) malloc(sizeof(*l));
 
-#ifdef FUTURES
-  FUTURE(i,num-1,build_lateral,&fc);
-  b = build_branch(i*BRANCHES_PER_LATERAL,(num-1)*BRANCHES_PER_LATERAL,
-    BRANCHES_PER_LATERAL);
-#else
   next = build_lateral(i,num-1);
   b = build_branch(i*BRANCHES_PER_LATERAL,(num-1)*BRANCHES_PER_LATERAL,
     BRANCHES_PER_LATERAL);
-#endif
 
-#ifdef FUTURES
-  TOUCH(&fc); 
-  l->next_lateral = (Lateral) fc.value;
-#else
   l->next_lateral = next;
-#endif
   l->branch = b;
   l->R = 1/300000.0;
   l->X = 0.000001;
@@ -84,33 +54,20 @@ Lateral build_lateral(int i, int num)
 
 Branch build_branch(int i, int j, int num)
 {
-  register Leaf l;
-  register Branch b;
-#ifdef FUTURES
-  future_cell_int fc;
-#endif
+  Leaf l;
+  Branch b;
 
   if (num == 0) return NULL;
   /* allocate branch */
-  b = (Branch) ALLOC(0,sizeof(*b));
+  b = (Branch) malloc(sizeof(*b));
   
   /* fill in children */
-#ifndef FUTURES
   b->next_branch= build_branch(i,j,num-1);
-#else
-  FUTURE(i,j,num-1,build_branch,&fc);
-#endif
 
   for (i=0; i<LEAVES_PER_BRANCH; i++) {
     l = build_leaf();
     b->leaves[i] = l;
   }
-  
- 
-#ifdef FUTURES
-  TOUCH(&fc);
-  b->next_branch = (Branch) fc.value;
-#endif
   
   /* fill in values */
   b->R = 0.0001;
@@ -120,9 +77,8 @@ Branch build_branch(int i, int j, int num)
   return b;
 }
 
-Leaf build_leaf()
-{
-  register Leaf l;
+Leaf build_leaf() {
+  Leaf l;
 
   l = (Leaf) malloc(sizeof(*l));
   l->D.P = 1.0;
