@@ -5888,70 +5888,131 @@ if test "$ac_cv_cxx_namespaces" = yes; then
 fi
 ])
 
-#
 # Check for hash_map extension.  This is from
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_hash_map.html
-#
-AC_DEFUN([AC_CXX_HAVE_EXT_HASH_MAP],
-[AC_CACHE_CHECK(whether the compiler has ext/hash_map,
-ac_cv_cxx_have_ext_hash_map,
-[AC_REQUIRE([AC_CXX_NAMESPACES])
+AC_DEFUN([AC_CXX_HAVE_STD_EXT_HASH_MAP],
+[AC_CACHE_CHECK([whether the compiler has <ext/hash_map> defining template class std::hash_map],
+ ac_cv_cxx_have_std_ext_hash_map,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   AC_TRY_COMPILE([#include <ext/hash_map>
 #ifdef HAVE_NAMESPACES
 using namespace std;
-#endif],[hash_map<int, int> t; return 0;],
-  ac_cv_cxx_have_ext_hash_map=std, ac_cv_cxx_have_ext_hash_map=no)
+#endif],[hash_map<int, int> t;],
+  [ac_cv_cxx_have_std_ext_hash_map=yes], [ac_cv_cxx_have_std_ext_hash_map=no])
+  AC_LANG_RESTORE])
+ HAVE_STD_EXT_HASH_MAP=0
+ if test "$ac_cv_cxx_have_std_ext_hash_map" = yes
+ then
+   HAVE_STD_EXT_HASH_MAP=1
+ fi
+ AC_SUBST(HAVE_STD_EXT_HASH_MAP)])
+
+AC_DEFUN([AC_CXX_HAVE_GNU_EXT_HASH_MAP],
+[AC_CACHE_CHECK([whether the compiler has <ext/hash_map> defining template class __gnu_cxx::hash_map],
+ ac_cv_cxx_have_gnu_ext_hash_map,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
   AC_TRY_COMPILE([#include <ext/hash_map>
 #ifdef HAVE_NAMESPACES
 using namespace __gnu_cxx;
-#endif],[hash_map<int, int> t; return 0;],
-  ac_cv_cxx_have_ext_hash_map=gnu, ac_cv_cxx_have_ext_hash_map=no)
-  AC_LANG_RESTORE
-])
-if test "$ac_cv_cxx_have_ext_hash_map" = std; then
-   AC_DEFINE(HAVE_STD_EXT_HASH_MAP,,[define if the compiler has ext/hash_map])
-fi
-if test "$ac_cv_cxx_have_ext_hash_map" = gnu; then
-   AC_DEFINE(HAVE_GNU_EXT_HASH_MAP,,[define if the compiler has ext/hash_map])
-fi
-])
+#endif],[hash_map<int,int> t; ],
+  [ac_cv_cxx_have_gnu_ext_hash_map=yes],[ac_cv_cxx_have_gnu_ext_hash_map=no])
+  AC_LANG_RESTORE])
+ HAVE_GNU_EXT_HASH_MAP=0
+ if test "$ac_cv_cxx_have_gnu_ext_hash_map" = yes
+ then
+   HAVE_GNU_EXT_HASH_MAP=1
+ fi
+ AC_SUBST(HAVE_GNU_EXT_HASH_MAP)])
 
-#
+AC_DEFUN([AC_CXX_HAVE_GLOBAL_HASH_MAP],
+[AC_CACHE_CHECK([whether the compiler has <hash_map> defining template class ::hash_map],
+ ac_cv_cxx_have_global_hash_map,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  AC_TRY_COMPILE([#include <hash_map>],[hash_map<int,int> t; ],
+  [ac_cv_cxx_have_global_hash_map=yes], [ac_cv_cxx_have_global_hash_map=no])
+  AC_LANG_RESTORE])
+ HAVE_GLOBAL_HASH_MAP=0
+ if test "$ac_cv_cxx_have_global_hash_map" = yes
+ then
+   HAVE_GLOBAL_HASH_MAP=1
+ fi
+ AC_SUBST(HAVE_GLOBAL_HASH_MAP)])
+
+AC_DEFUN([AC_CXX_HAVE_HASH_MAP],
+[AC_CXX_HAVE_STD_EXT_HASH_MAP
+ AC_CXX_HAVE_GNU_EXT_HASH_MAP
+ AC_CXX_HAVE_GLOBAL_HASH_MAP])
+
 # Check for hash_set extension.  This is modified from
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_hash_set.html
-#
-AC_DEFUN([AC_CXX_HAVE_EXT_HASH_SET],
-[AC_CACHE_CHECK(whether the compiler has ext/hash_set,
-ac_cv_cxx_have_ext_hash_set,
-[AC_REQUIRE([AC_CXX_NAMESPACES])
+AC_DEFUN([AC_CXX_HAVE_STD_EXT_HASH_SET],
+[AC_CACHE_CHECK([whether the compiler has <ext/hash_set> defining template class std::hash_set],
+ ac_cv_cxx_have_std_ext_hash_set,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   AC_TRY_COMPILE([#include <ext/hash_set>
 #ifdef HAVE_NAMESPACES
 using namespace std;
-#endif],[hash_set<int> t; return 0;],
-  ac_cv_cxx_have_ext_hash_set=std, ac_cv_cxx_have_ext_hash_set=no)
+#endif],[hash_set<int> t; ],
+  [ac_cv_cxx_have_std_ext_hash_set=yes], [ac_cv_cxx_have_std_ext_hash_set=no])
+  AC_LANG_RESTORE])
+ HAVE_STD_EXT_HASH_SET=0
+ if test "$ac_cv_cxx_have_std_ext_hash_set" = yes
+ then
+   HAVE_STD_EXT_HASH_SET=1
+ fi
+ AC_SUBST(HAVE_STD_EXT_HASH_SET)])
+
+AC_DEFUN([AC_CXX_HAVE_GNU_EXT_HASH_SET],
+[AC_CACHE_CHECK(
+ [whether the compiler has <ext/hash_set> defining template class __gnu_cxx::hash_set],
+ ac_cv_cxx_have_gnu_ext_hash_set,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
   AC_TRY_COMPILE([#include <ext/hash_set>
 #ifdef HAVE_NAMESPACES
 using namespace __gnu_cxx;
-#endif],[hash_set<int> t; return 0;],
-  ac_cv_cxx_have_ext_hash_set=gnu, ac_cv_cxx_have_ext_hash_set=no)
-  AC_LANG_RESTORE
-])
-if test "$ac_cv_cxx_have_ext_hash_set" = std; then
-   AC_DEFINE(HAVE_STD_EXT_HASH_SET,,[define if the compiler has ext/hash_set in std])
-fi
-if test "$ac_cv_cxx_have_ext_hash_set" = gnu; then
-   AC_DEFINE(HAVE_GNU_EXT_HASH_SET,,[define if the compiler has ext/hash_set in __gnu_cc])
-fi
-])
+#endif],[hash_set<int> t; ],
+  [ac_cv_cxx_have_gnu_ext_hash_set=yes], [ac_cv_cxx_have_gnu_ext_hash_set=no])
+  AC_LANG_RESTORE])
+ HAVE_GNU_EXT_HASH_SET=0
+ if test "$ac_cv_cxx_have_gnu_ext_hash_set" = yes
+ then
+   HAVE_GNU_EXT_HASH_SET=1
+ fi
+ AC_SUBST(HAVE_GNU_EXT_HASH_SET)])
 
-#
+AC_DEFUN([AC_CXX_HAVE_GLOBAL_HASH_SET],
+[AC_CACHE_CHECK([whether the compiler has <hash_set> defining template class ::hash_set],
+ ac_cv_cxx_have_global_hash_set,
+ [AC_REQUIRE([AC_CXX_NAMESPACES])
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  AC_TRY_COMPILE([#include <hash_set>],[hash_set<int> t; return 0;],
+  [ac_cv_cxx_have_global_hash_set=yes], [ac_cv_cxx_have_global_hash_set=no])
+  AC_LANG_RESTORE])
+ HAVE_GLOBAL_HASH_SET=0
+ if test "$ac_cv_cxx_have_global_hash_set" = yes
+ then
+   HAVE_GLOBAL_HASH_SET=1
+ fi
+ AC_SUBST(HAVE_GLOBAL_HASH_SET)])
+
+AC_DEFUN([AC_CXX_HAVE_HASH_SET],
+[AC_CXX_HAVE_STD_EXT_HASH_SET
+ AC_CXX_HAVE_GNU_EXT_HASH_SET
+ AC_CXX_HAVE_GLOBAL_HASH_SET])
+
 # Check for standard iterator extension.  This is modified from
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_hash_set.html
-#
 AC_DEFUN([AC_CXX_HAVE_STD_ITERATOR],
 [AC_CACHE_CHECK(whether the compiler has the standard iterator,
 ac_cv_cxx_have_std_iterator,
@@ -5965,10 +6026,12 @@ using namespace std;
   ac_cv_cxx_have_std_iterator=yes, ac_cv_cxx_have_std_iterator=no)
   AC_LANG_RESTORE
 ])
-if test "$ac_cv_cxx_have_std_iterator" = yes; then
-   AC_DEFINE(HAVE_STD_ITERATOR,,[define if the compiler has STL iterators])
+HAVE_STD_ITERATOR=0
+if test "$ac_cv_cxx_have_std_iterator" = yes
+then
+   HAVE_STD_ITERATOR=1
 fi
-])
+AC_SUBST(HAVE_STD_ITERATOR)])
 
 #
 # Check for bidirectional iterator extension.  This is modified from
@@ -5987,15 +6050,15 @@ using namespace std;
   ac_cv_cxx_have_bi_iterator=yes, ac_cv_cxx_have_bi_iterator=no)
   AC_LANG_RESTORE
 ])
-if test "$ac_cv_cxx_have_bi_iterator" = yes; then
-   AC_DEFINE(HAVE_BI_ITERATOR,,[define if the compiler has bidirectional iterator])
+HAVE_BI_ITERATOR=0
+if test "$ac_cv_cxx_have_bi_iterator" = yes
+then
+   HAVE_BI_ITERATOR=1
 fi
-])
+AC_SUBST(HAVE_BI_ITERATOR)])
 
-#
 # Check for forward iterator extension.  This is modified from
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_hash_set.html
-#
 AC_DEFUN([AC_CXX_HAVE_FWD_ITERATOR],
 [AC_CACHE_CHECK(whether the compiler has forward iterators,
 ac_cv_cxx_have_fwd_iterator,
@@ -6009,41 +6072,12 @@ using namespace std;
   ac_cv_cxx_have_fwd_iterator=yes, ac_cv_cxx_have_fwd_iterator=no)
   AC_LANG_RESTORE
 ])
-if test "$ac_cv_cxx_have_fwd_iterator" = yes; then
-   AC_DEFINE(HAVE_FWD_ITERATOR,,[define if the compiler has STL iterators])
+HAVE_FWD_ITERATOR=0
+if test "$ac_cv_cxx_have_fwd_iterator" = yes
+then
+   HAVE_FWD_ITERATOR=1
 fi
-])
-
-#
-# Check for slist extension.  This is from
-# http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_slist.html
-#
-AC_DEFUN([AC_CXX_HAVE_EXT_SLIST],
-[AC_CACHE_CHECK(whether the compiler has ext/slist,
-ac_cv_cxx_have_ext_slist,
-[AC_REQUIRE([AC_CXX_NAMESPACES])
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-  AC_TRY_COMPILE([#include <ext/slist>
-#ifdef HAVE_NAMESPACES
-using namespace std;
-#endif],[slist<int> s; return 0;],
-  ac_cv_cxx_have_ext_slist=std, ac_cv_cxx_have_ext_slist=no)
-  AC_TRY_COMPILE([#include <ext/slist>
-#ifdef HAVE_NAMESPACES
-using namespace __gnu_cxx;
-#endif],[slist<int> s; return 0;],
-  ac_cv_cxx_have_ext_slist=gnu, ac_cv_cxx_have_ext_slist=no)
-
-  AC_LANG_RESTORE
-])
-if test "$ac_cv_cxx_have_ext_slist" = std; then
-   AC_DEFINE(HAVE_EXT_SLIST,std,[define if the compiler has ext/slist])
-fi
-if test "$ac_cv_cxx_have_ext_slist" = gnu; then
-   AC_DEFINE(HAVE_EXT_SLIST,gnu,[define if the compiler has ext/slist])
-fi
-])
+AC_SUBST(HAVE_FWD_ITERATOR)])
 
 #
 # Check for FLEX.  This is modified from
@@ -6063,6 +6097,10 @@ fi
 # Check for Bison.  This is modified from
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_namespaces.html
 #
+# This macro verifies that Bison is installed.  If successful, then
+# 1) YACC is set to bison -y (to emulate YACC calls)
+# 2) BISON is set to bison
+#
 AC_DEFUN([AC_PROG_BISON],
 [AC_CACHE_CHECK(,
 ac_cv_has_bison,
@@ -6071,7 +6109,7 @@ ac_cv_has_bison,
 if test "$YACC" != "bison -y"; then
   AC_MSG_ERROR([bison not found but required])
 else
-  AC_SUBST(YACC,[bison],[location of bison])
+  AC_SUBST(BISON,[bison],[location of bison])
 fi
 ])
 
@@ -6111,12 +6149,12 @@ ac_cv_func_mmap_file,
 [AC_LANG_SAVE
   AC_LANG_C
   AC_TRY_RUN([
-#ifdef HAVE_SYS_MMAN_H
-#include <sys/mman.h>
-#endif
-
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
+#endif
+
+#ifdef HAVE_SYS_MMAN_H
+#include <sys/mman.h>
 #endif
 
 #ifdef HAVE_FCNTL_H
@@ -6125,12 +6163,12 @@ ac_cv_func_mmap_file,
 
   int fd;
   int main () {
-  fd = creat ("foo",0777); fd = (int) mmap (0, 1, PROT_READ, MAP_SHARED, fd, 0); unlink ("foo"); return (fd != MAP_FAILED);}],
+  fd = creat ("foo",0777); fd = (int) mmap (0, 1, PROT_READ, MAP_SHARED, fd, 0); unlink ("foo"); return (fd != (int) MAP_FAILED);}],
   ac_cv_func_mmap_file=yes, ac_cv_func_mmap_file=no)
   AC_LANG_RESTORE
 ])
 if test "$ac_cv_func_mmap_file" = yes; then
-   AC_DEFINE(HAVE_MMAP_FILE)
+   AC_DEFINE([HAVE_MMAP_FILE],[],[Define if mmap() can map files into memory])
    AC_SUBST(MMAP_FILE,[yes])
 fi
 ])
@@ -6152,7 +6190,7 @@ ac_cv_header_mmap_anon,
   AC_LANG_RESTORE
 ])
 if test "$ac_cv_header_mmap_anon" = yes; then
-   AC_DEFINE(HAVE_MMAP_ANONYMOUS)
+   AC_DEFINE([HAVE_MMAP_ANONYMOUS],[],[Define if mmap() uses MAP_ANONYMOUS to map anonymous pages, or undefine if it uses MAP_ANON])
 fi
 ])
 
@@ -6160,9 +6198,109 @@ fi
 # Configure a Makefile without clobbering it if it exists and is not out of
 # date.  This is modified from:
 # http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_slist.html
+#[AC_CONFIG_COMMANDS($1,${SHELL} ${srcdir}/autoconf/install-sh -c ${srcdir}/$1 $1)
 #
 AC_DEFUN([AC_CONFIG_MAKEFILE],
 [AC_CONFIG_COMMANDS($1,${SHELL} ${srcdir}/autoconf/install-sh -c ${srcdir}/$1 $1,${srcdir}/autoconf/mkinstalldirs `dirname $1`)
 ])
 
+#
+# Determine if the printf() functions have the %a format character.
+# This is modified from:
+# http://www.gnu.org/software/ac-archive/htmldoc/ac_cxx_have_ext_slist.html
+AC_DEFUN([AC_C_PRINTF_A],
+[
+        AC_MSG_CHECKING([for printf %a format specifier])
+	AC_LANG_SAVE
+	AC_LANG_C
+	AC_RUN_IFELSE(
+		AC_LANG_PROGRAM([#include <stdio.h>
+		                 #include <stdlib.h>],
+		                 [[[
+		                 volatile double A, B;
+		                 char Buffer[100];
+		                 A = 1;
+		                 A /= 10.0;
+		                 sprintf(Buffer, "%a", A);
+		                 B = atof(Buffer);
+		                 if (A != B)
+							 return (1);
+		                 if (A != 0x1.999999999999ap-4)
+							 return (1);
+		                 return (0);]]]),
+		ac_c_printf_a=yes,ac_c_printf_a=no)
+	AC_LANG_RESTORE
+        AC_MSG_RESULT($ac_c_printf_a)
+	if test "$ac_c_printf_a" = "yes"; then
+		AC_DEFINE([HAVE_PRINTF_A],[1],[Define to have the %a format string])
+	fi
+])
 
+#
+# Determine if the system can handle the -R option being passed to the linker.
+#
+AC_DEFUN([AC_LINK_USE_R],
+[
+  AC_MSG_CHECKING([for compiler -Wl,-R<path> option])
+  AC_LANG_SAVE
+  AC_LANG_C
+  oldcflags="$CFLAGS"
+  CFLAGS="$CFLAGS -Wl,-R."
+  AC_LINK_IFELSE([int main() { return 0; }],[ac_cv_link_use_r=yes],[ac_cv_link_use_r=no])
+  CFLAGS="$oldcflags"
+  AC_LANG_RESTORE
+  AC_MSG_RESULT($ac_cv_link_use_r)
+  if test "$ac_cv_link_use_r" = yes
+  then
+    AC_DEFINE([HAVE_LINK_R],[1],[Define if you can use -Wl,-R. to pass -R. to the linker, in order to add the current directory to the dynamic linker search path.])
+  fi
+])
+
+
+dnl AC_SINGLE_CXX_CHECK(DEFINEVAR, CACHEVAR, FUNCTION, HEADER, PROGRAM)
+dnl                     $1,        $2,       $3,       $4,     $5
+dnl 
+AC_DEFUN([AC_SINGLE_CXX_CHECK],
+[AC_CACHE_CHECK([for $3 in $4], [$2],
+ [AC_LANG_PUSH(C++)
+  AC_COMPILE_IFELSE(AC_LANG_SOURCE([$5]),[$2=yes],[$2=no])
+ AC_LANG_POP(C++)])
+ if test "$$2" = "yes"
+ then
+   AC_DEFINE($1, 1, [Define to 1 if your compiler defines $3 in the $4
+                     header file.])
+ fi])
+
+AC_DEFUN([AC_FUNC_ISNAN],[
+AC_SINGLE_CXX_CHECK([HAVE_ISNAN_IN_MATH_H],    [ac_cv_func_isnan_in_math_h],   
+                    [isnan], [<math.h>],
+                    [#include <math.h>
+                     int foo(float f) {return isnan(f);}])
+AC_SINGLE_CXX_CHECK([HAVE_ISNAN_IN_CMATH],     [ac_cv_func_isnan_in_cmath],    
+                    [isnan], [<cmath>],
+                    [#include <cmath>
+                     int foo(float f) {return isnan(f);}])
+AC_SINGLE_CXX_CHECK([HAVE_STD_ISNAN_IN_CMATH], [ac_cv_func_std_isnan_in_cmath],
+                    [std::isnan], [<cmath>],
+                    [#include <cmath>
+                     using std::isnan; int foo(float f) {return isnan(f);}])
+])
+
+AC_DEFUN([AC_FUNC_ISINF],[
+AC_SINGLE_CXX_CHECK([HAVE_ISINF_IN_MATH_H],    [ac_cv_func_isinf_in_math_h],   
+                    [isinf], [<math.h>],
+                    [#include <math.h>
+                     int foo(float f) {return isinf(f);}])
+AC_SINGLE_CXX_CHECK([HAVE_ISINF_IN_CMATH],     [ac_cv_func_isinf_in_cmath],    
+                    [isinf], [<cmath>],
+                    [#include <cmath>
+                     int foo(float f) {return isinf(f);}])
+AC_SINGLE_CXX_CHECK([HAVE_STD_ISINF_IN_CMATH], [ac_cv_func_std_isinf_in_cmath],
+                    [std::isinf], [<cmath>],
+                    [#include <cmath>
+                     using std::isinf; int foo(float f) {return isinf(f);}])
+AC_SINGLE_CXX_CHECK([HAVE_FINITE_IN_IEEEFP_H], [ac_cv_func_finite_in_ieeefp_h],
+                    [finite], [<ieeefp.h>],
+                    [#include <ieeefp.h>
+                     int foo(float f) {return finite(f);}])
+])

@@ -1,23 +1,28 @@
 #
-# Configure the location of the LLVM object root.  We know it is two
-# directories up.  The source tree location we do not know; let the LLVM
-# Makefiles find it for us.
+# Set this variable to the top of the LLVM source tree.
 #
-LLVM_OBJ_ROOT=$(LEVEL)/../..
+LLVM_SRC_ROOT = @LLVM_SRC@
 
 #
-# Grab the LLVM configuration file.
+# Set this variable to the top level directory where LLVM was built
+# (this is *not* the same as OBJ_ROOT as defined in LLVM's Makefile.config).
 #
-include $(LEVEL)/../../Makefile.config
+LLVM_OBJ_ROOT = @LLVM_OBJ@
 
 #
-# Reconfigure the source directories
+# Include LLVM's Master Makefile.
 #
-BUILD_SRC_ROOT:=$(LLVM_SRC_ROOT)/projects/testsuite
-BUILD_SRC_DIR := $(subst //,/,$(BUILD_SRC_ROOT)/$(patsubst $(BUILD_OBJ_ROOT)%,%,$(BUILD_OBJ_DIR)))
+include $(LLVM_OBJ_ROOT)/Makefile.config
 
 #
-# Include LLVM's build rules.
+# Set the source root and source directory pathnames
+#
+BUILD_SRC_DIR := $(subst //,/,@abs_top_srcdir@/$(patsubst $(BUILD_OBJ_ROOT)%,%,$(BUILD_OBJ_DIR)))
+
+BUILD_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
+
+#
+# Include LLVM's Master Makefile.
 #
 include $(LLVM_SRC_ROOT)/Makefile.rules
 
