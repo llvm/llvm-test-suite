@@ -50,12 +50,12 @@ IN pcost cost;
     static char s[200];
 
     if (cube.num_binary_vars == cube.num_vars - 1)
-	(void) sprintf(s, "c=%d(%d) in=%d out=%d tot=%d",
-	    cost->cubes, cost->cubes - cost->primes, cost->in,
+	(void) sprintf(s, "c=%d in=%d out=%d tot=%d",
+	    cost->cubes, cost->in,
 	    cost->out, cost->total);
     else
-	(void) sprintf(s, "c=%d(%d) in=%d mv=%d out=%d",
-	   cost->cubes, cost->cubes - cost->primes, cost->in,
+	(void) sprintf(s, "c=%d in=%d mv=%d out=%d",
+	   cost->cubes, cost->in,
 	   cost->mv, cost->out);
     return s;
 }
