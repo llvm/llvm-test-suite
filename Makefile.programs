@@ -89,6 +89,8 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 # Generated code for llc (which does not require the target platform)
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe.c,   $(PREFIXED_PROGRAMS_TO_TEST))
+LLCTRACECODEGEN := $(addsuffix .trace.llc.s, $(PREFIXED_PROGRAMS_TO_TEST))
+CBETRACECODEGEN := $(addsuffix .trace.cbe.c, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
@@ -112,6 +114,7 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 .PRECIOUS: Output/%.diff-lli Output/%.diff-jit
 .PRECIOUS: Output/%.diff-llc Output/%.diff-cbe
 
+
 # Regardless of what other options are specified, build the program's bytecode
 # representation.
 all:: $(BYTECODE)
@@ -122,13 +125,23 @@ all:: $(GCCOUTPUT)
 endif
 
 ifndef DISABLE_LLC
+ifeq ($(DOTRACING), yes)
+all:: $(LLCTRACECODEGEN)
+DISABLE_LLC_DIFFS = 1
+else
 all:: $(LLCCODEGEN)
+endif
 else
 DISABLE_LLC_DIFFS = 1
 endif
 
 ifndef DISABLE_CBE
+ifeq ($(DOTRACING), yes)
+all:: $(CBETRACECODEGEN)
+DISABLE_CBE_DIFFS = 1
+else
 all:: $(CBECODEGEN)
+endif
 else
 DISABLE_CBE_DIFFS = 1
 endif
@@ -200,6 +213,14 @@ $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
 	-$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS)
 
+$(PROGRAMS_TO_TEST:%=Output/%.trace.cbe.c): \
+Output/%.trace.cbe.c: Output/%.llvm.trace.bc $(LDIS)
+	-$(LDIS) -c < $< > $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace.cbe): \
+Output/%.trace.cbe: Output/%.trace.cbe.c
+	-$(CC) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TRACELIBS)
+
 #
 # Compile a linked program to machine code with LLC.
 #
@@ -207,11 +228,19 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.trace.llc.s): \
+Output/%.trace.llc.s: Output/%.llvm.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -f $< -o $@
+
 # Assemble (and link) an LLVM-linked program using the system assembler...
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
 	-$(CC) $(CFLAGS) $< $(LLCLIBS) -o $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace.llc): \
+Output/%.trace.llc: Output/%.trace.llc.s
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(TRACELIBS) -o $@
 
 
 #
@@ -248,6 +277,14 @@ Output/%.out-llc: Output/%.llc
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace-out-llc): \
+Output/%.trace-out-llc: Output/%.trace.llc
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.trace-out-cbe): \
+Output/%.trace-out-cbe: Output/%.trace.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 endif
 
