@@ -34,6 +34,9 @@ NObjects := $(addprefix Output/,$(NObjs))
 Output/%.o: %.c Output/.dir
 	$(CC) $(CPPFLAGS) -O $(CFLAGS) -c $< -o $@
 
+bugpoint-gccas: Output/$(PROG).bugpoint-gccas
+bugpoint-gccld: Output/$(PROG).bugpoint-gccld
+
 # Raw bytecode files are files created by simply linking the output of the GCC
 # frontend without running gccas.
 #
