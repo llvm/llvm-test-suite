@@ -164,6 +164,23 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc
 	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o Output/$*.llvm
 
+# Targets to get the pass arguments that gccas and gccld are using...
+Output/gccas-pass-args: $(LGCCAS)
+	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
+	sed 's/Pass Arguments: //' < $@.1 > $@
+Output/gccld-pass-args: $(LGCCLD)
+	$(LGCCLD) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
+	sed 's/Pass Arguments: //' < $@.1 > $@
+
+
+# Rules to bugpoint the GCCAS or GCCLD command...
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
+Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) Output/gccas-pass-args
+	$(LBUGPOINT) $< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
+Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) Output/gccld-pass-args
+	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
+
 #
 # Rules to compile the program for the C Back End
 #
@@ -179,6 +196,7 @@ Output/%.cbe: Output/%.cbe.c
 RUN_OPTIONS += 2>&1
 ifdef INPUT_FILENAME
 RUN_OPTIONS += < $(INPUT_FILENAME)
+BUGPOINT_OPTIONS += -input $(INPUT_FILENAME)
 endif
 
 # Rules to build the test output...
