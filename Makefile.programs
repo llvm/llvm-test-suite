@@ -5,7 +5,7 @@
 # executables for the following targets:
 #
 #   1. The native Sun Sparc compiler
-#   2. LLVM Bytecode Compiler + LLI interpreter
+#   2. LLVM Bytecode Compiler + LLI interpreter (if ENABLE_LLI is enabled)
 #   3. LLVM Bytecode Compiler + LLC Sparc machine code backend
 #
 # Running them, and then diffing the output.  If there are any failures, they
@@ -14,12 +14,21 @@
 # Input to this makefile should be the PROGRAMS_TO_TEST variable, which contains
 # a list of programs that should be run.
 #
+# If the user of this script specified 'make ENABLE_LLI=1', then the program is
+# interpreted with LLI and diff'd as well.
+#
 #  FIXME: There should be a way to specify the command line for a program
 #
 
 include $(LEVEL)/test/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
+
+# TIMEPROG - The program used to get timing results for a program
+TIMEPROG = $(LEVEL)/test/Programs/TimeProgram.sh
+
+# DIFFPROG - The program used to diff the output
+DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
 
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
@@ -38,20 +47,20 @@ LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build diffs for LLI and LLC output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-llc
-all:: $(LLCDIFFS) $(LLIDIFFS)
+all:: $(LLCDIFFS)
+
+ifdef ENABLE_LLI
+all:: $(LLIDIFFS)
+endif
 
 
 # Rules to build the test output...
 Output/%.out-nat: Output/%.native
 	-$< > $@ 2>&1
-Output/%.out-lli: Output/%.llvm
+Output/%.out-lli: Output/%.llvm $(LLI)
 	-$< > $@ 2>&1
 Output/%.out-llc: Output/%.llc
 	-$< > $@ 2>&1
-
-
-# DIFFPROG - The program used to diff the output
-DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
 
 # Rules to diff test output...
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
