@@ -270,7 +270,7 @@ Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
 	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
-Output/%.bugpoint-llc: Output/%.linked.bc $(LBUGPOINT) Output/%.out-nat
+Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-llc -mode=codegen $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
