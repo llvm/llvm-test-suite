@@ -63,7 +63,7 @@ $SortReverse = 0;
             'povray31'   => 'povray31'
            );
 
-@LatexColumns = (2, 3, 4, 6, 7, 5);
+@LatexColumns = (2, 3, 4, 5, 6);
 
 # Specify how to reformat columns to be presentable...
 %LatexColumnFormat = (
@@ -71,8 +71,7 @@ $SortReverse = 0;
                       3 => \&OnlyMayInfo,
                       4 => \&OnlyMayInfo,
                       5 => \&OnlyMayInfo,
-                      6 => \&OnlyMayInfo,
-                      7 => \&OnlyMayInfo);
+                      6 => \&OnlyMayInfo);
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
@@ -85,7 +84,6 @@ $SortReverse = 0;
             ["basic",     '.basic.txt: [^:]*Summary: (.*)'],
             ["steens-fi", '.steens-fi.txt: [^:]*Summary: (.*)'],
             ["steens",    '.steens.txt: [^:]*Summary: (.*)'],
-            ["andersens", '.andersens.txt: [^:]*Summary: (.*)'],
             ["ds-fi",     '.ds-fi.txt: [^:]*Summary: (.*)'],
             ["ds",        '.ds.txt: [^:]*Summary: (.*)'],
             [],
