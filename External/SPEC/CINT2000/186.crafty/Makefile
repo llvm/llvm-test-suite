@@ -2,7 +2,13 @@ LEVEL = ../../../..
 #RUN_OPTIONS     = 
 STDIN_FILENAME  = crafty.in
 STDOUT_FILENAME = crafty.out
+
+ifeq ($(ARCH),Alpha)
 CPPFLAGS = -DSPEC_CPU2000 -DLINUX_i386
+else
+CPPFLAGS = -DSPEC_CPU2000 -DALPHA -DLINUX
+endif
+
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
          attacks.c draw.c enprise.c init.c iterate.c make.c nexte.c output.c \
 	 preeval.c resign.c searchr.c swap.c utility.c boolean.c drawn.c     \

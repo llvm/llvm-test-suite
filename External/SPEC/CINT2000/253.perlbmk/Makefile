@@ -2,6 +2,10 @@ LEVEL = ../../../..
 REQUIRES_EH_SUPPORT = 1
 CPPFLAGS = -DSPEC_CPU2000_LINUX -Dbool=char -DI_TIME -DI_SYS_TIME
 
+ifeq ($(ARCH),Alpha)
+  CPPFLAGS += -DSPEC_CPU2000_LINUX_ALPHA
+endif
+
 ifeq ($(RUN_TYPE),test)
 RUN_OPTIONS     = test.pl
 STDOUT_FILENAME := test.out
