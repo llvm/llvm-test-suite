@@ -27,9 +27,15 @@ endif
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES)
 	gmake TEST=$(TEST) 2>&1 | tee $@
 
-report: report.$(TEST).raw.out
-	./GenerateReport.pl -html TEST.$(TEST).report < $< > report.$(TEST).html
-	./GenerateReport.pl TEST.$(TEST).report < $< | tee report.$(TEST).txt
+
+report.$(TEST).txt: report.$(TEST).raw.out
+	./GenerateReport.pl TEST.$(TEST).report < $< > $@
+
+report.$(TEST).html: report.$(TEST).raw.out
+	./GenerateReport.pl -html TEST.$(TEST).report < $< > $@
+
+report: report.$(TEST).txt
+	@cat report.$(TEST).txt
 
 clean::
 	rm -f report.*.raw.out report.*.txt
