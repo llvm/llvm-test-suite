@@ -187,7 +187,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-lsr-for-ppc
+LLCBETAOPTION := -enable-ppc-pattern-isel
 else
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-lsr-for-alpha
