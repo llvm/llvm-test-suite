@@ -1,7 +1,8 @@
 // Written for undergraduate C++ course project at Dept of
 // Computer Science, Rutgers University.  
-#include <stream.h>
+#include <iostream>
 #include <string.h>
+using namespace std;
 #include "student3.h"
 // evaluation of a constant is the value of the constant.
 double const_expr::eval(double numb)
