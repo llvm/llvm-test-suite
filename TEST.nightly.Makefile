@@ -1,4 +1,4 @@
-##===- test/Programs/TEST.nightly.Makefile --*- Makefile -*-=======- vim:ft=make
+##===- test/Programs/TEST.nightly.Makefile --*- Makefile -*- vim:ft=make --===##
 #
 # This test is used in conjunction with the llvm/utils/NightlyTest* stuff to
 # generate information about program status for the nightly report.
@@ -11,7 +11,11 @@ RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 CFLAGS  := -O3
 
 REPORTS_TO_GEN := compile nat llc cbe jit
+ifdef ENABLE_LINEARSCAN
+REPORTS_TO_GEN += llc-ls
+endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
+
 
 TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
 EXTRA_LLI_OPTS = $(TIMEOPT)
@@ -61,6 +65,25 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
+
+# LLC-linearscan tests
+$(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-ls.report.txt): \
+Output/%.nightly.llc-ls.report.txt: Output/%.llvm.bc Output/%.exe-llc-ls $(LLC)
+	@echo > $@
+	-head -n 100 Output/$*.exe-llc-ls >> $@
+	@-if test -f Output/$*.exe-llc-ls; then \
+	  echo "TEST-PASS: llc-ls $(RELDIR)/$*" >> $@;\
+	  $(LLC) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  printf "TEST-RESULT-llc-ls: " >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
+	  printf "TEST-RESULT-llc-ls-time: " >> $@;\
+	  grep "^real" Output/$*.out-llc-ls.time >> $@;\
+	  echo >> $@;\
+	else  \
+	  echo "TEST-FAIL: llc-ls $(RELDIR)/$*" >> $@;\
+	fi
+
+
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
