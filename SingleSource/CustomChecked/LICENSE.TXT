@@ -9,3 +9,9 @@ OOPack
 Copyright (C) 1995 Arch D. Robison
 This program is licensed under the GNU General Public License, Version 2.
 
+
+Stepanov
+------------------------------------------------------------------------------
+Copyright (C) Alex Stepanov
+This program is in the public domain.
+
