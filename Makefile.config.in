@@ -21,6 +21,11 @@ BUILD_SRC_DIR := $(subst //,/,@abs_top_srcdir@/$(patsubst $(BUILD_OBJ_ROOT)%,%,$
 
 BUILD_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
 
+#Set SourceDir for backwards compatbility.
+ifndef SourceDir
+SourceDir=$(BUILD_SRC_DIR)
+endif
+
 #
 # Provide variables specific to llvm-test
 #
