@@ -145,7 +145,7 @@ main(int argc, char *argv[]) {
 
   /* iterate */
   for (i = 0 ; i < max_iterations ; i ++) { 
-	 if ((i % 10) == 0) {
+	 if ((i % 1000) == 0) {
 		printf("%d\n", i);
 	 }
 	 /* traverse lists */
