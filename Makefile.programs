@@ -30,7 +30,7 @@ INCLUDES := $(ExtraHeaders) $(wildcard *.h)
 include $(LEVEL)/test/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
-.PRECIOUS: Output/%.cbe Output/%.cbe.c
+.PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG = $(LEVEL)/test/Programs/TimeProgram.sh
@@ -41,8 +41,11 @@ DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 
+# Completed bytecode for a program
+BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
+
 # Generated code for llc (which does not require the target platform)
-LLCCODEGEN := $(addsuffix .llc.s,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$(Source:.c=)))
@@ -61,6 +64,10 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build diffs for LLI and LLC output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-llc Output/%.diff-cbe
+
+# Regardless of what other options are specified, build the program's bytecode
+# representation.
+all:: $(BYTECODE)
 
 ifdef RUN_GCC_ONLY
 DISABLE_LLC = 1
