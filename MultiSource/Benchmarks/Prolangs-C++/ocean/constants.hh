@@ -1,12 +1,12 @@
 #ifndef Constants
 #define Constants
 
-#define MaxRows 25
-#define MaxCols 70
+#define MaxRows 2500
+#define MaxCols 5000
 
-#define DefaultNumObstacles 75
-#define DefaultNumPredators 20
-#define DefaultNumPrey 150
+#define DefaultNumObstacles 750
+#define DefaultNumPredators 200
+#define DefaultNumPrey 1000
 
 #define DefaultNumIterations 1000
 

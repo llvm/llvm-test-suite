@@ -6,7 +6,6 @@ public:
   Obstacle(Coordinate &aCoord) : Cell(aCoord) {
     image = ObstacleImage;
   }
-  virtual ~Obstacle(void) {Cell::~Cell();}
 };
 
 #endif

@@ -20,7 +20,7 @@ protected:
   virtual Cell *reproduce(Coordinate anOffset);
 
 public:
-  Cell(Coordinate &aCoord) {
+  Cell(const Coordinate &aCoord) {
     offset = new Coordinate(aCoord);
     image = DefaultImage;
   }

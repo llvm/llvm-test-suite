@@ -13,7 +13,7 @@ public:
     timeToReproduce = TimeToReproduce;
     image = DefaultPreyImage;
   }
-  ~Prey(void) {Cell::~Cell();}
+
   void process(void) {
     Coordinate toCoord;
 

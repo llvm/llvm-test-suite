@@ -7,6 +7,8 @@
 #include "predator.hh"
 #include "obstacle.hh"
 
+#include <cstdlib>
+
 //cell.cc
 Cell *Cell::getCellAt(Coordinate aCoord) {
   return cells[aCoord.getY()][aCoord.getX()];
@@ -121,11 +123,11 @@ Cell *Predator::reproduce(Coordinate anOffset) {
 #define MAX 32767
 
 float Random::randReal(void) {
-  return 0.0;
+  return random()/(float)RAND_MAX;
 }
 
 unsigned Random::nextIntBetween(int low, int high) {
-  return 0;
+  return (long long)(random())* high / RAND_MAX;
 }
 
 //ocean.cc
@@ -144,10 +146,6 @@ void Ocean::initialize(void) {
 
 void Ocean::initCells(void) {
   addEmptyCells();
-  if (numPredators == (size - numObstacles))
-    numPredators = size - numObstacles;
-  if (numPrey == (size - numObstacles - numPredators))
-    numPrey = size - numObstacles - numPredators;
   addObstacles();
   addPredators();
   addPrey();
@@ -229,7 +227,7 @@ void Ocean::run(void) {
   }
 }
 
-main() {
+int main() {
   Ocean *myOcean = new Ocean;
   myOcean->initialize();
   myOcean->run();

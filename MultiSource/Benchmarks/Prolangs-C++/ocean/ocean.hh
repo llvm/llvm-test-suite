@@ -9,7 +9,6 @@ friend class Cell;
 private:
   unsigned numRows;
   unsigned numCols;
-  unsigned size;
   unsigned numPrey;
   unsigned numPredators;
   unsigned numObstacles;

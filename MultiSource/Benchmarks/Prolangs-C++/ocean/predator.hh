@@ -13,7 +13,6 @@ public:
     timeToFeed = TimeToFeed;
     image = DefaultPredImage;
   }
-  virtual ~Predator(void) {Prey::~Prey();}
   virtual void process(void);
 };
 
