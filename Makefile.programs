@@ -251,7 +251,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(CC) $< $(LDFLAGS) $(CFLAGS) -O2 -o $@
+	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -o $@
 
 #
 # Compile a linked program to machine code with LLC.
