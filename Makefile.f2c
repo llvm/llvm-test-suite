@@ -1,0 +1,26 @@
+##===- Makefile.f2c ----------------------------------------*- Makefile -*-===##
+#
+# Enable running Fortran programs with LLVM by using f2c to convert to C and
+# link with libf2c, but only until we have a Fortran front-end.
+#
+##===----------------------------------------------------------------------===##
+
+# FIXME: This would be autoconf'd
+include $(LEVEL)/Makefile.config
+ifeq ($(ARCH),x86)
+	F2C_DIR = /home/vadve/shared/localtools/x86
+else
+	ifeq ($(ARCH),Sparc)
+		F2C_DIR = /usr/dcs/software/unsupported
+	endif
+endif
+
+F2C     = $(F2C_DIR)/bin/f2c
+F2C_INC = $(F2C_DIR)/include
+F2C_LIB = $(F2C_DIR)/lib
+
+%.c: %.f
+	$(F2C) $< >& /dev/null
+	
+CPPFLAGS = -I $(F2C_INC) 
+LDFLAGS += -L $(F2C_LIB) -lf2c
