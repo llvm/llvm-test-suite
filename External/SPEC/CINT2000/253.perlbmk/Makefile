@@ -1,7 +1,7 @@
 LEVEL = ../../../../../..
 REQUIRES_EH_SUPPORT = 1
-RUN_OPTIONS     = $(RUN_TYPE).pl
-STDOUT_FILENAME = $(RUN_TYPE).out
+RUN_OPTIONS     = test.pl
+STDOUT_FILENAME = test.out
 CPPFLAGS = -DSPEC_CPU2000_LINUX -Dbool=char -DI_TIME -DI_SYS_TIME
 
 ifneq ($(ARCH),Sparc)
