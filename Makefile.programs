@@ -131,9 +131,20 @@ ifdef DISABLE_FOR_LLVM_PROGRAMS
 endif
 
 ifdef DOTRACING
-    DISABLE_DIFFS  = 1
-    OPTPASSES     += $(TRACEFLAGS)
-    LDFLAGS       += $(TRACELIBS)
+  ## When tracing is enabled do the following:
+  ## -- disable output diffs
+  ## -- generate llc output if not disabled
+  ## -- generate cbe output if not disabled
+
+DISABLE_DIFFS  = 1
+OPTPASSES     += $(TRACEFLAGS)
+LDFLAGS       += $(TRACELIBS)
+ifndef DISABLE_LLC
+all:: $(LLCOUTPUT)
+endif
+ifndef DISABLE_CBE
+all:: $(CBEOUTPUT)
+endif
 endif
 
 ifndef DISABLE_LLC
