@@ -7,6 +7,9 @@
 ##===----------------------------------------------------------------------===##
 
 JIT_OPTS = -stats -time-passes
+CURDIR  := $(shell cd .; pwd)
+PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
+RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
@@ -15,7 +18,7 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$*' Program"
+	@echo ">>> ========= '$(RELDIR)/$*' Program"
 	@echo "---------------------------------------------------------------"
 	@cat $<
 
