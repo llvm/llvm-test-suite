@@ -36,7 +36,8 @@ sub TotalInstrEliminations {
  [],
 # Sizes
  ["#MCInsts", '([0-9]+).*Number of machine instrs printed'],
- ["#Int"   ,  '([0-9]+).*Number of intervals'],
+ ["#Int"    , '([0-9]+).*Number of intervals'],
+ ["#IntJoin", '([0-9]+).*Number of intervals joined'],
  [],
 # Number of transformations
  ["#spill" , '([0-9]+).*Number of registers spilled'],
