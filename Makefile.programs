@@ -386,7 +386,7 @@ endif
 # Rules to diff test output...
 #
 ifdef PROGRAM_IS_NONDETERMINISTIC
-# If the program is non-deterministic, just output something to $@
+# If the program is non-deterministic, just touch $@
 DIFFPROG = touch $@ \#
 endif
 
