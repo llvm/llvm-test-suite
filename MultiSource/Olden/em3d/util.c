@@ -20,7 +20,7 @@ void init_random(int seed)
 /* return a random number from 0 to range-1 */
 int gen_number(int range)
 {
-  return lrand48() % range;
+  return (int)lrand48() % range;
 }
 
 /* return a random number in [-range,range] but not zero */
