@@ -21,7 +21,7 @@ ifndef DISABLE_CBE
 REPORTS_TO_GEN +=  cbe
 endif
 ifdef ENABLE_LINEARSCAN
-REPORTS_TO_GEN += llc-ls jit-ls
+REPORTS_TO_GEN += llc-ls
 endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
@@ -122,22 +122,6 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
-	fi
-
-# JIT experimental tests
-$(PROGRAMS_TO_TEST:%=Output/%.nightly.jit-ls.report.txt): \
-Output/%.nightly.jit-ls.report.txt: Output/%.llvm.bc Output/%.exe-jit-ls $(JIT)
-	@echo > $@
-	-head -n 100 Output/$*.exe-jit-ls >> $@
-	@-if test -f Output/$*.exe-jit-ls; then \
-	  echo "TEST-PASS: jit-ls $(RELDIR)/$*" >> $@;\
-	  printf "TEST-RESULT-jit-ls: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
-	  printf "TEST-RESULT-jit-ls-time: " >> $@;\
-	  grep "^program" Output/$*.out-jit-ls.time >> $@;\
-	  echo >> $@;\
-	else  \
-	  echo "TEST-FAIL: jit-ls $(RELDIR)/$*" >> $@;\
 	fi
 
 # Overall tests: just run subordinate tests
