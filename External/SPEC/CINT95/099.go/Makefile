@@ -8,5 +8,6 @@ RUN_OPTIONS     = 40 19
 else
 STDIN_FILENAME  = 2stone9.in
 STDOUT_FILENAME = 2stone9.out
+RUN_OPTIONS     = 50 9
 endif
 include ../../Makefile.spec95
