@@ -1,25 +1,54 @@
 dnl Configure location of f2c binary, include file, and library
+dnl Parameters:
+dnl   $1 - prefix directory to check
+AC_DEFUN([CHECK_F2C],
+[
+if test -d "$1" && 
+   test -d "$1/bin" && test -f "$1/bin/f2c" &&
+   test -d "$1/include" && test -f "$1/include/f2c.h" &&
+   test -d "$1/lib" && test -f "$1/lib/libf2c.a"
+then
+  AC_SUBST(F2C,[$1/bin/f2c])
+  AC_SUBST(F2C_INC,[$1/include])
+  AC_SUBST(F2C_LIB,[$1/lib])
+  AC_SUBST(USE_F2C,[USE_F2C=1])
+fi
+])
+
 AC_DEFUN([CHECK_F2C_ALL],
 [AC_ARG_WITH(f2c,
   AC_HELP_STRING([--with-f2c=DIR], [Use f2c with install prefix DIR]),
   f2cdir=$withval)
 AC_MSG_CHECKING([for installed f2c components])
-if test -d "$f2cdir" && 
-   test -d "$f2cdir/bin" && test -f "$f2cdir/bin/f2c" &&
-   test -d "$f2cdir/include" && test -f "$f2cdir/include/f2c.h" &&
-   test -d "$f2cdir/lib" && test -f "$f2cdir/lib/libf2c.a"
-then
-    AC_SUBST(F2C,[$f2cdir/bin/f2c])
-    AC_SUBST(F2C_INC,[$f2cdir/include])
-    AC_SUBST(F2C_LIB,[$f2cdir/lib])
+CHECK_F2C($f2cdir)
+if test "x$F2C" = "x"; then
+  CHECK_F2C("/usr")
+  if test "x$F2C" = "x"; then
+    CHECK_F2C("/usr/local")
+    if test "x$F2C" = "x"; then
+      CHECK_F2C("/sw")
+      if test "x$F2C" = "x"; then
+        CHECK_F2C("/opt")
+        if test "x$F2C" = "x"; then
+          AC_SUBST(F2C,[[]])
+          AC_SUBST(F2C_INC,[[]])
+          AC_SUBST(F2C_LIB,[[]])
+          AC_SUBST(USE_F2C,[[]])
+          checkresult="no"
+        else
+          checkresult="yes, all 3 found"
+        fi
+      else
+        checkresult="yes, all 3 found"
+      fi
+    else
+      checkresult="yes, all 3 found"
+    fi
+  else
     checkresult="yes, all 3 found"
-    AC_SUBST(USE_F2C,[USE_F2C=1])
+  fi
 else
-    AC_SUBST(F2C,[[]])
-    AC_SUBST(F2C_INC,[[]])
-    AC_SUBST(F2C_LIB,[[]])
-    AC_SUBST(USE_F2C,[[]])
-    checkresult="no"
+  checkresult="yes, all 3 found"
 fi
 AC_MSG_RESULT($checkresult)
 ])
@@ -29,7 +58,7 @@ dnl
 dnl Check for f2c binary
 AC_DEFUN([CHECK_F2C_BIN],
 [AC_ARG_WITH(f2cbin,
-  AC_HELP_STRING([--with-f2cbin=DIR], [Find f2c binary in DIR]),
+  AC_HELP_STRING([--with-f2c-bin=DIR], [Find f2c binary in DIR]),
   f2cbin=$withval)
 AC_MSG_CHECKING([for f2c binary])
 if test -d "$f2cbin" && test -f "$f2cbin/f2c"; then
@@ -44,7 +73,7 @@ AC_MSG_RESULT($checkresult)
 dnl Check for f2c.h
 AC_DEFUN([CHECK_F2C_H],
 [AC_ARG_WITH(f2cinc,
-  AC_HELP_STRING([--with-f2cinc=DIR], [Find f2c.h in DIR]),
+  AC_HELP_STRING([--with-f2c-inc=DIR], [Find f2c.h in DIR]),
   f2cinc=$withval)
 AC_MSG_CHECKING([for f2c.h])
 if test -d "$f2cinc" && test -f "$f2cinc/f2c.h"; then
@@ -59,7 +88,7 @@ AC_MSG_RESULT($checkresult)
 dnl Check for libf2c.a
 AC_DEFUN([CHECK_F2C_LIB],
 [AC_ARG_WITH(f2clib,
-  AC_HELP_STRING([--with-f2clib=DIR], [Find libf2c.a in DIR]),
+  AC_HELP_STRING([--with-f2c-lib=DIR], [Find libf2c.a in DIR]),
   f2clib=$withval)
 AC_MSG_CHECKING([for libf2c.a])
 if test -d "$f2clib" && test -f "$f2clib/libf2c.a"; then

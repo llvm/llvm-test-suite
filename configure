@@ -1045,9 +1045,9 @@ Optional Packages:
   --with-tags[=TAGS]
                           include additional configurations [automatic]
   --with-f2c=DIR          Use f2c with install prefix DIR
-  --with-f2cbin=DIR       Find f2c binary in DIR
-  --with-f2cinc=DIR       Find f2c.h in DIR
-  --with-f2clib=DIR       Find libf2c.a in DIR
+  --with-f2c-bin=DIR      Find f2c binary in DIR
+  --with-f2c-inc=DIR      Find f2c.h in DIR
+  --with-f2c-lib=DIR      Find libf2c.a in DIR
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -19240,30 +19240,114 @@ if test "${with_f2c+set}" = set; then
 fi;
 echo "$as_me:$LINENO: checking for installed f2c components" >&5
 echo $ECHO_N "checking for installed f2c components... $ECHO_C" >&6
+
 if test -d "$f2cdir" &&
    test -d "$f2cdir/bin" && test -f "$f2cdir/bin/f2c" &&
    test -d "$f2cdir/include" && test -f "$f2cdir/include/f2c.h" &&
    test -d "$f2cdir/lib" && test -f "$f2cdir/lib/libf2c.a"
 then
-    F2C=$f2cdir/bin/f2c
+  F2C=$f2cdir/bin/f2c
 
-    F2C_INC=$f2cdir/include
+  F2C_INC=$f2cdir/include
 
-    F2C_LIB=$f2cdir/lib
+  F2C_LIB=$f2cdir/lib
 
+  USE_F2C=USE_F2C=1
+
+fi
+
+if test "x$F2C" = "x"; then
+
+if test -d ""/usr"" &&
+   test -d ""/usr"/bin" && test -f ""/usr"/bin/f2c" &&
+   test -d ""/usr"/include" && test -f ""/usr"/include/f2c.h" &&
+   test -d ""/usr"/lib" && test -f ""/usr"/lib/libf2c.a"
+then
+  F2C="/usr"/bin/f2c
+
+  F2C_INC="/usr"/include
+
+  F2C_LIB="/usr"/lib
+
+  USE_F2C=USE_F2C=1
+
+fi
+
+  if test "x$F2C" = "x"; then
+
+if test -d ""/usr/local"" &&
+   test -d ""/usr/local"/bin" && test -f ""/usr/local"/bin/f2c" &&
+   test -d ""/usr/local"/include" && test -f ""/usr/local"/include/f2c.h" &&
+   test -d ""/usr/local"/lib" && test -f ""/usr/local"/lib/libf2c.a"
+then
+  F2C="/usr/local"/bin/f2c
+
+  F2C_INC="/usr/local"/include
+
+  F2C_LIB="/usr/local"/lib
+
+  USE_F2C=USE_F2C=1
+
+fi
+
+    if test "x$F2C" = "x"; then
+
+if test -d ""/sw"" &&
+   test -d ""/sw"/bin" && test -f ""/sw"/bin/f2c" &&
+   test -d ""/sw"/include" && test -f ""/sw"/include/f2c.h" &&
+   test -d ""/sw"/lib" && test -f ""/sw"/lib/libf2c.a"
+then
+  F2C="/sw"/bin/f2c
+
+  F2C_INC="/sw"/include
+
+  F2C_LIB="/sw"/lib
+
+  USE_F2C=USE_F2C=1
+
+fi
+
+      if test "x$F2C" = "x"; then
+
+if test -d ""/opt"" &&
+   test -d ""/opt"/bin" && test -f ""/opt"/bin/f2c" &&
+   test -d ""/opt"/include" && test -f ""/opt"/include/f2c.h" &&
+   test -d ""/opt"/lib" && test -f ""/opt"/lib/libf2c.a"
+then
+  F2C="/opt"/bin/f2c
+
+  F2C_INC="/opt"/include
+
+  F2C_LIB="/opt"/lib
+
+  USE_F2C=USE_F2C=1
+
+fi
+
+        if test "x$F2C" = "x"; then
+          F2C=
+
+          F2C_INC=
+
+          F2C_LIB=
+
+          USE_F2C=
+
+          checkresult="no"
+        else
+          checkresult="yes, all 3 found"
+        fi
+      else
+        checkresult="yes, all 3 found"
+      fi
+    else
+      checkresult="yes, all 3 found"
+    fi
+  else
     checkresult="yes, all 3 found"
-    USE_F2C=USE_F2C=1
-
+  fi
 else
-    F2C=
-
-    F2C_INC=
-
-    F2C_LIB=
-
-    USE_F2C=
-
-    checkresult="no"
+  checkresult="yes, all 3 found"
 fi
 echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6
