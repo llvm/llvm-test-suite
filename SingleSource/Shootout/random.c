@@ -14,18 +14,18 @@
 #define IC 29573
 
 inline double gen_random(double max) {
-    static long last = 42;
+  static long last = 42;
     
-    last = (last * IA + IC) % IM;
-    return( max * last / IM );
+  last = (last * IA + IC) % IM;
+  return( max * last / IM );
 }
 
 int main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 1) - 1;
+  int N = ((argc == 2) ? atoi(argv[1]) : 1) - 1;
     
-    while (N--) {
-	gen_random(100.0);
-    }
-    printf("%.9f\n", gen_random(100.0));
-    return(0);
+  while (N--) {
+    gen_random(100.0);
+  }
+  printf("%.9f\n", gen_random(100.0));
+  return(0);
 }
