@@ -87,7 +87,7 @@ main(int argc, char** argv)
     if(stop_minutes) set_stop_alrm(stop_minutes);
   } else {
     get_solve_command();
-    if(!main_batch) sig_alrm_setup();
+    //if(!main_batch) sig_alrm_setup();
   }
   
   sig_int_setup();
