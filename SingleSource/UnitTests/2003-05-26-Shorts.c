@@ -54,5 +54,46 @@ main(int argc, char** argv)
   printf(" b* b = %d (0x%x)\t\t\tL/b = %lld (0x%llx)\n\n",
          (signed char) b*b, (signed char) b*b, L/b, L/b);
 
+
+  /* Do some arithmetic with the small signed and unsigned values */
+
+  unsigned int   uiprod = (ui+1u) * (ui+1u)     /* ui*ui unless overflow! */
+    - (unsigned int  ) (ui << 2) - (unsigned int  ) 1u;
+  unsigned short usprod = (us+1u) * (us+1u)     /* us*us unless overflow! */
+    - (unsigned short) (us << 2) - (unsigned short) 1u;
+  unsigned char  ubprod = (ub+1u) * (ub+1u)     /* ub*ub unless overflow! */
+    - (unsigned char ) (ub << 2) - (unsigned char ) 1u;
+
+             int  iprod = (i+1) * (i+1) - (int  ) (i << 2) - (int  ) 1;
+           short  sprod = (s+1) * (s+1) - (short) (s << 2) - (short) 1;
+    signed char   bprod = (b+1) * (b+1) - (char)  (b << 2) - (char) 1;
+
+  unsigned int   uidiv = (unsigned int  ) (UL/ui) * (unsigned int  ) (UL/ui);
+  unsigned short usdiv = (unsigned short) (UL/us) * (unsigned short) (UL/us);
+  unsigned char  ubdiv = (unsigned char ) (UL/ub) * (unsigned char ) (UL/ub);
+
+             int  idiv = (           int) ( L/ i) * (           int) ( L/ i);
+           short  sdiv = (         short) ( L/ s) * (         short) ( L/ s);
+    signed char   bdiv = (  signed char ) ( L/ b) * (  signed char ) ( L/ b);
+
+  printf("\n");
+  printf("uiprod = %u (0x%x)\t  uidiv = %u (0x%x)\n\n",
+         uiprod, uiprod, uidiv, uidiv);
+
+  printf("usprod = %u (0x%x)\t  usdiv = %u (0x%x)\n\n",
+         usprod, usprod, usdiv, usdiv);
+
+  printf("ubprod = %u (0x%x)\t  ubdiv = %u (0x%x)\n\n",
+         ubprod, ubprod, ubdiv, ubdiv);
+
+  printf(" iprod = %u (0x%x)\t   idiv = %u (0x%x)\n\n",
+          iprod,  iprod,  idiv,  idiv);
+
+  printf(" sprod = %u (0x%x)\t   sdiv = %u (0x%x)\n\n",
+          sprod,  sprod,  sdiv,  sdiv);
+
+  printf(" bprod = %u (0x%x)\t   bdiv = %u (0x%x)\n\n",
+          bprod,  bprod,  bdiv,  bdiv);
+
   return 0;
 }
