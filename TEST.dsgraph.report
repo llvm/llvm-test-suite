@@ -44,59 +44,65 @@ sub NoCallNodes {
 
 # For latex output, limit benchmarks and rename as appropriate
 @LatexRowMapOrder = (
-            'MultiSource/Olden/treeadd/treeadd'      => 'Olden-treeadd',
-            'MultiSource/Olden/bisort/bisort'        => 'Olden-bisort',
-            'MultiSource/Olden/mst/mst'              => 'Olden-mst',
-            'MultiSource/Olden/perimeter/perimeter'  => 'Olden-perimeter',
-            'MultiSource/Olden/health/health'        => 'Olden-health',
-            'MultiSource/Olden/tsp/tsp'              => 'Olden-tsp',
-            'MultiSource/Olden/power/power'          => 'Olden-power',
-            'MultiSource/Olden/em3d/em3d'            => 'Olden-em3d',
-            'MultiSource/Olden/voronoi/voronoi'      => 'Olden-voronoi',
-            'MultiSource/Olden/bh/bh'                => 'Olden-bh',
             '-' => '-',
-            'MultiSource/Ptrdist/anagram/anagram'    => 'ptrdist-anagram',
-            'MultiSource/Ptrdist/ks/ks'              => 'ptrdist-ks',
-            'MultiSource/Ptrdist/ft/ft'              => 'ptrdist-ft',
-            'MultiSource/Ptrdist/yacr2/yacr2'        => 'ptrdist-yacr2',
-            'MultiSource/Ptrdist/bc/bc'              => 'ptrdist-bc',
+
+            '181.mcf'       => '181.mcf',
+            '256.bzip2'     => '256.bzip2',
+            '164.gzip'      => '164.gzip',
+            '175.vpr'       => '175.vpr',
+            '197.parser'    => '197.parser',
+            '186.crafty'    => '186.crafty',
+            '300.twolf'     => '300.twolf',
+            '255.vortex'    => '255.vortex',
+            '254.gap'       => '254.gap',
+            '252.eon'       => '252.eon',
+            '253.perlbmk'   => '253.perlbmk',
+            '176.gcc'       => '176.gcc',
             '-' => '-',
-            'External/SPEC/CFP2000/179.art/179.art'        => '179.art',
-            'External/SPEC/CFP2000/183.equake/183.equake'  => '183.equake',
-            'External/SPEC/CINT2000/181.mcf/181.mcf'       => '181.mcf',
-            'External/SPEC/CINT2000/256.bzip2/256.bzip2'   => '256.bzip2',
-            'External/SPEC/CINT2000/164.gzip/164.gzip'     => '164.gzip',
-            'External/SPEC/CINT2000/197.parser/197.parser' => '197.parser',
-            'External/SPEC/CFP2000/188.ammp/188.ammp'      => '188.ammp',
-            'External/SPEC/CINT2000/175.vpr/175.vpr'       => '175.vpr',
-            'External/SPEC/CINT2000/300.twolf/300.twolf'   => '300.twolf',
-            'External/SPEC/CINT2000/186.crafty/186.crafty' => '186.crafty',
-            'External/SPEC/CINT2000/255.vortex/255.vortex' => '255.vortex',
-            'External/SPEC/CINT2000/254.gap/254.gap'       => '254.gap',
+            '179.art'       => '179.art',
+            '183.equake'    => '183.equake',
+            '171.swim'      => '171.swim',
+            '172.mgrid'     => '172.mgrid',
+            '168.wupwise'   => '168.wupwise',
+            '173.applu'     => '173.applu',
+            '188.ammp'      => '188.ammp',
+            '177.mesa'      => '177.mesa',
             '-' => '-',
-            'MultiSource/sgefa/sgefa'         => 'sgefa',
-            'MultiSource/sim/sim'             => 'sim',
-            'MultiSource/Burg/burg'           => 'burg',
-            'MultiSource/gnuchess/gnuchess'   => 'gnuchess',
-            'MultiSource/larn/larn'           => 'larn',
-            'MultiSource/flex/flex'           => 'flex',
-            'MultiSource/moria/moria'         => 'moria',
-            'MultiSource/povray31/povray31'   => 'povray31'
+            '129.compress'  => '129.compress',
+            '130.li'        => '130.li',
+            '124.m88ksim'   => '124.m88ksim',
+            '132.ijpeg'     => '132.ijpeg',
+            '099.go'        => '099.go',
+            '134.perl'      => '134.perl',
+            '147.vortex'    => '147.vortex',
+            '126.gcc'       => '126.gcc',
+            '-' => '-',
+            '102.swim'      => '102.swim',
+            '101.tomcatv'   => '101.tomcatv',
+            '107.mgrid'     => '107.mgrid',
+            '145.fpppp'     => '145.fpppp',
+            '104.hydro2d'   => '104.hydro2d',
+            '110.applu'     => '110.applu',
+            '103.su2cor'    => '103.su2cor',
+            '146.wave5'     => '146.wave5',
+            '-' => '-',
+            'fpgrowth' => 'fpgrowth',
+            'bsim'     => 'boxed-sim',
+            'namd'     => 'NAMD',
+            'povray'   => 'povray31',
            );
 
-@LatexColumns = (1, 27, 19,    # LOC, #MemInstrs, MaxSCC
-                 4, 5, 6, 7,   # Execution times
-                 11,           # Memory BU
-                 12,           # Memory TD
-                 16, 17,       # Total, Max Nodes
-                 15);          # NumFolded
+@LatexColumns = (1, 2, 19,    # LOC, #MemInstrs, MaxSCC
+                 15,16,       # Total/Collapsed nodes
+                 17, 18);     # Max Size, GG Size
 
 # Specify how to format columns nicely for printing...
 %LatexColumnFormat = (
-                      11 => \&FormatSize,
-                      12 => \&FormatSize,
-                      15 => \&NoStar,
-                      16 => \&NoCallNodes
+#                      11 => \&FormatSize,
+#                      12 => \&FormatSize,
+                      16 => \&NoStar,
+                      15 => \&NoCallNodes,
+                      18 => \&NoCallNodes
                      );
 
 @Graphs = (["scatter", "timeVmem.txt", 27, 7],
@@ -128,8 +134,8 @@ my $USERSYSTTIME = '([0-9.]+)[ 0-9.]+\([^)]+\)[ 0-9.]+\([^)]+\) +';
             ["BUTDSz:" , sub { return SumCols(@_, 2); }],
             [],
 # Misc stuff
-            ["NumFold" , '([0-9]+).*Number of folded nodes '],
             ["NumNodes", 'Graphs contain \\[([0-9+]+)\\] nodes total'],
+            ["NumFold" , '([0-9]+).*Number of folded nodes '],
             ["MaxSz"   , '([0-9]+).*Maximum graph size'],
             ["GlobGr"  , '\\.GlobalsGraph\\.dot\'... \\[([0-9+]+)\\]'],
             ["MaxSCC"  , '([0-9]+).*Maximum SCC Size in Call Graph'],
