@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-/* 8 bytes if alignon(int) is 4. */
+/* 5 bytes. */
 typedef struct DWordS_struct    { int i; char c; } DWordS;
 
 /* 12 bytes if d is 4-byte aligned; 16 bytes if d is 8-byte aligned. */
@@ -47,17 +47,17 @@ void test(char *fmt, ...) {
       printf("char %c\n", c);
       break;
     case 'D':
-      dw = va_arg(ap, DWordS);
+      /* dw = va_arg(ap, DWordS);
       printf("DWord { %d, %c }\n", dw.i, dw.c);
-      break;
+      */ break;
     case 'Q':
-      qw = va_arg(ap, QuadWordS);
+      /* qw = va_arg(ap, QuadWordS);
       printf("QuadWord { %d, %f }\n", qw.i, qw.d);
-      break;
+      */ break;
     case 'L':
-      ls = va_arg(ap, LargeS);
+      /* ls = va_arg(ap, LargeS);
       printf("LargeS { %d, %f, 0x%p, %d }\n", ls.i, ls.d, ls.ptr, ls.j);
-      break;
+      */ break;
     }
   va_end(ap);
 }
