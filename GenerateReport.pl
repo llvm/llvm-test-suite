@@ -316,6 +316,33 @@ if ($HTML) {
         print "\\\\\n";
       }
     }
+  } elsif ($CSV && scalar(@LatexRowMapOrder)) {
+    #
+    # Print out the table as csv in the row-order specified by LatexRowMapOrder
+    #
+    for ($i = 0; $i < @LatexRowMapOrder; $i += 2) {
+      my $Name = $LatexRowMapOrder[$i];
+      if ($Name eq '-') {
+        print "----\n";
+      } else {
+        # Output benchmark name.
+        printf "$LatexRowMapOrder[$i+1]";
+
+        # Find the row that this benchmark name corresponds to.
+        foreach $Row (@Values) {
+          if ($Row->[0] eq $Name) {
+            for ($j = 1; $j < @$Row-1; $j++) {
+              print ",$$Row[$j]";
+            }
+            goto Done;
+          }
+        }
+        print "UNKNOWN Benchmark name: " . $Name;
+      Done:
+        print "\\\\\n";
+      }
+    }
+
   } elsif ($CSV) {
     #
     # Print out the table as csv
@@ -323,7 +350,7 @@ if ($HTML) {
     foreach $Value (@Values) {
       printf "$$Value[0]";
       for ($i = 1; $i < @$Value-1; $i++) {
-        printf ",$$Value[$i]" if ($$Value[$i] ne "|");
+        print ",$$Value[$i]" if ($$Value[$i] ne "|");
       }
       print "\n";
     }
