@@ -5,14 +5,6 @@
 
 #ifndef __OBJ__
 
-extern "C" {
-int strlen(char *str1);
-int strcmp(char *str1, char *str2);
-char *strcpy(char *str1, char *str2);
-char *strncpy(char *str1, char *str2, int i);
-char *strcat(char *str1, char *str2);
-}
-
 class Object
 {
 	public :

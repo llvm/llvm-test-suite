@@ -4,11 +4,11 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #include "onlyobj.h"
-int strlen(char *str1) {return 0;}
-int strcmp(char *str1, char *str2) {return 0;}
-char *strcpy(char *str1, char *str2) {return "";}
-char *strncpy(char *str1, char *str2, int i) {return "";}
-char *strcat(char *str1, char *str2) {return "";}
+static int strlen(char *str1) {return 0;}
+static int strcmp(char *str1, char *str2) {return 0;}
+static char *strcpy(char *str1, char *str2) {return "";}
+static char *strncpy(char *str1, char *str2, int i) {return "";}
+static char *strcat(char *str1, char *str2) {return "";}
 
 #include "artest.h"
 
@@ -261,7 +261,7 @@ class B : public A
 };
 
  
-main ()
+int main ()
 {
         A *a1 = new A(1);
         A *a2 = new A(2);
