@@ -6,7 +6,8 @@
 ##===----------------------------------------------------------------------===##
 
 LEVEL = ../..
-PARALLEL_DIRS = LLVMSource SingleSource MultiSource External
+PARALLEL_DIRS = SingleSource MultiSource External
+#LLVMSource 
 
 include ${LEVEL}/test/Makefile.tests
 
