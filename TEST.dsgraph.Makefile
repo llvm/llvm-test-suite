@@ -39,6 +39,10 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LANALYZE) $(LOPT
 	-@grep 'td.GlobalsGraph.dot' $@.time.1 >> $@
 	@echo -n "SCCSIZE: " >> $@
 	-@grep 'Maximum SCC Size in Call Graph' $@.time.1 >> $@
+	@echo -n "ACCESSES TYPED: " >> $@
+	-@grep 'Number of loads/stores which are fully typed' $@.time.1 >> $@
+	@echo -n "ACCESSES UNTYPED: " >> $@
+	-@grep 'Number of loads/stores which are untyped' $@.time.1 >> $@
 	@# Emit timing data.
 	@echo -n "TIME: " >> $@
 	-@grep '  Local Data Structure' $@.time.1 >> $@
