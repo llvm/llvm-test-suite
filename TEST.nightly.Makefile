@@ -58,9 +58,6 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	  printf "TEST-RESULT-llc-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
-	  printf "TEST-RESULT-llc-comptime: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
-	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
@@ -73,7 +70,6 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
 	-head -n 100 Output/$*.exe-cbe >> $@
 	@-if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
-	  echo "TEST-RESULT-cbe: YES" >> $@;\
 	  printf "TEST-RESULT-cbe-time: " >> $@;\
 	  grep "^real" $(INFO_PREFIX)cbe.time >> $@;\
 	  echo >> $@;\
