@@ -40,14 +40,14 @@ Toggle *new_Toggle(char start_state) {
 
 
 typedef struct NthToggle {
-    TOGGLE;
+    Toggle base;
     int count_max;
     int counter;
 } NthToggle;
 
 NthToggle *nth_toggle_activate(NthToggle *this) {
     if (++this->counter >= this->count_max) {
-	this->state = !this->state;
+	this->base.state = !this->base.state;
 	this->counter = 0;
     }
     return(this);
@@ -55,7 +55,7 @@ NthToggle *nth_toggle_activate(NthToggle *this) {
 NthToggle *init_NthToggle(NthToggle *this, int max_count) {
     this->count_max = max_count;
     this->counter = 0;
-    this->activate = (Toggle *(*)(Toggle *))nth_toggle_activate;
+    this->base.activate = (Toggle *(*)(Toggle *))nth_toggle_activate;
     return(this);
 }
 NthToggle *new_NthToggle(char start_state, int max_count) {
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     ntog = new_NthToggle(true, 3);
     for (i=0; i<8; i++) {
     	const char *Msg;
-	if (ntog->activate((Toggle*)ntog)->value((Toggle*)ntog))
+	if (ntog->base.activate((Toggle*)ntog)->value((Toggle*)ntog))
 	  Msg = "true";
 	else
 	  Msg = "false";
