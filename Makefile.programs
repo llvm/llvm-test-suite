@@ -253,9 +253,10 @@ Output/gccld-pass-args: $(LGCCLDPROG)
 	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
 
-
+# If the program requires exception handling support, enable (potentially
+# expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
-CBEFLAGS += -enable-correct-eh-support
+LLCFLAGS += -enable-correct-eh-support
 endif
 
 #
@@ -263,17 +264,11 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
-	-$(LDIS) $(CBEFLAGS) -c $< -o $@ -f
+	-$(LLC) $(LLCFLAGS) -march=c $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
 	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -o $@
-
-# If the program requires exception handling support, enable (potentially
-# expensive) support for it.
-ifdef REQUIRES_EH_SUPPORT
-LLCFLAGS += -enable-correct-eh-support
-endif
 
 #
 # Compile a linked program to machine code with LLC.
