@@ -29,5 +29,6 @@ GT 2 3
 GT 3 2
 EQ 4 (ADD 2 2)
 EQ 5 (ADD 3 3)
+(EQ (ADD (MUL 2 (DIV 6 (MUL 3 (SUB 8 2))))) (ADD (MUL 2 (DIV 6 (MUL 3 (SUB 8 2))))))
 quit
 
