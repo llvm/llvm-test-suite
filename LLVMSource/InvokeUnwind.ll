@@ -1,17 +1,13 @@
-; Test to make sure the invoke instruction and llvm.unwind intrinsic are 
-; working...
+; Test to make sure the invoke instruction and unwind are working...
 
 implementation
 
-declare void %llvm.unwind()
 declare void %abort()
 
 internal void %throw(bool %ShouldThrow) {
 	br bool %ShouldThrow, label %Throw, label %NoThrow
 Throw:
-	call void %llvm.unwind()
-	call void %abort()           ;;; dead
-	ret void
+	unwind
 NoThrow:
 	ret void
 }
