@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 BM=099.go
 
 ifeq ($(RUN_TYPE),test)

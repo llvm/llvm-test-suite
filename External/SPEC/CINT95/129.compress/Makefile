@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 STDOUT_FILENAME := test.out
 include ../../Makefile.spec95
 

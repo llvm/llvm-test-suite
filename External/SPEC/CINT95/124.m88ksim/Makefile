@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS = -c
 
 ifeq ($(ENDIAN),big)

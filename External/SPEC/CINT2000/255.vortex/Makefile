@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 #STDOUT_FILENAME := input.random.out
 
 include ../../Makefile.spec2000

@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 
 RUN_OPTIONS     = `cat $(REF_IN_DIR)control`
 ifeq ($(RUN_TYPE),test)

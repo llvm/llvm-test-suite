@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 
 ifeq ($(RUN_TYPE),test)
 RUN_OPTIONS     = cccp.i -o - -quiet

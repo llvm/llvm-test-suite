@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 ifeq ($(RUN_TYPE),test)
 FILENAME  := specmun
 else

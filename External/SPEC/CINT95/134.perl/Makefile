@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS     := primes.pl
 STDIN_FILENAME  := primes.in
 STDOUT_FILENAME := primes.out

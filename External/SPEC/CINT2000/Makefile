@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PARALLEL_DIRS := \
 	164.gzip \
 	175.vpr \

@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS     = -l ./ -q -m 64M
 STDOUT_FILENAME = $(RUN_TYPE).out
 STDIN_FILENAME  = $(RUN_TYPE).in

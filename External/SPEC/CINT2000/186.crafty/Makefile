@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 #RUN_OPTIONS     = 
 STDIN_FILENAME  = crafty.in
 STDOUT_FILENAME = crafty.out

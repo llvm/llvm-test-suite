@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS     = chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook
 STDOUT_FILENAME = cook_log.out
 STDERR_FILENAME = cook_log.err

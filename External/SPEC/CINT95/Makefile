@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PARALLEL_DIRS := \
   099.go \
   124.m88ksim \
