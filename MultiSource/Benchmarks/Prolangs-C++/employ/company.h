@@ -16,6 +16,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.3  2004/10/05 00:38:46  lattner
+** Methods cannot be named the same thing classes are
+**
 ** Revision 1.2  2004/10/05 00:37:32  lattner
 ** Stop using deprecated headers
 **
@@ -46,7 +49,7 @@ class EmployeeNode {
   public:
     EmployeeNode(Employee *, EmployeeNode *);
 
-    Employee * Employee() { return employee; }
+    Employee * getEmployee() { return employee; }
     EmployeeNode *  Next();
 };
 /*****************************************************************************/
@@ -108,7 +111,7 @@ Company::PrintWithEarnings()
     EmployeeNode * curE;
 
     for(curE = employeeList; curE != NULL; curE = curE->Next())
-      curE->Employee()->PrintWithEarnings(currentWeek);
+      curE->getEmployee()->PrintWithEarnings(currentWeek);
 }
 /*****************************************************************************/
 void
@@ -119,7 +122,7 @@ Company::NewWeek()
     currentWeek++;
 
     for(curE = employeeList; curE != NULL; curE = curE->Next())
-      curE->Employee()->NewWeek();
+      curE->getEmployee()->NewWeek();
 }
 /*****************************************************************************/
 void
@@ -128,7 +131,7 @@ Company::AcrossTheBoardRaise(int units)
     EmployeeNode * curE;
 
     for(curE = employeeList; curE != NULL; curE = curE->Next())
-      curE->Employee()->Raise(units);
+      curE->getEmployee()->Raise(units);
 }
 
 #endif
