@@ -15,7 +15,7 @@ PROGRAMS_TO_TEST := $(PROG)
 
 ## LLVM bytecode libraries that must be linked with an application
 # FIXME: LIBS SHOULD BE SPECIFIED
-LIBS = -lm
+LIBS += -lm
 
 include $(LEVEL)/test/Programs/Makefile.programs
 
