@@ -1,4 +1,4 @@
 LEVEL = ../../..
-PARALLEL_DIRS  = UnitTests Shootout
+PARALLEL_DIRS  = UnitTests Shootout Stanford
 
 include Makefile.singlesrc
