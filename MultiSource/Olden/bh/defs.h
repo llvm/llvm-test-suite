@@ -15,7 +15,7 @@
 #define MLOCAL(xxx);
 #define NOTEST();
 #define RETEST();
-#define isnan(xxx) 0
+/*#define isnan(xxx) 0*/
 #define PID(xxx) 0
 int NumNodes;
 #endif
