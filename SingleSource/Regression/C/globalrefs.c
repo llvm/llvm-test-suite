@@ -40,7 +40,6 @@ main(int argc, char** argv)
   printf("sizeof(struct Test) = %d\n\n", (int)sizeof(struct test));
 
   printdiff(&TestArray[3], TestArray);
-  printdiff(&Test1.A, &TestArray[3]);
   printdiff(&Test1.S.Y, &Test1.A);
   printdiff(&Test1.next, &Test1.S.Y);
   printf("\n");
