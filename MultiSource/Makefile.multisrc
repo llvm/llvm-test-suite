@@ -24,22 +24,36 @@ all::
 include $(LEVEL)/test/Programs/Makefile.programs
 
 # Figure out what object files we want to build...
-LObjs    := $(sort $(addsuffix .bc, $(basename $(Source))))
+LObjs    := $(sort $(addsuffix .rbc, $(basename $(Source))))
 LObjects := $(addprefix Output/,$(LObjs))
 
 NObjs    := $(sort $(addsuffix .o, $(basename $(Source))))
 NObjects := $(addprefix Output/,$(NObjs))
 
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.bc
+.PRECIOUS: Output/%.linked.rbc Output/%.linked.rll
 
 Output/%.o: %.c Output/.dir
 	$(CC) $(CPPFLAGS) -O $(CFLAGS) -c $< -o $@
 
+# Raw bytecode files are files created by simply linking the output of the GCC
+# frontend without running gccas.
+#
+Output/%.rbc: Output/%.ll $(LAS)
+	$(LAS) -f $< -o $@
+
+
 # Output/*.linked.bc is all of the bytecode files of the program linked together
 # without any libraries linked in...
 #
-Output/%.linked.bc: $(LObjects)
+Output/%.linked.rbc: $(LObjects)
 	$(LLINK) -f $(LObjects) | opt -funcresolve > $@
+
+Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
+	$(LDIS) -f $< -o $@
+
+Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
+	$(LGCCAS) $< -o $@
 
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
@@ -56,7 +70,6 @@ final: Output/$(PROG).llvm
 	-ls -l Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.bc
 	-cp $(HOME)/LLVMPrograms/$(PROG).llvm.bc $(HOME)/LLVMPrograms/$(PROG).llvm.old.bc
 	cp Output/$(PROG).llvm.bc $(HOME)/LLVMPrograms
-	
 
 ds: Output/$(PROG).linked.bc
 	$(LANALYZE) -datastructure $< -t
