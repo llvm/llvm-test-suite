@@ -118,6 +118,42 @@ Output/%.trace-out-cbe: Output/%.trace.cbe
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+
+# Specify stdin, reference output, and command line options for the program...
+BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
+BUGPOINT_OPTIONS += --args -- $(RUN_OPTIONS)
+
+# Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
+Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) \
+                         Output/gccas-pass-args Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< `cat ../gccas-pass-args` $(BUGPOINT_OPTIONS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
+Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
+                         Output/gccld-pass-args Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< `cat ../gccld-pass-args` $(BUGPOINT_OPTIONS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
+Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< -run-llc $(BUGPOINT_OPTIONS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
+Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../../$< -run-jit $(BUGPOINT_OPTIONS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
+
+
+
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
 Output/%.out-tracing: Output/%.trace
 	$(SPEC_SANDBOX) trace-$(RUN_TYPE) $@ $(REF_IN_DIR) \
