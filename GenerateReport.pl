@@ -57,6 +57,19 @@ sub SumCols {
   return $Val;
 }
 
+sub AddColumns {
+  my ($Cols, $Col, @Indices) = @_;
+  my $result = 0;
+
+  foreach $Idx (@Indices) {
+    if ($Cols->[$Col+$Idx] ne "*") {
+      $result += $Cols->[$Col+$Idx];
+    }
+  }
+
+  return $result;
+}
+
 # Check command line arguments...
 die "Must specify a report description option" if (scalar(@ARGV) < 1);
 
