@@ -1,4 +1,4 @@
-##=== dsgraph.report-desc - Report description for dsgraph -----*- perl -*-===##
+##=== TEST.dsgraph.report - Report description for dsgraph -----*- perl -*-===##
 #
 # This file defines a report to be generated for the dsgraph test.
 #

@@ -32,7 +32,7 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
 	-(time -p $(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
-test.dsgraph.%: Output/%.$(TEST).report.txt
+test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
 	@echo ">>> ========= '$*' Program"
 	@echo "---------------------------------------------------------------"
