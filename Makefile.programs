@@ -57,11 +57,10 @@ TIMEPROG := $(PROGDIR)/TimeProgram.sh
 
 TOLERANCEOPT :=
 ifdef FP_TOLERANCE
-TOLERANCEOPT := -r $(FP_TOLERANCE)
-else
-ifdef FP_ABSTOLERANCE
-TOLERANCEOPT := -a $(FP_ABSTOLERANCE)
+TOLERANCEOPT += -r $(FP_TOLERANCE)
 endif
+ifdef FP_ABSTOLERANCE
+TOLERANCEOPT += -a $(FP_ABSTOLERANCE)
 endif
 
 # DIFFPROG - The program used to diff the output
@@ -246,6 +245,16 @@ Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
 Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
 	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+
+
+$(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm.bc): \
+Output/%.nogccldopt-llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.nogccldopt-llvm
+
+$(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm): \
+Output/%.nogccldopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.nogccldopt-llvm
+
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Targets to get the pass arguments that gccas and gccld are using...
@@ -373,7 +382,7 @@ Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
 	$(LBUGPOINT) $< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
+Output/%.bugpoint-gccld: Output/%.nogccldopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
 
