@@ -76,7 +76,7 @@ echo "Program $PROGRAM run #1 time: $TIME1"
 
 (time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
-/^real/   { /* IGNORE */; print }
+/^real/   { print }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
 !/^real/ && !/^user/ && !/^sys/  { print }
@@ -87,7 +87,7 @@ echo "Program $PROGRAM run #2 time: $TIME2"
 
 (time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
-/^real/   { /* IGNORE */; print }
+/^real/   { print }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
 !/^real/ && !/^user/ && !/^sys/  { print }
