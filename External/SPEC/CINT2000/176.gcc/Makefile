@@ -10,7 +10,11 @@ endif
 
 include ../../Makefile.spec2000
 
+ifeq ($(ENDIAN),big)
+  CPPFLAGS += -DHOST_WORDS_BIG_ENDIAN
+endif
+
 ifeq ($(ARCH),Sparc)
   ## SPEC portability note for GCC says to use these flags and cross fingers:
-  CPPFLAGS += -DHOST_WORDS_BIG_ENDIAN -DSPEC_CPU2000_LP64
+  CPPFLAGS += -DSPEC_CPU2000_LP64
 endif
