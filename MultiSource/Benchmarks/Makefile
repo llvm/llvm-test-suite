@@ -2,6 +2,6 @@
 
 LEVEL = ../..
 PARALLEL_DIRS := Fhourstones McCat Olden OptimizerEval Ptrdist llubenchmark \
-                 sim FreeBench MallocBench Prolangs-C++
+                 sim FreeBench MallocBench Prolangs-C Prolangs-C++
 
 include $(LEVEL)/Makefile.programs
