@@ -1,5 +1,5 @@
 LEVEL = ../../..
-PARALLEL_DIRS  = UnitTests Regression Benchmarks Gizmos CustomChecked
+PARALLEL_DIRS  = UnitTests Regression Benchmarks CustomChecked
 LDFLAGS += -lm
 
 include Makefile.singlesrc
