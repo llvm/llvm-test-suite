@@ -22,7 +22,7 @@ rm -rf *
 cp -r $INPUT_DIR/* .
 
 # If there is an "all" input directory, take it as well...
-cp -r $INPUT_DIR/../../all/input/* . 2>&1 > /dev/null
+cp -r $INPUT_DIR/../../all/input/* . > /dev/null 2>&1 
 
 # Run the program now...
 echo Running: $*
