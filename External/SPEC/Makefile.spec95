@@ -159,6 +159,20 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 
+LIBPROFILESO = $(LEVEL)/lib/Debug/libprofile_rt.so
+
+$(PROGRAMS_TO_TEST:%=Output/%.prof): \
+Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
+	@rm -f $@
+	$(SPEC_SANDBOX) profile-$(RUN_TYPE) Output/$*.out-prof $(REF_IN_DIR) \
+	  $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) $(LLI) $(JIT_OPTS)\
+            -fake-argv0 '../$*.llvm.bc' -load ../../$(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
+	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > Output/$*.out-prof
+	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
+		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
+
+
 
 
 
