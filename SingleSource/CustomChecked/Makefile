@@ -12,8 +12,9 @@ LDFLAGS += -lm
 LLI_RUN  := $(addsuffix .run-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JIT_RUN  := $(addsuffix .run-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLC_RUN  := $(addsuffix .run-llc, $(PREFIXED_PROGRAMS_TO_TEST))
+LLCLS_RUN  := $(addsuffix .run-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 CBE_RUN  := $(addsuffix .run-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
-.PRECIOUS: $(LLI_RUN) $(JIT_RUN) $(LLC_RUN) $(CBE_RUN)
+.PRECIOUS: $(LLI_RUN) $(JIT_RUN) $(LLC_RUN) $(LLCLS_RUN) $(CBE_RUN)
 
 ifndef DISABLE_LLC_DIFFS
 all:: $(LLC_RUN)
@@ -45,6 +46,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.run-llc): \
 Output/%.run-llc: Output/%.llc
 	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.run-llc-ls): \
+Output/%.run-llc-ls: Output/%.llc-ls
+	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+
 $(PROGRAMS_TO_TEST:%=Output/%.run-cbe): \
 Output/%.run-cbe: Output/%.cbe
 	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
@@ -60,6 +65,10 @@ Output/%.exe-jit: Output/%.run-jit
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
 Output/%.exe-llc: Output/%.run-llc
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-llc-ls): \
+Output/%.exe-llc-ls: Output/%.run-llc-ls
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \
