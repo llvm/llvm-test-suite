@@ -5,7 +5,5 @@
 #
 ##===----------------------------------------------------------------------===##
 
-TESTNAME = $(subst test.$(TEST).,,$@)
-
 test.$(TEST).%: Output/%.llvm.bc
 	$(LANALYZE) -unsafepointertypes $<
