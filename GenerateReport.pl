@@ -37,6 +37,7 @@ while ($_ = $ARGV[0], /^[-+]/) {
 # The column to sort by, to be overridden as neccesary by the report description
 my $SortCol = 0;
 my $SortReverse = 0;
+my $SortNumeric = 0;   # Sort numerically or textually?
 
 # Helper functions which may be called by the report description files...
 sub SumCols {
@@ -114,7 +115,11 @@ foreach $Record (@Records) {
 #
 # Sort table now...
 #
-@Values = sort { $a->[$SortCol] cmp $b->[$SortCol] } @Values;
+if ($SortNumeric) {
+  @Values = sort { $a->[$SortCol] <=> $b->[$SortCol] } @Values;
+} else {
+  @Values = sort { $a->[$SortCol] cmp $b->[$SortCol] } @Values;
+}
 @Values = reverse @Values if ($SortReverse);
 
 #
