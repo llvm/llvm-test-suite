@@ -560,7 +560,7 @@ endif
 GENERATEREPORT := $(BUILD_SRC_ROOT)/GenerateReport.pl
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
-	gmake TEST=$(TEST) 2>&1 | tee $@
+	$(MAKE) -j1 TEST=$(TEST) 2>&1 | tee $@
 
 ifneq ($(TestReport),)
 report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
