@@ -7,15 +7,20 @@
 #           like print a stack trace of a core dump.  It always returns
 #           "successful" so that tests will continue to be run.
 #
-# Syntax:  ./RunSafely.sh <program> <arguments>
+#           This script funnels stdout and stderr from the program into the
+#           first argument specified, and outputs a <outputfile>.time file which
+#           contains a timing of the program.
 #
-
+# Syntax:  ./RunSafely.sh <outputfile> <program> <arguments>
+#
+OUTFILE=$1
+shift
 PROGRAM=$1
 shift
 
-rm -f core*
+rm -f core core.*
 ulimit -c hard
-$PROGRAM $*
+(time -p $PROGRAM $* > $OUTFILE 2>&1) 2> $OUTFILE.time
 if ls | egrep "^core" > /dev/null
 then
     corefile=`ls core* | head -1`
