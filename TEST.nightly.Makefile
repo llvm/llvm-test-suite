@@ -56,7 +56,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	@-if test -f Output/$*.exe-llc; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
-	  grep "^real" $@ >> $@;\
+	  grep "^real" $(INFO_PREFIX)llc.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
