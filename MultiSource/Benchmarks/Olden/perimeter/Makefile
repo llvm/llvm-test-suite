@@ -2,7 +2,7 @@ LEVEL = ../../..
 
 PROG = perimeter
 LOCAL_CFLAGS=
-LOCAL_LIBS= 
+LOCAL_LDFLAGS= 
 
 OBJS = args.o main.o maketree.o
 

@@ -2,7 +2,7 @@ LEVEL = ../../..
 
 PROG = treeadd
 LOCAL_CFLAGS=
-LOCAL_LIBS= 
+LOCAL_LDFLAGS= 
 
 OBJS = args.o node.o par-alloc.o
 

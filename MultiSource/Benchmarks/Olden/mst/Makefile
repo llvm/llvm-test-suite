@@ -2,7 +2,7 @@ LEVEL = ../../..
 
 PROG = mst
 LOCAL_CFLAGS=
-LOCAL_LIBS=
+LOCAL_LDFLAGS=
 
 OBJS = args.o hash.o main.o makegraph.o
 
