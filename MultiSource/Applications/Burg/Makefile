@@ -11,7 +11,7 @@ STDIN_FILENAME = sample.gr
 
 Source  := $(ExtraSource) $(wildcard *.c)
 
-## $(BUILD_ROOT)/Depend/y.tab.d:: y.tab.c $(BUILD_ROOT)/Depend/.dir
+## $(BUILD_OBJ_ROOT)/Depend/y.tab.d:: y.tab.c $(BUILD_OBJ_ROOT)/Depend/.dir
 
 %.cpp %.h : %.y
 	yacc -d $<
@@ -28,7 +28,7 @@ y.tab.c y.tab.h: gram.y
 
 Source := $(patsubst gram.%,,$(Source))
 
-## $(BUILD_ROOT)/Depend/gram.d: gram.y
+## $(BUILD_OBJ_ROOT)/Depend/gram.d: gram.y
 
 src:
 	echo Sources = $(Source)
