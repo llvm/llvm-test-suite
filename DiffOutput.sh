@@ -12,11 +12,15 @@
 DIFFOUTPUT=Output/$2.diff-$1
 
 # Find gnu diff
+
+DIFF=diff
 if which gdiff > /dev/null 2>&1
 then
-  DIFF=gdiff
-else
-  DIFF=diff
+  where=`which gdiff 2>&1`
+  if [ -x "$where" ]
+  then
+    DIFF=gdiff
+  fi
 fi
 
 # Diff the two files.
