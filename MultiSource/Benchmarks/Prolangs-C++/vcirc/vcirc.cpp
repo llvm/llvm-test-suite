@@ -93,7 +93,7 @@ inline void Circle::Contract(int ContractBy)
    Expand(-ContractBy);       // redraws with (Radius - ContractBy)
 }
 
-main()                        // test the functions
+int main()                        // test the functions
 {
    Circle MyCircle(50, 100, 25);    // declare a circle object
    MyCircle.Show();                 // show it
