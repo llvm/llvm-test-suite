@@ -11,11 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef TORONTO
-
 #define PLAIN         /* Toronto uses the "plain" version */
 #define chatting printf
-#endif
 
 #define IA 16807
 #define IM 2147483647
@@ -33,20 +30,18 @@ int dealwithargs(int argc, char *argv[]);
 struct Results {
   float                  total_patients;
   float                  total_time;
-  float                  total_hosps; };  
+  float                  total_hosps; 
+};
 
 struct Patient {
   int                    hosps_visited;
   int                    time;
   int                    time_left;
-  struct Village         *home_village; };
+  struct Village         *home_village;
+};
 
 struct List {
   struct List            *forward;
-#ifdef JUMP
-  struct List            * next_forward;
-  struct Patient         * next_patient;
-#endif
   struct Patient         *patient;
   struct List            *back;
  };
@@ -58,7 +53,8 @@ struct Hosp {
   struct List            waiting; 
   struct List            assess; 
   struct List            inside;
-  struct List    up; };
+  struct List            up;
+};
   
 struct Village {
   struct Village         *forward[4],
@@ -66,7 +62,8 @@ struct Village {
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
-  long                   seed; };
+  long                   seed;
+};
 
 int dealwithargs(int argc, char *argv[]);
 float my_rand(long idum);

@@ -5,8 +5,6 @@
  *           To be used with health.c                               *
  ********************************************************************/
 
-#undef JUMP
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "health.h"
@@ -26,7 +24,6 @@ void addList(struct List *list, struct Patient *patient) {
   b->forward = list;
 } 
 
-
 void removeList(struct List *list, struct Patient *patient) {
   struct List          *l1,*l2;
   struct Patient       *p;
@@ -43,8 +40,8 @@ void removeList(struct List *list, struct Patient *patient) {
   if (list->forward != NULL) {
     l1 = list->forward;
     l2 = list->back;
-    l1->back = l2; }
-  
+    l1->back = l2;
+  }
   /*free(list);*/
 }
      
