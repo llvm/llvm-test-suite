@@ -1,7 +1,7 @@
 
+#include <stdio.h>
 
-
-void test_indvars(int *Array1, int Array2[100][200]) {
+static void test_indvars(int *Array1, int Array2[100][200]) {
   unsigned i, j;
   Array1[1] = Array2[3][6] = 12345;
 
@@ -18,6 +18,18 @@ void test_indvars(int *Array1, int Array2[100][200]) {
 
 
 int main() {
-  int Array[100][200];
+  int Array[100][200], i, j;
+  double sum = 0;
+
+  for (i=0; i < 100; i+=2)
+    for (j=0; j < 200; j++)
+      Array[i][j] = 0;
   test_indvars(Array[0], Array);
+
+  for (i=0; i < 100; i+=2)
+    for (j=0; j < 200; j++)
+      sum += Array[i][j];
+  printf("Checksum = %.0lf\n", sum);
+
+  return 0;
 }
