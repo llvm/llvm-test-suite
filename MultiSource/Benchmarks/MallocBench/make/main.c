@@ -1363,9 +1363,9 @@ log_working_directory (entering)
     fputs ("# ", stdout);
 
   if (makelevel == 0)
-    printf ("%s: %s ", program, message);
+    printf ("%s: %s ", "make", message);
   else
-    printf ("%s[%u]: %s ", program, makelevel, message);
+    printf ("%s[%u]: %s ", "make", makelevel, message);
 
 #ifdef	USG
   /* In some System V's, `getcwd' spawns a child running /bin/pwd.  */
