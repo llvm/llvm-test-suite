@@ -14,7 +14,7 @@ EXTRA_LLI_OPTS = $(TIMEOPT)
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.llvm.bc Output/%.LOC.txt Output/%.out-nat Output/%.out-jit $(LLI) $(LOPT)
 	@echo -n "LOC: " > $@
-	@cat Output/$*.LOC.txt >> $@
+	-@cat Output/$*.LOC.txt >> $@
 	@echo -n "LLC SIZE: " >> $@
 	#-@wc -c Output/$*.llc >> $@
 	@echo >> $@
@@ -22,7 +22,7 @@ Output/%.$(TEST).report.txt: Output/%.llvm.bc Output/%.LOC.txt Output/%.out-nat 
 	-@grep real Output/$*.out-nat.time >> $@
 	@echo -n "JIT TIME: " >> $@
 	-@grep real Output/$*.out-jit.time >> $@
-	@cat Output/$*.out-jit.info >> $@
+	-@cat Output/$*.out-jit.info >> $@
 	$(LOPT) -strip -stats -o /dev/null -f $< >> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
