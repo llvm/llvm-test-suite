@@ -4,7 +4,7 @@
 int main()
 {
   jmp_buf buf;
-  unsigned i = 0;
+  volatile unsigned i = 0;
 
   if (setjmp(buf) < 10) {
     printf("i == %u\n", i);
