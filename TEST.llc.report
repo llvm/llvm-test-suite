@@ -40,8 +40,8 @@ sub TotalInstrEliminations {
  ["#IntJoin", '([0-9]+).*Number of joined intervals'],
  [],
 # Number of transformations
- ["#spill" , '([0-9]+).*Number of registers spilled'],
- ["#reload", '([0-9]+).*Number of registers reloaded'],
+ ["#store" , '([0-9]+).*Number of stores added'],
+ ["#load"  , '([0-9]+).*Number of load added'],
  ["#fp"    , '([0-9]+).*Number of floating point instructions'],
  ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
  ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
