@@ -14,7 +14,6 @@
 
 
 int nbody;
-char *malloc();
 
 double sqrt(), xrand(), my_rand();
 real pow();

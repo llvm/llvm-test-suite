@@ -9,7 +9,7 @@ int dealwithargs(int argc, char *argv[]) {
   if (argc > 2) 
     NumNodes = atoi(argv[2]);
   else 
-    NumNodes = 1;
+    NumNodes = 4;
 
   if (argc > 1)
     nbody = atoi(argv[1]);
