@@ -12,7 +12,7 @@ my $WallTimeRE = "[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock";
 # FormatTime - Convert a time from 1m23.45 into 83.45
 sub FormatTime {
   my $Time = shift;
-  if ($Time =~ m/([0-9]+)m([0-9.]+)/) {
+  if ($Time =~ m/([0-9]+)[m:]([0-9.]+)/) {
     $Time = sprintf("%7.4f", $1*60.0+$2);
   }
   return $Time;
