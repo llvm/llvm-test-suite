@@ -1,0 +1,11 @@
+Flops
+------------------------------------------------------------------------------
+This program is licensed to you under the LLVM license.  It was written by Al
+Aburto.
+
+------------------------------------------------------------------------------
+OOPack
+------------------------------------------------------------------------------
+Copyright (C) 1995 Arch D. Robison
+This program is licensed under the GNU General Public License, Version 2.
+
