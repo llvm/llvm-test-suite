@@ -18,13 +18,19 @@ INFILE=$2
 OUTFILE=$3
 PROGRAM=$4
 shift 4
+SYSTEM=`uname -s`
 
-ulimit -t $ULIMIT
+case $SYSTEM in
+  CYGWIN*) 
+    ;;
+  *)
+    ulimit -t $ULIMIT
+    ulimit -c unlimited
+    # To prevent infinite loops which fill up the disk, specify a limit on size of
+    # files being output by the tests. 10 MB should be enough for anybody. ;)
+    ulimit -f 10485760
+esac
 rm -f core core.*
-ulimit -c unlimited
-# To prevent infinite loops which fill up the disk, specify a limit on size of
-# files being output by the tests. 10 MB should be enough for anybody. ;)
-ulimit -f 10485760
 
 #
 # Run the command, timing its execution.
@@ -36,7 +42,7 @@ ulimit -f 10485760
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-(time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") 2>&1 | awk -- '\
+( time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
