@@ -25,6 +25,9 @@ shift
 ulimit -t $ULIMIT
 rm -f core core.*
 ulimit -c unlimited
+# To prevent infinite loops which fill up the disk, specify a limit on size of
+# files being output by the tests. 1 MB should be enough for anybody. ;)
+ulimit -f 1048576
 
 #
 # If we are on a sun4u machine (UltraSparc), then the code we're generating
