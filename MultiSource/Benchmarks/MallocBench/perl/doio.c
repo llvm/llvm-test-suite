@@ -6,6 +6,10 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.3  2004/07/17 21:26:00  reid
+ * get rid of incorrect declaration of shmat(). If it isn't in sys/shm.h then
+ * "oh well.."
+ *
  * Revision 1.2  2004/06/25 08:07:12  lattner
  * fix the test on FreeBSD, contributed by Vladimir Merzliakov
  *
@@ -2680,7 +2684,7 @@ int *arglast;
 #endif
 }
 
-int
+int 
 do_shmio(optype, arglast)
 int optype;
 int *arglast;
@@ -2692,9 +2696,6 @@ int *arglast;
     char *mbuf, *shm;
     int id, mpos, msize;
     struct shmid_ds shmds;
-#if !defined(__FreeBSD__)
-    extern char *shmat();
-#endif
 
     id = (int)str_gnum(st[++sp]);
     mstr = st[++sp];
