@@ -25,7 +25,19 @@ shift
 ulimit -t $ULIMIT
 rm -f core core.*
 ulimit -c unlimited
-(time -p $PROGRAM $* 2> $OUTFILE > $OUTFILE < $INFILE) 2> $OUTFILE.time
+
+#
+# Run the command, timing its execution.
+# The standard output and standard error of $PROGRAM should go in $OUTFILE,
+# and the standard error of time should go in $OUTFILE.time.
+#
+# Ah, the joys of shell programming!
+# To get the time program and the specified program different output filenames,
+# we tell time to launch a shell which in turn executes $PROGRAM with the
+# necessary I/O redirection.
+#
+(time sh -c "$PROGRAM $* >& $OUTFILE < $INFILE") >& $OUTFILE.time
+
 if test $? -eq 0
 then
   touch $OUTFILE.exitok
