@@ -37,6 +37,9 @@ Output/%.o: $(SourceDir)%.c Output/.dir
 Output/%.o: $(SourceDir)%.cpp Output/.dir
 	$(CC) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
+Output/%.o: $(SourceDir)%.cc Output/.dir
+	$(CC) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
 bugpoint-gccas: Output/$(PROG).bugpoint-gccas
 bugpoint-gccld: Output/$(PROG).bugpoint-gccld
 

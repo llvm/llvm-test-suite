@@ -31,7 +31,7 @@ SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
 SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 
 PROG := $(BENCH_NAME)
-Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c)
+Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c $(SPEC_BENCH_DIR)/src/*.cc) \
 
 # Disable the default Output/%.out-* targets...
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
