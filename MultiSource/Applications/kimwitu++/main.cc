@@ -5,6 +5,7 @@
 #define KC_FUNCTIONS_main_
 
 #include <stdlib.h>
+#include <unistd.h>
 #include "k.h"
 #include "main.h"
 namespace kc { }
@@ -83,13 +84,7 @@ using std::flush;
 #include <vector>
 using std::string;
 
-/* LLVM: Remove long option support for compatibility with other platforms */
-#if 0
 #include "getopt.h"
-#else
-#include <stdlib.h>
-#include <unistd.h>
-#endif
 
 extern int yyparse(void);
 extern void yyrestart(FILE*);
