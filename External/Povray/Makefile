@@ -1,6 +1,6 @@
 LEVEL = ../..
 
-#include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.config
 
 PROG = povray
 
