@@ -380,7 +380,7 @@ Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 endif
 
 # Pseudo target to build just the bytecode file.
-bytecode: Output/$(PROG).llvm.bc
+bytecode: $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc)
 
 
 # Support for the TEST= option... when TEST= is specified on the command line,
