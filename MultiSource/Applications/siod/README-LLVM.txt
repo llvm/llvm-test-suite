@@ -20,8 +20,11 @@ I removed all the files except for those that need to be compiled to get
 the thing to work, and gave it a small MultiSource-friendly Makefile. I
 also #ifdefed out the "Evaluation took ... seconds" message that gets
 printed out after every top-level REPL expression, in slib.c (search for
-"ifdef STATISTICS"). I also renamed lchmod to l_chmod to allow it to
-compile natively under Redhat 8...
+"ifdef STATISTICS").
+
+We also renamed lchmod to l_chmod, ripped out lchown() and lcrypt(),
+and the reference to putpwent(). We provided a default definition for
+PATH_MAX.
 
 
 WHAT ELSE NEEDS TO BE DONE?

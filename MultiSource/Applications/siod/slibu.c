@@ -55,15 +55,9 @@
 #endif
 
 #if defined(sun)
-#include <crypt.h>
 #include <limits.h>
 #include <sys/mkdev.h>
 #include <fcntl.h>
-#endif
-
-#if defined(linux) && defined(PPC)
-/* I know, this should be defined(NEED_CRYPT_H) */
-#include <crypt.h>
 #endif
 
 #if defined(sgi)
@@ -138,17 +132,6 @@ LISP lgetuid(void)
 
 LISP lgetgid(void)
 {return(flocons(getgid()));}
-#endif
-
-#ifdef unix
-
-LISP lcrypt(LISP key,LISP salt)
-{char *result;
- if ((result = crypt(get_c_string(key),get_c_string(salt))))
-   return(strcons(strlen(result),result));
- else
-   return(NIL);}
-
 #endif
 
 #if defined(unix) || defined(WIN32)
@@ -2143,7 +2126,6 @@ void __stdcall init_slibu(void)
  init_subr_0("getcwd",lgetcwd);
 #endif
 #ifdef unix
- init_subr_2("crypt",lcrypt);
  init_subr_1("getpwuid",lgetpwuid);
  init_subr_1("getpwnam",lgetpwnam);
  init_subr_0("getpwent",lgetpwent);
