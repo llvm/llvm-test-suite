@@ -4,6 +4,9 @@
 #
 ##===----------------------------------------------------------------------===##
 
+# Sort numerically, not textually...
+$SortNumeric = 1;
+
 # Helper function
 sub Ratio {
   my ($Cols, $Col) = @_;
@@ -44,44 +47,44 @@ $SortReverse = 1;
 
 # For latex output, limit benchmarks and rename as appropriate
 @LatexRowMapOrder = (
-            'treeadd'    => 'Olden-treeadd',
-            'bisort'     => 'Olden-bisort',
-            'mst'        => 'Olden-mst',
-            'perimeter'  => 'Olden-perimeter',
-            'health'     => 'Olden-health',
-            'tsp'        => 'Olden-tsp',
-            'power'      => 'Olden-power',
-            'em3d'       => 'Olden-em3d',
-            'voronoi'    => 'Olden-voronoi',
-            'bh'         => 'Olden-bh',
+            'MultiSource/Olden/treeadd/treeadd'      => 'Olden-treeadd',
+            'MultiSource/Olden/bisort/bisort'        => 'Olden-bisort',
+            'MultiSource/Olden/mst/mst'              => 'Olden-mst',
+            'MultiSource/Olden/perimeter/perimeter'  => 'Olden-perimeter',
+            'MultiSource/Olden/health/health'        => 'Olden-health',
+            'MultiSource/Olden/tsp/tsp'              => 'Olden-tsp',
+            'MultiSource/Olden/power/power'          => 'Olden-power',
+            'MultiSource/Olden/em3d/em3d'            => 'Olden-em3d',
+            'MultiSource/Olden/voronoi/voronoi'      => 'Olden-voronoi',
+            'MultiSource/Olden/bh/bh'                => 'Olden-bh',
             '-' => '-',
-            'anagram'    => 'ptrdist-anagram',
-            'ks'         => 'ptrdist-ks',
-            'ft'         => 'ptrdist-ft',
-            'yacr2'      => 'ptrdist-yacr2',
-            'bc'         => 'ptrdist-bc',
+            'MultiSource/Ptrdist/anagram/anagram'    => 'ptrdist-anagram',
+            'MultiSource/Ptrdist/ks/ks'              => 'ptrdist-ks',
+            'MultiSource/Ptrdist/ft/ft'              => 'ptrdist-ft',
+            'MultiSource/Ptrdist/yacr2/yacr2'        => 'ptrdist-yacr2',
+            'MultiSource/Ptrdist/bc/bc'              => 'ptrdist-bc',
             '-' => '-',
-            '179.art'    => '179.art',
-            '183.equake' => '183.equake',
-            '181.mcf'    => '181.mcf',
-            '256.bzip2'  => '256.bzip2',
-            '164.gzip'   => '164.gzip',
-            '197.parser' => '197.parser',
-            '188.ammp'   => '188.ammp',
-            '175.vpr'    => '175.vpr',
-            '300.twolf'  => '300.twolf',
-            '186.crafty' => '186.crafty',
-            '255.vortex' => '255.vortex',
-            '254.gap'    => '254.gap',
+            'External/SPEC/CFP2000/179.art/179.art'        => '179.art',
+            'External/SPEC/CFP2000/183.equake/183.equake'  => '183.equake',
+            'External/SPEC/CINT2000/181.mcf/181.mcf'       => '181.mcf',
+            'External/SPEC/CINT2000/256.bzip2/256.bzip2'   => '256.bzip2',
+            'External/SPEC/CINT2000/164.gzip/164.gzip'     => '164.gzip',
+            'External/SPEC/CINT2000/197.parser/197.parser' => '197.parser',
+            'External/SPEC/CFP2000/188.ammp/188.ammp'      => '188.ammp',
+            'External/SPEC/CINT2000/175.vpr/175.vpr'       => '175.vpr',
+            'External/SPEC/CINT2000/300.twolf/300.twolf'   => '300.twolf',
+            'External/SPEC/CINT2000/186.crafty/186.crafty' => '186.crafty',
+            'External/SPEC/CINT2000/255.vortex/255.vortex' => '255.vortex',
+            'External/SPEC/CINT2000/254.gap/254.gap'       => '254.gap',
             '-' => '-',
-            'sgefa'      => 'sgefa',
-            'sim'        => 'sim',
-            'burg'       => 'burg',
-            'gnuchess'   => 'gnuchess',
-            'larn'       => 'larn',
-            'flex'       => 'flex',
-            'moria'      => 'moria',
-            'povray31'   => 'povray31'
+            'MultiSource/sgefa/sgefa'         => 'sgefa',
+            'MultiSource/sim/sim'             => 'sim',
+            'MultiSource/Burg/burg'           => 'burg',
+            'MultiSource/gnuchess/gnuchess'   => 'gnuchess',
+            'MultiSource/larn/larn'           => 'larn',
+            'MultiSource/flex/flex'           => 'flex',
+            'MultiSource/moria/moria'         => 'moria',
+            'MultiSource/povray31/povray31'   => 'povray31'
            );
 
 @LatexColumns = (1, 27, 19,    # LOC, #MemInstrs, MaxSCC
