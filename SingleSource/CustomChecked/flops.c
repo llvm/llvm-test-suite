@@ -173,7 +173,7 @@ double D3 = 0.1233153E-5;
 double E2 = 0.48E-3;
 double E3 = 0.411051E-6;
 
-void main()
+int main()
 {
 
 #ifdef ROPT
@@ -640,7 +640,7 @@ void main()
    printf("   MFLOPS(2)       = %10.4lf\n",T[30]);
    printf("   MFLOPS(3)       = %10.4lf\n",T[32]);
    printf("   MFLOPS(4)       = %10.4lf\n\n",T[34]);
-
+   return 0;
 }
 
 /*****************************************************/
