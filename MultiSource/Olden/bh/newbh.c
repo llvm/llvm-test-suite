@@ -163,6 +163,7 @@ treeptr old_main()
 
   CLRV(cmr);
   CLRV(cmv);
+
 /* Creates a list of bodies */
 #ifdef PLAIN
   for (i=0; i < 32; i++)
@@ -1565,56 +1566,4 @@ int dis2_number(nodeptr n, int prev_bodies, int tnperproc)
     return prev_bodies;
   }
 }    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
