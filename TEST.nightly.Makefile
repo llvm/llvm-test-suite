@@ -55,9 +55,9 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
-Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.diff-cbe $(LDIS)
-	-head -n 100 Output/$*.diff-cbe > $@
-	@if test -f Output/$*.diff-cbe; then \
+Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
+	-head -n 100 Output/$*.exe-cbe > $@
+	@if test -f Output/$*.exe-cbe; then \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
           echo "TEST-RESULT-cbe: YES" >> $@;\
 	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
@@ -69,9 +69,9 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.diff-cbe $(LDIS)
 
 # LLI tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
-Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
-	-head -n 100 Output/$*.diff-lli > $@
-	@if test -e Output/$*.diff-lli; then \
+Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.exe-lli $(LLI)
+	-head -n 100 Output/$*.exe-lli > $@
+	@if test -e Output/$*.exe-lli; then \
           echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
 	  grep "^real" Output/$*.out-lli.time >> $@;\
@@ -85,9 +85,9 @@ Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
-Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.diff-jit $(LLI)
-	-head -n 100 Output/$*.diff-jit > $@
-	@if test -f Output/$*.diff-jit; then \
+Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
+	-head -n 100 Output/$*.exe-jit > $@
+	@if test -f Output/$*.exe-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^real" Output/$*.out-jit.time >> $@;\
