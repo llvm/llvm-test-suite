@@ -3,4 +3,4 @@ RUN_OPTIONS     =
 STDIN_FILENAME  = ammp.in
 STDOUT_FILENAME = ammp.out
 CPPFLAGS =
-include ../../Makefile.spec
+include ../../Makefile.spec2000

@@ -1,6 +1,7 @@
 ##===- Makefile.spec ---------------------------------------*- Makefile -*-===##
 #
-# This makefile contains information for building SPEC as an external test.
+# This makefile is a template for building SPEC as an external
+# test. It is included by Makefile.spec2000 and Makefile.spec95.
 #
 ##===----------------------------------------------------------------------===##
 
@@ -32,7 +33,7 @@ SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
 BENCH_NAME  := $(patsubst /%,%,$(BENCH_NAME))
 SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
 
-SPEC_BENCH_DIR := $(SPEC2000_ROOT)/$(SPEC_SUBDIR)
+SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
 
 PROG := $(BENCH_NAME)
 ifndef Source
@@ -49,7 +50,7 @@ include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 LCCFLAGS  := -O3
 LCXXFLAGS := -O3
 
-CPPFLAGS += -DSPEC_CPU2000 -I $(SPEC_BENCH_DIR)/src/
+CPPFLAGS += -I $(SPEC_BENCH_DIR)/src/
 SPEC_SANDBOX := $(LLVM_SRC_ROOT)/test/Programs/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
@@ -195,4 +196,3 @@ Output/%.out-tracing: Output/%.trace
 $(PROGRAMS_TO_TEST:%=Output/%.performance): \
 Output/%.performance: Output/%.out-llc Output/%.out-tracing
 	-$(TIMESCRIPT) $* Output/$*.out-llc.time Output/$*.out-tracing.time $@
-

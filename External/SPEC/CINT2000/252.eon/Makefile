@@ -49,7 +49,7 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             mrInstance.cc mrMaterial.cc mrPhongAreaTriangleLuminaire.cc \
             mrSolidTexture.cc mrSphere.cc mrSurface.cc mrSurfaceTexture.cc \
             mrXYRectangle.cc mrXZRectangle.cc mrYZRectangle.cc myrand.cc)
-include ../../Makefile.spec
+include ../../Makefile.spec2000
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lstdc++ -lm
 

@@ -8,4 +8,4 @@ ifneq ($(ARCH),Sparc)
 CPPFLAGS += -D__LITTLE_ENDIAN__
 endif
 
-include ../../Makefile.spec
+include ../../Makefile.spec2000
