@@ -6,7 +6,7 @@ dnl   $2 full path to benchmark source
 AC_DEFUN([EXTERNAL_BENCHMARK],
 [m4_define([allcapsname],translit($1,a-z,A-Z))
  AC_ARG_ENABLE($1,
- AC_HELP_STRING([--enable-$1=ARG], 
+ AS_HELP_STRING([--enable-$1=ARG], 
                 [Use $1 as a benchmark (srcs in DIR)]),
  checkresult=$enableval,
  checkresult=auto)

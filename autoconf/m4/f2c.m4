@@ -17,7 +17,7 @@ fi
 
 AC_DEFUN([CHECK_F2C_ALL],
 [AC_ARG_WITH(f2c,
-  AC_HELP_STRING([--with-f2c=DIR], [Use f2c with install prefix DIR]),
+  AS_HELP_STRING(--with-f2c=DIR,Use f2c with install prefix DIR),
   f2cdir=$withval)
 AC_MSG_CHECKING([for installed f2c components])
 CHECK_F2C($f2cdir)
@@ -58,7 +58,7 @@ dnl
 dnl Check for f2c binary
 AC_DEFUN([CHECK_F2C_BIN],
 [AC_ARG_WITH(f2cbin,
-  AC_HELP_STRING([--with-f2c-bin=DIR], [Find f2c binary in DIR]),
+  AS_HELP_STRING(--with-f2c-bin=DIR,Find f2c binary in DIR),
   f2cbin=$withval)
 AC_MSG_CHECKING([for f2c binary])
 if test -d "$f2cbin" && test -f "$f2cbin/f2c"; then
@@ -73,7 +73,7 @@ AC_MSG_RESULT($checkresult)
 dnl Check for f2c.h
 AC_DEFUN([CHECK_F2C_H],
 [AC_ARG_WITH(f2cinc,
-  AC_HELP_STRING([--with-f2c-inc=DIR], [Find f2c.h in DIR]),
+  AS_HELP_STRING(--with-f2c-inc=DIR,Find f2c.h in DIR),
   f2cinc=$withval)
 AC_MSG_CHECKING([for f2c.h])
 if test -d "$f2cinc" && test -f "$f2cinc/f2c.h"; then
@@ -88,7 +88,7 @@ AC_MSG_RESULT($checkresult)
 dnl Check for libf2c.a
 AC_DEFUN([CHECK_F2C_LIB],
 [AC_ARG_WITH(f2clib,
-  AC_HELP_STRING([--with-f2c-lib=DIR], [Find libf2c.a in DIR]),
+  AS_HELP_STRING(--with-f2c-lib=DIR,Find libf2c.a in DIR),
   f2clib=$withval)
 AC_MSG_CHECKING([for libf2c.a])
 if test -d "$f2clib" && test -f "$f2clib/libf2c.a"; then
