@@ -23,7 +23,7 @@ typedef struct demand {
 
 #define NULL 0
 
-#if 1   /* __llvm__ SCALED BACK SETTINGS */
+#if 0   /* __llvm__ SCALED BACK SETTINGS */
 #define NUM_FEEDERS 4
 #define LATERALS_PER_FEEDER 4
 #define BRANCHES_PER_LATERAL 2
