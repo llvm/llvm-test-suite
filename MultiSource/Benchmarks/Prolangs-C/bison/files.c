@@ -131,13 +131,15 @@ void openfiles(void)
 
       /* Discard any directory names from the input file name
 	 to make the base of the output.  */
+      if (!name_base)
+        exit(1);
       cp = name_base;
       while (*cp)
-	{
-	  if (*cp == '/')
-	    name_base = cp+1;
-	  cp++;
-	}
+        {
+          if (*cp == '/')
+            name_base = cp+1;
+          cp++;
+        }
 
       /* BASE_LENGTH gets length of NAME_BASE, sans ".y" suffix if any.  */
 
