@@ -85,7 +85,7 @@ void freetree1(nodeptr n);
 int arg1;
 
 /* Used to setup runtime system, get arguments-- see old_main */
-main(int argc, char *argv)
+main(int argc, char **argv)
 {
   treeptr t;
 
