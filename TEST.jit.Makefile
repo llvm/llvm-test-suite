@@ -6,14 +6,15 @@
 #
 ##===----------------------------------------------------------------------===##
 
-JIT_OPTS = -stats -time-passes
+JIT_OPTS = -force-interpreter=false -stats -time-passes
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.llvm.bc $(LLI)
-	-(time -p $(LLI) -force-interpreter=false $(JIT_OPTS) $< > /dev/null) > $@ 2>&1
+	-(time -p $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS) > /dev/null \
+                < $(STDIN_FILENAME)) > $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
