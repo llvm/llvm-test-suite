@@ -1,5 +1,5 @@
 LEVEL = ../../../..
 
-PROG = tbl
+PROG = unix-tbl
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
