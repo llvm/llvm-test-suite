@@ -55,6 +55,6 @@ c   mantissa.
       }
       printf(" x = %9.6f    y = %12.2f  low = %8d j = %7d\n",x,y,(int)low,(int)j);
       pi = 4.0 * (float)low/(float)itot;
-      printf("Pi = %9.6f ztot = %12.2f itot = %8d\n",pi,ztot,(int)itot);
+      printf("Pi = %9.6f ztot = %12.2f itot = %8d\n",pi,ztot*0.0,(int)itot);
       return 0;
 }
