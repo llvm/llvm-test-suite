@@ -1,3 +1,4 @@
+##-----------------------------------------------------------*-Makefile-*-
 #                   test/Programs/MultiSource/Makefile.multisrc
 #
 # This makefile should be used by subdirectories that have multiple source files
@@ -8,6 +9,7 @@
 #
 # 1. LEVEL - Must be set as per normal semantics: The depth from the top of tree
 #
+##------------------------------------------------------------------------
 
 LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
