@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/04/05 16:26:44  lattner
+ * Add #include so that we get the prototype for atof.
+ *
  * Revision 1.1  2004/02/17 22:21:16  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -29,6 +32,7 @@
 #ifdef I_SYS_FILE
 #include <sys/file.h>
 #endif
+#include <stdlib.h>
 
 /* which backslash sequences to keep in m// or s// */
 
