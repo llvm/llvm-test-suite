@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include "defines.h"
 
 VERTEX_PTR *vp ;
