@@ -56,6 +56,9 @@ typedef pvector		*parray;	/* 2d array */
  * All are side-effect safe except for pparm and presult.
  * -DDEBUG will enable argument checking for pset and pparm
  */
+
+/* LLVM - Disable all of the inlining */
+#if 0
 #ifdef __GNUC__		/* inline is NOT ansii!  Sigh. */
 #ifndef BWGC
 extern inline precision pnew(precision u) { (* (prefc *) u)++; return u; }
@@ -98,6 +101,11 @@ extern inline precision psetq(precision *up, precision v) {
 #define pparmq(u)	(u)
 #define pvoid(u)	pdestroyf(u)
 #endif
+#endif
+#else
+#define pdestroy(u)     (void) ((u)!=pUndef&&--(*(prefc *)(u))==0&&pfree(u))
+#define pparmq(u)	((u) != pUndef && (* (prefc *) (u))++, (u))
+#define pvoid(u)	pdestroyf(u)
 #endif
 
 

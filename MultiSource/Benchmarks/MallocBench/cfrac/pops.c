@@ -265,7 +265,8 @@ void pdestroyf(u)
 #endif
 }
 
-#ifndef __GNUC__		/* inline in header file */
+/* LLVM - No inlining */
+//#ifndef __GNUC__		/* inline in header file */
 /*
  * We cannot allow this to be a macro because of the probability that it's
  * argument will be a function (e.g. utop(2))
@@ -314,7 +315,8 @@ precision psetq(up, v)
 #endif
    return v;
 }
-#endif
+/* LLVM - No Inlining */
+//#endif
 
 #if 0			/* original assignment code */
 precision pset(up, v)
