@@ -1,6 +1,9 @@
 /* $RCSfile$$Revision$$Date$
  *
  * $Log$
+ * Revision 1.2  2004/04/05 16:26:28  lattner
+ * Disable the custom allocator that is really buggy
+ *
  * Revision 1.1  2004/02/17 22:21:16  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was
@@ -14,7 +17,7 @@
  * 
  */
 
-#ifndef lint
+#if 0
 static char sccsid[] = "@(#)malloc.c	4.3 (Berkeley) 9/16/83";
 
 #ifdef DEBUGGING
@@ -132,6 +135,7 @@ malloc(nbytes)
 	/* apart from this loop, this is O(1) */
   	while (shiftr >>= 1)
   		bucket++;
+        printf("NB: %d %d\n", nbytes, bucket);
 	/*
 	 * If nothing in hash bucket right now,
 	 * request more memory from the system.
