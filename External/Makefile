@@ -18,4 +18,9 @@ ifndef USE_NAMD
 PARALLEL_DIRS := $(filter-out Namd/, $(PARALLEL_DIRS))
 endif
 
+# Sparc can't handle Namd: infinite loop, cause unknown
+ifeq ($(ARCH),Sparc)
+PARALLEL_DIRS := $(filter-out Namd/, $(PARALLEL_DIRS))
+endif
+
 include Makefile.external
