@@ -189,9 +189,12 @@ endif#DISABLE_DIFFS
 ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -enable-lsr-for-ppc
 else
+ifeq ($(ARCH),Alpha)
+LLCBETAOPTION := -enable-lsr-for-alpha
+else
 LLCBETAOPTION := -disable-pattern-isel=0
 endif
-
+endif
 
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
