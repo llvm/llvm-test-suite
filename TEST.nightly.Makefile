@@ -13,7 +13,7 @@ CFLAGS  := -O3
 REPORTS_TO_GEN := compile nat llc cbe jit
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
-TIMEOPT = -time-passes -stats -info-output-file=$@.info
+TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
 EXTRA_LLI_OPTS = $(TIMEOPT)
 
 INFO_PREFIX = Output/$*.*-
