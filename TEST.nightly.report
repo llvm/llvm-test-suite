@@ -24,9 +24,6 @@ my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
  ["LLC"      , "TEST-RESULT-llc: $WallTimeRE"],
  ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m]+)'],
  [],
- ["LLI"      , 'TEST-RESULT-lli-time: real\s*([.0-9m]+)'],
- ["DynInstrs", 'TEST-RESULT-lli-dyninst: *([0-9]+).*Number of dynamic inst'],
- [],
  ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)'],
  ["MachCode" , 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  ["CompTime" , "TEST-RESULT-jit-comptime: $WallTimeRE"]

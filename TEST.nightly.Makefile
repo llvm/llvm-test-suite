@@ -9,7 +9,7 @@ CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
-REPORTS_TO_GEN := compile llc cbe lli jit
+REPORTS_TO_GEN := compile llc cbe jit
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
 TIMEOPT = -time-passes -stats -info-output-file=$@.info
@@ -68,23 +68,6 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
         else  \
 	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
         fi
-
-# LLI tests
-$(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
-Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.exe-lli $(LLI)
-	-head -n 100 Output/$*.exe-lli > $@
-	@if test -e Output/$*.exe-lli; then \
-          echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
-	  echo -n "TEST-RESULT-lli-time: " >> $@;\
-	  grep "^real" $(INFO_PREFIX)lli.time >> $@;\
-	  echo >> $@;\
-	  echo -n "TEST-RESULT-lli-dyninst: " >> $@;\
-	  grep "Number of dynamic inst" $(INFO_PREFIX)lli.info >> $@;\
-	  echo >> $@;\
-	else  \
-	  echo "TEST-FAIL: lli $(RELDIR)/$*" >> $@;\
-	fi
-	-rm -f $(INFO_PREFIX)lli.info
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
