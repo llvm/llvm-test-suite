@@ -45,9 +45,7 @@ SourceDir := $(SPEC_BENCH_DIR)/src/
 
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
-LCCFLAGS := -DSPEC_CPU2000 -O2
-CFLAGS := -DSPEC_CPU2000 -O2
-
+CPPFLAGS += -DSPEC_CPU2000
 SPEC_SANDBOX := $(LEVEL)/test/Programs/External/SPEC/Sandbox.sh
 
 # Information about testing the program...
