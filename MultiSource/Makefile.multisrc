@@ -41,7 +41,6 @@ Output/%.o: %.c Output/.dir
 Output/%.linked.bc: $(LObjects)
 	$(LLINK) -f $(LObjects) | opt -funcresolve > $@
 
-
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
 Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
@@ -49,6 +48,19 @@ Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
+
+
+
+# Hackish productions that are useful for testing stuff.
+final: Output/$(PROG).llvm
+ds: Output/$(PROG).linked.bc
+	$(LANALYZE) -datastructure $< -t
+
+%.ps: %.dot
+	dot -Tps < $< > $@
+
+typesafe: Output/$(PROG).linked.bc
+	$(LANALYZE) -unsafepointertypes $<
 
 
 #
@@ -108,8 +120,5 @@ timing: all
 
 	$(TIMEPROG) 'Native Sun CC 64...' Output/$(PROG).native
 	$(TIMEPROG) 'Native Sun CC 32...' Output/$(PROG).native32
-
-ds: Output/$(PROG).linked.bc
-	analyze -datastructure $< -t
 
 endif
