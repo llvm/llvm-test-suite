@@ -135,6 +135,8 @@ ifdef DOTRACING
   ## -- disable output diffs
   ## -- generate llc output if not disabled
   ## -- generate cbe output if not disabled
+  ## -- Make the trace output files precious if tracing is enabled because
+  ##    we often don't want to generate the complete trace file!
 
 DISABLE_DIFFS  = 1
 OPTPASSES     += $(TRACEFLAGS)
@@ -145,6 +147,11 @@ endif
 ifndef DISABLE_CBE
 all:: $(CBEOUTPUT)
 endif
+ifndef DISABLE_JIT
+all:: $(JITOUTPUT)
+endif
+
+.PRECIOUS: $(LLIOUTPUT) $(JITOUTPUT) $(LLCOUTPUT) $(CBEOUTPUT)
 endif
 
 ifndef DISABLE_LLC
