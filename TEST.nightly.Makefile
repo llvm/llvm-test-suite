@@ -18,21 +18,22 @@ TIMEOPT = -time-passes -stats -info-output-file=$@.info
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1'
-	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
+	-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep "Total Execution Time" $@ >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep "Number of bytecode bytes written" $@ >> $@;\
+	  grep "Number of bytecode bytes written" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-compile: " >> $@;\
-	  grep "Number of instructions" $@ >> $@;\
+	  grep "Number of instructions" $@.info >> $@;\
 	  echo >> $@;\
 	else \
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\
 	fi
+	-@rm -f $@.info
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
@@ -41,7 +42,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 	@-if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-llc: " >> $@;\
-	  grep "Total Execution Time" $@ >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-llc: " >> $@;\
 	  grep "^real" $@ >> $@;\
@@ -49,11 +50,12 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
 	fi
+	-@rm -f $@.info
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.llvm.bc $(LDIS)
-	-($(MAKE) TIME_RUN=1 Output/$*.diff-cbe) > $@ 2>&1
+	-($(MAKE) TIME_RUN=1 Output/$*.diff-cbe) 2>&1 | head -n 100 > $@
 	@if test -f Output/$*.diff-cbe; then \
           echo "TEST-RESULT-cbe: YES" >> $@;\
 	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
@@ -67,7 +69,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc $(LDIS)
 # LLI tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
 Output/%.nightly.lli.report.txt: Output/%.llvm.bc $(LLI)
-	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-lli) > $@ 2>&1
+	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-lli) 2>&1 | head -n 100 > $@
 	@if test -e Output/$*.diff-lli; then \
           echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
@@ -84,7 +86,7 @@ Output/%.nightly.lli.report.txt: Output/%.llvm.bc $(LLI)
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
 Output/%.nightly.jit.report.txt: Output/%.llvm.bc $(LLI)
-	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-jit) > $@ 2>&1
+	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-jit) 2>&1 | head -n 100 > $@
 	@if test -f Output/$*.diff-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
