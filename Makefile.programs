@@ -138,29 +138,61 @@ RUN_OPTIONS += < $(INPUT_FILENAME)
 endif
 
 # Rules to build the test output...
+$(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
+$(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	-$(LLI) -q -abort-on-exception -force-interpreter=true $< > $@ 2>&1 $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(LLI) -force-interpreter=false $< > $@ 2>&1 $(RUN_OPTIONS)
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
+$(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$< > $@ 2>&1 $(RUN_OPTIONS)
 
 # Rules to diff test output...
+$(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
 	$(DIFFPROG) lli $*
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
 	$(DIFFPROG) jit $*
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	$(DIFFPROG) llc $*
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	$(DIFFPROG) cbe $*
+
+
+# Rules to support the USE_PRECOMPILED_BYTECODE setting If set, submakefiles
+# will not know how to make output bytecode files for the programs in this
+# directory.  Instead, this makefile just copies them out of the bytecode
+# repository.
+ifdef USE_PRECOMPILED_BYTECODE
+
+# Calculate the directory we should copy the bytecode file into.  This is
+# relative to BYTECODE_REPOSITORY and the current directory this program is in.
+#
+CURDIR  := $(shell cd .; pwd)
+PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)
+SRCDIR  := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
+
+# To Make a file up-to-date, just copy it over.
+$(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
+Output/%.llvm.bc: $(SRCDIR)/%.bc Output/.dir
+	cp $< $@
+
+endif
+
 
 # Support for the TEST= option... when TEST= is specified on the command line,
 # the default target is the test target.  Here we dispatch to a specific set of
