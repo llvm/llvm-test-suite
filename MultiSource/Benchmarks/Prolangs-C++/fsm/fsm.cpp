@@ -44,8 +44,8 @@ fsm::fsm(triple *p) {
       max_node = e->to;
   }
   graph = new state[max_node+1]; // was new state[max_node+1]
-  for (e=p; e->from; ++e)
-    graph[e->from].transition[e->input] = &graph[e->to];
+  for (triple *e=p; e->from; ++e)
+    graph[e->from].transition[(int)e->input] = &graph[e->to];
   current = 0;
 }
 
@@ -59,7 +59,7 @@ void fsm::reset() {
 
 void fsm::advance(char x) {
   if (current)
-    current = current->transition[x];
+    current = current->transition[(int)x];
 }
 
 int fsm::end_state() {
@@ -76,14 +76,14 @@ public:
   sample();
 };
 
-triple sample::edges[] = {{1,'A',2}, {1, 'B', 3}};
+triple sample::edges[3] = {{1,2,'A'}, {1, 3, 'B'}};
 
 sample::sample() : fsm(edges) {
 }
 
 #include <stdio.h>
 
-main() {
+int main() {
   char input_string[80];
   printf("Enter input expression: ");
   scanf("%s", input_string);
