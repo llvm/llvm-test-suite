@@ -1,6 +1,7 @@
                                        // Chapter 11 - Program 4
-#include <stream.h>
+#include <iostream>
 #include "supervsr.h"
+using namespace std;
 
 // In all cases, init_data assigns values to the class variables and
 //  display outputs the values to the monitor for inspection.
@@ -101,7 +102,7 @@ consultant::display(void)
 
 person *staff1,*staff2,*staff3,*staff4;
 
-main()
+int main()
 {
 supervisor *suppt;
 programmer *progpt;
