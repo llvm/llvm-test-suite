@@ -139,6 +139,7 @@ main(int argc, char *argv[]) {
 	 for (j = 0 ; j < num_lists ; j ++) { 
 		struct element *e = allocate();
 		e->next = lists[j];
+		e->count = 0;
 		lists[j] = e;
 	 }
   }
