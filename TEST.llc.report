@@ -8,16 +8,6 @@
 $SortCol = 1;
 $TrimRepeatedPrefix = 1;
 
-sub TotalInstrEliminations {
-  my ($Cols, $Col) = @_;
-  $iMov = $Cols->[$Col-2];
-  $peep = $Cols->[$Col-1];
-  if ($iMov eq "*") { $iMov = 0; }
-  if ($peep eq "*") { $peep = 0; }
-
-  return $iMov + $peep;
-}
-
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
 # seperators, and closures may be put in for custom processing.
@@ -48,6 +38,6 @@ sub TotalInstrEliminations {
  ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
  ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
  ["#peep"  , '([0-9]+).*Number of peephole optimization performed'],
- ["#tot-el", \&TotalInstrEliminations],
+ ["#tot-el", sub { return AddColumns(@_,-1,-2); }],
  []
-);
+ );
