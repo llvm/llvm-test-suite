@@ -61,14 +61,8 @@ licenses, and/or restrictions:
 
 Program             Directory
 -------             ---------
-System Library      llvm/lib/System
-Compiler Driver     llvm/tools/llvmc
-PowerPC Backend     llvm/lib/Target/PowerPC
-Autoconf:           llvm/autoconf
-                    llvm/projects/ModuleMaker/autoconf
-                    llvm/projects/sample/autoconf
-Burg:               llvm/utils/Burg
-                    llvm-test/MultiSource/Applications/Burg
+Autoconf:           llvm-test/autoconf
+Burg:               llvm-test/MultiSource/Applications/Burg
 Aha:                llvm-test/MultiSource/Applications/aha
 SGEFA:              llvm-test/MultiSource/Applications/sgefa
 SIOD:               llvm-test/MultiSource/Applications/siod
@@ -98,7 +92,3 @@ Dhrystone:          llvm-test/SingleSource/Benchmarks/Dhrystone
 SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
                     llvm-test/SingleSource/Gizmos
-GNU Libc:           llvm/runtime/GCCLibraries/libc
-Zlib Library:       llvm/runtime/zlib
-PNG Library:        llvm/runtime/libpng
-
