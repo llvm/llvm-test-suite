@@ -439,9 +439,9 @@ int main(int c, char *v[])
 
   /***...write image to stdout...***/
   for (i=0 ; i<3*WIDTH*HEIGHT ; ) {
-    fputc( memory[i++], stdout);
-    fputc( memory[i++], stdout);
-    fputc( memory[i++], stdout);
+    fputc( memory[i++]&~1, stdout);
+    fputc( memory[i++]&~1, stdout);
+    fputc( memory[i++]&~1, stdout);
   }
 
   return 0; /***...ANSI C wants main to return an int...***/
