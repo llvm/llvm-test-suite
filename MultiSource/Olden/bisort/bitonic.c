@@ -241,8 +241,7 @@ int main(int argc, char **argv) {
    
   n = dealwithargs(argc,argv);
 
-  printf("Bisort with %d size on %d procs of dim %d\n",
-	   n, NumNodes, NDim);
+  printf("Bisort with %d size of dim %d\n", n, NDim);
 
   h = RandTree(n,12345768,0,0);
   sval = random(245867) % RANGE;
