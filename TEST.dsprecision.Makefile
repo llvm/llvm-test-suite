@@ -16,6 +16,12 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc $(LOPT)
 	-($(LOPT) -basicaa -aa-eval -disable-output $<) > Output/$*.basicaa.out 2>&1
 	@echo -n "BASIC MA: " >> $@
 	-@grep 'may alias responses' Output/$*.basicaa.out >> $@
+	@echo -n "BASIC NOMR: " >> $@
+	-@grep 'no mod/ref responses' Output/$*.basicaa.out >> $@
+	@echo -n "BASIC JUSTREF: " >> $@
+	-@grep '[0-9] ref responses' Output/$*.basicaa.out >> $@
+	@echo -n "BASIC JUSTMOD: " >> $@
+	-@grep 'mod responses' Output/$*.basicaa.out >> $@
 	@echo -n "BASIC MR: " >> $@
 	-@grep 'mod & ref responses' Output/$*.basicaa.out >> $@
 	@
@@ -23,17 +29,35 @@ Output/%.$(TEST).report.txt: Output/%.lib.bc $(LOPT)
                            -disable-output $<) > Output/$*.steensfiaa.out 2>&1
 	@echo -n "STEENS-FI MA: " >> $@
 	-@grep 'may alias responses' Output/$*.steensfiaa.out >> $@
+	@echo -n "STEENS-FI NOMR: " >> $@
+	-@grep 'no mod/ref responses' Output/$*.steensfiaa.out >> $@
+	@echo -n "STEENS-FI JUSTREF: " >> $@
+	-@grep '[0-9] ref responses' Output/$*.steensfiaa.out >> $@
+	@echo -n "STEENS-FI JUSTMOD: " >> $@
+	-@grep 'mod responses' Output/$*.steensfiaa.out >> $@
 	@echo -n "STEENS-FI MR: " >> $@
 	-@grep 'mod & ref responses' Output/$*.steensfiaa.out >> $@
 	@
 	-($(LOPT) -steens-aa -aa-eval -disable-output $<) > Output/$*.steensfsaa.out 2>&1
 	@echo -n "STEENS-FS MA: " >> $@
 	-@grep 'may alias responses' Output/$*.steensfsaa.out >> $@
+	@echo -n "STEENS-FS NOMR: " >> $@
+	-@grep 'no mod/ref responses' Output/$*.steensfsaa.out >> $@
+	@echo -n "STEENS-FS JUSTREF: " >> $@
+	-@grep '[0-9] ref responses' Output/$*.steensfsaa.out >> $@
+	@echo -n "STEENS-FS JUSTMOD: " >> $@
+	-@grep 'mod responses' Output/$*.steensfsaa.out >> $@
 	@echo -n "STEENS-FS MR: " >> $@
 	-@grep 'mod & ref responses' Output/$*.steensfsaa.out >> $@
 	-($(LOPT) -ds-aa -aa-eval -disable-output $<) > Output/$*.dsaa.out 2>&1
 	@echo -n "DS MA: " >> $@
 	-@grep 'may alias responses' Output/$*.dsaa.out >> $@
+	@echo -n "DS NOMR: " >> $@
+	-@grep 'no mod/ref responses' Output/$*.dsaa.out >> $@
+	@echo -n "DS JUSTREF: " >> $@
+	-@grep '[0-9] ref responses' Output/$*.dsaa.out >> $@
+	@echo -n "DS JUSTMOD: " >> $@
+	-@grep 'mod responses' Output/$*.dsaa.out >> $@
 	@echo -n "DS MR: " >> $@
 	-@grep 'mod & ref responses' Output/$*.dsaa.out >> $@
 
