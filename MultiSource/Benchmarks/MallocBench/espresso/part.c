@@ -43,7 +43,7 @@ int *cols_visited;
 }
 
 
-static int
+int
 visit_col(A, pcol, rows_visited, cols_visited)
 sm_matrix *A;
 sm_col *pcol;
