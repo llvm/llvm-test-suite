@@ -53,7 +53,7 @@ ifndef USE_PRECOMPILED_BYTECODE
 # without any libraries linked in...
 #
 Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
-	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve -deadtypeelim | $(LDIS) > $@
+	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve -deadtypeelim -q | $(LDIS) > $@
 
 Output/%.LOC.txt: $(Source)
 	cat $(Source) $(wildcard *.h) | wc -l > $@
