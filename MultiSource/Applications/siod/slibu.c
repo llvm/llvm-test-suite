@@ -1448,17 +1448,6 @@ LISP l_chown(LISP path,LISP uid,LISP gid)
 
 #endif
 
-#if defined(unix) && !defined(linux)
-LISP l_lchown(LISP path,LISP uid,LISP gid)
-{long iflag;
- iflag = no_interrupt(1);
- if (lchown(get_c_string(path),get_c_long(uid),get_c_long(gid)))
-   err("lchown",cons(path,llast_c_errmsg(-1)));
- no_interrupt(iflag);
- return(NIL);}
-#endif
-
-
 #ifdef unix
 
 LISP popen_l(LISP name,LISP how)
@@ -2242,9 +2231,6 @@ void __stdcall init_slibu(void)
 #endif
 #ifndef WIN32
  init_subr_3("chown",l_chown);
-#endif
-#if defined(unix) && !defined(linux)
- init_subr_3("lchown",l_lchown);
 #endif
  init_subr_1("http-date",http_date);
 #if defined(__osf__)
