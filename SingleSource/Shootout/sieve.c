@@ -20,7 +20,7 @@ main(int argc, char *argv[]) {
 	}
 	for (i=2; i <= 8192; i++) {
 	    if (flags[i]) {
-		// remove all multiples of prime: i
+                /* remove all multiples of prime: i */
 		for (k=i+i; k <= 8192; k+=i) {
 		    flags[k] = 0;
 		}
