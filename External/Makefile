@@ -13,4 +13,4 @@ ifndef USE_SPEC
 DIRS := $(filter-out SPEC/, $(DIRS))
 endif
 
-include ${LEVEL}/test/Makefile.tests
+include ${LEVEL}/test/Programs/Makefile.programs
