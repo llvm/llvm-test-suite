@@ -212,16 +212,13 @@ extern void user_access (), make_access (), child_access ();
 #define	VFORK_NAME	"vfork"
 #endif	/* USG and don't have vfork.  */
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX)
+#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__)
 
 #include <unistd.h>
+#include <signal.h>
 
 #else
 
-#ifndef	USG
-extern int sigsetmask ();
-extern int sigblock ();
-#endif
 extern int kill ();
 extern void abort (), exit ();
 extern int unlink (), stat ();

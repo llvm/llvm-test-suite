@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #if	defined (USG) || defined (POSIX)
 #include <fcntl.h>
@@ -399,7 +400,6 @@ ar_member_touch (arname, memname)
   register int fd;
   struct ar_hdr ar_hdr;
   register int i;
-  extern int errno;
   struct stat statbuf;
 
   if (pos < 0)

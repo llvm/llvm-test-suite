@@ -22,14 +22,13 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include "file.h"
 #include "variable.h"
 #include <errno.h>
+#include <signal.h>
 
 /* Default path to search for executables.  */
 static char default_path[] = ":/bin:/usr/bin";
 
 /* Default shell to use.  */
 char default_shell[] = "/bin/sh";
-
-extern int errno;
 
 #if	defined(POSIX) || defined(__GNU_LIBRARY__)
 #include <limits.h>
@@ -101,7 +100,7 @@ extern int wait ();
 #endif	/* WTERMSIG defined or USG and don't have <sys/wait.h>.  */
 
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX)
+#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__)
 
 #include <sys/types.h>
 #define	GID_T	gid_t
@@ -128,8 +127,7 @@ extern void wait_to_start_job ();
 extern int start_remote_job_p ();
 extern int start_remote_job (), remote_status ();
 
-
-#if	(defined(USG) && !defined(HAVE_SIGLIST)) || defined(DGUX)
+#if	(defined(USG) && !defined(HAVE_SIGLIST)) || defined(DGUX) || defined(__CYGWIN__)
 static char *sys_siglist[NSIG];
 void init_siglist ();
 #else	/* Not (USG and HAVE_SIGLIST), or DGUX.  */
@@ -180,10 +178,12 @@ extern void block_remote_children (), unblock_remote_children ();
 
 extern int fatal_signal_mask;
 
-#ifdef	USG
+#if defined(USG) || defined(__CYGWIN__)
+
 /* Set nonzero in the interval when it's possible that we may see a dead
    child that's not in the `children' chain.  */
 static int unknown_children_possible = 0;
+
 #endif
 
 
@@ -192,7 +192,7 @@ static int unknown_children_possible = 0;
 static void
 block_signals ()
 {
-#ifdef USG
+#if defined(USG) || defined(__CYGWIN__)
 
   /* Tell child_handler that it might see children that aren't yet
      in the `children' chain.  */
@@ -216,7 +216,7 @@ block_signals ()
 static void
 unblock_signals ()
 {
-#ifdef	USG
+#if defined(USG) || defined(__CYGWIN__)
 
   (void) SIGNAL (SIGCLD, child_handler);
 
@@ -1243,7 +1243,7 @@ construct_command_argv (line, restp, file)
   return argv;
 }
 
-#if	(defined(USG) && !defined(HAVE_SIGLIST)) || defined(DGUX)
+#if	(defined(USG) && !defined(HAVE_SIGLIST)) || defined(DGUX) || defined(__CYGWIN__)
 /* Initialize sys_siglist.  */
 
 void
@@ -1274,9 +1274,11 @@ init_siglist ()
       case SIGTRAP:
 	sys_siglist[i] = "Trace Trap";
 	break;
+#ifdef SIGIOT
       case SIGIOT:
 	sys_siglist[i] = "IOT Trap";
 	break;
+#endif
 #ifdef	SIGEMT
       case SIGEMT:
 	sys_siglist[i] = "EMT Trap";

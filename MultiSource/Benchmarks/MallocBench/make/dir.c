@@ -25,6 +25,10 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #define SYSNDIR
 #endif /* Xenix */
 
+#if !defined(POSIX) && defined(__CYGWIN__)
+#define POSIX
+#endif
+
 #if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
 #include <dirent.h>
 #define direct dirent

@@ -342,7 +342,7 @@ fatal_error_signal (sig)
      int sig;
 {
   signal (sig, SIG_DFL);
-#ifndef USG
+#if !defined(USG) && !defined(__CYGWIN__)
   (void) sigsetmask (0);
 #endif
 

@@ -313,7 +313,9 @@ main (argc, argv, envp)
   FATAL_SIG (SIGINT);
   FATAL_SIG (SIGILL);
   FATAL_SIG (SIGTRAP);
+#ifdef SIGIOT
   FATAL_SIG (SIGIOT);
+#endif
 #ifdef	SIGEMT
   FATAL_SIG (SIGEMT);
 #endif

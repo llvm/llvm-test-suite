@@ -17,6 +17,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #include "make.h"
 #include "dep.h"
+#include <errno.h>
 
 
 /* Compare strings *S1 and *S2.
@@ -273,9 +274,6 @@ void
 perror_with_name (str, name)
      char *str, *name;
 {
-  extern int errno, sys_nerr;
-  extern const char * const sys_errlist[];
-
   if (errno < sys_nerr)
     error ("%s%s: %s", str, name, sys_errlist[errno]);
   else
@@ -288,9 +286,6 @@ void
 pfatal_with_name (name)
      char *name;
 {
-  extern int errno, sys_nerr;
-  extern const char *const sys_errlist[];
-
   if (errno < sys_nerr)
     fatal ("%s: %s", name, sys_errlist[errno]);
   else
@@ -481,7 +476,7 @@ dep_name (dep)
 }
 #endif
 
-#if	!defined(POSIX) && !defined(__GNU_LIBRARY__)
+#if	!defined(POSIX) && !defined(__GNU_LIBRARY__) && !defined(__CYGWIN__)
 extern int getuid (), getgid (), geteuid (), getegid ();
 #ifdef	USG
 extern int setuid (), setgid ();

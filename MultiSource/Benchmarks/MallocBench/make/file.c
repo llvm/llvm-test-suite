@@ -23,8 +23,6 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <errno.h>
 
 
-extern int errno;
-
 
 /* Hash table of files the makefile knows how to make.  */
 
