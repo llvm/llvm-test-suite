@@ -21,7 +21,7 @@ my $WallTimeRE = '[A-Za-z0-9.: ]+\\(([0-9.]+) wall clock';
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+).*Number of bytecode bytes'],
  ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
  [],
- ["NAT"      , "TEST-RESULT-nat-time: $WallTimeRE"],
+ ["NAT"      , 'TEST-RESULT-nat-time: real\s*([.0-9m]+)'],
  ["LLC"      , "TEST-RESULT-llc: $WallTimeRE"],
  ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m]+)'],
  [],
