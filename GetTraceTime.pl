@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-($prog, $llc, $trace, @rest) = @ARGV;
-$runs = $llc;  $runs =~ s/llc/runs/;
+($llc, $trace, $out) = @ARGV;
+$prog = $llc; $prog =~ s/\.out.*$//;
 
 open LLC, $llc;
 foreach $line (<LLC>){
@@ -36,7 +36,7 @@ $time_t2 = $sys2 + $time_t2;
 $pct = "n/a";
 $pct = sprintf("%.2f", ($time_t2/$time_t)*100.0) if ($time_t != 0);
 $report = "$prog  percentage: $pct; time: $time_t2\n";
-if (open(OUTPUT, ">>$runs")) {
+if (open(OUTPUT, ">>$out")) {
 	print OUTPUT $report;
 	close OUTPUT;
 }

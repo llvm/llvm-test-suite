@@ -56,8 +56,6 @@ PROGDIR = $(LEVEL)/test/Programs
 # TIMEPROG - The program used to get timing results for a program
 TIMEPROG := $(PROGDIR)/TimeProgram.sh
 
-TIMESCRIPT := $(PROGDIR)/GetTraceTime.pl
-
 # DIFFPROG - The program used to diff the output
 DIFFPROG := $(PROGDIR)/DiffOutput.sh
 
@@ -107,7 +105,7 @@ LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 #output for tracing framework
-TRACINGOUTPUT := $(addsuffix .out-tracing,  $(PREFIXED_PROGRAMS_TO_TEST))
+TRACINGOUTPUT := $(addsuffix .out-trace,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
@@ -115,11 +113,8 @@ JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
-#Diffs for tracing framework
-GETTIMECOMPARISON := $(addsuffix .performance, $(PREFIXED_PROGRAMS_TO_TEST))
-
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-tracing 
+.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-trace
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe Output/%.llc.bc
 
 # Build diffs from the output...
@@ -178,7 +173,7 @@ ifdef GET_LLVM_TRACE
 all:: $(TRACINGCODEGEN)
 all:: $(TRACINGLLCCODEGEN)
 all:: $(TRACINGEXECUTABLE)
-all:: $(GETTIMECOMPARISON)
+all:: $(TRACINGOUTPUT)
 
 DISABLE_CBE = 1
 DISABLE_LLC_DIFFS = 1
@@ -379,13 +374,9 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
-$(PROGRAMS_TO_TEST:%=Output/%.out-tracing): \
-Output/%.out-tracing: Output/%.trace
+$(PROGRAMS_TO_TEST:%=Output/%.out-trace): \
+Output/%.out-trace: Output/%.trace
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-
-$(PROGRAMS_TO_TEST:%=Output/%.performance): \
-Output/%.performance: Output/%.out-llc.time Output/%.out-tracing.time
-	-$(TIMESCRIPT) $* Output/$*.out-llc.time Output/$*.out-tracing.time $@
 
 endif
 
