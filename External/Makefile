@@ -9,8 +9,5 @@ include ${LEVEL}/Makefile.config
 # Create the list of directories to compile
 #
 DIRS := SPEC
-ifndef USE_SPEC
-DIRS := $(filter-out SPEC/, $(DIRS))
-endif
 
 include ${LEVEL}/test/Programs/Makefile.programs

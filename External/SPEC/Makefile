@@ -1,12 +1,17 @@
 LEVEL = ../../../..
-DIRS := CFP2000 CINT2000
+DIRS := CINT95 CFP2000 CINT2000
 include ${LEVEL}/Makefile.config
 
 #
-# Add SPEC95 if we've got it.
+# Remove SPEC95 and SPEC2000 per the user's configuration
 #
-ifeq ($(USE_SPEC95),1)
-DIRS += CINT95
+ifndef USE_SPEC
+DIRS := $(filter-out CFP2000/, $(DIRS))
+DIRS := $(filter-out CINT2000/, $(DIRS))
+endif
+
+ifndef USE_SPEC95
+DIRS := $(filter-out CINT95/, $(DIRS))
 endif
 
 include ${LEVEL}/test/Programs/Makefile.programs
