@@ -45,3 +45,20 @@ Output/%.run-llc: Output/%.llc
 $(PROGRAMS_TO_TEST:%=Output/%.run-cbe): \
 Output/%.run-cbe: Output/%.cbe
 	-$(TESTRUNR) $(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
+Output/%.exe-lli: Output/%.run-lli
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-jit): \
+Output/%.exe-jit: Output/%.run-jit
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
+Output/%.exe-llc: Output/%.run-llc
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \
+Output/%.exe-cbe: Output/%.run-cbe
+	-cp $< $@
