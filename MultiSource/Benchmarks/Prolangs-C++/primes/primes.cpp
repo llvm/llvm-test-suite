@@ -24,14 +24,15 @@ public:
 	int out();
 	filter(item *src, int f) : item (src) {factor = f;}
 };
-main() {
+
+int main() {
 	counter c(2);
 	sieve s(&c);
 	int next;
 	do {
 		next = s.out();
 		printf("%d ",next);
-	} while (next < 61);
+	} while (next < 100001);
 	printf ("\n");
 }
 int sieve::out() {
