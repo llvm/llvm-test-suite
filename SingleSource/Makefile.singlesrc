@@ -1,4 +1,4 @@
-##===- test/Programs/SingleSource/Makefile -----------------*- Makefile -*-===##
+##===- test/Programs/SingleSource/Makefile.singlesrc -------*- Makefile -*-===##
 #
 # This makefile builds all of the C programs in this directory in three
 # different configurations:
