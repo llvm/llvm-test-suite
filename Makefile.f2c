@@ -16,7 +16,7 @@ ifeq ($(ARCH),x86)
 F2C_DIR = /home/vadve/shared/localtools/x86
 else
 	ifeq ($(ARCH),Sparc)
-		F2C_DIR = /usr/dcs/software/unsupported
+		F2C_DIR = /home/vadve/shared/localtools/sparc
 	endif
 endif
 
@@ -28,7 +28,7 @@ clean::
 	rm -f $(Source:%.f=%.c)
 
 %.c: %.f
-	$(F2C) $< >& /dev/null
+	$(F2C) $< > /dev/null 2>&1
 	
 CPPFLAGS = -I$(F2C_INC) 
 LDFLAGS += -L$(F2C_LIB) -lf2c
