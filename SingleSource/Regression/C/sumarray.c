@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 int SumArray(int Array[], int Num) {
   unsigned i, Result = 0;
@@ -19,5 +20,6 @@ int main() {
   for (i = 1; i < 100; i += 2)
   	Array[i] = i*2;
 
-  return SumArray(Array, 100);
+  printf("Produced: %d\n", SumArray(Array, 100));
+  return 0;
 }
