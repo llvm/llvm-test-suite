@@ -51,7 +51,7 @@ main(int argc,char *argv[])
 
   scanf("%d",&rep);
   scanf("%d",&n);
-  scanf("%f",&eps);
+  scanf("%lf",&eps);
 
   dallocvector(n,&D);
   dallocvector(n,&E);
