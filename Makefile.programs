@@ -34,8 +34,7 @@ LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out.lli Output/%.out.llc  Output/%.out.nat
-all:: $(NATOUTPUT) $(LLCOUTPUT) $(LLIOUTPUT)
+.PRECIOUS: Output/%.out-lli Output/%.out-llc Output/%.out-nat
 
 # Build diffs for LLI and LLC output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-llc
