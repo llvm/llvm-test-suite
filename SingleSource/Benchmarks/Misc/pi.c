@@ -32,7 +32,6 @@ int main(int argc, char *argv[]) {
       itot = 1200;
 
       for(j=1; j<=itot; j++) {
-
 /*
 c   X and Y are two uniform random numbers between 0 and 1.
 c   They are computed using two linear congruential generators.
@@ -54,9 +53,8 @@ c   mantissa.
           low = low + 1;
         }
       }
-      printf(" x = %9.6f    y = %12.2f  low = %8ld j = %7ld\n",x,y,low,j);
+      printf(" x = %9.6f    y = %12.2f  low = %8d j = %7d\n",x,y,(int)low,(int)j);
       pi = 4.0 * (float)low/(float)itot;
-      printf("Pi = %9.6f ztot = %12.2f itot = %8ld\n",pi,ztot,itot);
-
+      printf("Pi = %9.6f ztot = %12.2f itot = %8d\n",pi,ztot,(int)itot);
       return 0;
 }
