@@ -20,4 +20,4 @@ $(DUMMYLIB) : $(wildcard $(DUMMYSRC)/*.c)
 LINKED_PROGS := $(PROGRAMS_TO_TEST:%=Output/%.lib.bc)
 
 $(LINKED_PROGS): Output/%.lib.bc: Output/%.llvm.bc $(DUMMYLIB)
-	$(LLINK) $< $(DUMMYLIB) | $(LOPT) -internalize -funcresolve -globaldce > $@ 
+	$(LLINK) $< $(DUMMYLIB) | $(LOPT) -funcresolve -internalize -globaldce > $@ 
