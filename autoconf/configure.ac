@@ -67,7 +67,7 @@ then
 fi
 
 dnl Check for GNU Make.  We use its extensions too, so don't build without it
-CHECK_GNU_MAKE
+AC_CHECK_GNU_MAKE
 if test -z "$_cv_gnu_make_command"
 then
 	AC_MSG_ERROR([GNU Make required but not found])
