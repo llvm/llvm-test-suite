@@ -20,7 +20,7 @@ int dealwithargs(int argc, char *argv[])
   if (argc > 3)
     flag = atoi(argv[3]);
   else 
-    flag = 1;
+    flag = 0;
 
   if (argc > 2) 
     NumNodes = atoi(argv[2]);
@@ -32,7 +32,7 @@ int dealwithargs(int argc, char *argv[])
   if (argc > 1)
     num = atoi(argv[1]);
   else
-    num = 50;
+    num = 65535;
 
   return num;
 }
