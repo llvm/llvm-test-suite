@@ -27,7 +27,7 @@ $TrimRepeatedPrefix = 1;
  ["#MCInsts", '([0-9]+).*Number of machine instrs printed'],
  ["#IntOrig", '([0-9]+).*Number of original intervals'],
  ["#IntCoal", '([0-9]+).*Number of intervals after coalescing'],
- ["Eff     ", '([0-9]+).*Ratio of intervals processed over total intervals'],
+ ["Eff     ", '(\d+\.\d+).*Ratio of intervals processed over total intervals'],
  [],
 # Number of transformations
  ["#store" , '([0-9]+).*Number of stores added'],
