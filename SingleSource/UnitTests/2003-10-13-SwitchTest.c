@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main(int argc) {
+int main(int argc, const char **argv) {
    switch (argc) {
    default:
      printf("GOOD\n");
