@@ -23,16 +23,19 @@ all::
 include $(LEVEL)/test/Programs/Makefile.programs
 
 # Figure out what object files we want to build...
-LObjs    := $(sort $(addsuffix .rbc, $(basename $(Source))))
+LObjs    := $(sort $(addsuffix .rbc, $(notdir $(basename $(Source)))))
 LObjects := $(addprefix Output/,$(LObjs))
 
-NObjs    := $(sort $(addsuffix .o, $(basename $(Source))))
+NObjs    := $(sort $(addsuffix .o, $(notdir $(basename $(Source)))))
 NObjects := $(addprefix Output/,$(NObjs))
 
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
 
-Output/%.o: %.c Output/.dir
+Output/%.o: $(SourceDir)%.c Output/.dir
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+Output/%.o: $(SourceDir)%.cpp Output/.dir
+	$(CC) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 bugpoint-gccas: Output/$(PROG).bugpoint-gccas
 bugpoint-gccld: Output/$(PROG).bugpoint-gccld
