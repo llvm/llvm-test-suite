@@ -22,8 +22,8 @@ sub FormatTime {
 
 sub GCCCBERatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-6];
-  my $CBE = $Cols->[$Col-5];
+  my $GCC = $Cols->[$Col-5];
+  my $CBE = $Cols->[$Col-4];
   if ($GCC ne "*" and $CBE ne "*" and $CBE != "0") {
     return sprintf("%3.2f", $GCC/$CBE);
   } else {
@@ -33,8 +33,8 @@ sub GCCCBERatio {
 
 sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-7];
-  my $LLC = $Cols->[$Col-5];
+  my $GCC = $Cols->[$Col-6];
+  my $LLC = $Cols->[$Col-4];
   if ($GCC ne "*" and $LLC ne "*" and $LLC != "0") {
     return sprintf("%3.2f", $GCC/$LLC);
   } else {
@@ -44,8 +44,8 @@ sub GCCLLCRatio {
 
 sub GCCLLC_BETARatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-8];
-  my $LLC_BETA = $Cols->[$Col-5];
+  my $GCC = $Cols->[$Col-7];
+  my $LLC_BETA = $Cols->[$Col-4];
   if ($GCC ne "*" and $LLC_BETA ne "*" and $LLC_BETA != "0") {
     return sprintf("%3.2f", $GCC/$LLC_BETA);
   } else {
