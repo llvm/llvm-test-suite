@@ -11,8 +11,7 @@
 #include "tree.h"
 extern void *malloc(unsigned);
 
-tree_t *TreeAlloc (level, lo, proc)
-    int		level, lo, proc;
+tree_t *TreeAlloc (int level, int lo, int proc)
 {
 
   if (level == 0)
@@ -35,8 +34,6 @@ tree_t *TreeAlloc (level, lo, proc)
     return new;
 #else
     struct tree *new, *right, *left;
-    int mid, lo_tmp;
-
     new = (struct tree *) malloc(sizeof(tree_t));
     left = TreeAlloc(level -1, lo+proc/2, proc/2);
     right=TreeAlloc(level-1,lo,proc/2);

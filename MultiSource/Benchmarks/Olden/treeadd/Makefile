@@ -1,9 +1,9 @@
-LEVEL = ../../..
+LEVEL = ../../../..
 
-PROG = treeadd
-LOCAL_CFLAGS=
-LOCAL_LDFLAGS= 
+PROG       = treeadd
+CPPFLAGS   = -DTORONTO
+LDFLAGS    = 
 
 OBJS = args.o node.o par-alloc.o
 
-include	../makefile
+include	../Makefile.multisrc

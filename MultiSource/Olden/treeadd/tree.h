@@ -4,6 +4,7 @@
  */
 
 #ifdef TORONTO
+#include <stdio.h>
 #define chatting printf
 #define PLAIN
 #endif
@@ -13,9 +14,9 @@ typedef struct tree {
     struct tree *left, *right;
 } tree_t;
 
-#define NULL	0
+extern tree_t *TreeAlloc (int level, int lo, int hi);
+int TreeAdd (tree_t *t);
 
-extern tree_t *TreeAlloc (/*int level, int lo, int hi*/);
 
 
 

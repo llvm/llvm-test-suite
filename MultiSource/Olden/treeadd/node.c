@@ -14,6 +14,7 @@
 #include "mem-ref.h"
 #endif
 
+#include <stdlib.h>
 #include "tree.h"
 
 #ifdef TORONTO
@@ -26,10 +27,7 @@ typedef struct {
     long 	level;
 } startmsg_t;
 
-int TreeAdd (/* tree_t *t */);
-extern tree_t *TreeAlloc (/* int level, int lo, int hi */);
-
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
     tree_t	*root;
     int level,result;
@@ -99,8 +97,7 @@ main (int argc, char *argv[])
 
 /* TreeAdd:
  */
-int TreeAdd (t)
-     register tree_t	*t;
+int TreeAdd (tree_t *t)
 {
   if (t == NULL)  {
     return 0;
