@@ -254,12 +254,16 @@ Output/gccld-pass-args: $(LGCCLDPROG)
 	sed 's/Pass Arguments: //' < $@.1 > $@
 
 
+ifdef REQUIRES_EH_SUPPORT
+CBEFLAGS += -enable-correct-eh-support
+endif
+
 #
 # Rules to compile the program for the C Back End
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LDIS)
-	-$(LDIS) -c $< -o $@ -f
+	-$(LDIS) $(CBEFLAGS) -c $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
