@@ -202,11 +202,11 @@ endif#DISABLE_DIFFS
 # raw output from the C frontend, optimize it.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
-	$(LGCCAS) $(STATS) $< -o $@
+	-$(LGCCAS) $(STATS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
-	$(LOPT) -mstrip $< -o $@ -f
+	-$(LOPT) -mstrip $< -o $@ -f
 
 
 ifndef DISABLE_FOR_LLVM_PROGRAMS
@@ -216,32 +216,32 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
+	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
+	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
 Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
-	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
 Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
-	$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/gccas-pass-args: $(LGCCAS) Output/.dir
-	$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
+	-$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
 Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
