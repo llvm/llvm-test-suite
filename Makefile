@@ -35,8 +35,14 @@ report.$(TEST).txt: report.$(TEST).raw.out $(TestReport)
 report.$(TEST).html: report.$(TEST).raw.out $(TestReport)
 	./GenerateReport.pl -html TEST.$(TEST).report < $< > $@
 
+report.$(TEST).tex: report.$(TEST).raw.out $(TestReport)
+	./GenerateReport.pl -latex TEST.$(TEST).report < $< > $@
+
 report: report.$(TEST).txt
-	@cat report.$(TEST).txt
+	@cat $<
+
+report.tex: report.$(TEST).tex
+	@cat $<
 
 clean::
 	rm -f report.*.raw.out report.*.txt
