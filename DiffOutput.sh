@@ -12,7 +12,7 @@
 DIFFOUTPUT=Output/$2.diff-$1
 
 # Find gnu diff
-if which gdiff 2> /dev/null
+if which gdiff > /dev/null 2>&1
 then
   DIFF=gdiff
 else
