@@ -1,0 +1,21 @@
+#!/bin/csh
+
+g++ -c -s driver.cc -o no.o
+g++ -s driver.cc -o no
+
+g++ -c -s -finline-functions -O2 driver.cc -o no.inline.O2.o
+g++ -s -finline-functions -O2 driver.cc -o no.inline.O2
+
+g++ -c -s -finline-functions -O3 driver.cc -o no.inline.O3.o
+g++ -s -finline-functions -O3 driver.cc -o no.inline.O3
+
+g++ -c -s -O3 driver.cc -o no.O3.o
+g++ -s  -O3 driver.cc -o no.O3
+
+g++ -c -s -O2 driver.cc -o no.O2.o
+g++ -s  -O2 driver.cc -o no.O2
+
+g++ -c -s -finline-functions driver.cc -o no.inline.o
+g++ -s -finline-functions driver.cc -o no.inline
+
+
