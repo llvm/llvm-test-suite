@@ -51,7 +51,7 @@ fi
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-(time sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") > $OUTFILE.time 2>&1
+(time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") > $OUTFILE.time 2>&1
 
 if test $? -eq 0
 then
