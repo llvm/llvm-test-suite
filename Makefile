@@ -6,8 +6,7 @@
 ##===----------------------------------------------------------------------===##
 
 LEVEL = ../..
-PARALLEL_DIRS = SingleSource MultiSource
- #NoSource
+PARALLEL_DIRS = SingleSource MultiSource External
 
 include ${LEVEL}/test/Makefile.tests
 
