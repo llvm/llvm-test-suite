@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+/* Linux defines these in stdint.h, sun might not have that file, don't mess 
+   around when it's this easy to fix */
+typedef unsigned char uint8;
+typedef   signed char int8;
+
 int
 main(int argc, char** argv)
 {
@@ -9,11 +14,11 @@ main(int argc, char** argv)
   short s1 = (argc >= 3)? atoi(argv[2]) : -769; /* 0xfcff = -769 */
   
   unsigned char ubc0 = (unsigned char) c1;      /* 100 = 'd' */
-  uint8_t  ubs0 = (uint8_t) s1;                 /* 0xff = 255 */
-  uint8_t  ubs1 = ubs0+1;                       /* ((uint8_t) 0xff) + 1) = 0 */
+  uint8  ubs0 = (uint8) s1;                     /* 0xff = 255 */
+  uint8  ubs1 = ubs0+1;                         /* ((uint8) 0xff) + 1) = 0 */
 
-  int8_t   bs0  = (int8_t) ubs0;                /* (int8_t) 0xff = -1 */
-  int8_t   bs1  = (int8_t) (ubs0 + 1U);         /* (int8_t) (0xff + 0x1) = 0 */
+  int8   bs0  = (int8) ubs0;                    /* (int8) 0xff = -1 */
+  int8   bs1  = (int8) (ubs0 + 1U);             /* (int8) (0xff + 0x1) = 0 */
 
   unsigned char  uc2 = (unsigned char) c1;      /* 100 = 'd' */
   unsigned short us2 = (unsigned short) s1;     /* 0xfcff = 64767 */
