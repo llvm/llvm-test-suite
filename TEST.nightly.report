@@ -1,0 +1,33 @@
+##=== TEST.nightly.report - Report description for nightly -----*- perl -*-===##
+#
+# This file defines a report to be generated for the nightly tests.
+#
+##===----------------------------------------------------------------------===##
+
+# Sort by program name
+$SortCol = 0;
+
+my $WallTimeRE = '[^(]+\\(([0-9.]+) wall clock';
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+ ["Program"  , '\'([^\']+)\' Program'],
+ [],
+# Times
+ ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
+ ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+).*Number of bytecode bytes'],
+ ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
+ [],
+ ["LLC"      , "TEST-RESULT-llc: $WallTimeRE"],
+ ["CBE"      , 'TEST-RESULT-cbe: (YES|NO)'],
+ [],
+ ["LLI"      , 'TEST-RESULT-lli-time: real\s*([.0-9m]+)'],
+ ["DynInstrs", 'TEST-RESULT-lli-dyninst: *([0-9]+).*Number of dynamic inst'],
+ [],
+ ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m]+)'],
+ ["MachCode" , 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
+ ["CompTime" , "TEST-RESULT-jit-comptime: $WallTimeRE"]
+);
