@@ -42,6 +42,10 @@ my $SortCol = 0;
 my $SortReverse = 0;
 my $SortNumeric = 0;   # Sort numerically or textually?
 
+# If the report wants us to trim repeated path prefixes off of the start of the
+# strings in the first column of the report, we can do that.
+my $TrimRepeatedPrefix = 0;
+
 # Helper functions which may be called by the report description files...
 sub SumCols {
   my ($Cols, $Col, $NumRows) = @_;
@@ -92,26 +96,27 @@ foreach $Record (@Records) {
   my @RowValues;
   my $Col = 0;
   for $Row (@Fields) {
+    my $Val = "*";
     if (scalar(@$Row)) {            # An actual value to read?
       if (ref ($Row->[1])) {        # Code to be executed?
-        push @RowValues, &{$Row->[1]}(\@RowValues, $Col);
+        $Val = &{$Row->[1]}(\@RowValues, $Col);
       } else {                      # Field to be read...
         $Record =~ m/$Row->[1]/;
         if (!defined($1)) {
-          push @RowValues, "*";
+          $Val = "*";
         } else {
           # If there is a formatting function, run it now...
-          my $Val = $1;
+          $Val = $1;
           if (scalar(@$Row) > 2) {
             $Val = &{$Row->[2]}($Val);
           }
-
-          push @RowValues, $Val;
         }
       }
     } else {                        # Just add a seperator...
-      push @RowValues, "|";
+      $Val = "|";
     }
+
+    push @RowValues, $Val;
     $Col++;
   }
 
@@ -122,6 +127,30 @@ foreach $Record (@Records) {
   }
   push @RowValues, $Assert if (!$HTML);
   push @Values, [@RowValues];
+}
+
+
+# If the report wants it, we can trim excess cruft off of the beginning of the
+# first column (which is often a path).
+if ($TrimRepeatedPrefix and scalar(@Values)) {
+  OuterLoop: while (1) {
+    # Figure out what the first path prefix is:
+    $Values[0]->[0] =~ m|([^/]+/).|;
+    last OuterLoop if (!defined($1));
+
+    # Now that we have the prefix, check to see if all of the entries in the
+    # table start with this prefix.
+    foreach $Row (@Values) {
+      last OuterLoop if ((substr $Row->[0], 0, length $1) ne $1);
+    }
+
+    # If we get here, then all of the entries have the prefix.  Remove it now.
+    foreach $Row (@Values) {
+      $Row->[0] = substr $Row->[0], length $1;
+    }
+
+    print "FOUND PREFIX: $1\n";
+  }
 }
 
 #
