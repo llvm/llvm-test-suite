@@ -82,11 +82,12 @@ static QuadTree child(QuadTree tree, ChildType ct)
       return tree->se;
     case southwest:
       return tree->sw;
-#ifdef DEBUG
     default:
+#ifdef DEBUG
       printf("\n bug in child()\n");
       exit(1);
 #endif
+      return 0;
     }
 }
 
