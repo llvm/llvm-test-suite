@@ -1,18 +1,20 @@
 LEVEL = ../../../../../..
 
-STDIN_FILENAME  := vortex.in
-STDOUT_FILENAME := vortex.out
+include $(LEVEL)/Makefile.config
 
-include ../../Makefile.spec95
+STDOUT_FILENAME := vortex.out
+LDFLAGS += -lm
+LIBS    += -lm
 
 ifeq ($(ARCH),Sparc)
   ## SPEC portability note for vortex says to use this flag on 64-bit machines
   CPPFLAGS += -DSPEC_CPU2000_LP64
-
-  # If we're on sparc, use the Big Endian input file
-  RUN_OPTIONS     = bendian.raw
-else
-  # Use the Little Endian input file
-  RUN_OPTIONS     = lendian.raw
 endif
 
+ifeq ($(ENDIAN), big)
+  RUN_OPTIONS  = vortex.in.big
+else
+  RUN_OPTIONS  = vortex.in.little
+endif
+
+include ../../Makefile.spec95
