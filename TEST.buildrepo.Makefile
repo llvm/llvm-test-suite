@@ -4,8 +4,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-BYTECODE_REPOSITORY := /home/vadve/lattner/LLVMPrograms
-
 ifeq ($(BYTECODE_REPOSITORY),)
 ERROR: BYTECODE_REPOSITORY must be defined to build a repository!
 endif
@@ -17,10 +15,7 @@ CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)
 DESTDIR := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
-TESTNAME = $*
-
 .PRECIOUS: $(DESTDIR)/.dir $(DESTDIR)/%.bc
-#.PHONY: test.$(TEST).%
 
 test-setup:: $(DESTDIR)/.dir
 
