@@ -6,6 +6,8 @@
 
 # Sort numerically, not textually...
 $SortNumeric = 1;
+$TrimRepeatedPrefix = 1;
+
 
 # Helper function
 sub Ratio {
