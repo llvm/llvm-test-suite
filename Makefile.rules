@@ -261,7 +261,7 @@ LLVMGXX := PATH=$(LLVMTOOLCURRENT):$(PATH) $(LLVMGCCDIR)/bin/g++
 
 LLVMAS  := $(LLVMTOOLCURRENT)/llvm-as$(EXEEXT)
 # Find the location of the platform specific LLVM GCC libraries
-LLVMGCCLIBDIR=$(dir $(shell $(LLVMGCC) -print-file-name=libgcc.a))
+LLVMGCCLIBDIR=$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) 
 # LLVM Tool Definitions (LLVMGCC, LLVMGXX, LLVMAS are provided by
 # Makefile.rules) 
 LLI       = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
