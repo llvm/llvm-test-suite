@@ -32,13 +32,13 @@ report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	gmake TEST=$(TEST) 2>&1 | tee $@
 
 ifneq ($(TestReport),)
-report.$(TEST).txt: report.$(TEST).raw.out $(TestReport)
+report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) ./GenerateReport.pl
 	./GenerateReport.pl $(TestReport) < $< > $@
 
-report.$(TEST).html: report.$(TEST).raw.out $(TestReport)
+report.$(TEST).html: report.$(TEST).raw.out $(TestReport) ./GenerateReport.pl
 	./GenerateReport.pl -html $(TestReport) < $< > $@
 
-report.$(TEST).tex: report.$(TEST).raw.out $(TestReport)
+report.$(TEST).tex: report.$(TEST).raw.out $(TestReport) ./GenerateReport.pl
 	./GenerateReport.pl -latex $(TestReport) < $< > $@
 
 report: report.$(TEST).txt
