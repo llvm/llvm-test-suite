@@ -305,19 +305,19 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
-	$(DIFFPROG) lli $*  $(HIDEDIFF)
+	-$(DIFFPROG) lli $*  $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-jit): \
 Output/%.diff-jit: Output/%.out-nat Output/%.out-jit
-	$(DIFFPROG) jit $* $(HIDEDIFF)
+	-$(DIFFPROG) jit $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
-	$(DIFFPROG) llc $* $(HIDEDIFF)
+	-$(DIFFPROG) llc $* $(HIDEDIFF)
 
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
-	$(DIFFPROG) cbe $* $(HIDEDIFF)
+	-$(DIFFPROG) cbe $* $(HIDEDIFF)
 
 ifndef DISABLE_DIFFS
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
