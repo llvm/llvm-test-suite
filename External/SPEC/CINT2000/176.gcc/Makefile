@@ -1,8 +1,8 @@
 LEVEL = ../../../../../..
-ifdef LARGE_PROBLEM_SIZE
-RUN_OPTIONS     = cp-decl.i -o cp-decl.s
-else
+ifeq ($(RUN_TYPE),test)
 RUN_OPTIONS     = cccp.i -o cccp.s
+else
+RUN_OPTIONS     = cp-decl.i -o cp-decl.s
 endif
 STDOUT_FILENAME = cccp.out
 include ../../Makefile.spec2000
