@@ -4,6 +4,8 @@
 #
 ##===----------------------------------------------------------------------===##
 
+include $(LEVEL)/Makefile.config
+
 # RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
 RUN_TYPE  := test
 
