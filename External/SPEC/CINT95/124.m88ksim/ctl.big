@@ -1,0 +1,8 @@
+lo dhry.big
+cacheoff
+br _exit
+g
+g
+sd
+q
+
