@@ -216,7 +216,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -224,7 +224,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	$(LGCCLD) -disable-inlining $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -245,7 +245,7 @@ Output/gccas-pass-args: $(LGCCAS) Output/.dir
 	sed 's/Pass Arguments: //' < $@.1 > $@
 Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
-	$(LGCCLD) -disable-inlining Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
+	$(LGCCLD) Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 > $@
 
 # If the program requires exception handling support, enable (potentially
