@@ -12,7 +12,7 @@ endif
 # relative to BYTECODE_REPOSITORY and the current directory this program is in.
 #
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(BUILD_SRC_ROOT)
+PROGDIR := $(PROJ_SRC_ROOT)
 DESTDIR := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
 .PRECIOUS: $(DESTDIR)/.dir $(DESTDIR)/%.bc

@@ -31,6 +31,6 @@ Source += gschar.c gscolor.c gscoord.c gsdevice.c \
 
 #Source += gdevx.c
 
-RUN_OPTIONS = -DNODISPLAY $(BUILD_SRC_DIR)/INPUT/large.ps
+RUN_OPTIONS = -DNODISPLAY $(PROJ_SRC_DIR)/INPUT/large.ps
 
 include ../../../Makefile.multisrc

@@ -10,6 +10,6 @@ Source := array.c doarg.c eval.c regexec.c \
           cons.c dolist.c hash.c perly.c str.c util.c \
           consarg.c dump.c malloc.c regcomp.c toke.c
 
-RUN_OPTIONS = $(BUILD_SRC_DIR)/INPUT/endsort.perl $(BUILD_SRC_DIR)/INPUT/endsort.perl
+RUN_OPTIONS = $(PROJ_SRC_DIR)/INPUT/endsort.perl $(PROJ_SRC_DIR)/INPUT/endsort.perl
 include ../../../Makefile.multisrc
 

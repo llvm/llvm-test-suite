@@ -46,7 +46,7 @@ include $(LEVEL)/Makefile.tests
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 .PRECIOUS: Output/%.linked.bc 
 
-PROGDIR = $(BUILD_SRC_ROOT)
+PROGDIR = $(PROJ_SRC_ROOT)
 
 #
 # Scripts in the this directory...
@@ -557,7 +557,7 @@ endif
 #
 # Rules for building a report from 'make report TEST=<x>'
 #
-GENERATEREPORT := $(BUILD_SRC_ROOT)/GenerateReport.pl
+GENERATEREPORT := $(PROJ_SRC_ROOT)/GenerateReport.pl
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	$(MAKE) -j1 TEST=$(TEST) 2>&1 | tee $@

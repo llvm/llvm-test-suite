@@ -39,18 +39,18 @@
 #
 # 6. LLVM_SRC_ROOT - If specified, points to the top of the LLVM source tree.
 #
-# 8. BUILD_SRC_DIR - The directory which contains the current set of Makefiles
+# 8. PROJ_SRC_DIR - The directory which contains the current set of Makefiles
 #    and usually the source code too (unless SourceDir is set).
 #
-# 9. BUILD_SRC_ROOT - The root directory of the source code being compiled.
+# 9. PROJ_SRC_ROOT - The root directory of the source code being compiled.
 #
-# 10. BUILD_OBJ_DIR - The directory where object code should be placed.
+# 10. PROJ_OBJ_DIR - The directory where object code should be placed.
 #
-# 11. BUILD_OBJ_ROOT - The root directory for where object code should be
+# 11. PROJ_OBJ_ROOT - The root directory for where object code should be
 #     placed.
 #
 # For building,
-# 	LLVM, LLVM_SRC_ROOT = BUILD_SRC_ROOT
+# 	LLVM, LLVM_SRC_ROOT = PROJ_SRC_ROOT
 #
 #===-----------------------------------------------------------------------====
 
@@ -98,10 +98,10 @@ install-bytecode::
 
 # Print out the directories used for building
 prdirs::
-	@${ECHO} "Build Source Root: " $(BUILD_SRC_ROOT)
-	@${ECHO} "Build Source Dir : " $(BUILD_SRC_DIR)
-	@${ECHO} "Build Object Root: " $(BUILD_OBJ_ROOT)
-	@${ECHO} "Build Object Dir : " $(BUILD_OBJ_DIR)
+	@${ECHO} "Build Source Root: " $(PROJ_SRC_ROOT)
+	@${ECHO} "Build Source Dir : " $(PROJ_SRC_DIR)
+	@${ECHO} "Build Object Root: " $(PROJ_OBJ_ROOT)
+	@${ECHO} "Build Object Dir : " $(PROJ_OBJ_DIR)
 	@${ECHO} "LLVM  Source Root: " $(LLVM_SRC_ROOT)
 	@${ECHO} "LLVM  Object Root: " $(LLVM_OBJ_ROOT)
 
@@ -165,11 +165,11 @@ endif
 ###########################################################################
 
 # Libraries that are being built
-DESTLIBDEBUG    := $(BUILD_OBJ_ROOT)/Debug/lib
-DESTLIBRELEASE  := $(BUILD_OBJ_ROOT)/Release/lib
-DESTLIBPROFILE  := $(BUILD_OBJ_ROOT)/Profile/lib
-DESTLIBBYTECODE := $(BUILD_OBJ_ROOT)/BytecodeLibs/lib
-DESTLIBCURRENT  := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/lib
+DESTLIBDEBUG    := $(PROJ_OBJ_ROOT)/Debug/lib
+DESTLIBRELEASE  := $(PROJ_OBJ_ROOT)/Release/lib
+DESTLIBPROFILE  := $(PROJ_OBJ_ROOT)/Profile/lib
+DESTLIBBYTECODE := $(PROJ_OBJ_ROOT)/BytecodeLibs/lib
+DESTLIBCURRENT  := $(PROJ_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 # LLVM libraries used for linking
 LLVMLIBDEBUGSOURCE    := $(LLVM_OBJ_ROOT)/Debug/lib
@@ -178,10 +178,10 @@ LLVMLIBPROFILESOURCE  := $(LLVM_OBJ_ROOT)/Profile/lib
 LLVMLIBCURRENTSOURCE  := $(LLVM_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 # Libraries that were built that will now be used for linking
-PROJLIBDEBUGSOURCE    := $(BUILD_OBJ_ROOT)/Debug/lib
-PROJLIBRELEASESOURCE  := $(BUILD_OBJ_ROOT)/Release/lib
-PROJLIBPROFILESOURCE  := $(BUILD_OBJ_ROOT)/Profile/lib
-PROJLIBCURRENTSOURCE  := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/lib
+PROJLIBDEBUGSOURCE    := $(PROJ_OBJ_ROOT)/Debug/lib
+PROJLIBRELEASESOURCE  := $(PROJ_OBJ_ROOT)/Release/lib
+PROJLIBPROFILESOURCE  := $(PROJ_OBJ_ROOT)/Profile/lib
+PROJLIBCURRENTSOURCE  := $(PROJ_OBJ_ROOT)/$(CONFIGURATION)/lib
 
 ###########################################################################
 # Tool Locations
@@ -192,20 +192,20 @@ PROJLIBCURRENTSOURCE  := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/lib
 #	PROJ* = Location of previously built tools used for linking.
 ###########################################################################
 
-DESTTOOLDEBUG   := $(BUILD_OBJ_ROOT)/Debug/bin
-DESTTOOLRELEASE := $(BUILD_OBJ_ROOT)/Release/bin
-DESTTOOLPROFILE := $(BUILD_OBJ_ROOT)/Profile/bin
-DESTTOOLCURRENT := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/bin
+DESTTOOLDEBUG   := $(PROJ_OBJ_ROOT)/Debug/bin
+DESTTOOLRELEASE := $(PROJ_OBJ_ROOT)/Release/bin
+DESTTOOLPROFILE := $(PROJ_OBJ_ROOT)/Profile/bin
+DESTTOOLCURRENT := $(PROJ_OBJ_ROOT)/$(CONFIGURATION)/bin
 
 LLVMTOOLDEBUG   := $(LLVM_OBJ_ROOT)/Debug/bin
 LLVMTOOLRELEASE := $(LLVM_OBJ_ROOT)/Release/bin
 LLVMTOOLPROFILE := $(LLVM_OBJ_ROOT)/Profile/bin
 LLVMTOOLCURRENT := $(LLVM_OBJ_ROOT)/$(CONFIGURATION)/bin
 
-PROJTOOLDEBUG   := $(BUILD_OBJ_ROOT)/Debug/bin
-PROJTOOLRELEASE := $(BUILD_OBJ_ROOT)/Release/bin
-PROJTOOLPROFILE := $(BUILD_OBJ_ROOT)/Profile/bin
-PROJTOOLCURRENT := $(BUILD_OBJ_ROOT)/$(CONFIGURATION)/bin
+PROJTOOLDEBUG   := $(PROJ_OBJ_ROOT)/Debug/bin
+PROJTOOLRELEASE := $(PROJ_OBJ_ROOT)/Release/bin
+PROJTOOLPROFILE := $(PROJ_OBJ_ROOT)/Profile/bin
+PROJTOOLCURRENT := $(PROJ_OBJ_ROOT)/$(CONFIGURATION)/bin
 
 #
 # Libtool is found in the current directory.
@@ -285,16 +285,16 @@ LLVMC     = $(LLVMTOOLCURRENT)/llvmc$(EXEEXT)
 # Include both the project headers and the LLVM headers for compilation and
 # dependency computation.
 #
-# BUILD_OBJ_DIR          : Files local to the particular object directory
+# PROJ_OBJ_DIR          : Files local to the particular object directory
 #                          (locallly generated header files).
-# BUILD_SRC_DIR          : Files local to the particular source directory.
-# BUILD_SRC_ROOT/include : Files global to the project.
+# PROJ_SRC_DIR          : Files local to the particular source directory.
+# PROJ_SRC_ROOT/include : Files global to the project.
 # LLVM_OBJ_ROOT/include  : config.h files generated by autoconf
 # LEVEL/include          : config.h files for the project
 # LLVM_SRC_ROOT/include  : Files global to LLVM.
 #
-CPPFLAGS += -I$(BUILD_OBJ_DIR) -I$(BUILD_SRC_DIR) -I$(LLVM_OBJ_ROOT)/include \
-            -I$(BUILD_SRC_ROOT)/include -I$(LEVEL)/include \
+CPPFLAGS += -I$(PROJ_OBJ_DIR) -I$(PROJ_SRC_DIR) -I$(LLVM_OBJ_ROOT)/include \
+            -I$(PROJ_SRC_ROOT)/include -I$(LEVEL)/include \
             -I$(LLVM_SRC_ROOT)/include
 
 # By default, strip symbol information from executable
@@ -389,18 +389,18 @@ endif
 # Libtool Objects
 #
 Srcs := $(sort $(basename $(Source)))
-ObjectsO  := $(Srcs:%=$(BUILD_OBJ_DIR)/Release/%.lo)
-ObjectsP  := $(Srcs:%=$(BUILD_OBJ_DIR)/Profile/%.lo)
-ObjectsG  := $(Srcs:%=$(BUILD_OBJ_DIR)/Debug/%.lo)
-ObjectsBC := $(Srcs:%=$(BUILD_OBJ_DIR)/BytecodeObj/%.bc)
+ObjectsO  := $(Srcs:%=$(PROJ_OBJ_DIR)/Release/%.lo)
+ObjectsP  := $(Srcs:%=$(PROJ_OBJ_DIR)/Profile/%.lo)
+ObjectsG  := $(Srcs:%=$(PROJ_OBJ_DIR)/Debug/%.lo)
+ObjectsBC := $(Srcs:%=$(PROJ_OBJ_DIR)/BytecodeObj/%.bc)
 
 #
 # The real objects underlying the libtool objects
 #
 RObjs := $(sort $(patsubst Debug/%.o, %.o, $(addsuffix .o,$(basename $(Source)))))
-RObjectsO := $(addprefix $(BUILD_OBJ_DIR)/Release/,$(RObjs))
-RObjectsP := $(addprefix $(BUILD_OBJ_DIR)/Profile/,$(RObjs))
-RObjectsG := $(addprefix $(BUILD_OBJ_DIR)/Debug/,$(RObjs))
+RObjectsO := $(addprefix $(PROJ_OBJ_DIR)/Release/,$(RObjs))
+RObjectsP := $(addprefix $(PROJ_OBJ_DIR)/Profile/,$(RObjs))
+RObjectsG := $(addprefix $(PROJ_OBJ_DIR)/Debug/,$(RObjs))
 
 #---------------------------------------------------------
 # Handle the DIRS and PARALLEL_DIRS options
@@ -744,44 +744,44 @@ endif
 
 
 #---------------------------------------------------------
-.PRECIOUS: $(BUILD_OBJ_DIR)/Depend/.dir $(BUILD_OBJ_DIR)/BytecodeObj/.dir
-.PRECIOUS: $(BUILD_OBJ_DIR)/Debug/.dir $(BUILD_OBJ_DIR)/Release/.dir
-.PRECIOUS: $(BUILD_OBJ_DIR)/Profile/.dir
+.PRECIOUS: $(PROJ_OBJ_DIR)/Depend/.dir $(PROJ_OBJ_DIR)/BytecodeObj/.dir
+.PRECIOUS: $(PROJ_OBJ_DIR)/Debug/.dir $(PROJ_OBJ_DIR)/Release/.dir
+.PRECIOUS: $(PROJ_OBJ_DIR)/Profile/.dir
 
 # Create .lo files in the ObjectFiles directory from the .cpp and .c files...
-$(BUILD_OBJ_DIR)/Release/%.lo: %.cpp $(BUILD_OBJ_DIR)/Release/.dir
+$(PROJ_OBJ_DIR)/Release/%.lo: %.cpp $(PROJ_OBJ_DIR)/Release/.dir
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileO) $< -o $@
 
-$(BUILD_OBJ_DIR)/Release/%.lo: %.c $(BUILD_OBJ_DIR)/Release/.dir
+$(PROJ_OBJ_DIR)/Release/%.lo: %.c $(PROJ_OBJ_DIR)/Release/.dir
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileCO) $< -o $@
 
-$(BUILD_OBJ_DIR)/Profile/%.lo: %.cpp $(BUILD_OBJ_DIR)/Profile/.dir
+$(PROJ_OBJ_DIR)/Profile/%.lo: %.cpp $(PROJ_OBJ_DIR)/Profile/.dir
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileP) $< -o $@
 
-$(BUILD_OBJ_DIR)/Profile/%.lo: %.c $(BUILD_OBJ_DIR)/Profile/.dir
+$(PROJ_OBJ_DIR)/Profile/%.lo: %.c $(PROJ_OBJ_DIR)/Profile/.dir
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileCP) $< -o $@
 
-$(BUILD_OBJ_DIR)/Debug/%.lo: %.cpp $(BUILD_OBJ_DIR)/Debug/.dir
+$(PROJ_OBJ_DIR)/Debug/%.lo: %.cpp $(PROJ_OBJ_DIR)/Debug/.dir
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileG) $< -o $@
 
-$(BUILD_OBJ_DIR)/Debug/%.lo: %.c $(BUILD_OBJ_DIR)/Debug/.dir 
+$(PROJ_OBJ_DIR)/Debug/%.lo: %.c $(PROJ_OBJ_DIR)/Debug/.dir 
 	@${ECHO} "Compiling `basename $<`"
 	$(VERB) $(CompileCG) $< -o $@
 
-$(BUILD_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(BUILD_OBJ_DIR)/BytecodeObj/.dir $(LCC1XX)
+$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1XX)
 	@${ECHO} "Compiling `basename $<` to bytecode"
 	$(VERB) $(LLVMGXX) $(CompileCommonOpts) $(CPPFLAGS) -c $< -o $@
 
-$(BUILD_OBJ_DIR)/BytecodeObj/%.bc: %.c $(BUILD_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
+$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
 	@${ECHO} "Compiling `basename $<` to bytecode"
 	$(VERB) $(LLVMGCC) $(CompileCommonOpts) $(CPPFLAGS) -c $< -o $@
 
-$(BUILD_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(BUILD_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
+$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
 	@${ECHO} "Compiling `basename $<` to bytecode"
 	$(VERB) $(LLVMAS) $< -f -o $@
 
@@ -849,9 +849,9 @@ endif
 
 # 'make clean' nukes the tree
 clean::
-	$(VERB) $(RM) -rf $(BUILD_OBJ_DIR)/Debug $(BUILD_OBJ_DIR)/Release
-	$(VERB) $(RM) -rf $(BUILD_OBJ_DIR)/Profile $(BUILD_OBJ_DIR)/Depend
-	$(VERB) $(RM) -rf $(BUILD_OBJ_DIR)/BytecodeObj
+	$(VERB) $(RM) -rf $(PROJ_OBJ_DIR)/Debug $(PROJ_OBJ_DIR)/Release
+	$(VERB) $(RM) -rf $(PROJ_OBJ_DIR)/Profile $(PROJ_OBJ_DIR)/Depend
+	$(VERB) $(RM) -rf $(PROJ_OBJ_DIR)/BytecodeObj
 	$(VERB) $(RM) -f core core.[0-9][0-9]* *.o *.d *~ *.flc
 ifneq ($(strip $(SHLIBEXT)),) # Extra paranoia - make real sure SHLIBEXT is set
 	$(VERB)	$(RM) -f *$(SHLIBEXT)
@@ -870,15 +870,15 @@ ifndef DISABLE_AUTO_DEPENDENCIES
 # include the dependencies now...
 #
 SourceBaseNames := $(basename $(Source))
-SourceDepend := $(SourceBaseNames:%=$(BUILD_OBJ_DIR)/Depend/%.d)
+SourceDepend := $(SourceBaseNames:%=$(PROJ_OBJ_DIR)/Depend/%.d)
 
 # Create dependencies for the *.cpp files...
-$(BUILD_OBJ_DIR)/Depend/%.d: %.cpp $(BUILD_OBJ_DIR)/Depend/.dir
-	$(VERB) $(Depend) $< | $(SED) 's|\.o:|\.lo:|' | $(SED) 's|$*\.lo *|$(BUILD_OBJ_DIR)/Release/& $(BUILD_OBJ_DIR)/Profile/& $(BUILD_OBJ_DIR)/Debug/& $(BUILD_OBJ_DIR)/Depend/$(@F)|g' > $@
+$(PROJ_OBJ_DIR)/Depend/%.d: %.cpp $(PROJ_OBJ_DIR)/Depend/.dir
+	$(VERB) $(Depend) $< | $(SED) 's|\.o:|\.lo:|' | $(SED) 's|$*\.lo *|$(PROJ_OBJ_DIR)/Release/& $(PROJ_OBJ_DIR)/Profile/& $(PROJ_OBJ_DIR)/Debug/& $(PROJ_OBJ_DIR)/Depend/$(@F)|g' > $@
 
 # Create dependencies for the *.c files...
-$(BUILD_OBJ_DIR)/Depend/%.d: %.c $(BUILD_OBJ_DIR)/Depend/.dir
-	$(VERB) $(DependC) -o $@ $< | $(SED) 's|\.o:|\.lo:|' | $(SED) 's|$*\.lo *|$(BUILD_OBJ_DIR)/Release/& $(BUILD_OBJ_DIR)/Profile/& $(BUILD_OBJ_DIR)/Debug/& $(BUILD_OBJ_DIR)/Depend/$(@F)|g' > $@
+$(PROJ_OBJ_DIR)/Depend/%.d: %.c $(PROJ_OBJ_DIR)/Depend/.dir
+	$(VERB) $(DependC) -o $@ $< | $(SED) 's|\.o:|\.lo:|' | $(SED) 's|$*\.lo *|$(PROJ_OBJ_DIR)/Release/& $(PROJ_OBJ_DIR)/Profile/& $(PROJ_OBJ_DIR)/Debug/& $(PROJ_OBJ_DIR)/Depend/$(@F)|g' > $@
 
 #
 # Autoconf Dependencies.
@@ -892,7 +892,7 @@ $(LLVM_OBJ_ROOT)/config.status:: $(LLVM_SRC_ROOT)/configure
 
 # If the Makefile in the source tree has been updated, copy it over into the
 # build tree.
-Makefile :: $(BUILD_SRC_DIR)/Makefile
+Makefile :: $(PROJ_SRC_DIR)/Makefile
 	@${ECHO} "===== Updating Makefile from source dir: `dirname $<` ====="
 	$(MKDIR) $(@D)
 	cp -f $< $@

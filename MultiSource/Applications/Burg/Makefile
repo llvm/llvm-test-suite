@@ -8,11 +8,11 @@ LDFLAGS  =
 
 ExtraSource := y.tab.c
 
-STDIN_FILENAME = $(BUILD_SRC_DIR)/sample.gr
+STDIN_FILENAME = $(PROJ_SRC_DIR)/sample.gr
 
 include $(LLVM_OBJ_ROOT)/Makefile.config
 
-Source  := $(ExtraSource) $(wildcard $(BUILD_SRC_DIR)/*.c)
+Source  := $(ExtraSource) $(wildcard $(PROJ_SRC_DIR)/*.c)
 
 include	../../Makefile.multisrc
 

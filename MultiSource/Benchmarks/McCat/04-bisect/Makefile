@@ -7,6 +7,6 @@ FP_TOLERANCE := 0.001
 
 #include $(LLVM_OBJ_ROOT)/Makefile.config
 
-STDIN_FILENAME = $(BUILD_SRC_DIR)/bisect_test.in
+STDIN_FILENAME = $(PROJ_SRC_DIR)/bisect_test.in
 
 include $(LEVEL)/MultiSource/Makefile.multisrc

@@ -657,8 +657,11 @@ int main (int c, char *v[])
   
   in_fp=fopen(v[1],"r");
   if (!in_fp) {
-    printf("ERROR: Could not open indata file\n");
-    exit(1);
+    in_fp=fopen("test.in","r");
+    if (!in_fp) {
+      printf("ERROR: Could not open indata file\n");
+      exit(1);
+    }
   }
 
   fscanf(in_fp,"%d",&DEPTH);

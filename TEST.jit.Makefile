@@ -8,7 +8,7 @@
 
 JIT_OPTS = -force-interpreter=false -stats -time-passes
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(BUILD_SRC_ROOT)
+PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \

@@ -1,6 +1,6 @@
 LEVEL = ../../../..
 
 PROG = agrep
-RUN_OPTIONS = -2 int $(BUILD_SRC_DIR)/InstructionCombining.cpp.txt
+RUN_OPTIONS = -2 int $(PROJ_SRC_DIR)/InstructionCombining.cpp.txt
 include $(LEVEL)/MultiSource/Makefile.multisrc
 

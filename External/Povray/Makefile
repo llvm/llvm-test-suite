@@ -6,7 +6,7 @@ PROG = povray
 
 SourceDir = $(POVRAY_ROOT)/source
 
-CPPFLAGS += -I$(POVRAY_ROOT)/source/unix -I$(BUILD_SRC_ROOT)/runtime/libpng -DPREFIX=\"$(BUILD_OBJ_DIR)\" -DSYSCONFDIR=\"$(POVRAY_ROOT)\" -DPOV_LIB_DIR=\"$(BUILD_OBJ_DIR)/lib\" -IOutput/src -UHAVE_LIBVGA
+CPPFLAGS += -I$(POVRAY_ROOT)/source/unix -I$(PROJ_SRC_ROOT)/runtime/libpng -DPREFIX=\"$(PROJ_OBJ_DIR)\" -DSYSCONFDIR=\"$(POVRAY_ROOT)\" -DPOV_LIB_DIR=\"$(PROJ_OBJ_DIR)/lib\" -IOutput/src -UHAVE_LIBVGA
 LIBS +=    -lpng -lz -lm
 LDFLAGS += -lpng -lz -lm
 

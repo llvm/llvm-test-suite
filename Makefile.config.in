@@ -25,7 +25,7 @@ include $(LLVM_OBJ_ROOT)/Makefile.config
 
 #Set SourceDir for backwards compatbility.
 ifndef SourceDir
-SourceDir=$(BUILD_SRC_DIR)
+SourceDir=$(PROJ_SRC_DIR)
 endif
 
 #

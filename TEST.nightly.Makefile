@@ -6,7 +6,7 @@
 ##===----------------------------------------------------------------------===##
 
 CURDIR  := $(shell cd .; pwd)
-PROGDIR := $(BUILD_SRC_ROOT)
+PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 CFLAGS  := -O3
 
