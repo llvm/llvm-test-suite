@@ -21,11 +21,10 @@ Source  := $(ExtraSource) $(wildcard *.c)
 ##	$(VERB) mv -f $(basename $@).tab.c $(basename $@).cpp
 ##	$(VERB) mv -f $(basename $@).tab.h $(basename $@).h
 
+include	../Makefile.multisrc
 
 y.tab.c y.tab.h: gram.y
 	yacc -d $<
-
-include	../Makefile.multisrc
 
 Source := $(patsubst gram.%,,$(Source))
 
