@@ -1,8 +1,7 @@
-LEVEL = ../../..
-PROG = em3d
-LOCAL_CFLAGS=
-#LOCAL_LIBS=
+LEVEL = ../../../..
 
-OBJS = args.o em3d.o main.o make_graph.o util.o
+PROG       = em3d
+CPPFLAGS   = -DTORONTO
+LDFLAGS    = 
 
-include	../makefile
+include	../Makefile.multisrc

@@ -1,8 +1,7 @@
-LEVEL = ../../..
-PROG = tsp
-LOCAL_CFLAGS=
-LOCAL_LIBS= -lm
+LEVEL = ../../../..
 
-OBJS = args.o tsp.o main.o build.o
+PROG     = tsp
+CPPFLAGS = -DTORONTO
+LDFLAGS  = -lm
 
-include	../makefile
+include	../Makefile.multisrc
