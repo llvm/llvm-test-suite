@@ -1,9 +1,9 @@
-#===-----------------------------------------------------------*-Makefile-*-===#
-#                        test/Programs/Makefile.programs
+##===- test/Programs/Makefile.programs ---------------------*- Makefile -*-===##
 #
 # This makefile contains all of the makefile machinery that is common to
-# building stuff in the Programs directory.  The main job of this is to take
-# executables for the following targets:
+# building stuff in the Programs directory.  This script can be used in two
+# different ways.  The main job of this is to take executables for the following
+# targets:
 #
 #   1. The native platform compiler
 #   2. LLVM Bytecode Compiler + LLI interpreter (if ENABLE_LLI is enabled)
@@ -12,19 +12,29 @@
 #   5. LLVM Bytecode Compiler + LLI Just-In-Time Compiler
 #
 # Running them, and then diffing the output.  If there are any failures, they
-# are flagged.
+# are flagged.  The other mode is used in conjunction with the TEST=<testname>
+# argument on the make command line.  In this case, a Makefile.TEST.<testname>
+# makefile is used to run tests on the program (see below).
 #
 # Input to this makefile should be the PROGRAMS_TO_TEST variable, which contains
 # a list of programs that should be run.  The makefile can also optionally
 # specify a INPUT_FILENAME variable, which contains a filename that is piped
 # into the program as it is being executed.
 #
-# If the user of this script specified 'make ENABLE_LLI=1', then the program is
-# interpreted with LLI and diff'd as well.
-#
 #  FIXME: There should be a way to specify the command line for a program
 #
-#-------------------------------------------------------------------------------
+##===----------------------------------------------------------------------===##
+#
+#                            Running Custom Tests
+#
+# This makefile provides facilities for defining custom tests that are to be run
+# on all of the programs in the test suite.  In order to define one of these
+# tests, create a llvm/test/Programs/Makefile.TEST.<testname> file.  This file
+# should define a rule 'test.<testname>.%' which is run once for each program in
+# the suite (the % passed in is the program name).  For a simple example, see
+# Makefile.TEST.example.
+#
+##===----------------------------------------------------------------------===##
 
 # Dependencies on header files need to be determined explicitly because
 # we do not automatically compute dependencies
