@@ -1,4 +1,4 @@
-#!/usr/dcs/software/supported/bin/perl -w
+#!/usr/bin/perl -w
 
 # htmlcoldiff - Diff two files (specified on the command line) laid out in
 # columns.  Output a copy of the second file with differences from the first
