@@ -25,7 +25,7 @@ void FLUSH(void)
 /* reset buffer to correst size if necessary */
   if (LEX_LEN > LEX_LEN_INCR)
     {
-      cfree(LEXEME);
+      free(LEXEME);
       LEX_LEN = LEX_LEN_INCR;
       LEXEME = calloc(LEX_LEN,sizeof(CH));
     }
