@@ -19,21 +19,34 @@ sub FormatTime {
   return $Time;
 }
 
-sub GCCLLCRatio {
+sub GCCCBERatio {
   my ($Cols, $Col) = @_;
-  if ($Cols->[$Col-2] ne "*" and $Cols->[$Col-4] ne "*" and
-      $Cols->[$Col-2] != "0") {
-    return sprintf("%3.2f", $Cols->[$Col-4]/$Cols->[$Col-2]);
+  my $GCC = $Cols->[$Col-5];
+  my $CBE = $Cols->[$Col-4];
+  if ($GCC ne "*" and $CBE ne "*" and $CBE != "0") {
+    return sprintf("%3.2f", $GCC/$CBE);
   } else {
     return "n/a";
   }
 }
 
-sub GCCCBERatio {
+sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
-  if ($Cols->[$Col-4] ne "*" and $Cols->[$Col-5] ne "*" and
-      $Cols->[$Col-4] != "0") {
-    return sprintf("%3.2f", $Cols->[$Col-5]/$Cols->[$Col-4]);
+  my $GCC = $Cols->[$Col-6];
+  my $LLC = $Cols->[$Col-4];
+  if ($GCC ne "*" and $LLC ne "*" and $LLC != "0") {
+    return sprintf("%3.2f", $GCC/$LLC);
+  } else {
+    return "n/a";
+  }
+}
+
+sub GCCLLC_LSRatio {
+  my ($Cols, $Col) = @_;
+  my $GCC = $Cols->[$Col-7];
+  my $LLC_LS = $Cols->[$Col-4];
+  if ($GCC ne "*" and $LLC_LS ne "*" and $LLC_LS != "0") {
+    return sprintf("%3.2f", $GCC/$LLC_LS);
   } else {
     return "n/a";
   }
@@ -51,14 +64,16 @@ sub GCCCBERatio {
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["Instrs"   , 'TEST-RESULT-compile: *([0-9]+).*Number of inst'],
  ["LLC<br>compile" , "TEST-RESULT-llc: $WallTimeRE"],
+ ["LLC-LS<br>compile" , "TEST-RESULT-llc-ls: $WallTimeRE"],
  ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: $WallTimeRE"],
  ["Machine<br>code", 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  [],
  ["GCC"      , 'TEST-RESULT-nat-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["CBE"      , 'TEST-RESULT-cbe-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["LLC"      , 'TEST-RESULT-llc-time: real\s*([.0-9m:]+)', \&FormatTime],
+ ["LLC-LS"   , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: real\s*([.0-9m:]+)', \&FormatTime],
- ["GCC/LLC"  , \&GCCLLCRatio],
  ["GCC/CBE"  , \&GCCCBERatio],
- ["LLC-LS"   , 'TEST-RESULT-llc-ls-time: real\s*([.0-9m:]+)', \&FormatTime]
+ ["GCC/LLC"  , \&GCCLLCRatio],
+ ["GCC/LLC-LS"  , \&GCCLLC_LSRatio]
 );
