@@ -61,8 +61,8 @@ main()
       }
       (void)vexopy( a.rd, b, x, b, 2 );
       err = snrm2( a.rd, b, 1 );
-      printf(" For Ax=b.    Absolute error = %e.  Relative error = %e.\n",
-	     err, err/snrm2( a.rd, x, 1 ) );
+      //printf(" For Ax=b.    Absolute error = %e.  Relative error = %e.\n",
+      //       err, err/snrm2( a.rd, x, 1 ) );
 
       /* Solve transpose system. */
       (void)sgesl( &a, ipvt, bt, 1 );
@@ -71,8 +71,8 @@ main()
       }
       (void)vexopy( a.rd, bt, x, bt, 2 );
       err = snrm2( a.rd, bt, 1 );
-      printf(" For A^Tx=b.  Absolute error = %e.  Relative error = %e.\n",
-	     err, err/snrm2( a.rd, x, 1 ) );
+      //printf(" For A^Tx=b.  Absolute error = %e.  Relative error = %e.\n",
+      //       err, err/snrm2( a.rd, x, 1 ) );
     }
   }				/* End of while loop over test cases. */
 }				/* End of MAIN */

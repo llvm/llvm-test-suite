@@ -2,13 +2,11 @@ LEVEL = ../../../../..
 PROG     = sgefa
 LDFLAGS  = -lm
 
+FP_TOLERANCE = 0.0001
 ifdef LARGE_PROBLEM_SIZE
 CPPFLAGS = -DSCALE=50
 else
 CPPFLAGS = -DSCALE=40
 endif
-
-# This program is adversely effected by the underlying precision of the machine
-PROGRAM_IS_NONDETERMINISTIC = 1
 
 include	../../Makefile.multisrc
