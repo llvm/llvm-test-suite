@@ -76,7 +76,12 @@ $SortReverse = 1;
             '-' => '-',
             'sgefa'      => 'sgefa',
             'sim'        => 'sim',
-            'burg'       => 'burg'
+            'burg'       => 'burg',
+            'gnuchess'   => 'gnuchess',
+            'larn'       => 'larn',
+            'flex'       => 'flex',
+            'moria'      => 'moria',
+            'povray31'   => 'povray31'
            );
 
 @LatexColumns = (1, 27, 19,    # LOC, #MemInstrs, MaxSCC
