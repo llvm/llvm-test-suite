@@ -80,7 +80,7 @@ direction vehicle::select_move()
 
     if (used == 0)
     {
-        cout << "vehicle::select_move "<< *this << " has no where to go!\n";
+        //cout << "vehicle::select_move "<< *this << " has no where to go!\n";
 	return(NO_DIRECTION);
     }
     else

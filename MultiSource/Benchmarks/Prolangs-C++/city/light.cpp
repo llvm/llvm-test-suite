@@ -10,7 +10,7 @@ void light::tick()
     {
         current_state = this->next_state();
 
-	cout << "current state = "<< current_state << '\n';
+	//cout << "current state = "<< current_state << '\n';
 	time_remaining_in_current_state = time_in_state[current_state];
     }
 }

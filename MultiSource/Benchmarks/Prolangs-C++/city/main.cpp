@@ -73,7 +73,7 @@ int main()
 
     for(i = 0; i < 100000; i++)
     {
-	cout << l << "\n";
+	//cout << l << "\n";
 	l.tick();
     }
 
@@ -96,8 +96,8 @@ int main()
 
     for(i=0; i< 100000; i++)
     {
-        cout << '\n' << i << ' ' << c << '\n';
+        //cout << '\n' << i << ' ' << c << '\n';
         c.tick();
     }
-    cout << i << ' ' << c << '\n';
+    //cout << i << ' ' << c << '\n';
 }

@@ -19,7 +19,7 @@ public:
 
 inline int broken_light::next_state()
 {
-    cout << "next state called\n";
+    //cout << "next state called\n";
     if ((random() % 4) == 1)
 	return (current_state);
     else
