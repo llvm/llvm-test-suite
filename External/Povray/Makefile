@@ -9,5 +9,5 @@ LDFLAGS += -L$(BUILD_OBJ_ROOT)/lib/$(CONFIGURATION) -lz -lpng -lstdc++ -ltiff
 
 SourceDir = $(POVRAY_ROOT)/src
 
-RUN_OPTIONS = -I$(POVRAY_ROOT)/scenes/advanced/chess2.pov -L$(POVRAY_ROOT)/include -O-
+RUN_OPTIONS = -I$(POVRAY_ROOT)/scenes/advanced/chess2.pov -L$(POVRAY_ROOT)/include -GA$<.junk -O-
 include ../../MultiSource/Makefile.multisrc
