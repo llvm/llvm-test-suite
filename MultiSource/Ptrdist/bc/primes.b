@@ -11,7 +11,7 @@
     if (limit >= 2) print "prime 1 = 2\n"
     if (limit >= 3) print "prime 2 = 3\n";
     scale = 0;
-for (timeloop = 0; timeloop < 50; timeloop += 1) {
+for (timeloop = 0; timeloop < 30; timeloop += 1) {
     num = 2;
     for ( p=5; p <= limit; p += 2)  {
 	root = sqrt(p);
