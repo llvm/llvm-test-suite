@@ -19,6 +19,7 @@
 my $HTML = 0;
 my $LATEX = 0;
 my $GRAPHS = 0;
+my $CSV = 0;
 
 # Parse arguments...
 while ($_ = $ARGV[0], /^[-+]/) {
@@ -29,6 +30,7 @@ while ($_ = $ARGV[0], /^[-+]/) {
   if (/^-html$/)   { $HTML = 1; next; }
   if (/^-latex$/)  { $LATEX = 1; next; }
   if (/^-graphs$/) { $GRAPHS = 1; next; }
+  if (/^-csv$/)    { $CSV = 1; next; }
 
   print "Unknown option: $_ : ignoring!\n";
 }
@@ -302,6 +304,17 @@ if ($HTML) {
       Done:
         print "\\\\\n";
       }
+    }
+  } elsif ($CSV) {
+    #
+    # Print out the table as csv
+    #
+    foreach $Value (@Values) {
+      printf "$$Value[0]";
+      for ($i = 1; $i < @$Value-1; $i++) {
+        printf ",$$Value[$i]" if ($$Value[$i] ne "|");
+      }
+      print "\n";
     }
   } else {
     #
