@@ -94,6 +94,14 @@ Output/%.out-llc: Output/%.llc
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc-ls): \
+Output/%.out-llc-ls: Output/%.llc-ls
+	$(SPEC_SANDBOX) llc-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../../$< $(RUN_OPTIONS)
+	-(cd Output/llc-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/llc-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \

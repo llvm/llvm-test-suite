@@ -85,8 +85,8 @@ PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 # Completed bytecode for a program
 BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 
-# Generated code for llc (which does not require the target platform)
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
+LLCLSCODEGEN := $(addsuffix .llc-ls.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
@@ -95,21 +95,23 @@ NATOUTPUT := $(addsuffix .out-nat,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLIOUTPUT := $(addsuffix .out-lli,  $(PREFIXED_PROGRAMS_TO_TEST))
 JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
+LLCLSOUTPUT := $(addsuffix .out-llc-ls,  $(PREFIXED_PROGRAMS_TO_TEST))
 CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
+LLCLSDIFFS  := $(addsuffix .diff-llc-ls, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
-.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc
+.PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-ls
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe
 
 # Build diffs from the output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-jit
-.PRECIOUS: Output/%.diff-llc Output/%.diff-cbe
+.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-ls Output/%.diff-cbe
 
 
 # Regardless of what other options are specified, build the program's bytecode
@@ -176,6 +178,10 @@ all:: $(JITDIFFS)
 endif
 endif
 
+ifdef ENABLE_LINEARSCAN
+all:: $(LLCLSDIFFS)
+endif
+
 ifdef ENABLE_LLI
 all:: $(LLIDIFFS)
 endif
@@ -240,6 +246,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $< -o $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.llc-ls.s): \
+Output/%.llc-ls.s: Output/%.llvm.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -f -regalloc=linearscan $< -o $@
+
 
 ## Alternative command to run llc remotely on another machine:
 ## This is very useful when debugging:
@@ -249,6 +259,10 @@ Output/%.llc.s: Output/%.llvm.bc $(LLC)
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.llc-ls): \
+Output/%.llc-ls: Output/%.llc-ls.s
 	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
 
 
@@ -288,6 +302,10 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc-ls): \
+Output/%.out-llc-ls: Output/%.llc-ls
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
@@ -340,6 +358,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.diff-llc): \
 Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 	-$(DIFFPROG) llc $* $(HIDEDIFF)
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-llc-ls): \
+Output/%.diff-llc-ls: Output/%.out-nat Output/%.out-llc-ls
+	-$(DIFFPROG) llc-ls $* $(HIDEDIFF)
+
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	-$(DIFFPROG) cbe $* $(HIDEDIFF)
@@ -355,6 +377,10 @@ Output/%.exe-jit: Output/%.diff-jit
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
 Output/%.exe-llc: Output/%.diff-llc
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-llc-ls): \
+Output/%.exe-llc-ls: Output/%.diff-llc-ls
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \
