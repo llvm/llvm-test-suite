@@ -33,7 +33,11 @@ server_sock () {
 	sysabort("server/setsockopt");
     memset(&sin,0,sizeof(sin));
     sin.sin_family = AF_INET;
+#if 0
     sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+#else
+    sin.sin_addr.s_addr = 0x0100007f;
+#endif
     sin.sin_port = 0;
     if (bind(ss, (sockaddr *)&sin, sizeof(sin)) == -1)
 	sysabort("server/bind");
@@ -59,7 +63,11 @@ client_sock (int port) {
     if ((sock = socket(PF_INET, SOCK_STREAM, 0)) == -1)
 	sysabort("client/socket");
     sin.sin_family = AF_INET;
+#if 0
     sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+#else
+    sin.sin_addr.s_addr = 0x0100007f;
+#endif
     sin.sin_port = port;
     if (connect(sock, (sockaddr *)&sin, sizeof(sin)) == -1)
 	sysabort("client/connect");
