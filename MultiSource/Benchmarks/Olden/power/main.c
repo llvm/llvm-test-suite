@@ -12,10 +12,7 @@
  */
 
 #include "power.h"
-
-#ifndef TORONTO
-#include <cm/cmmd.h>
-#endif
+#include <stdio.h>
 
 /* Domain of thetaR->P map is 0.65 to 1.00 [index*0.01+0.65] */
 double map_P[36] =
@@ -55,28 +52,13 @@ double map_Q[36] =
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
 
-main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
   Root r;
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
-#ifdef FUTURES
-  SPMDInit(argc,argv);
-#else
-#ifndef TORONTO
-  filestuff(0);
-  dealwithargs(argc,argv);
-  if (CMMD_self_address()) exit(1);
-#endif
-#endif
-
   chatting("Past initialization\n");
-
-#ifndef TORONTO
-  CMMD_node_timer_clear(0);
-  CMMD_node_timer_start(0);
-#endif
 
   /* initial pass */
   r = build_tree();
@@ -120,21 +102,5 @@ main(int argc,char *argv[])
     }
   } /* while */
 
-#ifndef TORONTO
-  CMMD_node_timer_stop(0);
-  chatting("Elapsed time %f\n", CMMD_node_timer_elapsed(0));
-#endif
-
-#ifdef FUTURES
-  __ShutDown(0);
-#endif
+  return 0;
 }
-
-
-
-
-
-
-
-
-

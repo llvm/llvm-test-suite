@@ -125,7 +125,6 @@ static Tree merge(Tree a, Tree b, Tree t, int nproc) {
   double tton1,ttop1,tton2,ttop2;
   double n1ton2,n1top2,p1ton2,p1top2;
   int choice;
-  int i;
 
   /* Compute location for first cycle */
   min = a;

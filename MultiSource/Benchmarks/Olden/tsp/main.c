@@ -39,28 +39,19 @@ int main(int argc,char *argv[])
   Tree t;
   int num;
  
-#ifdef FUTURES
-  num=SPMDInit(argc,argv);
-#else
   num=dealwithargs(argc,argv);
-#endif
+
   chatting("Building tree of size %d\n",num);
   t=build_tree(num,0,0,NumNodes,0.0,1.0,0.0,1.0);
   if (!flag) chatting("Past build\n");
   if (flag) chatting("newgraph\n");
   if (flag) chatting("newcurve pts\n");
 
-#ifdef TORONTO
   printf("Call tsp(t, %d, %d)\n", conquer_thresold, NumNodes); 
   tsp(t,conquer_thresold, NumNodes);
-#else
-  tsp(t,150,NumNodes);
-#endif
 
   if (flag) print_list(t);
   if (flag) chatting("linetype solid\n");
 
-#ifdef FUTURES
-  __ShutDown(0);
-#endif
+  return 0;
 }

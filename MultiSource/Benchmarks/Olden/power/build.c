@@ -47,7 +47,6 @@ Root build_tree()
 
 Lateral build_lateral(int i, int num)
 {
-  register int j,k;
   register Lateral l;
   register Branch b;
 #ifdef FUTURES

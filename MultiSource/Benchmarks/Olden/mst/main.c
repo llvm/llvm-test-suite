@@ -84,10 +84,6 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
 
 static Vertex MyVertexList = NULL;
 
-static void SetMyVertexList(Vertex v) {
-  MyVertexList = v;
-}
-
 static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
   future_cell_BlueReturn fcleft;
   BlueReturn retright;
@@ -111,9 +107,8 @@ static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
 
 static int ComputeMst(Graph graph,int numproc,int numvert) 
 {
-  Vertex v;
   Vertex inserted,tmp;
-  int cost=0,i,dist;
+  int cost=0,dist;
 
   /* make copy of graph */
   chatting("Compute phase 1\n");
