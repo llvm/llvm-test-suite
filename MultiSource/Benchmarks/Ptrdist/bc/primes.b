@@ -1,7 +1,7 @@
 
 /* An example that finds all primes between 2 and limit. */
 
-    limit = 500;
+    limit = 1500000;
 
     /* auto prime[], num, p, root, i */
 
