@@ -1,4 +1,4 @@
 LEVEL = ../..
-DIRS  = SingleSource #MultiSource
+DIRS  = SingleSource MultiSource
 
 include ${LEVEL}/test/Makefile.tests
