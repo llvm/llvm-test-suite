@@ -75,7 +75,7 @@ int list_equal(DLL *x, DLL *y) {
 void list_print(char *msg, DLL *x) {
     DLL *xp, *first = x->next;
     int i = 0;
-    fputs(msg, stdout);
+    puts(msg);
     printf("length: %d\n", list_length(x));
     for (xp=x->next; xp->next != first; xp=xp->next) {
 	printf("i:%3d  v:%3d  n:%3d  p:%3d\n", ++i,
@@ -150,7 +150,7 @@ int test_lists() {
     DLL *li3 = list_new();
     /* compare li2 and li1 for equality*/
     if (!list_equal(li2, li1)) {
-	fprintf(stderr, "li2 and li1 are not equal\n");
+	printf("li2 and li1 are not equal\n");
 	exit(1);
     }
     while (!list_empty(li2)) {
@@ -158,7 +158,7 @@ int test_lists() {
     }
     /* li2 must now be empty*/
     if (!list_empty(li2)) {
-	fprintf(stderr, "li2 should be empty now\n");
+	printf("li2 should be empty now\n");
 	exit(1);
     }
     /* remove each individual item from right side of li3 and
@@ -168,44 +168,44 @@ int test_lists() {
     }
     /* li3 must now be empty */
     if (!list_empty(li3)) {
-	fprintf(stderr, "li3 should be empty now\n");
+	printf("li3 should be empty now\n");
 	exit(1);
     }
     /* reverse li1 in place */
     list_reverse(li1);
     /* check that li1's first item is now SIZE */
     if (list_first(li1)->val != SIZE) {
-	fprintf(stderr, "li1 first value wrong, wanted %d, got %d\n",
+	printf("li1 first value wrong, wanted %d, got %d\n",
 		SIZE, list_first(li1)->val);
 	exit(1);
     }
     /* check that li1's last item is now 1 */
     if (list_last(li1)->val != 1) {
-	fprintf(stderr, "last value wrong, wanted %d, got %d\n",
+	printf("last value wrong, wanted %d, got %d\n",
 		SIZE, list_last(li1)->val);
 	exit(1);
     }
     /* check that li2's first item is now SIZE */
     if (list_first(li2)->val != SIZE) {
-	fprintf(stderr, "li2 first value wrong, wanted %d, got %d\n",
+	printf("li2 first value wrong, wanted %d, got %d\n",
 		SIZE, list_first(li2)->val);
 	exit(1);
     }
     /* check that li2's last item is now 1 */
     if (list_last(li2)->val != 1) {
-	fprintf(stderr, "last value wrong, wanted %d, got %d\n",
+	printf("last value wrong, wanted %d, got %d\n",
 		SIZE, list_last(li2)->val);
 	exit(1);
     }
     /* check that li1's length is still SIZE */
     if (list_length(li1) != SIZE) {
-	fprintf(stderr, "li1 size wrong, wanted %d, got %d\n",
+	printf("li1 size wrong, wanted %d, got %d\n",
 		SIZE, list_length(li1));
 	exit(1);
     }
     /* compare li1 and li2 for equality */
     if (!list_equal(li1, li2)) {
-	fprintf(stderr, "li1 and li2 are not equal\n");
+	printf("li1 and li2 are not equal\n");
 	exit(1);
     }
     len = list_length(li1);
