@@ -167,6 +167,7 @@ main(int argc, char *argv[]) {
 	 for ( ; j > 0 ; j --) {
 		for (k = 0 ; k < num_lists ; k ++) { 
 		  struct element *e = allocate();
+		  e->count = k+j;
 		  if (tail) {
 			 struct element *trav = lists[k];
 			 while (trav->next != NULL) {
@@ -181,6 +182,8 @@ main(int argc, char *argv[]) {
 		}
 	 }
   }
+  printf ("output = %d\n", accumulate);
+
   printf ("num allocated %d\n", num_allocated);
   return 0;
 }
