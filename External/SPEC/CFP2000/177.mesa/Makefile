@@ -20,4 +20,4 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             texstate.c texture.c triangle.c varray.c vb.c vbfill.c vbrender.c \
             vbxform.c winpos.c xform.c mesa4.c)
 
-include ../../Makefile.spec2000
+include ../../Makefile.spec

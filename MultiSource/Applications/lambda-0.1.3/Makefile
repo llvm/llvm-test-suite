@@ -1,6 +1,6 @@
 LEVEL = ../../../../..
 PROG = lambda
-LDFLAGS += -lstdc++
-LIBS += -lstdc++
+LDFLAGS = -lsupc++
+LIBS += -lsupc++
 STDIN_FILENAME=$(BUILD_SRC_DIR)/input
 include ../../Makefile.multisrc

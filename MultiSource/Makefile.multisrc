@@ -15,7 +15,7 @@ PROGRAMS_TO_TEST := $(PROG)
 
 ## LLVM bytecode libraries that must be linked with an application
 # FIXME: LIBS SHOULD BE SPECIFIED
-LIBS += -lm
+LIBS = -lm
 
 include $(LEVEL)/test/Programs/Makefile.programs
 
@@ -42,24 +42,19 @@ bugpoint-gccld: Output/$(PROG).bugpoint-gccld
 bugpoint-jit:   Output/$(PROG).bugpoint-jit
 bugpoint-llc:   Output/$(PROG).bugpoint-llc
 
-# Raw bytecode files are files created by simply assembling the output of the
-# GCC frontend, without running any optimizations.
+# Raw bytecode files are files created by simply linking the output of the GCC
+# frontend without running gccas.
 #
-Output/%.rbc: Output/%.ll $(LGCCAS)
-	$(LGCCAS) -disable-opt $< -o $@
+Output/%.rbc: Output/%.ll $(LLVMAS)
+	$(LLVMAS) -f $< -o - | $(LOPT) -f -q -funcresolve -o $@
 
 ifndef USE_PRECOMPILED_BYTECODE
-
-$(PROGRAMS_TO_TEST:%=Output/%.linked.rbc): \
-Output/%.linked.rbc: $(LObjects) $(LGCCLDPROG)
-	$(LGCCLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
 
 # Output/*.linked.ll is all of the bytecode files of the program linked together
 # without any libraries linked in...
 #
-$(PROGRAMS_TO_TEST:%=Output/%.linked.rll): \
-Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
-	$(LDIS) $< -o $@ -f
+Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
+	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve -deadtypeelim -q | $(LDIS) > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)

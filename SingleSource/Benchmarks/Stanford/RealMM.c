@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define float double
-
 #define  nil		0
 #define	 false		0
 #define  true		1
@@ -150,7 +148,7 @@ void Mm (int run)    {
     for ( i = 1; i <= rowsize; i++ )
 		for ( j = 1; j <= rowsize; j++ ) 
 			rInnerproduct(&rmr[i][j],rma,rmb,i,j);
-	printf("%f\n", rmr[run + 1][run + 1]);
+	printf("%d\n", rmr[run + 1][run + 1]);
 }
 
 int main()

@@ -33,8 +33,8 @@ $SortReverse = 1;
  ["#Glob"   , '([0-9]+).*Number of bytes of global vars'],
  [],
 # Number of transformations
- ["#store" , '([0-9]+).*Number of stores added'],
- ["#load"  , '([0-9]+).*Number of loads added'],
+ ["#spill" , '([0-9]+).*Number of registers spilled'],
+ ["#reload", '([0-9]+).*Number of registers reloaded'],
  ["#fp"    , '([0-9]+).*Number of floating point instructions'],
  ["#fxch"  , '([0-9]+).*Number of fxch instructions inserted'],
  []

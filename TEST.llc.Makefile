@@ -22,6 +22,6 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
 	@cat $<
 
-# Define REPORT_DEPENDENCIES so that the report is regenerated if llc changes
+# Define REPORT_DEPENDENCIES so that the report is regenerated if lli changes
 #
 REPORT_DEPENDENCIES := $(LLC)

@@ -3,7 +3,7 @@
 LEVEL = ../../../..
 include $(LEVEL)/Makefile.config
 
-PARALLEL_DIRS := Fhourstones McCat Olden OptimizerEval Ptrdist llubenchmark sim FreeBench MallocBench
+PARALLEL_DIRS := Fhourstones McCat Olden OptimizerEval Ptrdist llubenchmark sim FreeBench
 
 
 include $(LEVEL)/test/Programs/Makefile.programs

@@ -1,7 +1,6 @@
-##===- test/Programs/TEST.example.Makefile -----------------*- Makefile -*-===##
+##===- test/Programs/TEST.vtl.Makefile ---------------------*- Makefile -*-===##
 #
-# Example to show a custom test.  This test just prints the size of the bytecode
-# file for each program.
+# Makefile for getting performance metrics using Intel's VTune.
 #
 ##===----------------------------------------------------------------------===##
 
@@ -17,7 +16,7 @@ VTL := /opt/intel/vtune/bin/vtl
 P4_EVENTS := "-ec en='2nd Level Cache Read Misses' en='2nd-Level Cache Read References'"
 P3_EVENTS := "-ec en='L2 Cache Request Misses (highly correlated)'"
 
-EVENTS := $(P3_EVENTS)
+EVENTS := $(P4_EVENTS)
 
 #
 # Generate events for LLC
@@ -31,16 +30,37 @@ EVENTS := $(P3_EVENTS)
 	#-$(VERB) $(VTL) view > $@
 	#$(VERB)  $(VTL) delete $* -f
 
+test:: $(PROGRAMS_TO_TEST:%=test.$(TEST).pa.%)
+
 #
-# Generate events for CBE
+# Generate events for Pool Allocated CBE
+#
+$(PROGRAMS_TO_TEST:%=test.$(TEST).pa.%): \
+test.$(TEST).pa.%: Output/%.poolalloc.cbe
+	@echo "========================================="
+	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
+ifeq ($(RUN_OPTIONS),)
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+else
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<,"$(RUN_OPTIONS)"
+endif
+	-$(VERB) $(VTL) run $*
+	-$(VERB) $(VTL) view > $@
+	$(VERB)  $(VTL) delete $* -f
+
+#
+# Generate events for Pool Allocated CBE
 #
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.cbe
 	@echo "========================================="
 	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
-	$(VERB) $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+ifeq ($(RUN_OPTIONS),)
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
+else
+	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<,"$(RUN_OPTIONS)"
+endif
 	-$(VERB) $(VTL) run $*
 	-$(VERB) $(VTL) view > $@
 	$(VERB)  $(VTL) delete $* -f
-
 

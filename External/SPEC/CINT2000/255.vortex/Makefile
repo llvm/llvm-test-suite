@@ -1,7 +1,7 @@
 LEVEL = ../../../../../..
 #STDOUT_FILENAME := input.random.out
 
-include ../../Makefile.spec2000
+include ../../Makefile.spec
 
 ifeq ($(ARCH),Sparc)
   ## SPEC portability note for vortex says to use this flag on 64-bit machines

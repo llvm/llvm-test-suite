@@ -5,10 +5,6 @@
 #include <inttypes.h>
 
 
-static int64_t lls[] = {
-  123ULL, -1LL, -14LL, 14, 1ULL << 63, 0
-};
-
 int
 main(int argc, char** argv)
 {
@@ -18,7 +14,7 @@ main(int argc, char** argv)
   short         S, s1;
   unsigned short us1;
 
-  int           i1, i;
+  int           i1;
   unsigned      ui1;
 
   int64_t       L, l1;
@@ -125,12 +121,6 @@ main(int argc, char** argv)
   printf("double to ushort us1 = %u\t\t(0x%x)\n", us1, us1);
   printf("double to uint   ui1 = %u\t\t(0x%x)\n", ui1, ui1);
   printf("double to ulong  ul1 = %lu\t\t(0x%lx)\n", ul1, ul1);
-
-  for (i = 0; lls[i]; ++i) {
-    printf("double <- long long %lld = %f\n", lls[i], (double)lls[i]);
-    printf("double <- unsigned long long %llu = %f\n",
-           (unsigned long long)lls[i], (double)(unsigned long long)lls[i]);
-  }
 
   return 0;
 }

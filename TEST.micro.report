@@ -1,0 +1,161 @@
+##=== TEST.micro.report - Report for the MICRO'03 paper --------*- perl -*-===##
+#
+# This file defines a report to be generated for the micro paper.
+#
+# This report should be generated with the following command:
+#    gmake ENABLE_OPTIMIZED=1 TEST=micro RUNTIMELIMIT=120 LARGE_PROBLEM_SIZE=1 CFLAGS=-O3
+#
+##===----------------------------------------------------------------------===##
+
+# Sort by name
+$SortCol = 4;
+
+## Sort in descending order
+$SortReverse = 1;
+$SortNumeric = 1;
+
+# Helper function
+sub Ratio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[$Col-1] ne "*" and
+      $Cols->[$Col-1] != "0") {
+    return 0 if ($Cols->[$Col-2] eq "*");
+    return $Cols->[$Col-2]/$Cols->[$Col-1];
+  } else {
+    return "n/a";
+  }
+}
+sub InvRatio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[$Col-2] ne "*" and
+      $Cols->[$Col-2] != "0") {
+    return $Cols->[$Col-1]/$Cols->[$Col-2];
+  } else {
+    return "n/a";
+  }
+}
+
+sub LLVMRatio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[5] ne "*") {
+    return $Cols->[5]*1733333333/$Cols->[10];
+  } else {
+    return "n/a";
+  }
+}
+
+sub FormatSize {
+  my $Size = shift;
+  return "*" if ($Size eq "*");
+  if ($Size > 10*1024*1024) {
+    return (int $Size*10 / (1024*1024))/10 . "MB";
+  } elsif ($Size > 10*1024) {
+    return sprintf("%2.1f", $Size / 1024) . "KB";
+  } else {
+    return $Size . "B";
+  }
+}
+
+sub FormatSizeKB {
+  my $Size = shift;
+  return "*" if ($Size eq "*");
+  return sprintf("%2.1f", $Size / 1024);
+}
+
+sub FormatRatio {
+  return sprintf("%0.2f", shift);
+}
+sub FormatRatio2 {
+  return sprintf("%0.3f", shift);
+}
+
+# FormatTime - Convert a time from 1m23.45 into 83.45
+sub FormatTime {
+  my $Time = shift;
+  if ($Time =~ m/([0-9]+)[m:]([0-9.]+)/) {
+    $Time = sprintf("%7.3f", $1*60.0+$2);
+  }
+  return $Time;
+}
+
+
+@LatexColumns = (1, 15, 12,    # LOC, LLC Size, BytecodeSize
+                 10, 9, 11,     # #LLVM Insts, # MachineInsts, Ratio
+                 5, 4, 6);     # JIT Time, Nat Run Time, Ratio
+
+# Specify how to format columns nicely for printing...
+%LatexColumnFormat = (
+                       6 => \&FormatRatio2,
+                      11 => \&FormatRatio,
+                      12 => \&FormatSizeKB,
+                      15 => \&FormatSizeKB,
+                     );
+
+# For latex output, limit benchmarks and rename as appropriate
+@LatexRowMapOrder = (
+            'treeadd'    => 'Olden-treeadd',
+            'bisort'     => 'Olden-bisort',
+            'mst'        => 'Olden-mst',
+            'perimeter'  => 'Olden-perimeter',
+            'health'     => 'Olden-health',
+            'tsp'        => 'Olden-tsp',
+            'power'      => 'Olden-power',
+            'em3d'       => 'Olden-em3d',
+            'voronoi'    => 'Olden-voronoi',
+            'bh'         => 'Olden-bh',
+            '-' => '-',
+            'anagram'    => 'ptrdist-anagram',
+            'ks'         => 'ptrdist-ks',
+            'ft'         => 'ptrdist-ft',
+            'yacr2'      => 'ptrdist-yacr2',
+            'bc'         => 'ptrdist-bc',
+            '-' => '-',
+            '179.art'    => '179.art',
+            '183.equake' => '183.equake',
+            '181.mcf'    => '181.mcf',
+            '256.bzip2'  => '256.bzip2',
+            '164.gzip'   => '164.gzip',
+            '197.parser' => '197.parser',
+            '188.ammp'   => '188.ammp',
+            '175.vpr'    => '175.vpr',
+            '300.twolf'  => '300.twolf',
+            '186.crafty' => '186.crafty',
+            '255.vortex' => '255.vortex',
+            '254.gap'    => '254.gap',
+#            '-' => '-',
+#            'sgefa'      => 'sgefa',
+#            'sim'        => 'sim',
+#            'burg'       => 'burg',
+#            'fhourstones' => 'fhourstones',
+#            'optimizer-eval' => 'optimizer-eval',
+#            'flops' => 'flops',
+#            'llu' => 'llubenchmark'
+           );
+
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+ ["Name:" , '\'.*/([^\']+)\' Program'],
+ ["LOC:"  , 'LOC: *([0-9]+)'],
+ [],
+# Times
+ ["Total"  , 'JIT TIME: real\s*([.0-9m:]+)', \&FormatTime],
+ ["NatTotal", 'NAT TIME: real\s*([.0-9m:]+)', \&FormatTime],
+ ["CodeGen", 'Total Execution Time: ([0-9.]+)'],
+ ["CodeGenRatio", \&InvRatio],
+ [],
+# Sizes
+ ["MCSize"   , '([0-9]+).*Number of bytes of machine code compiled'],
+ ["#MCInsts" , '([0-9]+).*Number of machine instructions emitted'],
+ ["LLVMInsts", '([0-9]+).*Number of instructions'],
+ ["mc/LLVM ratio", \&Ratio],
+ ["BytcdSize", '([0-9]+).*Number of bytecode bytes written'],
+ [],
+ ["Cycle/LLVM", \&LLVMRatio],
+ ["LLC Size", 'LLC SIZE: *([0-9]+)'],
+# Number of transformations
+ []
+);
