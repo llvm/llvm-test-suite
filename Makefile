@@ -1,6 +1,6 @@
 ##===- test/Programs/Makefile ------------------------------*- Makefile -*-===##
 #
-# This recursively traverses the programs, building them as neccesary.  This
+# This recursively traverses the programs, building them as necessary.  This
 # makefile also implements 'make report TEST=<x>'.
 #
 ##===----------------------------------------------------------------------===##
@@ -9,7 +9,7 @@ LEVEL = ../..
 PARALLEL_DIRS = SingleSource MultiSource External
 #LLVMSource 
 
-include ${LEVEL}/test/Makefile.tests
+include ${LEVEL}/test/Programs/Makefile.programs
 
 # Include all makefiles which define tests... These makefiles must define
 # test.<testname>.%  given input from Output/%.llvm.bc
