@@ -2,4 +2,16 @@ LEVEL = ../../..
 PARALLEL_DIRS  := TimberWolfMC agrep allroots archie-client assembler bison \
       cdecl compiler dixie fixoutput football gnugo loader \
       plot2fig simulator unix-smail unix-tbl
+
+# Get the $(ARCH) setting
+include $(LEVEL)/Makefile.config
+
+# Disable bison due to insane running times of bison.native
+ifeq ($(ARCH), Sparc)
+PARALLEL_DIRS := $(filter-out bison, $(PARALLEL_DIRS))
+endif
+
+
+
+
 include $(LEVEL)/Makefile.programs
