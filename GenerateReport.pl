@@ -148,8 +148,6 @@ if ($TrimRepeatedPrefix and scalar(@Values)) {
     foreach $Row (@Values) {
       $Row->[0] = substr $Row->[0], length $1;
     }
-
-    print "FOUND PREFIX: $1\n";
   }
 }
 
