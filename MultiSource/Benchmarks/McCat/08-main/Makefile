@@ -1,6 +1,6 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 PROG = main
 LDFLAGS = -lm
 
-include ../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 

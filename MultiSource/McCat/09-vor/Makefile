@@ -1,7 +1,7 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 PROG = vor
 STDIN_FILENAME = vor.in3
 LDFLAGS = -lm
 
-include ../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 

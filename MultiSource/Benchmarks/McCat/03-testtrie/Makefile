@@ -1,7 +1,7 @@
-LEVEL = ../../../..
+LEVEL = ../../../../..
 PROG = testtrie
 LDFLAGS = -lm
 RUN_OPTIONS += testtrie.in2
 #STDIN_FILENAME = benchmark.in3
-include ../Makefile.multisrc
+include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
