@@ -7,13 +7,6 @@
 
 include $(LEVEL)/Makefile.config
 
-# RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
-ifdef LARGE_PROBLEM_SIZE
-RUN_TYPE  := train
-else
-RUN_TYPE  := test
-endif
-
 ## Information the test should have provided...
 ifndef STDOUT_FILENAME
 STDOUT_FILENAME := standard.out

@@ -9,4 +9,10 @@ include $(LEVEL)/Makefile.config
 SPEC_ROOT := $(SPEC95_ROOT)
 CPPFLAGS += -DSPEC_CPU95
 
+# RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
+# individual tests may override this to provide better input sizes
+ifndef RUN_TYPE
+RUN_TYPE  := ref
+endif
+
 include $(LEVEL)/test/Programs/External/SPEC/Makefile.spec
