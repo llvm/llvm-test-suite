@@ -206,7 +206,7 @@ void main()
 
    T[1] = 1.0E+06/(double)loops;
 
-   TLimit = 15.0;
+   TLimit = 1.0;
    NLimit = 512000000;
 
    piref = 3.14159265358979324;
