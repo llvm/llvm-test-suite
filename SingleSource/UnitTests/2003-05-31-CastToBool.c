@@ -2,11 +2,11 @@
 
 void testCastOps(int y) {
   printf("y = %d, (y == 2 || y == 0) == %d\n",
-         y, ((_Bool) y == 2) || ((_Bool) y == 0));
+         y, ((_Bool) (y == 2)) || ((_Bool) (y == 0)));
   printf("y = %d, (y > 2 || y < 5) == %d\n",
-         y, ((_Bool) y < 2) && ((_Bool) y > -10));
+         y, ((_Bool) (y < 2)) && ((_Bool) (y > -10)));
   printf("y = %d, (y ^ 2 ^ ~y) == %d\n",
-         y, ((_Bool) y ^ 2 ^ ~5));
+         y, (_Bool) (y ^ 2 ^ ~5));
 }
 
 void testBool(_Bool X) {
