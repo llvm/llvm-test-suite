@@ -59,8 +59,8 @@ Output/%.linked.rll: $(LObjects) $(LLINK) $(LOPT) $(LDIS)
 	$(LLINK) -f $(LObjects) | $(LOPT) -funcresolve -deadtypeelim -q | $(LDIS) > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
-Output/%.LOC.txt: $(addprefix $(SourceDir), $(Source))
-	cat $(addprefix $(SourceDir), $(Source)) $(wildcard $(SourceDir)/*.h) | wc -l > $@
+Output/%.LOC.txt: $(Source)
+	cat $(Source) $(wildcard $(SourceDir)/*.h) | wc -l > $@
 
 endif
 
