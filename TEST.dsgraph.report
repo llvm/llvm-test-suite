@@ -4,9 +4,10 @@
 #
 ##===----------------------------------------------------------------------===##
 
-# Sort numerically, not textually...
-$SortNumeric = 1;
-$TrimRepeatedPrefix = 1;
+$SortNumeric = 1;               # Sort numerically, not textually.
+$TrimAllDirectories = 1;        # Trim off benchmark directories.
+$SortCol = 2;                   # Sort by #MemInstrs
+$SortReverse = 1;               # Sort in descending order
 
 
 # Helper function
@@ -40,12 +41,6 @@ sub NoCallNodes {
   $_[0] =~ m/([0-9]+)\+/;
   return $1;
 }
-
-# Sort by total analyze time
-$SortCol = 7;
-
-# Sort in descending order
-$SortReverse = 1;
 
 # For latex output, limit benchmarks and rename as appropriate
 @LatexRowMapOrder = (

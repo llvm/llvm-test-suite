@@ -18,7 +18,8 @@ sub Ratio {
 
 $SortCol = 0;
 #$SortNumeric = 1;
-$TrimRepeatedPrefix = 1;
+$TrimAllDirectories = 1;        # Trim off benchmark directories.
+#$TrimRepeatedPrefix = 1;
 
 # Sort in ascending order
 $SortReverse = 0;
