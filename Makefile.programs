@@ -51,10 +51,14 @@ CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build diffs for LLI and LLC output...
 .PRECIOUS: Output/%.diff-lli Output/%.diff-llc Output/%.diff-cbe
+ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
+endif
+ifndef DISABLE_CBE_DIFFS
 all:: $(CBEDIFFS)
+endif
 
-ifdef ENABLE_LLI
+ifdef ENABLE_LLI_DIFFS
 all:: $(LLIDIFFS)
 endif
 
