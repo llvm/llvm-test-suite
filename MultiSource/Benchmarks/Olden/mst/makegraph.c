@@ -16,7 +16,7 @@ static int mult(int p, int q)
    return (((p0*q1+p1*q0) % CONST_m1)*CONST_m1+p0*q0);
 }
 
-static int random(int seed)
+static int random2(int seed)
 {
   int tmp;
   tmp = (mult(seed,CONST_b)+1);
@@ -27,7 +27,7 @@ static int compute_dist(int i,int j, int numvert)
 {
   int less, gt;
   if (i<j) {less = i; gt = j;} else {less = j; gt = i;}
-  return (random(less*numvert+gt) % RANGE)+1;
+  return (random2(less*numvert+gt) % RANGE)+1;
 }
 
 static int hashfunc(unsigned int key)
