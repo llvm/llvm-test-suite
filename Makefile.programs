@@ -19,7 +19,7 @@
 
 include $(LEVEL)/test/Makefile.tests
 
-.PRECIOUS: Output/%.linked.bc Output/%.native Output/%.llc
+.PRECIOUS: Output/%.llvm Output/%.native Output/%.llc
 
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
@@ -45,8 +45,8 @@ all:: $(LLIDIFFS)  $(LLCDIFFS)
 # Rules to build the test output...
 Output/%.out.nat: Output/%.native
 	-$< > $@ 2>&1
-Output/%.out.lli: Output/%.linked.bc
-	-$(LLI) -q < $< > $@ 2>&1
+Output/%.out.lli: Output/%.llvm
+	-$< > $@ 2>&1
 Output/%.out.llc: Output/%.llc
 	-$< > $@ 2>&1
 
