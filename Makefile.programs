@@ -166,7 +166,10 @@ Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 # the default target is the test target.  Here we dispatch to a specific set of
 # tests.
 #
-test:: $(addprefix test.$(TEST).,$(PROGRAMS_TO_TEST))
+.PHONY: test-setup test-finish
+test-setup::
+test-finish::
+test:: test-setup $(PROGRAMS_TO_TEST:%=test.$(TEST).%) test-finish
 
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #
@@ -190,9 +193,9 @@ test..%:
 # test.<testname>.%  given input from Output/%.llvm.bc
 #
 ifdef TEST
-TestMakefiles := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.$(TEST)*)
-ifneq ($(TestMakefiles),)
--include $(TestMakefiles)
+TestMakefile := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.$(TEST))
+ifneq ($(TestMakefile),)
+-include $(TestMakefile)
 else
 test.$(TEST).%:
 	@echo
