@@ -13,6 +13,7 @@
 ##===----------------------------------------------------------------------===##
 
 LEVEL = .
+DIRS = Runtime
 PARALLEL_DIRS = SingleSource MultiSource External
 
 include $(LEVEL)/Makefile.programs
