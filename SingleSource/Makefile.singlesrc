@@ -21,8 +21,8 @@ include $(LEVEL)/test/Makefile.tests
 
 PROGRAMS  = $(Source:.c=)
 NATFILES  = $(addsuffix .native, $(addprefix Output/,$(PROGRAMS)))
-LLCFILES  = $(addprefix Output/,$(PROGRAMS))
-BCFILES   = $(addsuffix .linked.bc, $(addprefix Output/,$(PROGRAMS)))
+LLCFILES  = $(PROGRAMS)
+BCFILES   = $(addsuffix .linked.bc, $(PROGRAMS))
 
 NATOUTPUT = $(addsuffix .nat.out, $(addprefix Output/,$(PROGRAMS)))
 LLIOUTPUT = $(addsuffix .lli.out, $(addprefix Output/,$(PROGRAMS)))
@@ -37,11 +37,11 @@ LLCDIFFS  = $(addsuffix .llc.diff, $(addprefix Output/,$(PROGRAMS)))
 all:: Output/.dir $(LLIDIFFS)  # $(LLCDIFFS)
 
 # Rules to build the test output...
-Output/%.nat.out: Output/%.native
+Output/%.nat.out: %.native
 	-$< > $@ 2>&1
-Output/%.lli.out: Output/%.linked.bc
+Output/%.lli.out: %.linked.bc
 	-$(LLI) -q $< > $@ 2>&1
-Output/%.llc.out: Output/%
+Output/%.llc.out: %
 	-$< > $@ 2>&1
 
 
