@@ -1,4 +1,4 @@
 LEVEL = ../../..
-DIRS  = Shootout
+DIRS  = UnitTests Shootout
 
 include Makefile.singlesrc
