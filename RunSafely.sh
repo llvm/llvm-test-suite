@@ -36,7 +36,13 @@ ulimit -f 10485760
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-(time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") > $OUTFILE.time 2>&1
+(time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE") 2>&1 | awk -- '\
+BEGIN     { cpu = 0.0; }
+/^real/   { /* IGNORE */; print }
+/^user/   { cpu += $2; print }
+/^sys/    { cpu += $2; print }
+!/^real/ && !/^user/ && !/^sys/  { print }
+END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 
 if test $? -eq 0
 then
