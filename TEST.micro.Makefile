@@ -12,11 +12,11 @@ TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
 EXTRA_LLI_OPTS = $(TIMEOPT)
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
-Output/%.$(TEST).report.txt: Output/%.llvm.bc Output/%.LOC.txt Output/%.out-nat Output/%.out-jit $(LLI) $(LOPT)
+Output/%.$(TEST).report.txt: Output/%.llvm.bc Output/%.LOC.txt Output/%.out-nat Output/%.out-jit Output/%.llc $(LLI) $(LOPT)
 	@echo -n "LOC: " > $@
 	-@cat Output/$*.LOC.txt >> $@
 	@echo -n "LLC SIZE: " >> $@
-	#-@wc -c Output/$*.llc >> $@
+	-@wc -c Output/$*.llc >> $@
 	@echo >> $@
 	@echo -n "NAT TIME: " >> $@
 	-@grep real Output/$*.out-nat.time >> $@

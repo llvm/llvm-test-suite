@@ -69,6 +69,16 @@ sub FormatRatio2 {
   return sprintf("%0.3f", shift);
 }
 
+# FormatTime - Convert a time from 1m23.45 into 83.45
+sub FormatTime {
+  my $Time = shift;
+  if ($Time =~ m/([0-9]+)[m:]([0-9.]+)/) {
+    $Time = sprintf("%7.3f", $1*60.0+$2);
+  }
+  return $Time;
+}
+
+
 @LatexColumns = (1, 15, 12,    # LOC, LLC Size, BytecodeSize
                  10, 9, 11,     # #LLVM Insts, # MachineInsts, Ratio
                  5, 4, 6);     # JIT Time, Nat Run Time, Ratio
@@ -127,8 +137,8 @@ sub FormatRatio2 {
  ["LOC:"  , 'LOC: *([0-9]+)'],
  [],
 # Times
- ["Total"  , 'JIT TIME: real ([0-9.]+)'],
- ["NatTotal", 'NAT TIME: real ([0-9.]+)'],
+ ["Total"  , 'JIT TIME: real\s*([.0-9m:]+)', \&FormatTime],
+ ["NatTotal", 'NAT TIME: real\s*([.0-9m:]+)', \&FormatTime],
  ["CodeGen", 'Total Execution Time: ([0-9.]+)'],
  ["CodeGenRatio", \&InvRatio],
  [],
