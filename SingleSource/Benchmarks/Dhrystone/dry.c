@@ -284,6 +284,7 @@ Proc0()
 -- Stop Timer --
 *****************/
 
+#if 0
 #ifdef CLOCK
 	benchtime = ( clock() - starttime - nulltime )/ CLK_TCK;
 	printf("Dhrystone(%s) time for %ld passes = %ld\n",
@@ -310,7 +311,7 @@ Proc0()
 	printf("This machine benchmarks at %ld dhrystones/second\n",
 		((long) LOOPS) * HZ / benchtime);
 #endif
-
+#endif
 }
 
 Proc1(PtrParIn)
