@@ -1,3 +1,3 @@
 LEVEL = ../../../../..
-PARALLEL_DIRS  := p2c make
+PARALLEL_DIRS  := espresso p2c make perl
 include $(LEVEL)/test/Programs/Makefile.programs
