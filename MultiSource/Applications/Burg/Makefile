@@ -22,13 +22,13 @@ include	../Makefile.multisrc
 #	seems to work.  Ideally, these yacc rules should be in a master rule
 #	file for the test suite, separate from the LLVM build rules.
 # 
-y.tab.h:: $(SourceDir)/gram.y
+y.tab.h:: gram.y
 	yacc -d $<
 
-y.tab.c: $(SourceDir)/gram.y
+y.tab.c: gram.y
 	yacc -d $<
 
-$(SourceDir)/lex.c: y.tab.h
+lex.c: y.tab.h
 
 src:
 	echo Sources = $(Source)
