@@ -51,7 +51,7 @@ Oalloc(char name[57])
   return (ObjPtr)o;
 }
 
-int FPEqual(double d1, double d2) {
+static int FPEqual(double d1, double d2) {
     return fabs(d1-d2) < 0.000001L;
 }
 
@@ -255,8 +255,8 @@ PrintPoints(ObjPtr o)
   if(o->Points != NULL)
     tmp = o->Points;
   while(tmp != NULL) {
-    printf("Point[%i] = (%.2lf, %.2lf, %.2lf)",i,tmp->P->x,tmp->P->y,tmp->P->z);
-    printf(" -> (%.2lf, %.2lf, %.2lf)\n",tmp->P->tx,tmp->P->ty,tmp->P->tz);
+    printf("Point[%i] = (%.2f, %.2f, %.2f)",i,tmp->P->x,tmp->P->y,tmp->P->z);
+    printf(" -> (%.2f, %.2f, %.2f)\n",tmp->P->tx,tmp->P->ty,tmp->P->tz);
     ++i;
     tmp = tmp->NextPoint;
   }return;
