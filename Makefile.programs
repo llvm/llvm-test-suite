@@ -244,6 +244,9 @@ $(PROGRAMS_TO_TEST:%=Output/%.linked.rll): \
 Output/%.linked.rll: $(SRCDIR)/%.linked.rll Output/.dir
 	cp $< $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
+Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
+	cp $< $@
 endif
 
 
