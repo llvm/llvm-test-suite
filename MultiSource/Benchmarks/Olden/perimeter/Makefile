@@ -6,7 +6,7 @@ LDFLAGS  =
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 11
 else
-RUN_OPTIONS = 4
+RUN_OPTIONS = 10
 endif
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
