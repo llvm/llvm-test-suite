@@ -66,7 +66,7 @@ mid);
 };
 
 int main(int argc, char**argv) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 50000000);
+    int n = ((argc == 2) ? atoi(argv[1]) : 5000000);
     vector<double> v;
     double d;
 
