@@ -151,7 +151,6 @@ if ($TrimRepeatedPrefix and scalar(@Values)) {
   OuterLoop: while (1) {
     # Figure out what the first path prefix is:
     $Values[0]->[0] =~ m|^([^/]*/).|;
-print "PREFIX = $1\n";
     last OuterLoop if (!defined($1));
 
     # Now that we have the prefix, check to see if all of the entries in the
