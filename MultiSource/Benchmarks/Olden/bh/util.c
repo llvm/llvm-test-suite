@@ -7,6 +7,7 @@
  */
 
 #include "stdinc.h"
+#include <errno.h>
 
 #define A	16807.0
 #define M	2147483647.0
@@ -65,8 +66,6 @@ double cputime()
 
 error(char *msg)
 {
-    extern int errno;
-
     fprintf(stderr, msg);
     if (errno != 0)
         perror("Error");
