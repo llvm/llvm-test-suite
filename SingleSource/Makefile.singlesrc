@@ -40,7 +40,7 @@ all:: Output/.dir $(LLIDIFFS)  # $(LLCDIFFS)
 Output/%.nat.out: Output/%.native
 	-$< > $@ 2>&1
 Output/%.lli.out: Output/%.linked.bc
-	-lli -q $< > $@ 2>&1
+	-$(LLI) -q $< > $@ 2>&1
 Output/%.llc.out: Output/%
 	-$< > $@ 2>&1
 
