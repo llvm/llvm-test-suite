@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 FP_ABSTOLERANCE := 4
 
 ifdef LARGE_PROBLEM_SIZE

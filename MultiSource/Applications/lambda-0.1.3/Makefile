@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = lambda
 LDFLAGS += -lstdc++
 LIBS += -lstdc++

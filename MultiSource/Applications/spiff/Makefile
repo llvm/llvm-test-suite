@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG     = spiff
 CPPFLAGS = 
 CFLAGS   = 

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG       = optimizer-eval
 CPPFLAGS   = 
 LDFLAGS    = -lm

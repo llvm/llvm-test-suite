@@ -37,7 +37,7 @@ endif
 PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
 SourceDir := $(SPEC_BENCH_DIR)/src/
 
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
 
 # Do not pass -Wall to compile commands...
 LCCFLAGS  := -O3

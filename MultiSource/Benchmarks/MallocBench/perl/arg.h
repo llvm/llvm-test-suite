@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.2  2004/09/01 14:33:24  criswell
+ * Migrating test suite out of the source tree.
+ *
  * Revision 1.1  2004/02/17 22:21:15  criswell
  * Initial commit of the perl Malloc Benchmark.  I've cheated a little by
  * generating the yacc output files and committing them directly, but it was

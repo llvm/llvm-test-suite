@@ -5,4 +5,4 @@ PARALLEL_DIRS :=   \
 	183.equake \
 	188.ammp
 
-include ${LEVEL}/test/Programs/Makefile.programs
+include ${LEVEL}/Makefile.programs

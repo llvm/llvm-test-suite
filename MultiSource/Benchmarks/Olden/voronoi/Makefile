@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 
 PROG     = voronoi
 INCLUDES = defines.h
@@ -9,5 +9,5 @@ ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 1000000 20 32 7
 endif
 
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
 

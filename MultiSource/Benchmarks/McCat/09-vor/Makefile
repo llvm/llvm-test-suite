@@ -1,10 +1,10 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 
-include $(LEVEL)/Makefile.config
+#include $(LLVM_OBJ_ROOT)/Makefile.config
 
 PROG = vor
 STDIN_FILENAME = $(BUILD_SRC_DIR)/vor.in3
 LDFLAGS = -lm
 
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
 

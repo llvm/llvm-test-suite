@@ -1,3 +1,3 @@
-LEVEL = ../../../../..
-include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
+LEVEL = ../../..
+include $(LEVEL)/SingleSource/Makefile.singlesrc
 

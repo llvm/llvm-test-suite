@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 
 PROG     = tsp
 CPPFLAGS = -DTORONTO
@@ -9,5 +9,5 @@ else
 RUN_OPTIONS = 1024000
 endif
 
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
 

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 
 PROG     = sim
 CPPFLAGS = -DUNIX

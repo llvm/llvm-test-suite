@@ -6,5 +6,5 @@
 #
 ##===----------------------------------------------------------------------===##
 
-include $(LEVEL)/test/Programs/Makefile.programs
+include $(LEVEL)/Makefile.programs
 .PRECIOUS: Output/%.linked.rll

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = aha
 CPPFLAGS = 
 LDFLAGS =

@@ -1,5 +1,5 @@
 # MultiSource Makefile:  Build all subdirectories automatically
 
-LEVEL = ../../..
+LEVEL = ..
 PARALLEL_DIRS  := Applications Benchmarks
-include $(LEVEL)/test/Programs/Makefile.programs
+include $(LEVEL)/Makefile.programs

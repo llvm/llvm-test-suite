@@ -1,4 +1,4 @@
-LEVEL = ../../..
+LEVEL = ..
 
 #
 # Include the configuration so that we know whether or not to include SPEC

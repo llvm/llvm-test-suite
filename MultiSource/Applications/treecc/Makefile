@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = treecc
 #LDFLAGS += -lstdc++
 #LIBS += -lstdc++

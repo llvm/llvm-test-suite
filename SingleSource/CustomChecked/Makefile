@@ -1,10 +1,10 @@
 # This directory contains testcases that use the TestRunner script to check to 
 # see if they succeed.
 
-LEVEL = ../../../..
+LEVEL = ../..
 DISABLE_DIFFS = 1
 
-include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
+include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 LIBS += -lstdc++
 LDFLAGS += -lm

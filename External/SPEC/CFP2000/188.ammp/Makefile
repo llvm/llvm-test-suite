@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS     = 
 STDIN_FILENAME  = ammp.in
 STDOUT_FILENAME = ammp.out

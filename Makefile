@@ -1,12 +1,27 @@
-##===- test/Programs/Makefile ------------------------------*- Makefile -*-===##
+##===- projects/ModuleMaker/Makefile -----------------------*- Makefile -*-===##
+# 
+#                     The LLVM Compiler Infrastructure
 #
-# This recursively traverses the programs, building them as necessary.  This
-# makefile also implements 'make report TEST=<x>'.
-#
+# This file was developed by the LLVM research group and is distributed under
+# the University of Illinois Open Source License. See LICENSE.TXT for details.
+# 
 ##===----------------------------------------------------------------------===##
+#
+# This is a sample Makefile for a project that uses LLVM.
+#
 
-LEVEL = ../..
+#
+# Indicates our relative path to the top of the project's root directory.
+#
+LEVEL = .
+
+#
+# Directories that needs to be built.
+#
 PARALLEL_DIRS = SingleSource MultiSource External
 
-include ${LEVEL}/test/Programs/Makefile.programs
+#
+# Include the Master Makefile that knows how to build all.
+#
+include $(LEVEL)/Makefile.common
 

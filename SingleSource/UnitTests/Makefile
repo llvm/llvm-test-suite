@@ -1,6 +1,6 @@
 # Programs/SingleSource/UnitTests/Makefile
 
 DIRS = SetjmpLongjmp
-LEVEL = ../../../..
-include ../Makefile.singlesrc
+LEVEL = ../..
+include $(LEVEL)/SingleSource/Makefile.singlesrc
 

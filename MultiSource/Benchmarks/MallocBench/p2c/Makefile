@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 PROG = p2c
 CPPFLAGS += -DNOMEMOPT
 RUN_OPTIONS = -v

@@ -6,6 +6,9 @@
  *    as specified in the README file that comes with the perl 3.0 kit.
  *
  * $Log$
+ * Revision 1.3  2004/09/01 14:33:24  criswell
+ * Migrating test suite out of the source tree.
+ *
  * Revision 1.2  2004/04/05 16:35:52  lattner
  * Finally, fix the last perl bug that prevented it from working with LLVM:
  *   No, memcpy is NOT allowed when the src & dest overlap!

@@ -1,6 +1,6 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 
-include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.common
 
 PROG     = burg
 CPPFLAGS = -DDEBUG
@@ -10,7 +10,7 @@ ExtraSource := y.tab.c
 
 STDIN_FILENAME = $(BUILD_SRC_DIR)/sample.gr
 
-include $(LEVEL)/Makefile.config
+include $(LLVM_OBJ_ROOT)/Makefile.config
 
 Source  := $(ExtraSource) $(wildcard $(BUILD_SRC_DIR)/*.c)
 

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = hbd
 CPPFLAGS += -DHAVE_CONFIG_H
 LDFLAGS += -lstdc++

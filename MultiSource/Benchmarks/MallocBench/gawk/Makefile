@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 RUN_OPTIONS = -f $(SourceDir)/INPUT/adj.awk type=l linelen=70 indent=5 $(SourceDir)/INPUT/words-large.awk
 PROG = gawk
 LIBS += -lm

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 LDFLAGS += -lm
 
-include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
+include $(LEVEL)/SingleSource/Makefile.singlesrc

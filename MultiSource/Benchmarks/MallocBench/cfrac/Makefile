@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 PROG = cfrac
 CPPFLAGS += -DNOMEMOPT
 LIBS += -lm

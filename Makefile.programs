@@ -40,13 +40,13 @@
 # we do not automatically compute dependencies
 INCLUDES := $(ExtraHeaders) $(wildcard $(SourceDir)/*.h)
 
-include $(LEVEL)/test/Programs/Makefile.tests
+include $(LEVEL)/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 .PRECIOUS: Output/%.linked.bc 
 
-PROGDIR = $(LLVM_SRC_ROOT)/test/Programs
+PROGDIR = $(BUILD_SRC_ROOT)
 
 #
 # Scripts in the Programs directory...
@@ -604,11 +604,3 @@ endif
 
 clean::
 	rm -f report.*.raw.out report.*.txt report.*.html report.*.tex
-
-# If the Makefile in the source tree has been updated, copy it over into the
-# build tree.
-Makefile :: $(BUILD_SRC_DIR)/Makefile
-	@${ECHO} "===== Updating Makefile from source dir: `dirname $<` ====="
-	$(MKDIR) $(@D)
-	cp -f $< $@
-

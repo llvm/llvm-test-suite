@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 PROG = make
 CPPFLAGS += -DHAVE_SIGLIST -DNO_LDAV -DNOMEMOPT
 Source=commands.c job.c dir.c file.c load.c misc.c main.c read.c \

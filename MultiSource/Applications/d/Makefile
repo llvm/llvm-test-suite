@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = make_dparser
 Sources=make_dparser.c write_ctables.c gram.c lex.c lr.c arg.c parse.c scan.c symtab.c util.c grammar.g.c
 CPPFLAGS =  -DD_BUILD_VERSION=5725

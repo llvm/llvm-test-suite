@@ -1,4 +1,4 @@
-LEVEL = ../../../../../..
+LEVEL = ../../../..
 PROG = gs
 LIBS += -lm
 LDFLAGS += -lm

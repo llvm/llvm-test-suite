@@ -1,13 +1,13 @@
-LEVEL=../../../../../..
+LEVEL=../../../..
 
-include $(LEVEL)/Makefile.config
+#include $(LLVM_OBJ_ROOT)/Makefile.config
 
 PROG = anagram
 #OBJS = anagram.o
 RUN_OPTIONS = words 
 STDIN_FILENAME = $(BUILD_SRC_DIR)/input.OUT
 
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
  
 #test:
 #	$(SIM) ./anagram words < input.in > FOO

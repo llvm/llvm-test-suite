@@ -17,7 +17,7 @@ PROGRAMS_TO_TEST := $(PROG)
 # FIXME: LIBS SHOULD BE SPECIFIED
 LIBS += -lm
 
-include $(LEVEL)/test/Programs/Makefile.programs
+include $(LEVEL)/Makefile.programs
 
 # Figure out what object files we want to build...
 LObjs    := $(sort $(addsuffix .rbc, $(notdir $(basename $(Source)))))

@@ -1,4 +1,4 @@
-LEVEL = ../../../../..
+LEVEL = ../../..
 PROG = kc
 CPPFLAGS=-I$(BUILD_SRC_DIR) -DYYDEBUG=1
 LDFLAGS = -lstdc++

@@ -1,12 +1,12 @@
 # MultiSource/Applications Makefile:  Build all subdirectories automatically
 
-LEVEL = ../../../..
+LEVEL = ../..
 
-include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.common
 
 PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc
 ifeq ($(OS),Linux)
 PARALLEL_DIRS += kimwitu++ obsequi
 endif
 
-include $(LEVEL)/test/Programs/Makefile.programs
+include $(LEVEL)/Makefile.programs
