@@ -1,9 +1,7 @@
-LEVEL = ../../..
+LEVEL = ../../../..
 
-PROG = health
-LOCAL_CFLAGS=
-LOCAL_LDFLAGS= -lm
+PROG     = health
+CPPFLAGS = -DTORONTO
+LDFLAGS  = -lm
 
-OBJS = args.o health.o list.o poisson.o
-
-include	../makefile
+include	../Makefile.multisrc
