@@ -1226,7 +1226,8 @@ void output_parser(void)
     fpars = fparser;
   else fpars = fparser1;
 #endif
-
+  if (!fpars || feof(fpars))
+    return;
   c = getc(fpars);
   while (c != EOF)
     {
