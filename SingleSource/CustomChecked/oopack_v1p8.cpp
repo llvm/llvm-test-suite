@@ -677,6 +677,7 @@ int main( int argc, char * argv[] )
 	    Benchmark * b = Benchmark::find( test_name );
 	    if( b==NULL ) {
 		printf("skipping non-existent test = '%s'\n", test_name );
+		abort();
 	    } else {
 		b->time_both( test_count );
 	    }
