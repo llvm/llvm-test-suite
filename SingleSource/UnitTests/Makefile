@@ -1,4 +1,4 @@
-# Programs/SingleSource/Misc/Makefile
+# Programs/SingleSource/UnitTests/Makefile
 
 LEVEL = ../../../..
 include ../Makefile.singlesrc
