@@ -41,12 +41,12 @@ sub GCCLLCRatio {
   }
 }
 
-sub GCCLLC_LSRatio {
+sub GCCLLC_BETARatio {
   my ($Cols, $Col) = @_;
   my $GCC = $Cols->[$Col-8];
-  my $LLC_LS = $Cols->[$Col-5];
-  if ($GCC ne "*" and $LLC_LS ne "*" and $LLC_LS != "0") {
-    return sprintf("%3.2f", $GCC/$LLC_LS);
+  my $LLC_BETA = $Cols->[$Col-5];
+  if ($GCC ne "*" and $LLC_BETA ne "*" and $LLC_BETA != "0") {
+    return sprintf("%3.2f", $GCC/$LLC_BETA);
   } else {
     return "n/a";
   }
@@ -63,7 +63,7 @@ sub GCCLLC_LSRatio {
  ["GCCAS"    , "TEST-RESULT-compile: $WallTimeRE"],
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["LLC<br>compile" , "TEST-RESULT-llc: $WallTimeRE"],
- ["LLC-LS<br>compile" , "TEST-RESULT-llc-ls: $WallTimeRE"],
+ ["LLC-BETA<br>compile" , "TEST-RESULT-llc-ls: $WallTimeRE"],
  ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: $WallTimeRE"],
  ["Machine<br>code", 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  [],
@@ -75,5 +75,5 @@ sub GCCLLC_LSRatio {
  ["JIT-BETA" , 'TEST-RESULT-jit-ls-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
- ["GCC/LLC-Beta"  , \&GCCLLC_LSRatio]
+ ["GCC/LLC-Beta"  , \&GCCLLC_BETARatio]
 );
