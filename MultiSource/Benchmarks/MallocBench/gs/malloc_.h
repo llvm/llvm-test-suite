@@ -30,7 +30,7 @@ copies.  */
 #    ifdef BSD4_2
        extern char *malloc();
 #    else
-#      if defined(__FreeBSD__)
+#      if defined(__FreeBSD__) || defined(__APPLE__)
 #        include <stdlib.h>
 #      else
 #        include <malloc.h>
