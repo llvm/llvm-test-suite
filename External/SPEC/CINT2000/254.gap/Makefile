@@ -1,5 +1,6 @@
 LEVEL = ../../../../../..
-RUN_OPTIONS     = -l ./ -q -m 64M \< $(RUN_TYPE).in
+RUN_OPTIONS     = -l ./ -q -m 64M
 STDOUT_FILENAME = $(RUN_TYPE).out
+STDIN_FILENAME  = $(RUN_TYPE).in
 CPPFLAGS = -DSYS_IS_USG -DSYS_HAS_CALLOC_PROTO -DSYS_HAS_IOCTL_PROTO -DSYS_HAS_TIME_PROTO
 include ../../Makefile.spec
