@@ -81,13 +81,13 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
-$(PROGRAMS_TO_TEST:%=Output/%.out-jit-ls): \
-Output/%.out-jit-ls: Output/%.llvm.bc $(LLI)
-	$(SPEC_SANDBOX) jit-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+$(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
+Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
+	$(SPEC_SANDBOX) jit-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) -regalloc=iterativescan $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
-	-(cd Output/jit-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/jit-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+	-(cd Output/jit-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/jit-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
@@ -97,13 +97,13 @@ Output/%.out-llc: Output/%.llc
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
-$(PROGRAMS_TO_TEST:%=Output/%.out-llc-ls): \
-Output/%.out-llc-ls: Output/%.llc-ls
-	$(SPEC_SANDBOX) llc-ls-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+$(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
+Output/%.out-llc-beta: Output/%.llc-beta
+	$(SPEC_SANDBOX) llc-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
-                  ../$*.llc-ls $(RUN_OPTIONS)
-	-(cd Output/llc-ls-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
-	-cp Output/llc-ls-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+                  ../$*.llc-beta $(RUN_OPTIONS)
+	-(cd Output/llc-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-cp Output/llc-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
@@ -142,8 +142,8 @@ Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-ls): \
-Output/%.bugpoint-llc-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
+Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) \
 	    -regalloc=iterativescan $(BUGPOINT_ARGS)
@@ -155,8 +155,8 @@ Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-ls): \
-Output/%.bugpoint-jit-ls: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-beta): \
+Output/%.bugpoint-jit-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) \
 	    -regalloc=iterativescan $(BUGPOINT_ARGS)
