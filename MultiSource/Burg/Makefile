@@ -2,7 +2,6 @@ LEVEL = ../../../..
 
 PROG     = burg
 CPPFLAGS = -DDEBUG 
-CFLAGS   = -g
 LDFLAGS  = 
 
 ExtraSource := y.tab.c
