@@ -45,11 +45,13 @@ include $(LEVEL)/test/Makefile.tests
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 
+PROGDIR = $(LEVEL)/test/Programs
+
 # TIMEPROG - The program used to get timing results for a program
-TIMEPROG = $(LEVEL)/test/Programs/TimeProgram.sh
+TIMEPROG = $(PROGDIR)/TimeProgram.sh
 
 # DIFFPROG - The program used to diff the output
-DIFFPROG = $(LEVEL)/test/Programs/DiffOutput.sh
+DIFFPROG = $(PROGDIR)/DiffOutput.sh
 
 # We will be working in the Output directory... 
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
@@ -166,14 +168,20 @@ Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 #
 test:: $(addprefix test.$(TEST).,$(PROGRAMS_TO_TEST))
 
+# AVAILABLE_TESTS - Compute the set of tests available for user help
+#
+TEST_FILES = $(filter-out %~, $(wildcard $(PROGDIR)/Makefile.TEST.*))
+AVAILABLE_TESTS = $(subst $(PROGDIR)/Makefile.TEST.,,$(TEST_FILES))
+
 # If they just say 'make test' then we print out an error telling the user to
 # specify a TEST= option.
 test..%:
+	@echo
 	@echo "***************************************************************"
-	@echo "ERROR: you cannot type '$(MAKE) test' directly."
-	@echo "Instead, use '$(MAKE) TEST=foo' where foo is the name of a test."
-	@echo "Tests should be defined in llvm/test/Programs/Makefile.TEST.*."
-	@echo "Alternatively, just use '$(MAKE)' to run comparisons."
+	@echo "  ERROR: you cannot type '$(MAKE) test' directly."
+	@echo "  Instead, use '$(MAKE) TEST=X' where X is the name of a test."
+	@echo "  Tests available: $(AVAILABLE_TESTS)"
+	@echo "  Alternatively, just use '$(MAKE)' to run comparisons."
 	@echo "***************************************************************"
 	@echo
 	@exit 1
@@ -185,5 +193,14 @@ ifdef TEST
 TestMakefiles := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.$(TEST)*)
 ifneq ($(TestMakefiles),)
 -include $(TestMakefiles)
+else
+test.$(TEST).%:
+	@echo
+	@echo "***************************************************************"
+	@echo "  ERROR: Test '$(TEST)' is not a known test!"
+	@echo "  Tests available: $(AVAILABLE_TESTS)"
+	@echo "***************************************************************"
+	@echo
+	@exit 1
 endif
 endif
