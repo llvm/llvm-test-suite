@@ -29,7 +29,7 @@ struct test** NextPtr     = &Test1.next;
 void
 printdiff(void* p1, void* p2)
 {
-  printf(" 0x%lx", (unsigned long) p1 - (unsigned long) p2);
+  printf(" %d", (int)((unsigned long) p1 - (unsigned long) p2));
 }
 
 int
@@ -37,7 +37,7 @@ main(int argc, char** argv)
 {
   unsigned long diff1, diff2, diff3, diff4; 
 
-  printf("sizeof(struct Test) = %llu\n\n", sizeof(struct test));
+  printf("sizeof(struct Test) = %d\n\n", (int)sizeof(struct test));
 
   printdiff(&TestArray[3], TestArray);
   printdiff(&Test1.A, &TestArray[3]);
