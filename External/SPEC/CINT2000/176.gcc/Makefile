@@ -1,11 +1,12 @@
 LEVEL = ../../../../../..
 
 ifeq ($(RUN_TYPE),test)
-RUN_OPTIONS     = cccp.i -o cccp.s
+RUN_OPTIONS     = cccp.i -o - -quiet
+STDOUT_FILENAME = cccp.s
 else
-RUN_OPTIONS     = cp-decl.i -o cp-decl.s
+RUN_OPTIONS     = cp-decl.i -o - -quiet
+STDOUT_FILENAME = cp-decl.s
 endif
-STDOUT_FILENAME = cccp.out
 
 include ../../Makefile.spec2000
 
