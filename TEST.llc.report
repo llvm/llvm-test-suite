@@ -1,6 +1,6 @@
-##=== TEST.jit.report - Report description for jit tests -------*- perl -*-===##
+##=== TEST.llc.report - Report description for llc tests -------*- perl -*-===##
 #
-# This file defines a report to be generated for the jit test.
+# This file defines a report to be generated for the llc test.
 #
 ##===----------------------------------------------------------------------===##
 
