@@ -1,0 +1,62 @@
+##=== dsgraph.report-desc - Report description for dsgraph -----*- perl -*-===##
+#
+# This file defines a report to be generated for the dsgraph test.
+#
+##===----------------------------------------------------------------------===##
+
+# Helper function
+sub Ratio {
+  my ($Cols, $Col) = @_;
+  if ($Cols->[$Col-2] ne "*" and
+      $Cols->[$Col-2] != "0") {
+    return $Cols->[$Col-1]/$Cols->[$Col-2];
+  } else {
+    return "n/a";
+  }
+}
+
+# Sort by total analyze time
+$SortCol = 2;
+
+# Sort in descending order
+$SortReverse = 1;
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+            ["Name:" , '\'([^\']+)\' Program'],
+            [],
+# Times
+            ["Anlyz:", '([0-9.]+) \([^)]+\)[ 0-9]+TOTAL'],
+            ["LocTm:", '([0-9.]+) \([^)]+\)[ 0-9]+Local'],
+            ["BUTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Bottom'],
+            ["TDTim:", '([0-9.]+) \([^)]+\)[ 0-9]+Top'],
+            ["SumTm:", sub { return SumCols(@_, 3); }],
+            [],
+# Sizes
+            ["LcSize:" , '([0-9]+)  Local'],
+            ["BUSize:" , '([0-9]+)  Bottom-up'],
+            ["TDSize:" , '([0-9]+)  Top-down'],
+            ["BUTDSz:" , sub { return SumCols(@_, 3); }],
+            [],
+# Misc stuff
+            ["NumFold" , '([0-9]+).*Number of folded nodes '],
+            ["NumNodes", 'Graphs contain \\[([0-9+]+)\\] nodes total'],
+            ["MaxSz"   , '([0-9]+).*Maximum graph size'],
+            ["GlobGr"  , '\\.GlobalsGraph\\.dot\'... \\[([0-9+]+)\\]'],
+            ["MaxSCC"  , '([0-9]+).*Maximum SCC Size in Call Graph'],
+            [],
+            ["Loads"   , '([0-9]+).*Number of Load insts'],
+            ["Store"   , '([0-9]+).*Number of Store insts'],
+            ["Calls"   , '([0-9]+).*Number of Call insts'],
+            ["Allca"   , '([0-9]+).*Number of Alloca insts'],
+            ["Mallc"   , '([0-9]+).*Number of Malloc insts'],
+            ["Sum"   , sub { return SumCols(@_, 5); }],
+            [],
+            ["num/ind" , '([0-9]+).*number of indirect call sites'],
+            ["indcallee",'([0-9]+).*number of callee functions at'],
+            ["ratio"   , \&Ratio],  # indcallee / num/ind
+            []
+           );
