@@ -2,11 +2,15 @@
 #include <stdarg.h>
 
 void test(char *fmt, ...) {
-  va_list ap;
+  va_list ap, aq;
   int d;
-  char c, *p, *s;
+  char c, *s;
 
   va_start(ap, fmt);
+
+  va_copy(aq, ap);    /* test va_copy */
+  va_end(aq);
+
   while (*fmt)
     switch(*fmt++) {
     case 's':           /* string */
