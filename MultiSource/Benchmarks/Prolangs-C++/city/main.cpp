@@ -71,13 +71,13 @@ int main()
 
     broken_light l(3,1,4,1);
 
-    for(i = 0; i < 100; i++)
+    for(i = 0; i < 100000; i++)
     {
 	cout << l << "\n";
 	l.tick();
     }
 
-    for(i=0; i< 100; i++)
+    for(i=0; i< 100000; i++)
     {
         i1.get_light()->tick();
     }
@@ -94,7 +94,7 @@ int main()
 
     i1.connectEout(r3, r1);
 
-    for(i=0; i< 100; i++)
+    for(i=0; i< 100000; i++)
     {
         cout << '\n' << i << ' ' << c << '\n';
         c.tick();
