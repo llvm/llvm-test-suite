@@ -16,10 +16,13 @@ shift;shift;shift
 
 mkdir Output/$TEST_UID 2> /dev/null
 cd Output/$TEST_UID
-rm -f *
+rm -rf *
 
 # Copy all of the test input files into the current directory...
-cp $INPUT_DIR/* .
+cp -r $INPUT_DIR/* .
+
+# If there is an "all" input directory, take it as well...
+cp -r $INPUT_DIR/../../all/input/* . 2&>1 > /dev/null
 
 # Run the program now...
 echo Running: $*
