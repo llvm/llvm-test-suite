@@ -21,7 +21,7 @@ include $(LEVEL)/test/Programs/Makefile.programs
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: %.c Output/.dir
-	$(NATGCC) $< -lm -o $@
+	$(CC) $(CFLAGS) $< -lm -o $@
 
 # Since this is just a single source program, the linked version of the program
 # is the same as the unlinked version...
