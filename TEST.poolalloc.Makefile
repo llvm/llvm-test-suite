@@ -1,63 +1,62 @@
 ##===- test/Programs/TEST.poolalloc.Makefile ---------------*- Makefile -*-===##
 #
-# Old tests for pool allocation.  These will almost certainly have to be updated
-# to be useful in the future.
+# Simple tests for pool allocation.
 #
-# Note that this is Sparc specific!
+# At the moment this doesn't do anything meaningful.  In the future, this should
+# do timings to see if we improve performance.
 #
 ##===----------------------------------------------------------------------===##
 
-.PRECIOUS: Output/%.poolalloc.bc
+# PALIB - The path to the runtime library which provides the pool allocator
+# itself.
+#
+PALIB := $(LEVEL)/test/Libraries/Output/libpoolalloc.bc
+PASRC := $(LEVEL)/test/Libraries/libdummy
 
-N32Objects := $(addprefix Output/n32/,$(NObjs))
-.PRECIOUS: $(N32Objects) Output/n32/.dir
-Output/%.native32: $(N32Objects)
-	$(CC) -o $@ $(N32Objects) $(LDFLAGS)
+# Rebuild libpoolalloc if neccesary...
+$(PALIB) : $(wildcard $(PASRC)/*.c)
+	cd $(PASRC); $(MAKE)
 
-Output/n32/%.o: %.c Output/n32/.dir
-	$(CC) -DTORONTO -g -xarch=v8 -c $< -o $@
+# LINKED_PROGS - All of the programs linked to libpoolalloc
+LINKED_PROGS := $(PROGRAMS_TO_TEST:%=Output/%.pa.llvm.bc)
 
-.PRECIOUS: Output/%.poolalloc8.llvm.bc Output/%.poolalloc16.llvm.bc Output/%.poolalloc32.llvm.bc Output/%.poolalloc16nle.llvm.bc Output/%.poolalloc32nle.llvm.bc
+IPO_OPTS := -internalize -funcresolve -instcombine -globaldce
+$(LINKED_PROGS): Output/%.pa.llvm.bc: Output/%.pa.bc $(PALIB)
+	$(LLINK) $< $(PALIB) | $(LOPT) $(IPO_OPTS) > $@ 
 
-# Pool allocate memory objects if possible
-Output/%.poolalloc8.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -ptrsize=8 -globaldce -instcombine -die -gcse < $< -o $@ -f
-Output/%.poolalloc16.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -ptrsize=16 -globaldce -instcombine -die -gcse < $< -o $@ -f
-Output/%.poolalloc32.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -ptrsize=32 -globaldce -instcombine -die -gcse < $< -o $@ -f
+# Pool allocation target...
 
-Output/%.poolalloc8nle.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -no-pool-load-elim -ptrsize=8 -globaldce -instcombine -die < $< -o $@ -f
-Output/%.poolalloc16nle.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -no-pool-load-elim -ptrsize=16 -globaldce -instcombine -die < $< -o $@ -f
-Output/%.poolalloc32nle.llvm.bc: Output/%.linked.bc $(LOPT)
-	$(LOPT) -internalize -poolalloc -no-pool-load-elim -ptrsize=32 -globaldce -instcombine -die < $< -o $@ -f
+PA_OPTS := -load /localhome/lattner/cvs/llvm/lib/Debug/libpoolalloc.so
+$(PROGRAMS_TO_TEST:%=Output/%.pa.bc): Output/%.pa.bc: Output/%.llvm.bc
+	$(LOPT) $(PA_OPTS) -poolalloc < $< > $@ || as < /dev/null > $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
+Output/%.$(TEST).report.txt: Output/%.pa.llvm.bc
+	echo "good" > $@
 
+test.$(TEST).%: Output/%.$(TEST).report.txt
+	@echo "---------------------------------------------------------------"
+	@echo ">>> ========= '$*' Program"
+	@echo "---------------------------------------------------------------"
+	@cat $<
 
-# Link the pool allocator into the programs...
-LLC_PROG_LIBS += /home/vadve/lattner/PoolAllocated/PoolAllocator.o
+#.PRECIOUS: Output/%.out-pa Output/%.diff-pa
+#Output/%.out-pa: Output/%.llc
+#	-$< > $@ 2>&1
 
-.PRECIOUS: Output/%.out-pa Output/%.diff-pa
-Output/%.out-pa: Output/%.llc
-	-$< > $@ 2>&1
+#Output/%.diff-pa: Output/%.out-pa Output/%.out-llc
+#	@echo "DIFFING pool allocated vs nonpoolallocated output:"
+#	diff $< $(<:%-pa=%-llc)
+#	@touch $@
 
-Output/%.diff-pa: Output/%.out-pa Output/%.out-llc
-	@echo "DIFFING pool allocated vs nonpoolallocated output:"
-	diff $< $(<:%-pa=%-llc)
-	@touch $@
-
-TESTNAME = $(subst test.example.,,$@)
-
-test.poolalloc.%: Output/%.poolalloc32.diff-pa Output/%.poolalloc32.llc \
-                  Output/%.poolalloc16.llc     Output/%.poolalloc32nle.llc \
-                  Output/%.poolalloc16nle.llc  Output/%.native32
-	$(TIMEPROG) 'Normal LLC build...' Output/$(TESTNAME).llc
-	$(TIMEPROG) '32 bit pool alloc NLE...' Output/$(TESTNAME).poolalloc32nle.llc
-	$(TIMEPROG) '32 bit pool allocation...' Output/$(TESTNAME).poolalloc32.llc
-	$(TIMEPROG) '16 bit pool alloc NLE...' Output/$(TESTNAME).poolalloc16nle.llc
-	$(TIMEPROG) '16 bit pool allocation...' Output/$(TESTNAME).poolalloc16.llc
-
-	$(TIMEPROG) 'Native Sun CC 64...' Output/$(TESTNAME).native
-	$(TIMEPROG) 'Native Sun CC 32...' Output/$(TESTNAME).native32
+#test.poolalloc.%: Output/%.poolalloc32.diff-pa Output/%.poolalloc32.llc \
+#                  Output/%.poolalloc16.llc     Output/%.poolalloc32nle.llc \
+#                  Output/%.poolalloc16nle.llc  Output/%.native32
+#	$(TIMEPROG) 'Normal LLC build...' Output/$*.llc
+#	$(TIMEPROG) '32 bit pool alloc NLE...' Output/$*.poolalloc32nle.llc
+#	$(TIMEPROG) '32 bit pool allocation...' Output/$*.poolalloc32.llc
+#	$(TIMEPROG) '16 bit pool alloc NLE...' Output/$*.poolalloc16nle.llc
+#	$(TIMEPROG) '16 bit pool allocation...' Output/$*.poolalloc16.llc
+#
+#	$(TIMEPROG) 'Native Sun CC 64...' Output/$*.native
+#	$(TIMEPROG) 'Native Sun CC 32...' Output/$*.native32
