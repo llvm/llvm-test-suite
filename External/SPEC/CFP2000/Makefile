@@ -1,3 +1,7 @@
 LEVEL = ../../../../..
-PARALLEL_DIRS := $(filter-out %-disabled/, $(sort $(filter-out CVS/, $(wildcard */))))
+PARALLEL_DIRS :=   \
+	179.art    \
+	183.equake \
+	188.ammp
+
 include ${LEVEL}/test/Programs/Makefile.programs
