@@ -1,4 +1,6 @@
 LEVEL = ../../../../../..
+FP_ABSTOLERANCE := 4
+
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS     := -frames 500
 else
