@@ -1,3 +1,10 @@
+/* Sparc is not C99-compliant */
+#if defined(sparc) || defined(__sparc__) || defined(__sparcv9)
+
+int main() { return 0; }
+
+#else /* sparc */
+
 #define ESCAPE 2
 #define IMAGE_SIZE 10
 #define START_X -2.0
@@ -32,3 +39,5 @@ int main() {
   mandel();
   return 0;
 }
+
+#endif /* sparc */
