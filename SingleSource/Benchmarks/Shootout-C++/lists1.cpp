@@ -19,7 +19,7 @@ using namespace std;
 void list_print_n (list<int> L, int n) {
     int c, lastc = n - 1;
     list<int>::iterator i;
-    for (c = 0, i = L.begin(); i != L.end(), c < n; ++i, ++c) {
+    for (c = 0, i = L.begin(); i != L.end() && c < n; ++i, ++c) {
 	cout << (*i);
 	if (c < lastc) cout << " ";
     }
