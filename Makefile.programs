@@ -187,6 +187,9 @@ $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
 	$(LGCCAS) $(STATS) $< -o $@
 
+Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
+	$(LOPT) -mstrip $< -o $@ -f
+
 ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
 # Link the program to the libraries it uses, then perform postlink
@@ -285,6 +288,7 @@ LLI_OPTS = -force-interpreter=true $(EXTRA_LLI_OPTS)
 JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
 
 native: $(PROGRAMS_TO_TEST:%=Output/%.native)
+stripped-bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc)
 
 ifndef PROGRAMS_HAVE_CUSTOM_RUN_RULES
 
