@@ -12,8 +12,8 @@ include $(LEVEL)/test/Programs/Makefile.programs
 LLVM_SOURCE_BYTECODES := $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc)
 
 $(LLVM_SOURCE_BYTECODES): \
-Output/%.llvm.bc: %.ll $(LAS) Output/.dir
-	$(LAS) $< -f -o $@
+Output/%.llvm.bc: %.ll $(LLVMAS) Output/.dir
+	$(LLVMAS) $< -f -o $@
 
 all:: $(CBEOUTPUT)
 
