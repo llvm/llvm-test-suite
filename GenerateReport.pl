@@ -11,12 +11,14 @@
 #           and descriptions for the columns of interest.  In reads the raw log
 #           input from stdin and writes the table to stdout.
 #
-# Syntax:   GenerateReport.pl [-html] [-latex] <ReportDesc> < Input > Output
+# Syntax:   GenerateReport.pl [-html] [-latex] [-graphs] <ReportDesc>
+#                    < Input > Output
 #
 
 # Default values for arguments
 my $HTML = 0;
 my $LATEX = 0;
+my $GRAPHS = 0;
 
 # Parse arguments...
 while ($_ = $ARGV[0], /^[-+]/) {
@@ -24,8 +26,9 @@ while ($_ = $ARGV[0], /^[-+]/) {
   last if /^--$/;  # Stop processing arguments on --
 
   # List command line options here...
-  if (/^-html$/)  { $HTML = 1; next; }
-  if (/^-latex$/) { $LATEX = 1; next; }
+  if (/^-html$/)   { $HTML = 1; next; }
+  if (/^-latex$/)  { $LATEX = 1; next; }
+  if (/^-graphs$/) { $GRAPHS = 1; next; }
 
   print "Unknown option: $_ : ignoring!\n";
 }
@@ -75,6 +78,9 @@ open(REPORTDESC, $ReportFN) or
 
 my @LatexColumns;  # Filled in by report if it supports Latex mode
 my %LatexColumnFormat;  # Filled in by report if supports latex mode
+my @Graphs;        # Filled in by the report if supports graph mode
+
+# Fill in all of the fields from the report description
 my @Fields = eval <REPORTDESC>;
 
 
@@ -175,6 +181,28 @@ if ($HTML) {
     print "\n</tr>\n";
   }
   print "\n</table>\n";
+} elsif ($GRAPHS) {      # Graph output...
+  print "Generating gnuplot data files:\n";
+  my $GraphNo = 0;
+  foreach $Graph (@Graphs) {
+    my @Graph = @$Graph;
+    my $Type = shift @Graph;
+    die "Only scatter graphs supported right now, not '$Type'!"
+      if ($Type ne "scatter");
+
+    my $Filename = shift @Graph;
+
+    print "Writing '$Filename'...\n";
+    open (FILE, ">$Filename") or die ("Could not open file '$Filename'!");
+
+    my ($XCol, $YCol) = @Graph;
+    foreach $Row (@Values) {
+      print FILE $$Row[$XCol] . "\t" . $$Row[$YCol] . "\n";
+    }
+    close FILE;
+    ++$GraphNo;
+  }
+
 } else {
   # Add the header for the report to the table after sorting...
   unshift @Values, [@Header];
@@ -244,5 +272,5 @@ if ($HTML) {
       # Print the assertion message if existant...
       print "$$Value[@$Value-1]\n";
     }
-}
+  }
 }
