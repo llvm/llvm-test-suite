@@ -46,8 +46,8 @@ SourceDir := $(SPEC_BENCH_DIR)/src/
 include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
 
 # Do not pass -Wall to compile commands...
-LCCFLAGS  := -O2
-LCXXFLAGS := -O2
+LCCFLAGS  := -O3
+LCXXFLAGS := -O3
 
 CPPFLAGS += -DSPEC_CPU2000 -I $(SPEC_BENCH_DIR)/src/
 SPEC_SANDBOX := $(LLVM_SRC_ROOT)/test/Programs/External/SPEC/Sandbox.sh
@@ -133,14 +133,14 @@ BUGPOINT_OPTIONS += --args -- $(RUN_OPTIONS)
 
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
-Output/%.bugpoint-gccas: Output/%.linked.rll $(LBUGPOINT) \
+Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccas-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccas-pass-args` $(BUGPOINT_OPTIONS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.linked.bc $(LBUGPOINT) \
+Output/%.bugpoint-gccld: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/gccld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../../$< `cat Output/gccld-pass-args` $(BUGPOINT_OPTIONS)
