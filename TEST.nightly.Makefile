@@ -10,7 +10,16 @@ PROGDIR := $(shell cd $(LEVEL)/test/Programs; pwd)/
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 CFLAGS  := -O3
 
-REPORTS_TO_GEN := compile nat llc cbe jit
+REPORTS_TO_GEN := compile nat
+ifndef DISABLE_LLC
+REPORTS_TO_GEN +=  llc
+endif
+ifndef DISABLE_JIT
+REPORTS_TO_GEN +=  jit
+endif
+ifndef DISABLE_CBE
+REPORTS_TO_GEN +=  cbe
+endif
 ifdef ENABLE_LINEARSCAN
 REPORTS_TO_GEN += llc-ls jit-ls
 endif
