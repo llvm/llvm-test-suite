@@ -20,9 +20,6 @@ endif
 ifndef DISABLE_CBE
 REPORTS_TO_GEN +=  cbe
 endif
-ifdef ENABLE_LINEARSCAN
-REPORTS_TO_GEN += llc-ls jit-ls
-endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
 
