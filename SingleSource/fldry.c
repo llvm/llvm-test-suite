@@ -80,7 +80,7 @@
 
 /* #define the type of float we will use:	*/
 #ifndef extended
-#define extended long double
+#define extended double
 #endif
 
 /* Define if should use homemade str* functions. */
@@ -88,7 +88,7 @@
 /*#define MYSTRFNS*/
 
 /* Accuracy of timings and human fatigue controlled by next two lines */
-#define LOOPS	150000		/* Use this for slow or 16 bit machines */
+#define LOOPS	15000		/* Use this for slow or 16 bit machines */
 //#define LOOPS	900000		/* Use this for faster machines */
 
 /* Compiler dependent options */
@@ -96,9 +96,9 @@
 #undef	NOSTRUCTASSIGN		/* Define if compiler can't assign structures */
 
 /* define only one of the next three defines */
-/*#define CLOCK*/
+#define CLOCK
 /*#define TIMES			/* Use times(2) time function */
-#define TIME			/* Use time(2) time function */
+/*#define TIME			/* Use time(2) time function */
 
 /* define the granularity of your times(2) function (when used) */
 /*#define HZ	50		/* times(2) returns 1/50 second (europe?) */
@@ -264,6 +264,7 @@ Proc0()
 #endif
 	for (i = 0; i < LOOPS; ++i)
 	{
+          if ((i & 255) == 0) printf("Making progress: %d\n", i);
 		Proc5();
 		Proc4();
 		IntLoc1 = 2.0;
