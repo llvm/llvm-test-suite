@@ -448,7 +448,7 @@ endif
 GENERATEREPORT := $(LEVEL)/test/Programs/GenerateReport.pl
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
-	gmake MAKEFLAGS=$(MAKEFLAGS) TEST=$(TEST) 2>&1 | tee $@
+	gmake TEST=$(TEST) 2>&1 | tee $@
 
 ifneq ($(TestReport),)
 report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
