@@ -194,7 +194,8 @@ if ($HTML) {
     if ($Str eq '|') {
       print "<td bgcolor='black' width='1'></td>";
     } else {
-      print "<td><table border='0' cellspacing='0' cellpadding='3'><tr><td>$Str</td></tr></table></td>\n";
+      #print "<td><table border='0' cellspacing='0' cellpadding='3'><tr><td>$Str</td></tr></table></td>\n";
+      print "<td>$Str</td>\n";
     }; "";
   }
   sub printLine {
