@@ -30,7 +30,7 @@ static char default_path[] = ":/bin:/usr/bin";
 /* Default shell to use.  */
 char default_shell[] = "/bin/sh";
 
-#if	defined(POSIX) || defined(__GNU_LIBRARY__)
+#if	defined(POSIX) || defined(__GNU_LIBRARY__) || defined(__FreeBSD__)
 #include <limits.h>
 #include <unistd.h>
 #define	GET_NGROUPS_MAX	sysconf (_SC_NGROUPS_MAX)
@@ -100,7 +100,7 @@ extern int wait ();
 #endif	/* WTERMSIG defined or USG and don't have <sys/wait.h>.  */
 
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__)
+#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__) || defined(__FreeBSD__)
 
 #include <sys/types.h>
 #define	GID_T	gid_t

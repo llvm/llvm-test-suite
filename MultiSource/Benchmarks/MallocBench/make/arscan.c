@@ -38,7 +38,7 @@
 #endif
 
 #if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
-	 || defined (POSIX))
+	 || defined (POSIX)) || defined (__FreeBSD__)
 #include <stdlib.h>
 #include <string.h>
 #define	ANSI_STRING
@@ -77,7 +77,7 @@ extern void free ();
 #define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
 #define bzero(s, n)	memset ((s), 0, (n))
 #define bcopy(s, d, n)	memcpy ((d), (s), (n))
-#endif	ANSI_STRING
+#endif	/*ANSI_STRING*/
 #undef	ANSI_STRING
 
 
@@ -93,7 +93,8 @@ extern void free ();
 #define	AR_NAMELEN	255
 #endif
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(_IBMR2)
+#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(_IBMR2) || \
+        defined(__FreeBSD__)
 #include <unistd.h>
 #else
 extern int read (), open (), close (), write (), fstat ();

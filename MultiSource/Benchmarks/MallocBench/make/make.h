@@ -15,7 +15,10 @@ You should have received a copy of the GNU General Public License
 along with GNU Make; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+#if !defined(_GNU_SOURCE)
 #define _GNU_SOURCE
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
@@ -80,7 +83,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 
 #if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
-	 || defined (POSIX))
+	 || defined (POSIX) || defined(__FreeBSD__))
 #include <stdlib.h>
 #include <string.h>
 #define	ANSI_STRING
@@ -212,7 +215,8 @@ extern void user_access (), make_access (), child_access ();
 #define	VFORK_NAME	"vfork"
 #endif	/* USG and don't have vfork.  */
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__)
+#if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(__CYGWIN__) || \
+        defined(__FreeBSD__)
 
 #include <unistd.h>
 #include <signal.h>
