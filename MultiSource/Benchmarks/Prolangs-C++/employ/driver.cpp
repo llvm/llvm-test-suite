@@ -16,6 +16,9 @@
 ** $Date$
 **
 ** $Log$
+** Revision 1.2  2004/10/05 00:41:19  lattner
+** Don't print argv[0]
+**
 ** Revision 1.1  2004/10/04 20:01:13  lattner
 ** Initial checkin of all of the source
 **
@@ -45,7 +48,7 @@ main(int argc, char *argv[])
     Company *  c;
 
     if (argc != 2) {
-        fprintf(stderr, "usage: %s <number_of_weeks>\n", argv[0]);
+        fprintf(stderr, "usage: %s <number_of_weeks>\n", "employ");
         return 1;
     }
 
