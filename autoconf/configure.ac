@@ -116,6 +116,7 @@ dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,/home/vadve/shared/benchmarks/spec95/benchspec)
 EXTERNAL_BENCHMARK(spec2000,/home/vadve/shared/benchmarks/speccpu2000/benchspec)
 EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
+EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
 
 dnl Check for f2c
 CHECK_F2C_ALL()
