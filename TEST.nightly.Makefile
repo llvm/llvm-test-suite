@@ -126,7 +126,6 @@ Output/%.nightly.jit-ls.report.txt: Output/%.llvm.bc Output/%.exe-jit-ls $(JIT)
 	-head -n 100 Output/$*.exe-jit-ls >> $@
 	@-if test -f Output/$*.exe-jit-ls; then \
 	  echo "TEST-PASS: jit-ls $(RELDIR)/$*" >> $@;\
-	  $(JIT) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-jit-ls: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-jit-ls-time: " >> $@;\
