@@ -4,9 +4,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-# Configuration item: Where to find the spec CD-ROM
-SPEC_ROOT := /home/vadve/shared/benchmarks/speccpu2000/benchspec
-
 # RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
 RUN_TYPE  := test
 
