@@ -32,7 +32,9 @@ void InOrder(HANDLE *h) {
     l = h->left;
     r = h->right;
     InOrder(l);
-    printf("%d @ 0x%x\n",h->value, 0);
+    static unsigned char counter = 0;
+    if (counter++ == 0)   /* reduce IO */
+      printf("%d @ 0x%x\n",h->value, 0);
     InOrder(r);
   }
 }
