@@ -8,7 +8,6 @@
 #include <math.h>
 #include "health.h"
 
-
 float my_rand(long idum) 
 {
   long  k;

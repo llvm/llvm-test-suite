@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define PLAIN         /* Toronto uses the "plain" version */
 #define chatting printf
 
 #define IA 16807
@@ -81,8 +80,7 @@ struct Village {
 #endif
 };
 
-struct Village *alloc_tree(int level, int lo, int proc, 
-                           int label, struct Village *back);
+struct Village *alloc_tree(int level, int label, struct Village *back);
 void dealwithargs(int argc, char *argv[]);
 float my_rand(long idum);
 struct Patient *generate_patient(struct Village *village);

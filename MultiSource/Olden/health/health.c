@@ -13,11 +13,8 @@
 int  max_level;
 long max_time, seed;
 
-
-struct Village *alloc_tree(int level, int lo, int proc, 
-                           int label, struct Village *back) 
-{  
-  if (level == 0) 
+struct Village *alloc_tree(int level, int label, struct Village *back) {
+  if (level == 0)
     return NULL;
   else {
     struct Village       *new;
@@ -26,13 +23,8 @@ struct Village *alloc_tree(int level, int lo, int proc,
 
     new = (struct Village *)malloc(sizeof(struct Village));
 
-    for (i = 3; i > 0; i--) {
-      struct Village *V = alloc_tree(level - 1, lo + (proc*(i))/4, 
-                                     proc / 4, (label * 4) + i + 1, new); 
-      fval[i] = V;
-    }
-
-    fval[0] = alloc_tree(level - 1, lo, proc / 4, (label * 4) + 1, new);
+    for (i = 3; i >= 0; i--)
+      fval[i] = alloc_tree(level - 1, label*4 + i + 1, new); 
 
     new->back = back;
     new->label = label;
@@ -230,7 +222,7 @@ int main(int argc, char *argv[])
   float total_time, total_patients, total_hosps;  
   
   dealwithargs(argc, argv);
-  top = alloc_tree(max_level, 0, 0, 0, top);
+  top = alloc_tree(max_level, 0, top);
   
   chatting("\n\n    Columbian Health Care Simulator\n\n");
   chatting("Working...\n");
