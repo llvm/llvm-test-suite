@@ -78,10 +78,6 @@ ENABLE_LLI  =
 all:: $(GCCOUTPUT)
 endif
 
-ifeq ($(UNAME),Linux)
-DISABLE_LLC_DIFFS = 1
-endif
-
 ifndef DISABLE_LLC
 all:: $(LLCCODEGEN)
 else
