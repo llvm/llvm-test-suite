@@ -20,7 +20,7 @@ void dealwithargs(int argc, char *argv[]) {
     seed = atol(argv[3]);
   }
 
-  printf("max_level=%d  max_time=%ld  seed=%ld \n", max_level, max_time, seed);
+  printf("max_level=%d  max_time=%d  seed=%d \n", max_level, (int)max_time, (int)seed);
 }
 
 
