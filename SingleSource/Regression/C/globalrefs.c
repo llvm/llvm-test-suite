@@ -45,22 +45,18 @@ main(int argc, char** argv)
   printf("\n");
 
   diff1 = (unsigned long) &TestArray[3] - (unsigned long) TestArray;
-  diff2 = (unsigned long) &Test1.A - (unsigned long) &TestArray[3];
   diff3 = (unsigned long) &Test1.S.Y - (unsigned long) &Test1.A;
   diff4 = (unsigned long) &Test1.next - (unsigned long) &Test1.S.Y;
 
   printf("&TestArray[3] - TestArray = 0x%lx\n", diff1);
-  printf("Aptr - &TestArray[3] = 0x%lx\n", diff2);
   printf("Xptr - Aptr          = 0x%lx\n", diff3);
   printf("NextPtr - Xptr       = 0x%lx\n\n", diff4);
 
   diff1 = (unsigned long) TestArrayPtr - (unsigned long) TestArray;
-  diff2 = (unsigned long) Aptr - (unsigned long) TestArrayPtr;
   diff3 = (unsigned long) Yptr - (unsigned long) Aptr;
   diff4 = (unsigned long) NextPtr - (unsigned long) Yptr;
 
   printf("&TestArray[3] - TestArray = 0x%lx\n", diff1);
-  printf("Aptr - &TestArray[3] = 0x%lx\n", diff2);
   printf("Xptr - Aptr          = 0x%lx\n", diff3);
   printf("NextPtr - Xptr       = 0x%lx\n\n", diff4);
 
