@@ -163,14 +163,24 @@ void delete_all_edges() { next_edge= 0; avail_edge = NYL;}
 /* memalign() on my SGI doesn't work. Thus, I have to write my own */
 void* myalign(int align_size, int alloc_size)
 {   
+#ifdef MEMALIGN_IS_NOT_AVAILABLE
     char* base = (char*)malloc(alloc_size + align_size);
+#else
+    char* base = (char*)memalign(align_size, alloc_size);
+#endif
     void *Result;
     if (base == NULL){
         printf("myalign() failed\n");
         exit(-1);
     }
+#ifdef MEMALIGN_IS_NOT_AVAILABLE
     return (void*)(base + align_size - ((uptrint)base % align_size));
+#else
+    return base;
+#endif
 }
+
+
 
 QUAD_EDGE alloc_edge() {
   QUAD_EDGE ans;
