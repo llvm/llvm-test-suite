@@ -1,3 +1,4 @@
+##-----------------------------------------------------------*-Makefile-*-
 #                        test/Programs/SingleSource/Makefile
 #
 # This makefile builds all of the C programs in this directory in three
@@ -14,6 +15,7 @@
 #
 #  IDEA: This could be specified in the start of the .c file, in a comment block
 #
+##------------------------------------------------------------------------
 
 PROGRAMS_TO_TEST = $(Source:.c=)
 
