@@ -1,7 +1,5 @@
 # Programs/SingleSource/UnitTests/SetjmpLongjmp/Makefile
-
-DIRS = C C++
-LEVEL = ../../../../..
+LEVEL = ../../../../../..
 include $(LEVEL)/test/Programs/SingleSource/Makefile.singlesrc
 
 
