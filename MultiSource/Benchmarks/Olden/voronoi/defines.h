@@ -4,12 +4,13 @@
 
 typedef int BOOLEAN;
 typedef unsigned long long uint64_t;
+typedef unsigned long      uptrint;
 
 struct edge_rec {
   struct VERTEX *v;
   struct edge_rec *next;
-  int wasseen;
-  int more_data[3]; /* 32 byte align this thing */
+  long wasseen;
+  void *Buffer;
 };
 
 
@@ -68,13 +69,13 @@ struct EDGE_STACK {
 #define destv(a) dest(a)->v
 
 
-#define SIZE ((uint64_t) sizeof(struct edge_rec))
-#define ANDF ((uint64_t) 4*sizeof(struct edge_rec) - 1)
+#define SIZE ((uptrint) sizeof(struct edge_rec))
+#define ANDF ((uptrint) 4*sizeof(struct edge_rec) - 1)
 
-#define sym(a) ((QUAD_EDGE) (((uint64_t) (a)) ^ 2*SIZE))
-#define rot(a) ((QUAD_EDGE) ( (((uint64_t) (a) + 1*SIZE) & ANDF) | ((uint64_t) (a) & ~ANDF) ))
-#define rotinv(a) ((QUAD_EDGE) ( (((uint64_t) (a) + 3*SIZE) & ANDF) | ((uint64_t) (a) & ~ANDF) ))
-#define base(a) ((QUAD_EDGE) ((uint64_t a) & ~ANDF))
+#define sym(a) ((QUAD_EDGE) (((uptrint) (a)) ^ 2*SIZE))
+#define rot(a) ((QUAD_EDGE) ( (((uptrint) (a) + 1*SIZE) & ANDF) | ((uptrint) (a) & ~ANDF) ))
+#define rotinv(a) ((QUAD_EDGE) ( (((uptrint) (a) + 3*SIZE) & ANDF) | ((uptrint) (a) & ~ANDF) ))
+#define base(a) ((QUAD_EDGE) ((uptrint a) & ~ANDF))
 
 QUAD_EDGE alloc_edge();
 void free_edge(QUAD_EDGE e);

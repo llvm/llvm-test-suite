@@ -164,11 +164,12 @@ void delete_all_edges() { next_edge= 0; avail_edge = NYL;}
 void* myalign(int align_size, int alloc_size)
 {   
     char* base = (char*)malloc(alloc_size + align_size);
+    void *Result;
     if (base == NULL){
         printf("myalign() failed\n");
         exit(-1);
     }
-    return (void*)(base + align_size - ((uint64_t)base % align_size));
+    return (void*)(base + align_size - ((uptrint)base % align_size));
 }
 
 QUAD_EDGE alloc_edge() {
@@ -177,7 +178,7 @@ QUAD_EDGE alloc_edge() {
   if (avail_edge == NYL) {
     ans = (QUAD_EDGE)myalign(4*(sizeof(struct edge_rec)),
                              4*(sizeof(struct edge_rec)));
-    if ((uint64_t) ans & ANDF) {
+    if ((uptrint)ans & ANDF) {
       printf("Aborting in alloc_edge, ans = 0x%p\n", ans);
       exit(-1);
     }
@@ -187,7 +188,7 @@ QUAD_EDGE alloc_edge() {
 }
 
 void free_edge(QUAD_EDGE e) {
-  e = (QUAD_EDGE) ((uint64_t) e ^ ((uint64_t) e & ANDF));
+  e = (QUAD_EDGE) ((uptrint) e ^ ((uptrint) e & ANDF));
   onext(e) = avail_edge;
   avail_edge = e;
 }
@@ -228,7 +229,6 @@ BOOLEAN ccw(VERTEX_PTR a, VERTEX_PTR b, VERTEX_PTR c) {
   double dret ;
   double xa,ya,xb,yb,xc,yc;
   VERTEX_PTR loc_a,loc_b,loc_c;
-	
   loc_a = a;
   xa=X(loc_a); ya=Y(loc_a);
   loc_b = b;
@@ -254,13 +254,13 @@ VERTEX_PTR origin, destination;
 
     onext(temp) = ans;
     orig(temp) = origin;
-    temp = (QUAD_EDGE) ((uint64_t) temp+SIZE);
-    onext(temp) = (QUAD_EDGE) ((uint64_t) ans + 3*SIZE);
-    temp = (QUAD_EDGE) ((uint64_t) temp+SIZE);
-    onext(temp) = (QUAD_EDGE) ((uint64_t) ans + 2*SIZE);
+    temp = (QUAD_EDGE) ((uptrint) temp+SIZE);
+    onext(temp) = (QUAD_EDGE) ((uptrint) ans + 3*SIZE);
+    temp = (QUAD_EDGE) ((uptrint) temp+SIZE);
+    onext(temp) = (QUAD_EDGE) ((uptrint) ans + 2*SIZE);
     orig(temp) = destination;
-    temp = (QUAD_EDGE) ((uint64_t) temp+SIZE);
-    onext(temp) = (QUAD_EDGE) ((uint64_t) ans + 1*SIZE);
+    temp = (QUAD_EDGE) ((uptrint) temp+SIZE);
+    onext(temp) = (QUAD_EDGE) ((uptrint) ans + 1*SIZE);
 
     /*printf("Edge made @ 0x%x\n",ans);*/
     /*dump_quad(ans);*/
@@ -343,7 +343,7 @@ void dump_quad(ptr)
   QUAD_EDGE j;
   VERTEX_PTR v;
 
-  ptr = (QUAD_EDGE) ((uint64_t) ptr & ~ANDF);
+  ptr = (QUAD_EDGE) ((uptrint) ptr & ~ANDF);
   printf("Entered DUMP_QUAD: ptr=0x%p\n",ptr);
   for (i=0; i<4; i++)
    {
@@ -363,7 +363,7 @@ EDGE_PAIR do_merge(QUAD_EDGE ldo, QUAD_EDGE ldi, QUAD_EDGE rdi, QUAD_EDGE rdo)
   int rvalid, lvalid;
   register QUAD_EDGE basel,lcand,rcand,t;
   VERTEX_PTR t1,t2;
-  
+
 /*printf("merge\n");*/
   while (1) {
     VERTEX_PTR t3=orig(rdi);
@@ -616,6 +616,8 @@ struct get_point get_points(int n, double curmax,int i, int seed,
   struct get_point point;
   int j;
 
+  //printf("seed = %d %f %d %d %d %d\n", n, curmax, i, seed, processor, numnodes);
+
   if (n<1) {
     point.v = NULL;
     point.curmax=curmax;
@@ -632,6 +634,7 @@ struct get_point get_points(int n, double curmax,int i, int seed,
   node = (VERTEX_PTR) malloc(sizeof(struct VERTEX));
 
   /*printf("Get points past alloc,n=%d\n",n);*/
+  //printf("%f\n", (double)point.seed);
   X(node) = point.curmax * exp(log(drand(point.seed))/i);
   Y(node) = drand(point.seed);
   NORM(node) = X(node)*X(node) + Y(node)*Y(node);
