@@ -41,6 +41,8 @@ doLeaf(leaf) Operator leaf;
 	}
 }
 
+static Operator addTypeInfo(Operator op) { return op; }
+
 void
 build()
 {
@@ -65,6 +67,7 @@ build()
 	for (ts = popQ(globalQ); ts; ts = popQ(globalQ)) {
 		for (ol = operators; ol; ol = ol->next) {
 			Operator op = (Operator) ol->x;
+op = addTypeInfo(op); /*TMP HACK!*/
 			addToTable(op->table, ts);
 		}
 	}
