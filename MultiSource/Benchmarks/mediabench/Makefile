@@ -1,7 +1,7 @@
 # MultiSource/mediabench Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../..
-PARALLEL_DIRS  := adpcm g721 gsm jpeg mpeg2
+PARALLEL_DIRS  := adpcm g721 gsm jpeg
 #epic fails with lli, needs more investigation
 #ghostscript  complex Makefile structure makes it tough to fit it
 #             in llvm-test Makefile structure
