@@ -252,8 +252,8 @@ LGCCLDPROG := $(LLVMTOOLCURRENT)/gccld$(EXEEXT)
 #--------------------------------------------------------------------------
 # The LLVM GCC front-end in C and C++ flavors
 #
-LLVMGCC := PATH=$(LLVMTOOLCURRENT):$(PATH) $(LLVMGCCDIR)/bin/gcc
-LLVMGXX := PATH=$(LLVMTOOLCURRENT):$(PATH) $(LLVMGCCDIR)/bin/g++
+LLVMGCC := PATH=$(LLVMTOOLCURRENT):$(PATH) $(LLVMGCCDIR)/bin/llvm-gcc
+LLVMGXX := PATH=$(LLVMTOOLCURRENT):$(PATH) $(LLVMGCCDIR)/bin/llvm-g++
 
 #--------------------------------------------------------------------------
 # The compiled LLVM tools
