@@ -28,7 +28,7 @@ my $FILE = join "\n", @Lines;
 # Now split it up into records.  Each benchmarks starts with a line with a >>>
 # prefix
 
-my @Records = split />>> =========  /, $FILE;
+my @Records = split />>> ========= /, $FILE;
 
 # Delete the first "entry" which is really stuff printed prior to starting the
 # first test.
@@ -38,12 +38,12 @@ shift @Records;
 # Output the headers for the report....
 printf("%-20s ", "Name:");
 if ($SHOW_TIMES) {
-  printf("%6s %-6s %-6s %-6s %-8s %-8s     ",
-         "Anlyz:", "LocTm:", "BUTim:", "TDTim:", "TimeSum:", "BCTime:");
+  printf("%6s %-6s %-6s %-6s %-8s     ",
+         "Anlyz:", "LocTm:", "BUTim:", "TDTim:", "TimeSum:");
 }
 
-printf("%-8s %-8s %-8s %-8s %-8s   ",
-       "LocSize:", "BUSize:", "TDSize:", "BUTDSz:", "BCSize:");
+printf("%-8s %-8s %-8s %-8s   ",
+       "LocSize:", "BUSize:", "TDSize:", "BUTDSz:");
 printf("%-8s %-10s %-6s %-6s %-6s " . "| %-5s %-5s %-5s %-5s %-5s %-5s" .
        " | %7s %9s %5s\n",
        "NumFold", "NumNodes", "MaxSz", "GlobGr", "MaxSCC",
@@ -52,7 +52,7 @@ printf("%-8s %-10s %-6s %-6s %-6s " . "| %-5s %-5s %-5s %-5s %-5s %-5s" .
 
 foreach $Record (@Records) {
   # Print BM name
-  printField('======= ([-a-zA-Z0-9.]+) Program', $Record, -20);
+  printField('\'([^\']+)\' Program', $Record, -20);
 
   if ($Record =~ m/Assertion/) {
     # If an assertion failure occured, print it out.
@@ -65,7 +65,6 @@ foreach $Record (@Records) {
       printField('([0-9.]+) \([^)]+\)[ 0-9]+Bottom', $Record, -6);
       my $T = printField('([0-9.]+) \([^)]+\)[ 0-9]+Top'   , $Record, -6);
       printf("%-8s ", $L+$B+$T);
-      printField('([0-9.]+) \([^)]+\)[ ]*[0-9]+  Bytecode', $Record, -8);
       print "|   ";
     }
 
@@ -74,7 +73,6 @@ foreach $Record (@Records) {
     my $B = printField("([0-9]+)  Bottom-up", $Record, -8);
     my $T = printField("([0-9]+)  Top-down", $Record, -8);
     printf("%-8s ", $B+$T);
-    printField("([0-9]+)  Bytecode", $Record, -8);
 
     print "|    ";
     printField("([0-9]+).*Number of folded nodes ", $Record, -5);
@@ -84,11 +82,11 @@ foreach $Record (@Records) {
     printField("([0-9]+).*Maximum SCC Size in Call Graph", $Record, -6);
 
     print "| ";
-    my $I = printField("([0-9]+).*Number of LoadInsts", $Record, -5);
-    $I += printField("([0-9]+).*Number of StoreInsts", $Record, -5);
-    $I += printField("([0-9]+).*Number of CallInsts", $Record, -5);
-    $I += printField("([0-9]+).*Number of AllocaInsts", $Record, -5);
-    $I += printField("([0-9]+).*Number of MallocInsts", $Record, -5);
+    my $I = printField("([0-9]+).*Number of Load insts", $Record, -5);
+    $I += printField("([0-9]+).*Number of Store insts", $Record, -5);
+    $I += printField("([0-9]+).*Number of Call insts", $Record, -5);
+    $I += printField("([0-9]+).*Number of Alloca insts", $Record, -5);
+    $I += printField("([0-9]+).*Number of Malloc insts", $Record, -5);
     printf("%-5s ", $I);
 
     print "| ";

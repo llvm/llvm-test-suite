@@ -37,3 +37,21 @@ test.dsgraph.%: Output/%.report.txt
 	@echo ">>> ========= '$*' Program"
 	@echo "---------------------------------------------------------------"
 	@cat $<
+
+
+#
+# Rules for building a report from 'make report TEST=dsgraph' at Programs level
+#
+
+report.raw.out: $(DUMMYLIB) $(LANALYZE)
+	gmake TEST=$(TEST) 2>&1 | tee $@
+
+## FIXME: This should be genericized and put into Programs/Makefile as a nice
+## report target.
+report: report.raw.out
+	./generate_report.pl report.raw.out > report.txt
+	@head -n1 report.txt
+	@sed '/^Name:/d' < report.txt | sort --key=2 -r -g
+
+clean::
+	rm -f report.raw.out report.txt
