@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define inline static
+
 #define IM 139968
 #define IA 3877
 #define IC 29573
