@@ -1,5 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdlib.h>
 #include "hash.h"
 #ifdef TORONTO
 #define MAXPROC 1
@@ -44,11 +45,6 @@ typedef struct graph_st {
   } *Graph;
 
 Graph MakeGraph(int numvert, int numproc);
+int dealwithargs(int argc, char *argv[]);
 
-
-
-
-
-
-
-
+int atoi(const char *);

@@ -1,5 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdlib.h>
 #include "hash.h"
 #ifdef TORONTO
 #define chatting printf
