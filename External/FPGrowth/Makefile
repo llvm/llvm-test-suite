@@ -2,7 +2,7 @@ LEVEL = ../..
 
 include $(LEVEL)/Makefile.config
 
-PROG = fpall
+PROG = fpgrowth
 SourceDir := $(FPGROWTH_ROOT)
 
 #CFLAGS += -Wno-deprecated
