@@ -12,7 +12,7 @@ RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 REPORTS_TO_GEN := compile llc cbe lli jit
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
-TIMEOPT  := -time-passes -stats
+TIMEOPT = -time-passes -stats -info-output-file=$@.info
 
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
@@ -53,44 +53,53 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.llvm.bc $(LDIS)
-	-($(MAKE) Output/$*.cbe) > $@ 2>&1
-	@if test -f Output/$*.cbe; then echo "TEST-RESULT-cbe: YES" >> $@; fi\
+	-($(MAKE) TIME_RUN=1 Output/$*.diff-cbe) > $@ 2>&1
+	@if test -f Output/$*.diff-cbe; then \
+          echo "TEST-RESULT-cbe: YES" >> $@;\
+	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
+	  grep "^real" $@ >> $@;\
+	  echo >> $@;\
+        else  \
+	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
+        fi
+
 
 # LLI tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
-Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
+Output/%.nightly.lli.report.txt: Output/%.llvm.bc $(LLI)
+	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-lli) > $@ 2>&1
 	@if test -e Output/$*.diff-lli; then \
-	  ($(ULIMIT); time -p $(LLI) -stats $(LLI_OPTS) $< $(RUN_OPTIONS)) >$@ 2>&1;\
           echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-lli-dyninst: " >> $@;\
-	  grep "Number of dynamic inst" $@ >> $@;\
+	  grep "Number of dynamic inst" $@.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: lli $(RELDIR)/$*" >> $@;\
 	fi
+	-@rm -f $@.info
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
-Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.diff-jit $(LLI)
-	@echo > $@  # Make sure something ends up in the file...
-	@if test -e Output/$*.diff-jit; then \
-	  ($(ULIMIT); time -p $(LLI) $(JIT_OPTS) $(TIMEOPT) $< $(RUN_OPTIONS)) > $@ 2>&1;\
+Output/%.nightly.jit.report.txt: Output/%.llvm.bc $(LLI)
+	-($(MAKE) EXTRA_LLI_OPTS='$(TIMEOPT)' TIME_RUN=1 Output/$*.diff-jit) > $@ 2>&1
+	@if test -f Output/$*.diff-jit; then \
           echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-jit-comptime: " >> $@;\
-	  grep "Total Execution Time" $@ >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-jit-machcode: " >> $@;\
-	  grep "bytes of machine code compiled" $@ >> $@;\
+	  grep "bytes of machine code compiled" $@.info >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi
+	-@rm -f $@.info
 
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \

@@ -68,7 +68,7 @@ RUNTIMELIMIT := 40
 # stack trace of a core dump.  It always returns "successful" so that tests will
 # continue to be run.
 ULIMIT   := ulimit -t $(RUNTIMELIMIT)
-RUNSAFELY = $(ULIMIT); $(PROGDIR)/RunSafely.sh
+RUNSAFELY := $(PROGDIR)/RunSafely.sh
 
 #
 # Targets to build for the default target...
@@ -203,25 +203,32 @@ endif
 ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
-	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(ULIMIT); $(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 endif
 
-LLI_OPTS := -q -abort-on-exception -force-interpreter=true
-JIT_OPTS := -force-interpreter=false
+# EXTRA_LLI_OPTS is used by the nightly tester to add arguments to invocations
+# of the JIT and LLI in order to get timing info and statistics.
+EXTRA_LLI_OPTS := 
+
+LLI_OPTS := -q -abort-on-exception -force-interpreter=true $(EXTRA_LLI_OPTS)
+JIT_OPTS := -force-interpreter=false $(EXTRA_LLI_OPTS)
+
+ifdef TIME_RUN
+TIME := time -p
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(LLI) $(LLI_OPTS) $< > $@ $(RUN_OPTIONS)
-
+	-$(ULIMIT); $(TIME) $(RUNSAFELY) $(LLI) $(LLI_OPTS) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(LLI) $(JIT_OPTS) $< > $@ $(RUN_OPTIONS)
+	-$(ULIMIT); $(TIME) $(RUNSAFELY) $(LLI) $(JIT_OPTS) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(ULIMIT); $(TIME) $(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	-$(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
+	-$(ULIMIT); $(TIME) $(RUNSAFELY) $< > $@ $(RUN_OPTIONS)
 
 #
 # Rules to diff test output...
