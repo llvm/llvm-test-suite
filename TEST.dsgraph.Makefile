@@ -27,28 +27,18 @@ $(LINKED_PROGS): Output/%.lib.bc: Output/%.llvm.bc $(DUMMYLIB)
 
 ANALYZE_OPTS := -stats -time-passes -only-print-main-ds -dsstats -instcount
 
-$(PROGRAMS_TO_TEST:%=Output/%.report.txt): \
-Output/%.report.txt: Output/%.lib.bc $(LANALYZE)
+$(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
+Output/%.$(TEST).report.txt: Output/%.lib.bc $(LANALYZE)
 	-(time -p $(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
-test.dsgraph.%: Output/%.report.txt
+test.dsgraph.%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
 	@echo ">>> ========= '$*' Program"
 	@echo "---------------------------------------------------------------"
 	@cat $<
 
+# Define REPORT_DEPENDENCIES so that the report is regenerated if analyze or
+# dummylib is updated.
 #
-# Rules for building a report from 'make report TEST=dsgraph' at Programs level
-#
-
-report.raw.out: $(DUMMYLIB) $(LANALYZE)
-	gmake TEST=$(TEST) 2>&1 | tee $@
-
-## FIXME: This should be genericized and put into Programs/Makefile as a nice
-## report target.
-report: report.raw.out
-	./generate_report.pl report.raw.out | tee report.txt
-
-clean::
-	rm -f report.raw.out report.txt
+REPORT_DEPENDENCIES := $(DUMMYLIB) $(LANALYZE)
