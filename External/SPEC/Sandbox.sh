@@ -28,6 +28,8 @@ cp -r $INPUT_DIR/../../all/input/* . 2&>1 > /dev/null
 echo Running: $*
 $*
 
+cp $(OUTPUT_FILE).time ../../${OUTPUTFILE}.time
+
 # This script is always successful...
 exit 0
 
