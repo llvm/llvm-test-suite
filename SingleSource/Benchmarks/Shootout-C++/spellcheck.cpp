@@ -6,36 +6,13 @@
 #include <iostream>
 #include <utility>
 #include <fstream>
-#include <hash_map.h>
 #include <algorithm>
 #include <iomanip>
+#include <map>
 
 using namespace std;
 
 typedef std::pair<const char*, const char*> span;
-
-namespace std {
-    template <> struct hash<span>;
-    template <> struct equal_to<span>;
-}
-
-template<> struct hash<span> {
-    inline size_t operator()(const span& s) const {
-        size_t h = 0;
-        const char* end = s.second;
-        for (const char* begin = s.first; begin != end; ++begin) {
-            h = 5 * h + *begin;
-        }
-        return h;
-    }
-};
-
-template<> struct equal_to<span> {
-    inline bool operator()(const span& s1, const span& s2) const {
-        return (s1.second - s1.first) == (s2.second - s2.first) &&
-            std::equal(s1.first, s1.second, s2.first);
-    }
-};
 
 class spell_checker {
 public:
@@ -64,7 +41,7 @@ public:
     }
 
 private:
-    std::hash_map<span, int> dict;
+    std::map<span, int> dict;
 };
 
 int main() {
