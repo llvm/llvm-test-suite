@@ -101,7 +101,7 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
       while (k<j);
 
       if (!cur_node || !cur_node->to_nodes) {
-        chatting("Error! no to_nodes filed on 0x%p\n",cur_node);
+        chatting("Error! no to_nodes filed!\n");
         exit(1);
       }
 
@@ -151,10 +151,10 @@ void fill_from_fields(node_t *nodelist, int degree) {
       otherlist=other_node->from_values;  /* <----- 10% load miss penalty */
       thecount=other_node->from_count;
       if (!otherlist) {
-        chatting("node 0x%p list 0x%p count %d\n",
-                 other_node,otherlist,thecount);
+        /*chatting("node 0x%p list 0x%p count %d\n",
+                 other_node,otherlist,thecount);*/
         otherlist = other_node->from_values;
-        chatting("No from list!! 0x%p\n",otherlist);
+        /*chatting("No from list!! 0x%p\n",otherlist);*/
       }
       
       otherlist[count] = value;                 /* <------ 42% store penalty */
@@ -321,7 +321,6 @@ graph_t *initialize_graph() {
     local_table = table->h_table[i*blocksize];
     local_node_r = local_table[0];
     retval->h_nodes[i] = local_node_r;
-      
     for (j = 1; j < blocksize; j++) {
       node_t *local_node_l;
 
