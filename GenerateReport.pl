@@ -102,7 +102,7 @@ foreach $Record (@Records) {
     # If an assertion failure occured, print it out.
     $Assert = sprintf "\n\t\t\t%s", (grep /Assertion/, (split "\n", $Record));
   }
-  push @RowValues, $Assert;
+  push @RowValues, $Assert if (!$HTML);
   push @Values, [@RowValues];
 }
 
