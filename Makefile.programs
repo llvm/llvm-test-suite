@@ -207,7 +207,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	-$(LGCCLD) $(STATS) $(EXTRA_LINKTIME_OPT_FLAGS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
