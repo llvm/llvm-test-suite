@@ -56,7 +56,7 @@ void test(char *fmt, ...) {
       break;
     case 'L':
       ls = va_arg(ap, LargeS);
-      printf("LargeS { %d, %f, 0x%p, %d }\n", ls.i, ls.d, ls.ptr, ls.j);
+      printf("LargeS { %d, %f, 0x%d, %d }\n", ls.i, ls.d, ls.ptr != 0, ls.j);
       break;
     }
   va_end(ap);
@@ -64,7 +64,6 @@ void test(char *fmt, ...) {
 
 int main() {
   DWordS dw = { 18, 'a' };
-  DWordS dw2;
   QuadWordS qw = { 19, 20.0 };
   LargeS ls = { 21, 22.0, &dw, 23 };
 
@@ -74,7 +73,7 @@ int main() {
   test("ddil", 1.0, 2.0f, (short)32764, 12345677823423LL);
 
   /* test passing structs by value to varargs */
-  test("DQL", dw2, qw, ls);
+  test("DQL", dw, qw, ls);
 
   return 0;
 }
