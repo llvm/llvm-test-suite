@@ -24,7 +24,7 @@ $DIFF -u Output/$2.out-nat Output/$2.out-$1 > $DIFFOUTPUT || (
   # They are different!
   echo "******************** TEST '$2' FAILED! ********************"
   echo "Execution Context Diff:"
-  cat $DIFFOUTPUT
+  head -n 200 $DIFFOUTPUT
   rm $DIFFOUTPUT
   echo "******************** TEST '$2' FAILED! ********************"
 )
