@@ -40,7 +40,7 @@
 # we do not automatically compute dependencies
 INCLUDES := $(ExtraHeaders) $(wildcard $(SourceDir)/*.h)
 
-include $(LEVEL)/test/Makefile.tests
+include $(LEVEL)/test/Programs/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
