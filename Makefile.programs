@@ -150,3 +150,28 @@ Output/%.diff-llc: Output/%.out-nat Output/%.out-llc
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	$(DIFFPROG) cbe $(subst Output/,,$(@:.diff-cbe=))
 
+# Support for the TEST= option... when TEST= is specified on the command line,
+# the default target is the test target.  Here we dispatch to a specific set of
+# tests.
+#
+test:: $(addprefix test.$(TEST).,$(PROGRAMS_TO_TEST))
+
+# If they just say 'make test' then we print out an error telling the user to
+# specify a TEST= option.
+test..%:
+	@echo "***************************************************************"
+	@echo "ERROR: you cannot type '$(MAKE) test' directly."
+	@echo "Instead, use '$(MAKE) TEST=foo' where foo is the name of a test."
+	@echo "Tests should be defined in llvm/test/Programs/Makefile.TEST.*."
+	@echo "Alternatively, just use '$(MAKE)' to run comparisons."
+	@echo "***************************************************************"
+	@echo
+	@exit 1
+
+# Include all makefiles which define tests... These makefiles must define
+# test.<testname>.%  given input from Output/%.llvm.bc
+#
+TestMakefiles := $(wildcard $(LEVEL)/test/Programs/Makefile.TEST.*)
+ifneq ($(TestMakefiles),)
+-include $(TestMakefiles)
+endif
