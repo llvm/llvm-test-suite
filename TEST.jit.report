@@ -28,6 +28,7 @@ $SortReverse = 1;
  [],
 # Sizes
  ["MCSize"  , '([0-9]+).*Number of bytes of machine code compiled'],
+ ["#MCInsts", '([0-9]+).*Number of machine instructions emitted'],
  ["#Glob"   , '([0-9]+).*Number of bytes of global vars'],
  [],
 # Number of transformations
