@@ -25,20 +25,6 @@ BUILD_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
 # Provide variables specific to llvm-test
 #
 
-# When this variable is set to 1, programs in the llvm/test/Programs hierarchy
-# are not recompiled from source code.  Instead, the bytecode for the file is
-# pulled from the BYTECODE_REPOSITORY directory.  This can be useful when disk
-# space is limited or when you just don't want to spend time running the C
-# frontend.
-#USE_PRECOMPILED_BYTECODE := 1
-@UPB@
-
-# This path specifies the cannonical location of bytecode files for compiled
-# versions of the test/Programs/* programs.  This is used as the bytecode source
-# when USE_PRECOMPILED_BYTECODE is specified or when source code is not
-# available for the program (such as SPEC).
-BYTECODE_REPOSITORY := @BCR@
-
 # SPEC benchmarks:
 #     If these are set then run the SPEC benchmarks.
 #     You must provide the SPEC benchmarks on your own.

@@ -115,21 +115,6 @@ EXTERNAL_BENCHMARK(spec95,/home/vadve/shared/benchmarks/spec95/benchspec)
 EXTERNAL_BENCHMARK(spec2000,/home/vadve/shared/benchmarks/speccpu2000/benchspec)
 EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
 
-dnl Precompiled Bytecode Option
-AC_ARG_ENABLE(precompiled_bytecode,AC_HELP_STRING([--enable-precompiled_bytecode],[Use pre-compiled bytecode (default is NO)]),,enableval=no)
-if test ${enableval} = "no"
-then
-	AC_SUBST(UPB,[[]])
-else
-	AC_SUBST(UPB,[[USE_PRECOMPILED_BYTECODE=1]])
-fi
-
-dnl Location of the bytecode repository
-AC_ARG_WITH(bcrepos,AC_HELP_STRING([--with-bcrepos],[Location of Bytecode Repository]),AC_SUBST(BCR,[$withval]),AC_SUBST(BCR,[/home/vadve/lattner/LLVMPrograms]))
-
-dnl Location of PAPI
-AC_ARG_WITH(papi,AC_HELP_STRING([--with-papi],[Location of PAPI]),AC_SUBST(PAPIDIR,[$withval]),AC_SUBST(PAPIDIR,[/home/vadve/shared/Sparc/papi-2.3.4.1]))
-
 dnl LLC Diff Option
 AC_ARG_ENABLE(llc_diffs,AC_HELP_STRING([--enable-llc_diffs],[Enable LLC Diffs
                                         when testing (default is
