@@ -83,7 +83,13 @@ using std::flush;
 #include <vector>
 using std::string;
 
+/* LLVM: Remove long option support for compatibility with other platforms */
+#if 0
 #include "getopt.h"
+#else
+#include <stdlib.h>
+#include <unistd.h>
+#endif
 
 extern int yyparse(void);
 extern void yyrestart(FILE*);
@@ -265,6 +271,11 @@ static  void processargs(int argc, char *argv[])
     g_progname = mkcasestring(get_basename(argv[0]));
 
     enum { O_stdafx = 1, O_commment_line, O_dir_line, O_rw_loop, O_operator_cast };
+
+/*
+ * LLVM: Removed for portability with other platforms.
+ */
+#if 0
     static struct option const long_options[] = {
 	{"no-csgio", no_argument, 0, 'c'},
 	{"no-rewrite", no_argument, 0, 'r'},
@@ -295,6 +306,7 @@ static  void processargs(int argc, char *argv[])
 	{"version", no_argument, 0, 'V'},
 	{0, 0, 0, 0}
     };
+#endif
 
     int c;
     while ((c = getopt (argc, argv,
