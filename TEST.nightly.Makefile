@@ -58,6 +58,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.diff-cbe $(LDIS)
 	-head -n 100 Output/$*.diff-cbe > $@
 	@if test -f Output/$*.diff-cbe; then \
+	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
           echo "TEST-RESULT-cbe: YES" >> $@;\
 	  echo -n "TEST-RESULT-cbe-time: " >> $@;\
 	  grep "^real" Output/$*.out-cbe.time >> $@;\
