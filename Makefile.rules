@@ -308,7 +308,7 @@ CPPFLAGS += -D_GNU_SOURCE
 # Pull in limit macros from stdint.h, even in C++:
 CPPFLAGS += -D__STDC_LIMIT_MACROS
 
-CompileCommonOpts := -Wall -W -Wwrite-strings -Wno-unused
+CompileCommonOpts := 
 CompileOptimizeOpts := -O3 -DNDEBUG -finline-functions
 
 #
