@@ -1,4 +1,0 @@
-
-USE_PRECOMPILED_BYTECODE := 1
-include $(LEVEL)/test/Programs/MultiSource/Makefile.multisrc
-
