@@ -8,7 +8,7 @@ include $(LEVEL)/Makefile.config
 #
 # Create the list of directories to compile
 #
-PARALLEL_DIRS := SPEC Povray Namd FPGrowth
+PARALLEL_DIRS := SPEC Povray Namd FPGrowth BoxedSim
 
 ifndef USE_POVRAY
 PARALLEL_DIRS := $(filter-out Povray, $(PARALLEL_DIRS))
@@ -20,6 +20,10 @@ endif
 
 ifndef USE_FPGROWTH
 PARALLEL_DIRS := $(filter-out FPGrowth, $(PARALLEL_DIRS))
+endif
+
+ifndef USE_BOXEDSIM
+PARALLEL_DIRS := $(filter-out BoxedSim, $(PARALLEL_DIRS))
 endif
 
 # Sparc can't handle Namd: infinite loop, cause unknown
