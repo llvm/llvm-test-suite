@@ -65,6 +65,8 @@ struct Village {
   long                   seed;
 };
 
+struct Village *alloc_tree(int level, int lo, int proc, 
+                           int label, struct Village *back);
 int dealwithargs(int argc, char *argv[]);
 float my_rand(long idum);
 struct Patient *generate_patient(struct Village *village);

@@ -119,7 +119,6 @@ void check_patients_inside(struct Village *village, struct List *list)
   } 
 }
 
-
 struct List *check_patients_assess(struct Village *village, struct List *list) 
 {
   float                 rand;
@@ -159,7 +158,6 @@ struct List *check_patients_assess(struct Village *village, struct List *list)
     } 
   return up;
 }
-
 
 void check_patients_waiting(struct Village *village, struct List *list) 
 {
@@ -203,7 +201,6 @@ void put_in_hosp(struct Hosp *hosp, struct Patient *patient)
   }
 }
 
-
 struct Patient *generate_patient(struct Village *village) 
 {
   long            s,newseed; 
@@ -226,7 +223,6 @@ struct Patient *generate_patient(struct Village *village)
     return patient; }
   return NULL; 
 }
-    
 
 int main(int argc, char *argv[]) 
 { 
