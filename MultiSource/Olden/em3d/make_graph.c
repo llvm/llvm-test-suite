@@ -57,7 +57,6 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
 		    int degree, int percent_local, int id)
 {
   node_t *cur_node;
-  int procname = 0;
 
   for(cur_node = nodelist; cur_node; cur_node=cur_node->next) {
     node_t *other_node;
@@ -102,7 +101,7 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
       while (k<j);
 
       if (!cur_node || !cur_node->to_nodes) {
-        chatting("Error! no to_nodes filed on 0x%x\n",cur_node);
+        chatting("Error! no to_nodes filed on 0x%p\n",cur_node);
         exit(1);
       }
 
@@ -118,12 +117,10 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
 
 void update_from_coeffs(node_t *nodelist) {
   node_t *cur_node;
-  int procname = 0;
   
   /* Setup coefficient and from_nodes vectors for h nodes */  
   for (cur_node = nodelist; cur_node; cur_node=cur_node->next) {
     int from_count = cur_node->from_count;
-    int k;
     
     if (from_count < 1) {
       chatting("Help! no from count (from_count=%d) \n", from_count);
@@ -154,9 +151,10 @@ void fill_from_fields(node_t *nodelist, int degree) {
       otherlist=other_node->from_values;  /* <----- 10% load miss penalty */
       thecount=other_node->from_count;
       if (!otherlist) {
-        chatting("node 0x%x list 0x%x count %d\n",other_node,otherlist,thecount);
+        chatting("node 0x%p list 0x%p count %d\n",
+                 other_node,otherlist,thecount);
         otherlist = other_node->from_values;
-        chatting("No from list!! 0x%x\n",otherlist);
+        chatting("No from list!! 0x%p\n",otherlist);
       }
       
       otherlist[count] = value;                 /* <------ 42% store penalty */
@@ -271,8 +269,6 @@ void clear_nummiss(table_t *table, int groupname)
 
 void do_all(table_t *table, int groupname, int nproc,
 	    void func(table_t *, int),int groupsize) {
-  int procname = groupname / groupsize;
-
   /*chatting("do all group %d with %d\n",groupname,nproc);*/
   if (nproc > 1) {
     do_all(table,groupname+nproc/2,nproc/2,func,groupsize);
