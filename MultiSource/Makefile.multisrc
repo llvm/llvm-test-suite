@@ -53,12 +53,12 @@ Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
 	$(LDIS) -f $< -o $@
 
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
-	$(LGCCAS) $< -o $@
+	$(LGCCAS) $(STATS) $< -o $@
 
 # Link the program to the libraries it uses, then perform postlink
 # optimization...
 Output/%.llvm Output/%.llvm.bc: Output/%.linked.bc
-	$(LGCCLD) $< -lgcc -lc $(LIBS) -o $(<:.linked.bc=.llvm)
+	$(LGCCLD) $(STATS) $< -lgcc -lc $(LIBS) -o $(<:.linked.bc=.llvm)
 
 Output/%.native: $(NObjects)
 	$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
