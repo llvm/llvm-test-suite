@@ -999,22 +999,28 @@ icstruct intcoord(bodyptr p, treeptr t)
     xsc = (pos[0] - t->rmin[0]) / rsize;    /*   scale to range [0,1)   */
     if (0.0 <= xsc && xsc < 1.0)              /*   within unit interval?  */
       ic.xp[0] = floor(IMAX * xsc);           /*     then integerize      */
-    else                                      /*   out of range           */
+    else {                                    /*   out of range           */
       ic.inb = FALSE;                         /*     then remember that   */
+      ic.xp[0] = 0;
+    }
 
 
     xsc = (pos[1] - t->rmin[1]) / rsize;    /*   scale to range [0,1)   */
     if (0.0 <= xsc && xsc < 1.0)              /*   within unit interval?  */
       ic.xp[1] = floor(IMAX * xsc);           /*     then integerize      */
-    else                                      /*   out of range           */
+    else {                                    /*   out of range           */
       ic.inb = FALSE;                         /*     then remember that   */
+      ic.xp[1] = 0;
+    }
 
 
     xsc = (pos[2] - t->rmin[2]) / rsize;    /*   scale to range [0,1)   */
     if (0.0 <= xsc && xsc < 1.0)              /*   within unit interval?  */
       ic.xp[2] = floor(IMAX * xsc);           /*     then integerize      */
-    else                                      /*   out of range           */
+    else {                                     /*   out of range           */
       ic.inb = FALSE;                         /*     then remember that   */
+      ic.xp[2] = 0;
+    }
 
 
     /*chatting("Returning %d:%d:%d, ic.inb=%d\n",ic.xp[0],ic.xp[1],ic.xp[2],ic.inb);*/
