@@ -13,11 +13,7 @@
 
 #include "general.h"
 
-#if defined(__FreeBSD__) || defined(__APPLE__)
-#  include <stdlib.h>
-#else
-#  include <malloc.h>
-#endif
+#include <stdlib.h>
 
 struct binaryTree {
   int                 value;
