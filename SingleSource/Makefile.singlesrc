@@ -33,6 +33,7 @@ LLCDIFFS  = $(addsuffix .llc.diff, $(addprefix Output/,$(PROGRAMS)))
 
 .PRECIOUS: Output/%.nat.out Output/%.lli.out Output/%.llc.out
 .PRECIOUS: Output/%.lli.diff Output/%.llc.diff
+.PRECIOUS: Output/%.native Output/%.linked.bc
 
 all:: Output/.dir $(LLIDIFFS)  # $(LLCDIFFS)
 
