@@ -318,7 +318,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.run.s): \
 Output/%.run.s: Output/%.run.bc $(LLC)
 	-$(LLC) -f $< -o $@
 
-STATIC_TRACE_LIBS = ${DESTLIBDEBUG}/firstTrigger.o ${DESTLIBDEBUG}/tracecache.o \
+STATIC_TRACE_LIBS = ${DESTLIBDEBUG}/firstTrigger.o ${DESTLIBDEBUG}/tracecache.o\
 	${DESTLIBCURRENT}/mapinfo.o ${DESTLIBDEBUG}/scratchmemory.o
 
 DYNAMIC_TRACE_LIBS = ${DESTLIBCURRENT}/libscalaropts.a \
