@@ -186,6 +186,9 @@ all:: $(LLIDIFFS)
 endif
 endif#DISABLE_DIFFS
 
+LLCBETAOPTION := -disable-pattern-isel=0
+
+
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
@@ -272,7 +275,7 @@ Output/%.llc.s: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f -regalloc=iterativescan $< -o $@
+	-$(LLC) $(LLCFLAGS) -f $(LLCBETAOPTION) $< -o $@
 
 
 ## Alternative command to run llc remotely on another machine:
@@ -333,7 +336,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -regalloc=iterativescan $(JIT_OPTS) $< $(RUN_OPTIONS)
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
 ifdef PROGRAM_REQUIRED_TO_EXIT_OK
 	@if test \! -f $@.exitok; then echo "TEST (jit-beta): $* FAILED!"; rm -f $@; fi
 endif
@@ -374,7 +377,7 @@ Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
 Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) -regalloc=iterativescan $(BUGPOINT_ARGS)
+	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
