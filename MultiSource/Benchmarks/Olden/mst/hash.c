@@ -2,10 +2,8 @@
 
 #include <stdlib.h>
 #include "hash.h"
-#ifdef TORONTO
-#define chatting printf
-#endif
-#define assert(num,a) if (!(a)) {chatting("Assertion failure:%d in hash\n",num); exit(-1);}
+
+#define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
 static int remaining = 0;
 static char *temp;
@@ -20,7 +18,7 @@ static char *localmalloc(int size)
   if (size>remaining) 
     {
       temp = (char *) malloc(32768);
-      if (!temp) chatting("Error! malloc returns null\n");
+      if (!temp) printf("Error! malloc returns null\n");
       remaining = 32768;
     }
   blah = temp;

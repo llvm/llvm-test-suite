@@ -32,11 +32,7 @@ static int compute_dist(int i,int j, int numvert)
 
 static int hashfunc(unsigned int key)
 {
-#ifndef NEWCACHE
   return ((key>>3) % HashRange);
-#else
-  return ((key>>10) % HashRange);
-#endif
 }
 
 static void AddEdges(int count1, Graph retval, int numproc, 
@@ -52,7 +48,6 @@ static void AddEdges(int count1, Graph retval, int numproc,
 
   for (tmp = retval->vlist[j]; tmp; tmp=tmp->next) 
     {
-      MLOCAL(tmp);
       for (i=0; i<numproc*perproc; i++) 
         {
           int pn,offset,dist;
@@ -81,10 +76,7 @@ Graph MakeGraph(int numvert, int numproc)
   Vertex v,tmp;
   Vertex block;
   Graph retval;
-#ifdef FUTURES
-  future_cell_int fc[MAXPROC];
-#endif
-  retval = (Graph) ALLOC(0,sizeof(*retval));
+  retval = (Graph)malloc(sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
       retval->vlist[i]=NULL;
@@ -92,7 +84,7 @@ Graph MakeGraph(int numvert, int numproc)
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = (Vertex) ALLOC(j,perproc*(sizeof(*tmp)));
+      block = (Vertex) malloc(perproc*(sizeof(*tmp)));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {
@@ -110,19 +102,9 @@ Graph MakeGraph(int numvert, int numproc)
   for (j=numproc-1; j>=0; j--) 
     {
       count1 = j*perproc;
-#ifndef FUTURES
       AddEdges(count1, retval, numproc, perproc, numvert, j);
-#else
-      FUTURE(count1,retval,numproc,perproc,numvert,j,AddEdges,&fc[j]);
-#endif
     } /* for j... */
   chatting("Make phase 4\n");
-#ifdef FUTURES
-  for (j=0; j<numproc; j++) 
-    {
-      TOUCH(&fc[j]);
-    }
-#endif
 
   chatting("Make returning\n");
   return retval;

@@ -6,9 +6,6 @@ typedef struct hash_entry {
   unsigned int key;
   void *entry;
   struct hash_entry *next;
-#ifdef JUMP
-  struct hash_entry *pf_ptr;
-#endif
 } *HashEntry;
 
 typedef struct hash {

@@ -2,10 +2,6 @@
 
 #include "mst.h"
 
-#ifndef TORONTO
-#include <cm/cmmd.h>
-#endif
-
 typedef struct blue_return {
   Vertex vert;
   int dist;
@@ -13,9 +9,6 @@ typedef struct blue_return {
 
 
 typedef struct fc_br {
-#ifndef TORONTO
-  future_cell_impl impl;
-#endif
   BlueReturn value;
 } future_cell_BlueReturn;
 
@@ -32,7 +25,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
     retval.dist = 999999;
     return retval;
   }
-  MLOCAL(vlist);
+
   prev = vlist;
   retval.vert = vlist;
   retval.dist = vlist->mindist;
@@ -100,17 +93,8 @@ static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
   BlueReturn retright;
 
   if (nproc > 1) {
-#ifdef FUTURES
-     RPC(inserted,nproc/2,pn+nproc/2,TO_PTR(pn+nproc/2),
-         Do_all_BlueRule,&fcleft);
-     /*FUTURE(inserted,nproc/2,pn+nproc/2,Do_all_BlueRule,&fcleft);*/
-     retright = Do_all_BlueRule(inserted,nproc/2,pn);
-     RTOUCH(&fcleft);
-     /*TOUCH(&fcleft);*/
-#else
      fcleft.value = Do_all_BlueRule(inserted,nproc/2,pn+nproc/2);
      retright = Do_all_BlueRule(inserted,nproc/2,pn);
-#endif
 
      if (fcleft.value.dist < retright.dist) {
        retright.dist = fcleft.value.dist;
@@ -130,23 +114,9 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   Vertex v;
   Vertex inserted,tmp;
   int cost=0,i,dist;
-#ifdef FUTURES
-      future_cell_int fc[MAXPROC];
-#endif
 
   /* make copy of graph */
   chatting("Compute phase 1\n");
-#ifdef FUTURES
-  for (i=0; i<numproc; i++) 
-    {
-      v=graph->vlist[i];
-      RPC(v,v,SetMyVertexList,&fc[i]);
-    }
-  for (i=0; i<numproc; i++)
-    {
-      TOUCH(&fc[i]);
-    }
-#endif
 
   /* Insert first node */
   inserted = graph->vlist[0];
@@ -175,50 +145,16 @@ int main(int argc, char *argv[])
   int dist;
   int size;
  
-#ifdef FUTURES
-  SPMDInit();
-#else
-#ifndef TORONTO
-  filestuff();
-#endif
-#endif
-
   size = dealwithargs(argc,argv);
   chatting("Making graph of size %d\n",size);
 
-#ifdef TORONTO
   graph = MakeGraph(size,NumNodes);
-#else
-  graph = MakeGraph(size,__NumNodes);
-#endif
   chatting("Graph completed\n");
-
-#ifndef TORONTO
-  CMMD_node_timer_clear(0);
-  CMMD_node_timer_start(0);
-  ClearAllStats();
-#endif
 
   chatting("About to compute mst \n");
 
-#ifdef TORONTO
   dist = ComputeMst(graph,NumNodes,size);
-#else
-  dist = ComputeMst(graph,__NumNodes,size);
-#endif
-
-#ifndef TORONTO
-  CMMD_node_timer_stop(0);
-#endif
 
   chatting("MST has cost %d\n",dist);
-
-#ifndef TORONTO
-  chatting("Time elapsed = %f seconds\n",CMMD_node_timer_elapsed(0));
-#endif
-
-#ifdef FUTURES
-  __ShutDown();
-#endif
   exit(0);
 }
