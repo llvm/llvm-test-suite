@@ -1,0 +1,8 @@
+LEVEL = ../../../../..
+PROG = Obsequi
+CPPFLAGS += -DCOUNTBITS16 -DLASTBIT16 -DCOUNTMOVES_TABLE -DHASHCODEBITS=23
+CPPFLAGS += -DTWO_STAGE_GENERATION
+LDFLAGS = -lsupc++
+LIBS += -lsupc++
+STDIN_FILENAME=$(BUILD_SRC_DIR)/input
+include ../../Makefile.multisrc

@@ -1,0 +1,5 @@
+Obsequi
+------------------------------------------------------------------------------
+Obsequi is licensed under the GNU General Public License.  Please see the file
+COPYRIGHT and GPL for more information.
+
