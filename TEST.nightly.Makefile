@@ -17,48 +17,59 @@ TIMEOPT  := -time-passes -stats
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
-	@echo "<a name='$(RELDIR)/$*:compile'>" > $@
-	-$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) >> $@ 2>&1
-	@echo -n "TEST-RESULT-compile: " >> $@
-	@-grep "Total Execution Time" $@ >> $@
-	@echo >> $@
-	@echo -n "TEST-RESULT-compile: " >> $@
-	@-grep "Number of bytecode bytes written" $@ >> $@
-	@echo >> $@
-	@echo -n "TEST-RESULT-compile: " >> $@
-	@-grep "Number of instructions" $@ >> $@
-	@echo >> $@
+	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1'
+	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) > $@ 2>&1)\
+	;then \
+	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
+	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  grep "Total Execution Time" $@ >> $@;\
+	  echo >> $@;\
+	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  grep "Number of bytecode bytes written" $@ >> $@;\
+	  echo >> $@;\
+	  echo -n "TEST-RESULT-compile: " >> $@;\
+	  grep "Number of instructions" $@ >> $@;\
+	  echo >> $@;\
+	else \
+	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@;\
+	fi
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
 Output/%.nightly.llc.report.txt: Output/%.llvm.bc $(LLC)
-	-(time -p $(LLC) -f $(TIMEOPT) Output/$*.llvm.bc -o /dev/null) > $@ 2>&1
-	@echo -n "TEST-RESULT-llc: " >> $@
-	@-grep "Total Execution Time" $@ >> $@
-	@echo >> $@
-	@echo -n "TEST-RESULT-llc: " >> $@
-	@-grep "^real" $@ >> $@
-	@echo >> $@
+	@echo 'time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1'
+	@-if (time -p $(LLC) -f $(TIMEOPT) $< -o /dev/null) > $@ 2>&1; then \
+	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
+	  echo -n "TEST-RESULT-llc: " >> $@;\
+	  grep "Total Execution Time" $@ >> $@;\
+	  echo >> $@;\
+	  echo -n "TEST-RESULT-llc: " >> $@;\
+	  grep "^real" $@ >> $@;\
+	  echo >> $@;\
+	else  \
+	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
+	fi
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.llvm.bc $(LDIS)
-	-(gmake Output/$*.cbe) > $@ 2>&1
+	-($(MAKE) Output/$*.cbe) > $@ 2>&1
 	@if test -f Output/$*.cbe; then echo "TEST-RESULT-cbe: YES" >> $@; fi\
 
 # LLI tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.lli.report.txt): \
 Output/%.nightly.lli.report.txt: Output/%.llvm.bc Output/%.diff-lli $(LLI)
-	@echo > $@  # Make sure something ends up in the file...
 	@if test -e Output/$*.diff-lli; then \
 	  ($(ULIMIT); time -p $(LLI) -stats $(LLI_OPTS) $< $(RUN_OPTIONS)) >$@ 2>&1;\
-          echo "TEST-RESULT-lli-diffmatch: YES" >> $@;\
+          echo "TEST-PASS: lli $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-lli-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
 	  echo -n "TEST-RESULT-lli-dyninst: " >> $@;\
 	  grep "Number of dynamic inst" $@ >> $@;\
 	  echo >> $@;\
+	else  \
+	  echo "TEST-FAIL: lli $(RELDIR)/$*" >> $@;\
 	fi
 
 # JIT tests
@@ -67,7 +78,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.diff-jit $(LLI)
 	@echo > $@  # Make sure something ends up in the file...
 	@if test -e Output/$*.diff-jit; then \
 	  ($(ULIMIT); time -p $(LLI) $(JIT_OPTS) $(TIMEOPT) $< $(RUN_OPTIONS)) > $@ 2>&1;\
-          echo "TEST-RESULT-jit-diffmatch: YES" >> $@;\
+          echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  echo -n "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^real" $@ >> $@;\
 	  echo >> $@;\
@@ -77,6 +88,8 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.diff-jit $(LLI)
 	  echo -n "TEST-RESULT-jit-machcode: " >> $@;\
 	  grep "bytes of machine code compiled" $@ >> $@;\
 	  echo >> $@;\
+	else  \
+	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi
 
 # Overall tests: just run subordinate tests
