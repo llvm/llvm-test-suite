@@ -4,7 +4,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-include $(LEVEL)/Makefile.config
+#include $(LEVEL)/Makefile.config
 
 SPEC_ROOT := $(SPEC95_ROOT)
 CPPFLAGS += -DSPEC_CPU95

@@ -14,11 +14,11 @@ PARALLEL_DIRS := \
 	300.twolf
 
 # Get the $(ARCH) setting
-include $(LEVEL)/Makefile.config
+#include $(LEVEL)/Makefile.config
 
 # Disable crafty until it stops infinite-looping on Sparc
 ifeq ($(ARCH), Sparc)
 PARALLEL_DIRS := $(filter-out 186.crafty, $(PARALLEL_DIRS))
 endif
 
-include ${LEVEL}/Makefile.programs
+include ${LEVEL}/External/Makefile.external

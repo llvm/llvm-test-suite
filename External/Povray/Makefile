@@ -1,6 +1,6 @@
 LEVEL = ../..
 
-include $(LEVEL)/Makefile.config
+#include $(LEVEL)/Makefile.config
 
 PROG = povray
 
@@ -11,4 +11,4 @@ LIBS += -lpng -lz -lm
 LDFLAGS += -L$(BUILD_OBJ_ROOT)/lib/$(CONFIGURATION) -lpng -lz -lm
 
 RUN_OPTIONS = -I$(POVRAY_ROOT)/scenes/advanced/chess2.pov -L$(POVRAY_ROOT)/include -GA$<.junk -O-
-include ../../MultiSource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc

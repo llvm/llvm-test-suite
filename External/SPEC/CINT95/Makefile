@@ -10,5 +10,4 @@ PARALLEL_DIRS := \
   147.vortex
 
 # Get the $(ARCH) setting
-include $(LEVEL)/Makefile.config
-include ${LEVEL}/Makefile.programs
+include ${LEVEL}/External/Makefile.external
