@@ -4,3 +4,8 @@ Richard's Benchmark
 This benchmark is licensed to you under the LLVM license.  It was written by
 M. Richards and M. J. Jordan.
 
+------------------------------------------------------------------------------
+Whetstone
+------------------------------------------------------------------------------
+(c) Copyright 1998 Painter Engineering, Inc.  See source file for
+license details.
