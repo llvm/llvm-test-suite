@@ -28,7 +28,7 @@ int dealwithargs(int argc, char *argv[])
   if (argc > 1)
     size = atoi(argv[1]);
   else
-    size = 512;
+    size = 1 << 15;
 
   NDim = mylog(NumNodes);
   return size;
