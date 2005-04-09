@@ -8,7 +8,11 @@
 # FIXME: This would be autoconf'd
 include $(LEVEL)/Makefile.config
 
+ifndef TEST
 all::
+else
+test::
+endif
 
 .PRECIOUS: %.c
 
