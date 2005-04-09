@@ -3,7 +3,7 @@ LEVEL = ../../../..
 STDIN_FILENAME  = crafty.in
 STDOUT_FILENAME = crafty.out
 
-ifeq ($(ARCH),Alpha)
+ifneq ($(ARCH),Alpha)
 CPPFLAGS = -DSPEC_CPU2000 -DLINUX_i386
 else
 CPPFLAGS = -DSPEC_CPU2000 -DALPHA -DLINUX
