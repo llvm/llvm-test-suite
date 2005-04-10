@@ -19,6 +19,6 @@ endif
 ifeq ($(ARCH),X86)
   CPPFLAGS += -DLINUX_i386
 endif
-ifeq ($(ARCH),PowerPC))
+ifeq ($(ARCH),PowerPC)
    CPPFLAGS += -DLINUX_PPC32
 endif
