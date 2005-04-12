@@ -4,6 +4,11 @@ STDIN_FILENAME  = $(RUN_TYPE).in
 STDOUT_FILENAME = $(RUN_TYPE).out
 CPPFLAGS =
 
+ifdef LARGE_PROBLEM_SIZE
+RUNTIMELIMIT := 1000
+endif
+
+
 SPEC_BENCH_DIR := /home/vadve/shared/benchmarks/speccpu2000/benchspec/CINT2000/197.parser/
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,                                  \
@@ -13,3 +18,4 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,                                  \
 				 xa.c
 
 include ../../Makefile.spec2000
+
