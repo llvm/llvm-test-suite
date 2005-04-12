@@ -39,20 +39,8 @@
 /* nasty nasty SunOS-ism */
 #ifdef sparc
 #include <alloca.h>
-#ifdef lint
-extern char *alloca();
-#endif
 #else
 extern char *alloca();
-#endif
-#ifdef SPRINTF_INT
-extern int sprintf();
-#else	/* not USG */
-/* nasty nasty berkelixm */
-#define setjmp	_setjmp
-#define longjmp	_longjmp
-
-extern int sprintf();
 #endif
 /*
  * if you don't have vprintf, but you are BSD, the version defined in
