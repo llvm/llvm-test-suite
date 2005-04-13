@@ -190,7 +190,8 @@ ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -enable-ppc-pattern-isel
 else
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION := -enable-lsr-for-alpha
+LLCBETAOPTION := -enable-alpha-intfpdiv -enable-alpha-ftoi
+#-enable-lsr-for-alpha
 else
 LLCBETAOPTION := -disable-pattern-isel=0
 endif
