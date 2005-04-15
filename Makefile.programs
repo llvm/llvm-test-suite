@@ -187,13 +187,13 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-ppc-pattern-isel
+LLCBETAOPTION := -enable-cc-opts
 else
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-intfpdiv -enable-alpha-ftoi
 #-enable-lsr-for-alpha
 else
-LLCBETAOPTION := -disable-pattern-isel=0
+LLCBETAOPTION := -enable-pattern-isel=1
 endif
 endif
 
