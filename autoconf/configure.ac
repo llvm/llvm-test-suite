@@ -106,7 +106,7 @@ EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
 EXTERNAL_BENCHMARK(sweep3d,/home/vadve/criswell/umt2k)
 EXTERNAL_BENCHMARK(fpgrowth,/home/vadve/shared/benchmarks/fpgrowth)
 EXTERNAL_BENCHMARK(boxedsim,/home/vadve/shared/benchmarks/boxed-sim)
-EXTERNAL_BENCHMARK(perfect,/home/vadve/shared/benchmarks/perfect)
+EXTERNAL_BENCHMARK(perfect,/home/vadve/shared/benchmarks/perfectclub)
 
 dnl Check for f2c
 CHECK_F2C_ALL()
