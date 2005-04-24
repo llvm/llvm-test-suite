@@ -68,6 +68,7 @@ FPGROWTH_ROOT := @FPGROWTH_ROOT@
 @USE_BOXEDSIM@
 BOXEDSIM_ROOT := @BOXEDSIM_ROOT@
 
+# Path to the Perfect Club benchmarks source code
 @USE_PERFECT@
 PERFECT_ROOT := @PERFECT_ROOT@
 
