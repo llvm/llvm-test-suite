@@ -1,4 +1,4 @@
-LEVEL = ../../..
+LEVEL = ../..
 include $(LEVEL)/Makefile.config
 
 # We can only compile these SPEC benchmarks with F2C
