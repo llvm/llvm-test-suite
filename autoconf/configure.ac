@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([[LLVM-TEST]],[[1.5]],[llvmbugs@cs.uiuc.edu])
+AC_INIT([[LLVM-TEST]],[[1.5cvs]],[llvmbugs@cs.uiuc.edu])
 
 dnl Place all of the extra autoconf files into the config subdirectory
 AC_CONFIG_AUX_DIR([autoconf])
@@ -8,6 +8,7 @@ dnl Verify that the source directory is valid
 AC_CONFIG_SRCDIR([SingleSource/Benchmarks/Makefile])
 
 dnl Do special configuration of Makefiles
+AC_CONFIG_COMMANDS([setup],,[llvm_src="${srcdir}"])
 AC_CONFIG_FILES([Makefile.config])
 AC_CONFIG_MAKEFILE(Makefile)
 AC_CONFIG_MAKEFILE(Makefile.common)
@@ -31,6 +32,7 @@ AC_CONFIG_MAKEFILE(External/Makefile)
 AC_CONFIG_MAKEFILE(External/Makefile.external)
 AC_CONFIG_MAKEFILE(External/Povray/Makefile)
 AC_CONFIG_MAKEFILE(External/PerfectClub/Makefile)
+AC_CONFIG_MAKEFILE(External/PerfectClub/Makefile.perfect)
 AC_CONFIG_MAKEFILE(External/SPEC/Makefile)
 AC_CONFIG_MAKEFILE(External/SPEC/Makefile.spec)
 AC_CONFIG_MAKEFILE(External/SPEC/Makefile.spec2000)
