@@ -209,19 +209,19 @@ if ($HTML) {
     }; "";
   }
   sub printLine {
-    print "<td bgcolor='" . ($_[0] ? "#DDDDDD" : "#AAAAAA") . "' width=1>\n";
+#    print "<td bgcolor='" . ($_[0] ? "#DDDDDD" : "#AAAAAA") . "' width=1>\n";
   }
 
   print "<table border='0' cellspacing='0' cellpadding='0'>\n";
   print "<tr bgcolor=#FFCC99>\n";
   map {
-    print "<td bgcolor='#DDAA77' width='1'></td>";
+    #print "<td bgcolor='#DDAA77' width='1'></td>";
     $_ = "<center><b><a href=\"#$_\">$_</a></b></center>"
       if $_ ne "|"; printCell $_
   } @Header;
-  print "<td bgcolor='#DDAA77' width='1'></td>";
-  print "\n</tr><tr bgcolor='black'>";
-  print "<td height=1></td>" x (2*@Header+1);
+  #print "<td bgcolor='#DDAA77' width='1'></td>";
+  print "\n</tr><tr bgcolor='black' height=1>";
+  #print "<td height=1></td>" x (2*@Header+1);
   print "</tr>\n";
   my $RowCount = 0;
   foreach $Row (@Values) {
