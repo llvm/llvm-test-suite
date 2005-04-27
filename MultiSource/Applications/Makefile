@@ -21,4 +21,8 @@ ifneq ($(OS),SunOS)
 PARALLEL_DIRS += kimwitu++
 endif
 
+ifeq ($(OS),SunOS)
+PARALLEL_DIRS := $(filter-out SPASS, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs
