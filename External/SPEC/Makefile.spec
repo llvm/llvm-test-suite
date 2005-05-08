@@ -113,6 +113,14 @@ Output/%.out-cbe: Output/%.cbe
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+# If a tolerance is set, pass it off to bugpoint
+ifdef FP_TOLERANCE
+BUGPOINT_OPTIONS += -rel-tolerance $(FP_TOLERANCE)
+endif
+ifdef FP_ABSTOLERANCE
+BUGPOINT_OPTIONS += -abs-tolerance $(FP_ABSTOLERANCE)
+endif
+
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
 BUGPOINT_OPTIONS += -timeout=$(RUNTIMELIMIT)

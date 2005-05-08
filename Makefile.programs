@@ -361,6 +361,13 @@ $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
+# If a tolerance is set, pass it off to bugpoint
+ifdef FP_TOLERANCE
+BUGPOINT_OPTIONS += -rel-tolerance $(FP_TOLERANCE)
+endif
+ifdef FP_ABSTOLERANCE
+BUGPOINT_OPTIONS += -abs-tolerance $(FP_ABSTOLERANCE)
+endif
 
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=Output/$*.out-nat
