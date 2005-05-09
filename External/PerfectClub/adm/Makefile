@@ -1,7 +1,7 @@
 LEVEL = ../../..
 include $(LEVEL)/Makefile.f2c
 
-Source := APSI.f
+Source := APSI.c TIMERS.c
 
 include ../Makefile.perfect
 
