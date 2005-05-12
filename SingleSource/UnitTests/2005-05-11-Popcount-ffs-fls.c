@@ -47,6 +47,7 @@ int ntz8(unsigned x) {
 
 int i;
 int main(void) {
+  long long l;
 
   for(i=-10; i<139045193; i*=-3) {
     printf("LLVM: n: %d, clz(n): %d, popcount(n): %d, ctz(n): %d\n",
@@ -55,6 +56,15 @@ int main(void) {
 	i, nlz10b(i), pop(i), ntz8(i));
     printf("  ***  \n");
     i++;
+  }
+
+  for(l=-10000; l<139045193*10000LL; l*=-3) {
+    printf("LLVM: n: %lld, clz(n): %d, popcount(n): %d, ctz(n): %d\n",
+	l, __builtin_clzll(l), __builtin_popcountll(l), __builtin_ctz(l));
+    printf("REF LO BITS : n: %lld, clz(n): %d, popcount(n): %d, ctz(n): %d\n",
+	l, nlz10b(l), pop(l), ntz8(l));
+    printf("  ***  \n");
+    l++;
   }
 
   return(0);
