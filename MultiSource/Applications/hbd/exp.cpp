@@ -97,7 +97,7 @@ char *Exp::toString(unsigned nextpc) {
         killexp(exp2);
         o = new char[strlen(e2) + 3];
         sprintf(o, "(%s)", e2);
-        delete e2;
+        delete [] e2;
       } else {
         o = new char[strlen(type2str[e->type]) + 3];
         sprintf(o, "(%s)", type2str[e->type]);
@@ -110,14 +110,14 @@ char *Exp::toString(unsigned nextpc) {
       sprintf(s, "%s(%s)", o, e1);
     else
       sprintf(s, "%s%s", o, e1);
-    killexp(exp1); delete e1; delete o;
+    killexp(exp1); delete [] e1; free(o);
     return s;
   case POSTUNARY:
     exp1->numrefs += numrefs-1;
     e1 = exp1->toString(0); o = op2str[e->op];
     s = new char[5 + strlen(o) + strlen(e1)];
     sprintf(s, (op_prec[exp1->e->op] < (op_prec[e->op] + 0))?"(%s)%s":"%s%s", e1, o);
-    killexp(exp1); delete e1;
+    killexp(exp1); delete [] e1;
     return s;
   case BINARY:
     exp1->numrefs += numrefs-1;
@@ -129,8 +129,8 @@ char *Exp::toString(unsigned nextpc) {
       (op_prec[exp1->e->op] < (op_prec[e->op] + 0))?"(%s)":"%s",
       o, (op_prec[exp2->e->op] < (op_prec[e->op] + 0))?"(%s)":"%s");
     s = new char[strlen(t1) + strlen(e1) + strlen(e2) - 3];
-    sprintf(s, t1, e1, e2); delete t1;
-    killexp(exp1); killexp(exp2); delete e1; delete e2;
+    sprintf(s, t1, e1, e2); delete [] t1;
+    killexp(exp1); killexp(exp2); delete [] e1; delete [] e2;
     return s;
   case TERNARY:
     exp1->numrefs += numrefs-1; exp2->numrefs += numrefs-1; exp3->numrefs += numrefs-1;
@@ -142,38 +142,38 @@ char *Exp::toString(unsigned nextpc) {
       o, (op_prec[exp2->e->op] < (op_prec[e->op] + 0))?"(%s)":"%s",
       o2, (op_prec[exp3->e->op] < (op_prec[e->op] + 0))?"(%s)":"%s");
     s = new char[strlen(t1) + strlen(e1) + strlen(e2) + strlen(e3) - 5];
-    sprintf(s, t1, e1, e2, e3); delete t1;
+    sprintf(s, t1, e1, e2, e3); delete [] t1;
     killexp(exp1); killexp(exp2); killexp(exp3);
-    delete e1; delete e2; delete e3;
+    delete [] e1; delete [] e2; delete [] e3;
     return s;
   case FUNCTIONCALL:
     t1 = new char[256];
     exp1->numrefs += numrefs-1;
     e1 = exp1->toString(0); sizestr = strlen(e1) + 3;
     sprintf(t1, "%s(", e1);
-    killexp(exp1); delete e1;
+    killexp(exp1); delete [] e1;
     i = numexps;
     if (i) {
       while (--i) {
         explist[i]->numrefs += numrefs-1;
         e1 = explist[i]->toString(0); strcat(t1, e1); sizestr += strlen(e1) + 2;
-        killexp(explist[i]); delete e1; strcat(t1, ", ");
+        killexp(explist[i]); delete [] e1; strcat(t1, ", ");
       }
       explist[0]->numrefs += numrefs-1;
       e1 = explist[0]->toString(0); strcat(t1, e1); sizestr += strlen(e1);
-      killexp(explist[0]); delete e1;
+      killexp(explist[0]); delete [] e1;
     }
     strcat(t1,")");
     s = new char[sizestr];
     strcpy(s, t1);
-    delete t1;
+    delete [] t1;
     return s;
   case ARRAYACCESS:
     exp1->numrefs += numrefs-1; exp2->numrefs += numrefs-1;
     e1 = exp1->toString(0); e2 = exp2->toString(0);
     s = new char[strlen(e1) + strlen(e2) + 3];
     sprintf(s, "%s[%s]", e1, e2);
-    killexp(exp1); killexp(exp2); delete e1; delete e2;
+    killexp(exp1); killexp(exp2); delete [] e1; delete [] e2;
     return s;
   case BRANCH:
 //    if ((unsigned)e->op > minpc) {
@@ -200,14 +200,14 @@ char *Exp::toString(unsigned nextpc) {
 //      s = new char[strlen(e1) + 21];
 //      sprintf(s, "if (%s) goto label%d", e1, branch_pc);
 //    }
-    killexp(exp1); delete e1;
+    killexp(exp1); delete [] e1;
     return s;
   case SWITCH:
     exp1->numrefs += numrefs-1;
     e1 = exp1->toString(0);
     s = new char[strlen(e1) + 29];
     sprintf(s, "switch (%s) default: label%d", e1, default_pc);
-    killexp(exp1); delete e1;
+    killexp(exp1); delete [] e1;
     return s;
   default:
     fprintf(stderr, "Error converting expressions to strings. %d\n", e->et);
