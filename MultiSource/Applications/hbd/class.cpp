@@ -55,7 +55,7 @@ Classfile::Classfile(int argc, char **argv) {
           fprintf(stderr, "Could not open file %s\n", argv[1]);
           goto defaultcase_hbt;
         }
-        delete tmpstr;
+        delete [] tmpstr;
         break;
       default: defaultcase_hbt:
         fatalerror(COMMAND_LINE_ERR_HBT, progname);
@@ -209,7 +209,7 @@ void Classfile::read() {
             for (tint = numimports - 2; tint>=0; tint--) {
               if (!strcmp(imports[tint], tstr)) {
                 --numimports;
-                delete tstr;
+                delete [] tstr;
                 break;
               }
             }
@@ -252,7 +252,7 @@ void Classfile::read() {
           for (tint = numimports - 2; tint>=0; tint--) {
             if (!strcmp(imports[tint], tstr)) {
               --numimports;
-              delete tstr;
+              delete [] tstr;
               break;
             }
           }
@@ -358,7 +358,7 @@ void Classfile::print() {
   fprintf(outfile, "\n");
   char *tmpstr = new char[access_flags.strlen() + 1];
   fprintf(outfile, "%sclass %s ", access_flags.toString(tmpstr), this_class_name);
-  delete tmpstr;
+  delete [] tmpstr;
   if (super_class) {
     if (!strcmp(tmpstr = cp(super_class)->chp, "Object")) {
       super_class_name = "Object";
@@ -380,7 +380,7 @@ void Classfile::print() {
     field_info &fi = *(fields[j++]);
     tmpstr = new char[fi.access_flags.strlen() + 1];
     fprintf(outfile, "\n  %s", fi.access_flags.toString(tmpstr));
-    delete tmpstr;
+    delete [] tmpstr;
     tmpstr = fi.sig;
     printsigname(this, outfile, tmpstr, fi.name, 0);
     if (fi.isconstant) {
