@@ -146,7 +146,7 @@ int decompileblock(Classfile *c, method_info_ptr mi) {
 
   strptr = new char[mi->access_flags.strlen() + 1];
   fprintf(c->outfile, "\n  %s", mi->access_flags.toString(strptr));
-  delete strptr;
+  delete [] strptr;
   char *tmp = mi->sig;
   if (printsigname(c, c->outfile, tmp, mi->name, mi)) return 1;
   for (int m = 0; m != mi->num_throws;) {
