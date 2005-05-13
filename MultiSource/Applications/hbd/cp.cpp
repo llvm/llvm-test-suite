@@ -15,6 +15,7 @@
 
 void ConstPool::read(Classfile *c, u16 *imports_count) {
   if ((constant_pool = new cp_info[(constant_pool_count = get16(c->infile, &c->infile_pos))]) == 0) memerr();
+  constant_pool->tag = 0;
   for (int j = 1, i = constant_pool_count - 1; i--;) {
     cp_info *cpi = &constant_pool[j++];
     cpi->tag = (unsigned char)get8(c->infile, &c->infile_pos);
