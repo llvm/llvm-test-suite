@@ -29,6 +29,7 @@ Classfile::Classfile(int argc, char **argv) {
   functoinsert = 0;
   outfile = stdout; infile = stdin;
   progname = *argv++;
+  options = (CL_Options)0;
   if (strcmp(progname + strlen(progname) - 3, "hbt") == 0) {
     for (; (--argc) && (**argv == '-'); argv++) {
       options = (CL_Options)0;
