@@ -1,4 +1,4 @@
-##=== TEST.dsgraph.report - Report description for AA tests ----*- perl -*-===##
+##=== TEST.aa.report - Report description for AA tests ---------*- perl -*-===##
 #
 # This file defines a report to be generated for the alias analysis comparison
 # test.
