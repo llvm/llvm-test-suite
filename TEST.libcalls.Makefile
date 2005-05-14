@@ -1,7 +1,12 @@
-##===- TEST.aa.Makefile ------------------------------------*- Makefile -*-===##
+##===- TEST.libcalls.Makefile -------------------------------*- Makefile -*-===##
 #
-# This recursively traverses the programs, computing the precision of various
-# alias analysis passes on the programs.
+# This recursively traverses the programs, and runs the -simplify-libcalls pass
+# on each *.linked.rbc bytecode file with -stats set so that it is possible to
+# determine which libcalls are being optimized in which programs.
+# 
+# Usage: 
+#     make TEST=libcalls summary (short summary)
+#     make TEST=libcalls (detailed list with time passes, etc.)
 #
 ##===----------------------------------------------------------------------===##
 
@@ -12,11 +17,12 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 	@cat $<
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt):  \
-Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT)
-	-$(LOPT) -simplify-libcalls -stats -debug-only=simplify-libcalls \
-	         -disable-output $< 2>$@ 
-list-calls:
+Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT) \
+	$(PROJ_SRC_ROOT)/TEST.libcalls.Makefile 
+	@-$(LOPT) -simplify-libcalls -stats -debug-only=simplify-libcalls \
+	         -time-passes -disable-output $< 2>$@ 
+summary:
 	@$(MAKE) TEST=libcalls | egrep '======|simplify-libcalls -'
 
-.PHONY: list-calls
+.PHONY: summary
 REPORT_DEPENDENCIES := $(LOPT)
