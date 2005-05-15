@@ -278,10 +278,14 @@ void agrep( register CHARTYPE *pat, int M, register CHARTYPE *text, register CHA
   shift = m-1;
   while (text < textend) {
 	shift = SHIFT[*(text += shift)];
+        if (text >= textend) break;
 	while(shift) {
 		shift = SHIFT[*(text += shift)];
+                if (text >= textend) break;
 		shift = SHIFT[*(text += shift)];
+                if (text >= textend) break;
 	}
+        if (text >= textend) break;
 		j = 1; HASH = *text;
 		while(j < r1) { HASH = (HASH << 2) + *(text-j);
 				j++; }
