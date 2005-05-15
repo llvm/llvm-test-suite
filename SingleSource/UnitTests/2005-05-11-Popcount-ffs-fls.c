@@ -71,6 +71,13 @@ int main(void) {
     l++;
   }
 
+  // Check some boundary and other cases  for FFS call
+  printf("FFS: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, i:%d, l:%d\n",
+      ffs(0), ffs(1), ffs(2), ffs(7), ffs(1024), ffs(i), ffsl(l));
+  printf("__builtin_ffs: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, i:%d l:%d\n",
+      __builtin_ffs(0), __builtin_ffs(1), __builtin_ffs(2), __builtin_ffs(7),
+      __builtin_ffs(1024), __builtin_ffs(i), __builtin_ffsl(l)); 
+
   return(0);
 }
 
