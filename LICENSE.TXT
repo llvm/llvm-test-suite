@@ -4,7 +4,7 @@ LLVM Release License
 University of Illinois/NCSA
 Open Source License
 
-Copyright (c) 2003, 2004 University of Illinois at Urbana-Champaign.
+Copyright (c) 2003, 2004, 2005 University of Illinois at Urbana-Champaign.
 All rights reserved.
 
 Developed by:
@@ -74,7 +74,7 @@ treecc:             llvm-test/MultiSource/Applications/treecc
 kimwitu++:          llvm-test/MultiSource/Applications/kimwitu++
 obsequi:            llvm-test/MultiSource/Applications/obsequi
 Hexxagon:           llvm-test/MultiSource/Applications/hexxagon
-SPASS:		    llvm-test/MultiSource/Applications/SPASS
+SPASS:              llvm-test/MultiSource/Applications/SPASS
 smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
 Fhourstones:        llvm-test/MultiSource/Benchmarks/Fhourstones
 McCat:              llvm-test/MultiSource/Benchmarks/McCat
@@ -90,11 +90,11 @@ p2c:                llvm-test/MultiSource/Benchmarks/MallocBench/p2c
 gawk:               llvm-test/MultiSource/Benchmarks/MallocBench/gawk
 make:               llvm-test/MultiSource/Benchmarks/MallocBench/make
 perl:               llvm-test/MultiSource/Benchmarks/MallocBench/perl
-adpcm:		    llvm-test/MultiSource/Benchmarks/mediabench/adpcm
-g721:		    llvm-test/MultiSource/Benchmarks/mediabench/g721
-gsm:		    llvm-test/MultiSource/Benchmarks/mediabench/gsm
-jpeg:		    llvm-test/MultiSource/Benchmarks/mediabench/jpeg
-mpeg2:		    llvm-test/MultiSource/Benchmarks/mediabench/mpeg2
+adpcm:              llvm-test/MultiSource/Benchmarks/mediabench/adpcm
+g721:               llvm-test/MultiSource/Benchmarks/mediabench/g721
+gsm:                llvm-test/MultiSource/Benchmarks/mediabench/gsm
+jpeg:               llvm-test/MultiSource/Benchmarks/mediabench/jpeg
+mpeg2:              llvm-test/MultiSource/Benchmarks/mediabench/mpeg2
 Dhrystone:          llvm-test/SingleSource/Benchmarks/Dhrystone
 SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
