@@ -2,7 +2,7 @@
 
 LEVEL = ../..
 
-include $(LEVEL)/Makefile.common
+include $(LEVEL)/Makefile.config
 
 PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc SPASS
 
