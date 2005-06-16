@@ -29,7 +29,7 @@
 #
 # This makefile provides facilities for defining custom tests that are to be run
 # on all of the programs in the test suite.  In order to define one of these
-# tests, create a llvm-test/Makefile.TEST.<testname> file.  This file
+# tests, create a llvm-test/TEST.<testname>.Makefile file.  This file
 # should define a rule 'test.<testname>.%' which is run once for each program in
 # the suite (the % passed in is the program name).  For a simple example, see
 # Makefile.TEST.example.
