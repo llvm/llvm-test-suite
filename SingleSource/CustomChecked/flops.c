@@ -1,4 +1,4 @@
-/* RUN: %s | grep MFLOPS\(4\)
+/* RUN: %s | grep 'MFLOPS.4.'
  */
 
 /*--------------------- Start flops.c source code ----------------------*/
