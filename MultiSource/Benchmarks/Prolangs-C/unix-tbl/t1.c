@@ -12,10 +12,8 @@ static char sccsid[] = "@(#)t1.c	4.2 8/11/83";
 extern FILE *_f[];
 # endif
 
-# ifdef unix
 # define MACROS "/usr/lib/tmac.s"
 # define PYMACS "/usr/lib/tmac.m"
-# endif
 
 # ifdef gcos
 # define MACROS "cc/troff/smac"
