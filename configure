@@ -465,7 +465,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH F2C F2C_INC F2C_LIB USE_F2C LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL HAVE_RE_COMP SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH F2C F2C_INC F2C_LIB USE_F2C LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -19067,6 +19067,105 @@ _ACEOF
   fi
 
 
+echo "$as_me:$LINENO: checking for re_comp" >&5
+echo $ECHO_N "checking for re_comp... $ECHO_C" >&6
+if test "${ac_cv_func_re_comp+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+/* Define re_comp to an innocuous variant, in case <limits.h> declares re_comp.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define re_comp innocuous_re_comp
+
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char re_comp (); below.
+    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+    <limits.h> exists even on freestanding compilers.  */
+
+#ifdef __STDC__
+# include <limits.h>
+#else
+# include <assert.h>
+#endif
+
+#undef re_comp
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char re_comp ();
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_re_comp) || defined (__stub___re_comp)
+choke me
+#else
+char (*f) () = re_comp;
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+int
+main ()
+{
+return f != re_comp;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_func_re_comp=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_func_re_comp=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $ac_cv_func_re_comp" >&5
+echo "${ECHO_T}$ac_cv_func_re_comp" >&6
+if test $ac_cv_func_re_comp = yes; then
+  HAVE_RE_COMP=HAVE_RE_COMP:=1
+
+else
+  HAVE_RE_COMP=
+
+fi
+
+
 
  # Check whether --enable-spec95 or --disable-spec95 was given.
 if test "${enable_spec95+set}" = set; then
@@ -20263,6 +20362,7 @@ s,@F77@,$F77,;t t
 s,@FFLAGS@,$FFLAGS,;t t
 s,@ac_ct_F77@,$ac_ct_F77,;t t
 s,@LIBTOOL@,$LIBTOOL,;t t
+s,@HAVE_RE_COMP@,$HAVE_RE_COMP,;t t
 s,@SPEC95_ROOT@,$SPEC95_ROOT,;t t
 s,@USE_SPEC95@,$USE_SPEC95,;t t
 s,@SPEC2000_ROOT@,$SPEC2000_ROOT,;t t

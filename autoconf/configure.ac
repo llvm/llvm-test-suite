@@ -98,6 +98,10 @@ AC_HEADER_SYS_WAIT
 dnl Determine if the linker supports the -R option.
 AC_LINK_USE_R
 
+dnl Check for needed functions
+AC_CHECK_FUNC([re_comp],[AC_SUBST(HAVE_RE_COMP,[HAVE_RE_COMP:=1])],
+                        [AC_SUBST(HAVE_RE_COMP,[[]])])
+
 dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,/home/vadve/shared/benchmarks/spec95/benchspec)
 EXTERNAL_BENCHMARK(spec2000,/home/vadve/shared/benchmarks/speccpu2000/benchspec)

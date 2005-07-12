@@ -66,3 +66,6 @@ FPGROWTH_ROOT := @FPGROWTH_ROOT@
 
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
+
+# Define HAVE_RE_COMP to 1 if re_comp is found, don't define it otherwise
+@HAVE_RE_COMP@
