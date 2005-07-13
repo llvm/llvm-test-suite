@@ -4,6 +4,8 @@ STDIN_FILENAME  = $(RUN_TYPE).in
 STDOUT_FILENAME = $(RUN_TYPE).out
 CPPFLAGS =
 
+include $(LEVEL)/Makefile.config
+
 ifeq ($(OS),Darwin)
 CPPFLAGS += -D_ANSI_SOURCE=1
 endif
