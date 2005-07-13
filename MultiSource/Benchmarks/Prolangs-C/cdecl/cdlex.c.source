@@ -76,13 +76,10 @@ struct yysvf {
 struct yysvf *yyestate;
 extern struct yysvf yysvec[], *yybgin;
 
-# line 3 "cdlex.l"
 /* Lexical analyzer description for ANSI and C++ cdecl. */
 
-# line 4 "cdlex.l"
 /* The output of this file is included */
 
-# line 5 "cdlex.l"
 /* into the C file cdecl.c. */
 char cdlexsccsid[] = "@(#)cdlex.l	2.2 3/30/88";
 # define YYNEWLINE 10
@@ -100,282 +97,226 @@ case 0:
 if(yywrap_nasko()) return(0); break;
 case 1:
 
-# line 13 "cdlex.l"
 	return ARRAY;
 break;
 case 2:
 
-# line 14 "cdlex.l"
 	return AS;
 break;
 case 3:
 
-# line 15 "cdlex.l"
 	return CAST;
 break;
 case 4:
 
-# line 16 "cdlex.l"
 	return DECLARE;
 break;
 case 5:
 
-# line 17 "cdlex.l"
 	return 0;
 break;
 case 6:
 
-# line 18 "cdlex.l"
 	return EXPLAIN;
 break;
 case 7:
 
-# line 19 "cdlex.l"
 return FUNCTION;
 break;
 case 8:
 
-# line 20 "cdlex.l"
 	return FUNCTION;
 break;
 case 9:
 
-# line 21 "cdlex.l"
 	return HELP;
 break;
 case 10:
 
-# line 22 "cdlex.l"
 	return INTO;
 break;
 case 11:
 
-# line 23 "cdlex.l"
 	return MEMBER;
 break;
 case 12:
 
-# line 24 "cdlex.l"
 	return OF;
 break;
 case 13:
 
-# line 25 "cdlex.l"
 	return POINTER;
 break;
 case 14:
 
-# line 26 "cdlex.l"
 	return POINTER;
 break;
 case 15:
 
-# line 27 "cdlex.l"
 	return 0;
 break;
 case 16:
 
-# line 28 "cdlex.l"
 return REFERENCE;
 break;
 case 17:
 
-# line 29 "cdlex.l"
 	return REFERENCE;
 break;
 case 18:
 
-# line 30 "cdlex.l"
 return RETURNING;
 break;
 case 19:
 
-# line 31 "cdlex.l"
 	return RETURNING;
 break;
 case 20:
 
-# line 32 "cdlex.l"
 	return SET;
 break;
 case 21:
 
-# line 33 "cdlex.l"
 	return TO;
 break;
 case 22:
 
-# line 34 "cdlex.l"
 	return ARRAY;
 break;
 case 23:
 
-# line 35 "cdlex.l"
 	return DOUBLECOLON;
 break;
 case 24:
 
-# line 36 "cdlex.l"
 	return HELP;
 break;
 case 25:
 
-# line 37 "cdlex.l"
 	return COMMA;
 break;
 case 26:
 
-# line 39 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return AUTO; }
 break;
 case 27:
 
-# line 40 "cdlex.l"
 { yylval.dynstr = ds("char");	return CHAR; }
 break;
 case 28:
 
-# line 41 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return CHAR; }
 break;
 case 29:
 
-# line 42 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return CLASS; }
 break;
 case 30:
 
-# line 43 "cdlex.l"
 { yylval.dynstr = ds("const");	return CONSTVOLATILE; }
 break;
 case 31:
 
-# line 44 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return CONSTVOLATILE; }
 break;
 case 32:
 
-# line 45 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return DOUBLE; }
 break;
 case 33:
 
-# line 46 "cdlex.l"
 { yylval.dynstr = ds("enum");	return ENUM; }
 break;
 case 34:
 
-# line 47 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return ENUM; }
 break;
 case 35:
 
-# line 48 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return EXTERN; }
 break;
 case 36:
 
-# line 49 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return FLOAT; }
 break;
 case 37:
 
-# line 50 "cdlex.l"
 	{ yylval.dynstr = ds("int");	return INT; }
 break;
 case 38:
 
-# line 51 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return INT; }
 break;
 case 39:
 
-# line 52 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return LONG; }
 break;
 case 40:
 
-# line 53 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return CONSTVOLATILE; }
 break;
 case 41:
 
-# line 54 "cdlex.l"
 { yylval.dynstr = ds(yytext);	return REGISTER; }
 break;
 case 42:
 
-# line 55 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return SHORT; }
 break;
 case 43:
 
-# line 56 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return SIGNED; }
 break;
 case 44:
 
-# line 57 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return STATIC; }
 break;
 case 45:
 
-# line 58 "cdlex.l"
 { yylval.dynstr = ds("struct");	return STRUCT; }
 break;
 case 46:
 
-# line 59 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return STRUCT; }
 break;
 case 47:
 
-# line 60 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return UNION; }
 break;
 case 48:
 
-# line 61 "cdlex.l"
 { yylval.dynstr = ds(yytext);	return UNSIGNED; }
 break;
 case 49:
 
-# line 62 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return VOID; }
 break;
 case 50:
 
-# line 63 "cdlex.l"
 { yylval.dynstr = ds(yytext);	return CONSTVOLATILE; }
 break;
 case 51:
 
-# line 65 "cdlex.l"
 { yylval.dynstr = ds(yytext);	return NAME; }
 break;
 case 52:
 
-# line 66 "cdlex.l"
 	{ yylval.dynstr = ds(yytext);	return NUMBER; }
 break;
 case 53:
 
-# line 68 "cdlex.l"
 	;
 break;
 case 54:
 
-# line 69 "cdlex.l"
 	;
 break;
 case 55:
 
-# line 70 "cdlex.l"
 return *yytext;
 break;
 case 56:
 
-# line 71 "cdlex.l"
 	{
 			(void) printf("bad character '%s'\n",visible(*yytext));
 			return *yytext;

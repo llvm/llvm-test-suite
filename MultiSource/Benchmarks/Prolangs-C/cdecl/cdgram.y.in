@@ -597,7 +597,6 @@ adecl		: FUNCTION RETURNING adecl
 			Debug((stderr, "\ttype='%s'\n", $2));
 			$$.left = ds("");
 			$$.right = ds("");
-			$$.type = cat($1,ds(strlen($1)?" ":""),$2,NullCP);
 			if (strcmp($2, "void") == 0)
 			    prev = 'v';
 			else if ((strncmp($2, "struct", 6) == 0) ||
@@ -605,6 +604,7 @@ adecl		: FUNCTION RETURNING adecl
 			    prev = 's';
 			else
 			    prev = 't';
+			$$.type = cat($1,ds(strlen($1)?" ":""),$2,NullCP);
 			Debug((stderr, "\n\tadecl now =\n"));
 			Debug((stderr, "\t\tadecl.left='%s'\n", $$.left));
 			Debug((stderr, "\t\tadecl.right='%s'\n", $$.right));

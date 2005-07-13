@@ -917,7 +917,6 @@ case 53:
 			Debug((stderr, "\ttype='%s'\n", yypvt[-0].dynstr));
 			yyval.halves.left = ds("");
 			yyval.halves.right = ds("");
-			yyval.halves.type = cat(yypvt[-1].dynstr,ds(strlen(yypvt[-1].dynstr)?" ":""),yypvt[-0].dynstr,NullCP);
 			if (strcmp(yypvt[-0].dynstr, "void") == 0)
 			    prev = 'v';
 			else if ((strncmp(yypvt[-0].dynstr, "struct", 6) == 0) ||
@@ -925,6 +924,7 @@ case 53:
 			    prev = 's';
 			else
 			    prev = 't';
+			yyval.halves.type = cat(yypvt[-1].dynstr,ds(strlen(yypvt[-1].dynstr)?" ":""),yypvt[-0].dynstr,NullCP);
 			Debug((stderr, "\n\tadecl now =\n"));
 			Debug((stderr, "\t\tadecl.left='%s'\n", yyval.halves.left));
 			Debug((stderr, "\t\tadecl.right='%s'\n", yyval.halves.right));
