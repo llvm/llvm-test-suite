@@ -89,6 +89,15 @@ AC_PROG_FLEX
 AC_PROG_BISON
 AC_PROG_LIBTOOL
 
+dnl Check for f2c in various locations or get from --with-f2c option
+CHECK_F2C_ALL()
+if test "x${F2C}" = "x"; then
+  CHECK_F2C_BIN()
+  CHECK_F2C_H()
+  CHECK_F2C_LIB()
+  CHECK_F2C_ENABLE()
+fi
+
 dnl Checks for header files.
 dnl We don't check for ancient stuff or things that are guaranteed to be there
 dnl by the C++ standard. We always use the <cfoo> versions of <foo.h> C headers.
@@ -109,15 +118,6 @@ EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
 EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
 EXTERNAL_BENCHMARK(sweep3d,/home/vadve/criswell/umt2k)
 EXTERNAL_BENCHMARK(fpgrowth,/home/vadve/shared/benchmarks/fpgrowth)
-
-dnl Check for f2c
-CHECK_F2C_ALL()
-if test "x${F2C}" = "x"; then
-  CHECK_F2C_BIN()
-  CHECK_F2C_H()
-  CHECK_F2C_LIB()
-  CHECK_F2C_ENABLE()
-fi
 
 dnl Create the output files
 AC_OUTPUT

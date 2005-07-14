@@ -12,6 +12,7 @@ then
   AC_SUBST(F2C_INC,[$1/include])
   AC_SUBST(F2C_LIB,[$1/lib])
   AC_SUBST(USE_F2C,[USE_F2C=1])
+  AC_SUBST(F2C_DIR,[$1])
 fi
 ])
 

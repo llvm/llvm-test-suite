@@ -44,6 +44,7 @@ SPEC95_ROOT := @SPEC95_ROOT@
 
 # F2C: Enable LLVM to run Fortran benchmarks without a Fortran front-end
 @USE_F2C@
+F2C_DIR := @F2C_DIR@
 F2C     := @F2C@
 F2C_INC := @F2C_INC@
 F2C_LIB := @F2C_LIB@
