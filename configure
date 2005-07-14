@@ -18755,9 +18755,22 @@ LIBTOOL='$(SHELL) $(top_builddir)/mklib'
 if test "${with_f2c+set}" = set; then
   withval="$with_f2c"
   f2cdir=$withval
+else
+  f2cdir=notfound
 fi;
 echo "$as_me:$LINENO: checking for installed f2c components" >&5
 echo $ECHO_N "checking for installed f2c components... $ECHO_C" >&6
+if test "$f2cdir" = "notfound" ; then
+ f2cdir=`which f2c`
+ if test "$f2cdir"x  != "x" ; then
+   if test -d "${f2cdir%*f2c}" -a -d "${f2cdir%*f2c}/.." ; then
+     f2cdir=`cd "${f2cdir%*f2c}/.." ; pwd`
+     if test ! -d "$f2cdir" ; then
+       f2cdir="notfound";
+     fi
+   fi
+ fi
+fi
 
 if test -d "$f2cdir" &&
    test -d "$f2cdir/bin" && test -f "$f2cdir/bin/f2c" &&

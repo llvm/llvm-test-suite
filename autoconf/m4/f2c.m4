@@ -18,9 +18,20 @@ fi
 
 AC_DEFUN([CHECK_F2C_ALL],
 [AC_ARG_WITH(f2c,
-  AS_HELP_STRING(--with-f2c=DIR,Use f2c with install prefix DIR),
-  f2cdir=$withval)
+  AS_HELP_STRING(--with-f2c=DIR,[Use f2c with install prefix DIR]),
+  [f2cdir=$withval],[f2cdir=notfound])
 AC_MSG_CHECKING([for installed f2c components])
+if test "$f2cdir" = "notfound" ; then
+ f2cdir=`which f2c`
+ if test "$f2cdir"x  != "x" ; then 
+   if test -d "${f2cdir%*f2c}" -a -d "${f2cdir%*f2c}/.." ; then
+     f2cdir=`cd "${f2cdir%*f2c}/.." ; pwd`
+     if test ! -d "$f2cdir" ; then
+       f2cdir="notfound";
+     fi
+   fi
+ fi
+fi
 CHECK_F2C($f2cdir)
 if test "x$F2C" = "x"; then
   CHECK_F2C("/usr")
