@@ -1,5 +1,12 @@
 ##===- Makefile.f2c ----------------------------------------*- Makefile -*-===##
 #
+#                     The LLVM Compiler Infrastructure
+#
+# This file was developed by the LLVM research group and is distributed under
+# the University of Illinois Open Source License. See LICENSE.TXT for details.
+# 
+#===------------------------------------------------------------------------===#
+#
 # Enable running Fortran programs with LLVM by using f2c to convert to C and
 # link with libf2c, but only until we have a Fortran front-end.
 #
@@ -8,25 +15,20 @@
 # FIXME: This would be autoconf'd
 include $(LEVEL)/Makefile.config
 
-ifndef TEST
-all::
-else
+# Make sure the correct targets come first.
+ifdef TEST
 test::
+else
+all::
+endif
+
+ifneq ($(USE_F2C),1)
+all test::
+	echo "The f2c program was not found"
+	exit 1
 endif
 
 .PRECIOUS: %.c
-
-ifeq ($(ARCH),x86)
-F2C_DIR = /home/vadve/shared/localtools/x86
-else
-	ifeq ($(ARCH),Sparc)
-		F2C_DIR = /home/vadve/shared/localtools/sparc
-	endif
-endif
-
-F2C     = $(F2C_DIR)/bin/f2c
-F2C_INC = $(F2C_DIR)/include
-F2C_LIB = $(F2C_DIR)/lib
 
 clean::
 	rm -f $(Source:%.f=%.c)
