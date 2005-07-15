@@ -14,6 +14,10 @@ include ../../Makefile.spec95
 
 ifeq ($(ARCH),Alpha)
 
+# So on alpha, gcc misoptimizes things.  So conditionally (on if we are on alpha)
+# change the optimization levels of the cbe and native
+# note llc compiles things correctly, this is only a gcc workaround
+
 Output/%.o: %.c Output/.dir
 	-$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -c $< -o $@
 
