@@ -11,3 +11,14 @@ STDOUT_FILENAME = 2stone9.out
 RUN_OPTIONS     = 50 9
 endif
 include ../../Makefile.spec95
+
+ifeq ($(ARCH),Alpha)
+
+Output/%.o: %.c Output/.dir
+	-$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -c $< -o $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.cbe): \
+Output/%.cbe: Output/%.cbe.c
+	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O0 -o $@
+
+endif
