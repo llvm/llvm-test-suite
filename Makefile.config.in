@@ -49,6 +49,13 @@ F2C     := @F2C@
 F2C_INC := @F2C_INC@
 F2C_LIB := @F2C_LIB@
 
+# F95: Enable LLVM to run Fortran benchmarks without a Fortran front-end
+@USE_F95@
+F95_DIR := @F95_DIR@
+F95     := @F95@
+F95_INC := @F95_INC@
+F95_LIB := @F95_LIB@
+
 # Path to the Povray source code.
 @USE_POVRAY@
 POVRAY_ROOT := @POVRAY_ROOT@

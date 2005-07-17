@@ -89,14 +89,11 @@ AC_PROG_FLEX
 AC_PROG_BISON
 AC_PROG_LIBTOOL
 
-dnl Check for f2c in various locations or get from --with-f2c option
-CHECK_F2C_ALL()
-if test "x${F2C}" = "x"; then
-  CHECK_F2C_BIN()
-  CHECK_F2C_H()
-  CHECK_F2C_LIB()
-  CHECK_F2C_ENABLE()
-fi
+dnl Check for GNU f2c FORTRAN -> C translator
+FIND_STD_PROGRAM(f2c,f2c.h,libf2c.a)
+dnl Check for the NAG f95 FORTRAN -> C translator
+FIND_STD_PROGRAM(f95,,libf97.dylib)
+CHECK_PROGRAM_SANITY([f95],[-V],[NAGWare Fortran 95])
 
 dnl Checks for header files.
 dnl We don't check for ancient stuff or things that are guaranteed to be there

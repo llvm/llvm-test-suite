@@ -465,7 +465,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL F2C F2C_INC F2C_LIB USE_F2C F2C_DIR HAVE_RE_COMP SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL USE_F2C F2C F2C_BIN F2C_DIR F2C_INC F2C_LIB USE_F95 F95 F95_BIN F95_DIR F95_INC F95_LIB HAVE_RE_COMP SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1047,10 +1047,14 @@ Optional Packages:
                           both]
   --with-tags[=TAGS]
                           include additional configurations [automatic]
-  --with-f2c=DIR          Use f2c with install prefix DIR
-  --with-f2c-bin=DIR      Find f2c binary in DIR
-  --with-f2c-inc=DIR      Find f2c.h in DIR
-  --with-f2c-lib=DIR      Find libf2c.a in DIR
+  --with-f2c=DIR          Specify that f2c's install prefix is DIR
+  --with-f2c-bin=DIR      Specify that f2c binary are in DIR
+  --with-f2c-lib=DIR      Specify that f2c libs are in DIR
+  --with-f2c-inc=DIR      Specify that f2c includes are in DIR
+  --with-f95=DIR          Specify that f95's install prefix is DIR
+  --with-f95-bin=DIR      Specify that f95 binary are in DIR
+  --with-f95-lib=DIR      Specify that f95 libs are in DIR
+  --with-f95-inc=DIR      Specify that f95 includes are in DIR
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -3980,7 +3984,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 3983 "configure"' > conftest.$ac_ext
+  echo '#line 3987 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -4854,7 +4858,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:4857:" \
+echo "$as_me:4861:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -5911,11 +5915,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5914: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5918: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5918: \$? = $ac_status" >&5
+   echo "$as_me:5922: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6154,11 +6158,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6157: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6161: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:6161: \$? = $ac_status" >&5
+   echo "$as_me:6165: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6214,11 +6218,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6217: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6221: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:6221: \$? = $ac_status" >&5
+   echo "$as_me:6225: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8399,7 +8403,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8402 "configure"
+#line 8406 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8497,7 +8501,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8500 "configure"
+#line 8504 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10690,11 +10694,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10693: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10697: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10697: \$? = $ac_status" >&5
+   echo "$as_me:10701: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10750,11 +10754,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10753: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10757: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10757: \$? = $ac_status" >&5
+   echo "$as_me:10761: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -12111,7 +12115,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12114 "configure"
+#line 12118 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12209,7 +12213,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12212 "configure"
+#line 12216 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13046,11 +13050,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13049: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13053: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13053: \$? = $ac_status" >&5
+   echo "$as_me:13057: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -13106,11 +13110,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13109: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13113: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13113: \$? = $ac_status" >&5
+   echo "$as_me:13117: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15145,11 +15149,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15148: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15152: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15152: \$? = $ac_status" >&5
+   echo "$as_me:15156: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15388,11 +15392,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15391: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15395: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15395: \$? = $ac_status" >&5
+   echo "$as_me:15399: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15448,11 +15452,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15451: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15455: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15455: \$? = $ac_status" >&5
+   echo "$as_me:15459: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17633,7 +17637,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17636 "configure"
+#line 17640 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -17731,7 +17735,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17734 "configure"
+#line 17738 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -18751,218 +18755,543 @@ LIBTOOL='$(SHELL) $(top_builddir)/mklib'
 
 
 
+echo "$as_me:$LINENO: checking for f2c bin/lib/include locations" >&5
+echo $ECHO_N "checking for f2c bin/lib/include locations... $ECHO_C" >&6
+
 # Check whether --with-f2c or --without-f2c was given.
 if test "${with_f2c+set}" = set; then
   withval="$with_f2c"
-  f2cdir=$withval
+  f2cpfxdir=$withval
 else
-  f2cdir=notfound
+  f2cpfxdir=nada
 fi;
-echo "$as_me:$LINENO: checking for installed f2c components" >&5
-echo $ECHO_N "checking for installed f2c components... $ECHO_C" >&6
-if test "$f2cdir" = "notfound" ; then
- f2cdir=`which f2c`
- if test "$f2cdir"x  != "x" ; then
-   if test -d "${f2cdir%*f2c}" -a -d "${f2cdir%*f2c}/.." ; then
-     f2cdir=`cd "${f2cdir%*f2c}/.." ; pwd`
-     if test ! -d "$f2cdir" ; then
-       f2cdir="notfound";
-     fi
-   fi
- fi
+
+# Check whether --with-f2c-bin or --without-f2c-bin was given.
+if test "${with_f2c_bin+set}" = set; then
+  withval="$with_f2c_bin"
+  f2cbindir=$withval
+else
+  f2cbindir=nada
+fi;
+
+# Check whether --with-f2c-lib or --without-f2c-lib was given.
+if test "${with_f2c_lib+set}" = set; then
+  withval="$with_f2c_lib"
+  f2clibdir=$withval
+else
+  f2clibdir=nada
+fi;
+
+# Check whether --with-f2c-inc or --without-f2c-inc was given.
+if test "${with_f2c_inc+set}" = set; then
+  withval="$with_f2c_inc"
+  f2cincdir=$withval
+else
+  f2cincdir=nada
+fi;
+pfxvar=f2cpfxdir
+binvar=f2cbindir
+incvar=f2cincdir
+libvar=f2clibdir
+if test "${!pfxvar}" != "nada" ; then
+
+if test -n "${!pfxvar}" -a -d "${!pfxvar}" -a -n "f2c" -a -d "${!pfxvar}/bin" -a -x "${!pfxvar}/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=${!pfxvar}/bin/f2c
+
+  F2C_BIN=${!pfxvar}/bin
+
+  F2C_DIR=${!pfxvar}
+
+  if test -n "f2c.h" -a -d "${!pfxvar}/include" -a -f "${!pfxvar}/include/f2c.h" ; then
+    F2C_INC=${!pfxvar}/include
+
+  fi
+  if test -n "libf2c.a" -a -d "${!pfxvar}/lib" -a -f "${!pfxvar}/lib/libf2c.a" ; then
+    F2C_LIB=${!pfxvar}/lib
+
+  fi
 fi
 
-if test -d "$f2cdir" &&
-   test -d "$f2cdir/bin" && test -f "$f2cdir/bin/f2c" &&
-   test -d "$f2cdir/include" && test -f "$f2cdir/include/f2c.h" &&
-   test -d "$f2cdir/lib" && test -f "$f2cdir/lib/libf2c.a"
-then
-  F2C=$f2cdir/bin/f2c
+elif test "${!binvar}" != "nada" ; then
+  if test "${!libvar}" != "nada" ; then
+    if test "${!incvar}" != "nada" ; then
+      if test -d "${!binvar}" ; then
+        if test -d "${!incvar}" ; then
+          if test -d "${!libvar}" ; then
+            F2C=${!binvar}/f2c
 
-  F2C_INC=$f2cdir/include
+            F2C_BIN=${!binvar}
 
-  F2C_LIB=$f2cdir/lib
+            F2C_INC=${!incvar}
 
-  USE_F2C=USE_F2C=1
+            F2C_LIB=${!libvar}
 
-  F2C_DIR=$f2cdir
+            USE_F2C=1
 
-fi
-
-if test "x$F2C" = "x"; then
-
-if test -d ""/usr"" &&
-   test -d ""/usr"/bin" && test -f ""/usr"/bin/f2c" &&
-   test -d ""/usr"/include" && test -f ""/usr"/include/f2c.h" &&
-   test -d ""/usr"/lib" && test -f ""/usr"/lib/libf2c.a"
-then
-  F2C="/usr"/bin/f2c
-
-  F2C_INC="/usr"/include
-
-  F2C_LIB="/usr"/lib
-
-  USE_F2C=USE_F2C=1
-
-  F2C_DIR="/usr"
-
-fi
-
-  if test "x$F2C" = "x"; then
-
-if test -d ""/usr/local"" &&
-   test -d ""/usr/local"/bin" && test -f ""/usr/local"/bin/f2c" &&
-   test -d ""/usr/local"/include" && test -f ""/usr/local"/include/f2c.h" &&
-   test -d ""/usr/local"/lib" && test -f ""/usr/local"/lib/libf2c.a"
-then
-  F2C="/usr/local"/bin/f2c
-
-  F2C_INC="/usr/local"/include
-
-  F2C_LIB="/usr/local"/lib
-
-  USE_F2C=USE_F2C=1
-
-  F2C_DIR="/usr/local"
-
-fi
-
-    if test "x$F2C" = "x"; then
-
-if test -d ""/sw"" &&
-   test -d ""/sw"/bin" && test -f ""/sw"/bin/f2c" &&
-   test -d ""/sw"/include" && test -f ""/sw"/include/f2c.h" &&
-   test -d ""/sw"/lib" && test -f ""/sw"/lib/libf2c.a"
-then
-  F2C="/sw"/bin/f2c
-
-  F2C_INC="/sw"/include
-
-  F2C_LIB="/sw"/lib
-
-  USE_F2C=USE_F2C=1
-
-  F2C_DIR="/sw"
-
-fi
-
-      if test "x$F2C" = "x"; then
-
-if test -d ""/opt"" &&
-   test -d ""/opt"/bin" && test -f ""/opt"/bin/f2c" &&
-   test -d ""/opt"/include" && test -f ""/opt"/include/f2c.h" &&
-   test -d ""/opt"/lib" && test -f ""/opt"/lib/libf2c.a"
-then
-  F2C="/opt"/bin/f2c
-
-  F2C_INC="/opt"/include
-
-  F2C_LIB="/opt"/lib
-
-  USE_F2C=USE_F2C=1
-
-  F2C_DIR="/opt"
-
-fi
-
-        if test "x$F2C" = "x"; then
-          F2C=
-
-          F2C_INC=
-
-          F2C_LIB=
-
-          USE_F2C=
-
-          checkresult="no"
+            echo "$as_me:$LINENO: result: found via --with options" >&5
+echo "${ECHO_T}found via --with options" >&6
+          else
+            echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+            { { echo "$as_me:$LINENO: error: The --with-f2c-libdir value must be a directory" >&5
+echo "$as_me: error: The --with-f2c-libdir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
+          fi
         else
-          checkresult="yes, all 3 found"
+          echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+          { { echo "$as_me:$LINENO: error: The --with-f2c-incdir value must be a directory" >&5
+echo "$as_me: error: The --with-f2c-incdir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
         fi
       else
-        checkresult="yes, all 3 found"
+        echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+        { { echo "$as_me:$LINENO: error: The --with-f2c-bindir value must be a directory" >&5
+echo "$as_me: error: The --with-f2c-bindir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
       fi
     else
-      checkresult="yes, all 3 found"
+      echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+      { { echo "$as_me:$LINENO: error: The --with-f2c-incdir option must be specified" >&5
+echo "$as_me: error: The --with-f2c-incdir option must be specified" >&2;}
+   { (exit 1); exit 1; }; }
     fi
   else
-    checkresult="yes, all 3 found"
+    echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+    { { echo "$as_me:$LINENO: error: The --with-f2c-libdir option must be specified" >&5
+echo "$as_me: error: The --with-f2c-libdir option must be specified" >&2;}
+   { (exit 1); exit 1; }; }
   fi
 else
-  checkresult="yes, all 3 found"
+  tmppfxdir=`which f2c 2>&1`
+  if test -n "$tmppfxdir" -a -d "${tmppfxdir%*f2c}" -a \
+          -d "${tmppfxdir%*f2c}/.." ; then
+    tmppfxdir=`cd "${tmppfxdir%*f2c}/.." ; pwd`
+
+if test -n "$tmppfxdir" -a -d "$tmppfxdir" -a -n "f2c" -a -d "$tmppfxdir/bin" -a -x "$tmppfxdir/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=$tmppfxdir/bin/f2c
+
+  F2C_BIN=$tmppfxdir/bin
+
+  F2C_DIR=$tmppfxdir
+
+  if test -n "f2c.h" -a -d "$tmppfxdir/include" -a -f "$tmppfxdir/include/f2c.h" ; then
+    F2C_INC=$tmppfxdir/include
+
+  fi
+  if test -n "libf2c.a" -a -d "$tmppfxdir/lib" -a -f "$tmppfxdir/lib/libf2c.a" ; then
+    F2C_LIB=$tmppfxdir/lib
+
+  fi
 fi
-echo "$as_me:$LINENO: result: $checkresult" >&5
+
+    echo "$as_me:$LINENO: result: found in PATH at $tmppfxdir" >&5
+echo "${ECHO_T}found in PATH at $tmppfxdir" >&6
+  else
+    checkresult="yes"
+    checkvar="USE_"F2C
+
+if test -n "/usr" -a -d "/usr" -a -n "f2c" -a -d "/usr/bin" -a -x "/usr/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=/usr/bin/f2c
+
+  F2C_BIN=/usr/bin
+
+  F2C_DIR=/usr
+
+  if test -n "f2c.h" -a -d "/usr/include" -a -f "/usr/include/f2c.h" ; then
+    F2C_INC=/usr/include
+
+  fi
+  if test -n "libf2c.a" -a -d "/usr/lib" -a -f "/usr/lib/libf2c.a" ; then
+    F2C_LIB=/usr/lib
+
+  fi
+fi
+
+    if test -z "${!checkvar}" ; then
+
+if test -n "/usr/local" -a -d "/usr/local" -a -n "f2c" -a -d "/usr/local/bin" -a -x "/usr/local/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=/usr/local/bin/f2c
+
+  F2C_BIN=/usr/local/bin
+
+  F2C_DIR=/usr/local
+
+  if test -n "f2c.h" -a -d "/usr/local/include" -a -f "/usr/local/include/f2c.h" ; then
+    F2C_INC=/usr/local/include
+
+  fi
+  if test -n "libf2c.a" -a -d "/usr/local/lib" -a -f "/usr/local/lib/libf2c.a" ; then
+    F2C_LIB=/usr/local/lib
+
+  fi
+fi
+
+      if test -z "${!checkvar}" ; then
+
+if test -n "/sw" -a -d "/sw" -a -n "f2c" -a -d "/sw/bin" -a -x "/sw/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=/sw/bin/f2c
+
+  F2C_BIN=/sw/bin
+
+  F2C_DIR=/sw
+
+  if test -n "f2c.h" -a -d "/sw/include" -a -f "/sw/include/f2c.h" ; then
+    F2C_INC=/sw/include
+
+  fi
+  if test -n "libf2c.a" -a -d "/sw/lib" -a -f "/sw/lib/libf2c.a" ; then
+    F2C_LIB=/sw/lib
+
+  fi
+fi
+
+        if test -z "${!checkvar}" ; then
+
+if test -n "/opt" -a -d "/opt" -a -n "f2c" -a -d "/opt/bin" -a -x "/opt/bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=/opt/bin/f2c
+
+  F2C_BIN=/opt/bin
+
+  F2C_DIR=/opt
+
+  if test -n "f2c.h" -a -d "/opt/include" -a -f "/opt/include/f2c.h" ; then
+    F2C_INC=/opt/include
+
+  fi
+  if test -n "libf2c.a" -a -d "/opt/lib" -a -f "/opt/lib/libf2c.a" ; then
+    F2C_LIB=/opt/lib
+
+  fi
+fi
+
+          if test -z "${!checkvar}" ; then
+
+if test -n "/" -a -d "/" -a -n "f2c" -a -d "//bin" -a -x "//bin/f2c" ; then
+  USE_F2C="USE_F2C = 1"
+
+  F2C=//bin/f2c
+
+  F2C_BIN=//bin
+
+  F2C_DIR=/
+
+  if test -n "f2c.h" -a -d "//include" -a -f "//include/f2c.h" ; then
+    F2C_INC=//include
+
+  fi
+  if test -n "libf2c.a" -a -d "//lib" -a -f "//lib/libf2c.a" ; then
+    F2C_LIB=//lib
+
+  fi
+fi
+
+            if test -z "${!checkvar}" ; then
+              checkresult="no"
+            fi
+          fi
+        fi
+      fi
+    fi
+    echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6
+  fi
+fi
 
-if test "x${F2C}" = "x"; then
 
-# Check whether --with-f2cbin or --without-f2cbin was given.
-if test "${with_f2cbin+set}" = set; then
-  withval="$with_f2cbin"
-  f2cbin=$withval
+echo "$as_me:$LINENO: checking for f95 bin/lib/include locations" >&5
+echo $ECHO_N "checking for f95 bin/lib/include locations... $ECHO_C" >&6
+
+# Check whether --with-f95 or --without-f95 was given.
+if test "${with_f95+set}" = set; then
+  withval="$with_f95"
+  f95pfxdir=$withval
+else
+  f95pfxdir=nada
 fi;
-echo "$as_me:$LINENO: checking for f2c binary" >&5
-echo $ECHO_N "checking for f2c binary... $ECHO_C" >&6
-if test -d "$f2cbin" && test -f "$f2cbin/f2c"; then
-    F2C=$f2cbin/f2c
 
-    checkresult="yes"
+# Check whether --with-f95-bin or --without-f95-bin was given.
+if test "${with_f95_bin+set}" = set; then
+  withval="$with_f95_bin"
+  f95bindir=$withval
 else
-    checkresult="no"
-fi
-echo "$as_me:$LINENO: result: $checkresult" >&5
-echo "${ECHO_T}$checkresult" >&6
-
-
-# Check whether --with-f2cinc or --without-f2cinc was given.
-if test "${with_f2cinc+set}" = set; then
-  withval="$with_f2cinc"
-  f2cinc=$withval
+  f95bindir=nada
 fi;
-echo "$as_me:$LINENO: checking for f2c.h" >&5
-echo $ECHO_N "checking for f2c.h... $ECHO_C" >&6
-if test -d "$f2cinc" && test -f "$f2cinc/f2c.h"; then
-    F2C_INC=$f2cinc
 
-    checkresult="yes"
+# Check whether --with-f95-lib or --without-f95-lib was given.
+if test "${with_f95_lib+set}" = set; then
+  withval="$with_f95_lib"
+  f95libdir=$withval
 else
-    checkresult="no"
-fi
-echo "$as_me:$LINENO: result: $checkresult" >&5
-echo "${ECHO_T}$checkresult" >&6
-
-
-# Check whether --with-f2clib or --without-f2clib was given.
-if test "${with_f2clib+set}" = set; then
-  withval="$with_f2clib"
-  f2clib=$withval
+  f95libdir=nada
 fi;
-echo "$as_me:$LINENO: checking for libf2c.a" >&5
-echo $ECHO_N "checking for libf2c.a... $ECHO_C" >&6
-if test -d "$f2clib" && test -f "$f2clib/libf2c.a"; then
-    F2C_LIB=$f2clib
 
-    checkresult="yes"
+# Check whether --with-f95-inc or --without-f95-inc was given.
+if test "${with_f95_inc+set}" = set; then
+  withval="$with_f95_inc"
+  f95incdir=$withval
 else
-    checkresult="no"
+  f95incdir=nada
+fi;
+pfxvar=f95pfxdir
+binvar=f95bindir
+incvar=f95incdir
+libvar=f95libdir
+if test "${!pfxvar}" != "nada" ; then
+
+if test -n "${!pfxvar}" -a -d "${!pfxvar}" -a -n "f95" -a -d "${!pfxvar}/bin" -a -x "${!pfxvar}/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=${!pfxvar}/bin/f95
+
+  F95_BIN=${!pfxvar}/bin
+
+  F95_DIR=${!pfxvar}
+
+  if test -n "" -a -d "${!pfxvar}/include" -a -f "${!pfxvar}/include/" ; then
+    F95_INC=${!pfxvar}/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "${!pfxvar}/lib" -a -f "${!pfxvar}/lib/libf97.dylib" ; then
+    F95_LIB=${!pfxvar}/lib
+
+  fi
 fi
-echo "$as_me:$LINENO: result: $checkresult" >&5
-echo "${ECHO_T}$checkresult" >&6
 
-  echo "$as_me:$LINENO: checking whether f2c install is complete" >&5
-echo $ECHO_N "checking whether f2c install is complete... $ECHO_C" >&6
-if test -f "$F2C" && test -d "$F2C_INC" && test -d "$F2C_LIB"; then
-    USE_F2C=USE_F2C=1
+elif test "${!binvar}" != "nada" ; then
+  if test "${!libvar}" != "nada" ; then
+    if test "${!incvar}" != "nada" ; then
+      if test -d "${!binvar}" ; then
+        if test -d "${!incvar}" ; then
+          if test -d "${!libvar}" ; then
+            F95=${!binvar}/f95
 
-    checkresult="yes"
+            F95_BIN=${!binvar}
+
+            F95_INC=${!incvar}
+
+            F95_LIB=${!libvar}
+
+            USE_F95=1
+
+            echo "$as_me:$LINENO: result: found via --with options" >&5
+echo "${ECHO_T}found via --with options" >&6
+          else
+            echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+            { { echo "$as_me:$LINENO: error: The --with-f95-libdir value must be a directory" >&5
+echo "$as_me: error: The --with-f95-libdir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
+          fi
+        else
+          echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+          { { echo "$as_me:$LINENO: error: The --with-f95-incdir value must be a directory" >&5
+echo "$as_me: error: The --with-f95-incdir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
+        fi
+      else
+        echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+        { { echo "$as_me:$LINENO: error: The --with-f95-bindir value must be a directory" >&5
+echo "$as_me: error: The --with-f95-bindir value must be a directory" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+    else
+      echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+      { { echo "$as_me:$LINENO: error: The --with-f95-incdir option must be specified" >&5
+echo "$as_me: error: The --with-f95-incdir option must be specified" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  else
+    echo "$as_me:$LINENO: result: failed" >&5
+echo "${ECHO_T}failed" >&6
+    { { echo "$as_me:$LINENO: error: The --with-f95-libdir option must be specified" >&5
+echo "$as_me: error: The --with-f95-libdir option must be specified" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
 else
-    USE_F2C=
+  tmppfxdir=`which f95 2>&1`
+  if test -n "$tmppfxdir" -a -d "${tmppfxdir%*f95}" -a \
+          -d "${tmppfxdir%*f95}/.." ; then
+    tmppfxdir=`cd "${tmppfxdir%*f95}/.." ; pwd`
 
-    checkresult="no"
+if test -n "$tmppfxdir" -a -d "$tmppfxdir" -a -n "f95" -a -d "$tmppfxdir/bin" -a -x "$tmppfxdir/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=$tmppfxdir/bin/f95
+
+  F95_BIN=$tmppfxdir/bin
+
+  F95_DIR=$tmppfxdir
+
+  if test -n "" -a -d "$tmppfxdir/include" -a -f "$tmppfxdir/include/" ; then
+    F95_INC=$tmppfxdir/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "$tmppfxdir/lib" -a -f "$tmppfxdir/lib/libf97.dylib" ; then
+    F95_LIB=$tmppfxdir/lib
+
+  fi
 fi
-echo "$as_me:$LINENO: result: $checkresult" >&5
+
+    echo "$as_me:$LINENO: result: found in PATH at $tmppfxdir" >&5
+echo "${ECHO_T}found in PATH at $tmppfxdir" >&6
+  else
+    checkresult="yes"
+    checkvar="USE_"F95
+
+if test -n "/usr" -a -d "/usr" -a -n "f95" -a -d "/usr/bin" -a -x "/usr/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=/usr/bin/f95
+
+  F95_BIN=/usr/bin
+
+  F95_DIR=/usr
+
+  if test -n "" -a -d "/usr/include" -a -f "/usr/include/" ; then
+    F95_INC=/usr/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "/usr/lib" -a -f "/usr/lib/libf97.dylib" ; then
+    F95_LIB=/usr/lib
+
+  fi
+fi
+
+    if test -z "${!checkvar}" ; then
+
+if test -n "/usr/local" -a -d "/usr/local" -a -n "f95" -a -d "/usr/local/bin" -a -x "/usr/local/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=/usr/local/bin/f95
+
+  F95_BIN=/usr/local/bin
+
+  F95_DIR=/usr/local
+
+  if test -n "" -a -d "/usr/local/include" -a -f "/usr/local/include/" ; then
+    F95_INC=/usr/local/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "/usr/local/lib" -a -f "/usr/local/lib/libf97.dylib" ; then
+    F95_LIB=/usr/local/lib
+
+  fi
+fi
+
+      if test -z "${!checkvar}" ; then
+
+if test -n "/sw" -a -d "/sw" -a -n "f95" -a -d "/sw/bin" -a -x "/sw/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=/sw/bin/f95
+
+  F95_BIN=/sw/bin
+
+  F95_DIR=/sw
+
+  if test -n "" -a -d "/sw/include" -a -f "/sw/include/" ; then
+    F95_INC=/sw/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "/sw/lib" -a -f "/sw/lib/libf97.dylib" ; then
+    F95_LIB=/sw/lib
+
+  fi
+fi
+
+        if test -z "${!checkvar}" ; then
+
+if test -n "/opt" -a -d "/opt" -a -n "f95" -a -d "/opt/bin" -a -x "/opt/bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=/opt/bin/f95
+
+  F95_BIN=/opt/bin
+
+  F95_DIR=/opt
+
+  if test -n "" -a -d "/opt/include" -a -f "/opt/include/" ; then
+    F95_INC=/opt/include
+
+  fi
+  if test -n "libf97.dylib" -a -d "/opt/lib" -a -f "/opt/lib/libf97.dylib" ; then
+    F95_LIB=/opt/lib
+
+  fi
+fi
+
+          if test -z "${!checkvar}" ; then
+
+if test -n "/" -a -d "/" -a -n "f95" -a -d "//bin" -a -x "//bin/f95" ; then
+  USE_F95="USE_F95 = 1"
+
+  F95=//bin/f95
+
+  F95_BIN=//bin
+
+  F95_DIR=/
+
+  if test -n "" -a -d "//include" -a -f "//include/" ; then
+    F95_INC=//include
+
+  fi
+  if test -n "libf97.dylib" -a -d "//lib" -a -f "//lib/libf97.dylib" ; then
+    F95_LIB=//lib
+
+  fi
+fi
+
+            if test -z "${!checkvar}" ; then
+              checkresult="no"
+            fi
+          fi
+        fi
+      fi
+    fi
+    echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6
-
+  fi
 fi
+
+
+echo "$as_me:$LINENO: checking sanity for program f95" >&5
+echo $ECHO_N "checking sanity for program f95... $ECHO_C" >&6
+sanity_path=`which f95 2>/dev/null`
+if test "$?" -eq 0 -a -x "$sanity_path" ; then
+  sanity=`f95 -V 2>&1 | grep "NAGWare Fortran 95"`
+  if test -z "$sanity" ; then
+    echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+    { { echo "$as_me:$LINENO: error: Program f95 failed to pass sanity check." >&5
+echo "$as_me: error: Program f95 failed to pass sanity check." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+else
+  echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+fi
+
 
 echo "$as_me:$LINENO: checking for ANSI C header files" >&5
 echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6
@@ -20385,11 +20714,18 @@ s,@F77@,$F77,;t t
 s,@FFLAGS@,$FFLAGS,;t t
 s,@ac_ct_F77@,$ac_ct_F77,;t t
 s,@LIBTOOL@,$LIBTOOL,;t t
+s,@USE_F2C@,$USE_F2C,;t t
 s,@F2C@,$F2C,;t t
+s,@F2C_BIN@,$F2C_BIN,;t t
+s,@F2C_DIR@,$F2C_DIR,;t t
 s,@F2C_INC@,$F2C_INC,;t t
 s,@F2C_LIB@,$F2C_LIB,;t t
-s,@USE_F2C@,$USE_F2C,;t t
-s,@F2C_DIR@,$F2C_DIR,;t t
+s,@USE_F95@,$USE_F95,;t t
+s,@F95@,$F95,;t t
+s,@F95_BIN@,$F95_BIN,;t t
+s,@F95_DIR@,$F95_DIR,;t t
+s,@F95_INC@,$F95_INC,;t t
+s,@F95_LIB@,$F95_LIB,;t t
 s,@HAVE_RE_COMP@,$HAVE_RE_COMP,;t t
 s,@SPEC95_ROOT@,$SPEC95_ROOT,;t t
 s,@USE_SPEC95@,$USE_SPEC95,;t t
