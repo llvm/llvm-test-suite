@@ -1051,13 +1051,13 @@ Optional Packages:
   --with-f2c-bin=DIR      Specify that the f2c binary is in DIR
   --with-f2c-lib=DIR      Specify that f2c libraries are in DIR
   --with-f2c-inc=DIR      Specify that the f2c includes are in DIR
-  --with-NAG-Fortran=DIR  Specify that the NAG-Fortran install prefix is DIR
-  --with-NAG-Fortran-bin=DIR
-                          Specify that the NAG-Fortran binary is in DIR
-  --with-NAG-Fortran-lib=DIR
-                          Specify that NAG-Fortran libraries are in DIR
-  --with-NAG-Fortran-inc=DIR
-                          Specify that the NAG-Fortran includes are in DIR
+  --with-nag-fortran=DIR  Specify that the nag-fortran install prefix is DIR
+  --with-nag-fortran-bin=DIR
+                          Specify that the nag-fortran binary is in DIR
+  --with-nag-fortran-lib=DIR
+                          Specify that nag-fortran libraries are in DIR
+  --with-nag-fortran-inc=DIR
+                          Specify that the nag-fortran includes are in DIR
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -19019,8 +19019,8 @@ fi
 
 
 
-echo "$as_me:$LINENO: checking for NAG-Fortran bin/lib/include locations" >&5
-echo $ECHO_N "checking for NAG-Fortran bin/lib/include locations... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking for nag-fortran bin/lib/include locations" >&5
+echo $ECHO_N "checking for nag-fortran bin/lib/include locations... $ECHO_C" >&6
 
 # Check whether --with-f95 or --without-f95 was given.
 if test "${with_f95+set}" = set; then

@@ -92,7 +92,7 @@ AC_PROG_LIBTOOL
 dnl Check for GNU f2c FORTRAN -> C translator
 FIND_STD_PROGRAM(f2c,f2c.h,libf2c.a)
 dnl Check for the NAG f95 FORTRAN -> C translator
-FIND_STD_PROGRAM(f95,,libf97.dylib,[NAG Fortran])
+FIND_STD_PROGRAM(f95,,libf97.dylib,[nag fortran])
 CHECK_PROGRAM_SANITY([f95],[-V],[NAGWare Fortran 95])
 
 dnl Checks for header files.
