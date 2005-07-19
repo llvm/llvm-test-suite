@@ -5,9 +5,9 @@ Source = dcabs1.f  gammul.f  matmul.f  rndcnf.f  wupwise.f  zdotc.f \
          dlarnd.f  lsame.f   muldoe.f  su3mul.f  zaxpy.f    zscal.f \
          dznrm2.f  phinit.f  uinith.f  zcopy.f
 
-include $(LEVEL)/Makefile.f2c
-
 STDIN_FILENAME  = wupwise.in
 STDOUT_FILENAME = wupwise.out
+NAGFORTRAN_FLAGS = -dusty -dcfuns
 
+include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
