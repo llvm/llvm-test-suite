@@ -23,7 +23,7 @@ endif
 
 ifneq ($(USE_F95),1)
 all test::
-	echo "The f2c program was not found"
+	echo "NAG Fortran is not support?"
 	exit 1
 endif
 

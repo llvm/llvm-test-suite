@@ -21,16 +21,10 @@ all::
 endif
 
 # Include the correct Makefile given how FORTRAN is currently being supported.
-
 ifeq ($(USE_F95),1)
 include $(LEVEL)/Makefile.nagfortran
 else
 ifeq ($(USE_F2C),1)
 include $(LEVEL)/Makefile.f2c
-else
-
-## If FORTRAN is not supported, do nothing.
-bytecode:
-
 endif
 endif
