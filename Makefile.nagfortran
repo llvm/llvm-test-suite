@@ -1,0 +1,39 @@
+##===- Makefile.nagfortran ---------------------------------*- Makefile -*-===##
+#
+#                     The LLVM Compiler Infrastructure
+#
+# This file was developed by Chris Lattner and is distributed under
+# the University of Illinois Open Source License. See LICENSE.TXT for details.
+# 
+#===------------------------------------------------------------------------===#
+#
+# Enable running Fortran programs with LLVM by using NAGWare Fortran front-end
+# to convert it to C.
+#
+##===----------------------------------------------------------------------===##
+
+include $(LEVEL)/Makefile.config
+
+# Make sure the correct targets come first.
+ifdef TEST
+test::
+else
+all::
+endif
+
+ifneq ($(USE_F95),1)
+all test::
+	echo "The f2c program was not found"
+	exit 1
+endif
+
+.PRECIOUS: %.c
+
+clean::
+	rm -f $(Source:%.f=%.c)
+
+%.c: %.f
+	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
+
+CPPFLAGS = -I$(F95_DIR)/lib/NAGWare 
+LDFLAGS += $(F95_DIR)/lib/NAGWare/libf97.dylib $(F95_DIR)/lib/NAGWare/libf96.a
