@@ -35,5 +35,9 @@ clean::
 %.c: %.f
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
 
+%.c: %.f90
+	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
+
+
 CPPFLAGS = -I$(F95_DIR)/lib/NAGWare 
-LDFLAGS += $(F95_DIR)/lib/NAGWare/libf97.dylib $(F95_DIR)/lib/NAGWare/libf96.a
+LDFLAGS += $(F95_DIR)/lib/NAGWare/quickfit.o -Xlinker -flat_namespace $(F95_DIR)/lib/NAGWare/libf97.dylib $(F95_DIR)/lib/NAGWare/libf96.a
