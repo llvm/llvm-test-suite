@@ -18793,44 +18793,44 @@ if test "${with_f2c_inc+set}" = set; then
 else
   f2cincdir=nada
 fi;
-pfxvar=f2cpfxdir
-binvar=f2cbindir
-incvar=f2cincdir
-libvar=f2clibdir
-if test "${!pfxvar}" != "nada" ; then
+eval pfxval=\$\{f2cpfxdir\}
+eval binval=\$\{f2cbindir\}
+eval incval=\$\{f2cincdir\}
+eval libvar=\$\{f2clibdir\}
+if test "${pfxval}" != "nada" ; then
 
-if test -n "${!pfxvar}" -a -d "${!pfxvar}" -a -n "f2c" -a -d "${!pfxvar}/bin" -a -x "${!pfxvar}/bin/f2c" ; then
+if test -n "${pfxval}" -a -d "${pfxval}" -a -n "f2c" -a -d "${pfxval}/bin" -a -x "${pfxval}/bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
 
-  F2C=${!pfxvar}/bin/f2c
+  F2C=${pfxval}/bin/f2c
 
-  F2C_BIN=${!pfxvar}/bin
+  F2C_BIN=${pfxval}/bin
 
-  F2C_DIR=${!pfxvar}
+  F2C_DIR=${pfxval}
 
-  if test -n "f2c.h" -a -d "${!pfxvar}/include" -a -f "${!pfxvar}/include/f2c.h" ; then
-    F2C_INC=${!pfxvar}/include
+  if test -n "f2c.h" -a -d "${pfxval}/include" -a -f "${pfxval}/include/f2c.h" ; then
+    F2C_INC=${pfxval}/include
 
   fi
-  if test -n "libf2c.a" -a -d "${!pfxvar}/lib" -a -f "${!pfxvar}/lib/libf2c.a" ; then
-    F2C_LIB=${!pfxvar}/lib
+  if test -n "libf2c.a" -a -d "${pfxval}/lib" -a -f "${pfxval}/lib/libf2c.a" ; then
+    F2C_LIB=${pfxval}/lib
 
   fi
 fi
 
-elif test "${!binvar}" != "nada" ; then
-  if test "${!libvar}" != "nada" ; then
-    if test "${!incvar}" != "nada" ; then
-      if test -d "${!binvar}" ; then
-        if test -d "${!incvar}" ; then
-          if test -d "${!libvar}" ; then
-            F2C=${!binvar}/f2c
+elif test "${binval}" != "nada" ; then
+  if test "${libval}" != "nada" ; then
+    if test "${incval}" != "nada" ; then
+      if test -d "${binval}" ; then
+        if test -d "${incval}" ; then
+          if test -d "${libval}" ; then
+            F2C=${binval}/f2c
 
-            F2C_BIN=${!binvar}
+            F2C_BIN=${binval}
 
-            F2C_INC=${!incvar}
+            F2C_INC=${incval}
 
-            F2C_LIB=${!libvar}
+            F2C_LIB=${libval}
 
             USE_F2C=1
 
@@ -18900,7 +18900,7 @@ fi
 echo "${ECHO_T}found in PATH at $tmppfxdir" >&6
   else
     checkresult="yes"
-    checkvar="USE_"F2C
+    eval checkval=\$\{"USE_"F2C\}
 
 if test -n "/usr" -a -d "/usr" -a -n "f2c" -a -d "/usr/bin" -a -x "/usr/bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
@@ -18921,7 +18921,7 @@ if test -n "/usr" -a -d "/usr" -a -n "f2c" -a -d "/usr/bin" -a -x "/usr/bin/f2c"
   fi
 fi
 
-    if test -z "${!checkvar}" ; then
+    if test -z "${checkval}" ; then
 
 if test -n "/usr/local" -a -d "/usr/local" -a -n "f2c" -a -d "/usr/local/bin" -a -x "/usr/local/bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
@@ -18942,7 +18942,7 @@ if test -n "/usr/local" -a -d "/usr/local" -a -n "f2c" -a -d "/usr/local/bin" -a
   fi
 fi
 
-      if test -z "${!checkvar}" ; then
+      if test -z "${checkval}" ; then
 
 if test -n "/sw" -a -d "/sw" -a -n "f2c" -a -d "/sw/bin" -a -x "/sw/bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
@@ -18963,7 +18963,7 @@ if test -n "/sw" -a -d "/sw" -a -n "f2c" -a -d "/sw/bin" -a -x "/sw/bin/f2c" ; t
   fi
 fi
 
-        if test -z "${!checkvar}" ; then
+        if test -z "${checkval}" ; then
 
 if test -n "/opt" -a -d "/opt" -a -n "f2c" -a -d "/opt/bin" -a -x "/opt/bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
@@ -18984,7 +18984,7 @@ if test -n "/opt" -a -d "/opt" -a -n "f2c" -a -d "/opt/bin" -a -x "/opt/bin/f2c"
   fi
 fi
 
-          if test -z "${!checkvar}" ; then
+          if test -z "${checkval}" ; then
 
 if test -n "/" -a -d "/" -a -n "f2c" -a -d "//bin" -a -x "//bin/f2c" ; then
   USE_F2C="USE_F2C = 1"
@@ -19005,7 +19005,7 @@ if test -n "/" -a -d "/" -a -n "f2c" -a -d "//bin" -a -x "//bin/f2c" ; then
   fi
 fi
 
-            if test -z "${!checkvar}" ; then
+            if test -z "${checkval}" ; then
               checkresult="no"
             fi
           fi
@@ -19053,44 +19053,44 @@ if test "${with_f95_inc+set}" = set; then
 else
   f95incdir=nada
 fi;
-pfxvar=f95pfxdir
-binvar=f95bindir
-incvar=f95incdir
-libvar=f95libdir
-if test "${!pfxvar}" != "nada" ; then
+eval pfxval=\$\{f95pfxdir\}
+eval binval=\$\{f95bindir\}
+eval incval=\$\{f95incdir\}
+eval libvar=\$\{f95libdir\}
+if test "${pfxval}" != "nada" ; then
 
-if test -n "${!pfxvar}" -a -d "${!pfxvar}" -a -n "f95" -a -d "${!pfxvar}/bin" -a -x "${!pfxvar}/bin/f95" ; then
+if test -n "${pfxval}" -a -d "${pfxval}" -a -n "f95" -a -d "${pfxval}/bin" -a -x "${pfxval}/bin/f95" ; then
   USE_F95="USE_F95 = 1"
 
-  F95=${!pfxvar}/bin/f95
+  F95=${pfxval}/bin/f95
 
-  F95_BIN=${!pfxvar}/bin
+  F95_BIN=${pfxval}/bin
 
-  F95_DIR=${!pfxvar}
+  F95_DIR=${pfxval}
 
-  if test -n "" -a -d "${!pfxvar}/include" -a -f "${!pfxvar}/include/" ; then
-    F95_INC=${!pfxvar}/include
+  if test -n "" -a -d "${pfxval}/include" -a -f "${pfxval}/include/" ; then
+    F95_INC=${pfxval}/include
 
   fi
-  if test -n "libf97.dylib" -a -d "${!pfxvar}/lib" -a -f "${!pfxvar}/lib/libf97.dylib" ; then
-    F95_LIB=${!pfxvar}/lib
+  if test -n "libf97.dylib" -a -d "${pfxval}/lib" -a -f "${pfxval}/lib/libf97.dylib" ; then
+    F95_LIB=${pfxval}/lib
 
   fi
 fi
 
-elif test "${!binvar}" != "nada" ; then
-  if test "${!libvar}" != "nada" ; then
-    if test "${!incvar}" != "nada" ; then
-      if test -d "${!binvar}" ; then
-        if test -d "${!incvar}" ; then
-          if test -d "${!libvar}" ; then
-            F95=${!binvar}/f95
+elif test "${binval}" != "nada" ; then
+  if test "${libval}" != "nada" ; then
+    if test "${incval}" != "nada" ; then
+      if test -d "${binval}" ; then
+        if test -d "${incval}" ; then
+          if test -d "${libval}" ; then
+            F95=${binval}/f95
 
-            F95_BIN=${!binvar}
+            F95_BIN=${binval}
 
-            F95_INC=${!incvar}
+            F95_INC=${incval}
 
-            F95_LIB=${!libvar}
+            F95_LIB=${libval}
 
             USE_F95=1
 
@@ -19160,7 +19160,7 @@ fi
 echo "${ECHO_T}found in PATH at $tmppfxdir" >&6
   else
     checkresult="yes"
-    checkvar="USE_"F95
+    eval checkval=\$\{"USE_"F95\}
 
 if test -n "/usr" -a -d "/usr" -a -n "f95" -a -d "/usr/bin" -a -x "/usr/bin/f95" ; then
   USE_F95="USE_F95 = 1"
@@ -19181,7 +19181,7 @@ if test -n "/usr" -a -d "/usr" -a -n "f95" -a -d "/usr/bin" -a -x "/usr/bin/f95"
   fi
 fi
 
-    if test -z "${!checkvar}" ; then
+    if test -z "${checkval}" ; then
 
 if test -n "/usr/local" -a -d "/usr/local" -a -n "f95" -a -d "/usr/local/bin" -a -x "/usr/local/bin/f95" ; then
   USE_F95="USE_F95 = 1"
@@ -19202,7 +19202,7 @@ if test -n "/usr/local" -a -d "/usr/local" -a -n "f95" -a -d "/usr/local/bin" -a
   fi
 fi
 
-      if test -z "${!checkvar}" ; then
+      if test -z "${checkval}" ; then
 
 if test -n "/sw" -a -d "/sw" -a -n "f95" -a -d "/sw/bin" -a -x "/sw/bin/f95" ; then
   USE_F95="USE_F95 = 1"
@@ -19223,7 +19223,7 @@ if test -n "/sw" -a -d "/sw" -a -n "f95" -a -d "/sw/bin" -a -x "/sw/bin/f95" ; t
   fi
 fi
 
-        if test -z "${!checkvar}" ; then
+        if test -z "${checkval}" ; then
 
 if test -n "/opt" -a -d "/opt" -a -n "f95" -a -d "/opt/bin" -a -x "/opt/bin/f95" ; then
   USE_F95="USE_F95 = 1"
@@ -19244,7 +19244,7 @@ if test -n "/opt" -a -d "/opt" -a -n "f95" -a -d "/opt/bin" -a -x "/opt/bin/f95"
   fi
 fi
 
-          if test -z "${!checkvar}" ; then
+          if test -z "${checkval}" ; then
 
 if test -n "/" -a -d "/" -a -n "f95" -a -d "//bin" -a -x "//bin/f95" ; then
   USE_F95="USE_F95 = 1"
@@ -19265,7 +19265,7 @@ if test -n "/" -a -d "/" -a -n "f95" -a -d "//bin" -a -x "//bin/f95" ; then
   fi
 fi
 
-            if test -z "${!checkvar}" ; then
+            if test -z "${checkval}" ; then
               checkresult="no"
             fi
           fi
