@@ -285,20 +285,20 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $(LLCBETAOPTION) $< -o $@
 
-
-## Alternative command to run llc remotely on another machine:
-## This is very useful when debugging:
-##	-rsh psmith "cd `/bin/pwd`; llc $(LLCFLAGS) -f $< -o $@"
+# On darwin, pass -force_cpusubtype_ALL to allow all ppc instructions.
+ifeq ($(ARCH),PowerPC)
+LLCASSEMBLERFLAGS = -force_cpusubtype_ALL
+endif
 
 # Assemble (and link) an LLVM-linked program using the system assembler...
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(LDFLAGS) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(LDFLAGS) -o $@
 
 
 #
