@@ -67,7 +67,7 @@ then
     fi
 
     corefile=`ls core* | head -n 1`
-    echo "where" > StackTrace.$$
+    echo "where 100" > StackTrace.$$
     $GDB -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
     rm -f StackTrace.$$ $corefile
 fi
