@@ -9,5 +9,7 @@ STDIN_FILENAME  = wupwise.in
 STDOUT_FILENAME = wupwise.out
 NAGFORTRAN_FLAGS = -dusty -dcfuns
 
+FP_TOLERANCE=0.005
+
 include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
