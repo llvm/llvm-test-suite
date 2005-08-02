@@ -21,12 +21,27 @@ OUTFILE=$3
 PROGRAM=$4
 shift 4
 
-ulimit -t $ULIMIT
-rm -f core core.*
-ulimit -c unlimited
-# To prevent infinite loops which fill up the disk, specify a limit on size of
-# files being output by the tests. 10 MB should be enough for anybody. ;)
-ulimit -f 10485760
+SYSTEM=`uname -s`
+
+case $SYSTEM in
+  CYGWIN*)
+    ;;
+  Darwin*)
+    # Disable core file emission, the script doesn't find it anyway because it is put
+    # into /cores.
+    ulimit -c 0
+    ulimit -t $ULIMIT
+    # To prevent infinite loops which fill up the disk, specify a limit on size of
+    # files being output by the tests. 10 MB should be enough for anybody. ;)
+    ulimit -f 10485760
+    ;;
+  *)
+    ulimit -t $ULIMIT
+    ulimit -c unlimited
+    # To prevent infinite loops which fill up the disk, specify a limit on size of
+    # files being output by the tests. 10 MB should be enough for anybody. ;)
+    ulimit -f 10485760
+esac
 
 #
 # Run the command, timing its execution.
