@@ -7,6 +7,13 @@ FP_ABSTOLERANCE := 0.005
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
 CPPFLAGS = -include errno.h -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
 
+include $(LEVEL)/Makefile.config
+
+ifeq ($(ARCH),PowerPC)
+ CPPFLAGS += -DFMAX_IS_DOUBLE
+endif
+
+
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             ggCoverageSolidTexture.cc ggPathDielectricMaterial.cc ggBox2.cc \
             ggBox3.cc ggRasterSurfaceTexture.cc ggJitterSample1.cc \
