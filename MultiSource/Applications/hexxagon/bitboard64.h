@@ -25,6 +25,7 @@
 
 #include <netinet/in.h>
 #include <stdio.h>
+#include <stdint.h>
 
 class BitBoard64
 {
