@@ -187,7 +187,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-gpopt
+LLCBETAOPTION := -enable-lsr-for-ppc
+#-enable-gpopt
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-ftoi -enable-lsr-for-alpha
