@@ -191,7 +191,7 @@ LLCBETAOPTION := -enable-lsr-for-ppc
 #-enable-gpopt
 endif
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION := -enable-alpha-ftoi -enable-lsr-for-alpha
+LLCBETAOPTION := -enable-alpha-FTOI -enable-lsr-for-alpha
 #-enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),x86)
