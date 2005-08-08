@@ -115,6 +115,7 @@ EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
 EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
 EXTERNAL_BENCHMARK(sweep3d,/home/vadve/criswell/umt2k)
 EXTERNAL_BENCHMARK(fpgrowth,/home/vadve/shared/benchmarks/fpgrowth)
+EXTERNAL_BENCHMARK(alp,/home/vadve/shared/benchmarks/ALP)
 
 dnl Create the output files
 AC_OUTPUT

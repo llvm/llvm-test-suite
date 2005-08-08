@@ -72,6 +72,10 @@ SWEEP3D_ROOT := @SWEEP3D_ROOT@
 @USE_FPGROWTH@
 FPGROWTH_ROOT := @FPGROWTH_ROOT@
 
+# Path to the ALP source code
+@USE_ALP@
+ALP_ROOT := @ALP_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
 
