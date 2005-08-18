@@ -187,15 +187,14 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -split-phi-constant-crit-edges
+LLCBETAOPTION := 
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-FTOI -enable-lsr-for-alpha
 #-enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -split-phi-constant-crit-edges
-#-enable-x86-fastcc
+LLCBETAOPTION := -enable-x86-fastcc
 endif
 
 # Given a version of the entire program linked together into a single unit of
