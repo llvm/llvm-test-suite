@@ -22,15 +22,15 @@
 #define USE_COMPL_LIFT_ONSET_COMPLEX	2
 #define NO_LIFTING			3
 
-bool compl_special_cases();
-pcover compl_merge();
-void compl_d1merge();
-pcover compl_cube();
-void compl_lift();
-void compl_lift_onset();
-void compl_lift_onset_complex();
-bool simp_comp_special_cases();
-bool simplify_special_cases();
+static bool compl_special_cases();
+static pcover compl_merge();
+static void compl_d1merge();
+static pcover compl_cube();
+static void compl_lift();
+static void compl_lift_onset();
+static void compl_lift_onset_complex();
+static bool simp_comp_special_cases();
+static bool simplify_special_cases();
 
 
 /* complement -- compute the complement of T */

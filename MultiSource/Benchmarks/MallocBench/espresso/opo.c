@@ -50,7 +50,7 @@
 static int opo_no_make_sparse;
 static int opo_repeated;
 static int opo_exact;
-void minimize();
+static void minimize();
 
 void phase_assignment(PLA, opo_strategy)
 pPLA PLA;
