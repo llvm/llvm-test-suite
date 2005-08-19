@@ -33,7 +33,7 @@ int main() {
            (double)(unsigned long long)((unsigned long long)i << 58ULL));  // i64
   }
   // edge case tests
-  for (unsigned i = 0; i < (sizeof(tests) / sizeof(int)); i++) {
+  for (i = 0; i < (sizeof(tests) / sizeof(int)); i++) {
     printf("%d %f %f %f %f\n", (double)(unsigned)tests[i],
                                (double)(  signed)tests[i],
                                (float) (unsigned)tests[i],
