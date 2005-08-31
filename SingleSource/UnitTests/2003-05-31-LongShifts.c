@@ -5,14 +5,21 @@ void Test(long long Val, int Amt) {
          (unsigned long long)Val >> Amt, Val << Amt);
 }
 
-int main() {
-  Test(123, 4);
-  Test(123, 34);
-  Test(-4, 4);
-  Test(-5, 34);
-  Test(-6000000000LL, 4);
-  Test(-6000000000LL, 34);
-  Test( 6000000000LL, 4);
-  Test( 6000000000LL, 34);
+volatile struct {
+  long long A;  int V;
+} Vals[] = {
+  { 123, 4},
+  { 123, 34},
+  {-4, 4},
+  {-5, 34},
+  { -6000000000LL, 4}, 
+  { -6000000000LL, 34}, 
+  {  6000000000LL, 4}, 
+  {  6000000000LL, 34}
+};
+
+int main(int argc, char**argv) {
+  for (argc--; argc < sizeof(Vals)/sizeof(Vals[0]); ++argc)
+    Test(Vals[argc].A, Vals[argc].V);
   return 0;
 }
