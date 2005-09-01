@@ -1,5 +1,5 @@
 LEVEL = ../../..
-PROG = SPASS 
+PROG = SPASS
 
 CPPFLAGS = -DCLOCK_NO_TIMING -fno-strict-aliasing -w
 LDFLAGS  = -lm
