@@ -187,7 +187,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-ppc-dag-isel
+LLCBETAOPTION := 
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-FTOI -enable-lsr-for-alpha
