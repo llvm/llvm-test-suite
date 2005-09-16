@@ -459,26 +459,32 @@ Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 ifndef DISABLE_DIFFS
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
 Output/%.exe-lli: Output/%.diff-lli
+	-rm $@
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-jit): \
 Output/%.exe-jit: Output/%.diff-jit
+	-rm $@
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-jit-beta): \
 Output/%.exe-jit-beta: Output/%.diff-jit-beta
+	-rm $@
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc): \
 Output/%.exe-llc: Output/%.diff-llc
+	-rm $@
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc-beta): \
 Output/%.exe-llc-beta: Output/%.diff-llc-beta
+	-rm $@
 	-cp $< $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-cbe): \
 Output/%.exe-cbe: Output/%.diff-cbe
+	-rm $@
 	-cp $< $@
 
 # Pseudo target to build just the bytecode file.
