@@ -2,9 +2,8 @@
 
 LEVEL = ../../..
 
-## NOTE: This must remain sorted, so that the labels in the nightly tester 
+## NOTE: This must remain in this oder, so that the labels in the nightly tester 
 ## gnuplot scripts are correct.
-PARALLEL_DIRS  := bh bisort em3d health mst perimeter power treeadd tsp voronoi
-
+PARALLEL_DIRS  := bh em3d mst power tsp bisort health perimeter treeadd voronoi
 
 include $(LEVEL)/Makefile.programs
