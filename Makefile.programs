@@ -187,7 +187,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -sched=simple
+LLCBETAOPTION := -enable-dag-combiner
+#-sched=simple
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-FTOI -enable-lsr-for-alpha
