@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define GLOBAL
 #include "config.h"
