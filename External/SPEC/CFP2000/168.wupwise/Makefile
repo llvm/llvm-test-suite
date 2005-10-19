@@ -12,4 +12,4 @@ NAGFORTRAN_FLAGS = -dusty -dcfuns
 FP_TOLERANCE=0.005
 
 include ../../Makefile.spec2000
-include $(PROC_SRC_ROOT)/Makefile.FORTRAN
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
