@@ -12,8 +12,8 @@ STDOUT_FILENAME = $(RUN_TYPE).out
 NAGFORTRAN_FLAGS = -kind=byte -dusty -I $(SPEC_BENCH_DIR)/src
 
 
-include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 CPPFLAGS += -DINT64='long long'
 
 FaceRec.c: FaceRecTypes.c gaborRoutines.c graphRoutines.c imageRoutines.c parameterRoutines.c

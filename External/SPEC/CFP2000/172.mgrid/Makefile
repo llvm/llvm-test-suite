@@ -8,5 +8,5 @@ FP_TOLERANCE=0.001
 STDIN_FILENAME  = mgrid.in
 STDOUT_FILENAME = mgrid.out
 
-include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN

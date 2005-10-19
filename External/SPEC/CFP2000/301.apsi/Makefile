@@ -9,5 +9,5 @@ FP_TOLERANCE=0.01
 STDOUT_FILENAME = apsi.out
 NAGFORTRAN_FLAGS = -dusty
 
-include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN

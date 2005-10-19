@@ -17,8 +17,8 @@ NAGFORTRAN_FLAGS = -fixed -kind=byte -dcfuns -dusty
 # -I $(SPEC_BENCH_DIR)/src
 
 
-include $(LEVEL)/Makefile.FORTRAN
 include ../../Makefile.spec2000
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 CPPFLAGS += -DINT64='long long'
 
 ab.c arhbt.c arhim.c bifg21.c bifgel.c          \
