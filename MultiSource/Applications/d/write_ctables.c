@@ -958,7 +958,7 @@ write_header_as_C(Grammar *g, char *base_pathname, char *tag) {
   if (g->write_header > 0 || (g->write_header < 0 && (tokens || states))) {
     strcpy(pathname, base_pathname);
     strcat(pathname, ".d_parser.h");
-    hfp = fopen(pathname, "w");
+    hfp = stdout; //fopen(pathname, "w");
     if (!hfp)
       d_fail("unable to open `%s` for write\n", pathname);
     fprintf(hfp, "#ifndef _%s_h\n", tag);
@@ -993,7 +993,7 @@ write_header_as_C(Grammar *g, char *base_pathname, char *tag) {
 		  g->productions.v[i]->name, g->productions.v[i]->state->index);
     }
     fprintf(hfp, "#endif\n");
-    fclose(hfp);
+    //fclose(hfp);
     return 1;
   }
   return 0;
@@ -1049,7 +1049,7 @@ write_parser_tables_as_C(Grammar *g, char *base_pathname, char *tag) {
 
   strcpy(pathname, base_pathname);
   strcat(pathname, ".d_parser.c");
-  fp = fopen(pathname, "w");
+  fp = stdout; //fopen(pathname, "w");
   if (!fp)
     d_fail("unable to open `%s` for write\n", pathname);
 
@@ -1094,7 +1094,7 @@ write_parser_tables_as_C(Grammar *g, char *base_pathname, char *tag) {
   else
     fprintf(fp, "0");
   fprintf(fp, "};\n");
-  fclose(fp);
+  //fclose(fp);
 }
 
 int
