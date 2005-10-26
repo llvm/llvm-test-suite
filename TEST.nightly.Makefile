@@ -117,9 +117,6 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	  printf "TEST-RESULT-jit-comptime: " >> $@;\
 	  grep "Total Execution Time" Output/$*.out-jit.info >> $@;\
 	  echo >> $@;\
-	  printf "TEST-RESULT-jit-machcode: " >> $@;\
-	  grep "bytes of machine code compiled" Output/$*.out-jit.info >> $@;\
-	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
 	fi

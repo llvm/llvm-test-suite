@@ -60,7 +60,6 @@ sub GCCLLC_BETARatio {
  ["LLC<br>compile" , "TEST-RESULT-llc: .*$WallTimeRE"],
  ["LLC-BETA<br>compile" , "TEST-RESULT-llc-beta: .*$WallTimeRE"],
  ["JIT<br>codegen" , "TEST-RESULT-jit-comptime: .*$WallTimeRE"],
- ["Machine<br>code", 'TEST-RESULT-jit-machcode: *([0-9]+).*bytes of machine code'],
  [],
  ["GCC"      , 'TEST-RESULT-nat-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["CBE"      , 'TEST-RESULT-cbe-time: program\s*([.0-9m:]+)', \&FormatTime],
