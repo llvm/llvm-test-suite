@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <stdlib.h>
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__APPLE__)
 #include <sys/time.h>
 #else
 #include <sys/timeb.h>
@@ -87,7 +87,7 @@ void HexxagonMoveList::sortList()
 
 int getTime()
 {
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__APPLE__)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
