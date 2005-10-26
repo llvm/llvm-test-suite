@@ -23,6 +23,7 @@
 #ifndef _BITBOARD64_H
 #define _BITBOARD64_H
 
+#include <sys/types.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdint.h>
