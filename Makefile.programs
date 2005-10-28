@@ -196,7 +196,7 @@ endif
 ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -enable-ia64-dag-isel
 endif
-1ifeq ($(ARCH),x86)
+ifeq ($(ARCH),x86)
 LLCBETAOPTION := -enable-x86-fastcc
 endif
 
