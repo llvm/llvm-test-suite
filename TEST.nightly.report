@@ -66,7 +66,7 @@ sub GCCLLC_BETARatio {
  ["LLC"      , 'TEST-RESULT-llc-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-BETA" , 'TEST-RESULT-llc-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: program\s*([.0-9m:]+)', \&FormatTime],
- ["GCC/CBE"  , \&GCCCBERatio],
- ["GCC/LLC"  , \&GCCLLCRatio],
- ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio]
+ ["GCC/<br>CBE"  , \&GCCCBERatio],
+ ["GCC/<br>LLC"  , \&GCCLLCRatio],
+ ["GCC/<br>LLC-BETA"  , \&GCCLLC_BETARatio]
 );
