@@ -18,6 +18,7 @@ endif
 
 ifeq ($(OS),SunOS)
 PARALLEL_DIRS := $(filter-out SPASS, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out hexxagon, $(PARALLEL_DIRS))
 endif
 
 include $(LEVEL)/Makefile.programs
