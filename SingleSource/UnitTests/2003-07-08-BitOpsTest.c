@@ -10,6 +10,7 @@ void test(int A, int B, int C, int D) {
   printf("%d %d %d %d %d\n", bxor, bor, band, bandnot, bornot);
 }
 
-void main() {
+int main() {
   test(7, 8, -5, 5);
+  return 0;
 }

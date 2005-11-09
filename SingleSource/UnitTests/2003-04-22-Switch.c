@@ -17,8 +17,9 @@ static int func(unsigned i) {
 }
 
 
-void main() {
+int main() {
   unsigned i;
   for (i = 0; i < 10; ++i)
     func(i);
+  return 0;
 }

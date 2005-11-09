@@ -13,10 +13,11 @@ List Node4 = {&Node3, 1};
 List Node5 = {&Node4, 0};
 
 
-void main() {
+int main() {
     List *PrevL, *CurL;
     for (PrevL = 0, CurL = &Node5; CurL; PrevL = CurL, CurL = CurL->Next) {
 	printf("%d %d\n", CurL->Data, PrevL ? PrevL->Data : -1);
     }
+    return 0;
 }
 

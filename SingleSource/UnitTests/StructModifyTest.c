@@ -13,7 +13,7 @@ void printS1(S1Ty *V) {
   printf("%d, %f, %f, %lld\n", V->w, V->x, V->y, V->z);
 }
 
-void main() {
+int main() {
   S2Ty E;
   E.A.w = 1;
   E.A.x = 123.42f;
@@ -26,5 +26,6 @@ void main() {
 
   printS1(&E.A);
   printS1(&E.B);
+  return 0;
 }
 
