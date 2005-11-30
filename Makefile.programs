@@ -190,8 +190,8 @@ ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -sched=simple
 endif
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION := -enable-alpha-intfpdiv
-# -enable-alpha-FTOI
+LLCBETAOPTION := -enable-dag-isel-for-alpha
+# -enable-alpha-FTOI -enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -enable-ia64-dag-isel 
