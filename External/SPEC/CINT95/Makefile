@@ -10,4 +10,12 @@ PARALLEL_DIRS := \
   147.vortex
 
 # Get the $(ARCH) setting
+include ${LEVEL}/Makefile.config
+
+ifeq ($(ARCH), Alpha)
+PARALLEL_DIRS := $(filter-out 134.perl, $(PARALLEL_DIRS))
+endif
+
+# Include the standard makefiles
 include ${LEVEL}/External/Makefile.external
+
