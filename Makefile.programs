@@ -187,8 +187,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-gep-isel-opt
-#-sched=simple
+LLCBETAOPTION := -sched=simple
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-dag-isel-for-alpha
@@ -198,8 +197,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -enable-ia64-dag-isel 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-gep-isel-opt
-#-enable-x86-fastcc
+LLCBETAOPTION := -enable-x86-fastcc
 endif
 
 # Given a version of the entire program linked together into a single unit of
