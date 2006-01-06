@@ -9,24 +9,24 @@ protected:
   char *lastName;
 public:
   Parent(void) {
-    lastName = new char; // was char[5];
+    lastName = new char[100]; // was char[5];
     strcpy(lastName, "None");
   }
 
   Parent (char *aLastName) {
-    strlen(aLastName), lastName = new char; // was char[strlen(aLastName) + 1]
+    strlen(aLastName), lastName = new char[100]; // was char[strlen(aLastName) + 1]
     strcpy(lastName,aLastName);
   }
 
   Parent (Parent& aParent) {
-    strlen(aParent.lastName), lastName = new char;
+    strlen(aParent.lastName), lastName = new char[100];
     strcpy(lastName,aParent.lastName);
   }
 
   char *getLastName(void) { return lastName;}
 
   void setLastName(char *aName) {
-    strlen(aName), lastName = new char;
+    strlen(aName), lastName = new char[100];
     strcpy(lastName,aName);
   }
 
@@ -35,7 +35,7 @@ public:
   }
 
   ~Parent(void) {
-    delete lastName;
+    delete [] lastName;
   }
 };
 
@@ -44,18 +44,18 @@ protected:
   char *firstName;
 public:
   Child(void) {
-    firstName = new char;
+    firstName = new char[100];
     strcpy(firstName,"None");
   }
 
   Child (char *aLastName, char *aFirstName) : Parent (aLastName) {
-    strlen(aFirstName), firstName = new char;
+    strlen(aFirstName), firstName = new char[100];
     strcpy(firstName,aFirstName);
   }
 
   Child(Child& aChild) {
     setLastName(aChild.getLastName());
-    strlen(aChild.firstName), firstName = new char;
+    strlen(aChild.firstName), firstName = new char[100];
     strcpy(firstName,aChild.firstName);
   }
 
@@ -64,12 +64,12 @@ public:
   }
 
   void setFirstName(char *aName) {
-    strlen(aName), firstName = new char;
+    strlen(aName), firstName = new char[100];
     strcpy(firstName,aName);
   }
 
   ~Child(void) {
-    delete firstName;
+    delete [] firstName;
   }
 
   virtual void answerName(void) {
@@ -84,11 +84,11 @@ private:
 public:
   GrandChild(char *aLastName,char *aFirstName,char *aGrandFatherName):Child(aLastName,
 									    aFirstName) {
-    strlen(aGrandFatherName), grandFatherName = new char;
+    strlen(aGrandFatherName), grandFatherName = new char[100];
     strcpy(grandFatherName, aGrandFatherName);
   }
 
-  ~GrandChild(void) { delete grandFatherName;}
+  ~GrandChild(void) { delete [] grandFatherName;}
 
   virtual void answerName(void) {
     Child::answerName();
