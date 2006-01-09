@@ -11,7 +11,10 @@ ifeq ($(ARCH), Sparc)
 PARALLEL_DIRS := $(filter-out bison, $(PARALLEL_DIRS))
 endif
 
-
+# Disable until disk space eating bug can be fixed
+ifeq ($(ARCH), Alpha)
+PARALLEL_DIRS := $(filter-out bison, $(PARALLEL_DIRS))
+endif
 
 
 include $(LEVEL)/Makefile.programs
