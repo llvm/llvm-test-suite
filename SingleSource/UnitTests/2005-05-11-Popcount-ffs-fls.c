@@ -24,6 +24,12 @@ int nlz10b(unsigned x) {
    return table[x >> 26];
 }
 
+int nlzll(unsigned long long x) {
+  if ((x >> 32) == 0)
+    return nlz10b(x)+32;
+  return nlz10b(x>>32);
+}
+
 int pop(unsigned x) {
    x = x - ((x >> 1) & 0x55555555);
    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
@@ -31,6 +37,10 @@ int pop(unsigned x) {
    x = x + (x << 8);
    x = x + (x << 16);
    return x >> 24;
+}
+
+int popll(unsigned long long x) {
+  return pop(x) + pop(x >> 32);
 }
 
 int ntz8(unsigned x) {
@@ -44,6 +54,17 @@ int ntz8(unsigned x) {
    x = (x & -x)*0x0450FBAF;
    return table[x >> 26];
 }
+
+/* Work with non-gcc compilers and GCC before 4.0 */
+#if !defined(__GNUC__) || __GNUC__ < 4
+#define __builtin_clz nlz10b
+#define __builtin_popcount pop
+#define __builtin_ctz ntz8
+#define __builtin_clzll nlzll
+#define __builtin_popcountll popll
+#define __builtin_ffsl __builtin_ffs
+#define ffsl ffs
+#endif
 
 int i;
 int main(void) {
@@ -66,7 +87,7 @@ int main(void) {
     printf("LLVM: n: %lld, clz(n): %d, popcount(n): %d, ctz(n): %d\n",
 	l, __builtin_clzll(l), __builtin_popcountll(l), __builtin_ctz(l));
     printf("REF LO BITS : n: %lld, clz(n): %d, popcount(n): %d, ctz(n): %d\n",
-	l, nlz10b(l), pop(l), ntz8(l));
+	l, nlzll(l), popll(l), ntz8(l));
     printf("  ***  \n");
     l++;
   }
