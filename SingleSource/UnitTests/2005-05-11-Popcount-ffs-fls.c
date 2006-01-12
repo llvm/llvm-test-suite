@@ -2,6 +2,7 @@
  * http://www.hackersdelight.org/HDcode/nlz.cc and
  * http://www.hackersdelight.org/HDcode/ntz.cc
  */
+#include <stdio.h>
 
 #define u 99
 
@@ -93,11 +94,11 @@ int main(void) {
   }
 
   // Check some boundary and other cases  for FFS call
-  printf("FFS: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, i:%d, l:%d\n",
-      ffs(0), ffs(1), ffs(2), ffs(7), ffs(1024), ffs(i), ffsl(l));
-  printf("__builtin_ffs: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, i:%d l:%d\n",
+  printf("FFS: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, 1234:%d i:%d, l:%d\n",
+      ffs(0), ffs(1), ffs(2), ffs(7), ffs(1024), ffs(1234), ffs(i), ffsl(l));
+  printf("__builtin_ffs: 0:%d, 1:%d, 2:%d, 7:%d, 1024:%d, 1234:%d i:%d l:%d\n",
       __builtin_ffs(0), __builtin_ffs(1), __builtin_ffs(2), __builtin_ffs(7),
-      __builtin_ffs(1024), __builtin_ffs(i), __builtin_ffsl(l)); 
+      __builtin_ffs(1024), __builtin_ffs(1234), __builtin_ffs(i), __builtin_ffsl(l)); 
 
   return(0);
 }
