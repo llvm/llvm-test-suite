@@ -22,6 +22,9 @@ endif
 ifeq ($(ARCH),PowerPC)
    CPPFLAGS += -DLINUX_PPC32
 endif
+ifeq ($(ARCH),Sparc)
+   CPPFLAGS += -DSUN_BSD
+endif
 
 include ../../Makefile.spec2000
 
