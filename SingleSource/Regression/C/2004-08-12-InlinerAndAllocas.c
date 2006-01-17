@@ -1,5 +1,6 @@
 // A compiler cannot inline Callee into main unless it is prepared to reclaim
 // the stack memory allocated in it.
+// XFAIL: *
 
 #ifdef __FreeBSD__
 #include <stdlib.h>
