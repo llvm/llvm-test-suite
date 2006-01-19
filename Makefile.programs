@@ -194,7 +194,7 @@ LLCBETAOPTION := -disable-alpha-dag-isel
 # -enable-alpha-FTOI -enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),IA64)
-LLCBETAOPTION := -enable-ia64-dag-isel 
+LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
 LLCBETAOPTION := -enable-x86-dag-isel
