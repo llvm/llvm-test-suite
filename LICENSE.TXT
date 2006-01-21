@@ -75,6 +75,7 @@ kimwitu++:          llvm-test/MultiSource/Applications/kimwitu++
 obsequi:            llvm-test/MultiSource/Applications/obsequi
 Hexxagon:           llvm-test/MultiSource/Applications/hexxagon
 SPASS:              llvm-test/MultiSource/Applications/SPASS
+oggenc:             llvm-test/MultiSource/Applications/oggenc
 smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
 Fhourstones:        llvm-test/MultiSource/Benchmarks/Fhourstones
 McCat:              llvm-test/MultiSource/Benchmarks/McCat
