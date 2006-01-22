@@ -5331,7 +5331,9 @@ extern void _analysis_output(char *base,int i,float *v,int n,int bark,int dB,
 #  define max(x,y)  ((x)<(y)?(y):(x))
 #endif
 
-#if defined(__i386__) && defined(__GNUC__) && !defined(__BEOS__)
+#if 0
+/* XXX - no inline asm! */
+
 #  define VORBIS_FPU_CONTROL
 /* both GCC and MSVC are kinda stupid about rounding/casting to int.
    Because of encapsulation constraints (GCC can't see inside the asm
