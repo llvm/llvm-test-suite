@@ -1,4 +1,5 @@
 #include <stdio.h>
+// PR269, PR285
 
 // Test that static initializers for things with bitfields work.
 
@@ -80,6 +81,19 @@ struct S11 {
   int B;
 } s11 = { 1, 3};
 
+struct S12 {   // PR269
+  unsigned long long A: 33;
+  unsigned long long B: 40;
+  unsigned long long C: 41;
+} s12 = { 0x1FFFFFFFFULL, 0, 1000000 };
+
+struct S13 {   // PR285
+  unsigned A:1;
+  char B[4096 +1];
+  int C;
+} s13 = { 1, "hello S13 world", 12314 };
+
+
 int main() {
   printf("s0 = %d, %d, %d\n", s0.A, s0.B, s0.C);
   printf("s1 = %f, %d, %d, %d\n", s1.F, s1.A, s1.B, (int)s1.C);
@@ -94,4 +108,7 @@ int main() {
   printf("s9 = %d, %d, %d\n", s9.A, s9.B, (int)s9.C);
   printf("s10 = %d, %d, %d, %d\n", s10.D, s10.D2, s10.D3, s10.B);
   printf("s11 = %d, %d\n", s11.D, s11.B);
+  printf("s12 = %lld, %lld, %lld\n", (long long) s12.A, (long long) s12.B,
+         (long long)s12.C);
+  printf("s13 = %d, %s, %d\n", s13.A, s13.B, s13.C);
 }
