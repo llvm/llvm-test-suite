@@ -9,6 +9,8 @@ CPPFLAGS = -include errno.h -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLI
 
 include $(LEVEL)/Makefile.config
 
+CFLAGS += -fno-exceptions
+
 ifeq ($(ARCH),PowerPC)
  CPPFLAGS += -DFMAX_IS_DOUBLE
 endif
