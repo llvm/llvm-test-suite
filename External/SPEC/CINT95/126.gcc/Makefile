@@ -10,5 +10,10 @@ STDIN_FILENAME = amptjp.i
 STDOUT_FILENAME = amptjp.s
 endif
 
-include ../../Makefile.spec95
+include ${LEVEL}/Makefile.config
 
+ifeq ($(ARCH),Alpha)
+CPPFLAGS += -DHOST_BITS_PER_WIDE_INT=64 -DHOST_WIDE_INT=long 
+endif
+
+include ../../Makefile.spec95
