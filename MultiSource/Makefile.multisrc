@@ -69,4 +69,4 @@ Output/%.LOC.txt: $(Source)
 endif
 
 Output/%.native: $(NObjects)
-	-$(CC) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
+	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
