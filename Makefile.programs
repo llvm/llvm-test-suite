@@ -295,6 +295,10 @@ Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
 ifeq ($(ARCH),PowerPC)
 LLCASSEMBLERFLAGS = -force_cpusubtype_ALL
 endif
+# On sparc, pass -mcpu=v9 to allow all V9 instructions, even in 32-bit mode.
+ifeq ($(ARCH),Sparc)
+LLCASSEMBLERFLAGS = -mcpu=v9
+endif
 
 # Assemble (and link) an LLVM-linked program using the system assembler...
 #
