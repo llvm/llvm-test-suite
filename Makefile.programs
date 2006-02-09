@@ -200,7 +200,7 @@ ifeq ($(ARCH),x86)
 LLCBETAOPTION := -enable-x86-sse
 endif
 ifeq ($(ARCH),Sparc)
-LLCBETAOPTION := -enable-sparc-lsr
+LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 
 # Given a version of the entire program linked together into a single unit of
