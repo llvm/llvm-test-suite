@@ -3,7 +3,7 @@
 
 int tests[] = {
   0x80000000,
-  -123456789,
+  -123456792,
   -10,
   -2,
   -1,
@@ -11,8 +11,8 @@ int tests[] = {
   1,
   2,
   10,
-  123456789,
-  0x7FFFFFFF
+  123456792,
+  0x7FFFFF80
 };
 
 int main() {
@@ -34,10 +34,10 @@ int main() {
   }
   // edge case tests
   for (i = 0; i < (sizeof(tests) / sizeof(int)); i++) {
-    printf("%d %f %f %f %f\n", i,
+    printf("%d %f %f %f\n", i,
                                (double)(unsigned)tests[i],
                                (double)(  signed)tests[i],
-                               (float) (unsigned)tests[i],
+                               (float)           tests[i],
                                (float) (  signed)tests[i]);
   }
 }
