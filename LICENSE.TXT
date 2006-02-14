@@ -79,6 +79,7 @@ oggenc:             llvm-test/MultiSource/Applications/oggenc
 JM:                 llvm-test/MultiSource/Applications/JM
 smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
 Fhourstones:        llvm-test/MultiSource/Benchmarks/Fhourstones
+Fhourstones-3.1:    llvm-test/MultiSource/Benchmarks/Fhourstones-3.1
 McCat:              llvm-test/MultiSource/Benchmarks/McCat
 Olden:              llvm-test/MultiSource/Benchmarks/Olden
 OptimizerEval:      llvm-test/MultiSource/Benchmarks/OptimizerEval
