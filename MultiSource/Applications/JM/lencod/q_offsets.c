@@ -14,7 +14,7 @@
 #include "global.h"
 #include "memalloc.h"
 
-extern char *GetConfigFileContent (char *Filename, int error_type);
+extern char *GetConfigFileContent (char *Filename);
 
 #define MAX_ITEMS_TO_PARSE  1000
 
@@ -339,7 +339,7 @@ void Init_QOffsetMatrix ()
   {
     printf ("Parsing Quantization Offset Matrix file %s ",
       input->QOffsetMatrixFile);
-    content = GetConfigFileContent (input->QOffsetMatrixFile, 0);
+    content = GetConfigFileContent (input->QOffsetMatrixFile);
     if (content != '\0')
       ParseQOffsetMatrix (content, strlen (content));
     else

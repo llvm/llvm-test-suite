@@ -14,7 +14,7 @@
 #include "global.h"
 #include "memalloc.h"
 
-extern char *GetConfigFileContent (char *Filename, int error_type);
+extern char *GetConfigFileContent (char *Filename);
 
 #define MAX_ITEMS_TO_PARSE  1000
 
@@ -402,7 +402,7 @@ void Init_QMatrix (void)
   if(input->ScalingMatrixPresentFlag)
   {
     printf ("Parsing QMatrix file %s ", input->QmatrixFile);
-    content = GetConfigFileContent(input->QmatrixFile, 0);
+    content = GetConfigFileContent(input->QmatrixFile);
     if(content!='\0')
       ParseMatrix(content, strlen (content));
     else
