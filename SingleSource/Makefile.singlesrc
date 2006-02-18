@@ -35,6 +35,6 @@ endif
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: $(SourceDir)/%.c Output/.dir
-	-$(CC) $(CFLAGS) -O2 $< -lm -o $@ $(LDFLAGS)
+	-$(CC) $(CFLAGS) -O2 $(TARGET_CFLAGS) $< -lm -o $@ $(LDFLAGS)
 Output/%.native: $(SourceDir)/%.cpp Output/.dir
-	-$(CXX) $(CXXFLAGS) -O2 $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) $< -lm -o $@ $(LDFLAGS)
