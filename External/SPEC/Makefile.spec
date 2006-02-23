@@ -31,9 +31,9 @@ endif
 PROG := $(BENCH_NAME)
 ifndef Source
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c \
-          $(SPEC_BENCH_DIR)/src/*.cc) \
-          $(SPEC_BENCH_DIR)/src/*.cpp) \
-          $(SPEC_BENCH_DIR)/src/*.f)
+                     $(SPEC_BENCH_DIR)/src/*.cc \
+                     $(SPEC_BENCH_DIR)/src/*.cpp \
+                     $(SPEC_BENCH_DIR)/src/*.f)
 endif
 
 # Disable the default Output/%.out-* targets...
