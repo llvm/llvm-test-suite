@@ -33,7 +33,9 @@ ifndef Source
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c \
                      $(SPEC_BENCH_DIR)/src/*.cc \
                      $(SPEC_BENCH_DIR)/src/*.cpp \
-                     $(SPEC_BENCH_DIR)/src/*.f)
+                     $(SPEC_BENCH_DIR)/src/*.f \
+                     $(SPEC_BENCH_DIR)/src/*.f90 \
+                     $(SPEC_BENCH_DIR)/src/*.F90)
 endif
 
 # Disable the default Output/%.out-* targets...
