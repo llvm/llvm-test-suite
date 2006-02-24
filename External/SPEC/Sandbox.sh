@@ -25,7 +25,7 @@ cp -r $INPUT_DIR/* .
 cp -r $INPUT_DIR/../../all/input/* . > /dev/null 2>&1 
 
 # If any of the input files is a .bz2 file, uncompress it now.
-bunzip2 *.bz2
+bunzip2 *.bz2 > /dev/null 2>&1
 
 # Run the program now.
 echo Running: $*
