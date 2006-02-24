@@ -30,7 +30,9 @@ endif
 .PRECIOUS: %.c
 
 clean::
-	rm -f $(Source:%.f=%.c)
+	rm -f $(patsubst %.f,%.c, $(filter %.f,$(Source))) \
+	      $(patsubst %.f90,%.c, $(filter %.f90,$(Source))) \
+	      $(patsubst %.F90,%.c, $(filter %.F90,$(Source)))
 
 %.c: %.f
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
