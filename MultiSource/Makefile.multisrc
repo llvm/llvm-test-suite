@@ -31,6 +31,9 @@ NObjects := $(addprefix Output/,$(NObjs))
 Output/%.o: %.c Output/.dir
 	-$(CC) $(CPPFLAGS) $(CFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
 
+Output/%.o: %.C Output/.dir
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
+
 Output/%.o: %.cpp Output/.dir
 	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
 

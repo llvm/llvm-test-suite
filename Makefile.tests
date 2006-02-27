@@ -60,6 +60,10 @@ Output/%.ll: %.cpp $(LCC1XX) Output/.dir $(INCLUDES)
 Output/%.ll: %.cc $(LCC1XX) Output/.dir $(INCLUDES)
 	-$(LLVMGXX) $(CPPFLAGS) $(LCXXFLAGS) -S $< -o $@ -emit-llvm
 
+# Compile from X.C to Output/X.ll
+Output/%.ll: %.C $(LCC1XX) Output/.dir $(INCLUDES)
+	-$(LLVMGXX) $(CPPFLAGS) $(LCXXFLAGS) -S $< -o $@ -emit-llvm
+
 # LLVM Assemble from Output/X.ll to Output/X.bc.  Output/X.ll must have come
 # from GCC output, so use GCCAS.
 #
