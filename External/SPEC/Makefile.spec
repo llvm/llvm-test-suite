@@ -18,11 +18,19 @@ LDFLAGS += -lm
 #
 CURRENT_DIR := $(shell cd .; pwd)
 BENCH_NAME  := $(subst $(shell cd ..   ; pwd),,$(CURRENT_DIR))
-SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
 
 # Remove any leading /'s from the paths
 BENCH_NAME  := $(patsubst /%,%,$(BENCH_NAME))
+
+## SPEC_SUITEDIR - Allow SPEC configuration files to override "CINT2000" with
+## something else.
+
+ifndef SPEC_SUITEDIR
+SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
 SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
+else
+SPEC_SUBDIR := $(SPEC_SUITEDIR)/$(BENCH_NAME)
+endif
 
 ifndef SPEC_BENCH_DIR
 SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
@@ -31,9 +39,11 @@ endif
 PROG := $(BENCH_NAME)
 ifndef Source
 Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c \
+					 $(SPEC_BENCH_DIR)/src/*.C \
                      $(SPEC_BENCH_DIR)/src/*.cc \
                      $(SPEC_BENCH_DIR)/src/*.cpp \
                      $(SPEC_BENCH_DIR)/src/*.f \
+                     $(SPEC_BENCH_DIR)/src/*.F \
                      $(SPEC_BENCH_DIR)/src/*.f90 \
                      $(SPEC_BENCH_DIR)/src/*.F90)
 endif
