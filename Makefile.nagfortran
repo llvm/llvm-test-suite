@@ -31,15 +31,21 @@ endif
 
 clean::
 	rm -f $(patsubst %.f,%.c, $(filter %.f,$(Source))) \
+	      $(patsubst %.F,%.c, $(filter %.F,$(Source))) \
 	      $(patsubst %.f90,%.c, $(filter %.f90,$(Source))) \
 	      $(patsubst %.F90,%.c, $(filter %.F90,$(Source)))
 
 %.c: %.f
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
 
+%.f: %.F
+	$(CPP) -x c $< -o - $(CPPFLAGS) -traditional-cpp | $(SED) '/^# /d' > $@
+
 %.c: %.f90
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
 
+%.f90: %.F90
+	$(CPP) -x c $< -o - $(CPPFLAGS) -traditional-cpp | $(SED) '/^# /d' > $@
 
-CPPFLAGS = -I$(F95_DIR)/lib/NAGWare 
+CPPFLAGS += -I$(F95_DIR)/lib/NAGWare 
 LDFLAGS += $(F95_DIR)/lib/NAGWare/quickfit.o -Xlinker -flat_namespace $(F95_DIR)/lib/NAGWare/libf97.dylib $(F95_DIR)/lib/NAGWare/libf96.a
