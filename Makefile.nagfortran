@@ -39,13 +39,13 @@ clean::
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
 
 %.f: %.F
-	$(CPP) -x c $< -o - $(CPPFLAGS) -traditional-cpp | $(SED) '/^# /d' > $@
+	$(LEVEL)/filepp $< -o $@ -M $(SPEC_BENCH_DIR)/src/ $(FPPFLAGS)
 
 %.c: %.f90
 	$(F95) -w -S -O2 $< -o $@ $(NAGFORTRAN_FLAGS)
 
 %.f90: %.F90
-	$(CPP) -x c $< -o - $(CPPFLAGS) -traditional-cpp | $(SED) '/^# /d' > $@
+	$(LEVEL)/filepp $< -o $@ -M $(SPEC_BENCH_DIR)/src/ $(FPPFLAGS)
 
 CPPFLAGS += -I$(F95_DIR)/lib/NAGWare 
 LDFLAGS += $(F95_DIR)/lib/NAGWare/quickfit.o -Xlinker -flat_namespace $(F95_DIR)/lib/NAGWare/libf97.dylib $(F95_DIR)/lib/NAGWare/libf96.a
