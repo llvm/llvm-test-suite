@@ -147,7 +147,7 @@
  */
 
 typedef unsigned long Quad;             /* for building our bit mask */
-#define MASK_BITS 32                    /* number of bits in a Quad */
+#define MASK_BITS (sizeof(Quad)*8)                    /* number of bits in a Quad */
 
 #define MAX_QUADS 2                     /* controls largest phrase */
 
