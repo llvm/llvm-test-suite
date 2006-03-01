@@ -87,7 +87,9 @@ DimensionChannel(void)
     net = 0;
     do {
 	line++;
-	stat = fscanf(channelFP, "%u%u%u", &col, &bot, &top);
+	unsigned int c1, b1, t1;
+	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
+	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
 		/*
@@ -203,7 +205,9 @@ DescribeChannel(void)
     line = 0;
     do {
 	line++;
-	stat = fscanf(channelFP, "%u%u%u", &col, &bot, &top);
+	unsigned int c1, b1, t1;
+	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
+	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
 		/*
