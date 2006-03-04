@@ -1,5 +1,6 @@
 LEVEL = ../..
-PARALLEL_DIRS=Dhrystone Shootout Shootout-C++ Stanford McGill Misc Misc-C++ 
+PARALLEL_DIRS=Dhrystone CoyoteBench Shootout Shootout-C++ Stanford McGill \
+              Misc Misc-C++ 
 LDFLAGS += -lm
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
