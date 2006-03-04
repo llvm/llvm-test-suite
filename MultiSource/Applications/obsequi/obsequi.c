@@ -34,6 +34,12 @@
 #include "cppflags.h"
 #include "interface.h"
 
+// LLVM: define our own getline for portability
+#define getline getline_llvm
+
+ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+  return getstr (lineptr, n, stream, '\n', 0, 0);
+}
 
 //########################################################
 // Function templates.
@@ -172,7 +178,6 @@ get_solve_command()
   char   c1, c2;
 
   s32bit r, c;
-    
   while( (len = getline(&line, &line_size, stdin)) != -1){
     s32bit t;
     
