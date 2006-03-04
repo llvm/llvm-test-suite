@@ -7,13 +7,8 @@
 #define _GNU_SOURCE  //Need this so that __USE_GNU is defined
 #endif
 
-#include <features.h>
-
 #include <stdlib.h>
 #include <stdio.h>
-#if !defined(__FreeBSD__)
-#  include <malloc.h>
-#endif
 #include <string.h>
 
 

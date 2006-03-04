@@ -102,6 +102,7 @@ Asprintf(char **str, s32bit *len, s32bit offset, const char *format, ... )
 // This function stores the string created from FORMAT and the
 //   following args to the end of the string STR.
 //========================================================
+#if 0
 extern s32bit
 asprintf_my(char **str, s32bit offset, const char *format, ... )
 {
@@ -127,6 +128,7 @@ asprintf_my(char **str, s32bit offset, const char *format, ... )
   va_end (ap);
   return nchars;
 }
+#endif
 
 
 //########################################################
