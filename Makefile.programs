@@ -204,7 +204,7 @@ LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 
 ifeq ($(OS),Darwin)
-TARGET_CFLAGS := -mdynamic-no-pic
+TARGET_CFLAGS := -mdynamic-no-pic -fomit-frame-pointer
 endif
 
 # Given a version of the entire program linked together into a single unit of
