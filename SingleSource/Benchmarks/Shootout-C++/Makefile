@@ -1,7 +1,7 @@
 LEVEL = ../../..
 CXXFLAGS += -Wno-deprecated
 CPPFLAGS += -Wno-deprecated
-LDFLAGS += -lm
+LDFLAGS += -lm -lstdc++
 LIBS += -lstdc++
 REQUIRES_EH_SUPPORT=1
 FP_TOLERANCE = 0.00000001
