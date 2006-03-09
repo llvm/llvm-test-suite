@@ -187,7 +187,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -sched=list-td
+LLCBETAOPTION := -use-sched-latencies
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -enable-alpha-lsmark
