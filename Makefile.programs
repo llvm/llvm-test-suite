@@ -190,7 +190,7 @@ ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -use-sched-latencies
 endif
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION := -enable-alpha-lsmark
+LLCBETAOPTION :=  -sched=list-td -use-sched-latencies
 # -enable-alpha-FTOI -enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),IA64)
