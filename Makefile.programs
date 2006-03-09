@@ -187,10 +187,10 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -use-sched-latencies
+LLCBETAOPTION := -sched=list-td
 endif
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION :=  -sched=list-td -use-sched-latencies
+LLCBETAOPTION := -sched=list-td 
 # -enable-alpha-FTOI -enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),IA64)
