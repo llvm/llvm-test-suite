@@ -1,5 +1,5 @@
 /*
- * LLVM - http://llvm.cs.uiuc.edu
+ * LLVM - http://llvm.org/
  *
  * Changes:
  *  1) 2/18/2004
