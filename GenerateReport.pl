@@ -96,6 +96,11 @@ my $ReportFN = $ARGV[0];
 open(REPORTDESC, $ReportFN) or
   die "Couldn't open report description '$ReportFN'!";
 
+# HilightColumns - Filled in by the report if desired in HTML mode.  This
+# contains a column number if the HTML version of the output should highlight a
+# cell in green/red if it is gt/lt 1.0 by a significant margin.
+my %HilightColumns;
+
 my @LatexColumns;  # Filled in by report if it supports Latex mode
 my %LatexColumnFormat;  # Filled in by report if supports latex mode
 my @Graphs;        # Filled in by the report if supports graph mode
@@ -201,27 +206,47 @@ for $Row (@Fields) {
 if ($HTML) {
   sub printCell {
     my $Str = shift;
+    my $ColNo = shift;
+    my $IsWhite = shift;
+    my $Attrs = "";
     if ($Str eq '|') {
-      print "<td bgcolor='black' width='1'></td>";
+      $Attrs = " bgcolor='black' width='1'";
+      $Str = "";
     } else {
-      #print "<td><table border='0' cellspacing='0' cellpadding='3'><tr><td>$Str</td></tr></table></td>\n";
-      print "<td>$Str</td>\n";
-    }; "";
-  }
-  sub printLine {
-#    print "<td bgcolor='" . ($_[0] ? "#DDDDDD" : "#AAAAAA") . "' width=1>\n";
+      # If  the user requested that we highlight this column, check to see what
+      # number it is.  If it is > 1.05, we color it green, < 0.95 we use red.
+      # If it's not a number, ignore it.
+      if ($HilightColumns{$ColNo}) {
+        if ($Str =~ m/^([0-9]+).?[0-9.]*$/) {
+          if ($Str <= 0.85) {
+            $Attrs = " bgcolor='#FF7070'";
+          } elsif ($Str <= 0.95) {
+            $Attrs = " bgcolor='#FFAAAA'";
+          } elsif ($Str >= 1.15) {
+            $Attrs = " bgcolor='#80FF80'";
+          } elsif ($Str >= 1.05) {
+            $Attrs = " bgcolor='#CCFFCC'";
+          }
+        }
+
+        if (!$IsWhite && $Attrs eq "") {
+          # If it's not already white, make it white now.
+          $Attrs = " bgcolor=white";
+        }
+      }
+    };
+    print "<td$Attrs>$Str</td>";
+    "";
   }
 
   print "<table border='0' cellspacing='0' cellpadding='0'>\n";
   print "<tr bgcolor=#FFCC99>\n";
   map {
-    #print "<td bgcolor='#DDAA77' width='1'></td>";
     $_ = "<center><b><a href=\"#$_\">$_</a></b></center>"
-      if $_ ne "|"; printCell $_
+      if $_ ne "|";
+    printCell($_, -1)
   } @Header;
-  #print "<td bgcolor='#DDAA77' width='1'></td>";
   print "\n</tr><tr bgcolor='black' height=1>";
-  #print "<td height=1></td>" x (2*@Header+1);
   print "</tr>\n";
   my $RowCount = 0;
   foreach $Row (@Values) {
@@ -229,8 +254,8 @@ if ($HTML) {
     $IsWhite = ++$RowCount <= 2;
     print "<tr bgcolor='" . ($IsWhite ? "white" : "#CCCCCC") . "'>\n";
     $RowCount = 0 if ($RowCount > 3);
-    map { printLine($IsWhite); printCell $_ } @$Row;
-    printLine($IsWhite);
+    my $ColCount = 0;
+    map { printCell($_, $ColCount++, $IsWhite); } @$Row;
     print "\n</tr>\n";
   }
   print "\n</table>\n";
