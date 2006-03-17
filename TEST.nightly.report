@@ -22,8 +22,8 @@ sub FormatTime {
 
 sub GCCCBERatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-5];
-  my $CBE = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-6];
+  my $CBE = $Cols->[$Col-5];
   return "n/a" if ($GCC eq "*" or $CBE eq "*");
   return sprintf("%3.2f", $GCC/$CBE) if ($GCC >= 0.1 and $CBE >= 0.1);
   return "-";
@@ -31,8 +31,8 @@ sub GCCCBERatio {
 
 sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-6];
-  my $LLC = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-7];
+  my $LLC = $Cols->[$Col-5];
   return "n/a" if ($GCC eq "*" or $LLC eq "*");
   return sprintf("%3.2f", $GCC/$LLC) if ($GCC >= 0.1 and $LLC >= 0.1);
   return "-";
@@ -40,12 +40,27 @@ sub GCCLLCRatio {
 
 sub GCCLLC_BETARatio {
   my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-7];
-  my $LLC_BETA = $Cols->[$Col-4];
+  my $GCC = $Cols->[$Col-8];
+  my $LLC_BETA = $Cols->[$Col-5];
   return "n/a" if ($GCC eq "*" or $LLC_BETA eq "*");
   return sprintf("%3.2f", $GCC/$LLC_BETA) if ($GCC >= 0.1 and $LLC_BETA >= 0.1);
   return "-";
 }
+
+sub LLCLLC_BETARatio {   # LLC/LLC-BETA
+  my ($Cols, $Col) = @_;
+  my $LLC = $Cols->[$Col-7];
+  my $LLC_BETA = $Cols->[$Col-6];
+  return "n/a" if ($LLC eq "*" or $LLC_BETA eq "*");
+  return sprintf("%3.2f", $LLC/$LLC_BETA) if ($LLC >= 0.1 and $LLC_BETA >= 0.1);
+  return "-";
+}
+
+# highlight the RATIO columns with green/red.
+$HilightColumns{14} = 1;
+$HilightColumns{15} = 1;
+$HilightColumns{16} = 1;
+$HilightColumns{17} = 1;
 
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
@@ -66,7 +81,9 @@ sub GCCLLC_BETARatio {
  ["LLC"      , 'TEST-RESULT-llc-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-BETA" , 'TEST-RESULT-llc-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: program\s*([.0-9m:]+)', \&FormatTime],
+ [],
  ["GCC/<br>CBE"  , \&GCCCBERatio],
  ["GCC/<br>LLC"  , \&GCCLLCRatio],
- ["GCC/<br>LLC-BETA"  , \&GCCLLC_BETARatio]
+ ["GCC/<br>LLC-BETA"  , \&GCCLLC_BETARatio],
+ ["LLC/<br>LLC-BETA"  , \&LLCLLC_BETARatio]
 );
