@@ -1,6 +1,6 @@
 # SingleSource/UnitTests/Makefile
 
-DIRS = SetjmpLongjmp
+DIRS = Vector SetjmpLongjmp
 LEVEL = ../..
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
