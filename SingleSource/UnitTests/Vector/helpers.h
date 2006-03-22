@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 typedef float v4sf __attribute__ ((__vector_size__ (16)));
 
 typedef union {
