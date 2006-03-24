@@ -1,2 +1,6 @@
 Output
 gram.output
+gram.cpp
+gram.h
+y.tab.c
+y.tab.h
