@@ -1,7 +1,14 @@
 # SingleSource/UnitTests/Vector/Makefile
+LEVEL = ../../..
+
+include $(LEVEL)/Makefile.config
 
 DIRS = 
-LEVEL = ../../..
+
+ifeq ($(ARCH),PowerPC)
+DIRS += Altivec
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 
