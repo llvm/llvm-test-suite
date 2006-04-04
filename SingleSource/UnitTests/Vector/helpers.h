@@ -7,6 +7,18 @@ typedef double v2sd __attribute__ ((__vector_size__ (16)));
 typedef float  v8sf __attribute__ ((__vector_size__ (32)));
 typedef double v8sd __attribute__ ((__vector_size__ (64)));
 
+typedef int    v2i64 __attribute__ ((__vector_size__ (16)));
+typedef int    v4i32 __attribute__ ((__vector_size__ (16)));
+typedef short  v8i16 __attribute__ ((__vector_size__ (16)));
+typedef char   v16i8 __attribute__ ((__vector_size__ (16)));
+typedef float  v4f32 __attribute__ ((__vector_size__ (16)));
+typedef double v2f64 __attribute__ ((__vector_size__ (16)));
+
+typedef union {
+  v4i32 V;
+  int A[4];
+} IV;
+
 typedef union {
   v4sf V;
   float A[4];
@@ -21,6 +33,10 @@ typedef union {
   v8sd V;
   double A[8];
 } D8V;
+
+static void printIV(IV *F) {
+	printf("%u %u %u %u\n", F->A[0], F->A[1], F->A[2], F->A[3]);
+}
 
 static void printFV(FV *F) {
 	printf("%f %f %f %f\n", F->A[0], F->A[1], F->A[2], F->A[3]);
