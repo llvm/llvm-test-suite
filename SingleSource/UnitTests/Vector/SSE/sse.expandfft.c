@@ -3,7 +3,7 @@
 #include <time.h>
 #include <float.h>
 #include "xmmintrin.h"
-#define N 256
+#define N 1024
 #define N2 N/2
 main()
 {
@@ -65,8 +65,8 @@ main()
       printf(" for n=%d, fwd/bck error=%e\n",N,error);
       first = 0;
    } else {
-       unsigned j = 0;
-      for(it=0;it<1000;it++){
+      unsigned j = 0;
+      for(it=0;it<20000;it++){
          sign = +1.0;
          cfft2(n,x,y,w,sign);
          sign = -1.0;
