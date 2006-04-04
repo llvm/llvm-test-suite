@@ -62,18 +62,12 @@ main()
       printf(" for n=%d, fwd/bck error=%e\n",N,error);
       first = 0;
    } else {
-      t1   = ((float)clock())/((float) CLOCKS_PER_SEC);
       for(it=0;it<nits;it++){
          sign = +1.0;
          cfft2(n,x,y,w,sign);
          sign = -1.0;
          cfft2(n,y,x,w,sign);
       }
-      t1   = ((float)clock())/((float) CLOCKS_PER_SEC) - t1;
-      t1   = t1/(2.0*((float) nits));
-      ln2 = 10.0; /* reset this for different N  */
-      mflops = 5.0*((float) N)*ln2/((1.e+6)*t1);
-      printf(" for n=%d, t1=%e, mflops=%e\n",n,t1,mflops);
    }
    }
 }
