@@ -2,8 +2,13 @@
 #include <math.h>
 #include <time.h>
 #include <float.h>
+#include <stdlib.h>
+#include <altivec.h>
 #define N 1048576
 #define N2 N/2
+void cfft2(unsigned int n,float x[][2],float y[][2],float w[][2], float sign);
+void cffti(int n, float w[][2]);
+
 main()
 {
 /* 
@@ -29,7 +34,6 @@ main()
    float error,fnm1,sign,z0,z1,ggl();
    float *x,*y,*z,*w;
    double t1,mflops;
-   void cffti(),cfft2();
 /* allocate storage for x,y,z,w on 4-word bndr. */
    x = (float *) malloc(8*N);
    y = (float *) malloc(8*N);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <altivec.h>
 #include <math.h>
 #include <float.h>
 #define N 1027

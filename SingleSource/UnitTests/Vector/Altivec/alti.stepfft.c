@@ -2,6 +2,7 @@
 #include <math.h>
 #include <time.h>
 #include <float.h>
+#include <altivec.h>
 #define N 128
 #define N2 N/2
 main()
