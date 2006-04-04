@@ -9,6 +9,10 @@ ifeq ($(ARCH),PowerPC)
 DIRS += Altivec
 endif
 
+ifeq ($(ARCH),x86)
+DIRS += SSE
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 
