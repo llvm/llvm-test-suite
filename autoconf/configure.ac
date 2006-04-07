@@ -49,10 +49,31 @@ dnl * Get command line options
 dnl **************************************************************************
 
 dnl Location of LLVM source code
-AC_ARG_WITH(llvmsrc,AS_HELP_STRING(--with-llvmsrc,Location of LLVM Source Code),AC_SUBST(LLVM_SRC,[$withval]),AC_SUBST(LLVM_SRC,[`cd ${srcdir}/../..; pwd`]))
+AC_ARG_WITH(llvmsrc,
+  AS_HELP_STRING([--with-llvmsrc=DIR],Location of LLVM Source Code),
+  AC_SUBST(LLVM_SRC,[$withval]),
+  AC_SUBST(LLVM_SRC,[`cd ${srcdir}/../..; pwd`]))
 
 dnl Location of LLVM object code
-AC_ARG_WITH(llvmobj,AS_HELP_STRING(--with-llvmobj,Location of LLVM Object Code),AC_SUBST(LLVM_OBJ,[$withval]),AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
+AC_ARG_WITH(llvmobj,
+  AS_HELP_STRING([--with-llvmobj],Location of LLVM Object Code),
+  AC_SUBST(LLVM_OBJ,[$withval]),
+  AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
+
+dnl Location of the parent directory of the external tests
+AC_ARG_WITH(externals,
+  AS_HELP_STRING([--with-externals=DIR],Location of External Test code),
+  AC_SUBST(LLVM_EXTERNALS,[$withval]),
+  AC_SUBST(LLVM_EXTERNALS,[/home/vadve/shared/benchmarks]))
+
+dnl Configure the default locations of the external benchmarks
+EXTERNAL_BENCHMARK(spec95,${LLVM_EXTERNALS}/spec95/benchspec)
+EXTERNAL_BENCHMARK(spec2000,${LLVM_EXTERNALS}/speccpu2000/benchspec)
+EXTERNAL_BENCHMARK(povray,${LLVM_EXTERNALS}/povray31)
+EXTERNAL_BENCHMARK(namd,${LLVM_EXTERNALS}/spec_namd)
+EXTERNAL_BENCHMARK(sweep3d,${LLVM_EXTERNALS}/sweep3d)
+EXTERNAL_BENCHMARK(fpgrowth,${LLVM_EXTERNALS}/fpgrowth)
+EXTERNAL_BENCHMARK(alp,${LLVM_EXTERNALS}/alp)
 
 dnl LLC Diff Option
 AC_ARG_ENABLE(llc_diffs,
@@ -107,15 +128,6 @@ AC_LINK_USE_R
 dnl Check for needed functions
 AC_CHECK_FUNC([re_comp],[AC_SUBST(HAVE_RE_COMP,[HAVE_RE_COMP:=1])],
                         [AC_SUBST(HAVE_RE_COMP,[[]])])
-
-dnl Configure the default locations of the external benchmarks
-EXTERNAL_BENCHMARK(spec95,/home/vadve/shared/benchmarks/spec95/benchspec)
-EXTERNAL_BENCHMARK(spec2000,/home/vadve/shared/benchmarks/speccpu2000/benchspec)
-EXTERNAL_BENCHMARK(povray,/home/vadve/shared/benchmarks/povray31)
-EXTERNAL_BENCHMARK(namd,/home/vadve/shared/benchmarks/spec_namd)
-EXTERNAL_BENCHMARK(sweep3d,/home/vadve/criswell/umt2k)
-EXTERNAL_BENCHMARK(fpgrowth,/home/vadve/shared/benchmarks/fpgrowth)
-EXTERNAL_BENCHMARK(alp,/home/vadve/shared/benchmarks/ALP)
 
 dnl Create the output files
 AC_OUTPUT
