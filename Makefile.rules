@@ -150,14 +150,8 @@ endif
 
 # If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
 # then adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
-ifdef ENABLE_ASSERTIONS
-  ifdef ENABLE_OPTIMIZED
-  CONFIGURATION := $(CONFIGURATION)+Asserts
-  endif
-else
-  ifndef ENABLE_OPTIMIZED
+ifdef DISABLE_ASSERTIONS
   CONFIGURATION := $(CONFIGURATION)-Asserts
-  endif
 endif
 
 #
