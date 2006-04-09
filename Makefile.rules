@@ -104,6 +104,7 @@ prdirs::
 	@${ECHO} "Build Object Dir : " $(PROJ_OBJ_DIR)
 	@${ECHO} "LLVM  Source Root: " $(LLVM_SRC_ROOT)
 	@${ECHO} "LLVM  Object Root: " $(LLVM_OBJ_ROOT)
+	@${ECHO} "CONFIGURATION    : " $(CONFIGURATION)
 
 ###########################################################################
 # Suffixes and implicit rules:
@@ -144,6 +145,18 @@ else
     CONFIGURATION := Release
   else
     CONFIGURATION := Debug
+  endif
+endif
+
+# If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
+# then adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
+ifdef ENABLE_ASSERTIONS
+  ifdef ENABLE_OPTIMIZED
+  CONFIGURATION := $(CONFIGURATION)+Asserts
+  endif
+else
+  ifndef ENABLE_OPTIMIZED
+  CONFIGURATION := $(CONFIGURATION)-Asserts
   endif
 endif
 
