@@ -76,6 +76,10 @@ FPGROWTH_ROOT := @FPGROWTH_ROOT@
 @USE_ALP@
 ALP_ROOT := @ALP_ROOT@
 
+# Path to the NURBS source code
+@USE_NURBS@
+NURBS_ROOT := @NURBS_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
 

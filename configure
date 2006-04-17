@@ -465,7 +465,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ LLVM_EXTERNALS SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH ALP_ROOT USE_ALP DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL USE_F2C F2C F2C_BIN F2C_DIR F2C_INC F2C_LIB USE_F95 F95 F95_BIN F95_DIR F95_INC F95_LIB HAVE_RE_COMP LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS LLVM_SRC LLVM_OBJ LLVM_EXTERNALS SPEC95_ROOT USE_SPEC95 SPEC2000_ROOT USE_SPEC2000 POVRAY_ROOT USE_POVRAY NAMD_ROOT USE_NAMD SWEEP3D_ROOT USE_SWEEP3D FPGROWTH_ROOT USE_FPGROWTH ALP_ROOT USE_ALP NURBS_ROOT USE_NURBS DISABLE_LLC_DIFFS CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP ifGNUmake LEX LEXLIB LEX_OUTPUT_ROOT FLEX YACC BISON build build_cpu build_vendor build_os host host_cpu host_vendor host_os EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL USE_F2C F2C F2C_BIN F2C_DIR F2C_INC F2C_LIB USE_F95 F95 F95_BIN F95_DIR F95_INC F95_LIB HAVE_RE_COMP LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1044,6 +1044,7 @@ Optional Packages:
   --with-sweep3d=DIR      Use sweep3d as a benchmark (srcs in DIR)
   --with-fpgrowth=DIR     Use fpgrowth as a benchmark (srcs in DIR)
   --with-alp=DIR          Use alp as a benchmark (srcs in DIR)
+  --with-nurbs=DIR        Use nurbs as a benchmark (srcs in DIR)
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
@@ -2014,6 +2015,53 @@ no)
         ALP_ROOT="$checkresult"
 
         USE_ALP=USE_ALP=1
+
+        checkresult="yes, in $checkresult"
+    else
+
+
+        checkresult="no, not found in $checkresult"
+    fi
+    ;;
+esac
+echo "$as_me:$LINENO: result: $checkresult" >&5
+echo "${ECHO_T}$checkresult" >&6
+
+
+
+# Check whether --with-nurbs or --without-nurbs was given.
+if test "${with_nurbs+set}" = set; then
+  withval="$with_nurbs"
+  checkresult=$withval
+else
+  checkresult=auto
+fi;
+echo "$as_me:$LINENO: checking for nurbs benchmark sources" >&5
+echo $ECHO_N "checking for nurbs benchmark sources... $ECHO_C" >&6
+case "$checkresult" in
+auto|yes)
+    defaultdir=${LLVM_EXTERNALS}/nurbs
+	if test -d "$defaultdir"
+	then
+		NURBS_ROOT=$defaultdir
+
+		USE_NURBS=USE_NURBS=1
+
+        checkresult="yes, found in $defaultdir"
+    else
+        checkresult=no
+    fi
+    ;;
+no)
+
+
+    checkresult=no
+    ;;
+*)  if test -d "$checkresult"
+    then
+        NURBS_ROOT="$checkresult"
+
+        USE_NURBS=USE_NURBS=1
 
         checkresult="yes, in $checkresult"
     else
@@ -20766,6 +20814,8 @@ s,@FPGROWTH_ROOT@,$FPGROWTH_ROOT,;t t
 s,@USE_FPGROWTH@,$USE_FPGROWTH,;t t
 s,@ALP_ROOT@,$ALP_ROOT,;t t
 s,@USE_ALP@,$USE_ALP,;t t
+s,@NURBS_ROOT@,$NURBS_ROOT,;t t
+s,@USE_NURBS@,$USE_NURBS,;t t
 s,@DISABLE_LLC_DIFFS@,$DISABLE_LLC_DIFFS,;t t
 s,@CXX@,$CXX,;t t
 s,@CXXFLAGS@,$CXXFLAGS,;t t
