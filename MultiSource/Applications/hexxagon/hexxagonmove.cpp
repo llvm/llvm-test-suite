@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <stdlib.h>
-#if defined(__FreeBSD__) || defined(__APPLE__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
 #include <sys/time.h>
 #else
 #include <sys/timeb.h>

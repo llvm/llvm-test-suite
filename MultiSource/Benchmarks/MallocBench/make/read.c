@@ -23,7 +23,8 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* This is POSIX.2, but most systems using -DPOSIX probably don't have it.  */
 #if defined(__GNU_LIBRARY__) || defined(__CYGWIN__) || defined(__FreeBSD__) || \
-    defined(__APPLE__) || (defined(__sun__) && defined(__svr4__))
+    defined(__OpenBSD__) || defined(__APPLE__) || \
+    (defined(__sun__) && defined(__svr4__))
 #include <glob.h>
 #else
 #include "glob/glob.h"

@@ -38,7 +38,8 @@
 #endif
 
 #if	(defined(STDC_HEADERS) || defined(__GNU_LIBRARY__) || \
-	   defined(POSIX)) || defined(__FreeBSD__) || defined(__APPLE__)
+	   defined(POSIX)) || defined(__FreeBSD__) || defined(__OpenBSD__) || \
+     defined(__APPLE__)
 #include <stdlib.h>
 #include <string.h>
 #define	ANSI_STRING
@@ -94,7 +95,7 @@ extern void free ();
 #endif
 
 #if	defined(__GNU_LIBRARY__) || defined(POSIX) || defined(_IBMR2) || \
-    defined(__FreeBSD__) || defined(__APPLE__)
+    defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
 #include <unistd.h>
 #else
 extern int read (), open (), close (), write (), fstat ();
