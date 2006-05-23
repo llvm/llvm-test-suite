@@ -7,13 +7,20 @@
 # Usage: 
 #     make TEST=libcalls summary (short summary)
 #     make TEST=libcalls (detailed list with time passes, etc.)
+#     make TEST=libcalls report
+#     make TEST=libcalls report.html
 #
 ##===----------------------------------------------------------------------===##
 
-TDIR:=$(patsubst $(PROJ_OBJ_ROOT)/%,%,$(shell pwd))
+CURDIR  := $(shell cd .; pwd)
+PROGDIR := $(PROJ_SRC_ROOT)
+RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "======= $(TDIR)/$*' Program"
+	@echo "---------------------------------------------------------------"
+	@echo ">>> ========= '$(RELDIR)/$*' Program"
+	@echo "---------------------------------------------------------------"
 	@cat $<
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt):  \
