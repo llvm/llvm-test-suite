@@ -16,7 +16,7 @@ fib(unsigned long n) {
 
 int
 main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 4);
+    int N = ((argc == 2) ? atoi(argv[1]) : 43);
     printf("%ld\n", fib(N));
     return(0);
 }
