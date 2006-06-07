@@ -57,12 +57,21 @@ rm -f core core.*
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-( time -p sh -c "${DIR}TimedExec.sh $ULIMIT $PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
+if [ $SYSTEM == Darwin ]; then
+    ( time -p sh -c "${DIR}TimedExec.sh $ULIMIT $PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
 !/^user/ && !/^sys/  { print }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+else
+    ( time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
+BEGIN     { cpu = 0.0; }
+/^user/   { cpu += $2; print }
+/^sys/    { cpu += $2; print }
+!/^user/ && !/^sys/  { print }
+END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+fi
 
 if test $? -eq 0
 then
