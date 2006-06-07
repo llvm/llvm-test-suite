@@ -13,6 +13,12 @@
 #
 # Syntax:  ./RunSafely.sh <ulimit> <stdinfile> <stdoutfile> <program> <args...>
 #
+if [ $# -lt 4 ]; then
+    echo "./RunSafely.sh <timeout> <stdinfile> <stdoutfile> <program> <args...>"
+    exit 1
+fi
+
+DIR=${0%%`basename $0`}
 ULIMIT=$1
 INFILE=$2
 OUTFILE=$3
@@ -51,7 +57,7 @@ rm -f core core.*
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
-( time -p sh -c "$PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
+( time -p sh -c "${DIR}TimedExec.sh $ULIMIT $PROGRAM $* > $OUTFILE 2>&1 < $INFILE" ) 2>&1 | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print }
 /^sys/    { cpu += $2; print }
