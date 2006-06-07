@@ -4,5 +4,5 @@ DIRS =
 LEVEL = ../../../..
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
-TARGET_CFLAGS += -maltivec
+TARGET_FLAGS += -maltivec
 LCCFLAGS += -maltivec

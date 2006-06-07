@@ -29,16 +29,16 @@ NObjects := $(addprefix Output/,$(NObjs))
 .PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
 
 Output/%.o: %.c Output/.dir
-	-$(CC) $(CPPFLAGS) $(CFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.C Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cpp Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cc Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_CFLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
 
 bugpoint-gccas: Output/$(PROG).bugpoint-gccas
 bugpoint-gccld: Output/$(PROG).bugpoint-gccld
@@ -72,4 +72,4 @@ Output/%.LOC.txt: $(Source)
 endif
 
 Output/%.native: $(NObjects)
-	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS)
+	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)

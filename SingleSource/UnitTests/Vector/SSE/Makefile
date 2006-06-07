@@ -4,5 +4,5 @@ DIRS =
 LEVEL = ../../../..
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
-TARGET_CFLAGS += -msse3
+TARGET_FLAGS += -msse3
 LCCFLAGS += -msse3

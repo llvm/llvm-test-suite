@@ -203,10 +203,6 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 
-ifeq ($(OS),Darwin)
-TARGET_CFLAGS := -mdynamic-no-pic -fomit-frame-pointer
-endif
-
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
@@ -282,7 +278,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 $(TARGET_CFLAGS) -o $@
+	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 $(TARGET_FLAGS) -o $@
 
 #
 # Compile a linked program to machine code with LLC.
@@ -308,11 +304,11 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS) -o $@
 
 
 #

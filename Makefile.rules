@@ -315,14 +315,21 @@ CPPFLAGS += -D_GNU_SOURCE
 # Pull in limit macros from stdint.h, even in C++:
 CPPFLAGS += -D__STDC_LIMIT_MACROS
 
-CompileCommonOpts := 
 CompileOptimizeOpts := -O3 -DNDEBUG -finline-functions
+
+ifeq ($(OS),Darwin)
+TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
+endif
+
+ifdef EXTRA_FLAGS
+TARGET_FLAGS += $(EXTRA_FLAGS)
+endif
 
 #
 # Compile commands with libtool.
 #
-Compile  := $(LIBTOOL) --tag=CXX --mode=compile $(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $(CompileCommonOpts)
-CompileC  := $(LIBTOOL) --mode=compile $(CC) -c $(CPPFLAGS) $(CFLAGS) $(CompileCommonOpts)
+Compile  := $(LIBTOOL) --tag=CXX --mode=compile $(CXX) -c $(CPPFLAGS) $(CXXFLAGS)
+CompileC  := $(LIBTOOL) --mode=compile $(CC) -c $(CPPFLAGS) $(CFLAGS)
 
 # Compile a cpp file, don't link...
 CompileG := $(Compile) -g  -D_DEBUG
@@ -782,11 +789,11 @@ $(PROJ_OBJ_DIR)/Debug/%.lo: %.c $(PROJ_OBJ_DIR)/Debug/.dir
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1XX)
 	@${ECHO} "Compiling `basename $<` to bytecode"
-	$(VERB) $(LLVMGXX) $(CompileCommonOpts) $(CPPFLAGS) -c $< -o $@
+	$(VERB) $(LLVMGXX) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
 	@${ECHO} "Compiling `basename $<` to bytecode"
-	$(VERB) $(LLVMGCC) $(CompileCommonOpts) $(CPPFLAGS) -c $< -o $@
+	$(VERB) $(LLVMGCC) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
 	@${ECHO} "Compiling `basename $<` to bytecode"
