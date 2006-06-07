@@ -24,14 +24,20 @@ shift
 if [ -z "$PARENT" ]; then
     # Start a watchdog process
     $0 -p $$ $TIMEOUT $PROGRAM $* &
-    WATCHDOG="$!"
     exec "$@"
-    # I am done first. kill the watch dog.
-    kill $WATCHDOG && (sleep 2; kill -1 $WATCHDOG) && (sleep 2; kill -9 $WATCHDOG)
 else
     # Sleep for a specified time then wake up to kill the parent process.
     exec > /dev/null 2>&1
-    sleep $TIMEOUT
+    SEC=0
+    while [ $SEC -lt $TIMEOUT ]; do
+        sleep 1
+        # Check if parent has completed.
+        kill -s INFO $PATENT 2>/dev/null
+        if [ $? -eq 1 ]; then
+            exit 0
+        fi
+        SEC=$(($SEC + 1))
+    done
     kill $PARENT && (sleep 2; kill -1 $PARENT) && (sleep 2; kill -9 $PARENT)
 fi 
 
