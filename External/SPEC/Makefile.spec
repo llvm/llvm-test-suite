@@ -135,6 +135,12 @@ ifdef FP_ABSTOLERANCE
 BUGPOINT_OPTIONS += -abs-tolerance $(FP_ABSTOLERANCE)
 endif
 
+
+# Give bugpoint information about LDFLAGS to pass down to the actual link stage
+# of the program.
+BUGPOINT_OPTIONS += $(LDFLAGS:%=-Xlinker=%) 
+
+
 # Specify stdin, reference output, and command line options for the program...
 BUGPOINT_OPTIONS += -input=$(STDIN_FILENAME) -output=../$*.out-nat
 BUGPOINT_OPTIONS += -timeout=$(RUNTIMELIMIT)
