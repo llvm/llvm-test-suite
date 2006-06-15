@@ -18,12 +18,11 @@ if [ "$1" == "-p" ]; then
 fi
 
 TIMEOUT=$1
-PROGRAM=$2
 shift
 
 if [ -z "$PARENT" ]; then
     # Start a watchdog process
-    $0 -p $$ $TIMEOUT $PROGRAM $* &
+    $0 -p $$ $TIMEOUT $* &
     exec "$@"
 else
     # Sleep for a specified time then wake up to kill the parent process.
