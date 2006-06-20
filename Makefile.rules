@@ -321,8 +321,8 @@ ifeq ($(OS),Darwin)
 TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
 endif
 
-ifdef EXTRA_FLAGS
-TARGET_FLAGS += $(EXTRA_FLAGS)
+ifdef EXTRA_OPTIONS
+TARGET_FLAGS += $(EXTRA_OPTIONS)
 endif
 
 #
