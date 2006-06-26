@@ -203,6 +203,9 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 
+print-llcbeta-option:
+	@echo $(LLCBETAOPTION)
+
 # Given a version of the entire program linked together into a single unit of
 # raw output from the C frontend, optimize it.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
