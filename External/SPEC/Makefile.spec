@@ -138,7 +138,7 @@ endif
 
 # Give bugpoint information about LDFLAGS to pass down to the actual link stage
 # of the program.
-BUGPOINT_OPTIONS += $(LDFLAGS:%=-Xlinker=%) 
+BUGPOINT_OPTIONS += $(LDFLAGS:%=-Xlinker=%) $(EXTRA_OPTIONS:%=-Xlinker=%)
 
 
 # Specify stdin, reference output, and command line options for the program...
