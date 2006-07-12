@@ -148,7 +148,7 @@ set_add(void *av, void *t) {
   int j, n = v->n;
   uint i;
   if (n) {
-    uint h = ((uint)t);
+    ulong h = ((ulong)t);
     h = h % n;
     for (i = h, j = 0; 
 	 i < v->n && j < SET_MAX_SEQUENTIAL; 

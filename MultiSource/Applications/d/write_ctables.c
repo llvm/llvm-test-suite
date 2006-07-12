@@ -385,7 +385,7 @@ write_scanner_data_as_C(FILE *fp, Grammar *g, char *tag) {
 
 static void
 write_goto_data_as_C(FILE *fp, Grammar *g, char *tag) {
-  Vec(int) vgoto;
+  Vec(long) vgoto;
   State *s;
   uint8 *goto_valid = NULL;
   int i, j, x, again, lowest, nvalid_bytes, sym, lowest_sym;

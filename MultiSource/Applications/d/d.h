@@ -77,6 +77,7 @@ typedef unsigned long long uint64;
 typedef short int16;
 typedef unsigned short uint16;
 /* typedef uint32 uint; * already part of most systems */
+typedef unsigned long ulong;
 
 #include "dparse.h"
 #include "arg.h"
