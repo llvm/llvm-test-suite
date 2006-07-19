@@ -1,6 +1,6 @@
 LEVEL = ../..
-#PARALLEL_DIRS=Dhrystone CoyoteBench Shootout Shootout-C++ Stanford McGill \
-#              Misc Misc-C++ Misc-C++-EH
+PARALLEL_DIRS=Dhrystone CoyoteBench Shootout Shootout-C++ Stanford McGill \
+              Misc Misc-C++ Misc-C++-EH
 PARALLEL_DIRS=Dhrystone CoyoteBench Shootout Shootout-C++ Stanford McGill \
               Misc Misc-C++
 LDFLAGS += -lm
