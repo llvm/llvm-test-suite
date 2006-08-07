@@ -44,7 +44,7 @@ class BitBoard64
 	BitBoard64 operator=(const BitBoard64 &right);
 	BitBoard64 operator~(void);
 
-	BitBoard64::operator bool();
+	operator bool();
 
 	void print(void);
 
