@@ -19851,7 +19851,7 @@ fi
 eval pfxval=\$\{f2cpfxdir\}
 eval binval=\$\{f2cbindir\}
 eval incval=\$\{f2cincdir\}
-eval libvar=\$\{f2clibdir\}
+eval libval=\$\{f2clibdir\}
 if test "${pfxval}" != "nada" ; then
 
 if test -n "${pfxval}" -a -d "${pfxval}" -a -n "f2c" -a -d "${pfxval}/bin" -a -x "${pfxval}/bin/f2c" ; then
@@ -19887,7 +19887,7 @@ elif test "${binval}" != "nada" ; then
 
             F2C_LIB=${libval}
 
-            USE_F2C=1
+            USE_F2C="USE_F2C = 1"
 
             { echo "$as_me:$LINENO: result: found via --with options" >&5
 echo "${ECHO_T}found via --with options" >&6; }
@@ -20111,7 +20111,7 @@ fi
 eval pfxval=\$\{f95pfxdir\}
 eval binval=\$\{f95bindir\}
 eval incval=\$\{f95incdir\}
-eval libvar=\$\{f95libdir\}
+eval libval=\$\{f95libdir\}
 if test "${pfxval}" != "nada" ; then
 
 if test -n "${pfxval}" -a -d "${pfxval}" -a -n "f95" -a -d "${pfxval}/bin" -a -x "${pfxval}/bin/f95" ; then
@@ -20147,7 +20147,7 @@ elif test "${binval}" != "nada" ; then
 
             F95_LIB=${libval}
 
-            USE_F95=1
+            USE_F95="USE_F95 = 1"
 
             { echo "$as_me:$LINENO: result: found via --with options" >&5
 echo "${ECHO_T}found via --with options" >&6; }
