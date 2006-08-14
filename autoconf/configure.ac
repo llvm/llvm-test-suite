@@ -76,6 +76,26 @@ EXTERNAL_BENCHMARK(fpgrowth,${LLVM_EXTERNALS}/fpgrowth)
 EXTERNAL_BENCHMARK(alp,${LLVM_EXTERNALS}/alp)
 EXTERNAL_BENCHMARK(nurbs,${LLVM_EXTERNALS}/nurbs)
 
+dnl Check that the paths of provided external benchmark dirs make sense
+if test -n "$SPEC2000_ROOT" ; then
+  if test -d "$SPEC2000_ROOT" ; then
+    if test `basename '${SPEC2000_ROOT%benchspec}'` != "benchspec"; then
+      AC_MSG_ERROR([SPEC 2000 directory must end in 'benchspec'])
+    fi
+  else
+    AC_MSG_ERROR([SPEC 2000 option must specify a directory])
+  fi
+fi
+if test -n "$SPEC95_ROOT" ; then
+  if test -d "$SPEC95_ROOT" ; then
+    if test `basename '${SPEC95_ROOT%benchspec}'` != "benchspec"; then
+      AC_MSG_ERROR([SPEC 95 directory must end in 'benchspec'])
+    fi
+  else
+    AC_MSG_ERROR([SPEC 95 option must specify a directory])
+  fi
+fi
+
 dnl LLC Diff Option
 AC_ARG_ENABLE(llc_diffs,
   AS_HELP_STRING(--enable-llc_diffs,
@@ -101,9 +121,8 @@ dnl Verify that GCC is version 3.0 or higher
 
 dnl Check for GNU Make.  We use its extensions too, so don't build without it
 AC_CHECK_GNU_MAKE
-if test -z "$llvm_cv_gnu_make_command"
-then
-	AC_MSG_ERROR([GNU Make required but not found])
+if test -z "$llvm_cv_gnu_make_command" ; then
+  AC_MSG_ERROR([GNU Make required but not found])
 fi
 
 dnl Checks for other tools
