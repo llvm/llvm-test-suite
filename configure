@@ -2132,36 +2132,35 @@ fi
 echo $ECHO_N "checking for spec95 benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/spec95/benchspec
-	if test -d "$defaultdir"
-	then
-		SPEC95_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/spec95/benchspec
+  if test -d "$defaultdir";  then
+    SPEC95_ROOT=$defaultdir
 
-		USE_SPEC95=USE_SPEC95=1
+    USE_SPEC95=USE_SPEC95=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        SPEC95_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    SPEC95_ROOT="$checkresult"
 
-        USE_SPEC95=USE_SPEC95=1
+    USE_SPEC95=USE_SPEC95=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2180,36 +2179,35 @@ fi
 echo $ECHO_N "checking for spec2000 benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/speccpu2000/benchspec
-	if test -d "$defaultdir"
-	then
-		SPEC2000_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/speccpu2000/benchspec
+  if test -d "$defaultdir";  then
+    SPEC2000_ROOT=$defaultdir
 
-		USE_SPEC2000=USE_SPEC2000=1
+    USE_SPEC2000=USE_SPEC2000=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        SPEC2000_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    SPEC2000_ROOT="$checkresult"
 
-        USE_SPEC2000=USE_SPEC2000=1
+    USE_SPEC2000=USE_SPEC2000=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2228,36 +2226,35 @@ fi
 echo $ECHO_N "checking for povray benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/povray31
-	if test -d "$defaultdir"
-	then
-		POVRAY_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/povray31
+  if test -d "$defaultdir";  then
+    POVRAY_ROOT=$defaultdir
 
-		USE_POVRAY=USE_POVRAY=1
+    USE_POVRAY=USE_POVRAY=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        POVRAY_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    POVRAY_ROOT="$checkresult"
 
-        USE_POVRAY=USE_POVRAY=1
+    USE_POVRAY=USE_POVRAY=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2276,36 +2273,35 @@ fi
 echo $ECHO_N "checking for namd benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/spec_namd
-	if test -d "$defaultdir"
-	then
-		NAMD_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/spec_namd
+  if test -d "$defaultdir";  then
+    NAMD_ROOT=$defaultdir
 
-		USE_NAMD=USE_NAMD=1
+    USE_NAMD=USE_NAMD=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        NAMD_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    NAMD_ROOT="$checkresult"
 
-        USE_NAMD=USE_NAMD=1
+    USE_NAMD=USE_NAMD=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2324,36 +2320,35 @@ fi
 echo $ECHO_N "checking for sweep3d benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/sweep3d
-	if test -d "$defaultdir"
-	then
-		SWEEP3D_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/sweep3d
+  if test -d "$defaultdir";  then
+    SWEEP3D_ROOT=$defaultdir
 
-		USE_SWEEP3D=USE_SWEEP3D=1
+    USE_SWEEP3D=USE_SWEEP3D=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        SWEEP3D_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    SWEEP3D_ROOT="$checkresult"
 
-        USE_SWEEP3D=USE_SWEEP3D=1
+    USE_SWEEP3D=USE_SWEEP3D=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2372,36 +2367,35 @@ fi
 echo $ECHO_N "checking for fpgrowth benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/fpgrowth
-	if test -d "$defaultdir"
-	then
-		FPGROWTH_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/fpgrowth
+  if test -d "$defaultdir";  then
+    FPGROWTH_ROOT=$defaultdir
 
-		USE_FPGROWTH=USE_FPGROWTH=1
+    USE_FPGROWTH=USE_FPGROWTH=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        FPGROWTH_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    FPGROWTH_ROOT="$checkresult"
 
-        USE_FPGROWTH=USE_FPGROWTH=1
+    USE_FPGROWTH=USE_FPGROWTH=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2420,36 +2414,35 @@ fi
 echo $ECHO_N "checking for alp benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/alp
-	if test -d "$defaultdir"
-	then
-		ALP_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/alp
+  if test -d "$defaultdir";  then
+    ALP_ROOT=$defaultdir
 
-		USE_ALP=USE_ALP=1
+    USE_ALP=USE_ALP=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        ALP_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    ALP_ROOT="$checkresult"
 
-        USE_ALP=USE_ALP=1
+    USE_ALP=USE_ALP=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2468,36 +2461,35 @@ fi
 echo $ECHO_N "checking for nurbs benchmark sources... $ECHO_C" >&6; }
 case "$checkresult" in
 auto|yes)
-    defaultdir=${LLVM_EXTERNALS}/nurbs
-	if test -d "$defaultdir"
-	then
-		NURBS_ROOT=$defaultdir
+  defaultdir=${LLVM_EXTERNALS}/nurbs
+  if test -d "$defaultdir";  then
+    NURBS_ROOT=$defaultdir
 
-		USE_NURBS=USE_NURBS=1
+    USE_NURBS=USE_NURBS=1
 
-        checkresult="yes, found in $defaultdir"
-    else
-        checkresult=no
-    fi
-    ;;
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
 no)
 
 
-    checkresult=no
-    ;;
-*)  if test -d "$checkresult"
-    then
-        NURBS_ROOT="$checkresult"
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    NURBS_ROOT="$checkresult"
 
-        USE_NURBS=USE_NURBS=1
+    USE_NURBS=USE_NURBS=1
 
-        checkresult="yes, in $checkresult"
-    else
+    checkresult="yes, in $checkresult"
+  else
 
 
-        checkresult="no, not found in $checkresult"
-    fi
-    ;;
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
 esac
 { echo "$as_me:$LINENO: result: $checkresult" >&5
 echo "${ECHO_T}$checkresult" >&6; }
@@ -2506,7 +2498,7 @@ echo "${ECHO_T}$checkresult" >&6; }
 
 if test -n "$SPEC2000_ROOT" ; then
   if test -d "$SPEC2000_ROOT" ; then
-    if test `basename '$SPEC2000_ROOT'` != "benchspec"; then
+    if test `basename "$SPEC2000_ROOT"` != "benchspec"; then
       { { echo "$as_me:$LINENO: error: SPEC 2000 directory must end in 'benchspec'" >&5
 echo "$as_me: error: SPEC 2000 directory must end in 'benchspec'" >&2;}
    { (exit 1); exit 1; }; }
@@ -5270,7 +5262,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5273 "configure"' > conftest.$ac_ext
+  echo '#line 5265 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7435,11 +7427,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7438: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7430: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7442: \$? = $ac_status" >&5
+   echo "$as_me:7434: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7703,11 +7695,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7706: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7698: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7710: \$? = $ac_status" >&5
+   echo "$as_me:7702: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7807,11 +7799,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7810: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7802: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7814: \$? = $ac_status" >&5
+   echo "$as_me:7806: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10259,7 +10251,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10262 "configure"
+#line 10254 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10359,7 +10351,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10362 "configure"
+#line 10354 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12727,11 +12719,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12730: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12722: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12734: \$? = $ac_status" >&5
+   echo "$as_me:12726: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12831,11 +12823,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12834: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12826: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12838: \$? = $ac_status" >&5
+   echo "$as_me:12830: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14401,11 +14393,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14404: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14396: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14408: \$? = $ac_status" >&5
+   echo "$as_me:14400: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14505,11 +14497,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14508: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14500: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14512: \$? = $ac_status" >&5
+   echo "$as_me:14504: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16740,11 +16732,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16743: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16735: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16747: \$? = $ac_status" >&5
+   echo "$as_me:16739: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17008,11 +17000,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17011: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17003: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17015: \$? = $ac_status" >&5
+   echo "$as_me:17007: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17112,11 +17104,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17115: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17107: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17119: \$? = $ac_status" >&5
+   echo "$as_me:17111: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized

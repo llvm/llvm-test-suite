@@ -79,7 +79,7 @@ EXTERNAL_BENCHMARK(nurbs,${LLVM_EXTERNALS}/nurbs)
 dnl Check that the paths of provided external benchmark dirs make sense
 if test -n "$SPEC2000_ROOT" ; then
   if test -d "$SPEC2000_ROOT" ; then
-    if test `basename '$SPEC2000_ROOT'` != "benchspec"; then
+    if test `basename "$SPEC2000_ROOT"` != "benchspec"; then
       AC_MSG_ERROR([SPEC 2000 directory must end in 'benchspec'])
     fi
   else
