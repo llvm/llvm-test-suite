@@ -2511,7 +2511,7 @@ echo "$as_me: error: SPEC 2000 option must specify a directory" >&2;}
 fi
 if test -n "$SPEC95_ROOT" ; then
   if test -d "$SPEC95_ROOT" ; then
-    if test `basename '${SPEC95_ROOT%benchspec}'` != "benchspec"; then
+    if test `basename ${SPEC95_ROOT}` != "benchspec"; then
       { { echo "$as_me:$LINENO: error: SPEC 95 directory must end in 'benchspec'" >&5
 echo "$as_me: error: SPEC 95 directory must end in 'benchspec'" >&2;}
    { (exit 1); exit 1; }; }

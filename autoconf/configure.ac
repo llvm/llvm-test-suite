@@ -88,7 +88,7 @@ if test -n "$SPEC2000_ROOT" ; then
 fi
 if test -n "$SPEC95_ROOT" ; then
   if test -d "$SPEC95_ROOT" ; then
-    if test `basename '${SPEC95_ROOT%benchspec}'` != "benchspec"; then
+    if test `basename ${SPEC95_ROOT}` != "benchspec"; then
       AC_MSG_ERROR([SPEC 95 directory must end in 'benchspec'])
     fi
   else
