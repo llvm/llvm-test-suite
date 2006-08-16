@@ -68,22 +68,22 @@ $HilightColumns{17} = 1;
 (
 # Name
  ["Program"  , '\'([^\']+)\' Program'],
-# [],
+ [],
 # Times
  ["GCCAS"    , "TEST-RESULT-compile: .*$WallTimeRE"],
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["LLC compile" , "TEST-RESULT-llc: .*$WallTimeRE"],
  ["LLC-BETA compile" , "TEST-RESULT-llc-beta: .*$WallTimeRE"],
  ["JIT codegen" , "TEST-RESULT-jit-comptime: .*$WallTimeRE"],
-# [],
+ [],
  ["GCC"      , 'TEST-RESULT-nat-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["CBE"      , 'TEST-RESULT-cbe-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC"      , 'TEST-RESULT-llc-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-BETA" , 'TEST-RESULT-llc-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: program\s*([.0-9m:]+)', \&FormatTime],
-# [],
-# ["GCC/CBE"  , \&GCCCBERatio],
-# ["GCC/LLC"  , \&GCCLLCRatio],
-# ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio],
-# ["LLC/LLC-BETA"  , \&LLCLLC_BETARatio]
+ [],
+ ["GCC/CBE"  , \&GCCCBERatio],
+ ["GCC/LLC"  , \&GCCLLCRatio],
+ ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio],
+ ["LLC/LLC-BETA"  , \&LLCLLC_BETARatio]
 );
