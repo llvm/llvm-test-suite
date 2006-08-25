@@ -321,6 +321,12 @@ ifeq ($(OS),Darwin)
 TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
 endif
 
+ifeq ($(OS),Linux)
+ifeq ($(ARCH),x86)
+CPPFLAGS += -D__NO_MATH_INLINES
+endif
+endif
+
 ifdef EXTRA_OPTIONS
 TARGET_FLAGS += $(EXTRA_OPTIONS)
 endif
