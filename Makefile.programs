@@ -203,7 +203,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-x86-fastcc
+LLCBETAOPTION := -enable-x86-isel-preprocessing
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
