@@ -46,6 +46,12 @@ include $(LEVEL)/Makefile.tests
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc
 .PRECIOUS: Output/%.linked.bc 
 
+# If we're using the llvm-gcc3 compiler then we need to also link with the
+# llvm c runtime library, othwerwise we don't
+ifneq ($(LLVMGCC_MAJVERS),4)
+LIBS += -lcrtend
+endif
+
 PROGDIR = $(PROJ_SRC_ROOT)
 
 #
@@ -224,7 +230,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	-$(LGCCLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -232,7 +238,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.llvm
+	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
 	$(MV) -f $@.tmp $@
@@ -240,20 +246,20 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
 Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
 Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.noopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 
 $(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm.bc): \
 Output/%.nogccldopt-llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.nogccldopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.nogccldopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm): \
 Output/%.nogccldopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -lcrtend -o Output/$*.nogccldopt-llvm
+	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS)  -o Output/$*.nogccldopt-llvm
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
