@@ -6,6 +6,8 @@
 
 LEVEL = ../../../..
 
+include ../../Makefile.spec2006
+
 RUN_OPTIONS = `head -n 1 $(REF_IN_DIR)control`
 
 ifeq ($(RUN_TYPE),test)
@@ -13,5 +15,3 @@ ifeq ($(RUN_TYPE),test)
 else
   STDOUT_FILENAME := input.combined.out
 endif
-
-include ../../Makefile.spec2006

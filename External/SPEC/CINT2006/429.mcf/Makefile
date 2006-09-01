@@ -11,7 +11,6 @@ include ../../Makefile.spec2006
 RUN_OPTIONS = inp.in
 
 CPPFLAGS += -DWANT_STDC_PROTO
-LDFLAGS += -lm
 
 ifeq ($(RUN_TYPE),test)
   STDOUT_FILENAME := test.out

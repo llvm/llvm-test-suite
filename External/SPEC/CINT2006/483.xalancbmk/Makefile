@@ -17,7 +17,7 @@ CPPFLAGS += -DNDEBUG -DAPP_NO_THREADS -DXALAN_INMEM_MSG_LOADER        \
             -I$(SPEC_BENCH_DIR)/src/xercesc/sax                       \
             -I$(SPEC_BENCH_DIR)/src/xercesc/util/MsgLoaders/InMemory  \
             -I$(SPEC_BENCH_DIR)/src/xercesc/util/Transcoders/Iconv    \
-            -I$(SPEC_BENCH_DIR)/src/xalanc/include
+            -I$(SPEC_BENCH_DIR)/src/xalanc/Include
 
 include ../../Makefile.spec2006
 
