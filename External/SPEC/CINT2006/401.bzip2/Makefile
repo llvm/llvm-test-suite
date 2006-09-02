@@ -8,6 +8,7 @@ LEVEL = ../../../..
 
 include ../../Makefile.spec2006
 
+## FIXME: The control file has more than one line in it.
 RUN_OPTIONS = `head -n 1 $(REF_IN_DIR)control`
 
 ifeq ($(RUN_TYPE),test)

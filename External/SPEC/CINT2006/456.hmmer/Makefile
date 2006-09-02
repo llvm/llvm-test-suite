@@ -6,8 +6,8 @@
 
 LEVEL = ../../../..
 
-FP_ABSTOLERANCE = 0.00001
 FP_TOLERANCE    = 0.002
+FP_ABSTOLERANCE = 0.00001
 
 include ../../Makefile.spec2006
 

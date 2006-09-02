@@ -17,7 +17,9 @@ ifeq ($(ENDIAN),big)
 endif
 
 ifeq ($(RUN_TYPE),test)
-  RUN_OPTIONS = cccp.i -o cccp.s
+  RUN_OPTIONS      = cccp.i -o cccp.s
+  STDOUT_FILENAME := cccp.s
 else
-  RUN_OPTIONS = integrate.i -o integrate.s
+  RUN_OPTIONS      = integrate.i -o integrate.s
+  STDOUT_FILENAME := integrate.s
 endif
