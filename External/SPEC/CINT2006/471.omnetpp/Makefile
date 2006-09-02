@@ -6,8 +6,32 @@
 
 LEVEL = ../../../..
 
-FP_ABSTOLERANCE = 0.000001
 FP_TOLERANCE    = 0.00001
+FP_ABSTOLERANCE = 0.000001
+
+Source = $(addprefix $(SPEC_BENCH_DIR)/src/,                                   \
+           EtherAppCli.cc EtherAppCli_n.cc EtherAppSrv.cc EtherAppSrv_n.cc     \
+           EtherApp_m.cc EtherBus.cc EtherBus_n.cc EtherCtrl_m.cc              \
+           EtherEncap.cc EtherEncap_n.cc EtherFrame_m.cc EtherHost_n.cc        \
+           EtherHub.cc EtherHub_n.cc EtherLLC.cc EtherLLC_n.cc EtherMAC.cc     \
+           EtherMAC_n.cc EtherSwitch_n.cc LargeNet_n.cc MACAddress.cc          \
+           MACAddress_m.cc MACRelayUnitBase.cc MACRelayUnitNP.cc               \
+           MACRelayUnitNP_n.cc MACRelayUnitPP.cc MACRelayUnitPP_n.cc           \
+           MACRelayUnit_n.cc Networks_n.cc eth-index_n.cc utils.cc)            \
+         $(addprefix $(SPEC_BENCH_DIR)/src/libs/cmdenv/,                       \
+           cmdenv.cc enumstr.cc heap.cc)                                       \
+         $(addprefix $(SPEC_BENCH_DIR)/src/libs/envir/,                        \
+           akoutvectormgr.cc args.cc cenvir.cc cinifile.cc filemgrs.cc main.cc \
+           omnetapp.cc patmatch.cc platdep.cc seeds.cc slaveapp.cc speedmtr.cc)\
+         $(addprefix $(SPEC_BENCH_DIR)/src/libs/sim/,                          \
+           carray.cc cexception.cc cmessage.cc cpar.cc ctypes.cc task.cc       \
+           cchannel.cc cfsm.cc cmodule.cc cpsquare.cc cvarhist.cc util.cc      \
+           ccoroutine.cc cgate.cc cmsgheap.cc cqueue.cc cwatch.cc cdensity.cc  \
+           chead.cc cnetmod.cc csimul.cc distrib.cc cdetect.cc chist.cc        \
+           cobject.cc cstat.cc errmsg.cc cdispstr.cc cksplit.cc coutvect.cc    \
+           cstruct.cc onstartup.cc cenum.cc cllist.cc cpacket.cc ctopo.cc      \
+           random.cc std/netpack.cc)                                           \
+           $(SPEC_BENCH_DIR)/src/libs/spec/spec_qsort.cc
 
 CPPFLAGS += -DNDEBUG=1                            \
             -I$(SPEC_BENCH_DIR)/src/omnet_include \
@@ -15,10 +39,5 @@ CPPFLAGS += -DNDEBUG=1                            \
 
 include ../../Makefile.spec2006
 
-RUN_OPTIONS = omnetpp.ini
-
-ifeq ($(RUN_TYPE),test)
-  STDOUT_FILENAME := test.out
-else
-  STDOUT_FILENAME := train.out
-endif
+RUN_OPTIONS      = omnetpp.ini
+STDOUT_FILENAME := omnetpp.log
