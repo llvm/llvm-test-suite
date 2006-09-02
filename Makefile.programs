@@ -203,7 +203,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-x86-fastcc
+LLCBETAOPTION := -regalloc=local -fast
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
@@ -266,11 +266,11 @@ endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/gccas-pass-args: $(LGCCAS) Output/.dir
 	-$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
-	sed 's/Pass Arguments: //' < $@.1 > $@
+	sed 's/Pass Arguments: //' < $@.1 | sed 's/-emitbytecode//'> $@
 Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
 	$(LGCCLD) Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
-	sed 's/Pass Arguments: //' < $@.1 > $@
+	sed 's/Pass Arguments: //' < $@.1 | sed 's/-emitbytecode//' | > $@
 
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
