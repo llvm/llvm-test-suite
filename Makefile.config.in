@@ -35,10 +35,12 @@ endif
 # SPEC benchmarks:
 #     If these are set then run the SPEC benchmarks.
 #     You must provide the SPEC benchmarks on your own.
+@USE_SPEC2006@
 @USE_SPEC2000@
 @USE_SPEC95@
 
 # Path to the SPEC benchmarks.
+SPEC2006_ROOT := @SPEC2006_ROOT@
 SPEC2000_ROOT := @SPEC2000_ROOT@
 SPEC95_ROOT := @SPEC95_ROOT@
 

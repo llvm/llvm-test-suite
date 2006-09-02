@@ -1,7 +1,7 @@
 ##===- Makefile.spec ---------------------------------------*- Makefile -*-===##
 #
-# This makefile is a template for building SPEC as an external
-# test. It is included by Makefile.spec2000 and Makefile.spec95.
+# This makefile is a template for building SPEC as an external test. It is
+# included by Makefile.spec2006, Makefile.spec2000, and Makefile.spec95.
 #
 ##===----------------------------------------------------------------------===##
 
@@ -38,12 +38,12 @@ endif
 
 PROG := $(BENCH_NAME)
 ifndef Source
-Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c \
-					 $(SPEC_BENCH_DIR)/src/*.C \
-                     $(SPEC_BENCH_DIR)/src/*.cc \
+Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c   \
+                     $(SPEC_BENCH_DIR)/src/*.C   \
+                     $(SPEC_BENCH_DIR)/src/*.cc  \
                      $(SPEC_BENCH_DIR)/src/*.cpp \
-                     $(SPEC_BENCH_DIR)/src/*.f \
-                     $(SPEC_BENCH_DIR)/src/*.F \
+                     $(SPEC_BENCH_DIR)/src/*.f   \
+                     $(SPEC_BENCH_DIR)/src/*.F   \
                      $(SPEC_BENCH_DIR)/src/*.f90 \
                      $(SPEC_BENCH_DIR)/src/*.F90)
 endif
