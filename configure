@@ -798,6 +798,8 @@ SPEC95_ROOT
 USE_SPEC95
 SPEC2000_ROOT
 USE_SPEC2000
+SPEC2006_ROOT
+USE_SPEC2006
 POVRAY_ROOT
 USE_POVRAY
 NAMD_ROOT
@@ -1474,6 +1476,7 @@ Optional Packages:
   --with-externals=DIR    Location of External Test code
   --with-spec95=DIR       Use spec95 as a benchmark (srcs in DIR)
   --with-spec2000=DIR     Use spec2000 as a benchmark (srcs in DIR)
+  --with-spec2006=DIR     Use spec2006 as a benchmark (srcs in DIR)
   --with-povray=DIR       Use povray as a benchmark (srcs in DIR)
   --with-namd=DIR         Use namd as a benchmark (srcs in DIR)
   --with-sweep3d=DIR      Use sweep3d as a benchmark (srcs in DIR)
@@ -2054,10 +2057,19 @@ ac_config_commands="$ac_config_commands External/SPEC/Makefile"
 ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec"
 
 
+ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec2006"
+
+
 ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec2000"
 
 
 ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec95"
+
+
+ac_config_commands="$ac_config_commands External/SPEC/CFP2006/Makefile"
+
+
+ac_config_commands="$ac_config_commands External/SPEC/CINT2006/Makefile"
 
 
 ac_config_commands="$ac_config_commands External/SPEC/CFP2000/Makefile"
@@ -2200,6 +2212,53 @@ no)
     SPEC2000_ROOT="$checkresult"
 
     USE_SPEC2000=USE_SPEC2000=1
+
+    checkresult="yes, in $checkresult"
+  else
+
+
+    checkresult="no, not found in $checkresult"
+  fi
+  ;;
+esac
+{ echo "$as_me:$LINENO: result: $checkresult" >&5
+echo "${ECHO_T}$checkresult" >&6; }
+
+
+
+
+# Check whether --with-spec2006 was given.
+if test "${with_spec2006+set}" = set; then
+  withval=$with_spec2006; checkresult=$withval
+else
+  checkresult=auto
+fi
+
+{ echo "$as_me:$LINENO: checking for spec2006 benchmark sources" >&5
+echo $ECHO_N "checking for spec2006 benchmark sources... $ECHO_C" >&6; }
+case "$checkresult" in
+auto|yes)
+  defaultdir=${LLVM_EXTERNALS}/speccpu2006/benchspec
+  if test -d "$defaultdir";  then
+    SPEC2006_ROOT=$defaultdir
+
+    USE_SPEC2006=USE_SPEC2006=1
+
+    checkresult="yes, found in $defaultdir"
+  else
+    checkresult=no
+  fi
+  ;;
+no)
+
+
+  checkresult=no
+  ;;
+*)
+  if test -d "$checkresult" ; then
+    SPEC2006_ROOT="$checkresult"
+
+    USE_SPEC2006=USE_SPEC2006=1
 
     checkresult="yes, in $checkresult"
   else
@@ -2496,6 +2555,19 @@ echo "${ECHO_T}$checkresult" >&6; }
 
 
 
+if test -n "$SPEC2006_ROOT" ; then
+  if test -d "$SPEC2006_ROOT" ; then
+    if test `basename "$SPEC2006_ROOT"` != "benchspec"; then
+      { { echo "$as_me:$LINENO: error: SPEC 2006 directory must end in 'benchspec'" >&5
+echo "$as_me: error: SPEC 2006 directory must end in 'benchspec'" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  else
+    { { echo "$as_me:$LINENO: error: SPEC 2006 option must specify a directory" >&5
+echo "$as_me: error: SPEC 2006 option must specify a directory" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+fi
 if test -n "$SPEC2000_ROOT" ; then
   if test -d "$SPEC2000_ROOT" ; then
     if test `basename "$SPEC2000_ROOT"` != "benchspec"; then
@@ -4460,9 +4532,9 @@ fi
 { echo "$as_me:$LINENO: result: $llvm_cv_has_bison" >&5
 echo "${ECHO_T}$llvm_cv_has_bison" >&6; }
 if test "$YACC" != "bison -y"; then
-  { { echo "$as_me:$LINENO: error: bison not found but required" >&5
-echo "$as_me: error: bison not found but required" >&2;}
-   { (exit 1); exit 1; }; }
+
+  { echo "$as_me:$LINENO: WARNING: bison not found, can't rebuild grammars" >&5
+echo "$as_me: WARNING: bison not found, can't rebuild grammars" >&2;}
 else
   BISON=bison
 
@@ -5262,7 +5334,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5265 "configure"' > conftest.$ac_ext
+  echo '#line 5337 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7427,11 +7499,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7430: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7502: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7434: \$? = $ac_status" >&5
+   echo "$as_me:7506: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7695,11 +7767,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7698: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7770: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7702: \$? = $ac_status" >&5
+   echo "$as_me:7774: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7799,11 +7871,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7802: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7874: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7806: \$? = $ac_status" >&5
+   echo "$as_me:7878: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10251,7 +10323,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10254 "configure"
+#line 10326 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10351,7 +10423,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10354 "configure"
+#line 10426 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12719,11 +12791,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12722: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12794: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12726: \$? = $ac_status" >&5
+   echo "$as_me:12798: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12823,11 +12895,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12826: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12898: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12830: \$? = $ac_status" >&5
+   echo "$as_me:12902: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14393,11 +14465,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14396: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14468: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14400: \$? = $ac_status" >&5
+   echo "$as_me:14472: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14497,11 +14569,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14500: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14572: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14504: \$? = $ac_status" >&5
+   echo "$as_me:14576: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16732,11 +16804,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16735: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16807: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16739: \$? = $ac_status" >&5
+   echo "$as_me:16811: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17000,11 +17072,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17003: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17075: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17007: \$? = $ac_status" >&5
+   echo "$as_me:17079: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17104,11 +17176,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17107: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17179: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17111: \$? = $ac_status" >&5
+   echo "$as_me:17183: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -21413,8 +21485,11 @@ do
     "External/Povray/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/Povray/Makefile" ;;
     "External/SPEC/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile" ;;
     "External/SPEC/Makefile.spec") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec" ;;
+    "External/SPEC/Makefile.spec2006") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec2006" ;;
     "External/SPEC/Makefile.spec2000") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec2000" ;;
     "External/SPEC/Makefile.spec95") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec95" ;;
+    "External/SPEC/CFP2006/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/CFP2006/Makefile" ;;
+    "External/SPEC/CINT2006/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/CINT2006/Makefile" ;;
     "External/SPEC/CFP2000/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/CFP2000/Makefile" ;;
     "External/SPEC/CINT2000/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/CINT2000/Makefile" ;;
     "External/SPEC/CFP95/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/CFP95/Makefile" ;;
@@ -21528,6 +21603,8 @@ SPEC95_ROOT!$SPEC95_ROOT$ac_delim
 USE_SPEC95!$USE_SPEC95$ac_delim
 SPEC2000_ROOT!$SPEC2000_ROOT$ac_delim
 USE_SPEC2000!$USE_SPEC2000$ac_delim
+SPEC2006_ROOT!$SPEC2006_ROOT$ac_delim
+USE_SPEC2006!$USE_SPEC2006$ac_delim
 POVRAY_ROOT!$POVRAY_ROOT$ac_delim
 USE_POVRAY!$USE_POVRAY$ac_delim
 NAMD_ROOT!$NAMD_ROOT$ac_delim
@@ -21579,8 +21656,6 @@ CXXCPP!$CXXCPP$ac_delim
 F77!$F77$ac_delim
 FFLAGS!$FFLAGS$ac_delim
 ac_ct_F77!$ac_ct_F77$ac_delim
-LIBTOOL!$LIBTOOL$ac_delim
-USE_F2C!$USE_F2C$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -21622,6 +21697,8 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+LIBTOOL!$LIBTOOL$ac_delim
+USE_F2C!$USE_F2C$ac_delim
 F2C!$F2C$ac_delim
 F2C_BIN!$F2C_BIN$ac_delim
 F2C_DIR!$F2C_DIR$ac_delim
@@ -21638,7 +21715,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 14; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 16; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -21985,10 +22062,16 @@ echo "$as_me: executing $ac_file commands" >&6;}
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile External/SPEC/Makefile ;;
     "External/SPEC/Makefile.spec":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec External/SPEC/Makefile.spec ;;
+    "External/SPEC/Makefile.spec2006":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2006`
+   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec2006 External/SPEC/Makefile.spec2006 ;;
     "External/SPEC/Makefile.spec2000":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2000`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec2000 External/SPEC/Makefile.spec2000 ;;
     "External/SPEC/Makefile.spec95":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec95`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec95 External/SPEC/Makefile.spec95 ;;
+    "External/SPEC/CFP2006/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CFP2006/Makefile`
+   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CFP2006/Makefile External/SPEC/CFP2006/Makefile ;;
+    "External/SPEC/CINT2006/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CINT2006/Makefile`
+   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CINT2006/Makefile External/SPEC/CINT2006/Makefile ;;
     "External/SPEC/CFP2000/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CFP2000/Makefile`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CFP2000/Makefile External/SPEC/CFP2000/Makefile ;;
     "External/SPEC/CINT2000/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CINT2000/Makefile`
