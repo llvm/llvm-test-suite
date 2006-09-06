@@ -6,6 +6,7 @@
 
 LEVEL = ../../..
 PARALLEL_DIRS := \
+        400.perlbench  \
 	401.bzip2      \
 	403.gcc        \
 	429.mcf        \
@@ -15,7 +16,6 @@ PARALLEL_DIRS := \
         464.h264ref    \
         473.astar
 
-# 400.perlbench -- Need Makefile Help
 # 445.gobmk     -- Multiple Dirs
 # 471.omnetpp   -- Multiple Dirs
 # 483.xalancbmk -- Needs C++ Exceptions
