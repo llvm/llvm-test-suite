@@ -14,6 +14,7 @@ PARALLEL_DIRS := \
     435.gromacs  \
     437.leslie3d \
     444.namd     \
+    447.dealII   \
     459.GemsFDTD \
     470.lbm
 
@@ -24,7 +25,6 @@ PARALLEL_DIRS := \
 #   482.sphinx3   - generates control file at run time
 # These don't compile
 #   436.cactusADM - multiple dirs
-#   447.dealII    - multiple dirs
 #   454.calculix  - multiple dirs
 #   481.wrf       - multiple dirs
 

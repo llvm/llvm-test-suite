@@ -41,3 +41,6 @@ include ../../Makefile.spec2006
 
 RUN_OPTIONS      = omnetpp.ini
 STDOUT_FILENAME := omnetpp.log
+
+LDFLAGS = -lstdc++ -lm
+LIBS    = -lstdc++ -lm
