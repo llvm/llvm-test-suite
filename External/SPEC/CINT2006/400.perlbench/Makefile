@@ -7,13 +7,17 @@
 
 LEVEL = ../../../..
 
+include $(LEVEL)/Makefile.config
+
 CPPFLAGS += -DPERL_CORE
 
+ifeq ($(OS),Darwin)
 ifeq ($(ARCH),PowerPC)
   CPPFLAGS += -DSPEC_CPU_MACOSX_PPC
 endif
 ifeq ($(ARCH),x86)
   CPPFLAGS += -DSPEC_CPU_MACOSX_IA32
+endif
 endif
 
 ifeq ($(ENDIAN),little)
