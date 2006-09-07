@@ -33,10 +33,14 @@ Source = av.c deb.c doio.c doop.c dump.c globals.c gv.c hv.c locale.c mg.c     \
 include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)
+  # test.out isn't specified in the REF_IN_DIR/test/data/output directory, so
+  # use one of the .out files that does exist in that directory.
   RUN_OPTIONS      = -I./lib test.pl
-  STDOUT_FILENAME := test.out
+  STDOUT_FILENAME := append.out
+  STDERR_FILENAME := append.err
 else
   RUN_OPTIONS      = -I./lib scrabbl.pl
   STDIN_FILENAME  := scrabbl.in
   STDOUT_FILENAME := scrabbl.out
+  STDERR_FILENAME := scrabbl.err
 endif
