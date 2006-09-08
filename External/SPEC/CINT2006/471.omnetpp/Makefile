@@ -34,7 +34,9 @@ SIMSources    := \
            chead.cc cnetmod.cc csimul.cc distrib.cc cdetect.cc chist.cc        \
            cobject.cc cstat.cc errmsg.cc cdispstr.cc cksplit.cc coutvect.cc    \
            cstruct.cc onstartup.cc cenum.cc cllist.cc cpacket.cc ctopo.cc      \
-           random.cc std/netpack.cc)
+           random.cc)
+SIMSTDSources := \
+         $(SPEC_BENCH_DIR)/src/libs/sim/std/netpack.cc
 SPECSources   := \
          $(SPEC_BENCH_DIR)/src/libs/spec/spec_qsort.cc
 
@@ -42,6 +44,7 @@ Source := $(notdir $(TOPSources))                           \
           $(addprefix cmdenv_,$(notdir $(CMDENVSources)))   \
           $(addprefix envir_,$(notdir $(ENVIRSources)))     \
           $(addprefix sim_,$(notdir $(SIMSources)))         \
+          $(addprefix simstd_,$(notdir $(SIMSTDSources)))   \
           $(addprefix spec_,$(notdir $(SPECSources)))
 
 CPPFLAGS += -DNDEBUG=1                            \
@@ -78,7 +81,12 @@ $(SPEC_BENCH_DIR)/src/libs/envir/%
 $(addprefix sim_,$(notdir $(SIMSources))) : sim_% : \
 $(SPEC_BENCH_DIR)/src/libs/sim/%
 	cp $< $@
-$(notdir $(SPECSources)) : % : $(SPEC_BENCH_DIR)/src/libs/spec/%
+$(addprefix simstd_,$(notdir $(SIMSTDSources))) : simstd_% : \
+$(SPEC_BENCH_DIR)/src/libs/sim/std/%
+	cp $< $@
+
+
+$(addprefix spec_,$(notdir $(SPECSources)) ): spec_% : $(SPEC_BENCH_DIR)/src/libs/spec/%
 	cp $< $@
 
 ##===----------------------------------------------------------------------===##
