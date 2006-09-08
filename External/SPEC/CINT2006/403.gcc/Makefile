@@ -6,7 +6,7 @@
 
 LEVEL = ../../../..
 
-include ../../Makefile.spec2006
+CPPFLAGS += -DSPEC_CPU_MACOSX -DINLINE=__inline__
 
 ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
@@ -15,6 +15,8 @@ endif
 ifeq ($(ENDIAN),big)
   CPPFLAGS += -DHOST_WORDS_BIG_ENDIAN
 endif
+
+include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS      = cccp.i -o cccp.s
