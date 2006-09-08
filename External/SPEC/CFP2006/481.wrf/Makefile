@@ -9,7 +9,8 @@ LEVEL = ../../../..
 FP_TOLERANCE    = 5e-2
 FP_ABSTOLERANCE = 1.0e-2
 
-Source = wrf_num_bytes_between.c pack_utils.c module_driver_constants.F90      \
+TOPSources := \
+         wrf_num_bytes_between.c pack_utils.c module_driver_constants.F90      \
          module_domain.F90 module_integrate.F90 module_timing.F90              \
          module_configure.F90 module_tiles.F90 module_machine.F90              \
          module_nesting.F90 module_wrf_error.F90 module_state_description.F90  \
@@ -51,7 +52,8 @@ Source = wrf_num_bytes_between.c pack_utils.c module_driver_constants.F90      \
          module_cumulus_driver.F90 module_microphysics_driver.F90              \
          solve_em.F90 start_em.F90 internal_header_util.F90 io_int.F90         \
          init_modules_em.F90 init_modules.F90 wrf_io.f90 field_routines.f90    \
-         wrf.F90                                                               \
+         wrf.F90
+NETCDFSources := \
          $(addprefix $(SPEC_BENCH_DIR)/src/netcdf/,                            \
            attr.c dim.c error.c fort-attio.c fort-control.c fort-dim.c         \
            fort-genatt.c fort-geninq.c fort-genvar.c fort-lib.c fort-misc.c    \
@@ -59,8 +61,9 @@ Source = wrf_num_bytes_between.c pack_utils.c module_driver_constants.F90      \
            fort-varmio.c fort-varsio.c libvers.c nc.c ncx.c posixio.c putget.c \
            string.c v1hpg.c v2i.c var.c typeSizes.f90 netcdf.f90)
 
-include ../../Makefile.spec2006
-include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
+Source := \
+         $(notdir $(TOPSources)) \
+         $(addprefix netcdf_,$(notdir $(NETCDFSources)))
 
 FPPFLAGS += -w -m literal.pm                                                   \
             -DINTIO -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4    \
@@ -68,6 +71,34 @@ FPPFLAGS += -w -m literal.pm                                                   \
             -DNMM_MAX_DIM=1000 -DCOAMPS_CORE=0  -DEXP_CORE=0 -DF90_STANDALONE  \
             -DCONFIG_BUF_LEN=8192 -DMAX_DOMAINS_F=21 -DNO_NAMELIST_PRINT
 
-CPPFLAGS += -I$(SPEC_BENCH_DIR)/src/netcdf/include
+CPPFLAGS += \
+         -I$(SPEC_BENCH_DIR)/src/netcdf         \
+         -I$(SPEC_BENCH_DIR)/src/netcdf/include \
+         -I$(SPEC_BENCH_DIR)/src                \
+         -I$(SPEC_BENCH_DIR)/src/include 
+
+
+include ../../Makefile.spec2006
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 
 STDOUT_FILENAME := rsl.out.0000
+
+##===----------------------------------------------------------------------===##
+# Copy the source files to the working directory. Some files may have the
+# same names but are in different directories, so we add a prefix to
+# the filenames to prevent overwriting files.
+##===----------------------------------------------------------------------===##
+
+$(notdir $(TOPSources)) : % : \
+$(SPEC_BENCH_DIR)/src/%
+	cp $< $@
+$(addprefix netcdf_,$(notdir $(NETCDFSources))) : netcdf_% : \
+$(SPEC_BENCH_DIR)/src/netcdf/%
+	cp $< $@
+
+##===----------------------------------------------------------------------===##
+# Clean up all of the copied source files.
+##===----------------------------------------------------------------------===##
+
+clean::
+	$(RM) -f $(Source)
