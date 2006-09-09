@@ -6,7 +6,7 @@
 
 LEVEL = ../../../..
 
-CPPFLAGS += -DSPEC_CPU_MACOSX -DINLINE=__inline__
+CPPFLAGS += -DINLINE=__inline__
 
 ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
