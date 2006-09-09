@@ -7,9 +7,17 @@
 
 LEVEL = ../../../..
 
+# FIXME: The "test" run type outputs timestamps to STDERR. However, the
+# RunSafely.sh script dups STDERR to STDOUT. So testing the difference between
+# the two outputs would require ugly hacks. Let's just run the "train" right
+# now. If we need to run "test" later, we can apply some type of hack to get it
+# to work.
+
+RUN_TYPE := train
+
 include $(LEVEL)/Makefile.config
 
-CPPFLAGS += -DPERL_CORE
+CPPFLAGS += -DPERL_CORE -DI_TIME
 
 ifeq ($(OS),Darwin)
 ifeq ($(ARCH),PowerPC)
