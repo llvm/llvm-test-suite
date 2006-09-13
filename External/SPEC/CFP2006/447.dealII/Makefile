@@ -8,9 +8,12 @@ LEVEL = ../../../..
 
 FP_ABSTOLERANCE = 0.0000001;
 
-include ../../Makefile.spec2006
+CPPFLAGS += \
+        -Ddeal_II_dimension=3     \
+        -DBOOST_DISABLE_THREADS   \
+        -I$(SPEC_BENCH_DIR)/src/include
 
-CPPFLAGS += -I$(SPEC_BENCH_DIR)/src/include -DBOOST_DISABLE_THREADS
+include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS := 8
