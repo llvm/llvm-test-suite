@@ -27,10 +27,6 @@
 extern	"C" {
 #endif
 
-#ifdef __x86_64__
-#error "Temporarily disabled for X86-64!"
-#endif
-
 static void Usage(char *progname);
 static void Version(void);
 static int ExtraOptions(TreeCCContext *context, char **options, int num);
