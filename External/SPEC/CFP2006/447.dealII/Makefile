@@ -6,7 +6,7 @@
 
 LEVEL = ../../../..
 
-FP_ABSTOLERANCE = 0.0000001;
+FP_ABSTOLERANCE = 0.0000001
 
 CPPFLAGS += \
         -Ddeal_II_dimension=3     \
