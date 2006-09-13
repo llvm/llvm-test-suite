@@ -6,6 +6,8 @@
 
 LEVEL = ../../../..
 
+include $(LEVEL)/Makefile.config
+
 CPPFLAGS += -DINLINE=__inline__
 
 ifeq ($(OS),Darwin)
