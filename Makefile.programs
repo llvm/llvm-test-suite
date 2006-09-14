@@ -328,8 +328,8 @@ Output/%.llc-beta: Output/%.llc-beta.s
 # of the JIT and LLI in order to get timing info and statistics.
 EXTRA_LLI_OPTS = 
 
-LLI_OPTS = -force-interpreter=true $(EXTRA_LLI_OPTS)
-JIT_OPTS = -force-interpreter=false $(EXTRA_LLI_OPTS)
+LLI_OPTS = -force-interpreter=true --disable-core-files $(EXTRA_LLI_OPTS)
+JIT_OPTS = -force-interpreter=false --disable-core-files $(EXTRA_LLI_OPTS)
 
 
 # If the program requires exception handling support, enable (potentially
