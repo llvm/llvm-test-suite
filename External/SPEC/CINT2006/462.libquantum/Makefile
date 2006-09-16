@@ -6,6 +6,13 @@
 
 LEVEL = ../../../..
 
+ifdef LARGE_PROBLEM_SIZE
+RUN_TYPE := ref
+else
+# small problem size should use train: test is too small.
+RUN_TYPE := train
+endif
+
 include ../../Makefile.spec2006
 
 ifeq ($(OS),Darwin)
