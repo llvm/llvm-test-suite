@@ -327,6 +327,11 @@ CPPFLAGS += -D__NO_MATH_INLINES
 endif
 endif
 
+ifeq ($(ARCH),Alpha)
+CPPFLAGS += -mieee
+CFLAGS += -mieee
+endif
+
 ifdef EXTRA_OPTIONS
 TARGET_FLAGS += $(EXTRA_OPTIONS)
 endif
