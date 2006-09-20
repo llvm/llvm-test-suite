@@ -79,6 +79,7 @@ EXTERNAL_BENCHMARK(sweep3d,${LLVM_EXTERNALS}/sweep3d)
 EXTERNAL_BENCHMARK(fpgrowth,${LLVM_EXTERNALS}/fpgrowth)
 EXTERNAL_BENCHMARK(alp,${LLVM_EXTERNALS}/alp)
 EXTERNAL_BENCHMARK(nurbs,${LLVM_EXTERNALS}/nurbs)
+EXTERNAL_BENCHMARK(hmmer,${LLVM_EXTERNALS}/hmmer)
 
 dnl Check that the paths of provided external benchmark dirs make sense
 if test -n "$SPEC2006_ROOT" ; then

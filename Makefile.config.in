@@ -82,6 +82,10 @@ ALP_ROOT := @ALP_ROOT@
 @USE_NURBS@
 NURBS_ROOT := @NURBS_ROOT@
 
+# Path to the HMMER source code
+@USE_HMMER@
+HMMER_ROOT := @HMMER_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
 
