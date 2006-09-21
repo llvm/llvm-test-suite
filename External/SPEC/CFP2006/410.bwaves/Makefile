@@ -10,7 +10,7 @@ FP_TOLERANCE    = 0.015
 FP_ABSTOLERANCE = 1.0e-16
 
 include ../../Makefile.spec2006
-include $(LEVEL)/Makefile.FORTRAN
+include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 
 STDIN_FILENAME  := bwaves.in
 STDOUT_FILENAME := bwaves.out
