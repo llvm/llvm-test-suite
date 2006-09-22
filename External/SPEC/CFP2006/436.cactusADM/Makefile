@@ -156,6 +156,8 @@ CPPFLAGS += \
           -I$(SPEC_BENCH_DIR)/src                 \
           -I$(SPEC_BENCH_DIR)/src/include 
 
+NAGFORTRAN_FLAGS += -maxcontin=39
+
 include ../../Makefile.spec2006
 include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 
