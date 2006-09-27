@@ -241,15 +241,20 @@ CPPFLAGS += \
          -I$(SPEC_BENCH_DIR)/src                               \
          -I$(SPEC_BENCH_DIR)/src/include 
 
+NAGFORTRAN_FLAGS += \
+         -I$(SPEC_BENCH_DIR)/src                               \
+         -I$(SPEC_BENCH_DIR)/src/SPOOLES                       \
+         -maxcontin=256
+
 include ../../Makefile.spec2006
 include $(PROJ_SRC_ROOT)/Makefile.FORTRAN
 
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS     := -i beampic
-  STDOUT_FILENAME := beampic.log
+  STDOUT_FILENAME := beampic.dat
 else
   RUN_OPTIONS     := -i stairs
-  STDOUT_FILENAME := stairs.log
+  STDOUT_FILENAME := stairs.dat
 endif
 
 ##===----------------------------------------------------------------------===##
@@ -282,6 +287,9 @@ $(SPEC_BENCH_DIR)/src/SPOOLES/ChvManager/src/%
 $(addprefix dstree_,$(notdir $(DSTREESources))) : dstree_% : \
 $(SPEC_BENCH_DIR)/src/SPOOLES/DSTree/src/%
 	cp $< $@
+$(addprefix dv_,$(notdir $(DVSources))) : dv_% : \
+$(SPEC_BENCH_DIR)/src/SPOOLES/DV/src/%
+	cp $< $@
 $(addprefix dmtx_,$(notdir $(DENSEMTXSources))) : dmtx_% : \
 $(SPEC_BENCH_DIR)/src/SPOOLES/DenseMtx/src/%
 	cp $< $@
@@ -312,7 +320,7 @@ $(SPEC_BENCH_DIR)/src/SPOOLES/IV/src/%
 $(addprefix ivl_,$(notdir $(IVLSources))) : ivl_% : \
 $(SPEC_BENCH_DIR)/src/SPOOLES/IVL/src/%
 	cp $< $@
-$(addprefix ideq_,$(notdir $(IEQSources))) : ideq_% : \
+$(addprefix ideq_,$(notdir $(IDEQSources))) : ideq_% : \
 $(SPEC_BENCH_DIR)/src/SPOOLES/Ideq/src/%
 	cp $< $@
 $(addprefix inpmtx_,$(notdir $(INPMTXSources))) : inpmtx_% : \
