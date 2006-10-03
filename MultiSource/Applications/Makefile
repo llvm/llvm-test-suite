@@ -4,7 +4,8 @@ LEVEL = ../..
 
 include $(LEVEL)/Makefile.config
 
-PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc SPASS hexxagon oggenc JM
+PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc SPASS \
+                 hexxagon oggenc JM viterbi
 
 # Obsequi uses Linux-only features; need to fix that
 ifeq ($(OS),Linux)
