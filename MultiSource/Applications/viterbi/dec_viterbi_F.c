@@ -11,7 +11,12 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
   char X0, X1, Y0, Y1;
   unsigned char history[MAX_Nways][MAX_history];
   unsigned char history_new[MAX_Nways][MAX_history+1];
+#if 0
+  /* FIXME */
+  /* Time varies between runs giving false negatives about which run
+     (JIT, CBE, or LLC) failed */
   double startTime, now, estTotal;
+#endif /* 0 */
   
   if (bit_stream->length) {
     bitvector_clear(bit_stream);
@@ -30,16 +35,26 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
   memcpy(Metr, Metr_mem->data, Metr_mem->length*sizeof(double));
   memcpy(history, history_mem, sizeof(history));
   
+#if 0
+  /* FIXME */
+  /* Time varies between runs giving false negatives about which run
+     (JIT, CBE, or LLC) failed */
   startTime = sTime();
+#endif /* 0 */
   i_punct = 0;
   while (i_in<bit_stream->length) {
+#if 0
+    /* FIXME */
+    /* Time varies between runs giving false negatives about which run
+       (JIT, CBE, or LLC) failed */
     if (i_in && (i_in % 10000 == 0)) {
       now = sTime();
       estTotal = ((double)1.02*bit_stream->length/((double)i_in))*(now-startTime);
-      printf("Viterbi: Estimate %1.1lf%% complete (%1.1lf seconds / %1.1lf seconds)...\r",
+      printf("Viterbi: Estimate %1.1lf%% complete (%1.1lf seconds / %1.1lf seconds)...\n",
              (double)100.0*i_in/(1.02*bit_stream->length), now-startTime, estTotal);
       fflush(stdout);
     }
+#endif /* 0 */
     if (i_punct == param->n_in) {
       i_punct = 0;                 
     }

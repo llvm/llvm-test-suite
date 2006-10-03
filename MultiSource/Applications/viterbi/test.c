@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#define INPUT_FILE PROJ_SRC_DIR "/Dist_demux"
+
 size_t read_dmatrix(dvarray* out, const char* filename);
 void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit_stream,
                    const dvarray* Dist, const param_viterbi_t* param, size_t n);
@@ -25,11 +27,11 @@ int main(void)
   dvector_init(&Metr_mem, MAX_Nways);
   memcpy(Metr_mem.data, param_viterbi.Metr, sizeof(param_viterbi.Metr));
 
-  read_dmatrix(&Dist_demux, "Dist_demux");
+  read_dmatrix(&Dist_demux, INPUT_FILE);
 
   printf("Starting Viterbi\n");
   dec_viterbi_F(&Metr_mem, history_mem, &d_bit_stream, &Dist_demux, &param_viterbi, 0);
-  printf("\nViterbi finished\n");
+  printf("Viterbi finished\n");
 
   dvector_clear(&Metr_mem);
   dvarray_clear(&Dist_demux);

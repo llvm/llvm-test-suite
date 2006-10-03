@@ -10,18 +10,18 @@ size_t read_dmatrix(dvarray* out, const char* filename) {
 
     printf("Opened file %s for matrix reading\n", filename);
 
-    fscanf(fid, "%d %d\n", &height, &width);
+    fscanf(fid, "%d %d", &height, &width);
 
     dvarray_init(out, height, width);
-    
+
     for (i=0; i<height; ++i) {
       for (j=0; j<width; ++j) {
-        fscanf(fid,"%lf\n",&value);
-          out->data[i].data[j] = value;
+        fscanf(fid,"%lf",&value);
+        out->data[i].data[j] = value;
       }
     }
 
-    printf("%lf\n", out->data[i-1].data[j-1]);
+    printf("%g\n", out->data[i-1].data[j-1]);
     fclose(fid);
     printf("File read and closed\n");
     return i*j;
