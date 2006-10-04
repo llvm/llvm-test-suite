@@ -34,8 +34,6 @@ endif
 .PRECIOUS: Output/%.llvm.bc
 .PRECIOUS: Output/%.llvm
 
-LCCFLAGS  += -O2
-LCXXFLAGS += -O2
 LLCFLAGS =
 FAILURE  = $(LLVM_SRC_ROOT)/test/Failure.sh
 TESTRUNR = @echo Running test: $<; \
