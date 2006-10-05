@@ -193,7 +193,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -fast -regalloc=local
+LLCBETAOPTION := -relocation-model=pic
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -sched=list-td 
