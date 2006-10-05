@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <time.h>
+#include <stdlib.h>
 
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
 #  include <sys/time.h>
