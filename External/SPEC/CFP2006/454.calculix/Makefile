@@ -234,10 +234,10 @@ CPPFLAGS += \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES/SubMtxManager/src     \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES/SymbFac/src           \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES/Tree/src              \
-         -I$(SPEC_BENCH_DIR)/src/SPOOLES/Utilities/src         \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES/ZV/src                \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES/misc/src              \
          -I$(SPEC_BENCH_DIR)/src/SPOOLES                       \
+         -I$(SPEC_BENCH_DIR)/src/SPOOLES/Utilities/src         \
          -I$(SPEC_BENCH_DIR)/src                               \
          -I$(SPEC_BENCH_DIR)/src/include 
 
