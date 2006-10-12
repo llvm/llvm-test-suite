@@ -1,6 +1,6 @@
 LEVEL = ../../../..
 
-PROG     = smg2000 
+PROG     = smg2000
  
 CPPFLAGS += -D_POSIX_SOURCE -DHYPRE_TIMING -DHYPRE_SEQUENTIAL 
 CPPFLAGS += -I. 
