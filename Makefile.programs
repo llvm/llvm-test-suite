@@ -193,7 +193,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -relocation-model=pic
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -sched=list-td 
@@ -203,7 +203,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -fast -regalloc=local
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
