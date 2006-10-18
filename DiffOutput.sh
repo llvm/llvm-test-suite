@@ -32,7 +32,7 @@ TESTOUTPUT=Output/${PROG}.out-${WHICHOUTPUT}
 GOODOUTPUT=Output/${PROG}.out-${GOODOUTPUT}
 
 # Diff the two files.
-$DIFF $GOODOUTPUT $TESTOUTPUT > $DIFFOUTPUT || (
+$DIFF $GOODOUTPUT $TESTOUTPUT > $DIFFOUTPUT 2>&1 || (
   # They are different!
   echo "******************** TEST ($WHICHOUTPUT) '$PROG' FAILED! ********************"
   echo "Execution Context Diff:"
