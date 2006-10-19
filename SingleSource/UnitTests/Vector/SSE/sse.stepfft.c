@@ -17,10 +17,10 @@ main()
    float t1,ln2,mflops;
    void cffti(),cfft2();
 /* allocate storage for x,y,z,w on 4-word bndr. */
-   x = (float *)_mm_malloc(8*N, 16);
-   y = (float *)_mm_malloc(8*N, 16);
-   z = (float *)_mm_malloc(8*N, 16);
-   w = (float *)_mm_malloc(4*N, 16);
+   x = (float *)valloc(8*N);
+   y = (float *)valloc(8*N);
+   z = (float *)valloc(8*N);
+   w = (float *)valloc(4*N);
    first = 1;
    seed  = 331.0;
    for(icase=0;icase<2;icase++){

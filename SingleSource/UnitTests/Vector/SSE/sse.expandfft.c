@@ -5,6 +5,7 @@
 #include "xmmintrin.h"
 #define N 1024
 #define N2 N/2
+
 main()
 {
 /* 
@@ -14,15 +15,16 @@ main()
               wpp, SAM. Math. ETHZ 21 May, 2002 
 */
    int first,i,icase,it,n;
-   float error,fnm1,seed,sign,z0,z1,ggl();
+   double error;
+   float fnm1,seed,sign,z0,z1,ggl();
    float *x,*y,*z,*w;
    float t1,ln2,mflops;
    void cffti(),cfft2();
 /* allocate storage for x,y,z,w on 4-word bndr. */
-   x = (float *)_mm_malloc(8*N, 16);
-   y = (float *)_mm_malloc(8*N, 16);
-   z = (float *)_mm_malloc(8*N, 16);
-   w = (float *)_mm_malloc(4*N, 16);
+   x = (float *)valloc(8*N);
+   y = (float *)valloc(8*N);
+   z = (float *)valloc(8*N);
+   w = (float *)valloc(4*N);
    first = 1;
    seed  = 331.0;
    for(icase=0;icase<2;icase++){
