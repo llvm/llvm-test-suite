@@ -193,7 +193,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -combiner-alias-analysis
+LLCBETAOPTION := -enable-tail-merge
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -sched=list-td 
