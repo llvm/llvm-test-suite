@@ -1,5 +1,6 @@
 # SingleSource/UnitTests/Vector/Makefile
 LEVEL = ../../..
-PROG=div
+SEED := $(shell date +%j)
+RUN_OPTIONS := $(SEED)
 include $(LEVEL)/Makefile.config
 include $(LEVEL)/SingleSource/Makefile.singlesrc
