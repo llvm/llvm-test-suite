@@ -15,6 +15,9 @@ ifeq ($(ARCH),PowerPC)
  CPPFLAGS += -DFMAX_IS_DOUBLE
 endif
 
+ifeq ($(ARCH),Alpha)
+ CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             ggCoverageSolidTexture.cc ggPathDielectricMaterial.cc ggBox2.cc \
