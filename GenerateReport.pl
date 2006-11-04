@@ -372,10 +372,16 @@ if ($HTML) {
     #
     # Print out the table as csv
     #
+    my $firstrow = 1;
     foreach $Value (@Values) {
       printf "$$Value[0]";
       for ($i = 1; $i < @$Value-1; $i++) {
         print ",$$Value[$i]" if ($$Value[$i] ne "|");
+      }
+      if ($firstrow) {
+        # Print an extra column for the header.
+        print ",$$Value[@$Value-1]";
+        $firstrow = 0;
       }
       print "\n";
     }
