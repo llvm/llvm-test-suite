@@ -18,10 +18,10 @@ ANALYZE_OPTS +=  -instcount -disable-verify
 MEM := -track-memory -time-passes
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
-Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LANALYZE) $(LOPT)
+Output/%.$(TEST).report.txt: Output/%.lib.bc Output/%.LOC.txt $(LOPT)
 	@# Gather data
-	-($(LANALYZE) -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@.time.1 2>&1
-	-($(LANALYZE) $(MEM) -$(PASS)datastructure -disable-verify $<)> $@.mem.1 2>&1
+	-($(LOPT) -analyze -$(PASS)datastructure $(ANALYZE_OPTS) $<)> $@.time.1 2>&1
+	-($(LOPT) -analyze $(MEM) -$(PASS)datastructure -disable-verify $<)> $@.mem.1 2>&1
 	-($(LOPT) -steens-aa -time-passes -disable-output $<) > $@.time.2 2>&1
 	-($(LOPT) -steens-aa $(MEM) -disable-output $<) > $@.mem.2 2>&1
 	@# Emit data.
@@ -74,5 +74,5 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 # Define REPORT_DEPENDENCIES so that the report is regenerated if analyze or
 # dummylib is updated.
 #
-REPORT_DEPENDENCIES := $(DUMMYLIB) $(LANALYZE) $(LOPT)
+REPORT_DEPENDENCIES := $(DUMMYLIB) $(LOPT)
 

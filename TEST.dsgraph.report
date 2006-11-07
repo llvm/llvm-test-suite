@@ -28,7 +28,7 @@ sub TypeSafeRatio {
   $TS = 0 if ($TS eq "*");
   $NTS = 0 if ($NTS eq "*");
 
-  if ($TS + NTS != 0) {
+  if ($TS + $NTS != 0) {
     return sprintf("%4.1f%%", 100*$TS/($TS+$NTS+0.0));
   } else {
     return "n/a";
