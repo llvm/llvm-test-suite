@@ -55,10 +55,6 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
       fflush(stdout);
     }
 #endif /* 0 */
-    if (i_punct == param->n_in) {
-      i_punct = 0;                 
-    }
-    
     memcpy(Metr0, Metr, Metr_mem->length*sizeof(double));
     memcpy(Metr1, Metr, Metr_mem->length*sizeof(double));
     
@@ -128,6 +124,10 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
       for (j=0; j<MAX_history; ++j) {
         history[i][j] = history_new[i][j];
       }
+    }
+
+    if (++i_punct == param->n_in) {
+      i_punct = 0;                 
     }
   }
 
