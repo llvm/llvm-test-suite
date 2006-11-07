@@ -193,8 +193,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-majik-f00
-#--enable-tail-merge
+LLCBETAOPTION := --enable-tail-merge
 #-regalloc=local -fast
 endif
 ifeq ($(ARCH),Alpha)
@@ -205,8 +204,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-majik-f00
-#--enable-tail-merge
+LLCBETAOPTION := --enable-tail-merge
 #-regalloc=local -fast
 endif
 ifeq ($(ARCH),Sparc)
