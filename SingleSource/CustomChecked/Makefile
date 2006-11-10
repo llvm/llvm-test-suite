@@ -7,7 +7,7 @@ DISABLE_DIFFS = 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 LIBS += -lstdc++
-LDFLAGS += -lm
+LDFLAGS += -lstdc++ -lm
 
 LLI_RUN  := $(addsuffix .run-lli, $(PREFIXED_PROGRAMS_TO_TEST))
 JIT_RUN  := $(addsuffix .run-jit, $(PREFIXED_PROGRAMS_TO_TEST))
