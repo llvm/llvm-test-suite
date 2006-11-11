@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS 1
+#endif
 #include <inttypes.h>
 
 
