@@ -56,6 +56,7 @@ void PGM_InitImage(ImgP img, char *filename)
 
   /* Clear valid bit. */
   img->valid = 0;
+  img->var = 0;
 }
 
 /*
@@ -196,6 +197,7 @@ int PGM_LoadImage(ImgP img)
   img->data = (char *) malloc((img->width * img->height) * sizeof(char));
   img->hist = (int *) calloc(img->maxgray + 1, sizeof(int));
   img->p = (double *) calloc(img->maxgray + 1, sizeof(double));
+  img->var = NULL;
 
   /* Skip comments. */
   fscanf(img->fp, "#%n", &n);
