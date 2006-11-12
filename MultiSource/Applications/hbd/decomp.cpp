@@ -248,7 +248,7 @@ here:
            l->type = LOOP_WHILE;
            str = l->condition->toString(0);
            fprintf(c->outfile, "    while (%s) {\n", str);
-           delete str;
+           delete [] str;
            indentlevel++;
            for (int i=indentlevel; i--;) fprintf(c->outfile, "  ");
            branchbacklist2->push(branchbacklist->pop());
@@ -272,7 +272,7 @@ here:
                  char *str = l->condition->toString(0);
                  fprintf(c->outfile, "  } while(%s);\t/*%d*/\n", str,
                      pptr->minpc);
-                 delete str;
+                 delete [] str;
                }
              } else {
                fprintf(c->outfile, "  }\t/*%d*/\n", pptr->minpc);
@@ -308,7 +308,7 @@ here:
              fprintf(c->outfile, "    %s;\t/*%d*/\n", str, (*(p-1))->minpc);
              for (int i=indentlevel; i--;) fprintf(c->outfile, "  ");
            }
-           delete str;
+           delete [] str;
            fprintf(c->outfile, "  }\n");
            indentlevel--;
            for (int i=indentlevel; i--;) fprintf(c->outfile, "  ");
@@ -329,7 +329,7 @@ here:
          fprintf(c->outfile, "\n");
          for (int i=indentlevel; i--;) fprintf(c->outfile, "  ");
        }
-       delete str;
+       delete [] str;
       }
     }
     fprintf(c->outfile, "  }");

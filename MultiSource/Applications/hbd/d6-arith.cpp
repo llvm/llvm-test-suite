@@ -86,7 +86,7 @@ int pushunop(Classfile *c) /* push unary operation, popping operand e.g. lneg */
       tmpstr = new char[100];
       sprintf(tmpstr,"label%i", branch_pc);
       buff = new char[strlen(tmpstr) + 1]; strcpy(buff, tmpstr);
-      delete tmpstr;
+      delete [] tmpstr;
       e1 = new Exp(pcval, buff, VOID/*label*/, IM);
       *donestkptr++ = new Exp(pcval, PREUNARY, VOID, GOTO, e1, branch_pc);
       return 0;
