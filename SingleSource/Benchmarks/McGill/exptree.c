@@ -381,8 +381,9 @@ void search(void)
     doSearch();
 }
 
-void main( int argc, char *argv[] )
+int main( int argc, char *argv[] )
 {
     if( getInput() )
 	search();
+    return 0;
 }
