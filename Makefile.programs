@@ -391,6 +391,10 @@ ifdef FP_ABSTOLERANCE
 BUGPOINT_OPTIONS += -abs-tolerance $(FP_ABSTOLERANCE)
 endif
 
+ifdef DISABLE_LOOP_EXTRACT
+BUGPOINT_OPTIONS += -disable-loop-extraction
+endif
+
 # Give bugpoint information about LDFLAGS to pass down to the actual link stage
 # of the program.
 BUGPOINT_OPTIONS += $(LDFLAGS:%=-Xlinker=%) $(EXTRA_OPTIONS:%=-Xlinker=%)
