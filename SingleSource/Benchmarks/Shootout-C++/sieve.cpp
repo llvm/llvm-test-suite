@@ -7,38 +7,37 @@ using namespace std;
 
 void sieve(list<int>& unknown, vector<int>& primes)
 {
-	while (!unknown.empty())
-	{
-		int p = unknown.front();
-		unknown.pop_front();
-		list<int>::iterator i = unknown.begin();
-		while (i != unknown.end())
-		{
-			if (*i % p)
-				++i;
-			else
-				i = unknown.erase(i);
-		}
-		primes.push_back(p);
-	}
+  while (!unknown.empty())
+  {
+    int p = unknown.front();
+    unknown.pop_front();
+    list<int>::iterator i = unknown.begin();
+    while (i != unknown.end())
+    {
+      if (*i % p)
+        ++i;
+      else
+        i = unknown.erase(i);
+    }
+    primes.push_back(p);
+  }
 }
 
 int main(int argc, char *argv[]) 
 {
-    size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 
-                  500);
+  size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 500);
 
-	vector<int> primes;
+  vector<int> primes;
 
-	// run the sieve repeatedly
-    while (NUM--) {
-		list<int> integers;
-		for (int i = 2; i < 8192; ++i)
-			integers.push_back(i);
-		primes.clear();
-		sieve(integers, primes);
-    }
+  // run the sieve repeatedly
+  while (NUM--) {
+    list<int> integers;
+    for (int i = 2; i < 8192; ++i)
+      integers.push_back(i);
+    primes.clear();
+    sieve(integers, primes);
+  }
 
-    cout << "Count: " << primes.size() << endl;
-	return 0;
+  cout << "Count: " << primes.size() << endl;
+  return 0;
 }
