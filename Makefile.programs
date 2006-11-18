@@ -428,6 +428,8 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
+clean::
+	rm -f bugpoint-*
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
 
