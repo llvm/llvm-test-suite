@@ -40,7 +40,6 @@ Output/%.native: $(SourceDir)/%.cpp Output/.dir
 	-$(CXX) $(CXXFLAGS) -O2 $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 
-bugpoint-gccas bugpoint-gccld bugpoint-jit bugpoint-llc \
-bugpoint-llc-beta:
+bugpoint-gccas bugpoint-gccld bugpoint-jit bugpoint-llc bugpoint-llc-beta:
 	@echo "The $@ target doesn't work in SingleSource.  Try:"
 	@echo "  'make Output/[programname].$@' instead."
