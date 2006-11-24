@@ -202,7 +202,7 @@ void find(register int level);
 **  with decoding the command line arguments, initializing the
 **  various arrays, and starting the recursive search routine.
 */
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
    register int  i;				/* Loop variable */
    register char *p;				/* Ptr to argument */

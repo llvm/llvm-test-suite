@@ -333,7 +333,7 @@ void get_real_move(int *data1,int *data2,int *row,int *col) /* returns row & col
   *row = data1[*col];  /* row is given by the content of the structure */
 }
 
-void main(void)
+int main(void)
 {
   int row,col,maxrow,player;
   int *win,*current,*temp;
@@ -419,6 +419,7 @@ void main(void)
 	dump_play(tree); /* dump for memory management */
         break;
     }
+  return 0;
 }
 
 /*****************************************************************************/

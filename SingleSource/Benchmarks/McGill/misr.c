@@ -32,6 +32,7 @@ prob described above.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define INF 10000
 #define MAX_REG_LN 100
@@ -56,7 +57,7 @@ void create_link_list(misr_type *cell_array);
 
 /* Main Program */
 
-void main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
         misr_type cell_array;
 	int num_vect, num_times, num_true, i;
@@ -68,7 +69,7 @@ void main(int argc,char *argv[])
 	if (0 && argc < 6)
 	{
 		printf("Usage: MISR fileout reg_len #_vectors prob #_times [structure] [seed] [seed] [seed]\n");
-		return;
+		return 1;
 	}
 
 /* input and translate arguments */
@@ -87,7 +88,7 @@ void main(int argc,char *argv[])
 		for (i=1; i<reg_len; i++)
 			structure[i] = '0';
 		structure[0] = '1';
-		structure[reg_len] = NULL;
+		structure[reg_len] = 0;
 	}
         if (argc > 7) sscanf(argv[7], "%hu", &seed[0]); else seed[0] = 1;
         if (argc > 8) sscanf(argv[8], "%hu", &seed[1]); else seed[1] = 0;
@@ -98,17 +99,17 @@ void main(int argc,char *argv[])
 	if (reg_len > MAX_REG_LN)
 	{
 		printf("Register too long; Max. = %d\n", MAX_REG_LN);
-		return;
+		return 2;
 	}
 	if ((prob > 1) || (prob < 0))
 	{
 		printf("Prob. out of range 0=<Prob>=1\n");
-		return;
+		return 3;
 	}
 	if (strlen(structure) != reg_len)
 	{
 		printf("Structure does not match Register length:\n");
-		return;
+		return 4;
 	}
 
 
@@ -145,6 +146,7 @@ void main(int argc,char *argv[])
 
 	printf("%d	%d	%.3e %d	%s	%d	%d	%d	%.8e\n", reg_len, num_vect, prob, num_times, structure, seed[0], seed[1], seed[2],(double)(num_times - num_true)/(double)num_times);
 	//kill_list(&cell_array);
+        return 0;
 }
 
 /*************************************************************
