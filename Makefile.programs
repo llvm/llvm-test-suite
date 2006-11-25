@@ -83,10 +83,15 @@ endif
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
 # continue to be run.
-ifndef GET_STABLE_NUMBERS
-RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT)
+ifdef PROGRAM_REQUIRED_TO_EXIT_OK
+EXIT_OK := 1
 else
-RUNSAFELY := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT)
+EXIT_OK := 0
+endif
+ifndef GET_STABLE_NUMBERS
+RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT) $(EXIT_OK)
+else
+RUNSAFELY := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT) $(EXIT_OK)
 endif
 
 ifndef STDIN_FILENAME
@@ -351,37 +356,52 @@ ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (nat): $* FAILED EXITOK!"; rm -f $@; \
+	fi
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS)
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (lli): $* FAILED EXITOK!"; rm -f $@; \
+	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
-ifdef PROGRAM_REQUIRED_TO_EXIT_OK
-	@if test \! -f $@.exitok; then echo "TEST (jit): $* FAILED!"; rm -f $@; fi
-endif
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (jit): $* FAILED EXITOK!"; rm -f $@; \
+	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
-ifdef PROGRAM_REQUIRED_TO_EXIT_OK
-	@if test \! -f $@.exitok; then echo "TEST (jit-beta): $* FAILED!"; rm -f $@; fi
-endif
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (jit-beta): $* FAILED EXITOK!"; rm -f $@; \
+	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (llc): $* FAILED EXITOK!" ; rm -f $@; \
+	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (llc-beta): $* FAILED EXITOK!" ; rm -f $@; \
+	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	@if test $$? -ne 0 ; then \
+	  echo "TEST (cbe): $* FAILED EXITOK!" ; rm -f $@; \
+	fi
 
 # If a tolerance is set, pass it off to bugpoint
 ifdef FP_TOLERANCE
