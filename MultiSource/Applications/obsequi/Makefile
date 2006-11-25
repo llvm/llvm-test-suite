@@ -5,4 +5,5 @@ CPPFLAGS += -DTWO_STAGE_GENERATION
 LDFLAGS = -lsupc++ -lcurses
 LIBS += -lsupc++ -lcurses
 STDIN_FILENAME=$(PROJ_SRC_DIR)/input
+PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include ../../Makefile.multisrc
