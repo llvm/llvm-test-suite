@@ -51,7 +51,7 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
 Output/%.nightly.nat.report.txt: Output/%.out-nat
 	@echo > $@
-	printf "TEST-RESULT-nat-time: " >> $@
+	@printf "TEST-RESULT-nat-time: " >> $@
 	-grep "^program" Output/$*.out-nat.time >> $@
 
 # LLC tests
