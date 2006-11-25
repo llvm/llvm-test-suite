@@ -34,12 +34,14 @@
 #include "cppflags.h"
 #include "interface.h"
 
+#ifndef __linux__
 // LLVM: define our own getline for portability
 #define getline getline_llvm
 
 ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
   return getstr (lineptr, n, stream, '\n', 0, 0);
 }
+#endif
 
 //########################################################
 // Function templates.
