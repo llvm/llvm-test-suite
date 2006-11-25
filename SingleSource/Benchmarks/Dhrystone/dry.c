@@ -166,12 +166,12 @@ extern boolean		Func2();
 #include <sys/times.h>
 #endif
 
+#include <string.h>
+
 main()
 {
 	Proc0();
-#if 0
-	exit(0);
-#endif
+        return 0;
 }
 
 /*

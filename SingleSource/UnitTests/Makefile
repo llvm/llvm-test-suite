@@ -13,5 +13,5 @@ DIRS :=
 DIRS += Vector
 endif
 
+PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
-

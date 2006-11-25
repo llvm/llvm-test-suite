@@ -23,6 +23,7 @@ int passShort(char c, short s)
 int main()
 {
   printf("%d\n", passShort(0x80, 0xf0f4));
+  return 0;
 }
 
 short getShort(char c, char c2, char c3, short s, short s2, int i)

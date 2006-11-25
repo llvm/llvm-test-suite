@@ -18,4 +18,5 @@ int main() {
   U.Y = ~0;
   test(&U.Z, 0);
   printf("%x\n", U.Y);
+  return 0;
 }

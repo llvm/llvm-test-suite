@@ -9,4 +9,5 @@ void printArgsNoRet(char a3, char* a5) {
 
 int main() {
   printArgsNoRet('c', "e");
+  return 0;
 }

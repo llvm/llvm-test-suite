@@ -432,4 +432,5 @@ int main(void) {
     
     rsdec_204(rs_in, rs_out);
   }
+  return 0;
 }

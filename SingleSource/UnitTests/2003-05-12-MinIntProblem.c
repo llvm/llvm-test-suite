@@ -6,5 +6,6 @@ void foo(int X) {
 }
 int main() {
  foo(-2147483648);
+ return 0;
 }
 

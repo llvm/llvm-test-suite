@@ -3,7 +3,7 @@
 #include <float.h>
 #include "xmmintrin.h"
 #define N 20
-main()
+int main()
 {
 /* 
   SSE unit step isamax with alignment code. From Section
@@ -22,6 +22,7 @@ main()
   im = isamax0(N,x);
   printf(" maximum index = %d\n",im);
   printf(" maximum value = %e\n",x[im]);
+  return 0;
 }
 #define NS 12
 int isamax0(int n, float *x)

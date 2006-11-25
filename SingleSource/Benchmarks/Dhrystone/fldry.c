@@ -165,10 +165,11 @@ extern boolean		Func2();
 #include <sys/types.h>
 #include <sys/times.h>
 #endif
-
+#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-main( argc, argv)
+int main( argc, argv)
 int argc;
 char **argv;
 {
@@ -176,9 +177,7 @@ char **argv;
          sizeof(extended));
 	//fflush( stdout);
 	Proc0();
-#if 0
-	exit(0);
-#endif
+        return 0;
 }
 
 /*
@@ -203,7 +202,6 @@ Proc0()
 	Enumeration	 	EnumLoc;
 	String30		String1Loc;
 	String30		String2Loc;
-	extern char		*malloc();
 	register unsigned int	i;
 
 #ifdef CLOCK

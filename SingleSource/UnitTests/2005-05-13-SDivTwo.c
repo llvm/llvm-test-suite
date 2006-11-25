@@ -5,4 +5,5 @@ int main() {
   for (i = 0; i != 258; ++i) {
     printf("%d\n", ((signed char)i) / (signed char)2);
   }
+  return 0;
 }

@@ -10,4 +10,5 @@ struct T GV = { 1, 5, 1 };
 
 int main() {
   printf("%d %d %d\n", GV.X, GV.Y, GV.Z);
+  return 0;
 }

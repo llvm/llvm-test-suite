@@ -28,4 +28,5 @@ int main()
            char   c2 = (         char ) UC80;     /* sign-extend */
   printf("%d %d --> unsigned: uc = %d, uc2 = %d\n", C80, UC80, uc, uc2);
   printf("%d %d -->   signed:  c = %d,  c2 = %d\n", C80, UC80,  c,  c2);
+  return 0;
 }

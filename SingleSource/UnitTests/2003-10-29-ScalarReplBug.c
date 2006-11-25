@@ -28,6 +28,5 @@ int main()
 
   d.uval = 0;
   iter(callback, &d);
+  return 0;
 }
-
-

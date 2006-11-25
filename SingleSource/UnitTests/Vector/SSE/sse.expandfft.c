@@ -6,7 +6,7 @@
 #define N 1024
 #define N2 N/2
 
-main()
+int main()
 {
 /* 
    SSE version of cfft2 - uses Intel intrinsics.
@@ -85,6 +85,7 @@ main()
       }
    }
    }
+   return 0;
 }
 void cfft2(n,x,y,w,sign)
 int n;

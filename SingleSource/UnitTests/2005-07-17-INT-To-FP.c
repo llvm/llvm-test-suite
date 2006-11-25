@@ -40,4 +40,5 @@ int main() {
                                (float)           tests[i],
                                (float) (  signed)tests[i]);
   }
+  return 0;
 }

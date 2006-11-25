@@ -140,4 +140,5 @@ int main() {
   printf("PR627: %d\n", sizeof(lock));
   XX = ucast_test();
   printf("PR684: %d, %d, %d %d\n", XX.s.i1, XX.s.i2, XX.s.i3, XX.i);
+  return 0;
 }

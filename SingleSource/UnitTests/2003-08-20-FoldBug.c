@@ -14,5 +14,6 @@ foo (int x)
 int main () {
   foo (0x8000fffe);
   printf("All ok\n");
+  return 0;
 }
 

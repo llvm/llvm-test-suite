@@ -111,4 +111,5 @@ int main() {
   printf("s12 = %lld, %lld, %lld\n", (long long) s12.A, (long long) s12.B,
          (long long)s12.C);
   printf("s13 = %d, %s, %d\n", s13.A, s13.B, s13.C);
+  return 0;
 }

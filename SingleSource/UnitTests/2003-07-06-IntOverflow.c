@@ -49,4 +49,5 @@ int main()
   divideOvf(b21 + 1,    b21 + 2);
   divideNeg(b21 + 1,    b21 + 2);       /* arg1 must be < arg2 */
   subtractOvf(b21 + 1,  b21 + 2);
+  return 0;
 }
