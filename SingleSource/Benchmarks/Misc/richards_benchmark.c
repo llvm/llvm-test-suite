@@ -22,8 +22,9 @@
 #include <stdlib.h>
 
 #define                Count           10000*1000
-#define                Qpktcountval    2326410
-#define                Holdcountval     930563
+#define                Qpktcountval    23263894
+#define                Holdcountval     9305557
+
 
 #define                TRUE            1
 #define                FALSE           0
@@ -343,6 +344,7 @@ void append(struct packet *pkt, struct packet *ptr)
 int main()
 {
     struct packet *wkq = 0;
+    int retval;
 
     printf("Bench mark starting\n");
 
@@ -386,11 +388,15 @@ int main()
            qpktcount, holdcount);
 
     printf("These results are ");
-    if (qpktcount == Qpktcountval && holdcount == Holdcountval)
-        printf("correct");
-    else printf("incorrect");
-
+    if (qpktcount == Qpktcountval && holdcount == Holdcountval) {
+      printf("correct");
+      retval = 0;
+    } else {
+      printf("incorrect");
+      retval = 1;
+    }
+    
     printf("\nend of run\n");
-    return 0;
+    return retval;
 }
 
