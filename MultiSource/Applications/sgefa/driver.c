@@ -75,6 +75,7 @@ main()
       //       err, err/snrm2( a.rd, x, 1 ) );
     }
   }				/* End of while loop over test cases. */
+  return 0;
 }				/* End of MAIN */
 
 int matgen( a, x, b, bt, ipvt, test_case, scale )
