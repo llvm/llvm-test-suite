@@ -89,19 +89,16 @@ return 1; \
 }
 
 // The higher the number the better the testing. 
-#define ITERATIONS 10000
+#define ITERATIONS 100
 
 int main(int argc, char **argv) {
     // Since the test vectors are printed out anyways, I suggest leaving
     // the test nondeterministic. Many people run tests on various
     // machines, so REM-related code will be covered with a much better
     // coverage... If you really don't like the idea of having better
-    // coverage, uncomment the srand line:
+    // coverage, uncomment the following line:
 
-    if (argc > 1) {
-      int seed = atoi(argv[1]);
-      srand(seed);
-    }
+    //srand(0xA392049F);
 
     unsigned idx = 0;
     for (; idx < ITERATIONS; ++idx) {
