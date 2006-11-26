@@ -10,8 +10,10 @@ ifneq ($(LLVMGCC_MAJVERS),3)
 # FIXME: Disable SJLJ tests for now, until EH edges are represented.
 DIRS :=
 
-DIRS += Vector
+DIRS += Vector 
 endif
+
+DIRS += SignlessTypes
 
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
