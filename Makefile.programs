@@ -356,52 +356,31 @@ ifndef USE_PRECOMPILED_BYTECODE
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (nat): $* FAILED EXITOK!"; rm -f $@; \
-	fi
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (lli): $* FAILED EXITOK!"; rm -f $@; \
-	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (jit): $* FAILED EXITOK!"; rm -f $@; \
-	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (jit-beta): $* FAILED EXITOK!"; rm -f $@; \
-	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (llc): $* FAILED EXITOK!" ; rm -f $@; \
-	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (llc-beta): $* FAILED EXITOK!" ; rm -f $@; \
-	fi
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
-	@if test $$? -ne 0 ; then \
-	  echo "TEST (cbe): $* FAILED EXITOK!" ; rm -f $@; \
-	fi
 
 # If a tolerance is set, pass it off to bugpoint
 ifdef FP_TOLERANCE

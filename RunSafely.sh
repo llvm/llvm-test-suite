@@ -92,7 +92,13 @@ if [ "$EXITOK" -ne 0 ] ; then
   exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
   if [ -z "$exitval" ] ; then
     exitval=99
+    echo "TEST $PROGRAM FAILED:  CAN'T GET EXIT CODE!"
+  else
+    if test "$exitval" -ne 0 ; then
+      echo "TEST $PROGRAM FAILED:  EXIT != 0"
+    fi
   fi
+  echo "exit $exitval" >> $OUTFILE
 else
   exitval=0
 fi
