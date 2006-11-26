@@ -11,6 +11,7 @@ int main(int argc, char**argv) {
   int i;
   if (argc > 1)
     testVal = atoi(argv[1]);
+  printf("testVal = %d\n", testVal);
 
   // First check for elimination of A -> B -> C type casts.
 
