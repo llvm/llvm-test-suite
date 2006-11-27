@@ -34,14 +34,27 @@
 #include "cppflags.h"
 #include "interface.h"
 
-#ifndef __linux__
 // LLVM: define our own getline for portability
 #define getline getline_llvm
 
+// Crude approximation of gnu getline
 ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
-  return getstr (lineptr, n, stream, '\n', 0, 0);
+  char buffer[4096];
+  bzero(buffer,4096);
+  ssize_t result = 0;
+  if (NULL == fgets(buffer, 4095, stream))
+    result = -1;
+  else
+    result = strlen(buffer);
+  if (result >= 0) {
+    if (*lineptr == 0 )
+      *lineptr = malloc(result+1);
+    else
+      *lineptr = realloc(*lineptr, result+1);
+    memcpy(*lineptr, buffer, result+1);
+  }
+  return result;
 }
-#endif
 
 //########################################################
 // Function templates.
