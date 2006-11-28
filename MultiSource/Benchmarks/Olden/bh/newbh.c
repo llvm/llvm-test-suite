@@ -48,7 +48,7 @@ void freetree1(nodeptr n);
 int arg1;
 
 /* Used to setup runtime system, get arguments-- see old_main */
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
   treeptr t;
 
   /* Initialize the runtime system */
@@ -56,6 +56,7 @@ main(int argc, char **argv) {
   chatting("nbody = %d, numnodes = %d\n", nbody, NumNodes);
 
   t = old_main();
+  return 0;
 }
 
 /* global! */

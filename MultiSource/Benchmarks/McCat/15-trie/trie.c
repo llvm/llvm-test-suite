@@ -318,7 +318,7 @@ TrieRoot trInit(void)
   return tr;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   FILE * file;
   char word[LINESIZE];
@@ -330,12 +330,12 @@ void main(int argc, char **argv)
   if(argc != 2)
     {
     fprintf(stdout, "Usage: %s <sourcefile>\n",argv[0]);
-    exit(0);
+    return 1;
     }
   if(!(file = fopen(argv[1], "r")))
     {
       perror(argv[1]);
-      exit(0);
+      return 1;
     }
   while(!feof(file))
     {
@@ -352,4 +352,5 @@ void main(int argc, char **argv)
     }
   fclose(file);
   printT(tr);
+  return 0;
 };
