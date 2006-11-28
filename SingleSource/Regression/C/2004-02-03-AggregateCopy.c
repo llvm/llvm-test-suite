@@ -10,5 +10,6 @@ int main() {
   B = C = A;
 
   printf("%d, %d, %d\n", A.X, B.X, C.X);
+  return 0;
 }
 

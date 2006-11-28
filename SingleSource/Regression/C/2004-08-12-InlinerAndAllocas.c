@@ -22,4 +22,5 @@ int main() {
   for (i = 0; i < 10000; ++i)
     j += Callee(i);
   printf("%d\n", j);
+  return 0;
 }
