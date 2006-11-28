@@ -29,7 +29,7 @@ int START_ADDRESS = -1;
 char MAIN_ROUTINE[LABEL_SIZE_1+1];
 
 /* -------------------------------- main ---------------------------------- */
-void main(int argc,char **argv)
+int main(int argc,char **argv)
 {
   FILE *INPUT_STREAM;             /* Input file stream                      */
   SYMBOL_TABLE SYM_TAB;           /* The symbol table                       */
@@ -155,4 +155,5 @@ void main(int argc,char **argv)
       (void) printf("Errors detected. No executable created.\n");
 
   }
+  return 0;
 }

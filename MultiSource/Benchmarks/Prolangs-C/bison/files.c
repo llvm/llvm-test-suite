@@ -245,7 +245,7 @@ FILE *tryopen(char *name,char *mode)
 
 void done(int k)
 {
-  return;
+  exit(k);
   if (faction)
     fclose(faction);
 
