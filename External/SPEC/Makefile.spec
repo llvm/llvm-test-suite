@@ -5,53 +5,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-include $(LEVEL)/Makefile.config
-
-## Information the test should have provided...
-ifndef STDOUT_FILENAME
-STDOUT_FILENAME := standard.out
-endif
-LDFLAGS += -lm
-
-# Get the current directory, the name of the benchmark, and the current
-# subdirectory of the SPEC directory we are in (ie, CINT2000/164.gzip)
-#
-CURRENT_DIR := $(shell cd .; pwd)
-BENCH_NAME  := $(subst $(shell cd ..   ; pwd),,$(CURRENT_DIR))
-
-# Remove any leading /'s from the paths
-BENCH_NAME  := $(patsubst /%,%,$(BENCH_NAME))
-
-## SPEC_SUITEDIR - Allow SPEC configuration files to override "CINT2000" with
-## something else.
-
-ifndef SPEC_SUITEDIR
-SPEC_SUBDIR := $(subst $(shell cd ../..; pwd),,$(CURRENT_DIR))
-SPEC_SUBDIR := $(patsubst /%,%,$(SPEC_SUBDIR))
-else
-SPEC_SUBDIR := $(SPEC_SUITEDIR)/$(BENCH_NAME)
-endif
-
-ifndef SPEC_BENCH_DIR
-SPEC_BENCH_DIR := $(SPEC_ROOT)/$(SPEC_SUBDIR)
-endif
-
-PROG := $(BENCH_NAME)
-ifndef Source
-Source := $(wildcard $(SPEC_BENCH_DIR)/src/*.c   \
-                     $(SPEC_BENCH_DIR)/src/*.C   \
-                     $(SPEC_BENCH_DIR)/src/*.cc  \
-                     $(SPEC_BENCH_DIR)/src/*.cpp \
-                     $(SPEC_BENCH_DIR)/src/*.f   \
-                     $(SPEC_BENCH_DIR)/src/*.F   \
-                     $(SPEC_BENCH_DIR)/src/*.f90 \
-                     $(SPEC_BENCH_DIR)/src/*.F90)
-endif
-
-# Disable the default Output/%.out-* targets...
-PROGRAMS_HAVE_CUSTOM_RUN_RULES := 1
-SourceDir := $(SPEC_BENCH_DIR)/src/
-
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
 # Do not pass -Wall to compile commands...

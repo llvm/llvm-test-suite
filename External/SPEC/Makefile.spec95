@@ -19,4 +19,5 @@ RUN_TYPE  := train
 endif
 endif
 
+include $(LEVEL)/External/SPEC/Makefile.spec.config
 include $(LEVEL)/External/SPEC/Makefile.spec
