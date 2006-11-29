@@ -127,6 +127,12 @@ Output/%.out-cbe: Output/%.cbe
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+# The RunSafely.sh script puts an "exit <retval>" line at the end of
+# the program's output. We have to make bugpoint do the same thing
+# or else it will get false positives when it diff's the reference
+# output with the program's output.
+BUGPOINT_OPTIONS += -append-exit-code
+
 # If a tolerance is set, pass it off to bugpoint
 ifdef FP_TOLERANCE
 BUGPOINT_OPTIONS += -rel-tolerance $(FP_TOLERANCE)
