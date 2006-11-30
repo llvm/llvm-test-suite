@@ -94,6 +94,18 @@ else
 RUNSAFELY := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT) $(EXIT_OK)
 endif
 
+# LLVMGCCLD - This sets up the command to use for linking test programs
+# that were generated with llvm-gcc. Usually $(CC) is sufficient but, 
+# depending on libstdc++ and libgcc.a usage, it may be necessary to ensure
+# that the link is done against llvm-gcc's version of those libraries. If
+# the LINK_WITH_LLVMGCC_LIBS variable is set, then the link is done that
+# way. Unfortunately, this can't help JIT because it is always linked with
+# the libraries of lli.
+LLVMGCCLD := $(CC)
+ifdef LINK_WITH_LLVMGCC_LIBS
+LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib
+endif
+
 ifndef STDIN_FILENAME
 STDIN_FILENAME := /dev/null
 endif
@@ -295,7 +307,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(CC) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -fno-inline $(TARGET_FLAGS) -o $@
+	-$(LLVMGCCLD) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -fno-inline $(TARGET_FLAGS) -o $@
 
 #
 # Compile a linked program to machine code with LLC.
@@ -321,11 +333,13 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS) -o $@
+	-$(LLVMGCCLD) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
+	  $(TARGET_FLAGS) $(LDFLAGS) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(CC) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS) -o $@
+	-$(LLVMGCCLD) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
+	  $(TARGET_FLAGS) $(LDFLAGS) -o $@
 
 
 #
