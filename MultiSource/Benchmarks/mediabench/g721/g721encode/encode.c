@@ -116,4 +116,5 @@ fprintf(stderr, "\t-l\tProcess 16-bit linear PCM input data\n");
 		resid = pack_output(0, enc_bits);
 	}
 	fclose(stdout);
+	return 0;
 }
