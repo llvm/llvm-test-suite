@@ -317,4 +317,5 @@ void main(void)
   if (ERROR_CNT)
     printf("****** %d format errors found in output of your scanner.\n",
 	   ERROR_CNT);
+  exit(0);
 }
