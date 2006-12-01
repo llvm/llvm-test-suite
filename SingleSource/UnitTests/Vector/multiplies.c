@@ -30,5 +30,6 @@ int main(int argc, char **Argv) {
   ProcessArray(v4f32);
   ProcessArray(v2f64);
 #endif
+  return 0;
 }
 

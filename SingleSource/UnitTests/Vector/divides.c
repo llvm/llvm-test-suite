@@ -30,4 +30,5 @@ int main(int argc, char**argv) {
 
   printf("U3.V = <%u %u %u %u>\n", U3.A[0], U3.A[1], U3.A[2], U3.A[3]);
   printf("S3.V = <%u %u %u %u>\n", S3.A[0], S3.A[1], S3.A[2], S3.A[3]);
+  return 0;
 }
