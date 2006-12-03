@@ -281,6 +281,13 @@ LLINK     = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
 LPROF     = $(LLVMTOOLCURRENT)/llvm-prof$(EXEEXT)
 LBUGPOINT = $(LLVMTOOLCURRENT)/bugpoint$(EXEEXT)
 LLVMC     = $(LLVMTOOLCURRENT)/llvmc$(EXEEXT)
+LUPGRADE  = $(LLVMTOOLCURRENT)/llvm-upgrade$(EXEEXT)
+ifeq ($(LLVMGCC_MAJVERS),3)
+UPGRADE_LL= $(LUPGRADE) $(1) -o $(1).up.tmp -f ; $(MV) $(1).up.tmp $(1)
+else
+UPGRADE_LL=
+endif
+
 
 
 ###########################################################################
