@@ -19,6 +19,11 @@ REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
 REF_OUT_DIR := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/output/
 LOCAL_OUTPUTS := $(notdir $(wildcard $(REF_OUT_DIR)/*))
 
+# Sometimes a test will output its program name or some other gunk that
+# we don't want to diff against. Tests can override this definition to
+# provide a filter for the output files.
+SPEC_OUTPUT_FILE_FILTER = cat
+
 
 # Specify how to generate output from the SPEC programs.  Basically we just run
 # the program in a sandbox (a special directory we create), then we cat all of
@@ -29,7 +34,8 @@ Output/%.out-nat: Output/%.native
 	-$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.native $(RUN_OPTIONS)
-	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
@@ -37,7 +43,8 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	-$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLI_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
-	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/lli-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
@@ -45,7 +52,8 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-$(SPEC_SANDBOX) jit-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
-	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
@@ -53,7 +61,8 @@ Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	-$(SPEC_SANDBOX) jit-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
-	-(cd Output/jit-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/jit-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/jit-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
@@ -61,7 +70,8 @@ Output/%.out-llc: Output/%.llc
 	-$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.llc $(RUN_OPTIONS)
-	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
@@ -69,7 +79,8 @@ Output/%.out-llc-beta: Output/%.llc-beta
 	-$(SPEC_SANDBOX) llc-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.llc-beta $(RUN_OPTIONS)
-	-(cd Output/llc-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/llc-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/llc-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
@@ -77,7 +88,8 @@ Output/%.out-cbe: Output/%.cbe
 	-$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.cbe $(RUN_OPTIONS)
-	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > $@
+	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
 # The RunSafely.sh script puts an "exit <retval>" line at the end of
@@ -159,7 +171,8 @@ Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
 	$(SPEC_SANDBOX) profile-$(RUN_TYPE) Output/$*.out-prof $(REF_IN_DIR) \
 	  $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) $(LLI) $(JIT_OPTS)\
             -fake-argv0 '../$*.llvm.bc' -load $(LIBPROFILESO) ../../$< -llvmprof-output ../../$@ $(RUN_OPTIONS)
-	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) > Output/$*.out-prof
+	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > Output/$*.out-prof
 	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 	-cp Output/profile-$(RUN_TYPE)/llvmprof.out $@
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
