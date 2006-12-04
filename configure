@@ -20458,6 +20458,7 @@ if test "$?" -eq 0 -a -x "$sanity_path" ; then
   if test -z "$sanity" ; then
     { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
+    sanity="0"
     if test "1" -eq 1 ; then
       { echo "$as_me:$LINENO: WARNING: Program f95 failed to pass sanity check." >&5
 echo "$as_me: WARNING: Program f95 failed to pass sanity check." >&2;}
@@ -20469,12 +20470,20 @@ echo "$as_me: error: Program f95 failed to pass sanity check." >&2;}
   else
     { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
+    sanity="1"
   fi
 else
   { echo "$as_me:$LINENO: result: not found" >&5
 echo "${ECHO_T}not found" >&6; }
 fi
 
+if test "$sanity" -eq "0" ; then
+  USE_F95=
+
+else
+  USE_F95=USE_F95=1
+
+fi
 
 { echo "$as_me:$LINENO: checking for ANSI C header files" >&5
 echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6; }
