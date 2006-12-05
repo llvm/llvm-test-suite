@@ -47,7 +47,7 @@ int comp(const double *a,const double *b)
   else return 0;
 }
 
-main ()
+int main ()
 {
   double a,b,c,d;
   int i,j,k,l,m;
@@ -116,6 +116,7 @@ main ()
       freeMatrix(U);
       freeMatrix(A);
     }
+  return 0;
 }
 
 void Check(Matrix A, Matrix U, int l)
