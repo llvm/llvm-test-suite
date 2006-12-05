@@ -355,9 +355,9 @@ void construct_vor() {
 /* ********************************************************************* */
 /* PROCEDURE: main - starts the program                                  */
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   get_file();
   construct_vor();
- 
+  return 0;
 }
