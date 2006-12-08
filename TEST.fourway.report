@@ -1,0 +1,64 @@
+##=== TEST.fourway.report - Report description for llc tests ---*- perl -*-===##
+#
+# This file defines a report to be generated for the fourway test.
+#
+##===----------------------------------------------------------------------===##
+
+# Sort by name
+$SortCol = 1;
+$TrimRepeatedPrefix = 1;
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+# Name
+ ["Name:" , '\'([^\']+)\' Program'],
+ [],
+# Times
+ ["Time GND"  , 'real ([0-9.]+)gcc\.nodebug'],
+ ["Time GD"  , 'real ([0-9.]+)gcc\.debug'],
+ ["Time LND"  , 'real ([0-9.]+)llvmgcc\.nodebug'],
+ ["Time LD"  , 'real ([0-9.]+)llvmgcc\.debug'],
+ [],
+# Text Sizes
+ ["Text GND",
+  '([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+gcc.nodebug'],
+ ["Text GD",
+  '([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+gcc.debug'],
+ ["Text LND",
+  '([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.nodebug'],
+ ["Text LD",
+  '([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.debug'],
+ [],
+# Data Sizes
+ ["Data GND",
+  '[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+gcc.nodebug'],
+ ["Data GD",
+  '[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+gcc.debug'],
+ ["Data LND",
+  '[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.nodebug'],
+ ["Data LD",
+  '[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.debug'],
+ [],
+# Other Sizes
+ ["Other GND",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9a-fA-F]+gcc.nodebug'],
+ ["Other GD",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9a-fA-F]+gcc.debug'],
+ ["Other LND",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.nodebug'],
+ ["Other LD",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9]+\s+[0-9a-fA-F]+llvmgcc.debug'],
+ [],
+# Total Sizes
+ ["Total GND",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9a-fA-F]+gcc.nodebug'],
+ ["Total GD",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9a-fA-F]+gcc.debug'],
+ ["Total LND",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9a-fA-F]+llvmgcc.nodebug'],
+ ["Total LD",
+  '[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+([0-9]+)\s+[0-9a-fA-F]+llvmgcc.debug'],
+ [],
+ );
