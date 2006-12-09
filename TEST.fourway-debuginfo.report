@@ -1,6 +1,6 @@
 ##=== TEST.fourway.report - Report description for llc tests ---*- perl -*-===##
 #
-# This file defines a report to be generated for the fourway test.
+# This file defines a report to be generated for the fourway-debuginfo test.
 #
 ##===----------------------------------------------------------------------===##
 
@@ -13,6 +13,16 @@ my $ExtObjSize   = '\d+\s+\d+\s+(\d+)\s+\d+\s+\d+\s+[0-9a-fA-F]+';
 my $ExtOtherSize = '\d+\s+\d+\s+\d+\s+(\d+)\s+\d+\s+[0-9a-fA-F]+';
 my $ExtTotalSize = '\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+[0-9a-fA-F]+';
 
+sub Percentage {
+  my ($Cols, $Col) = @_;
+  my $GCC = $Cols->[$Col-2];
+  my $LLVMGCC = $Cols->[$Col-1];
+  return "n/a" if ($GCC eq "*" or $LLVMGCC eq "*");
+  return sprintf("%5.1f%%", $LLVMGCC / $GCC * 100)
+         if ($GCC > 0 and $LLVMGCC > 0);
+  return "    -";
+}
+
 # These are the columns for the report.  The first entry is the header for the
 # column, the second is the regex to use to match the value.  Empty list create
 # seperators, and closures may be put in for custom processing.
@@ -20,25 +30,16 @@ my $ExtTotalSize = '\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+[0-9a-fA-F]+';
 # Name
  ["Name:" , '\'([^\']+)\' Program'],
  [],
-# Times
- ["Time GND", 'real ([0-9.]+)gcc\.nodebug'],
- ["Time GD",  'real ([0-9.]+)gcc\.debug'],
- ["Time LND", 'real ([0-9.]+)llvmgcc\.nodebug'],
- ["Time LD",  'real ([0-9.]+)llvmgcc\.debug'],
- [],
 # Text Sizes
  ["Text GND", "${ExtTextSize}gcc.nodebug"],
  ["Text GD",  "${ExtTextSize}gcc.debug"],
  ["Text LND", "${ExtTextSize}llvmgcc.nodebug"],
  ["Text LD",  "${ExtTextSize}llvmgcc.debug"],
  [],
-# Data Sizes
- ["Data GCC",      "${ExtDataSize}gcc.nodebug"],
- ["Data LLVM-GCC", "${ExtDataSize}llvmgcc.nodebug"],
- [],
 # Other Sizes
- ["Other(Debug) GCC",      "${ExtOtherSize}gcc.debug"],
- ["Other(Debug) LLVM-GCC", "${ExtOtherSize}llvmgcc.debug"],
+ ["Debug* GCC",      "${ExtOtherSize}gcc.debug"],
+ ["Debug* LLVM-GCC", "${ExtOtherSize}llvmgcc.debug"],
+ ["Debug* %",        \&Percentage],
  [],
 # Total Sizes
  ["Total GND", "${ExtTotalSize}gcc.nodebug"],
