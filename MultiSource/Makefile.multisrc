@@ -73,3 +73,7 @@ endif
 
 Output/%.native: $(NObjects)
 	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+
+# A simple target to run findmisopt when bugpoint isn't helping
+findmisopt:
+	$(LLVM_SRC_ROOT)/utils/findmisopt Output/$(PROG).linked.rbc misopt "$(RUN_OPTIONS)" "$(STDIN_FILENAME)"
