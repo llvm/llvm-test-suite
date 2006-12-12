@@ -790,7 +790,7 @@ int main(int argc, char **argv)
 	if(opt.serial == 0)
 	{
 		/* We randomly pick a serial number. This is then incremented for each file */
-		srand(time(NULL));
+		srand(0);
 		opt.serial = rand();
 	}
 
