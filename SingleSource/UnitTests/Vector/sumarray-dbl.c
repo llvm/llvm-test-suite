@@ -7,7 +7,7 @@ union Array {
 
 union Array TheArray;
 
-void main() {
+int main() {
   int i;
   v8sd sum = { 0, 0, 0, 0, 0, 0, 0, 0};
   D8V sumV;
@@ -19,4 +19,5 @@ void main() {
 
   sumV.V = sum;
   printD8V(&sumV);
+  return 0;
 }
