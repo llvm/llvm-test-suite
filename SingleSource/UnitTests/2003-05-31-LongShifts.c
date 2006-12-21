@@ -1,7 +1,7 @@
 
 void Test(long long Val, int Amt) {
   printf("0x%llx op %d:\n", Val, Amt);
-  printf("  sar: 0x%llx\n  shr: 0x%llx\n  shl: 0x%llx\n", Val >> Amt, 
+  printf("  ashr: 0x%llx\n  lshr: 0x%llx\n  shl: 0x%llx\n", Val >> Amt, 
          (unsigned long long)Val >> Amt, Val << Amt);
 }
 
