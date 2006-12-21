@@ -774,6 +774,9 @@ install:: $(TOOLEXENAMES)
 
 endif
 
+LCC1 := $(LLVMGCCDIR)/libexec/gcc/$(LLVMGCCARCH)/cc1
+LCC1XX := $(LLVMGCCDIR)/libexec/gcc/$(LLVMGCCARCH)/cc1plus
+LCOLLECT2 :=$(LLVMGCCDIR)/libexec/gcc/$(LLVMGCCARCH)/collect2 
 
 
 #---------------------------------------------------------
