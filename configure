@@ -20452,6 +20452,7 @@ fi
 
 { echo "$as_me:$LINENO: checking sanity for program f95" >&5
 echo $ECHO_N "checking sanity for program f95... $ECHO_C" >&6; }
+sanity="0"
 sanity_path=`which f95 2>/dev/null`
 if test "$?" -eq 0 -a -x "$sanity_path" ; then
   sanity=`f95 -V 2>&1 | grep "NAGWare Fortran 95"`
@@ -20477,12 +20478,17 @@ else
 echo "${ECHO_T}not found" >&6; }
 fi
 
-if test "$sanity" -eq "0" ; then
+if test -z "$sanity" ; then
   USE_F95=
 
 else
-  USE_F95=USE_F95=1
+  if test "$sanity" -eq "0" ; then
+    USE_F95=
 
+  else
+    USE_F95=USE_F95=1
+
+  fi
 fi
 
 { echo "$as_me:$LINENO: checking for ANSI C header files" >&5
