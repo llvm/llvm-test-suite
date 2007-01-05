@@ -150,10 +150,14 @@ FIND_STD_PROGRAM(f2c,f2c.h,libf2c.a)
 dnl Check for the NAG f95 FORTRAN -> C translator
 FIND_STD_PROGRAM(f95,,libf97.dylib,[nag fortran])
 CHECK_PROGRAM_SANITY([f95],[-V],[NAGWare Fortran 95],1)
-if test "$sanity" -eq "0" ; then
+if test -z "$sanity" ; then
   AC_SUBST(USE_F95,[[]])
 else
-  AC_SUBST(USE_F95,[USE_F95=1])
+  if test "$sanity" -eq "0" ; then
+    AC_SUBST(USE_F95,[[]])
+  else
+    AC_SUBST(USE_F95,[USE_F95=1])
+  fi
 fi
 
 dnl Checks for header files.
