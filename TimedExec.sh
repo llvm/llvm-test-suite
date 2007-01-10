@@ -13,7 +13,7 @@ if [ $# -lt 2 ]; then
 fi
 
 PARENT=""
-if [ "$1" == "-p" ]; then
+if [ "$1" = "-p" ]; then
     PARENT=$2; shift; shift;
 fi
 

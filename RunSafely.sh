@@ -76,7 +76,7 @@ rm -f core core.*
 # necessary I/O redirection.
 #
 COMMAND="$PROGRAM $*"
-if [ $SYSTEM == Darwin ]; then
+if [ "$SYSTEM" = "Darwin" ]; then
   COMMAND="${DIR}TimedExec.sh $ULIMIT $COMMAND"
 fi
 
