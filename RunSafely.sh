@@ -80,7 +80,7 @@ if [ "$SYSTEM" = "Darwin" ]; then
   COMMAND="${DIR}TimedExec.sh $ULIMIT $COMMAND"
 fi
 
-( time -p sh -c "$COMMAND >$OUTFILE < $INFILE" ; echo exit $? ) 2>&1 \
+( time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
   | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
