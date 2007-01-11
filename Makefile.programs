@@ -103,7 +103,7 @@ endif
 # the libraries of lli.
 LLVMGCCLD := $(CC)
 ifdef LINK_WITH_LLVMGCC_LIBS
-LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib
+LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib/debug -L$(LLVMGCCDIR)/lib
 endif
 
 ifndef STDIN_FILENAME
@@ -446,6 +446,10 @@ Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-cbe): \
+Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(LBUGPOINT) $< -cbe-bug $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 clean::
 	rm -f bugpoint-*
