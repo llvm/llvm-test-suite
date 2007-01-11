@@ -3043,15 +3043,16 @@ void setbinmode(FILE *f)
 void *timer_start(void)
 {
 	time_t *start = malloc(sizeof(time_t));
-	time(start);
+        *start = 21;
 	return (void *)start;
 }
 
 double timer_time(void *timer)
 {
-	time_t now = time(NULL);
+	static time_t now = 42;
 	time_t start = *((time_t *)timer);
 
+    now++;
     if(now-start)
     	return (double)(now-start);
     else
@@ -3069,16 +3070,19 @@ void timer_clear(void *timer)
 void *timer_start(void)
 {
 	struct timeval *start = malloc(sizeof(struct timeval));
-	gettimeofday(start, NULL);
+        start->tv_sec = 21;
+	// gettimeofday(start, NULL);
+        start->tv_usec = 0;
 	return (void *)start;
 }
 
 double timer_time(void *timer)
 {
-	struct timeval now;
+	static struct timeval now = { 42, 0 };
 	struct timeval start = *((struct timeval *)timer);
 
-	gettimeofday(&now, NULL);
+	// gettimeofday(&now, NULL);
+        now.tv_sec++;
 
 	return (double)now.tv_sec - (double)start.tv_sec + 
 		((double)now.tv_usec - (double)start.tv_usec)/1000000.0;
