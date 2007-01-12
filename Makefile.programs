@@ -451,8 +451,14 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-cbe): \
 Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -cbe-bug $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
+$(PROGRAMS_TO_TEST:%=Output/%.misopt.out): \
+Output/%.misopt.out: Output/%.linked.rbc $(LFINDMISOPT) 
+	$(LFINDMISOPT) $< Output/$*.misopt "$(RUN_OPTIONS)" \
+	  "$(STDIN_FILENAME)" > Output/$*.misopt.out 2>&1
+
 clean::
-	rm -f bugpoint-*
+	rm -f bugpoint-* 
+	rm -rf Output/misopt-*
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
 
