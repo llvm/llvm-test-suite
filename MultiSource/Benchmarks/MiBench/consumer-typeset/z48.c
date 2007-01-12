@@ -3605,9 +3605,7 @@ void PDFFile_Cleanup(FILE* in_fp)
 
     now = time( NULL );
     date = localtime( &now );
-    fprintf(in_fp, "/CreationDate (D:%.4d%.2d%.2d%.2d%.2d%.2d)\n",
-      date->tm_year + 1900, date->tm_mon + 1, date->tm_mday,
-      date->tm_hour, date->tm_min, date->tm_sec);
+    fprintf(in_fp, "/CreationDate (Sometime Today)\n");
   }
 
   if (g_doc_author != NULL)
