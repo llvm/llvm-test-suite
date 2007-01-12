@@ -27,8 +27,6 @@ int main(int argc, char *argv[]) {
 	MAXSIZE=atoi(argv[2]);
 	MAXWAVES=atoi(argv[1]);
 		
- srand(1);
-
  RealIn=(float*)malloc(sizeof(float)*MAXSIZE);
  ImagIn=(float*)malloc(sizeof(float)*MAXSIZE);
  RealOut=(float*)malloc(sizeof(float)*MAXSIZE);
@@ -39,8 +37,8 @@ int main(int argc, char *argv[]) {
  /* Makes MAXWAVES waves of random amplitude and period */
 	for(i=0;i<MAXWAVES;i++) 
 	{
-		coeff[i] = rand()%1000;
-		amp[i] = rand()%1000;
+		coeff[i] = i%1000;
+		amp[i] = i%1000;
 	}
  for(i=0;i<MAXSIZE;i++) 
  {
