@@ -50,6 +50,9 @@ static char Rcs_Id[] =
 
 /*
  * $Log$
+ * Revision 1.2  2007/01/12 00:01:41  reid
+ * Rename getline so it doesn't conflict with the Linux version.
+ *
  * Revision 1.1  2007/01/09 23:57:18  lattner
  * initial recheckin of mibench
  *
@@ -167,7 +170,7 @@ static void	save_root_cap P ((ichar_t * word, ichar_t * pattern,
 		  struct flagent * sufent,
 		  ichar_t savearea[MAX_CAPS][INPUTWORDLEN + MAXAFFIXLEN],
 		  int * nsaved));
-static char *	getline P ((char * buf));
+static char *	getline_ispell P ((char * buf));
 void		askmode P ((void));
 void		copyout P ((char ** cc, int cnt));
 static void	lookharder P ((char * string));
@@ -449,7 +452,7 @@ checkagain:
 
 		move (li - 1, 0);
 		(void) putchar ('!');
-		if (getline (buf) == NULL)
+		if (getline_ispell (buf) == NULL)
 		    {
 		    (void) putchar (7);
 		    erase ();
@@ -474,7 +477,7 @@ checkagain:
 		    (void) printf ("%s ", CORR_C_READONLY);
 		    }
 		(void) printf (CORR_C_REPLACE_WITH);
-		if (getline (ctok) == NULL)
+		if (getline_ispell (ctok) == NULL)
 		    {
 		    (void) putchar (7);
 		    /* Put it back */
@@ -536,7 +539,7 @@ checkagain:
 		char	buf[100];
 		move (li - 1, 0);
 		(void) printf (CORR_C_LOOKUP_PROMPT);
-		if (getline (buf) == NULL)
+		if (getline_ispell (buf) == NULL)
 		    {
 		    (void) putchar (7);
 		    erase ();
@@ -1390,7 +1393,7 @@ static void save_root_cap (word, pattern, prestrip, preadd, sufstrip, sufadd,
 #endif /* NO_CAPITALIZATION_SUPPORT */
     }
 
-static char * getline (s)
+static char * getline_ispell (s)
     register char *	s;
     {
     register char *	p;
