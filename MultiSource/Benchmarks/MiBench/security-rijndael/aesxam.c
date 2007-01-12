@@ -97,12 +97,12 @@ void fillrand(char *buf, int len)
 
 int encfile(FILE *fin, FILE *fout, aes *ctx, char* fn)
 {   char            inbuf[16], outbuf[16];
-    fpos_t          flen;
+    long            flen;
     unsigned long   i=0, l=0;
 
     fillrand(outbuf, 16);           /* set an IV for CBC mode           */
     fseek(fin, 0, SEEK_END);        /* get the length of the file       */
-    fgetpos(fin, &flen);            /* and then reset to start          */
+    flen = ftell(fin);              /* and then reset to start          */
     fseek(fin, 0, SEEK_SET);        
     fwrite(outbuf, 1, 16, fout);    /* write the IV to the output       */
     fillrand(inbuf, 1);             /* make top 4 bits of a byte random */
