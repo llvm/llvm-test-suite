@@ -103,7 +103,8 @@ endif
 # the libraries of lli.
 LLVMGCCLD := $(CC)
 ifdef LINK_WITH_LLVMGCC_LIBS
-LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib/debug -L$(LLVMGCCDIR)/lib
+#LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib/debug -L$(LLVMGCCDIR)/lib
+LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib
 endif
 
 ifndef STDIN_FILENAME
