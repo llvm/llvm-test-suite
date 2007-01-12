@@ -302,7 +302,7 @@ int print_test_data()
 	printf("\n");
 	printf("cbc cipher text\n");
 	printf("cipher[%d]= ",32);
-	for (j=0; j<32+1; j++)
+	for (j=0; j<32; j++)
 		printf("%02X",cbc_ok[j]);
 	printf("\n");
 
