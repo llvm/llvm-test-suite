@@ -25,21 +25,21 @@ void divideOvf(int x, int y)
 {
   int sum = x * x + y * y;
   int rem = (1 << 31) / sum;
-  printf("divide after overflow = %d (0x%lx)\n", rem, rem);
+  printf("divide after overflow = %d (0x%x)\n", rem, rem);
 }
 
 void divideNeg(int x, int y)
 {
   int sum = x * x - y * y;
   int rem = sum / (1 << 18);
-  printf("divide negative value by power-of-2 = %d (0x%lx)\n", rem, rem);
+  printf("divide negative value by power-of-2 = %d (0x%x)\n", rem, rem);
 }
 
 void subtractOvf(int x, int y)
 {
   int sum = x * x + y * y;
   int rem = (1u << 31) - sum;
-  printf("subtract after overflow = %d (0x%lx)\n", rem, rem);
+  printf("subtract after overflow = %d (0x%x)\n", rem, rem);
 }
 
 int main()
