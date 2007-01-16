@@ -368,9 +368,11 @@ ifndef PROGRAMS_HAVE_CUSTOM_RUN_RULES
 
 # Rules to build the test output...
 ifndef USE_PRECOMPILED_BYTECODE
+ifndef USE_REFERENCE_OUTPUT
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+endif
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
@@ -581,6 +583,14 @@ Output/%.linked.rll: $(SRCDIR)/%.linked.rll Output/.dir
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
+else 
+ifdef USE_REFERENCE_OUTPUT
+# In this case, we opt out of generating the native output and just
+# copy it from a reference output
+$(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
+Output/%.out-nat: $(PROJ_SRC_DIR)/%.reference_output Output/.dir
+	cp $< $@
+endif
 endif
 
 # Support for the TEST= option... when TEST= is specified on the command line,
