@@ -1,0 +1,23 @@
+# SingleSource/UnitTests/Integer/Makefile
+LEVEL = ../../..
+
+# You can use this seed value to get a different test
+# each day, but don't forget to 'make clean' To use it,
+# change RUN_OPTIONS (below) to be $(SEED)
+SEED := $(shell date +%j)
+
+# Use a consistent seed value for the tests so they produce
+# the same results regardless of whether you make clean or not.
+RUN_OPTIONS := 31415926
+
+# None of these test cases can use a native code generator because
+# those targets are not set up to deal with arbitrary precision
+# integer types. Consequently, we must disable the LLI, LLC, 
+# LLC-BETA, and JIT test cases. This leaves the CBE which can
+# handle the arbitrary precision integers.
+#
+DISABLE_LLC := 1
+DISABLE_JIT := 1
+
+include $(LEVEL)/Makefile.config
+include $(LEVEL)/SingleSource/Makefile.singlesrc
