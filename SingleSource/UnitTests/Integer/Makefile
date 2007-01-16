@@ -19,5 +19,12 @@ RUN_OPTIONS := 31415926
 DISABLE_LLC := 1
 DISABLE_JIT := 1
 
+# Define USE_REFERENCE_OUTPUT which is a signal to Makefile.programs
+# that the native compiler should not be run but that its output
+# should be "faked" by copying the reference output. This is 
+# necessary because gcc doesn't support the bitwidth attribute and 
+# therefore can't generate correct output.
+USE_REFERENCE_OUTPUT := 1
+
 include $(LEVEL)/Makefile.config
 include $(LEVEL)/SingleSource/Makefile.singlesrc
