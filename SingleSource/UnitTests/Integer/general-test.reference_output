@@ -1,0 +1,7 @@
+X is 1802150879
+sizeof(MyStruct) == 12
+sizeof(My17BitInt) == 4
+sizeof(j) == 2
+j = 257
+size sum is 18
+exit 0
