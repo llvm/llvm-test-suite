@@ -56028,6 +56028,10 @@ int main(int argc, char** argv)
   out << std::flush;
   struct timeval end_time, start_time;
   gettimeofday(&start_time, NULL);
+  
+  // LLVM: disable timing.
+  end_time = start_time;
+  
   if (a_rhomin_f)
     Pooma::newRelation(Hacks::limit_rh(a_rhomin), rh);
   switch (eos) {
@@ -56049,9 +56053,11 @@ int main(int argc, char** argv)
       dt = std::min(a_max_dt, std::max(a_min_dt, a_cfl*dt_));
     }
     t += dt;
-    gettimeofday(&end_time, NULL);
-    out << "i = " << it << "\t t = " << t << "\t dt = " << dt
- << " (" << end_time.tv_sec + end_time.tv_usec/1000000.0 - start_time.tv_sec - start_time.tv_usec/1000000.0 << "s/it)" << std::endl;
+
+    // LLVM: disable timing.
+    //gettimeofday(&end_time, NULL);
+    out << "i = " << it << "\t t = " << t << "\t dt = " << dt;
+ //<< " (" << end_time.tv_sec + end_time.tv_usec/1000000.0 - start_time.tv_sec - start_time.tv_usec/1000000.0 << "s/it)" << std::endl;
     iteration_time += end_time.tv_sec + end_time.tv_usec/1000000.0 - start_time.tv_sec - start_time.tv_usec/1000000.0;
     start_time = end_time;
     Adv5::advect(dt, rh, v, 0.0, T, flm, fle, flvv, flvc, cv, scratchc, eeq, ietot);
@@ -56068,7 +56074,8 @@ int main(int argc, char** argv)
       if (Dim > 2)
  Hacks::checkRegularity(v.center(2));
   }
-  out << "Time spent in iteration: " << iteration_time << std::endl;
+  // LLVM: disable timing.
+  //out << "Time spent in iteration: " << iteration_time << std::endl;
   out << "Correctness:"
       << "\n\tsum(rh) difference = " << sum(rh)-rh0
       << "\n\tsum(vx) = " << sum(v.center(0))
