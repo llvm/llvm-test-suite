@@ -72,8 +72,8 @@ AC_ARG_WITH(externals,
 
 dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,${LLVM_EXTERNALS}/spec95/benchspec)
-EXTERNAL_BENCHMARK(spec2000,${LLVM_EXTERNALS}/speccpu2000/benchspec)
-EXTERNAL_BENCHMARK(spec2006,${LLVM_EXTERNALS}/speccpu2006/benchspec)
+EXTERNAL_BENCHMARK(spec2000,${LLVM_EXTERNALS}/speccpu2000/benchspec,[CINT2000])
+EXTERNAL_BENCHMARK(spec2006,${LLVM_EXTERNALS}/speccpu2006/benchspec,[CPU2006])
 EXTERNAL_BENCHMARK(povray,${LLVM_EXTERNALS}/povray31)
 EXTERNAL_BENCHMARK(namd,${LLVM_EXTERNALS}/spec_namd)
 EXTERNAL_BENCHMARK(sweep3d,${LLVM_EXTERNALS}/sweep3d)
@@ -81,35 +81,6 @@ EXTERNAL_BENCHMARK(fpgrowth,${LLVM_EXTERNALS}/fpgrowth)
 EXTERNAL_BENCHMARK(alp,${LLVM_EXTERNALS}/alp)
 EXTERNAL_BENCHMARK(nurbs,${LLVM_EXTERNALS}/nurbs)
 EXTERNAL_BENCHMARK(hmmer,${LLVM_EXTERNALS}/hmmer)
-
-dnl Check that the paths of provided external benchmark dirs make sense
-if test -n "$SPEC2006_ROOT" ; then
-  if test -d "$SPEC2006_ROOT" ; then
-    if test `basename "$SPEC2006_ROOT"` != "benchspec"; then
-      AC_MSG_ERROR([SPEC 2006 directory must end in 'benchspec'])
-    fi
-  else
-    AC_MSG_ERROR([SPEC 2006 option must specify a directory])
-  fi
-fi
-if test -n "$SPEC2000_ROOT" ; then
-  if test -d "$SPEC2000_ROOT" ; then
-    if test `basename "$SPEC2000_ROOT"` != "benchspec"; then
-      AC_MSG_ERROR([SPEC 2000 directory must end in 'benchspec'])
-    fi
-  else
-    AC_MSG_ERROR([SPEC 2000 option must specify a directory])
-  fi
-fi
-if test -n "$SPEC95_ROOT" ; then
-  if test -d "$SPEC95_ROOT" ; then
-    if test `basename ${SPEC95_ROOT}` != "benchspec"; then
-      AC_MSG_ERROR([SPEC 95 directory must end in 'benchspec'])
-    fi
-  else
-    AC_MSG_ERROR([SPEC 95 option must specify a directory])
-  fi
-fi
 
 dnl LLC Diff Option
 AC_ARG_ENABLE(llc_diffs,
