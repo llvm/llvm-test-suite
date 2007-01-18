@@ -35,7 +35,7 @@ int main(int argc, char**argv) {
   unsigned short ush;
 
   if (argc < 2) {
-    fprintf(stderr, "Program requires integer parameter");
+    printf("Program requires integer parameter");
     exit (1);
   }
 
