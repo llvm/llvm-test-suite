@@ -13,7 +13,7 @@ DIRS :=
 DIRS += Vector 
 endif
 
-DIRS += SignlessTypes Integer
+DIRS += SignlessTypes
 
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
