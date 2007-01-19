@@ -11,7 +11,7 @@ typedef unsigned char ATTR_BITS( 4) My04BitInt;
 typedef unsigned short ATTR_BITS(16) My16BitInt;
 typedef unsigned int ATTR_BITS(17) My17BitInt;
 typedef unsigned long long ATTR_BITS(37) My37BitInt;
-typedef unsigned ATTR_BITS(65) My65BitInt;
+typedef unsigned ATTR_BITS(63) My63BitInt;
 
 struct MyStruct {
   struct MyStruct* next;
@@ -30,7 +30,7 @@ struct MyStruct* getSizes( short ATTR_BITS(23) num, My37BitInt * result) {
   printf("sizeof(MyStruct) == %d\n", sizeof(struct MyStruct));
   printf("sizeof(My17BitInt) == %d\n", sizeof(My17BitInt));
   printf("sizeof(j) == %d\n", sizeof(j));
-  result = sizeof(My17BitInt) + sizeof(j) + sizeof(struct MyStruct);
+  *result = sizeof(My17BitInt) + sizeof(j) + sizeof(struct MyStruct);
   Data1.i4Field = num;
   Data1.i12Field = num + 1;
   Data1.i17Field = num + 2;
@@ -56,7 +56,7 @@ main ( int argc, char** argv)
   int r = rand();
   int num = 0;
   int ATTR_BITS(23) val = 0;
-  My37BitInt* sizes = 0;
+  My37BitInt sizes = 0;
   printf("rand = %d\n", r);
   printf("argc = %d\n", argc);
   if (argc > 1)
@@ -64,7 +64,7 @@ main ( int argc, char** argv)
   printf("num  = %d\n", num);
   val = r + argc + num;
   printf("val  = %d\n", val);
-  struct MyStruct* that = ((int ATTR_BITS(32)) getSizes(val, &sizes));
+  struct MyStruct* that = getSizes(val, &sizes);
   printf("that.i4Field  = %d\n", (int)that->i4Field);
   printf("that.i12Field = %d\n", (int)that->i12Field);
   printf("that.i17Field = %d\n", (int)that->i17Field);
