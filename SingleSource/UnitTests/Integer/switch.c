@@ -3,8 +3,8 @@
 typedef unsigned int __attribute__ ((bitwidth(7))) int7;
 typedef unsigned int __attribute__ ((bitwidth(3))) int3;
 
-const int7 zero = 1 << 8; // constant 0;
-static int3 seven = 0xf; // constant 7;
+const int7 zero = (int7)(1 << 8); // constant 0;
+static int3 seven = (int3)0xf; // constant 7;
 
 int3  test(unsigned char c)
 {
