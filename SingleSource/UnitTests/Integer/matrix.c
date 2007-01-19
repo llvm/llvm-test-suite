@@ -1,6 +1,7 @@
 
 // Date: Fri Jan 12 17:32:33 CST 2007
 #include "matrix.h"
+#include <stdio.h>
 
 typedef enum bool{false=0, true=1} bool;
 

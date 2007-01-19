@@ -1,3 +1,4 @@
+#include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;
 typedef int __attribute__ ((bitwidth(6))) int6;

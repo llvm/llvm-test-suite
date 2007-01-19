@@ -1,5 +1,6 @@
 // Date: Fri Jan 12 17:40:34 CST 2007
-#include "bitlogic.cpp.ssdm.h"
+#include "bitlogic.h"
+#include <stdio.h>
 
 // Module | Test
 // Thread: int my_test();

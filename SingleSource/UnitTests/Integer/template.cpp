@@ -21,9 +21,6 @@ T&  min(T  &tParam1, T  &tParam2, T  &tParam3)
        return tParam3;
 }
 
-
-
-
 int main()
 {
     int4 x , y, z;

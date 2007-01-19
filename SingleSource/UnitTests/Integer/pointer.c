@@ -1,3 +1,4 @@
+#include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(3))) int3;
 typedef int __attribute__ ((bitwidth(31))) int31;

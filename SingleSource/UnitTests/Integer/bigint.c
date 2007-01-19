@@ -1,6 +1,7 @@
 
 // Date: Fri Jan 12 17:25:23 CST 2007
 #include "bigint.h"
+#include <stdio.h>
 
 typedef enum bool{false=0, true=1} bool;
 
@@ -24,7 +25,7 @@ int my_test(){
   for ( ; ; ) {
   bool ssdm_tmp_1 = (i < bnd);
   if (!ssdm_tmp_1) break;
-    if (i % 2 == 0
+    if (i % 2 == 0)
         x = x + 1;
      else 
          y = y - x;
@@ -41,7 +42,6 @@ int my_test(){
   rem2 = l_result;
   printf("rem2 = %lld\n", rem2);
   return 0;
-}
 }
 
 int main()

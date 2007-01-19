@@ -1,3 +1,4 @@
+#include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(61))) int61;
 

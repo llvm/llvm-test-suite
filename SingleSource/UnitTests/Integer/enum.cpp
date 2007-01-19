@@ -1,9 +1,4 @@
-
-
-
 #include <stdio.h>
-
-
 
 class myClass
 {

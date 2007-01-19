@@ -1,5 +1,6 @@
 // Date: Fri Jan 12 17:28:32 CST 2007
 #include "bitbit.h"
+#include <stdio.h>
 
 // Module | Test
 // Thread: int my_test();

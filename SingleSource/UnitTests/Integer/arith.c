@@ -1,6 +1,7 @@
 
 // Date: Fri Jan 12 17:19:09 CST 2007
 #include "arith.h"
+#include <stdio.h>
 
 
 int21 x = 0x1fffff;
