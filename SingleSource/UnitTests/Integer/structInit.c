@@ -1,3 +1,9 @@
+//===--- structInit.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for struct data structure with initialization.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(31))) int31;

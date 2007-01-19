@@ -1,3 +1,11 @@
+//===--- exception.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test of exception handling with non-regular data
+// type. The compiler should be able to differentiate int31, int7 etc.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(31))) int31;
 typedef int __attribute__ ((bitwidth(1))) int1;

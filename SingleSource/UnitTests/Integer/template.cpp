@@ -1,3 +1,10 @@
+//===--- template.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for template functions.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <iostream>
 
 typedef int __attribute__ ((bitwidth(4))) int4;

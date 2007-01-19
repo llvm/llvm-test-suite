@@ -1,9 +1,13 @@
-// Date: Fri Jan 12 17:28:32 CST 2007
+//===--- bitbit.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a general test for bit operations.
+//
+//===------------------------------------------------------------------------===//
+
 #include "bitbit.h"
 #include <stdio.h>
 
-// Module | Test
-// Thread: int my_test();
+
 int my_test(){
 {
   int21 x = 0x1fffff;
@@ -17,27 +21,27 @@ int my_test(){
   i_result = result;
   printf("i_result = %x\n", i_result);
   result = x & y;
-  if (result == y/*CPPASTBinaryExpression*/) 
+  if (result == y) 
     printf("ok\n");
    else 
     printf("fail\n");
   
   result = x | y;
-  if (result == x/*CPPASTBinaryExpression*/) 
+  if (result == x) 
     printf("ok\n");
    else 
     printf("fail\n");
   
   result = x;
   result &= y;
-  if (result == y/*CPPASTBinaryExpression*/) 
+  if (result == y)
     printf("ok\n");
    else 
     printf("fail\n");
   
   result = x;
   result |= y;
-  if (result == x/*CPPASTBinaryExpression*/) 
+  if (result == x)
     printf("ok\n");
    else 
     printf("fail\n");
@@ -48,7 +52,7 @@ int my_test(){
   {
     result = y << 1;
     result += 1;
-    if (result != x/*CPPASTBinaryExpression*/) 
+    if (result != x)
       printf("fail\n");
      else 
       printf("ok\n");
@@ -57,7 +61,7 @@ int my_test(){
     result <<= 1;
     ++result;
     
-    if (result != x/*CPPASTBinaryExpression*/) 
+    if (result != x)
       printf("fail\n");
      else 
       printf("ok\n");
@@ -72,4 +76,4 @@ int main()
     my_test();
     return 0;
 }
-// End of Module | Test
+

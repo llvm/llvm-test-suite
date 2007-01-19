@@ -1,3 +1,10 @@
+//===--- SSAtest.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// Adopted the test from previous test-cases. Changed it with
+// non-regular int data type.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;

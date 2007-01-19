@@ -1,5 +1,10 @@
+//===--- arith.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a general test for arithmatic operations.
+//
+//===------------------------------------------------------------------------===//
 
-// Date: Fri Jan 12 17:19:09 CST 2007
+
 #include "arith.h"
 #include <stdio.h>
 

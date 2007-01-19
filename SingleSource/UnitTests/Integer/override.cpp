@@ -1,3 +1,9 @@
+//===--- override.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test of override test.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(31))) int31;
 typedef int __attribute__ ((bitwidth(32))) int32;

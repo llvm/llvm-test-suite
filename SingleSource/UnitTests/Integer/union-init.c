@@ -1,3 +1,10 @@
+//===--- union-init.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for union initialization.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 

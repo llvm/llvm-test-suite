@@ -1,3 +1,10 @@
+//===--- global.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is used to test global arrays.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(7))) int7;
 typedef int __attribute__ ((bitwidth(14))) int14;

@@ -1,3 +1,11 @@
+//===--- struct1.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for struct data structure. If the data layout for
+// non-regular bitwidth data is not correct, it may change the value of another field.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 

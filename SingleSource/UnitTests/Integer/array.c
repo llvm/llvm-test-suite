@@ -1,3 +1,9 @@
+//===--- array.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a general test for array data types.
+//
+//===------------------------------------------------------------------------===//
+
 
 #include "array.h"
 #include <stdio.h>
@@ -38,4 +44,4 @@ int main()
     return 0;
 }
 
-// End of Module | Test
+

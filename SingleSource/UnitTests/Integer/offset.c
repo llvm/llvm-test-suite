@@ -1,3 +1,10 @@
+//===--- offset.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for data size calculation with non-regular integral type.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(33))) int33;

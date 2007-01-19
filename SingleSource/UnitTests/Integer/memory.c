@@ -1,3 +1,9 @@
+//===--- memory.c --- Test Cases for Bit Accurate Types -------------------===//
+//
+// This is a test for memory malloc and free operations. It tests
+// non-regular bitwidth data and structures.
+//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 #include <stdlib.h>
 

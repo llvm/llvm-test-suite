@@ -1,5 +1,9 @@
+//===--- bigint.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a general test for big integer type.
+//
+//===------------------------------------------------------------------------===//
 
-// Date: Fri Jan 12 17:25:23 CST 2007
 #include "bigint.h"
 #include <stdio.h>
 
@@ -51,4 +55,4 @@ int main()
 }
 
 
-// End of Module | Test
+

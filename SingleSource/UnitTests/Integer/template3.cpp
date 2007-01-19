@@ -1,3 +1,9 @@
+//===--- template3.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for partial specialization.
+//
+//===------------------------------------------------------------------------===//
+
 #include <iostream>
 using namespace std;
 

@@ -1,3 +1,10 @@
+//===--- local-union.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for local union data type.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(33))) int33;

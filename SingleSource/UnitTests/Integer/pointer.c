@@ -1,3 +1,9 @@
+//===--- pointer.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for address calculation with non-regular integral type.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(3))) int3;
@@ -16,11 +22,11 @@ int main()
     int3 i3;
     int31 i31;
 
-    if(&i3 != (test(i3) + 1))
+    if(&i3 != (test(&i3) + 1))
         printf("error\n");
     
-    if(&i31 != (test2(i31)+1))
-        printf("error2: &i31=%p, ret = %p\n", &i31, test2(i31));
+    if(&i31 != (test2(&i31)+1))
+        printf("error2: &i31=%p, ret = %p\n", &i31, test2(&i31));
 
     return 0;
 }

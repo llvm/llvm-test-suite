@@ -1,12 +1,18 @@
+//===--- matrix.c --- Test Cases for Bit Accurate Types -------------------===//
+//
+// This is a test for matrix with non-regular bitwidth data. In
+// my_test(A, B) function, we get A=A*B. For each row after
+// multiplication, we sort it in non-increasing order. Then the first
+// two largest elements are used to get the gcd.
+//
+//===----------------------------------------------------------------------===//
 
-// Date: Fri Jan 12 17:32:33 CST 2007
 #include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef enum bool{false=0, true=1} bool;
 
-// Thread: void mysort(const sc_int<17> X[8], sc_int<17> Y[8]);
 void mysort(const int17  X[8], int17  Y[8]){
 {
   unsigned int i, j;
@@ -113,4 +119,4 @@ int main()
     return 0;
 }
 
-// End of Module | Test
+

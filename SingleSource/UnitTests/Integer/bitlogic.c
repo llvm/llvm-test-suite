@@ -1,4 +1,10 @@
-// Date: Fri Jan 12 17:40:34 CST 2007
+//===--- bitlogic.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a general test for logical operations.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include "bitlogic.h"
 #include <stdio.h>
 
@@ -13,23 +19,23 @@ int my_test(){
   uint9 temp;
   y = x;
   y -= 1;
-  if (!y/*CPPASTUnaryExpression*/) 
+  if (!y)
     printf("ok\n");
    else 
     printf("fail\n");
   
-  if (y > x/*CPPASTBinaryExpression*/) 
+  if (y > x)
     printf("fail\n");
    else 
     printf("ok\n");
   
-  if (z != uz/*CPPASTBinaryExpression*/) 
+  if (z != uz)
     printf("ok\n");
    else 
     printf("fail\n");
   
   temp = z;
-  if (temp <= uz/*CPPASTBinaryExpression*/) 
+  if (temp <= uz)
     printf("ok\n");
    else 
     printf("fail\n");
@@ -43,4 +49,4 @@ int main()
     my_test();
     return 0;
 }
-// End of Module | Test
+

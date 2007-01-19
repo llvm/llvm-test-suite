@@ -1,3 +1,11 @@
+//===--- union-struct.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for struct with union inside. The purpose is to see
+// whether the size of the structure is correct.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(31))) int31;

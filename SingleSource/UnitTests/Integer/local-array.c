@@ -1,3 +1,9 @@
+//===--- local-array.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is another test for local arrays.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;
@@ -12,6 +18,7 @@ int4 test(int6 X) {
                                2 , 2 , 2 , 2,  3, 4 };
   return student_t[X];
 }
+
 
 int main()
 {

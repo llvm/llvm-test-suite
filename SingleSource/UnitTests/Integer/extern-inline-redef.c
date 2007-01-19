@@ -1,3 +1,9 @@
+//===--- extern_inline_redef.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// this is used to test redefining inline function.  
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(61))) int61;

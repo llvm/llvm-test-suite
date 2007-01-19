@@ -1,3 +1,9 @@
+//===--- enum.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test of bitwidth attribute with enum data.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 class myClass

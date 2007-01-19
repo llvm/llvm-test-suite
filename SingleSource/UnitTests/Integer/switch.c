@@ -1,3 +1,11 @@
+//===--- switch.c --- Test Cases for Bit Accurate Types -------------------===//
+//
+// This is a test for switch statement. The switch value is a
+// non-regular bitwidth. test(int3 c) function return the value of the
+// argument c. 
+//
+//===----------------------------------------------------------------------===//
+
 #include <stdio.h>
 
 typedef unsigned int __attribute__ ((bitwidth(7))) int7;
@@ -31,7 +39,7 @@ int main()
    
     for(i=0; i< ((unsigned char)zero) + 8; i++)
     {
-        c = (unsigned char)test(i);
+        c = (unsigned char)test((int3)i);
         if(c != i)
             printf("error: i=%hhd, c=%hhd\n", i, c);
     }

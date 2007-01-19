@@ -1,3 +1,12 @@
+//===--- large-array.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is used to test large local arrays. Some local arrays are
+// partially initilized.
+//
+//===------------------------------------------------------------------------===//
+
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(13))) int13;
@@ -8,7 +17,7 @@ int13 test(int13 x) {
   const char S [1000] = "foo";
 
   const int13 array[] = {
-     17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 
+     17, 53, 523, 123, 49, 17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 
      17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 
      17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 
      17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 17, 23, 123, 123, 49, 
@@ -34,8 +43,9 @@ int13 test(int13 x) {
 
 int main()
 {
-    if(test(1) != 23)
+    if(test(1) != 53)
         printf("error\n");
-    if(test(2) != 123)
+    if(test(2) != 523)
         printf("error2\n");
+    return 0;
 }

@@ -1,3 +1,11 @@
+//===--- field.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is used to test struct with field specifier. We suppose the
+// data layout of the field should be the same as the corresponding struct using
+// bit accurate types.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(7))) int7;
 typedef int __attribute__ ((bitwidth(17))) int17;

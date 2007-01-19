@@ -1,3 +1,11 @@
+//===--- struct2.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for struct data structure. We test the nested structure
+// and pointer to structure.
+//
+//===------------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(33))) int33;

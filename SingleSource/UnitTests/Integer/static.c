@@ -1,3 +1,9 @@
+//===--- static.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//
+// This is a test for static data with non-regular integral data.
+//
+//===------------------------------------------------------------------------===//
+
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(31))) int31;
 
