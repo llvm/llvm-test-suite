@@ -4,30 +4,26 @@
 //
 //===------------------------------------------------------------------------===//
 
-#include <iostream>
+#include <stdio.h>
 using namespace std;
 
 typedef int __attribute__ ((bitwidth(17))) int17;
 typedef int __attribute__ ((bitwidth(15))) int15;
 
 template<class T, class U, int I> struct X
-  { void f() { cout << "Primary template" << endl; } };
+  { void f() { printf("Primary template\n"); } };
 
 template<class T, int I> struct X<T, T*, I>
-  { void f() { cout << "Partial specialization 1" << endl;
-  } };
+  { void f() { printf("Partial specialization 1\n"); } };
 
 template<class T, class U, int I> struct X<T*, U, I>
-  { void f() { cout << "Partial specialization 2" << endl;
-  } };
+  { void f() { printf("Partial specialization 2\n"); } };
 
 template<class T> struct X<int, T*, 10>
-  { void f() { cout << "Partial specialization 3" << endl;
-  } };
+  { void f() { printf("Partial specialization 3\n"); } };
 
 template<class T, class U, int I> struct X<T, U*, I>
-  { void f() { cout << "Partial specialization 4" << endl;
-  } };
+  { void f() { printf("Partial specialization 4\n"); } };
 
 int main() {
    X<int17, int17, 10> a;
