@@ -9,7 +9,7 @@
 //
 //===--------------------------------------------------------------------===//
 
-#include <iostream>
+#include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;
 typedef unsigned int __attribute__ ((bitwidth(5))) int5;
