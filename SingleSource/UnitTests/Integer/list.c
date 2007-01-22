@@ -1,15 +1,15 @@
-//===--- list.c --- Test Cases for Bit Accurate Types -------------------===//
+//===--- list.c --- Test Cases for Bit Accurate Types ---------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for simple linked list operation. Data are added to
 // and removed from the list. We compare the expected value wehen we
 // remove data from the list. 
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 
 #include <stdio.h>
 #include <stdlib.h>

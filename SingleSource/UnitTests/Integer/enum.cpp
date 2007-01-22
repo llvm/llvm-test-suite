@@ -1,13 +1,13 @@
-//===--- enum.cpp --- Test Cases for Bit Accurate Types -----------------===//
+//===--- enum.cpp --- Test Cases for Bit Accurate Types -------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test of bitwidth attribute with enum data.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 
 class myClass

@@ -1,16 +1,16 @@
-//===--- matrix.c --- Test Cases for Bit Accurate Types -----------------===//
+//===--- matrix.c --- Test Cases for Bit Accurate Types -------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for matrix with non-regular bitwidth data. In
 // my_test(A, B) function, we get A=A*B. For each row after
 // multiplication, we sort it in non-increasing order. Then the first
 // two largest elements are used to get the gcd.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 #include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>

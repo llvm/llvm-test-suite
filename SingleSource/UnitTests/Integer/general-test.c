@@ -1,11 +1,14 @@
-/* This test just tries out a few bitwidth attribute constructs and 
+//===--- general-test.c - General Bit Accurate Type Test ------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
- * generates some output based on the them.
- */
+// This file was developed by Reid Spencer and is distributed under the 
+// the University of Illinois Open Source License. See LICENSE.TXT for 
+// details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This test just tries out a few bitwidth attribute constructs and 
+//
+//===----------------------------------------------------------------------===//
 
 #include <stdio.h>
 #include <stdlib.h>

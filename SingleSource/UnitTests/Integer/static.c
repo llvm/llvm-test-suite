@@ -1,13 +1,13 @@
-//===--- static.c --- Test Cases for Bit Accurate Types -----------------===//
+//===--- static.c --- Test Cases for Bit Accurate Types -------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for static data with non-regular integral data.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(31))) int31;
 

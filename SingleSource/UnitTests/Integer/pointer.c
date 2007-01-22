@@ -1,13 +1,13 @@
-//===--- pointer.c --- Test Cases for Bit Accurate Types ----------------===//
+//===--- pointer.c --- Test Cases for Bit Accurate Types ------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for address calculation with non-regular integral type.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(3))) int3;

@@ -1,14 +1,14 @@
-//===--- union-struct.c --- Test Cases for Bit Accurate Types -----------===//
+//===--- union-struct.c --- Test Cases for Bit Accurate Types -------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for struct with union inside. The purpose is to see
 // whether the size of the structure is correct.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 
 #include <stdio.h>
 

@@ -1,9 +1,11 @@
-#include <stdio.h>
+//===-- cppfield.cpp - Test C++ Fields With Bit Accurate Types ------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+//
+#include <stdio.h>
 typedef unsigned int __attribute__ ((bitwidth(7))) int7;
 typedef unsigned int __attribute__ ((bitwidth(17))) int17;
 typedef unsigned int __attribute__ ((bitwidth(32))) int32;

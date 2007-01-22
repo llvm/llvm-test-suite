@@ -1,14 +1,15 @@
-//===--- struct1.c --- Test Cases for Bit Accurate Types ----------------===//
+//===--- struct1.c --- Test Cases for Bit Accurate Types ------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for struct data structure. If the data layout for
-// non-regular bitwidth data is not correct, it may change the value of another field.
+// non-regular bitwidth data is not correct, it may change the value of 
+// another field.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 
 #include <stdio.h>
 

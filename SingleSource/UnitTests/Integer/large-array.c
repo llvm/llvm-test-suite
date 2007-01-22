@@ -1,14 +1,14 @@
-//===--- large-array.c --- Test Cases for Bit Accurate Types ------------===//
+//===--- large-array.c --- Test Cases for Bit Accurate Types --------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is used to test large local arrays. Some local arrays are
 // partially initilized.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 
 
 #include <stdio.h>

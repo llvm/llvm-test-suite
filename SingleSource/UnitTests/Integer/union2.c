@@ -1,14 +1,14 @@
-//===--- union2.c --- Test Cases for Bit Accurate Types -----------------===//
+//===--- union2.c --- Test Cases for Bit Accurate Types -------------------===//
 //
 // This file was developed by Guoling han and donated to the LLVM research
 // group and is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-//===-------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 //
 // This is a test for union type. By assigning values to different
 // fields, we can check whether the assignment is correctly performed.
 //
-//===--------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 typedef int __attribute__ ((bitwidth(9))) int9;
 typedef int __attribute__ ((bitwidth(31))) int31;
