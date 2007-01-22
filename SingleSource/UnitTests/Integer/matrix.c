@@ -1,110 +1,125 @@
-//===--- matrix.c --- Test Cases for Bit Accurate Types -------------------===//
+//===--- matrix.c --- Test Cases for Bit Accurate Types -----------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a test for matrix with non-regular bitwidth data. In
 // my_test(A, B) function, we get A=A*B. For each row after
 // multiplication, we sort it in non-increasing order. Then the first
 // two largest elements are used to get the gcd.
 //
-//===----------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 #include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef enum bool{false=0, true=1} bool;
 
-void mysort(const int17  X[8], int17  Y[8]){
+
+
+
+
+
+void mysort(const int17  X[8], int17  Y[8])
 {
-  unsigned int i, j;
-  int17 temp;
-  {
-  j = 0;
-  for ( ; ; ) {
-  bool ssdm_tmp_4 = (j < 8);
-  if (!ssdm_tmp_4) break;
-    Y[j] = X[j];
-  j++;
-  }
-  }
-  {
-  j = 0;
-  for ( ; ; ) {
-  bool ssdm_tmp_5 = (j < 8);
-  if (!ssdm_tmp_5) break;
+    unsigned int i, j;
+    int17 temp;
     {
-      temp = -0xffff;
-      {
-      i = j;
-      for ( ; ; ) {
-      bool ssdm_tmp_6 = (i < 8);
-      if (!ssdm_tmp_6) break;
-        {
-          temp = Y[i] > temp ? Y[i] : temp;
+        j = 0;
+        for ( ; ; ) {
+            bool ssdm_tmp_4 = (j < 8);
+            if (!ssdm_tmp_4) break;
+            Y[j] = X[j];
+            j++;
         }
-      ++i;
-      }
-      }
-      Y[j] = temp;
     }
-  j++;
-  }
-  }
-}
+    {
+        j = 0;
+        for ( ; ;j++ ) {
+            bool ssdm_tmp_5 = (j < 8);
+            if (!ssdm_tmp_5) break;
+            {
+                    i = j;
+                    for ( ; ; i++) {
+                        bool ssdm_tmp_6 = (i < 8);
+                        if (!ssdm_tmp_6) break;
+                        {
+                            if(Y[i]>Y[j]){
+                                temp = Y[j];
+                                Y[j] = Y[i];
+                                Y[i] = temp;
+                            }
+                                
+                        }
+                    }
+            }
+
+        }
+    }
 }
 
-// Module | Test
-// Thread: int my_test(sc_int<17> A[8][8], sc_int<17> B[8][8] );
-int my_test(int17  A[8][8], int17  B[8][8]){
+
+
+int get_gcd(const int  a, const int  b)
 {
-  unsigned int i, j, k;
-  int17 C[8];
-  int t;
-  {
-  i = 0;
-  for ( ; ; ) {
-  bool ssdm_tmp_1 = (i < 8);
-  if (!ssdm_tmp_1) break;
-    {
-    j = 0;
-    for ( ; ; ) {
-    bool ssdm_tmp_2 = (j < 8);
-    if (!ssdm_tmp_2) break;
-      {
-        {
-        k = 0;
-        for ( ; ; ) {
-        bool ssdm_tmp_3 = (k < 8);
-        if (!ssdm_tmp_3) break;
-          A[i][j] = A[i][k] * B[j][k];
-        ++k;
-        }
-        }
-        mysort(A[i], C);
-        t = get_gcd(C[0], C[1]);
-        printf("t=%d\n", t);
-      }
-    ++j;
-    }
-    }
-  ++i;
-  }
-  }
-  return 0;
-}
-}
-// Thread: int get_gcd(const int& a, const int& b);
-int get_gcd(const int  a, const int  b){
-{
-  if (b == 0/*CPPASTBinaryExpression*/) 
+    if (b == 0)
     return a;
   
   return get_gcd( b, a % b );
 }
+
+
+
+int my_test(int17  A[8][8], int17  B[8][8])
+{
+    unsigned int i, j, k, dd;
+    int17 C[8][8];
+    int17 D[8];
+    int t;
+    {
+        i = 0;
+        for ( ; ; ) {
+            bool ssdm_tmp_1 = (i < 8);
+            if (!ssdm_tmp_1) break;
+            {
+                j = 0;
+                for ( ; ; ) {
+                    bool ssdm_tmp_2 = (j < 8);
+                    if (!ssdm_tmp_2) break;
+                    {
+                        {
+                            C[i][j] = 0;
+                            k = 0;
+                            for ( ; ; ) {
+                                bool ssdm_tmp_3 = (k < 8);
+                                if (!ssdm_tmp_3) break;
+                                C[i][j] += A[i][k] * B[k][j];
+                                ++k;
+                            }
+                        }
+                       
+                    }
+                   
+                    ++j;
+                }
+            }
+            mysort(C[i], D);
+            t = get_gcd(D[0], D[1]);
+            printf("get_gcd(%d, %d) = %d\n", D[0], D[1], t);
+            ++i;
+        }
+    }
+    return 0;
 }
+
+
+
 
 int main()
 {
-    unsigned int i, j;
+    int i, j;
             
     int17 X[8][8];
     int17 Y[8][8];

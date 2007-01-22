@@ -1,9 +1,13 @@
-//===--- arith.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//===--- arith.c --- Test Cases for Bit Accurate Types ------------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a general test for arithmatic operations.
 //
-//===------------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 
 #include "arith.h"
 #include <stdio.h>

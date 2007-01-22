@@ -1,10 +1,14 @@
-//===--- struct2.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//===--- struct2.c --- Test Cases for Bit Accurate Types ----------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a test for struct data structure. We test the nested structure
 // and pointer to structure.
 //
-//===------------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 
 #include <stdio.h>
 

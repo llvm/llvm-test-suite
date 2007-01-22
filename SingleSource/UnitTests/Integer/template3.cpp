@@ -1,11 +1,16 @@
-//===--- template3.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//===--- template3.cpp --- Test Cases for Bit Accurate Types ------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a test for partial specialization.
 //
 //===------------------------------------------------------------------------===//
 
 #include <stdio.h>
-using namespace std;
+
 
 typedef int __attribute__ ((bitwidth(17))) int17;
 typedef int __attribute__ ((bitwidth(15))) int15;

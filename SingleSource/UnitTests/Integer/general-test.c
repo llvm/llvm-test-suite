@@ -1,4 +1,9 @@
 /* This test just tries out a few bitwidth attribute constructs and 
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
  * generates some output based on the them.
  */
 

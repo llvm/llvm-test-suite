@@ -1,9 +1,13 @@
-//===--- local-array.c --- Test Cases for Bit Accurate Types -------------------------------===//
+//===--- local-array.c --- Test Cases for Bit Accurate Types ------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is another test for local arrays.
 //
-//===------------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;

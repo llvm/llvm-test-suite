@@ -1,9 +1,13 @@
-//===--- template.cpp --- Test Cases for Bit Accurate Types -------------------------------===//
+//===--- template.cpp --- Test Cases for Bit Accurate Types -------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a test for template functions.
 //
-//===------------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 
 #include <iostream>
 

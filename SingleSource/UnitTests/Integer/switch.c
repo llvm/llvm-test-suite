@@ -1,20 +1,30 @@
-//===--- switch.c --- Test Cases for Bit Accurate Types -------------------===//
+//===--- switch.c --- Test Cases for Bit Accurate Types -----------------===//
+//
+// This file was developed by Guoling han and donated to the LLVM research
+// group and is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//===-------------------------------------------------------------------===//
 //
 // This is a test for switch statement. The switch value is a
 // non-regular bitwidth. test(int3 c) function return the value of the
 // argument c. 
 //
-//===----------------------------------------------------------------------===//
-
+//===--------------------------------------------------------------------===//
 #include <stdio.h>
 
 typedef unsigned int __attribute__ ((bitwidth(7))) int7;
 typedef unsigned int __attribute__ ((bitwidth(3))) int3;
 
+<<<<<<< switch.c
+=======
 const int7 zero = (int7)(1 << 8); // constant 0;
 static int3 seven = (int3)0xf; // constant 7;
+>>>>>>> 1.2
 
-int3  test(unsigned char c)
+const int7 zero = 0;         // constant 0;
+static int3 seven = 7;       // constant 7;
+
+int3  test(int3 c)
 {
     
     switch(c){
