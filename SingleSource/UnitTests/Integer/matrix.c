@@ -1,8 +1,8 @@
 //===--- matrix.c --- Test Cases for Bit Accurate Types -------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a test for matrix with non-regular bitwidth data. In
@@ -11,60 +11,57 @@
 // two largest elements are used to get the gcd.
 //
 //===----------------------------------------------------------------------===//
+
+
 #include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef enum bool{false=0, true=1} bool;
 
-
-
-
-
-
 void mysort(const int17  X[8], int17  Y[8])
 {
-    unsigned int i, j;
-    int17 temp;
-    {
-        j = 0;
-        for ( ; ; ) {
-            bool ssdm_tmp_4 = (j < 8);
-            if (!ssdm_tmp_4) break;
-            Y[j] = X[j];
-            j++;
-        }
+  unsigned int i, j;
+  int17 temp;
+  {
+    j = 0;
+    for ( ; ; ) {
+      bool ssdm_tmp_4 = (j < 8);
+      if (!ssdm_tmp_4) break;
+      Y[j] = X[j];
+      j++;
     }
-    {
-        j = 0;
-        for ( ; ;j++ ) {
-            bool ssdm_tmp_5 = (j < 8);
-            if (!ssdm_tmp_5) break;
-            {
-                    i = j;
-                    for ( ; ; i++) {
-                        bool ssdm_tmp_6 = (i < 8);
-                        if (!ssdm_tmp_6) break;
-                        {
-                            if(Y[i]>Y[j]){
-                                temp = Y[j];
-                                Y[j] = Y[i];
-                                Y[i] = temp;
-                            }
-                                
-                        }
-                    }
+  }
+  {
+    j = 0;
+    for ( ; ;j++ ) {
+      bool ssdm_tmp_5 = (j < 8);
+      if (!ssdm_tmp_5) break;
+      {
+        i = j;
+        for ( ; ; i++) {
+          bool ssdm_tmp_6 = (i < 8);
+          if (!ssdm_tmp_6) break;
+          {
+            if(Y[i]>Y[j]){
+              temp = Y[j];
+              Y[j] = Y[i];
+              Y[i] = temp;
             }
-
+                                
+          }
         }
+      }
+
     }
+  }
 }
 
 
 
 int get_gcd(const int  a, const int  b)
 {
-    if (b == 0)
+  if (b == 0)
     return a;
   
   return get_gcd( b, a % b );
@@ -74,44 +71,44 @@ int get_gcd(const int  a, const int  b)
 
 int my_test(int17  A[8][8], int17  B[8][8])
 {
-    unsigned int i, j, k, dd;
-    int17 C[8][8];
-    int17 D[8];
-    int t;
-    {
-        i = 0;
+  unsigned int i, j, k, dd;
+  int17 C[8][8];
+  int17 D[8];
+  int t;
+  {
+    i = 0;
+    for ( ; ; ) {
+      bool ssdm_tmp_1 = (i < 8);
+      if (!ssdm_tmp_1) break;
+      {
+        j = 0;
         for ( ; ; ) {
-            bool ssdm_tmp_1 = (i < 8);
-            if (!ssdm_tmp_1) break;
+          bool ssdm_tmp_2 = (j < 8);
+          if (!ssdm_tmp_2) break;
+          {
             {
-                j = 0;
-                for ( ; ; ) {
-                    bool ssdm_tmp_2 = (j < 8);
-                    if (!ssdm_tmp_2) break;
-                    {
-                        {
-                            C[i][j] = 0;
-                            k = 0;
-                            for ( ; ; ) {
-                                bool ssdm_tmp_3 = (k < 8);
-                                if (!ssdm_tmp_3) break;
-                                C[i][j] += A[i][k] * B[k][j];
-                                ++k;
-                            }
-                        }
-                       
-                    }
-                   
-                    ++j;
-                }
+              C[i][j] = 0;
+              k = 0;
+              for ( ; ; ) {
+                bool ssdm_tmp_3 = (k < 8);
+                if (!ssdm_tmp_3) break;
+                C[i][j] += A[i][k] * B[k][j];
+                ++k;
+              }
             }
-            mysort(C[i], D);
-            t = get_gcd(D[0], D[1]);
-            printf("get_gcd(%d, %d) = %d\n", D[0], D[1], t);
-            ++i;
+                       
+          }
+                   
+          ++j;
         }
+      }
+      mysort(C[i], D);
+      t = get_gcd(D[0], D[1]);
+      printf("get_gcd(%d, %d) = %d\n", D[0], D[1], t);
+      ++i;
     }
-    return 0;
+  }
+  return 0;
 }
 
 
@@ -119,19 +116,19 @@ int my_test(int17  A[8][8], int17  B[8][8])
 
 int main()
 {
-    int i, j;
+  int i, j;
             
-    int17 X[8][8];
-    int17 Y[8][8];
+  int17 X[8][8];
+  int17 Y[8][8];
 
-    for(i=0; i<8; i++)
-        for(j=0; j<8; j++){
-            X[i][j] = (i+1) * (j + 79);
-            Y[i][j] = (i-1) * (j + 255);
-        }
-    my_test(X, Y);
+  for(i=0; i<8; i++)
+    for(j=0; j<8; j++){
+      X[i][j] = (i+1) * (j + 79);
+      Y[i][j] = (i-1) * (j + 255);
+    }
+  my_test(X, Y);
 
-    return 0;
+  return 0;
 }
 
 

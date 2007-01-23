@@ -1,14 +1,15 @@
 //===--- struct2.c --- Test Cases for Bit Accurate Types ------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a test for struct data structure. We test the nested structure
 // and pointer to structure.
 //
 //===----------------------------------------------------------------------===//
+
 
 #include <stdio.h>
 
@@ -34,9 +35,9 @@ int assign() {
 
 int main()
 {
-    assign();
-    if(G.pInfo != G.info)
-        printf("error\n");
+  assign();
+  if(G.pInfo != G.info)
+    printf("error\n");
 
-    return 0;
+  return 0;
 }

@@ -1,14 +1,16 @@
 //===--- SSAtest.c --- Test Cases for Bit Accurate Types ------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // Adopted the test from previous test-cases. Changed it with
 // non-regular int data type.
 //
 //===----------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(4))) int4;
@@ -32,6 +34,6 @@ int4 foo()
 
 int main()
 {
-    foo();
-    return 0;
+  foo();
+  return 0;
 }

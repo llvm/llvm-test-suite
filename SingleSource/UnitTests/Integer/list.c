@@ -1,8 +1,8 @@
 //===--- list.c --- Test Cases for Bit Accurate Types ---------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a test for simple linked list operation. Data are added to
@@ -39,44 +39,44 @@ int array[64*3] = {103, 198, 105, 115, 81, 255, 74, 236, 41, 205, 186, 171,
 
 void test()
 {
-    unsigned int i=0;
-    unsigned int cnt = sizeof(array)/sizeof(*array);
+  unsigned int i=0;
+  unsigned int cnt = sizeof(array)/sizeof(*array);
 
-    myList* head = 0;
+  myList* head = 0;
 
     
-    for(i; i<cnt; ++i)
-    {
-        myList* elem = malloc(sizeof(myList));
+  for(i; i<cnt; ++i)
+  {
+    myList* elem = malloc(sizeof(myList));
 
-        elem->next = head;
-        head = elem;
-        (*elem).s.x = array[i];
-        (*elem).s.y = array[i] - 1;
-    }
+    elem->next = head;
+    head = elem;
+    (*elem).s.x = array[i];
+    (*elem).s.y = array[i] - 1;
+  }
 
 
-    i = 0;
-    while(head)
-    {
-        myList* tmp;
-        i+=1;
-        if(head->s.x != array[64*3 - i])
-           printf("error: i = %d, x = %d, array = %d\n",
-                  i,head->s.x, array[64*3 - i]);
-        if( (head->s.y ^ (int7)((array[64*3 - i] - 1)&0x7f)) != 0 )
-           printf("error: i = %d, y = %hhd, expected = %hhd\n",
-                  i, (unsigned char)(head->s.y), ((array[64*3 - i] - 1)&0x7f));
-        //remove from the list
-        tmp = head;
-        head = head->next;
-        free(tmp);
-    }
+  i = 0;
+  while(head)
+  {
+    myList* tmp;
+    i+=1;
+    if(head->s.x != array[64*3 - i])
+      printf("error: i = %d, x = %d, array = %d\n",
+             i,head->s.x, array[64*3 - i]);
+    if( (head->s.y ^ (int7)((array[64*3 - i] - 1)&0x7f)) != 0 )
+      printf("error: i = %d, y = %hhd, expected = %hhd\n",
+             i, (unsigned char)(head->s.y), ((array[64*3 - i] - 1)&0x7f));
+    //remove from the list
+    tmp = head;
+    head = head->next;
+    free(tmp);
+  }
         
 }
 
 int main()
 {
-    test();
-    return 0;
+  test();
+  return 0;
 }

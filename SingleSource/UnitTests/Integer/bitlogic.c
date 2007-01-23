@@ -1,8 +1,8 @@
 //===--- bitlogic.c --- Test Cases for Bit Accurate Types -----------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a general test for logical operations.
@@ -12,9 +12,8 @@
 #include "bitlogic.h"
 #include <stdio.h>
 
-// Module | Test
-// Thread: int my_test();
-int my_test(){
+
+int my_test()
 {
   uint1 x = 0x1;
   uint1 y;
@@ -25,32 +24,32 @@ int my_test(){
   y -= 1;
   if (!y)
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   if (y > x)
     printf("fail\n");
-   else 
+  else 
     printf("ok\n");
   
   if (z != uz)
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   temp = z;
   if (temp <= uz)
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   return 0;
-}
+
 }
 
 int main()
 {
-    my_test();
-    return 0;
+  my_test();
+  return 0;
 }
 

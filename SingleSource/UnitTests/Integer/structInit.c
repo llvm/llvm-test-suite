@@ -1,22 +1,24 @@
 //===--- structInit.c --- Test Cases for Bit Accurate Types ---------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a test for struct data structure with initialization.
 //
 //===----------------------------------------------------------------------===//
+
+
 #include <stdio.h>
 
 typedef int __attribute__ ((bitwidth(31))) int31;
 typedef int __attribute__ ((bitwidth(24))) int24;
 
 typedef struct Connection_Type {
-   int24    to;
+   int24   to;
    char    type[10];
-   int31    length;
+   int31   length;
 } Connection;
 
 Connection link[3]
@@ -27,9 +29,9 @@ Connection link[3]
 
 int main()
 {
-    int24 l;
-    for(l=0; l<3; l++)
-      printf("%d, %s, %d\n", link[l].to, link[l].type, link[l].length);
+  int24 l;
+  for(l=0; l<3; l++)
+    printf("%d, %s, %d\n", link[l].to, link[l].type, link[l].length);
 
-    return 0;
+  return 0;
 }

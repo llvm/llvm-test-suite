@@ -1,8 +1,8 @@
 //===--- arith.c --- Test Cases for Bit Accurate Types --------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a general test for arithmetic operations.
@@ -16,9 +16,8 @@
 int21 x = 0x1fffff;
 
 int21 y = 0x0fffff;
-// Module | Test
-// Thread: int my_test();
-int my_test(){
+
+int my_test()
 {
   uint10 i = 0;
   int10 j;
@@ -72,12 +71,12 @@ int my_test(){
   i_temp = ui_x - ui_y;
   printf("i_temp = %x\n", i_temp);
   return 0;
-}
+
 }
 
 int main()
 {
-    my_test();
-    return 0;
+  my_test();
+  return 0;
 }
-// End of Module | Test
+

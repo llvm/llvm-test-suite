@@ -1,8 +1,8 @@
 //===--- bigint.c --- Test Cases for Bit Accurate Types -------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a general test for big integer type.
@@ -16,12 +16,10 @@ typedef enum bool{false=0, true=1} bool;
 const uint10 bnd = 1023;
 
 
-int169 x = 0xffffffff;
+int169 x = 0xffffffffULL;
+int169 y = -0xabcdefdeULL;
 
-int169 y = -0xabcdefde;
-// Module | Test
-// Thread: int my_test();
-int my_test(){
+int my_test()
 {
   uint10 i = 0;
   int169 result;
@@ -29,17 +27,17 @@ int my_test(){
   long long rem;
   long long rem2;
   {
-  ;/*NULL statement*/
-  for ( ; ; ) {
-  bool ssdm_tmp_1 = (i < bnd);
-  if (!ssdm_tmp_1) break;
-    if (i % 2 == 0)
+    ;
+    for ( ; ; ) {
+      bool ssdm_tmp_1 = (i < bnd);
+      if (!ssdm_tmp_1) break;
+      if (i % 2 == 0)
         x = x + 1;
-     else 
-         y = y - x;
+      else 
+        y = y - x;
     
-  ++i;
-  }
+      ++i;
+    }
   }
   result = x*y;
   l_result = result % 0x37015; 
@@ -54,8 +52,8 @@ int my_test(){
 
 int main()
 {
-    my_test();
-    return 0;
+  my_test();
+  return 0;
 }
 
 

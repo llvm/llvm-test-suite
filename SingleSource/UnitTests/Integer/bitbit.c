@@ -1,18 +1,19 @@
 //===--- bitbit.c --- Test Cases for Bit Accurate Types -------------------===//
 //
-// This file was developed by Guoling han and donated to the LLVM research
-// group and is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// This file was developed by Guoling Han and is distributed under the 
+// University of Illinois Open Source License. See LICENSE.TXT for details.
+//
 //===----------------------------------------------------------------------===//
 //
 // This is a general test for bit operations.
 //
 //===----------------------------------------------------------------------===//
+
 #include "bitbit.h"
 #include <stdio.h>
 
 
-int my_test(){
+int my_test()
 {
   int21 x = 0x1fffff;
   int21 y = 0x0fffff;
@@ -27,27 +28,27 @@ int my_test(){
   result = x & y;
   if (result == y) 
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   result = x | y;
   if (result == x) 
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   result = x;
   result &= y;
   if (result == y)
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   result = x;
   result |= y;
   if (result == x)
     printf("ok\n");
-   else 
+  else 
     printf("fail\n");
   
   result = x >> 20;
@@ -58,7 +59,7 @@ int my_test(){
     result += 1;
     if (result != x)
       printf("fail\n");
-     else 
+    else 
       printf("ok\n");
     
     result = y;
@@ -67,17 +68,17 @@ int my_test(){
     
     if (result != x)
       printf("fail\n");
-     else 
+    else 
       printf("ok\n");
     
   }
   return 0;
-}
+  
 }
 
 int main()
 {
-    my_test();
-    return 0;
+  my_test();
+  return 0;
 }
 
