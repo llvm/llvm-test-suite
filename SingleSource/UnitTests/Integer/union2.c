@@ -8,6 +8,10 @@
 // This is a test for union type. By assigning values to different
 // fields, we can check whether the assignment is correctly performed.
 //
+// Note: In the current implementation, a 9-bit data will also occupy
+// 2 bytes. So for this example, storing value to the 9-bit field will
+// change the two bytes of the memory.
+//
 //===----------------------------------------------------------------------===//
 
 
@@ -21,12 +25,17 @@ typedef struct myStruct {int9* ptr; short i;} myStruct;
 myStruct test(myUnion u)
 {
   myStruct x;
+  int9* ptr;
+  
+  u.i31 = -1;
+  u.i = 0x0;
+  ptr = &(u.i9);
+  *ptr= -1;
 
-  u.i31 = 0;
-  u.i = 0xffff;
-  int9* ptr = &(u.i9);
-  *ptr= 0x00;
-
+  printf("u.i = %hd\n", u.i);
+  printf("u.i9 = %hd\n", u.i9);
+  printf("u.i31 = %d\n", u.i31);
+ 
   x.ptr = ptr;
   x.i = u.i;
 

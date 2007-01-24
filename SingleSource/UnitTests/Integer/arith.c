@@ -43,7 +43,7 @@ int my_test()
   l = j / k;
   temp = l;
   printf( "temp = %hd\n", temp);
-  j *= (-176);
+  j *= (-176); // after truncation, the value should be -384
   l = j / k;
   temp = l;
   printf( "temp = %hd\n", temp);

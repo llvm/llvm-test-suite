@@ -27,7 +27,7 @@ struct Blend_Map_Entry {
 
 int main()
 {
-  if( sizeof(struct Blend_Map_Entry) == 5 * sizeof(int) )
+  if( sizeof(struct Blend_Map_Entry) != 5 * sizeof(int) )
     printf("error: %d\n", sizeof(struct Blend_Map_Entry));
   return 0;
 }
