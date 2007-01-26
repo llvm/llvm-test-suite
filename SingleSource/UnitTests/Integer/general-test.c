@@ -41,7 +41,7 @@ struct MyStruct* getSizes( short ATTR_BITS(23) num, My37BitInt * result) {
   *result = sizeof(My17BitInt) + sizeof(j) + sizeof(struct MyStruct);
   Data1.i4Field = num;
   Data1.i12Field = num + 1;
-  Data1.i17Field = num + 2;
+  Data1.i17Field = num + 2; 
   Data1.i37Field = num + 3;
   Data1.next = 0;
   Data2 = Data1;

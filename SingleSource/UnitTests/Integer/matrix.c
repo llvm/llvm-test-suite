@@ -19,10 +19,10 @@
 
 typedef enum bool{false=0, true=1} bool;
 
-void mysort(const int17  X[8], int17  Y[8])
+void mysort(const int24  X[8], int24  Y[8])
 {
   unsigned int i, j;
-  int17 temp;
+  int24 temp;
   {
     j = 0;
     for ( ; ; ) {
@@ -69,11 +69,11 @@ int get_gcd(const int  a, const int  b)
 
 
 
-int my_test(int17  A[8][8], int17  B[8][8])
+int my_test(int24  A[8][8], int24  B[8][8])
 {
   unsigned int i, j, k, dd;
-  int17 C[8][8];
-  int17 D[8];
+  int24 C[8][8];
+  int24 D[8];
   int t;
   {
     i = 0;
@@ -118,8 +118,8 @@ int main()
 {
   int i, j;
             
-  int17 X[8][8];
-  int17 Y[8][8];
+  int24 X[8][8];
+  int24 Y[8][8];
 
   for(i=0; i<8; i++)
     for(j=0; j<8; j++){
