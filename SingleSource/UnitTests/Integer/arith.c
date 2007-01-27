@@ -17,6 +17,8 @@ int21 x = 0x1fffff;
 
 int21 y = 0x0fffff;
 
+
+
 int my_test()
 {
   uint10 i = 0;
@@ -70,6 +72,7 @@ int my_test()
   ui_y = y;
   i_temp = ui_x - ui_y;
   printf("i_temp = %x\n", i_temp);
+
   return 0;
 
 }
