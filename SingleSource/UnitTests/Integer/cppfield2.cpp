@@ -27,8 +27,8 @@ class bitFieldStruct {
 class bitAccurateStruct {
   public:
   int32 i;
-  int7 c;
-  int17 s;
+  int7 c : 7;
+  int17 s : 17;
   int8 c2;
 };
 
@@ -37,9 +37,9 @@ int main()
   printf("sizeof(bitFieldStruct) == %d\n", sizeof(bitFieldStruct));
   printf("sizeof(bitAccurateStruct) == %d\n", sizeof(bitAccurateStruct));
 
-  if (sizeof(bitAccurateStruct) != 4 * sizeof(int))
+  if (sizeof(bitAccurateStruct) != 2 * sizeof(int))
     printf("bitAccurrateStruct should be %d but is %d \n", 
-            4 * sizeof(int), sizeof(bitAccurateStruct));
+            2 * sizeof(int), sizeof(bitAccurateStruct));
 
   if (sizeof(bitFieldStruct) != 2 * sizeof(int))
     printf("bitFieldStruct should be %d but is %d \n", 
@@ -49,12 +49,8 @@ int main()
   bitAccurateStruct y;
 
   char* yip = (char*) &y.i;
-  char* ycp = (char*) &y.c;
-  char* ysp = (char*) &y.s;
   char* yc2p = (char*) &y.c2;
   printf("Offset bitAccurateStruct.i = %d\n", yip - yip);
-  printf("Offset bitAccurateStruct.c = %d\n", ycp - yip);
-  printf("Offset bitAccurateStruct.s = %d\n", ysp - yip);
   printf("Offset bitAccurateStruct.c2 = %d\n", yc2p - yip);
   
   char* xip = (char*) &x.i;
