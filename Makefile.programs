@@ -237,7 +237,7 @@ print-llcbeta-option:
 # raw output from the C frontend, optimize it.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rll $(LGCCAS)
-	-$(LGCCAS) $(STATS) $< -o $@
+	-$(LGCCAS) $(STATS) $(EXTRA_GCCAS_OPTIONS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
@@ -286,7 +286,7 @@ endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/gccas-pass-args: $(LGCCAS) Output/.dir
-	-$(LGCCAS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
+	-$(LGCCAS) $(EXTRA_GCCAS_OPTIONS) /dev/null -o /dev/null -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 | sed 's/-emitbytecode//' > $@
 Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/gccld.test.bc
