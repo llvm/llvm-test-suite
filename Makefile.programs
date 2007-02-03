@@ -238,7 +238,7 @@ print-llcbeta-option:
 # standard compilation optimizations.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
-	-$(LOPT) -std-compile-opts $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@
+	-$(LOPT) -std-compile-opts $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
@@ -254,7 +254,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
 	-$(LGCCLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
+	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
 endif
 
@@ -262,7 +262,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
 	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	-$(LOPT) -q $(OPTPASSES) < $@ > $@.tmp
+	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
 endif
 
