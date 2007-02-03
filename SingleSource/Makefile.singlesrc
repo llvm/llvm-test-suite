@@ -22,13 +22,12 @@ include $(LEVEL)/Makefile.programs
 .PRECIOUS: Output/%.linked.rll
 
 ifndef USE_PRECOMPILED_BYTECODE
-Output/%.linked.rbc: Output/%.ll
-	-$(LLVMAS) < $< > $@
-Output/%.linked.rll: Output/%.ll
-	-cp -f $< $@
+Output/%.linked.rbc: Output/%.bc
+	cp -f $< $@
 
 Output/%.LOC.txt: $(SourceDir)/%.c
 	cat $< | wc -l > $@
+
 Output/%.LOC.txt: $(SourceDir)/%.cpp
 	cat $< | wc -l > $@
 endif
@@ -36,6 +35,7 @@ endif
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: $(SourceDir)/%.c Output/.dir
 	-$(CC) $(CFLAGS) -O2 $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
 Output/%.native: $(SourceDir)/%.cpp Output/.dir
 	-$(CXX) $(CXXFLAGS) -O2 $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 

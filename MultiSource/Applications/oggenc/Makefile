@@ -1,8 +1,8 @@
 LEVEL = ../../..
 PROG = oggenc
 
-CPPFLAGS =
-LDFLAGS  = -lm
+CPPFLAGS := -g
+LDFLAGS  := -lm
 
 STDIN_FILENAME = $(SourceDir)/tune
 RUN_OPTIONS="-Q -s 901820 -"

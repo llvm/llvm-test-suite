@@ -20,13 +20,13 @@ LIBS += -lm
 include $(LEVEL)/Makefile.programs
 
 # Figure out what object files we want to build...
-LObjs    := $(sort $(addsuffix .rbc, $(notdir $(basename $(Source)))))
+LObjs    := $(sort $(addsuffix .bc, $(notdir $(basename $(Source)))))
 LObjects := $(addprefix Output/,$(LObjs))
 
 NObjs    := $(sort $(addsuffix .o, $(notdir $(basename $(Source)))))
 NObjects := $(addprefix Output/,$(NObjs))
 
-.PRECIOUS: $(LObjects) $(NObjects) Output/%.linked.rll
+.PRECIOUS: $(LObjects) $(NObjects)
 
 Output/%.o: %.c Output/.dir
 	-$(CC) $(CPPFLAGS) $(CFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
@@ -48,24 +48,12 @@ bugpoint-llc-beta: Output/$(PROG).bugpoint-llc-beta
 bugpoint-cbe:   Output/$(PROG).bugpoint-cbe
 misopt: Output/$(PROG).misopt.out
 
-# Raw bytecode files are files created by simply assembling the output of the
-# GCC frontend, without running any optimizations.
-#
-Output/%.rbc: Output/%.ll $(LGCCAS)
-	-$(LGCCAS) -disable-opt $< -o $@
 
 ifndef USE_PRECOMPILED_BYTECODE
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.rbc): \
 Output/%.linked.rbc: $(LObjects) $(LGCCLDPROG)
 	-$(LGCCLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
-
-# Output/*.linked.ll is all of the bytecode files of the program linked together
-# without any libraries linked in...
-#
-$(PROGRAMS_TO_TEST:%=Output/%.linked.rll): \
-Output/%.linked.rll: Output/%.linked.rbc $(LDIS)
-	-$(LDIS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)

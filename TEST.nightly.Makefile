@@ -31,10 +31,10 @@ EXTRA_LLI_OPTS = $(TIMEOPT)
 
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
-Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LGCCAS)
+Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LOPT)
 	@echo > $@
-	@echo '$(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) $(EXTRA_GCCAS_OPTIONS)  >>$@ 2>&1'
-	@-if ($(LGCCAS) Output/$*.linked.rll -o /dev/null $(TIMEOPT) $(EXTRA_GCCAS_OPTIONS) >>$@ 2>&1)\
+	@echo '$(LOPT) Output/$*.linked.bc -f -o /dev/null $(TIMEOPT) $(EXTRA_LOPT_OPTIONS)  >>$@ 2>&1'
+	@-if ($(LOPT) Output/$*.linked.bc -f -o /dev/null $(TIMEOPT) $(EXTRA_LOPT_OPTIONS) >>$@ 2>&1)\
 	;then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
