@@ -417,7 +417,7 @@ static void PS_PrintBeforeFirstPage(FULL_LENGTH h, FULL_LENGTH v,
   else
     p0("%!PS-Adobe-3.0\n");
   p1("%%%%Creator: %s\n", LOUT_VERSION);
-  p0("%%%%CreationDate: Sometime Today");
+  p0("%%%%CreationDate: Sometime Today\n");
   p0("%%DocumentData: Binary\n");
   p0("%%DocumentNeededResources: (atend)\n");
   p0("%%DocumentSuppliedResources: (atend)\n");
