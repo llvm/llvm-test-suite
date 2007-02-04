@@ -288,7 +288,7 @@ endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Targets to get the pass arguments that gccas and gccld are using...
 Output/opt-pass-args: $(LOPT) Output/.dir
 	-$(LLVMAS) < /dev/null -o - | \
-	  $(LOPT) $(EXTRA_LOPT_OPTIONS) -disable-output -debug-pass=Arguments 2>&1 | \
+	  $(LOPT) $(EXTRA_LOPT_OPTIONS) -std-compile-opts -disable-output -debug-pass=Arguments 2>&1 | \
 	  sed 's/Pass Arguments: //' | sed 's/-emitbytecode//' > $@
 
 Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
