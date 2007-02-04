@@ -121,9 +121,9 @@ BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
 Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
-                         Output/gccas-pass-args Output/%.out-nat
+                         Output/opt-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/gccas-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
