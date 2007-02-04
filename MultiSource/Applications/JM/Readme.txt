@@ -16,8 +16,13 @@ please send comments and additions to suehring@hhi.de
 1.1 Windows
 -----------
   
-  A workspace for MS Visual C++ is provided with the name "tml.dsw". It contains
-  the encoder and decoder projects.
+  Workspaces for MS Visual C++ 6.0/2003/2005 are provided with the nams 
+
+    jm.dsw      - MS Visual C++ 6.0
+    jm_vc7.sln  - MS Visual C++ 2003
+    jm_vc8.sln  - MS Visual C++ 2005
+
+  These contain encoder and decoder projects.
 
 
 1.2 Unix
