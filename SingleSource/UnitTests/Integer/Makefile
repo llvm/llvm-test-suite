@@ -10,6 +10,9 @@ SEED = $(shell date +%j)
 # the same results regardless of whether you make clean or not.
 RUN_OPTIONS := 31415926
 
+# Define this to 1 to test larger integer (>64 bits) types.
+ENABLE_LARGE_INTEGERS := 0
+
 # None of these test cases can use a native code generator because
 # those targets are not set up to deal with arbitrary precision
 # integer types. Consequently, we must disable the LLI, LLC, 
@@ -31,3 +34,6 @@ USE_REFERENCE_OUTPUT := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 LDFLAGS += -lstdc++
+ifeq (1,$(ENABLE_LARGE_INTEGERS))
+CPPFLAGS += -DENABLE_LARGE_INTEGERS
+endif
