@@ -14,61 +14,61 @@
 
 using namespace llvm;
 
-APInt x(21,0x1fffff);
+APInt x(0x1fffff, 21);
 
-APInt y(21,0x0fffff);
+APInt y(0x0fffff, 21);
 
 int my_test()
 {
-  APInt i(10,uint64_t(0));
-  APInt j(10);
-  APInt k(10);
-  APInt l(10);
-  APInt result(21);
+  APInt i(uint64_t(0), 10);
+  APInt j(0, 10);
+  APInt k(0, 10);
+  APInt l(0, 10);
+  APInt result(0, 21);
   short temp;
   int i_temp;
   unsigned int ui_x;
   unsigned int ui_y;
   j = i;
   j -= 1;
-  temp = (short)j;
+  temp = (short)j.getValue();
   printf( "temp = %hd\n", temp);
   k = i;
   k += 1;
-  temp = k;
+  temp = k.getValue();
   printf( "temp = %hd\n", temp);
   k = j * k;
-  temp = k;
+  temp = k.getValue();
   printf( "temp = %hd\n", temp);
   j *= 120;
   l = j / k;
-  temp = l;
+  temp = l.getValue();
   printf( "temp = %hd\n", temp);
   j *= (-176); // after truncation, the value should be -384
   l = j / k;
-  temp = l;
+  temp = l.getValue();
   printf( "temp = %hd\n", temp);
   l = 120;
   l = (j * l);
   l %= 4;
-  temp = l;
+  temp = l.getValue();
   printf( "temp = %hd\n", temp);
   l = -217;
   l = (j * l);
   l = l / (++i);
-  temp = l;
+  temp = l.getValue();
   printf( "temp = %hd\n", temp);
   result = ++x;
   
-  i_temp = result;
+  i_temp = result.getValue();
   printf( "i_temp = %x\n", i_temp);
   x--;
  
   result = x + y;
-  i_temp = result;
+  i_temp = result.getValue();
   printf("i_temp = %x\n", i_temp);
-  ui_x = x;
-  ui_y = y;
+  ui_x = x.getValue();
+  ui_y = y.getValue();
   i_temp = ui_x - ui_y;
   printf("i_temp = %x\n", i_temp);
 

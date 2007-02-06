@@ -19,8 +19,8 @@ int
 main ( int argc, char** argv)
 {
   int num, r;
-  APInt x(24), y(24), z(24);
-  APInt ux(24), uy(24), uz(24);
+  APInt x(0, 24, true), y(0, 24, true), z(0, 24, true);
+  APInt ux(0, 24), uy(0, 24), uz(0, 24);
 
   r = rand();
   r = r - 1804289384; // -1
@@ -36,28 +36,29 @@ main ( int argc, char** argv)
 
   x = num;
   ux = num;
-  printf("x = %d, ux = %u, y=%d, uy = %u\n", int(x), (unsigned int)ux, 
-         int(y), (unsigned int)uy);
+  printf("x = %d, ux = %u, y=%d, uy = %u\n", int(x.getValue()), 
+         (unsigned int)ux.getValue(), int(y.getValue()), 
+         (unsigned int)uy.getValue());
     
   z = x * y;  // 0x1000001 * (-1)
   uz = ux * uy;
-  printf("z=%d, uz=%u\n", int(z), (unsigned int)uz);
+  printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   z = x % 314;
   uz = ux % 314;
-  printf("z=%d, uz=%u\n", int(z), (unsigned int)uz);
+  printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   z = x / 314;
   uz = ux / 314;
-  printf("z=%d, uz=%u\n", int(z), (unsigned int)uz);
+  printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   z = (x+0xf28) / 314;
   uz = (ux + 0xf28) / 314;
-  printf("z=%d, uz=%u\n", int(z), (unsigned int)uz);
+  printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   z = (x - 580) / 314;
   uz = (((ux - 580)) / 314);
-  printf("z=%d, uz=%u\n", int(z), (unsigned int)uz);
+  printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   return 0;
 }

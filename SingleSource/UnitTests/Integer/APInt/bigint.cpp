@@ -13,17 +13,17 @@
 
 using namespace llvm;
 
-const APInt bnd(10,1023);
+const APInt bnd(1023, 10);
 
 
-APInt x(169, 0xffffffffULL);
-APInt y(169, -0xabcdefdeULL);
+APInt x(0xffffffffULL, 169);
+APInt y(-0xabcdefdeULL, 169);
 
 int my_test()
 {
-  APInt i(10,uint64_t(0));
-  APInt result(169);
-  APInt l_result(32);
+  APInt i(uint64_t(0), 10);
+  APInt result(0, 169);
+  APInt l_result(0, 32);
   long long rem;
   long long rem2;
   {
@@ -41,11 +41,11 @@ int my_test()
   }
   result = x*y;
   l_result = result % 0x37015; 
-  rem = l_result;
+  rem = l_result.getValue();
   printf("rem = %lld\n", rem);
 
   l_result = result % -198721;
-  rem2 = l_result;
+  rem2 = l_result.getValue();
   printf("rem2 = %lld\n", rem2);
   return 0;
 }

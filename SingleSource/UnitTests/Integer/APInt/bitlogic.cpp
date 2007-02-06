@@ -16,11 +16,11 @@ using namespace llvm;
 
 int my_test()
 {
-  APInt x(1,0x1);
-  APInt y(1);
-  APInt z(9,0x1ff);
-  APInt uz(9,0x1ff);
-  APInt temp(9);
+  APInt x(0x1, 1);
+  APInt y(0, 1);
+  APInt z(0x1ff, 9);
+  APInt uz(0x1ff, 9);
+  APInt temp(0, 9);
   y = x;
   y -= 1;
   if (!y)
