@@ -23,6 +23,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <errno.h>
 
 #include <signal.h>
+#include <zlib.h>
 
 #include "Solver.h"
 
@@ -83,7 +84,7 @@ static inline uint64_t memUsed() { return 0; }
 #define CHUNK_LIMIT 1048576
 
 class StreamBuffer {
-    FILE*  in;
+    gzFile  in;
     char    buf[CHUNK_LIMIT];
     int     pos;
     int     size;
@@ -91,10 +92,10 @@ class StreamBuffer {
     void assureLookahead() {
         if (pos >= size) {
             pos  = 0;
-            size = fread(buf, 1, sizeof(buf), in); } }
+            size = gzread(in, buf, sizeof(buf)); } }
 
 public:
-    StreamBuffer(FILE* i) : in(i), pos(0), size(0) {
+    StreamBuffer(gzFile i) : in(i), pos(0), size(0) {
         assureLookahead(); }
 
     int  operator *  () { return (pos >= size) ? EOF : buf[pos]; }
@@ -161,6 +162,8 @@ static void parse_DIMACS_main(B& in, Solver& S) {
             if (match(in, "p cnf")){
                 int vars    = parseInt(in);
                 int clauses = parseInt(in);
+                reportf("|  Number of variables:  %-12d                                         |\n", vars);
+                reportf("|  Number of clauses:    %-12d                                         |\n", clauses);
             }else{
                 reportf("PARSE ERROR! Unexpected char: %c\n", *in), exit(3);
             }
@@ -174,7 +177,7 @@ static void parse_DIMACS_main(B& in, Solver& S) {
 
 // Inserts problem into solver.
 //
-static void parse_DIMACS(FILE* input_stream, Solver& S) {
+static void parse_DIMACS(gzFile input_stream, Solver& S) {
     StreamBuffer in(input_stream);
     parse_DIMACS_main(in, S); }
 
@@ -187,12 +190,11 @@ void printStats(Solver& solver)
     double   cpu_time = cpuTime();
     uint64_t mem_used = memUsed();
     reportf("restarts              : %lld\n", solver.starts);
-    reportf("conflicts             : %-12lld   (%.0f /sec)\n", solver.conflicts   , solver.conflicts   /cpu_time);
-    reportf("decisions             : %-12lld   (%4.2f %% random) (%.0f /sec)\n", solver.decisions, (float)solver.rnd_decisions*100 / (float)solver.decisions, solver.decisions   /cpu_time);
-    reportf("propagations          : %-12lld   (%.0f /sec)\n", solver.propagations, solver.propagations/cpu_time);
+    reportf("conflicts             : %-12lld\n", solver.conflicts);
+    reportf("decisions             : %-12lld   (%4.2f %% random)\n", solver.decisions, (float)solver.rnd_decisions*100 / (float)solver.decisions);
+    reportf("propagations          : %-12lld\n", solver.propagations);
     reportf("conflict literals     : %-12lld   (%4.2f %% deleted)\n", solver.tot_literals, (solver.max_literals - solver.tot_literals)*100 / (double)solver.max_literals);
     if (mem_used != 0) reportf("Memory used           : %.2f MB\n", mem_used / 1048576.0);
-    reportf("CPU time              : %g s\n", cpu_time);
 }
 
 Solver* solver;
@@ -283,6 +285,7 @@ int main(int argc, char** argv)
     argc = j;
 
 
+    reportf("This is MiniSat 2.0 beta\n");
 #if defined(__linux__)
     fpu_control_t oldcw, newcw;
     _FPU_GETCW(oldcw); newcw = (oldcw & ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);
@@ -297,11 +300,15 @@ int main(int argc, char** argv)
     if (argc == 1)
         reportf("Reading from standard input... Use '-h' or '--help' for help.\n");
 
-    FILE* in = fopen(argv[1], "rb");
+    gzFile in = (argc == 1) ? gzdopen(0, "rb") : gzopen(argv[1], "rb");
     if (in == NULL)
         reportf("ERROR! Could not open file: %s\n", argc == 1 ? "<stdin>" : argv[1]), exit(1);
 
-    parse_DIMACS(in, S);;
+    reportf("============================[ Problem Statistics ]=============================\n");
+    reportf("|                                                                             |\n");
+
+    parse_DIMACS(in, S);
+    gzclose(in);
     FILE* res = (argc >= 3) ? fopen(argv[2], "wb") : NULL;
 
     if (!S.simplify()){
@@ -312,6 +319,8 @@ int main(int argc, char** argv)
     }
 
     bool ret = S.solve();
+    printStats(S);
+    reportf("\n");
     printf(ret ? "SATISFIABLE\n" : "UNSATISFIABLE\n");
     if (res != NULL){
         if (ret){

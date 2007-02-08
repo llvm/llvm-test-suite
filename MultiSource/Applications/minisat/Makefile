@@ -3,6 +3,7 @@
 LEVEL = ../../..
 PROG = minisat
 CPPFLAGS = -D NDEBUG -Imtl
-RUN_OPTIONS = long.cnf
+LDFLAGS = -lz
+RUN_OPTIONS = -verbosity=0 long.cnf.gz
 
 include ../../Makefile.multisrc
