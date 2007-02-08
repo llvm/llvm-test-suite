@@ -634,9 +634,9 @@ time_t tot_time;
 // input parameters from configuration file
 struct inp_par
 {
-  char infile[100];                       //!< H.264 inputfile
-  char outfile[100];                      //!< Decoded YUV 4:2:0 output
-  char reffile[100];                      //!< Optional YUV 4:2:0 reference file for SNR measurement
+  char infile[1000];                       //!< H.264 inputfile
+  char outfile[1000];                      //!< Decoded YUV 4:2:0 output
+  char reffile[1000];                      //!< Optional YUV 4:2:0 reference file for SNR measurement
   int FileFormat;                         //!< File format of the Input file, PAR_OF_ANNEXB or PAR_OF_RTP
   int ref_offset;
   int poc_scale;
@@ -647,7 +647,7 @@ struct inp_par
   unsigned long R_decoder;                //!< Decoder Rate in HRD Model
   unsigned long B_decoder;                //!< Decoder Buffer size in HRD model
   unsigned long F_decoder;                //!< Decoder Initial buffer fullness in HRD model
-  char LeakyBucketParamFile[100];         //!< LeakyBucketParamFile
+  char LeakyBucketParamFile[1000];         //!< LeakyBucketParamFile
 #endif
 
   // picture error concealment
