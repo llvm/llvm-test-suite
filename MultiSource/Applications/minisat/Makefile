@@ -10,3 +10,6 @@ RUN_OPTIONS = -verbosity=0 long.cnf.gz
 endif
 
 include ../../Makefile.multisrc
+
+JIT_OPTS += -load libz.dylib
+
