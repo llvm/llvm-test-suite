@@ -1,4 +1,4 @@
-# MultiSource/minisat Makefile:  Build all subdirectories automatically
+# MultiSource/minisat Makefile
 
 LEVEL = ../../..
 PROG = minisat
