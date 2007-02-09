@@ -275,7 +275,6 @@ LLVMGCCLIBDIR=$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH)
 # Makefile.rules) 
 LLI       = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
 LLC       = $(LLVMTOOLCURRENT)/llc$(EXEEXT)
-LGCCAS    = $(LLVMTOOLCURRENT)/gccas$(EXEEXT)
 LLVMLD    = $(LLVMLDPROG) -L$(LLVMGCCLIBDIR) -L$(LLVMGCCDIR)/lib
 LDIS      = $(LLVMTOOLCURRENT)/llvm-dis$(EXEEXT)
 LOPT      = $(LLVMTOOLCURRENT)/opt$(EXEEXT)
@@ -518,10 +517,6 @@ endif
 #  be used in this way, it is better to define DONT_BUILD_RELINKED, and define
 #  BUILD_ARCHIVE instead.
 #
-#  Some libraries must be built as .a files (libscalar for example) because if
-#  it's built as a .o file, then all of the constituent .o files in it will be
-#  linked into tools (for example gccas) even if they only use one of the parts
-#  of it.  For this reason, sometimes it's useful to use libraries as .a files.
 ###########################################################################
 
 # Install rule for making bytecode library directory if it does not exist.
