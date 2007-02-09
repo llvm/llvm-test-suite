@@ -40,8 +40,10 @@ Output/%.o: %.cpp Output/.dir
 Output/%.o: %.cc Output/.dir
 	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
 
-bugpoint-gccas: Output/$(PROG).bugpoint-gccas
-bugpoint-gccld: Output/$(PROG).bugpoint-gccld
+bugpoint-opt: Output/$(PROG).bugpoint-opt
+bugpoint-gccas: Output/$(PROG).bugpoint-opt
+bugpoint-llvm-ld: Output/$(PROG).bugpoint-llvm-ld
+bugpoint-gccld: Output/$(PROG).bugpoint-llvm-ld
 bugpoint-jit:   Output/$(PROG).bugpoint-jit
 bugpoint-llc:   Output/$(PROG).bugpoint-llc
 bugpoint-llc-beta: Output/$(PROG).bugpoint-llc-beta
@@ -52,8 +54,8 @@ misopt: Output/$(PROG).misopt.out
 ifndef USE_PRECOMPILED_BYTECODE
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.rbc): \
-Output/%.linked.rbc: $(LObjects) $(LGCCLDPROG)
-	-$(LGCCLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
+Output/%.linked.rbc: $(LObjects) $(LLVMLDPROG)
+	-$(LLVMLDPROG) -link-as-library -disable-opt $(LObjects) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)

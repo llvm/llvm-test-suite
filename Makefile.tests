@@ -19,7 +19,7 @@ DISABLE_AUTO_DEPENDENCIES=1
 include ${LEVEL}/Makefile.common
 
 # Specify ENABLE_STATS on the command line to enable -stats and -time-passes
-# output from gccas and gccld.
+# output from opt and llvm-ld.
 ifdef ENABLE_STATS
 STATS = -stats -time-passes
 endif

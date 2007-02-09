@@ -118,20 +118,20 @@ BUGPOINT_OPTIONS += -timeout=$(RUNTIMELIMIT)
 BUGPOINT_OPTIONS += --tool-args $(LLCFLAGS)
 BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 
-# Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
-Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
+# Rules to bugpoint the opt, llvm-ld, llc, or lli commands...
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
+Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/opt-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
 	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.nogccldopt-llvm.bc $(LBUGPOINT) \
-                         Output/gccld-pass-args Output/%.out-nat
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
+Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
+                         Output/llvm-ld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.nogccldopt-llvm.bc `cat Output/gccld-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
@@ -160,7 +160,6 @@ Output/%.bugpoint-jit-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) \
 	    $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
-
 
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so

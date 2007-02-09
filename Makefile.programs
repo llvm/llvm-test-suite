@@ -251,49 +251,49 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 # optimization...
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
-Output/%.llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -o Output/$*.llvm
+Output/%.llvm.bc: Output/%.linked.bc $(LLVM_LDDPROG)
+	-$(LLVMLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
-Output/%.llvm: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) $(STATS) $< -lc $(LIBS) -o Output/$*.llvm
+Output/%.llvm: Output/%.linked.bc $(LLVMLDPROG)
+	-$(LLVMLD) $(STATS) $< -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
-Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LLVMLDPROG)
+	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
-Output/%.noopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+Output/%.noopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
+	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 
-$(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm.bc): \
-Output/%.nogccldopt-llvm.bc: Output/%.linked.bc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.nogccldopt-llvm
+$(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm.bc): \
+Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LLVMLDPROG)
+	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
 
-$(PROGRAMS_TO_TEST:%=Output/%.nogccldopt-llvm): \
-Output/%.nogccldopt-llvm: Output/%.linked.rbc $(LGCCLDPROG)
-	-$(LGCCLD) -disable-opt $(STATS) $< -lc $(LIBS)  -o Output/$*.nogccldopt-llvm
+$(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm): \
+Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
+	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
-# Targets to get the pass arguments that gccas and gccld are using...
+# Targets to get the pass arguments that opt and llvm-ld are using...
 Output/opt-pass-args: $(LOPT) Output/.dir
 	-$(LLVMAS) < /dev/null -o - | \
 	  $(LOPT) $(EXTRA_LOPT_OPTIONS) -std-compile-opts -disable-output -debug-pass=Arguments 2>&1 | \
 	  sed 's/Pass Arguments: //' | sed 's/-emitbytecode//' > $@
 
-Output/gccld-pass-args: $(LGCCLDPROG) Output/.dir
-	$(LLVMAS) < /dev/null > Output/gccld.test.bc
-	$(LGCCLD) Output/gccld.test.bc -o Output/gccld.test-out -debug-pass=Arguments > $@.1 2>&1
+Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
+	$(LLVMAS) < /dev/null > Output/llvm-ld.test.bc
+	$(LLVMLD) Output/llvm-ld.test.bc -o Output/llvm-ld.test-out -debug-pass=Arguments > $@.1 2>&1
 	sed 's/Pass Arguments: //' < $@.1 | sed 's/-emitbytecode//' > $@
 
 # If the program requires exception handling support, enable (potentially
@@ -431,15 +431,15 @@ BUGPOINT_OPTIONS += --tool-args $(LLCFLAGS)
 BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 
 # Rules to bugpoint the GCCAS, GCCLD, LLC, or LLI commands...
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccas): \
-Output/%.bugpoint-gccas: Output/%.noopt-llvm.bc $(LBUGPOINT) \
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
+Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/opt-pass-args Output/%.out-nat
 	$(LBUGPOINT) $< `cat Output/opt-pass-args` $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-gccld): \
-Output/%.bugpoint-gccld: Output/%.nogccldopt-llvm.bc $(LBUGPOINT) \
-                         Output/gccld-pass-args Output/%.out-nat
-	$(LBUGPOINT) $< `cat Output/gccld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
+Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
+                         Output/llvm-ld-pass-args Output/%.out-nat
+	$(LBUGPOINT) $< `cat Output/llvm-ld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat

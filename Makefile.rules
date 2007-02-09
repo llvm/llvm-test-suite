@@ -254,7 +254,7 @@ endif
 BURG       := $(LLVMTOOLCURRENT)/burg$(EXEEXT)
 RunBurg    := $(BURG) $(BURG_OPTS)
 TBLGEN     := $(LLVMTOOLCURRENT)/tblgen$(EXEEXT)
-LGCCLDPROG := $(LLVMTOOLCURRENT)/gccld$(EXEEXT)
+LLVMLDPROG := $(LLVMTOOLCURRENT)/llvm-ld$(EXEEXT)
 
 #--------------------------------------------------------------------------
 # The LLVM GCC front-end in C and C++ flavors
@@ -276,7 +276,7 @@ LLVMGCCLIBDIR=$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH)
 LLI       = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
 LLC       = $(LLVMTOOLCURRENT)/llc$(EXEEXT)
 LGCCAS    = $(LLVMTOOLCURRENT)/gccas$(EXEEXT)
-LGCCLD    = $(LGCCLDPROG) -L$(LLVMGCCLIBDIR) -L$(LLVMGCCDIR)/lib
+LLVMLD    = $(LLVMLDPROG) -L$(LLVMGCCLIBDIR) -L$(LLVMGCCDIR)/lib
 LDIS      = $(LLVMTOOLCURRENT)/llvm-dis$(EXEEXT)
 LOPT      = $(LLVMTOOLCURRENT)/opt$(EXEEXT)
 LLINK     = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
