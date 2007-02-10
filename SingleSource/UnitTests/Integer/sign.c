@@ -35,8 +35,8 @@ main ( int argc, char** argv)
   
   num = num - 0xdf5e75; //0x1000001
 
-  x = num;
-  ux = num;
+  x = num; // = 1
+  ux = num; // = 1
   printf("x = %d, ux = %u, y=%d, uy = %u\n", x, ux, y, uy);
     
   z = x * y;  // 0x1000001 * (-1)
