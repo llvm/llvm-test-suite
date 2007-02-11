@@ -19,7 +19,7 @@ int
 main ( int argc, char** argv)
 {
   int num, r;
-  APInt x(0, 24, true), y(0, 24, true), z(0, 24, true);
+  APInt x(0, 24), y(0, 24), z(0, 24);
   APInt ux(0, 24), uy(0, 24), uz(0, 24);
 
   r = rand();
@@ -30,10 +30,13 @@ main ( int argc, char** argv)
   
   if (argc > 1)
     num = atoi(argv[1]);
+  else
+    num = 0;
 
   
   num = num - 0xdf5e75; //0x1000001
 
+  printf("num = %d\n", num);
   x = num;
   ux = num;
   printf("x = %d, ux = %u, y=%d, uy = %u\n", int(x.getValue()), 
@@ -44,20 +47,20 @@ main ( int argc, char** argv)
   uz = ux * uy;
   printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
-  z = x % 314;
-  uz = ux % 314;
+  z = APIntOps::srem(x, 314);
+  uz = APIntOps::urem(ux, 314);
   printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
-  z = x / 314;
-  uz = ux / 314;
+  z = APIntOps::sdiv(x, 314);
+  uz = APIntOps::udiv(ux, 314);
   printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
-  z = (x+0xf28) / 314;
-  uz = (ux + 0xf28) / 314;
+  z = APIntOps::sdiv((x+0xf28), 314);
+  uz = APIntOps::udiv((ux + 0xf28), 314);
   printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
-  z = (x - 580) / 314;
-  uz = (((ux - 580)) / 314);
+  z = APIntOps::sdiv((x - 580), 314);
+  uz = APIntOps::udiv((ux - 580), 314);
   printf("z=%d, uz=%u\n", int(z.getValue()), (unsigned int)uz.getValue());
 
   return 0;

@@ -31,7 +31,7 @@ int my_test()
     for ( ; ; ) {
       bool ssdm_tmp_1 = (i < bnd);
       if (!ssdm_tmp_1) break;
-      if (i % 2 == 0)
+      if (APIntOps::urem(i, 2) == 0)
         x = x + 1;
       else 
         y = y - x;
@@ -40,11 +40,11 @@ int my_test()
     }
   }
   result = x*y;
-  l_result = result % 0x37015; 
+  l_result = APIntOps::srem(result, 0x37015);
   rem = l_result.getValue();
   printf("rem = %lld\n", rem);
 
-  l_result = result % -198721;
+  l_result = APIntOps::srem(result, -198721);
   rem2 = l_result.getValue();
   printf("rem2 = %lld\n", rem2);
   return 0;
