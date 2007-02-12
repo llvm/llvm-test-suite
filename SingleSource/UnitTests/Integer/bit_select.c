@@ -14,11 +14,11 @@
 
 #ifdef ENABLE_LARGE_INTEGERS
 typedef int __attribute__((bitwidth(250))) BitType;
-const BitType X = 0xAAAAAAAAULL;
+const BitType X = 0xAAAAAAAAAAAAAAAAULL;
 int numbits = 250;
 #else
 typedef int __attribute__((bitwidth(47))) BitType;
-const BitType X = 0xAAAAAAAAULL;
+const BitType X = 0xAAAAAAAAAAAAULL;
 int numbits = 47;
 #endif
 
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   BitType Y = X;
 #endif
 
-  int i;
+  BitType i;
 
   for (i = numbits-1; i >= 0; --i) {
     if (__builtin_bit_select(Y, i)) 

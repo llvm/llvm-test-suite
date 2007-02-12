@@ -1,0 +1,18 @@
+Tried to execute an unknown external function: i1 (...) * __builtin_bit_and_reduce
+/proj/llvm/llvm-2/Debug/bin/lli((anonymous namespace)::PrintStackTrace()+0x1a)[0x871c18a]
+/proj/llvm/llvm-2/Debug/bin/lli((anonymous namespace)::SignalHandler(int)+0x110)[0x871c4b2]
+[0x8e5420]
+/lib/libc.so.6(abort+0x101)[0x3234f1]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::callExternalFunction(llvm::Function*, std::vector<llvm::GenericValue, std::allocator<llvm::GenericValue> > const&)+0x138)[0x845428c]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::callFunction(llvm::Function*, std::vector<llvm::GenericValue, std::allocator<llvm::GenericValue> > const&)+0x11a)[0x844f356]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::visitCallSite(llvm::CallSite)+0x433)[0x844f9d9]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::visitCallInst(llvm::CallInst&)+0x2a)[0x845a998]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::InstVisitor<llvm::Interpreter, void>::visitCall(llvm::CallInst&)+0x18)[0x845a9b2]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::InstVisitor<llvm::Interpreter, void>::visit(llvm::Instruction&)+0x422)[0x845b5cc]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::run()+0x9d)[0x8450c21]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::Interpreter::runFunction(llvm::Function*, std::vector<llvm::GenericValue, std::allocator<llvm::GenericValue> > const&)+0xc9)[0x84545a1]
+/proj/llvm/llvm-2/Debug/bin/lli(llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*)+0x218)[0x84729ac]
+/proj/llvm/llvm-2/Debug/bin/lli(main+0x356)[0x83593aa]
+/lib/libc.so.6(__libc_start_main+0xdc)[0x30f4e4]
+/proj/llvm/llvm-2/Debug/bin/lli(__gxx_personality_v0+0x191)[0x8358fd1]
+exit 134
