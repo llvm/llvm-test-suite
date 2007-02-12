@@ -52,7 +52,7 @@ struct MyStruct* getSizes( short ATTR_BITS(23) num, My37BitInt * result) {
   Data2.next = &Data1;
   j = num * 2;
   printf("j = %d\n", j);
-  printf("size sum is %d\n", result);
+  printf("size sum is %d\n", (int)*result);
   return &Data2;
 }
 

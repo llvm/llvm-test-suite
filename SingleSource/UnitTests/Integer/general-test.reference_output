@@ -6,7 +6,7 @@ sizeof(MyStruct) == 20
 sizeof(My17BitInt) == 4
 sizeof(j) == 2
 j = -66
-size sum is 167356064
+size sum is 26
 that.i4Field  = 9
 that.i12Field = 2848
 that.i17Field = 31527
