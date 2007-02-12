@@ -16,15 +16,15 @@
 
 #ifdef ENABLE_LARGE_INTEGERS
 typedef int __attribute__((bitwidth(250))) BitType;
-const BitType X = 0xAAAAAAAAAAAAAAAAULL;
+const BitType X = 0xFFFFFFFFFFFFFFFFULL;
 int numbits = 250;
 #else
-typedef int __attribute__((bitwidth(47))) BitType;
-const BitType X = 0xAAAAAAAAAAAAULL;
-int numbits = 47;
+typedef int __attribute__((bitwidth(15))) BitType;
+const BitType X = 0xFFFFFFFFFFFULL;
+int numbits = 15;
 #endif
 
-printBits(BitType val, int numbits ) {
+void printBits(BitType val, int numbits ) {
   int j;
   for (j = numbits-1; j >= 0; --j) {
     if (__builtin_bit_select(val, j))
@@ -33,6 +33,20 @@ printBits(BitType val, int numbits ) {
       printf("0");
   }
 }
+
+void showReduction(BitType Val) {
+  printf("Value=");
+  _Bool And  = __builtin_bit_and_reduce(Val);
+  _Bool Nand = __builtin_bit_nand_reduce(Val);
+  _Bool Or   = __builtin_bit_or_reduce(Val);
+  _Bool Nor  = __builtin_bit_nor_reduce(Val);
+  _Bool Xor  = __builtin_bit_xor_reduce(Val);
+  _Bool Nxor = __builtin_bit_nxor_reduce(Val);
+  printBits(Val, numbits);
+  printf(", and=%d, nand=%d, or=%d, nor=%d, xor=%d, nxor=%d\n",
+      And, Nand, Or, Nor, Xor, Nxor);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -47,21 +61,14 @@ int main(int argc, char** argv)
 
   srand(seed);
 
+  showReduction(0);
+  showReduction(1);
+  showReduction(-1);
+
   for (i = 0; i < 128; i++) {
-    int num = rand();
+    unsigned long long num = rand();
     BitType Val = Y * num;
-    {
-      unsigned char And  = __builtin_bit_and_reduce(Val);
-      unsigned char Nand = __builtin_bit_nand_reduce(Val);
-      unsigned char Or   = __builtin_bit_or_reduce(Val);
-      unsigned char Nor  = __builtin_bit_nor_reduce(Val);
-      unsigned char Xor  = __builtin_bit_xor_reduce(Val);
-      unsigned char Nxor = __builtin_bit_nxor_reduce(Val);
-      printf("Value=");
-      printBits(Val, numbits);
-      printf(", and=%d, nand=%d, or=%d, nor=%d, xor=%d, nxor=%d\n",
-          And, Nand, Or, Nor, Xor, Nxor);
-    }
+    showReduction(Val);
   }
   return 0;
 }

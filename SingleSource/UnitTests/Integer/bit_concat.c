@@ -21,7 +21,7 @@ int numbits2 = 19;
 
 void printBits(ConcatType val, int numbits ) {
   int j;
-  for (j = numbits-1; j >= 0; --j) {
+  for (j = numbits; j > 0; --j) {
     if (__builtin_bit_select(val, j))
       printf("1");
     else

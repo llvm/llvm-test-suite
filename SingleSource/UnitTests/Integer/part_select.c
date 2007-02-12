@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   for (i = 1; i <= numbits; ++i) {
     BitType left = rand() % numbits;
     BitType right = i;
-    BitType Z = __builtin_part_select(Y, left, right);
+    BitType Z = __builtin_bit_part_select(Y, left, right);
     printf("part_select(Y, %3d, %3d) = ", (int)left, (int)right);
     for (j = numbits; j > 0; --j) {
       if (__builtin_bit_select(Z, j))
