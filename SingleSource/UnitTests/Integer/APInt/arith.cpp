@@ -11,6 +11,7 @@
 
 #include "llvm/ADT/APInt.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 using namespace llvm;
 
@@ -18,67 +19,174 @@ APInt x(0x1fffff, 21);
 
 APInt y(0x0fffff, 21);
 
-int my_test()
-{
-  APInt i(uint64_t(0), 10);
-  APInt j(0, 10);
-  APInt k(0, 10);
-  APInt l(0, 10);
-  APInt result(0, 21);
-  short temp;
-  int i_temp;
-  unsigned int ui_x;
-  unsigned int ui_y;
-  j = i;
-  j -= 1;
-  temp = (short)j.getValue();
-  printf( "temp = %hd\n", temp);
-  k = i;
-  k += 1;
-  temp = k.getValue();
-  printf( "temp = %hd\n", temp);
-  k = j * k;
-  temp = k.getValue();
-  printf( "temp = %hd\n", temp);
-  j *= 120;
-  l = APIntOps::sdiv(j, k);
-  temp = l.getValue();
-  printf( "temp = %hd\n", temp);
-  j *= (-176); // after truncation, the value should be -384
-  l = APIntOps::sdiv(j, k);
-  temp = l.getValue();
-  printf( "temp = %hd\n", temp);
-  l = 120;
-  l = (j * l);
-  l = APIntOps::urem(l, 4);
-  temp = l.getValue();
-  printf( "temp = %hd\n", temp);
-  l = -217;
-  l = (j * l);
-  l = APIntOps::sdiv(l, (++i));
-  temp = l.getValue();
-  printf( "temp = %hd\n", temp);
-  result = ++x;
-  
-  i_temp = result.getValue();
-  printf( "i_temp = %x\n", i_temp);
+const char* str(const APInt& X) {
+  static std::string temp_str;
+  temp_str = X.to_string();
+  return temp_str.c_str(); 
+}
+
+void test_interface(const APInt &val) {
+  printf("INTERFACE TEST: val = %s\n", str(val));
+  unsigned bitwidth = val.getNumBits();
+  unsigned pos = rand() % bitwidth;
+  printf("val[%u] = %d\n", pos, val[pos]);
+  APInt smax = APInt::getMaxValue(bitwidth, true);
+  APInt umax = APInt::getMaxValue(bitwidth, false);
+  APInt smin = APInt::getMinValue(bitwidth, true);
+  APInt umin = APInt::getMinValue(bitwidth, false);
+  printf("APInt::getMaxValue(%d, true)  = %s\n", bitwidth, str(smax));
+  printf("APInt::getMaxValue(%d, false) = %s\n", bitwidth, str(umax));
+  printf("APInt::getMinValue(%d, true)  = %s\n", bitwidth, str(smin));
+  printf("APInt::getMinValue(%d, false) = %s\n", bitwidth, str(umin));
+  APInt null = APInt::getNullValue(bitwidth);
+  APInt allone = APInt::getAllOnesValue(bitwidth);
+  printf("APInt::getNullValue(%d) = %s\n", bitwidth, str(umin));
+  printf("APInt::getAllOnesValue(%d) = %s\n", bitwidth, str(umin));
+  APInt x(val);
+  x.set(pos);
+  printf("val.set(%d) = %s\n", pos, str(x));
+  x.set();
+  printf("val.set() = %s\n", str(x));
+  x = val;
+  x.clear(pos);
+  printf("val.clear(%d) = %s\n", pos, str(x));
+  x.clear();
+  printf("val.clear() = %s\n", str(x));
+  x = val;
+  x.flip(pos);
+  printf("val.flip(%d) = %s\n", pos, str(x));
+  x = val;
+  x.flip();
+  printf("val.flip() = %s\n", str(x));
+  unsigned bitsize = bitwidth / 2;
+  printf("val.HiBits(%d) = %s\n", bitsize, str(val.HiBits(bitsize)));
+  printf("val.LoBits(%d) = %s\n", bitsize, str(val.LoBits(bitsize)));
+  printf("val.IsIntN(%d) = %d\n", bitsize, str(val.IsIntN(bitsize)));
+}
+
+void test_unops(const APInt &val) {
+  printf("UNARY OPERATORS TEST: val = %s\n", str(val));
+  APInt x(val);
+  x++;
+  printf("val++ = %s\n", str(x));
+  x = val;
+  ++x;
+  printf("++val = %s\n", str(x));
+  x = val;
   x--;
- 
-  result = x + y;
-  i_temp = result.getValue();
-  printf("i_temp = %x\n", i_temp);
-  ui_x = x.getValue();
-  ui_y = y.getValue();
-  i_temp = ui_x - ui_y;
-  printf("i_temp = %x\n", i_temp);
+  printf("val-- = %s\n", str(x));
+  x = val;
+  --x;
+  printf("--val = %s\n", str(x));
+  x = -val;
+  printf("-val = %s\n", str(x));
+  x = ~val;
+  printf("~val = %s\n", str(x));
+  printf("!val = %d\n", !val);
+  printf("val.isPowerOf2() = %d\n", val.isPowerOf2());
+  printf("val.LogBase2() = %d\n", val.getNumBits());
+  printf("val.CountLeadingZeros() = %d\n", val.CountLeadingZeros());
+  printf("val.CountTrailingZeros() = %d\n", val.CountTrailingZeros());
+  printf("val.CountPopulation() = %d\n", val.CountPopulation());
+  printf("val.getNumBits() = %d\n", val.getNumBits());
+  x = val.ByteSwap();
+  printf("val.ByteSwap() = %d\n", str(x));
+  printf("val.RoundToDouble(true) %d = %f\n", val.RoundToDouble(true));
+  printf("val.getValue() = ");
+  if (val.getNumBits() > 64)
+    printf("too wide\n");
+  else
+    printf("%ul\n", val.getValue());
 
-  return 0;
+}
 
+void test_binops(const APInt &v1, const APInt &v2) {
+  printf("BINARY OPERATORS TEST: vl = %s, v2 = %s\n", str(v1), str(v2));
+  APInt result(v1);
+  result &= v2;
+  printf("v1 &= v2: %s\n", str(result));
+  result = v1;
+  result |= v2;
+  printf("v1 |= v2: %s\n", str(result));
+  result = v1;
+  result ^= v2;
+  printf("v1 ^= v2: %s\n", str(result));
+  result = v1;
+  result *= v2;
+  printf("v1 *= v2: %s\n", str(result));
+  result = v1;
+  result += v2;
+  printf("v1 += v2: %s\n", str(result));
+  result = v1;
+  result -= v2;
+  printf("v1 -= v2: %s\n", str(result));
+  result = v1 & v2;
+  printf("v1 &  v2: %s\n", str(result));
+  result = v1 | v2;
+  printf("v1 |  v2: %s\n", str(result));
+  result = v1 ^ v2;
+  printf("v1 ^  v2: %s\n", str(result));
+  result = v1 && v2;
+  printf("v1 && v2: %s\n", str(result));
+  result = v1 || v2;
+  printf("v1 || v2: %s\n", str(result));
+  result = v1 * v2;
+  printf("v1 *  v2: %s\n", str(result));
+  result = v1 + v2;
+  printf("v1 +  v2: %s\n", str(result));
+  result = v1 - v2;
+  printf("v1 -  v2: %s\n", str(result));
+  printf("v1 == v2: %d\n", v1 == v2);
+  printf("v1 != v2: %d\n", v1 == v2);
+  printf("v1 <  v2: %d\n", v1 == v2);
+  printf("v1 <= v2: %d\n", v1 == v2);
+  printf("v1 >  v2: %d\n", v1 == v2);
+  printf("v1 >= v2: %d\n", v1 == v2);
+  {
+    using namespace APIntOps;
+    unsigned shiftAmt = rand() % v1.getNumBits();
+    result = AShr(v1,shiftAmt);
+    printf("AShr(v1,%d) = %s\n", shiftAmt, str(result));
+    result = LShr(v1,shiftAmt);
+    printf("LShr(v1,%d) = %s\n", shiftAmt, str(result));
+    result = Shl(v1,shiftAmt);
+    printf("Shl(v1,%d) = %s\n", shiftAmt, str(result));
+    result = SDiv(v1,v2);
+    printf("SDiv(v1,v2) = %s\n", str(result));
+    result = UDiv(v1,v2);
+    printf("UDiv(v1,v2) = %s\n", str(result));
+    result = SRem(v1,v2);
+    printf("SRem(v1,v2) = %s\n", str(result));
+    result = URem(v1,v2);
+    printf("URem(v1,v2) = %s\n", str(result));
+  }
+}
+
+void test_multiple() {
+  srand(0);
+  for (unsigned i = 0; i < 1024; ++i) {
+    unsigned bits = rand() % 1024;
+    APInt v1(0u, bits);
+    APInt v2(0u, bits);
+    for (unsigned i = 0; i < bits; ++i) {
+      unsigned bit = rand() % 2;
+      v1.Shl(1);
+      v1 |= bit;
+    }
+    for (unsigned i = 0; i < bits; ++i) {
+      unsigned bit = rand() % 2;
+      v2.Shl(1);
+      v2 |= bit;
+    }
+    test_interface(v1);
+    test_unops(v2);
+    test_binops(v1,v2);
+  }
 }
 
 int main()
 {
-  my_test();
+  test_multiple();
   return 0;
 }
 
