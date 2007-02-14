@@ -100,11 +100,12 @@ void test_unops(const APInt &val) {
   if (val.getNumBits() > 64)
     printf("too wide\n");
   else
-    printf("%ul\n", val.getValue());
+    printf("%lu\n", val.getValue());
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
-  printf("BINARY OPERATORS TEST: vl = %s, v2 = %s\n", str(v1), str(v2));
+  printf("BINARY OPERATORS TEST: vl = %s, ", str(v1));
+  printf("v2 = %s\n", str(v2));
   APInt result(v1);
   result &= v2;
   printf("v1 &= v2: %s\n", str(result));
@@ -176,14 +177,15 @@ void test_multiple() {
     APInt v2(0u, bits);
     for (unsigned i = 0; i < bits; ++i) {
       unsigned bit = rand() % 2;
-      v1.Shl(1);
+      v1 = v1.Shl(1);
       v1 |= bit;
     }
     for (unsigned i = 0; i < bits; ++i) {
       unsigned bit = rand() % 2;
-      v2.Shl(1);
+      v2 = v2.Shl(1);
       v2 |= bit;
     }
+    printf("\nTEST CASE: %d bits\n\n", bits);
     test_interface(v1);
     test_unops(v2);
     test_binops(v1,v2);
