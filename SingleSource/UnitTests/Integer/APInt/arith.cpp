@@ -41,8 +41,8 @@ void test_interface(const APInt &val) {
   printf("APInt::getMinValue(%d, false) = %s\n", bitwidth, str(umin));
   APInt null = APInt::getNullValue(bitwidth);
   APInt allone = APInt::getAllOnesValue(bitwidth);
-  printf("APInt::getNullValue(%d) = %s\n", bitwidth, str(umin));
-  printf("APInt::getAllOnesValue(%d) = %s\n", bitwidth, str(umin));
+  printf("APInt::getNullValue(%d) = %s\n", bitwidth, str(null));
+  printf("APInt::getAllOnesValue(%d) = %s\n", bitwidth, str(allone));
   APInt x(val);
   x.set(pos);
   printf("val.set(%d) = %s\n", pos, str(x));
@@ -62,7 +62,7 @@ void test_interface(const APInt &val) {
   unsigned bitsize = bitwidth / 2;
   printf("val.HiBits(%d) = %s\n", bitsize, str(val.HiBits(bitsize)));
   printf("val.LoBits(%d) = %s\n", bitsize, str(val.LoBits(bitsize)));
-  printf("val.IsIntN(%d) = %d\n", bitsize, str(val.IsIntN(bitsize)));
+  printf("val.IsIntN(%d) = %d\n", bitwidth, val.IsIntN(bitwidth));
 }
 
 void test_unops(const APInt &val) {
@@ -91,8 +91,7 @@ void test_unops(const APInt &val) {
   printf("val.CountPopulation() = %d\n", val.CountPopulation());
   printf("val.getNumBits() = %d\n", val.getNumBits());
   if (val.getNumBits() >= 16 && val.getNumBits() % 16 == 0) {
-    // FIXME: ByteSwap crashes!
-    // x = val.ByteSwap();
+    x = val.ByteSwap();
     printf("val.ByteSwap() = %d\n", str(x));
   }
   printf("val.RoundToDouble(true) %d = %f\n", val.RoundToDouble(true));
