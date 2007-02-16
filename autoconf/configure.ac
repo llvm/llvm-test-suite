@@ -144,5 +144,9 @@ dnl Check for needed functions
 AC_CHECK_FUNC([re_comp],[AC_SUBST(HAVE_RE_COMP,[HAVE_RE_COMP:=1])],
                         [AC_SUBST(HAVE_RE_COMP,[[]])])
 
+dnl Get the extension used for shared libraries
+AC_LTDL_SHLIBEXT
+AC_SUBST(SHLIBEXT,$libltdl_cv_shlibext)
+
 dnl Create the output files
 AC_OUTPUT

@@ -91,3 +91,6 @@ HMMER_ROOT := @HMMER_ROOT@
 
 # Define HAVE_RE_COMP to 1 if re_comp is found, don't define it otherwise
 @HAVE_RE_COMP@
+
+# Get the shared library (dll) extension
+SHLIBEXT = @SHLIBEXT@
