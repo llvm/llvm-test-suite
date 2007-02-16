@@ -12,5 +12,4 @@ endif
 
 include ../../Makefile.multisrc
 
-JIT_OPTS += -load libz.dylib
-
+JIT_OPTS += -load libz$(SHLIBEXT)
