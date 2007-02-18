@@ -21,8 +21,8 @@ APInt y(21, 0x0fffff);
 
 static std::string temp_str;
 
-const char* str(const APInt& X) {
-  temp_str = X.toString();
+const char* str(const APInt& X, bool wantSigned = false) {
+  temp_str = X.toString(10,wantSigned);
   return temp_str.c_str(); 
 }
 
@@ -35,10 +35,10 @@ void test_interface(const APInt &val) {
   APInt umax(APInt::getMaxValue(bitwidth, false));
   APInt smin(APInt::getMinValue(bitwidth, true));
   APInt umin(APInt::getMinValue(bitwidth, false));
-  printf("APInt::getMaxValue(%d, true)  = %s\n", bitwidth, str(smax));
-  printf("APInt::getMaxValue(%d, false) = %s\n", bitwidth, str(umax));
-  printf("APInt::getMinValue(%d, true)  = %s\n", bitwidth, str(smin));
+  printf("APInt::getMinValue(%d, true)  = %s\n", bitwidth, str(smin,true));
+  printf("APInt::getMaxValue(%d, true)  = %s\n", bitwidth, str(smax,true));
   printf("APInt::getMinValue(%d, false) = %s\n", bitwidth, str(umin));
+  printf("APInt::getMaxValue(%d, false) = %s\n", bitwidth, str(umax));
   APInt null = APInt::getNullValue(bitwidth);
   APInt allone = APInt::getAllOnesValue(bitwidth);
   printf("APInt::getNullValue(%d) = %s\n", bitwidth, str(null));
@@ -94,7 +94,8 @@ void test_unops(const APInt &val) {
     x = val.byteSwap();
     printf("val.byteSwap() = %d\n", str(x));
   }
-  printf("val.roundToDouble(true) %d = %f\n", val.roundToDouble(true));
+  printf("val.roundToDouble(false) = %f\n", val.roundToDouble(false));
+  printf("val.roundToDouble(true)  = %f\n", val.roundToDouble(true));
   printf("val.getValue() = ");
   if (val.getBitWidth() > 64)
     printf("too wide\n");
@@ -136,7 +137,7 @@ void test_binops(const APInt &v1, const APInt &v2) {
   result = v1 - v2;
   printf("v1 -  v2: %s\n", str(result));
   printf("v1 == v2: %d\n", v1 == v2);
-  printf("v1 != v2: %d\n", v1 == v2);
+  printf("v1 != v2: %d\n", v1 != v2);
   printf("v1.eq(v2): %d\n", v1.eq(v2));
   printf("v1.ne(v2): %d\n", v1.ne(v2));
   printf("v1.ult(v2): %d\n", v1.ult(v2));
