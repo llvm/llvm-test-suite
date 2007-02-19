@@ -4,6 +4,6 @@ PROG = SIBsim4
 CPPFLAGS =
 LDFLAGS  =
 
-RUN_OPTIONS="$(PROJ_SRC_DIR)/x.fa $(PROJ_SRC_DIR)/y.fa -A4"
+RUN_OPTIONS= -A4 $(PROJ_SRC_DIR)/x.fa $(PROJ_SRC_DIR)/y.fa
 
 include ../../Makefile.multisrc
