@@ -26,6 +26,16 @@ void print(const APInt& X, bool wantSigned = false, bool withNL = true) {
     printf("\n");
 }
 
+APInt randomAPInt(unsigned bits) {
+  APInt val(bits, 0u);
+  for (unsigned i = 0; i < bits; ++i) {
+    unsigned bit = rand() % 2;
+    val = val.shl(1);
+    val |= APInt(bits, bit);
+  }
+  return val;
+}
+
 void test_interface(const APInt &val) {
   printf("INTERFACE TEST: val = "); print(val);
   unsigned bitwidth = val.getBitWidth();
@@ -104,8 +114,8 @@ void test_unops(const APInt &val) {
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
-  printf("BINARY OPERATORS TEST: vl = "); print(v1,false,false);
-  printf(", v2 = "); print(v2);
+  printf("BINARY OPERATORS TEST: \n      vl: "); print(v1,false,false);
+  printf("\n      v2: "); print(v2);
   APInt result(v1);
   result &= v2;
   printf("v1 &= v2: "); print(result);
@@ -157,7 +167,7 @@ void test_binops(const APInt &v1, const APInt &v2) {
     printf("lshr(v1,%d) = ", shiftAmt); print(result);
     result = shl(v1,shiftAmt);
     printf("shl(v1,%d) = ", shiftAmt); print(result);
-    if (v2 == 0)
+    if (v2 == APInt(v2.getBitWidth(), 0))
       printf("sdiv/udiv/srem/urem not tested, v2 == 0\n");
     else {
       result = sdiv(v1,v2);
@@ -174,28 +184,55 @@ void test_binops(const APInt &v1, const APInt &v2) {
 
 void test_multiple() {
   srand(0);
-  for (unsigned bits = 1; bits <= 1024; ++bits) {
-    APInt v1(bits, 0u);
-    APInt v2(bits, 0u);
-    for (unsigned i = 0; i < bits; ++i) {
-      unsigned bit = rand() % 2;
-      v1 = v1.shl(1);
-      v1 |= APInt(bits, bit);
+  for (unsigned bits = 1; bits <= 256; ++bits) {
+    printf("\nTEST CASE: %d BITS\n\n", bits);
+    APInt zero(bits,0);
+    APInt one(bits,1);
+    if (bits == 1) {
+      test_interface(zero);
+      test_interface(one);
+      test_unops(zero);
+      test_unops(one);
+      test_binops(zero,one);
+      test_binops(one,zero);
+      continue;
     }
-    for (unsigned i = 0; i < bits; ++i) {
-      unsigned bit = rand() % 2;
-      v2 = v2.shl(1);
-      v2 |= APInt(bits, bit);
+    APInt two(bits,1);
+    APInt three(bits,1);
+    APInt min = APInt::getMinValue(bits, true);
+    APInt max = APInt::getMaxValue(bits, true);
+    APInt mid = APIntOps::lshr(max, bits/2);
+    APInt r1 = randomAPInt(bits);
+    APInt r2 = randomAPInt(bits);
+    APInt *list[9];
+    list[0] = &zero;
+    list[1] = &one;
+    list[2] = &two;
+    list[3] = &three;
+    list[4] = &min;
+    list[5] = &r1;
+    list[6] = &mid;
+    list[7] = &r2;
+    list[8] = &max;
+    for (unsigned i = 0; i < 9; ++i) {
+      test_interface(*(list[i]));
+      test_unops(*(list[i]));
     }
-    printf("\nTEST CASE: %d bits\n\n", bits);
-    test_interface(v1);
-    test_unops(v2);
-    test_binops(v1,v2);
+    for (unsigned i = 0; i < 9; ++i) {
+      for (unsigned j = 0; j < 9; ++j) {
+        test_binops(*(list[i]), *(list[j]));
+      }
+    }
   }
 }
 
 int main()
 {
+  APInt X(48, 100);
+  APInt Y(48, 10);
+  APInt Q(1,0);
+  APInt R(1,0);
+  APInt::divide(X, 1, Y, 1, &Q, &R);
   test_multiple();
   return 0;
 }
