@@ -11,16 +11,16 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/ADT/APInt.h"
+#include "llvm/ADT/StringExtras.h"
+#include "llvm/System/Signals.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "llvm/System/Signals.h"
 
 using namespace llvm;
 
-APInt x(21, 0x1fffff);
-APInt y(21, 0x0fffff);
+static int input = 0, output = 0;
 
 void print(const APInt& X, bool wantSigned = false, bool withNL = true) {
   std::string decstr = X.toString(10,wantSigned);
@@ -39,210 +39,146 @@ APInt randomAPInt(unsigned bits) {
   return val;
 }
 
-void test_interface(const APInt &val) {
-  printf("INTERFACE TEST: val = "); print(val);
-  unsigned bitwidth = val.getBitWidth();
-  unsigned pos = rand() % bitwidth;
-  printf("val[%u] = %d\n", pos, val[pos]);
-  APInt smax(APInt::getMaxValue(bitwidth, true));
-  APInt umax(APInt::getMaxValue(bitwidth, false));
-  APInt smin(APInt::getMinValue(bitwidth, true));
-  APInt umin(APInt::getMinValue(bitwidth, false));
-  printf("APInt::getMinValue(%d, true)  = ", bitwidth); print(smin,true);
-  printf("APInt::getMaxValue(%d, true)  = ", bitwidth); print(smax,true);
-  printf("APInt::getMinValue(%d, false) = ", bitwidth); print(umin);
-  printf("APInt::getMaxValue(%d, false) = ", bitwidth); print(umax);
-  APInt null = APInt::getNullValue(bitwidth);
-  APInt allone = APInt::getAllOnesValue(bitwidth);
-  printf("APInt::getNullValue(%d) = ", bitwidth); print(null);
-  printf("APInt::getAllOnesValue(%d) = ", bitwidth); print(allone);
-  APInt x(val);
-  x.set(pos);
-  printf("val.set(%d) = ", pos);  print(x);
-  x.set();
-  printf("val.set() = "); print(x);
-  x = val;
-  x.clear(pos);
-  printf("val.clear(%d) = ", pos);  print(x);
-  x.clear();
-  printf("val.clear() = "); print(x);
-  x = val;
-  x.flip(pos);
-  printf("val.flip(%d) = ", pos); print(x);
-  x = val;
-  x.flip();
-  printf("val.flip() = "); print(x);
-  unsigned bitsize = bitwidth / 2;
-  printf("val.getHiBits(%d) = ", bitsize); print(val.getHiBits(bitsize));
-  printf("val.getLoBits(%d) = ", bitsize); print(val.getLoBits(bitsize));
-  printf("val.isIntN(%d) = %d\n", bitwidth, val.isIntN(bitwidth));
-}
-
-void test_unops(const APInt &val) {
-  printf("UNARY OPERATORS TEST: val = "); print(val);
-  APInt x(val);
-  x++;
-  printf("val++ = "); print(x);
-  x = val;
-  ++x;
-  printf("++val = "); print(x);
-  x = val;
-  x--;
-  printf("val-- = "); print(x);
-  x = val;
-  --x;
-  printf("--val = "); print(x);
-  x = -val;
-  printf("-val = "); print(x);
-  x = ~val;
-  printf("~val = "); print(x);
-  printf("!val = %d\n", !val);
-  printf("val.isPowerOf2() = %d\n", val.isPowerOf2());
-  printf("val.logBase2() = %d\n", val.logBase2());
-  printf("val.countLeadingZeros() = %d\n", val.countLeadingZeros());
-  printf("val.countTrailingZeros() = %d\n", val.countTrailingZeros());
-  printf("val.countPopulation() = %d\n", val.countPopulation());
-  printf("val.getBitWidth() = %d\n", val.getBitWidth());
-  if (val.getBitWidth() >= 16 && val.getBitWidth() % 16 == 0) {
-    x = val.byteSwap();
-    printf("val.byteSwap() = "); print(x);
-  }
-  printf("val.roundToDouble(false) = %f\n", val.roundToDouble(false));
-  printf("val.roundToDouble(true)  = %f\n", val.roundToDouble(true));
-  printf("val.getValue() = ");
-  if (val.getBitWidth() > 64)
-    printf("too wide\n");
-  else
-    printf("%lu\n", val.getValue());
-}
-
-void old_test_binops(const APInt &v1, const APInt &v2) {
-  printf("BINARY OPERATORS TEST: \n      vl: "); print(v1,false,false);
-  printf("\n      v2: "); print(v2);
-  APInt result(v1);
-  result &= v2;
-  printf("v1 &= v2: "); print(result);
-  result = v1;
-  result |= v2;
-  printf("v1 |= v2: "); print(result);
-  result = v1;
-  result ^= v2;
-  printf("v1 ^= v2: "); print(result);
-  result = v1;
-  result *= v2;
-  printf("v1 *= v2: "); print(result);
-  result = v1;
-  result += v2;
-  printf("v1 += v2: "); print(result);
-  result = v1;
-  result -= v2;
-  printf("v1 -= v2: "); print(result);
-  result = v1 & v2;
-  printf("v1 &  v2: "); print(result);
-  result = v1 | v2;
-  printf("v1 |  v2: "); print(result);
-  result = v1 ^ v2;
-  printf("v1 ^  v2: "); print(result);
-  result = v1 * v2;
-  printf("v1 *  v2: "); print(result);
-  result = v1 + v2;
-  printf("v1 +  v2: "); print(result);
-  result = v1 - v2;
-  printf("v1 -  v2: "); print(result);
-  printf("v1 == v2: %d\n", v1 == v2);
-  printf("v1 != v2: %d\n", v1 != v2);
-  printf("v1.eq(v2): %d\n", v1.eq(v2));
-  printf("v1.ne(v2): %d\n", v1.ne(v2));
-  printf("v1.ult(v2): %d\n", v1.ult(v2));
-  printf("v1.slt(v2): %d\n", v1.slt(v2));
-  printf("v1.ule(v2): %d\n", v1.ule(v2));
-  printf("v1.sle(v2): %d\n", v1.sle(v2));
-  printf("v1.ugt(v2): %d\n", v1.ugt(v2));
-  printf("v1.sgt(v2): %d\n", v1.sgt(v2));
-  printf("v1.uge(v2): %d\n", v1.uge(v2));
-  printf("v1.sge(v2): %d\n", v1.sge(v2));
-  {
-    using namespace APIntOps;
-    unsigned shiftAmt = rand() % v1.getBitWidth();
-    result = ashr(v1,shiftAmt);
-    printf("ashr(v1,%d) = ", shiftAmt); print(result);
-    result = lshr(v1,shiftAmt);
-    printf("lshr(v1,%d) = ", shiftAmt); print(result);
-    result = shl(v1,shiftAmt);
-    printf("shl(v1,%d) = ", shiftAmt); print(result);
-    if (v2 == APInt(v2.getBitWidth(), 0))
-      printf("sdiv/udiv/srem/urem not tested, v2 == 0\n");
-    else {
-      result = sdiv(v1,v2);
-      printf("sdiv(v1,v2) = "); print(result);
-      result = udiv(v1,v2);
-      printf("udiv(v1,v2) = "); print(result);
-      result = srem(v1,v2);
-      printf("srem(v1,v2) = "); print(result);
-      result = urem(v1,v2);
-      printf("urem(v1,v2) = "); print(result);
-    }
-  }
-}
-
-static int input = 0, output = 0;
-
-std::string getBinopCmd(const APInt &v1, std::string op, const APInt &v2, 
-                     bool wantSigned = false) {
-  std::string Result;
-  Result += "truncate(";
-  Result += v1.toString(10,wantSigned);
-  Result += " " + op + " ";
-  Result += v2.toString(10,wantSigned);
-  Result += ")\n";
-  return Result;
-}
-
 std::string getResult(const std::string& cmd) {
   const char *command = cmd.c_str();
   if (-1 == write(output, command, cmd.size())) {
     std::string msg = "write: " + cmd;
+    msg.resize(msg.size()-1);
     perror(msg.c_str());
     exit(1);
   }
-  usleep(1000); // try to switch contexts
-  char buf[1024];
-  int len = read(input, buf, 1024);
+   usleep(1); // try to switch contexts
+  char buf[4096];
+  int len = read(input, buf, 4095);
   if (-1 == len) {
     std::string msg = "read: " + cmd;
+    msg.resize(msg.size()-1);
     perror(msg.c_str());
     exit(1);
   }
-  // We're only interested in the last line.
-  if (char * nl = strrchr(buf, '\n')) {
+  buf[len] = 0;
+  // Clear the trailing newline
+  if (char * nl = strrchr(buf, '\n'))
     *nl = 0;
-    if (char *nnl = strrchr(nl, '\n'))
-      return std::string(nnl+1);
-  }
   return std::string(buf);
 }
 
-void doMultiply(const APInt &v1, const APInt &v2) {
-  std::string cmd = getBinopCmd(v1, "*", v2);
+std::string getBinop(const APInt &v1, const std::string &op, 
+                     const APInt &v2, bool wantSigned = false) {
+  APInt mask = APInt::getAllOnesValue(v1.getBitWidth());
+  std::string cmd;
+  cmd += "bitand(truncate(";
+  cmd += v1.toString(10,wantSigned);
+  cmd += " " + op + " ";
+  cmd += v2.toString(10,wantSigned);
+  cmd += "), bitneg(0," + utostr(unsigned(v1.getBitWidth())) + "))\n";
+  return getResult(cmd);
+}
+
+
+bool getCompare(const APInt &v1, const std::string &op, 
+                const APInt &v2, bool wantSigned = false) {
+
+  std::string cmd = v1.toString(10, wantSigned) + op + 
+                    v2.toString(10, wantSigned) + '\n';
   std::string result = getResult(cmd);
+  return bool(atoi(result.c_str()));
+}
+
+void report(const APInt &v1, const APInt &v2, const std::string& op, 
+            const std::string& result, const std::string& apresult) {
+  print(v1, false, false);
+  printf(op.c_str());
+  print(v2, false, false);
+  printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
+  fflush(stdout);
+}
+
+void doMultiply(const APInt &v1, const APInt &v2) {
+  std::string result = getBinop(v1, "*", v2);
   APInt r = v1 * v2;
   std::string apresult = r.toString(10, false);
-  if (result != apresult) {
-    printf("ERROR: ");
-    print(v1, false, false);
-    printf(" * ");
-    print(v2, false, false);
-    printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
-  }
+  if (result != apresult) 
+    report(v1,v2," * ", result,apresult);
+}
+
+void doDivide(const APInt &v1, const APInt &v2) {
+  if (v2 == APInt(v2.getBitWidth(),0))
+    return;
+  std::string result = getBinop(v1, "/", v2);
+  APInt r = APIntOps::udiv(v1, v2);
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(v1,v2," / ", result,apresult);
+}
+
+void doRemainder(const APInt &v1, const APInt &v2) {
+  if (v2 == APInt(v2.getBitWidth(),0))
+    return;
+  std::string result = getBinop(v1, "%", v2);
+  APInt r = APIntOps::urem(v1, v2);
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(v1,v2," % ", result,apresult);
+}
+
+void doAdd(const APInt &v1, const APInt &v2) {
+  std::string result = getBinop(v1, "+", v2);
+  APInt r = v1 + v2;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(v1,v2," + ", result,apresult);
+}
+
+void doSubtract(const APInt &v1, const APInt &v2) {
+  std::string result = getBinop(v1, "-", v2);
+  APInt r = v1 - v2;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(v1,v2," - ", result,apresult);
+}
+
+void doComparisons(const APInt &v1, const APInt &v2) {
+  bool result = getCompare(v1, "==", v2);
+  bool apresult = v1 == v2;
+  if (result != apresult)
+    report(v1,v2," == ", (result?"true":"false"), (apresult?"true":"false"));
+  result = getCompare(v1, "!=", v2);
+  apresult = v1 != v2;
+  if (result != apresult)
+    report(v1,v2," != ", (result?"true":"false"), (apresult?"true":"false"));
+  result = getCompare(v1, "<", v2);
+  apresult = v1.ult(v2);
+  if (result != apresult)
+    report(v1,v2," < ", (result?"true":"false"), (apresult?"true":"false"));
+  result = getCompare(v1, "<=", v2);
+  apresult = v1.ule(v2);
+  if (result != apresult)
+    report(v1,v2," <= ", (result?"true":"false"), (apresult?"true":"false"));
+  result = getCompare(v1, ">", v2);
+  apresult = v1.ugt(v2);
+  if (result != apresult)
+    report(v1,v2," > ", (result?"true":"false"), (apresult?"true":"false"));
+  result = getCompare(v1, ">=", v2);
+  apresult = v1.uge(v2);
+  if (result != apresult)
+    report(v1,v2," >= ", (result?"true":"false"), (apresult?"true":"false"));
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
+  doAdd(v1,v2);
+  doSubtract(v1,v2);
   doMultiply(v1, v2);
+  doDivide(v1, v2);
+  doComparisons(v1, v2);
 }
 
 void Shutdown() {
+  // Be nice and tell gp to stop
+  write(output, "quit\n", 5);
+  // Close our descriptors
   close(input);
-  close(output);
+  close(output); // gp will get SIGPIPE if not terminated
 }
 
 /* function executed by the user-interacting process. */
@@ -267,9 +203,10 @@ void test_driver(int input_pipe[], int output_pipe[]) {
   srand(0);
 
   // Start loop over the range of bits of interest
-  for (unsigned bits = 1; bits <= 256; ++bits) {
+  for (unsigned bits = 1; bits <= 1024; bits++) {
     // Indicate which test case we are running
-    printf("\nTEST CASE: %d BITS\n\n", bits);
+    printf("\nTEST CASE: %d BITS\n", bits);
+    fflush(stdout);
     // Gather some test data
     APInt zero(bits,0);
     APInt one(bits,1);
@@ -312,8 +249,6 @@ void calculator(int input_pipe[], int output_pipe[])
     char ch;  /* the same - as a char. */
     int rc;   /* return values of functions. */
 
-    printf("In translator\n");
-
     /* first, close unnecessary file descriptors */
     close(input_pipe[1]); /* we don't need to write to this pipe.  */
     close(output_pipe[0]); /* we don't need to read from this pipe. */
@@ -325,6 +260,10 @@ void calculator(int input_pipe[], int output_pipe[])
     }
     if (-1 == dup2(output_pipe[1], STDOUT_FILENO)) {
       perror("dup2 for stdout");
+      exit(1);
+    }
+    if (-1 == dup2(output_pipe[1], STDERR_FILENO)) {
+      perror("dup2 for stderr");
       exit(1);
     }
 
