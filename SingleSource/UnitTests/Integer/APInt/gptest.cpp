@@ -182,7 +182,7 @@ void Shutdown() {
 }
 
 /* function executed by the user-interacting process. */
-void test_driver(int input_pipe[], int output_pipe[]) {
+void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
 
   int c;    /* user input - must be 'int', to recognize EOF (= -1). */
   char ch;  /* the same - as a char. */
@@ -203,7 +203,7 @@ void test_driver(int input_pipe[], int output_pipe[]) {
   srand(0);
 
   // Start loop over the range of bits of interest
-  for (unsigned bits = 1; bits <= 1024; bits++) {
+  for (int bits = low; bits <= high; bits++) {
     // Indicate which test case we are running
     printf("\nTEST CASE: %d BITS\n", bits);
     fflush(stdout);
@@ -270,8 +270,7 @@ void calculator(int input_pipe[], int output_pipe[])
     // exec gp with modes:
     //   --quiet (don't print banner), 
     //   --fast (don't read init files) 
-    //   --test (no history, wrap long lines)
-    execlp("gp", "gp", "--quiet", "--fast", "--test", (char*)NULL);
+    execlp("gp", "gp", "--quiet", "--fast", (char*)NULL);
     perror("execlp");
     exit(1);
 }
@@ -285,6 +284,14 @@ int main(int argc, char* argv[])
     int translator_to_user[2];
     int pid;       /* pid of child process, or 0, as returned via fork.    */
     int rc;        /* stores return values of various routines.            */
+    int low_bit = 1;
+    int high_bit = 1024;
+
+    // Get the arguments
+    if (argc > 2) {
+      low_bit = atoi(argv[1]);
+      high_bit = atoi(argv[2]);
+    }
 
     /* first, create one pipe. */
     rc = pipe(user_to_translator);
@@ -307,10 +314,10 @@ int main(int argc, char* argv[])
 	    perror("main: fork");
 	    exit(1);
 	case 0:		/* inside child process.  */
-	    calculator(user_to_translator, translator_to_user); /* line 'A' */
+	    calculator(user_to_translator, translator_to_user);
 	    /* NOT REACHED */
 	default:	/* inside parent process. */
-	    test_driver(translator_to_user, user_to_translator); /* line 'B' */
+	    test_driver(low_bit, high_bit, translator_to_user, user_to_translator);
 	    /* NOT REACHED */
     }
 
