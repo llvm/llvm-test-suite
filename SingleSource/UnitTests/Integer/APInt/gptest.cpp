@@ -78,25 +78,11 @@ std::string getBinop(const APInt &v1, const std::string &op,
   return getResult(cmd);
 }
 
-
-void report(const std::string& cmd,
-            const std::string& result, const std::string& apresult) {
-  printf("%s = %s (not %s)\n", cmd.c_str(), result.c_str(), apresult.c_str());
-}
-
 void report(const APInt &v1, const APInt &v2, const std::string& op, 
             const std::string& result, const std::string& apresult) {
   print(v1, false, false);
   printf(op.c_str());
   print(v2, false, false);
-  printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
-  fflush(stdout);
-}
-
-void report(const APInt &v1, const std::string &op, 
-            const std::string& result, const std::string& apresult) {
-  printf(op.c_str());
-  print(v1, false, false);
   printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
   fflush(stdout);
 }
@@ -126,7 +112,7 @@ void doRemainder(const APInt &v1, const APInt &v2) {
   APInt r = APIntOps::urem(v1, v2);
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1,v2," % ", result,apresult);
+    report(v1,v2," %% ", result,apresult);
 }
 
 void doAdd(const APInt &v1, const APInt &v2) {
@@ -156,7 +142,7 @@ void doAnd(const APInt &v1, const APInt &v2) {
   APInt r = v1 & v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(cmd, result,apresult);
+    report(v1, v2, " and ", result,apresult);
 }
 
 void doOr(const APInt &v1, const APInt &v2) {
@@ -170,7 +156,7 @@ void doOr(const APInt &v1, const APInt &v2) {
   APInt r = v1 | v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(cmd, result,apresult);
+    report(v1, v2, " or ", result,apresult);
 }
 
 void doXor(const APInt &v1, const APInt &v2) {
@@ -184,7 +170,7 @@ void doXor(const APInt &v1, const APInt &v2) {
   APInt r = v1 ^ v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(cmd, result,apresult);
+    report(v1, v2, " xor ", result,apresult);
 }
 
 void doComplement(const APInt &v1) {
@@ -195,8 +181,12 @@ void doComplement(const APInt &v1) {
   std::string result = getResult(cmd);
   APInt r = ~v1;
   std::string apresult = r.toString(10, false);
-  if (result != apresult)
-    report(v1," ~ ", result,apresult);
+  if (result != apresult) {
+    printf("~ ");
+    print(v1, false, false);
+    printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
+    fflush(stdout);
+  }
 }
 
 void doBitTest(const APInt &v1) {
@@ -241,46 +231,19 @@ void doShift(const APInt &v1) {
     apresult = R1.toString(10,false);
     if (gpresult != apresult) {
       print(v1, false, false);
-      printf(" s>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      printf(" u>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
   }
 }
 
-bool getCompare(const APInt &v1, const std::string &op, 
-                const APInt &v2, bool wantSigned = false) {
-
-  std::string cmd = v1.toString(10, wantSigned) + op + 
-                    v2.toString(10, wantSigned) + '\n';
-  std::string result = getResult(cmd);
-  return bool(atoi(result.c_str()));
-}
-
-void doComparisons(const APInt &v1, const APInt &v2) {
-  bool result = getCompare(v1, "==", v2);
-  bool apresult = v1 == v2;
-  if (result != apresult)
-    report(v1,v2," == ", (result?"true":"false"), (apresult?"true":"false"));
-  result = getCompare(v1, "!=", v2);
-  apresult = v1 != v2;
-  if (result != apresult)
-    report(v1,v2," != ", (result?"true":"false"), (apresult?"true":"false"));
-  result = getCompare(v1, "<", v2);
-  apresult = v1.ult(v2);
-  if (result != apresult)
-    report(v1,v2," < ", (result?"true":"false"), (apresult?"true":"false"));
-  result = getCompare(v1, "<=", v2);
-  apresult = v1.ule(v2);
-  if (result != apresult)
-    report(v1,v2," <= ", (result?"true":"false"), (apresult?"true":"false"));
-  result = getCompare(v1, ">", v2);
-  apresult = v1.ugt(v2);
-  if (result != apresult)
-    report(v1,v2," > ", (result?"true":"false"), (apresult?"true":"false"));
-  result = getCompare(v1, ">=", v2);
-  apresult = v1.uge(v2);
-  if (result != apresult)
-    report(v1,v2," >= ", (result?"true":"false"), (apresult?"true":"false"));
+void doCompare(const APInt &v1, const std::string &op, 
+                const APInt &v2, bool apresult) {
+  std::string cmd = v1.toString(10, false) + op + 
+                    v2.toString(10, false) + '\n';
+  bool gpresult = atoi(getResult(cmd).c_str());
+  if (gpresult != apresult)
+    report(v1,v2, op, (apresult?"true":"false"), (apresult?"true":"false"));
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
@@ -292,7 +255,12 @@ void test_binops(const APInt &v1, const APInt &v2) {
   doAnd(v1,v2);
   doOr(v1,v2);
   doXor(v1,v2);
-  doComparisons(v1, v2);
+  doCompare(v1, "==", v2, v1 == v2);
+  doCompare(v1, "!=", v2, v1 != v2);
+  doCompare(v1, "< ", v2, v1.ult(v2));
+  doCompare(v1, "<=", v2, v1.ule(v2));
+  doCompare(v1, "> ", v2, v1.ugt(v2));
+  doCompare(v1, ">=", v2, v1.uge(v2));
 }
 
 void Shutdown() {
