@@ -40,6 +40,10 @@ APInt randomAPInt(unsigned bits) {
 }
 
 std::string getResult(const std::string& cmd) {
+#if 0
+  printf("Command: %s", cmd.c_str());
+  fflush(stdout);
+#endif
   const char *command = cmd.c_str();
   if (-1 == write(output, command, cmd.size())) {
     std::string msg = "write: " + cmd;
@@ -47,7 +51,6 @@ std::string getResult(const std::string& cmd) {
     perror(msg.c_str());
     exit(1);
   }
-   usleep(1); // try to switch contexts
   char buf[4096];
   int len = read(input, buf, 4095);
   if (-1 == len) {
@@ -76,13 +79,9 @@ std::string getBinop(const APInt &v1, const std::string &op,
 }
 
 
-bool getCompare(const APInt &v1, const std::string &op, 
-                const APInt &v2, bool wantSigned = false) {
-
-  std::string cmd = v1.toString(10, wantSigned) + op + 
-                    v2.toString(10, wantSigned) + '\n';
-  std::string result = getResult(cmd);
-  return bool(atoi(result.c_str()));
+void report(const std::string& cmd,
+            const std::string& result, const std::string& apresult) {
+  printf("%s = %s (not %s)\n", cmd.c_str(), result.c_str(), apresult.c_str());
 }
 
 void report(const APInt &v1, const APInt &v2, const std::string& op, 
@@ -90,6 +89,14 @@ void report(const APInt &v1, const APInt &v2, const std::string& op,
   print(v1, false, false);
   printf(op.c_str());
   print(v2, false, false);
+  printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
+  fflush(stdout);
+}
+
+void report(const APInt &v1, const std::string &op, 
+            const std::string& result, const std::string& apresult) {
+  printf(op.c_str());
+  print(v1, false, false);
   printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
   fflush(stdout);
 }
@@ -138,6 +145,117 @@ void doSubtract(const APInt &v1, const APInt &v2) {
     report(v1,v2," - ", result,apresult);
 }
 
+void doAnd(const APInt &v1, const APInt &v2) {
+  std::string cmd;
+  cmd += "bitand(";
+  cmd += v1.toString(10,false);
+  cmd += ",";
+  cmd += v2.toString(10,false);
+  cmd += ")\n";
+  std::string result = getResult(cmd);
+  APInt r = v1 & v2;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(cmd, result,apresult);
+}
+
+void doOr(const APInt &v1, const APInt &v2) {
+  std::string cmd;
+  cmd += "bitor(";
+  cmd += v1.toString(10,false);
+  cmd += ",";
+  cmd += v2.toString(10,false);
+  cmd += ")\n";
+  std::string result = getResult(cmd);
+  APInt r = v1 | v2;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(cmd, result,apresult);
+}
+
+void doXor(const APInt &v1, const APInt &v2) {
+  std::string cmd;
+  cmd += "bitxor(";
+  cmd += v1.toString(10,false);
+  cmd += ",";
+  cmd += v2.toString(10,false);
+  cmd += ")\n";
+  std::string result = getResult(cmd);
+  APInt r = v1 ^ v2;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(cmd, result,apresult);
+}
+
+void doComplement(const APInt &v1) {
+  std::string cmd;
+  cmd += "bitneg(";
+  cmd += v1.toString(10,false);
+  cmd += "," + utostr(v1.getBitWidth()) + ")\n";
+  std::string result = getResult(cmd);
+  APInt r = ~v1;
+  std::string apresult = r.toString(10, false);
+  if (result != apresult)
+    report(v1," ~ ", result,apresult);
+}
+
+void doBitTest(const APInt &v1) {
+  for (int i = 0; i < v1.getBitWidth(); i++) {
+    std::string cmd;
+    cmd += "bittest(";
+    cmd += v1.toString(10,false);
+    cmd += "," + utostr(i) + ")\n";
+    bool gpresult = atoi(getResult(cmd).c_str());
+    bool apresult = v1[i];
+    if (gpresult != apresult) {
+      print(v1, false, false);
+      printf("[%d] = %s (not %s)\n", i,
+        (gpresult?"true":"false"), (apresult?"true":"false"));
+      fflush(stdout);
+    }
+  }
+}
+
+void doShift(const APInt &v1) {
+  APInt mask = APInt::getAllOnesValue(v1.getBitWidth());
+  for (int i = 1; i <= v1.getBitWidth(); i++) {
+    std::string cmd;
+    cmd += "bitand(truncate(shift(";
+    cmd += v1.toString(10,false);
+    cmd += "," + utostr(unsigned(i)) + ")), ";
+    cmd += "bitneg(0," + utostr(unsigned(v1.getBitWidth())) + "))\n";
+    std::string gpresult = getResult(cmd);
+    APInt R1 = v1.shl(i);
+    std::string apresult = R1.toString(10,false);
+    if (gpresult != apresult) {
+      print(v1, false, false);
+      printf(" << %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
+    cmd = "bitand(truncate(shift(";
+    cmd += v1.toString(10,false);
+    cmd += ",-" + utostr(i) + ")), ";
+    cmd += "bitneg(0," + utostr(unsigned(v1.getBitWidth())) + "))\n";
+    gpresult = getResult(cmd);
+    R1 = v1.lshr(i);
+    apresult = R1.toString(10,false);
+    if (gpresult != apresult) {
+      print(v1, false, false);
+      printf(" s>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
+  }
+}
+
+bool getCompare(const APInt &v1, const std::string &op, 
+                const APInt &v2, bool wantSigned = false) {
+
+  std::string cmd = v1.toString(10, wantSigned) + op + 
+                    v2.toString(10, wantSigned) + '\n';
+  std::string result = getResult(cmd);
+  return bool(atoi(result.c_str()));
+}
+
 void doComparisons(const APInt &v1, const APInt &v2) {
   bool result = getCompare(v1, "==", v2);
   bool apresult = v1 == v2;
@@ -170,6 +288,10 @@ void test_binops(const APInt &v1, const APInt &v2) {
   doSubtract(v1,v2);
   doMultiply(v1, v2);
   doDivide(v1, v2);
+  doRemainder(v1,v2);
+  doAnd(v1,v2);
+  doOr(v1,v2);
+  doXor(v1,v2);
   doComparisons(v1, v2);
 }
 
@@ -234,6 +356,9 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
       for (unsigned j = 0; j < 9; ++j) {
         test_binops(*(list[i]), *(list[j]));
       }
+      doComplement(*(list[i]));
+      doBitTest(*(list[i]));
+      doShift(*(list[i]));
     }
   }
 
