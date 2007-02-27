@@ -10,6 +10,8 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/ADT/APInt.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/ManagedStatic.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,8 +21,12 @@ APInt x(21, 0x1fffff);
 APInt y(21, 0x0fffff);
 
 void print(const APInt& X, bool wantSigned = false, bool withNL = true) {
-  std::string decstr = X.toString(10,wantSigned);
-  std::string hexstr = X.toString(16,false);
+  std::string decstr;
+  if (wantSigned)
+    decstr = X.toStringSigned(10);
+  else
+    decstr = X.toString(10);
+  std::string hexstr = X.toString(16);
   printf("%s (%s)", decstr.c_str(), hexstr.c_str());
   if (withNL)
     printf("\n");
@@ -41,10 +47,10 @@ void test_interface(const APInt &val) {
   unsigned bitwidth = val.getBitWidth();
   unsigned pos = rand() % bitwidth;
   printf("val[%u] = %d\n", pos, val[pos]);
-  APInt smax(APInt::getMaxValue(bitwidth, true));
-  APInt umax(APInt::getMaxValue(bitwidth, false));
-  APInt smin(APInt::getMinValue(bitwidth, true));
-  APInt umin(APInt::getMinValue(bitwidth, false));
+  APInt smax(APInt::getSignedMaxValue(bitwidth));
+  APInt umax(APInt::getMaxValue(bitwidth));
+  APInt smin(APInt::getSignedMinValue(bitwidth));
+  APInt umin(APInt::getMinValue(bitwidth));
   printf("APInt::getMinValue(%d, true)  = ", bitwidth); print(smin,true);
   printf("APInt::getMaxValue(%d, true)  = ", bitwidth); print(smax,true);
   printf("APInt::getMinValue(%d, false) = ", bitwidth); print(umin);
@@ -104,13 +110,15 @@ void test_unops(const APInt &val) {
     x = val.byteSwap();
     printf("val.byteSwap() = "); print(x);
   }
-  printf("val.roundToDouble(false) = %f\n", val.roundToDouble(false));
-  printf("val.roundToDouble(true)  = %f\n", val.roundToDouble(true));
+  printf("val.roundToDouble() = %f\n", val.roundToDouble());
+  printf("val.signedRoundToDouble()  = %f\n", val.signedRoundToDouble());
   printf("val.getValue() = ");
   if (val.getBitWidth() > 64)
     printf("too wide\n");
-  else
-    printf("%lu\n", val.getValue());
+  else {
+    printf("%lu\n", val.getZExtValue());
+    printf("%ld\n", val.getSExtValue());
+  }
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
@@ -184,7 +192,7 @@ void test_binops(const APInt &v1, const APInt &v2) {
 
 void test_multiple() {
   srand(0);
-  for (unsigned bits = 1; bits <= 256; ++bits) {
+  for (unsigned bits = 257; bits <= 257; ++bits) {
     printf("\nTEST CASE: %d BITS\n\n", bits);
     APInt zero(bits,0);
     APInt one(bits,1);
@@ -199,12 +207,13 @@ void test_multiple() {
     }
     APInt two(bits,1);
     APInt three(bits,1);
-    APInt min = APInt::getMinValue(bits, true);
-    APInt max = APInt::getMaxValue(bits, true);
+    APInt min = APInt::getSignedMinValue(bits);
+    APInt max = APInt::getSignedMaxValue(bits);
     APInt mid = APIntOps::lshr(max, bits/2);
     APInt r1 = randomAPInt(bits);
     APInt r2 = randomAPInt(bits);
-    APInt *list[9];
+    APInt r3 = randomAPInt(bits);
+    APInt *list[10];
     list[0] = &zero;
     list[1] = &one;
     list[2] = &two;
@@ -214,26 +223,23 @@ void test_multiple() {
     list[6] = &mid;
     list[7] = &r2;
     list[8] = &max;
-    for (unsigned i = 0; i < 9; ++i) {
+    list[9] = &r3;
+    for (unsigned i = 0; i < 10; ++i) {
       test_interface(*(list[i]));
       test_unops(*(list[i]));
     }
-    for (unsigned i = 0; i < 9; ++i) {
-      for (unsigned j = 0; j < 9; ++j) {
+    for (unsigned i = 0; i < 10; ++i) {
+      for (unsigned j = 0; j < 10; ++j) {
         test_binops(*(list[i]), *(list[j]));
       }
     }
   }
 }
 
-int main()
+int main(int argc, char** argv)
 {
-  APInt X(48, 100);
-  APInt Y(48, 10);
-  APInt Q(1,0);
-  APInt R(1,0);
-  APInt::divide(X, 1, Y, 1, &Q, &R);
+  cl::ParseCommandLineOptions(argc, argv, "APInt arithmetic test\n");
   test_multiple();
+  llvm_shutdown();
   return 0;
 }
-
