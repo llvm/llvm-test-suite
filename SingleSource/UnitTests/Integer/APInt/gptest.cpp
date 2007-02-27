@@ -207,7 +207,6 @@ void doBitTest(const APInt &v1) {
 }
 
 void doShift(const APInt &v1) {
-  APInt mask = APInt::getAllOnesValue(v1.getBitWidth());
   for (int i = 1; i <= v1.getBitWidth(); i++) {
     std::string cmd;
     cmd += "bitand(truncate(shift(";
@@ -234,16 +233,78 @@ void doShift(const APInt &v1) {
       printf(" u>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
+    if (v1.isNegative())
+      cmd = "shift(" + v1.toString(10,true) + ",-" + utostr(i) + ")-1\n";
+    else
+      cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")\n";
+    gpresult = getResult(cmd);
+    R1 = v1.ashr(i);
+    if (v1.isNegative())
+      apresult = R1.toString(10,true);
+    else
+      apresult = R1.toString(10,false);
+    if (gpresult != apresult) {
+      if (v1.isNegative())
+        print(v1, true, false);
+      else
+        print(v1, false, false);
+      printf(" s>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
+  }
+}
+
+void doTruncExt(const APInt &v1) {
+  if (v1.getBitWidth() < 33)
+    return;
+  std::string cmd;
+  for (int i = 1; i < v1.getBitWidth(); i++) {
+    cmd = "bitand(" + v1.toString(10,false) + ",bitneg(0,";
+    cmd += utostr(unsigned(i)) + "))\n";
+    std::string gpresult = getResult(cmd);
+    APInt V1(v1);
+    V1.trunc(i);
+    std::string apresult = V1.toString(10,false);
+    if (gpresult != apresult) {
+      print(v1, false, false);
+      printf(".trunc(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
+  }
+  for (int i = v1.getBitWidth()+1; i < v1.getBitWidth()*2+2; ++i) {
+    cmd = "bitand(" + v1.toString(10,false) + ",bitneg(0,";
+    cmd += utostr(unsigned(i)) + "))\n";
+    std::string gpresult = getResult(cmd);
+    APInt V1(v1);
+    V1.zext(i);
+    std::string apresult = V1.toString(10,false);
+    if (gpresult != apresult) {
+      print(v1, false, false);
+      printf(".zext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
+    cmd = "bitand(" + v1.toString(10,true) + ",bitneg(0,";
+    cmd += utostr(unsigned(i)) + "))\n";
+    gpresult = getResult(cmd);
+    APInt V2(v1);
+    V2.sext(i);
+    apresult = V2.toString(10,false);
+    if (gpresult != apresult) {
+      print(v1, true, false);
+      printf(".sext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      fflush(stdout);
+    }
   }
 }
 
 void doCompare(const APInt &v1, const std::string &op, 
-                const APInt &v2, bool apresult) {
-  std::string cmd = v1.toString(10, false) + op + 
-                    v2.toString(10, false) + '\n';
+                const APInt &v2, bool isSigned, bool apresult) {
+  std::string cmd = v1.toString(10, isSigned) + op + 
+                    v2.toString(10, isSigned) + '\n';
   bool gpresult = atoi(getResult(cmd).c_str());
   if (gpresult != apresult)
-    report(v1,v2, op, (apresult?"true":"false"), (apresult?"true":"false"));
+    report(v1,v2, (isSigned? " s"+op : " u"+op), 
+        (gpresult?"true":"false"), (apresult?"true":"false"));
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
@@ -255,13 +316,17 @@ void test_binops(const APInt &v1, const APInt &v2) {
   doAnd(v1,v2);
   doOr(v1,v2);
   doXor(v1,v2);
-  doCompare(v1, "==", v2, v1 == v2);
-  doCompare(v1, "!=", v2, v1 != v2);
-  doCompare(v1, "< ", v2, v1.ult(v2));
-  doCompare(v1, "<=", v2, v1.ule(v2));
-  doCompare(v1, "> ", v2, v1.ugt(v2));
-  doCompare(v1, ">=", v2, v1.uge(v2));
-}
+  doCompare(v1, " == ", v2, false, v1 == v2);
+  doCompare(v1, " != ", v2, false, v1 != v2);
+  doCompare(v1, " <  ", v2, false, v1.ult(v2));
+  doCompare(v1, " <= ", v2, false, v1.ule(v2));
+  doCompare(v1, " >  ", v2, false, v1.ugt(v2));
+  doCompare(v1, " >= ", v2, false, v1.uge(v2));
+  doCompare(v1, " <  ", v2, true,  v1.slt(v2));
+  doCompare(v1, " <= ", v2, true,  v1.sle(v2));
+  doCompare(v1, " >  ", v2, true,  v1.sgt(v2));
+  doCompare(v1, " >= ", v2, true,  v1.sge(v2));
+ }
 
 void Shutdown() {
   // Be nice and tell gp to stop
@@ -327,6 +392,7 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
       doComplement(*(list[i]));
       doBitTest(*(list[i]));
       doShift(*(list[i]));
+      doTruncExt(*(list[i]));
     }
   }
 
