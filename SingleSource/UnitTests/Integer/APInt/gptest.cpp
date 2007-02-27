@@ -23,7 +23,11 @@ using namespace llvm;
 static int input = 0, output = 0;
 
 void print(const APInt& X, bool wantSigned = false, bool withNL = true) {
-  std::string decstr = X.toString(10,wantSigned);
+  std::string decstr;
+  if (wantSigned)
+    decstr = X.toStringSigned(10);
+  else
+    decstr = X.toString(10);
   printf("%s", decstr.c_str());
   if (withNL)
     printf("\n");
@@ -367,8 +371,8 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
     APInt one(bits,1);
     APInt two(bits,2);
     APInt three(bits,3);
-    APInt min = APInt::getMinValue(bits, true);
-    APInt max = APInt::getMaxValue(bits, true);
+    APInt min = APInt::getSignedMinValue(bits);
+    APInt max = APInt::getSignedMaxValue(bits);
     APInt mid = APIntOps::lshr(max, bits/2);
     APInt r1 = randomAPInt(bits);
     APInt r2 = randomAPInt(bits);
