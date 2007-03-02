@@ -265,22 +265,20 @@ void doShift(const APInt &v1) {
       printf(" u>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
+    cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")";
     if (v1.isNegative()) {
-      cmd = "shift(" + v1.toString(10,true) + ",-" + utostr(i-1) + ")\n";
-      R1 = v1.ashr(i-1);
-      apresult = R1.toString(10,true);
-    } else {
-      cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")\n";
-      R1 = v1.ashr(i);
-      apresult = R1.toString(10,false);
+      APInt hiMask(32, -1ULL);
+      hiMask.sextOrTrunc(v1.getBitWidth());
+      hiMask = hiMask.shl(v1.getBitWidth()-i);
+      cmd = "bitor(" + cmd + "," + hiMask.toString(10,false) + ")";
     }
+    cmd += "\n";
+    R1 = v1.ashr(i);
+    apresult = R1.toString(10,false);
     gpresult = getResult(cmd);
     if (gpresult != apresult) {
-      if (v1.isNegative())
-        print(v1, true);
-      else
-        print(v1, false);
-      printf(" s>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      print(v1, false);
+      printf(" s>> %d = %s (not %s) cmd=%s\n", i, gpresult.c_str(), apresult.c_str(), cmd.c_str());
       fflush(stdout);
     }
   }
