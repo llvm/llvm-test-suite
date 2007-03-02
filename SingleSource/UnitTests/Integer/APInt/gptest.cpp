@@ -31,6 +31,12 @@ void print(const APInt& X, bool wantSigned = false) {
   printf("%s", decstr.c_str());
 }
 
+void error(const std::string& gp, const std::string& ap, 
+           const std::string &cmd) {
+  printf(" = %s (not %s)\n cmd=%s\n", gp.c_str(), ap.c_str(), cmd.c_str());
+  fflush(stdout);
+}
+
 APInt randomAPInt(unsigned bits) {
   APInt val(bits, 0u);
   for (unsigned i = 0; i < bits; ++i) {
@@ -77,60 +83,65 @@ std::string getBinop(const APInt &v1, const std::string &op,
   cmd += " " + op + " ";
   cmd += v2.toString(10,wantSigned);
   cmd += "), bitneg(0," + utostr(unsigned(v1.getBitWidth())) + "))\n";
-  return getResult(cmd);
+  return cmd;
 }
 
 void report(const APInt &v1, const APInt &v2, const std::string& op, 
-            const std::string& result, const std::string& apresult) {
+            const std::string& result, const std::string& apresult,
+            const std::string& cmd) {
   print(v1, false);
   printf(op.c_str());
   print(v2, false);
-  printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
-  fflush(stdout);
+  error(result,apresult,cmd);
 }
 
 void doMultiply(const APInt &v1, const APInt &v2) {
-  std::string result = getBinop(v1, "*", v2);
+  std::string cmd = getBinop(v1, "*", v2);
+  std::string result = getResult(cmd);
   APInt r = v1 * v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult) 
-    report(v1,v2," * ", result,apresult);
+    report(v1,v2," * ", result,apresult,cmd);
 }
 
 void doDivide(const APInt &v1, const APInt &v2) {
   if (v2 == APInt(v2.getBitWidth(),0))
     return;
-  std::string result = getBinop(v1, "/", v2);
+  std::string cmd = getBinop(v1, "/", v2);
+  std::string result = getResult(cmd);
   APInt r = APIntOps::udiv(v1, v2);
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1,v2," / ", result,apresult);
+    report(v1,v2," / ", result,apresult,cmd);
 }
 
 void doRemainder(const APInt &v1, const APInt &v2) {
   if (v2 == APInt(v2.getBitWidth(),0))
     return;
-  std::string result = getBinop(v1, "%", v2);
+  std::string cmd = getBinop(v1, "%", v2);
+  std::string result = getResult(cmd);
   APInt r = APIntOps::urem(v1, v2);
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1,v2," %% ", result,apresult);
+    report(v1,v2," %% ", result,apresult,cmd);
 }
 
 void doAdd(const APInt &v1, const APInt &v2) {
-  std::string result = getBinop(v1, "+", v2);
+  std::string cmd = getBinop(v1, "+", v2);
+  std::string result = getResult(cmd);
   APInt r = v1 + v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1,v2," + ", result,apresult);
+    report(v1,v2," + ", result,apresult,cmd);
 }
 
 void doSubtract(const APInt &v1, const APInt &v2) {
-  std::string result = getBinop(v1, "-", v2);
+  std::string cmd = getBinop(v1, "-", v2);
+  std::string result = getResult(cmd);
   APInt r = v1 - v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1,v2," - ", result,apresult);
+    report(v1,v2," - ", result,apresult,cmd);
 }
 
 void doAnd(const APInt &v1, const APInt &v2) {
@@ -144,7 +155,7 @@ void doAnd(const APInt &v1, const APInt &v2) {
   APInt r = v1 & v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1, v2, " and ", result,apresult);
+    report(v1, v2, " and ", result,apresult,cmd);
 }
 
 void doOr(const APInt &v1, const APInt &v2) {
@@ -158,7 +169,7 @@ void doOr(const APInt &v1, const APInt &v2) {
   APInt r = v1 | v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1, v2, " or ", result,apresult);
+    report(v1, v2, " or ", result,apresult,cmd);
 }
 
 void doXor(const APInt &v1, const APInt &v2) {
@@ -172,7 +183,7 @@ void doXor(const APInt &v1, const APInt &v2) {
   APInt r = v1 ^ v2;
   std::string apresult = r.toString(10, false);
   if (result != apresult)
-    report(v1, v2, " xor ", result,apresult);
+    report(v1, v2, " xor ", result,apresult,cmd);
 }
 
 void doGCD(const APInt &v1, const APInt &v2) {
@@ -186,7 +197,7 @@ void doGCD(const APInt &v1, const APInt &v2) {
   APInt r = APIntOps::GreatestCommonDivisor(v1, v2);
   std::string apresult = r.toString(10, false);
   if (gpresult != apresult)
-    report(v1, v2, " gcd ", gpresult, apresult);
+    report(v1, v2, " gcd ", gpresult, apresult,cmd);
 }
 
 void doComplement(const APInt &v1) {
@@ -200,8 +211,7 @@ void doComplement(const APInt &v1) {
   if (result != apresult) {
     printf("~ ");
     print(v1, false);
-    printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
-    fflush(stdout);
+    error(result, apresult, cmd);
   }
 }
 
@@ -215,7 +225,8 @@ void doSqrt(const APInt &v1) {
   if (gpresult != apresult) {
     printf("sqrt(");
     print(v1, false);
-    printf(") = %s (not %s)\n", gpresult.c_str(), apresult.c_str());
+    printf(")");
+    error(gpresult, apresult, cmd);
   }
 }
 
@@ -230,9 +241,8 @@ void doBitTest(const APInt &v1) {
     bool apresult = v1[i];
     if (gpresult != apresult) {
       print(v1, false);
-      printf("[%d] = %s (not %s)\n", i,
-        (gpresult?"true":"false"), (apresult?"true":"false"));
-      fflush(stdout);
+      printf("[%d]", i);
+      error((gpresult?"true":"false"), (apresult?"true":"false"), cmd);
     }
   }
 }
@@ -250,8 +260,8 @@ void doShift(const APInt &v1) {
     std::string apresult = R1.toString(10,false);
     if (gpresult != apresult) {
       print(v1, false);
-      printf(" << %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
-      fflush(stdout);
+      printf(" << %d", i);
+      error(gpresult, apresult, cmd);
     }
     cmd = "bitand(truncate(shift(";
     cmd += v1.toString(10,false);
@@ -262,8 +272,8 @@ void doShift(const APInt &v1) {
     apresult = R1.toString(10,false);
     if (gpresult != apresult) {
       print(v1, false);
-      printf(" u>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
-      fflush(stdout);
+      printf(" u>> %d", i);
+      error(gpresult, apresult, cmd);
     }
     cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")";
     if (v1.isNegative()) {
@@ -278,8 +288,8 @@ void doShift(const APInt &v1) {
     gpresult = getResult(cmd);
     if (gpresult != apresult) {
       print(v1, false);
-      printf(" s>> %d = %s (not %s) cmd=%s\n", i, gpresult.c_str(), apresult.c_str(), cmd.c_str());
-      fflush(stdout);
+      printf(" s>> %d", i);
+      error(gpresult, apresult, cmd);
     }
   }
 }
@@ -297,8 +307,8 @@ void doTruncExt(const APInt &v1) {
     std::string apresult = V1.toString(10,false);
     if (gpresult != apresult) {
       print(v1, false);
-      printf(".trunc(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
-      fflush(stdout);
+      printf(".trunc(%d)", i);
+      error(gpresult, apresult, cmd);
     }
   }
   for (int i = v1.getBitWidth()+1; i < v1.getBitWidth()+128; ++i) {
@@ -310,8 +320,8 @@ void doTruncExt(const APInt &v1) {
     std::string apresult = V1.toString(10,false);
     if (gpresult != apresult) {
       print(v1, false);
-      printf(".zext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
-      fflush(stdout);
+      printf(".zext(%d)", i);
+      error(gpresult, apresult, cmd);
     }
     std::string before = v1.toString(10,true);
     APInt V2(v1);
@@ -319,7 +329,8 @@ void doTruncExt(const APInt &v1) {
     apresult = V2.toString(10,true);
     if (before != apresult) {
       print(v1, true);
-      printf(".sext(%d) = %s (not %s)\n", i, before.c_str(), apresult.c_str());
+      printf(".sext(%d)", i);
+      error(before, apresult, cmd);
       fflush(stdout);
     }
   }
@@ -332,7 +343,7 @@ void doCompare(const APInt &v1, const std::string &op,
   bool gpresult = atoi(getResult(cmd).c_str());
   if (gpresult != apresult)
     report(v1,v2, (isSigned? " s"+op : " u"+op), 
-        (gpresult?"true":"false"), (apresult?"true":"false"));
+        (gpresult?"true":"false"), (apresult?"true":"false"), cmd);
 }
 
 void test_binops(const APInt &v1, const APInt &v2) {
@@ -424,7 +435,8 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
         doShift(*(list[i]));
         doTruncExt(*(list[i]));
       }
-      doSqrt(*(list[i]));
+      if (bits < 193) // pari/gp screws up after 192 bits
+        doSqrt(*(list[i]));
     }
   }
 
