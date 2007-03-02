@@ -22,15 +22,13 @@ using namespace llvm;
 
 static int input = 0, output = 0;
 
-void print(const APInt& X, bool wantSigned = false, bool withNL = true) {
+void print(const APInt& X, bool wantSigned = false) {
   std::string decstr;
   if (wantSigned)
     decstr = X.toStringSigned(10);
   else
     decstr = X.toString(10);
   printf("%s", decstr.c_str());
-  if (withNL)
-    printf("\n");
 }
 
 APInt randomAPInt(unsigned bits) {
@@ -84,9 +82,9 @@ std::string getBinop(const APInt &v1, const std::string &op,
 
 void report(const APInt &v1, const APInt &v2, const std::string& op, 
             const std::string& result, const std::string& apresult) {
-  print(v1, false, false);
+  print(v1, false);
   printf(op.c_str());
-  print(v2, false, false);
+  print(v2, false);
   printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
   fflush(stdout);
 }
@@ -201,7 +199,7 @@ void doComplement(const APInt &v1) {
   std::string apresult = r.toString(10, false);
   if (result != apresult) {
     printf("~ ");
-    print(v1, false, false);
+    print(v1, false);
     printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
     fflush(stdout);
   }
@@ -216,13 +214,14 @@ void doSqrt(const APInt &v1) {
   std::string apresult = rslt.toString(10, false);
   if (gpresult != apresult) {
     printf("sqrt(");
-    print(v1, false, false);
+    print(v1, false);
     printf(") = %s (not %s)\n", gpresult.c_str(), apresult.c_str());
   }
 }
 
 void doBitTest(const APInt &v1) {
-  for (int i = 0; i < v1.getBitWidth(); i++) {
+  int increment = (v1.getBitWidth() <= 64) ? 1 : v1.getBitWidth() / 64;
+  for (int i = 0; i < v1.getBitWidth(); i += increment) {
     std::string cmd;
     cmd += "bittest(";
     cmd += v1.toString(10,false);
@@ -230,7 +229,7 @@ void doBitTest(const APInt &v1) {
     bool gpresult = atoi(getResult(cmd).c_str());
     bool apresult = v1[i];
     if (gpresult != apresult) {
-      print(v1, false, false);
+      print(v1, false);
       printf("[%d] = %s (not %s)\n", i,
         (gpresult?"true":"false"), (apresult?"true":"false"));
       fflush(stdout);
@@ -239,7 +238,8 @@ void doBitTest(const APInt &v1) {
 }
 
 void doShift(const APInt &v1) {
-  for (int i = 1; i <= v1.getBitWidth(); i++) {
+  int increment = (v1.getBitWidth() <= 64) ? 1 : v1.getBitWidth() / 64;
+  for (int i = 1; i < v1.getBitWidth(); i += increment) {
     std::string cmd;
     cmd += "bitand(truncate(shift(";
     cmd += v1.toString(10,false);
@@ -249,7 +249,7 @@ void doShift(const APInt &v1) {
     APInt R1 = v1.shl(i);
     std::string apresult = R1.toString(10,false);
     if (gpresult != apresult) {
-      print(v1, false, false);
+      print(v1, false);
       printf(" << %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
@@ -261,25 +261,25 @@ void doShift(const APInt &v1) {
     R1 = v1.lshr(i);
     apresult = R1.toString(10,false);
     if (gpresult != apresult) {
-      print(v1, false, false);
+      print(v1, false);
       printf(" u>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
-    if (v1.isNegative())
-      cmd = "shift(" + v1.toString(10,true) + ",-" + utostr(i) + ")-1\n";
-    else
-      cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")\n";
-    gpresult = getResult(cmd);
-    R1 = v1.ashr(i);
-    if (v1.isNegative())
+    if (v1.isNegative()) {
+      cmd = "shift(" + v1.toString(10,true) + ",-" + utostr(i-1) + ")\n";
+      R1 = v1.ashr(i-1);
       apresult = R1.toString(10,true);
-    else
+    } else {
+      cmd = "shift(" + v1.toString(10,false) + ",-" + utostr(i) + ")\n";
+      R1 = v1.ashr(i);
       apresult = R1.toString(10,false);
+    }
+    gpresult = getResult(cmd);
     if (gpresult != apresult) {
       if (v1.isNegative())
-        print(v1, true, false);
+        print(v1, true);
       else
-        print(v1, false, false);
+        print(v1, false);
       printf(" s>> %d = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
@@ -298,12 +298,12 @@ void doTruncExt(const APInt &v1) {
     V1.trunc(i);
     std::string apresult = V1.toString(10,false);
     if (gpresult != apresult) {
-      print(v1, false, false);
+      print(v1, false);
       printf(".trunc(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
   }
-  for (int i = v1.getBitWidth()+1; i < v1.getBitWidth()*2+2; ++i) {
+  for (int i = v1.getBitWidth()+1; i < v1.getBitWidth()+128; ++i) {
     cmd = "bitand(" + v1.toString(10,false) + ",bitneg(0,";
     cmd += utostr(unsigned(i)) + "))\n";
     std::string gpresult = getResult(cmd);
@@ -311,7 +311,7 @@ void doTruncExt(const APInt &v1) {
     V1.zext(i);
     std::string apresult = V1.toString(10,false);
     if (gpresult != apresult) {
-      print(v1, false, false);
+      print(v1, false);
       printf(".zext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
@@ -320,7 +320,7 @@ void doTruncExt(const APInt &v1) {
     V2.sext(i);
     apresult = V2.toString(10,true);
     if (before != apresult) {
-      print(v1, true, false);
+      print(v1, true);
       printf(".sext(%d) = %s (not %s)\n", i, before.c_str(), apresult.c_str());
       fflush(stdout);
     }
@@ -422,8 +422,10 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
       }
       doComplement(*(list[i]));
       doBitTest(*(list[i]));
-      doShift(*(list[i]));
-      doTruncExt(*(list[i]));
+      if (bits > 1) {
+        doShift(*(list[i]));
+        doTruncExt(*(list[i]));
+      }
       doSqrt(*(list[i]));
     }
   }
