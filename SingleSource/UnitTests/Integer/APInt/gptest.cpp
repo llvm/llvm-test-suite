@@ -177,6 +177,20 @@ void doXor(const APInt &v1, const APInt &v2) {
     report(v1, v2, " xor ", result,apresult);
 }
 
+void doGCD(const APInt &v1, const APInt &v2) {
+  std::string cmd;
+  cmd += "gcd(";
+  cmd += v1.toString(10,false);
+  cmd += ",";
+  cmd += v2.toString(10,false);
+  cmd += ")\n";
+  std::string gpresult = getResult(cmd);
+  APInt r = APIntOps::GreatestCommonDivisor(v1, v2);
+  std::string apresult = r.toString(10, false);
+  if (gpresult != apresult)
+    report(v1, v2, " gcd ", gpresult, apresult);
+}
+
 void doComplement(const APInt &v1) {
   std::string cmd;
   cmd += "bitneg(";
@@ -190,6 +204,20 @@ void doComplement(const APInt &v1) {
     print(v1, false, false);
     printf(" = %s (not %s)\n", result.c_str(), apresult.c_str());
     fflush(stdout);
+  }
+}
+
+void doSqrt(const APInt &v1) {
+  // Square Root
+  std::string cmd;
+  cmd = "round(sqrt(" + v1.toString(10,false) + "))\n";
+  std::string gpresult = getResult(cmd);
+  APInt rslt = v1.sqrt();
+  std::string apresult = rslt.toString(10, false);
+  if (gpresult != apresult) {
+    printf("sqrt(");
+    print(v1, false, false);
+    printf(") = %s (not %s)\n", gpresult.c_str(), apresult.c_str());
   }
 }
 
@@ -287,15 +315,13 @@ void doTruncExt(const APInt &v1) {
       printf(".zext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
       fflush(stdout);
     }
-    cmd = "bitand(" + v1.toString(10,true) + ",bitneg(0,";
-    cmd += utostr(unsigned(i)) + "))\n";
-    gpresult = getResult(cmd);
+    std::string before = v1.toString(10,true);
     APInt V2(v1);
     V2.sext(i);
-    apresult = V2.toString(10,false);
-    if (gpresult != apresult) {
+    apresult = V2.toString(10,true);
+    if (before != apresult) {
       print(v1, true, false);
-      printf(".sext(%d) = %s (not %s)\n", i, gpresult.c_str(), apresult.c_str());
+      printf(".sext(%d) = %s (not %s)\n", i, before.c_str(), apresult.c_str());
       fflush(stdout);
     }
   }
@@ -320,6 +346,7 @@ void test_binops(const APInt &v1, const APInt &v2) {
   doAnd(v1,v2);
   doOr(v1,v2);
   doXor(v1,v2);
+  doGCD(v1,v2);
   doCompare(v1, " == ", v2, false, v1 == v2);
   doCompare(v1, " != ", v2, false, v1 != v2);
   doCompare(v1, " <  ", v2, false, v1.ult(v2));
@@ -397,6 +424,7 @@ void test_driver(int low, int high, int input_pipe[], int output_pipe[]) {
       doBitTest(*(list[i]));
       doShift(*(list[i]));
       doTruncExt(*(list[i]));
+      doSqrt(*(list[i]));
     }
   }
 
