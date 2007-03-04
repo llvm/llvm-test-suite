@@ -48,7 +48,7 @@ int main(int argc, char**argv) {
   sh = (short)-1;
   ush = (unsigned short) -1;
 
-  printf("%d %hd %hu", TestVal, sh, ush);
+  printf("%d %hd %hu\n", TestVal, sh, ush);
 
   return TestVal;
 }
