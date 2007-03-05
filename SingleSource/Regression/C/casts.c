@@ -23,8 +23,8 @@ main(int argc, char** argv)
   int           i1, i;
   unsigned      ui1;
 
-  int64_t       L, l1;
-  uint64_t      ul1;
+  long          L, l1;
+  unsigned long ul1;
 
   float         F;
   double        D;
