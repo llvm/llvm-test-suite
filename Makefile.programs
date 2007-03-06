@@ -211,7 +211,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION :=  --enable-ppc-preinc
+LLCBETAOPTION :=  --enable-ppc-preinc  --enable-tail-merge
 #--enable-tail-merge
 #-regalloc=local -fast
 endif
