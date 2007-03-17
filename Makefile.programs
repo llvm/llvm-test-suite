@@ -223,7 +223,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-gep-index-sinking
+LLCBETAOPTION := -reduce-joining-phy-regs
 #--enable-tail-merge
 #-regalloc=local -fast
 endif
