@@ -12,4 +12,8 @@ endif
 
 include ../../Makefile.multisrc
 
+ifeq ($(OS),Darwin)
+SHLIBEXT := .dylib
+endif
+
 JIT_OPTS += -load libz$(SHLIBEXT)
