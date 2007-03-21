@@ -6,7 +6,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-LLC_OPTS = -f -o=/dev/null -stats -time-passes -regalloc=linearscan
+LLC_OPTS = $(LLCFLAGS) -f -o=/dev/null -stats -time-passes -regalloc=linearscan
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))

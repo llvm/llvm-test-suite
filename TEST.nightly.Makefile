@@ -61,7 +61,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	-head -n 100 Output/$*.exe-llc >> $@
 	@-if test -f Output/$*.exe-llc; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
@@ -78,7 +78,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 	-head -n 100 Output/$*.exe-llc-beta >> $@
 	@-if test -f Output/$*.exe-llc-beta; then \
 	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< $(LLCBETAOPTION) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  $(LLC) $< $(LLCFLAGS) $(LLCBETAOPTION) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
 	  grep "Total Execution Time" $@.info >> $@;\
 	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
