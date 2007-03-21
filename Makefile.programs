@@ -223,7 +223,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-tail-merge
+LLCBETAOPTION := -enable-rematerialization
+# -enable-tail-merge
 #-regalloc=local -fast
 endif
 ifeq ($(ARCH),Sparc)
