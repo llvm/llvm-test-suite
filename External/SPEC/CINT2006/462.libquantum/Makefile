@@ -19,6 +19,10 @@ ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
 
+ifeq ($(OS),Linux)
+  CPPFLAGS += -DSPEC_CPU_LINUX
+endif
+
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS     := 33 5
   STDOUT_FILENAME := test.out
