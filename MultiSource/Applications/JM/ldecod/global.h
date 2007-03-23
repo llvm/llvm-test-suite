@@ -327,8 +327,8 @@ typedef struct macroblock
   int           is_skip;
 
   int           i16mode;
-  char          b8mode[4];
-  char          b8pdir[4];
+  signed char   b8mode[4];
+  signed char   b8pdir[4];
   int           ei_flag;
 
   int           LFDisableIdc;

@@ -53,9 +53,9 @@ extern ColocatedParams *Co_located;
 
 static void SetMotionVectorPredictor (struct img_par  *img,
                                       short           pmv[2],
-                                      char            ref_frame,
+                                      signed char     ref_frame,
                                       byte            list,
-                                      char            ***refPic,
+                                      signed char     ***refPic,
                                       short           ****tmp_mv,
                                       int             block_x,
                                       int             block_y,
@@ -1266,9 +1266,9 @@ void read_ipred_modes(struct img_par *img,struct inp_par *inp)
  */
 static void SetMotionVectorPredictor (struct img_par  *img,
                                       short           pmv[2],
-                                      char            ref_frame,
+                                      signed char     ref_frame,
                                       byte            list,
-                                      char            ***refPic,
+                                      signed char     ***refPic,
                                       short           ****tmp_mv,
                                       int             block_x,
                                       int             block_y,
@@ -1501,7 +1501,7 @@ void readMotionInfoFromNAL (struct img_par *img, struct inp_par *inp)
   int step_v0         = BLOCK_STEP [partmode][1];
 
   int mv_mode, i0, j0;
-  char refframe;
+  signed char refframe;
   short pmv[2];
   int j4, i4, ii,jj;
   int vec;
@@ -1514,7 +1514,7 @@ void readMotionInfoFromNAL (struct img_par *img, struct inp_par *inp)
 
   byte  **    moving_block;
   short ****  co_located_mv;
-  char  ***   co_located_ref_idx;
+  signed char *** co_located_ref_idx;
   int64 ***   co_located_ref_id;
 
   if ((img->MbaffFrameFlag)&&(currMB->mb_field))
@@ -1552,7 +1552,7 @@ void readMotionInfoFromNAL (struct img_par *img, struct inp_par *inp)
 
       PixelPos mb_left, mb_up, mb_upleft, mb_upright;
 
-      char  l0_rFrame,l1_rFrame;
+      signed char  l0_rFrame,l1_rFrame;
       short pmvl0[2]={0,0}, pmvl1[2]={0,0};
 
       getLuma4x4Neighbour(img->current_mb_nr, -1,  0, &mb_left);
@@ -2353,7 +2353,7 @@ void readCoeff4x4_CAVLC (struct img_par *img,struct inp_par *inp,
   int numones, totzeros, level, cdc=0, cac=0;
   int zerosleft, ntr, dptype = 0;
   int max_coeff_num = 0, nnz;
-  char type[15];
+  signed char type[15];
   static int incVlc[] = {0,3,6,12,24,48,32768};    // maximum vlc = 6
 
   numcoeff = 0;
@@ -3858,7 +3858,7 @@ int decode_one_macroblock(struct img_par *img,struct inp_par *inp)
 
   int jf;
 
-  char l0_rFrame = -1, l1_rFrame = -1;
+  signed char l0_rFrame = -1, l1_rFrame = -1;
 
   short pmvl0[2]={0,0},
         pmvl1[2]={0,0};
@@ -3869,7 +3869,7 @@ int decode_one_macroblock(struct img_par *img,struct inp_par *inp)
 
   byte  **    moving_block;
   short ****  co_located_mv;
-  char  ***   co_located_ref_idx;
+  signed char *** co_located_ref_idx;
   int64 ***   co_located_ref_id;
 
   int need_4x4_transform = (!currMB->luma_transform_size_8x8_flag);
@@ -3976,8 +3976,8 @@ int decode_one_macroblock(struct img_par *img,struct inp_par *inp)
   if (img->type==B_SLICE && img->direct_spatial_mv_pred_flag && (IS_DIRECT (currMB) ||
     (IS_P8x8(currMB) && !(currMB->b8mode[0] && currMB->b8mode[1] && currMB->b8mode[2] && currMB->b8mode[3]))))
   {
-    char l0_rFrameL, l0_rFrameU, l0_rFrameUL, l0_rFrameUR;
-    char l1_rFrameL, l1_rFrameU, l1_rFrameUL, l1_rFrameUR;
+    signed char l0_rFrameL, l0_rFrameU, l0_rFrameUL, l0_rFrameUR;
+    signed char l1_rFrameL, l1_rFrameU, l1_rFrameUL, l1_rFrameUR;
 
     PixelPos mb_left, mb_up, mb_upleft, mb_upright;
 

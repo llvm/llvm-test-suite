@@ -685,7 +685,7 @@ int readSyntaxElement_FLC(SyntaxElement *sym, Bitstream *currStream)
  */
 
 int readSyntaxElement_NumCoeffTrailingOnes(SyntaxElement *sym,  DataPartition *dP,
-                                           char *type)
+                                           signed char *type)
 {
   Bitstream   *currStream = dP->bitstream;
   int frame_bitoffset = currStream->frame_bitoffset;

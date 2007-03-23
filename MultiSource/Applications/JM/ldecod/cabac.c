@@ -873,7 +873,7 @@ void readRefFrame_CABAC( SyntaxElement *se,
   int   a, b;
   int   act_ctx;
   int   act_sym;
-  char** refframe_array = dec_picture->ref_idx[se->value2];
+  signed char** refframe_array = dec_picture->ref_idx[se->value2];
   int   b8a, b8b;
 
   PixelPos block_a, block_b;

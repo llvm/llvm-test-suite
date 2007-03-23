@@ -38,7 +38,7 @@ int  GetVLCSymbol_IntraMode (byte buffer[],int totbitoffset,int *info, int bytec
 
 int readSyntaxElement_FLC(SyntaxElement *sym, Bitstream *currStream);
 int readSyntaxElement_NumCoeffTrailingOnes(SyntaxElement *sym,  DataPartition *dP,
-                                           char *type);
+                                           signed char *type);
 int readSyntaxElement_NumCoeffTrailingOnesChromaDC(SyntaxElement *sym,  DataPartition *dP);
 int readSyntaxElement_Level_VLC0(SyntaxElement *sym, struct datapartition *dP);
 int readSyntaxElement_Level_VLCN(SyntaxElement *sym, int vlc, struct datapartition *dP);
