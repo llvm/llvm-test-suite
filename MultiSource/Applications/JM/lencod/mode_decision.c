@@ -298,7 +298,7 @@ void init_enc_mb_params(Macroblock* currMB, RD_PARAMS *enc_mb, int intra, int bs
 *    computation of prediction list (including biprediction) cost
 *************************************************************************************
 */
-void list_prediction_cost(int list, int block, int mode, RD_PARAMS enc_mb, int bmcost[5], char best_ref[2])
+void list_prediction_cost(int list, int block, int mode, RD_PARAMS enc_mb, int bmcost[5], signed char best_ref[2])
 {
   short ref;
   int mcost;
@@ -325,7 +325,7 @@ void list_prediction_cost(int list, int block, int mode, RD_PARAMS enc_mb, int b
           if (mcost < bmcost[list])
           {
             bmcost[list]   = mcost;
-            best_ref[list] = (char)ref;
+            best_ref[list] = (signed char)ref;
           }
         }
       }
@@ -379,7 +379,7 @@ int compute_ref_cost(RD_PARAMS enc_mb, int ref, int list)
 *    Determination of prediction list based on simple distortion computation
 *************************************************************************************
 */
-void determine_prediction_list(int mode, int bmcost[5], char best_ref[2], char *best_pdir, int *cost, short *bi_pred_me)
+void determine_prediction_list(int mode, int bmcost[5], signed char best_ref[2], signed char *best_pdir, int *cost, short *bi_pred_me)
 {
   if ((!input->BiPredMotionEstimation) || (mode != 1))
   {
@@ -607,8 +607,8 @@ void submacroblock_mode_decision(RD_PARAMS enc_mb,
   short pdir;
   short bi_pred_me;
 
-  char best_pdir = 0;
-  char best_ref[2] = {0, -1};
+  signed char best_pdir = 0;
+  signed char best_ref[2] = {0, -1};
 #ifdef BEST_NZ_COEFF
   int best_nz_coeff[2][2];
 #endif

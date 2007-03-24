@@ -41,10 +41,10 @@ void encode_one_macroblock_highloss ()
   int max_index;
 
   int         rerun, block, index, mode, i, j, ctr16x16, MEPos;
-  char        best_pdir;
+  signed char        best_pdir;
   RD_PARAMS   enc_mb;
   double      min_rdcost = 0, max_rdcost=1e30;
-  char        best_ref[2] = {0, -1};
+  signed char        best_ref[2] = {0, -1};
   int         bmcost[5] = {INT_MAX};
   int         cost=0;
   int         min_cost = INT_MAX, cost_direct=0, have_direct=0, i16mode=0;

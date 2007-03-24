@@ -258,8 +258,8 @@ int Mode_Decision_for_new_8x8IntraBlocks (int b8, double lambda, int *min_cost)
   int fadjust8x8[2][16][16];
   int left_available, up_available, all_available;
 
-  char   upMode;
-  char   leftMode;
+  signed char upMode;
+  signed char leftMode;
   int    mostProbableMode;
 
   PixelPos left_block;
@@ -364,7 +364,7 @@ int Mode_Decision_for_new_8x8IntraBlocks (int b8, double lambda, int *min_cost)
   }
 
   //===== set intra mode prediction =====
-  img->ipredmode8x8[pic_block_y][pic_block_x] = (char) best_ipmode;
+  img->ipredmode8x8[pic_block_y][pic_block_x] = (signed char) best_ipmode;
   currMB->intra_pred_modes8x8[4*b8] = (mostProbableMode == best_ipmode)
     ? -1
     : (best_ipmode < mostProbableMode ? best_ipmode : best_ipmode-1);

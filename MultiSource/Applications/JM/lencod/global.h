@@ -368,8 +368,8 @@ typedef struct macroblock
 
   int                 mb_type;
   int                 mvd[2][BLOCK_MULTIPLE][BLOCK_MULTIPLE][2];          //!< indices correspond to [list][block_y][block_x][x,y]
-  char                intra_pred_modes[MB_BLOCK_PARTITIONS];
-  char                intra_pred_modes8x8[MB_BLOCK_PARTITIONS];           //!< four 8x8 blocks in a macroblock
+  signed char         intra_pred_modes[MB_BLOCK_PARTITIONS];
+  signed char         intra_pred_modes8x8[MB_BLOCK_PARTITIONS];           //!< four 8x8 blocks in a macroblock
   int                 cbp ;
   int64               cbp_blk ;    //!< 1 bit set for every 4x4 block with coefs (not implemented for INTRA)
   int                 b8mode[4];
@@ -539,8 +539,8 @@ imgpel  ***imgUV_org_frm;
 imgpel   **imgY_com;               //!< Encoded luma images
 imgpel  ***imgUV_com;              //!< Encoded croma images
 
-char    ***direct_ref_idx;           //!< direct mode reference index buffer
-char    **direct_pdir;              //!< direct mode reference index buffer
+signed char ***direct_ref_idx;     //!< direct mode reference index buffer
+signed char **direct_pdir;         //!< direct mode reference index buffer
 
 // Buffers for rd optimization with packet losses, Dim. Kontopodis
 byte **pixel_map;   //!< Shows the latest reference frame that is reliable for each pixel
@@ -556,7 +556,7 @@ time_t  tot_time;
 char errortext[ET_SIZE]; //!< buffer for error message for exit with error()
 
 // Residue Color Transform
-char b8_ipredmode8x8[4][4], b8_intra_pred_modes8x8[16];
+signed char b8_ipredmode8x8[4][4], b8_intra_pred_modes8x8[16];
 
 //! Info for the "decoders-in-the-encoder" used for rdoptimization with packet losses
 typedef struct
@@ -899,8 +899,8 @@ typedef struct
   int mb_y_upd;
   int mb_y_intra;              //!< which GOB to intra code
   int block_c_x;               //!< current block chroma vertical
-  char **ipredmode;             //!< intra prediction mode
-  char **ipredmode8x8;          //!< help storage for 8x8 modes, inserted by YV
+  signed char **ipredmode;     //!< intra prediction mode
+  signed char **ipredmode8x8;  //!< help storage for 8x8 modes, inserted by YV
 
   int cod_counter;             //!< Current count of number of skipped macroblocks in a row
   int ***nz_coeff;             //!< number of coefficients per block (CAVLC)
@@ -1161,15 +1161,15 @@ typedef struct
   short  bi_pred_me;
 
   int    b8mode[4], b8pdir[4];
-  char   **ipredmode;
-  char   intra_pred_modes[16];
-  char   intra_pred_modes8x8[16];
+  signed char **ipredmode;
+  signed char intra_pred_modes[16];
+  signed char intra_pred_modes8x8[16];
   int    cbp;
   int64  cbp_blk;
   int    mode;
   short  ******pred_mv;        //!< predicted motion vectors
   short  ******all_mv;         //!< all modes motion vectors
-  char   refar[2][4][4];       //!< reference frame array [list][y][x]
+  signed char   refar[2][4][4];//!< reference frame array [list][y][x]
   int    i16offset;
   int    c_ipred_mode;
 
@@ -1205,9 +1205,9 @@ typedef struct
   int resTrans_B_8x8[16][16];
   int mprRGB_8x8[3][16][16];
   short part8x8mode[4];
-  char  part8x8pdir[4];
-  char  part8x8fwref[4];
-  char  part8x8bwref[4];
+  signed char part8x8pdir[4];
+  signed char part8x8fwref[4];
+  signed char part8x8bwref[4];
   imgpel rec_mbY8x8[16][16];
   imgpel mpr8x8[16][16];
   int lrec[16][16]; // transform and quantized coefficients will be stored here for SP frames

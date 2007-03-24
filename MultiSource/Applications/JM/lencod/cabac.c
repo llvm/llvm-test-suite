@@ -689,7 +689,7 @@ void writeRefFrame_CABAC(SyntaxElement *se, DataPartition *dp)
   int   a, b;
   int   act_ctx;
   int   act_sym;
-  char** refframe_array = enc_picture->ref_idx[se->value2];
+  signed char** refframe_array = enc_picture->ref_idx[se->value2];
 
   int bslice = (img->type==B_SLICE);
 

@@ -1350,7 +1350,7 @@ void UpdateUser_data_unregistered()
   for(i = 0; i < total_byte; i++)
   {
     temp_data = i * 4;
-    seiUser_data_unregistered.byte[i] = (char) iClip3(0, 255, temp_data);
+    seiUser_data_unregistered.byte[i] = (signed char) iClip3(0, 255, temp_data);
   }
   seiUser_data_unregistered.total_byte = total_byte;
 }
@@ -1469,7 +1469,7 @@ void UpdateUser_data_registered_itu_t_t35()
   for(i = 0; i < total_byte; i++)
   {
     temp_data = i * 3;
-    seiUser_data_registered_itu_t_t35.byte[i] = (char) iClip3(0, 255, temp_data);
+    seiUser_data_registered_itu_t_t35.byte[i] = (signed char) iClip3(0, 255, temp_data);
   }
   seiUser_data_registered_itu_t_t35.total_byte = total_byte;
 }

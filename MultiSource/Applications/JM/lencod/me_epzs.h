@@ -71,10 +71,10 @@ extern int EPZSInit(void);
 extern void EPZSDelete (void);
 extern void EPZSOutputStats(FILE *stat,short stats_file);
 extern void EPZSSliceInit(EPZSColocParams* p, StorablePicture **listX[6]);
-extern int EPZSPelBlockMotionSearch (imgpel *, short, int, int, char ***, short ****,
+extern int EPZSPelBlockMotionSearch (imgpel *, short, int, int, signed char ***, short ****,
                                      int, int, int, short[2], short[2], int, int, int);
 
-extern int EPZSBiPredBlockMotionSearch (imgpel *, short, int, int, char  ***, short  ****,
+extern int EPZSBiPredBlockMotionSearch (imgpel *, short, int, int, signed char  ***, short  ****,
                                         int, int, int, short*, short *,
                                         short[2], short[2], int, int, int);
 

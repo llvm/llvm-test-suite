@@ -184,7 +184,7 @@ UMHEXBipredIntegerPelBlockMotionSearch (
                                        int       lambda_factor // <--  lagrangian parameter for determining motion cost
                                        );
 
-void UMHEXSetMotionVectorPredictor (short pmv[2], char **refPic, short ***tmp_mv,
+void UMHEXSetMotionVectorPredictor (short pmv[2], signed char **refPic, short ***tmp_mv,
                                     short  ref_frame, int list, int block_x, int block_y,
                                     int blockshape_x, int blockshape_y, int *search_range);
 

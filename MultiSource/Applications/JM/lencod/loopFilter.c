@@ -51,7 +51,7 @@ static const byte CLIP_TAB[52][5]  =
   { 0, 9,12,18,18},{ 0,10,13,20,20},{ 0,11,15,23,23},{ 0,13,17,25,25}
 } ;
 
-static const char chroma_edge[2][4][4] = //[dir][edge][yuv_format]
+static const signed char chroma_edge[2][4][4] = //[dir][edge][yuv_format]
 { { {-1, 0, 0, 0},
     {-1,-1,-1, 1},
     {-1, 1, 1, 2},
@@ -221,8 +221,8 @@ void GetStrength(byte Strength[16],ImageParameters *img,int MbQAddr,int dir,int 
   int    blk_x, blk_x2, blk_y, blk_y2 ;
   short  ***list0_mv = enc_picture->mv[LIST_0];
   short  ***list1_mv = enc_picture->mv[LIST_1];
-  char   **list0_refIdxArr = enc_picture->ref_idx[LIST_0];
-  char   **list1_refIdxArr = enc_picture->ref_idx[LIST_1];
+  signed char **list0_refIdxArr = enc_picture->ref_idx[LIST_0];
+  signed char **list1_refIdxArr = enc_picture->ref_idx[LIST_1];
   int64  **list0_refPicIdArr = enc_picture->ref_pic_id[LIST_0];
   int64  **list1_refPicIdArr = enc_picture->ref_pic_id[LIST_1];
   int64    ref_p0,ref_p1,ref_q0,ref_q1;

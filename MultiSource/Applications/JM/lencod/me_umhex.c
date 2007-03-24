@@ -1293,7 +1293,7 @@ terminate_step:
  ************************************************************************
  */
 void UMHEXSetMotionVectorPredictor (short  pmv[2],
-                               char   **refPic,
+                               signed char **refPic,
                                short  ***tmp_mv,
                                short  ref_frame,
                                int    list,

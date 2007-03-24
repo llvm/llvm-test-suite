@@ -1063,7 +1063,7 @@ static short EPZSSpatialPredictors (PixelPos block_a,
                                     int list,
                                     int list_offset,
                                     short ref,
-                                    char **refPic,
+                                    signed char **refPic,
                                     short ***tmp_mv,
                                     EPZSStructure * predictor)
 {
@@ -1499,7 +1499,7 @@ EPZSPelBlockMotionSearch (imgpel * cur_pic,  // <--  original pixel values for t
                           short ref,          // <--  reference picture
                           int list,           // <--  reference list
                           int list_offset,    // <--  offset for Mbaff
-                          char ***refPic,     // <--  reference array
+                          signed char ***refPic, // <--  reference array
                           short ****tmp_mv,   // <--  mv array
                           int pic_pix_x,      // <--  absolute x-coordinate of regarded AxB block
                           int pic_pix_y,      // <--  absolute y-coordinate of regarded AxB block
@@ -1967,7 +1967,7 @@ EPZSBiPredBlockMotionSearch (imgpel * cur_pic,   // <--  original pixel values f
                              short  ref,          // <--  reference picture
                              int    list,         // <--  reference list
                              int    list_offset,  // <--  offset for Mbaff
-                             char  ***refPic,    // <--  reference array
+                             signed char ***refPic, // <--  reference array
                              short  ****tmp_mv,   // <--  mv array
                              int    pic_pix_x,    // <--  absolute x-coordinate of regarded AxB block
                              int    pic_pix_y,    // <--  absolute y-coordinate of regarded AxB block

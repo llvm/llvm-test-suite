@@ -66,7 +66,7 @@ static int diff  [16];
 static int diff64[64];
 static imgpel orig_pic [768];
 void SetMotionVectorPredictor (short  pmv[2],
-                               char   **refPic,
+                               signed char **refPic,
                                short  ***tmp_mv,
                                short  ref_frame,
                                int    list,
@@ -85,7 +85,7 @@ extern const short block_type_shift_factor[8];
  ************************************************************************
  */
 void SetMotionVectorPredictor (short  pmv[2],
-                               char   **refPic,
+                               signed char **refPic,
                                short  ***tmp_mv,
                                short  ref_frame,
                                int    list,
@@ -1367,7 +1367,7 @@ PartitionMotionSearch (int    blocktype,
   static int  bx0[5][4] = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,2,0,0}, {0,2,0,2}};
   static int  by0[5][4] = {{0,0,0,0}, {0,0,0,0}, {0,2,0,0}, {0,0,0,0}, {0,0,2,2}};
 
-  char  **ref_array;
+  signed char **ref_array;
   short ***mv_array;
   short *all_mv;
   short ref;
@@ -1459,10 +1459,10 @@ void Get_Direct_Motion_Vectors ()
 
   byte  **   moving_block;
   short ****   co_located_mv;
-  char  ***    co_located_ref_idx;
+  signed char *** co_located_ref_idx;
   int64 ***    co_located_ref_id;
-  char  **     ref_pic_l0 = enc_picture->ref_idx[LIST_0];
-  char  **     ref_pic_l1 = enc_picture->ref_idx[LIST_1];
+  signed char ** ref_pic_l0 = enc_picture->ref_idx[LIST_0];
+  signed char ** ref_pic_l1 = enc_picture->ref_idx[LIST_1];
   Macroblock *currMB = &img->mb_data[img->current_mb_nr];
 
   if (currMB->list_offset)
@@ -1641,7 +1641,7 @@ void Get_Direct_Motion_Vectors ()
           {
             all_mvs[LIST_0][l0_refX][0][0] = pmvfw[0];
             all_mvs[LIST_0][l0_refX][0][1] = pmvfw[1];
-            direct_ref_idx[LIST_0][pic_block_y][pic_block_x]= (char)l0_refX;
+            direct_ref_idx[LIST_0][pic_block_y][pic_block_x]= (signed char)l0_refX;
           }
         }
         else
@@ -1657,13 +1657,13 @@ void Get_Direct_Motion_Vectors ()
           {
             all_mvs[LIST_1][0][0][0] = 0;
             all_mvs[LIST_1][0][0][1] = 0;
-            direct_ref_idx[LIST_1][pic_block_y][pic_block_x]= (char)l1_refX;
+            direct_ref_idx[LIST_1][pic_block_y][pic_block_x]= (signed char)l1_refX;
           }
           else
           {
             all_mvs[LIST_1][l1_refX][0][0] = pmvbw[0];
             all_mvs[LIST_1][l1_refX][0][1] = pmvbw[1];
-            direct_ref_idx[LIST_1][pic_block_y][pic_block_x]= (char)l1_refX;
+            direct_ref_idx[LIST_1][pic_block_y][pic_block_x]= (signed char)l1_refX;
           }
         }
         else

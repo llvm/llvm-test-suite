@@ -86,12 +86,12 @@ int   **cofAC4x4=NULL, ****cofAC4x4intern=NULL; // [level/run][scan_pos]
 int   cbp, cbp8x8, cnt_nonz_8x8;
 int64 cbp_blk;
 int   cbp_blk8x8;
-char  frefframe[4][4], brefframe[4][4];
+signed char frefframe[4][4], brefframe[4][4];
 int   b8mode[4], b8pdir[4];
 short best8x8mode [4];                // [block]
-char  best8x8pdir  [MAXMODE][4];       // [mode][block]
-char  best8x8fwref [MAXMODE][4];       // [mode][block]
-char  best8x8bwref [MAXMODE][4];       // [mode][block]
+signed char best8x8pdir  [MAXMODE][4];       // [mode][block]
+signed char best8x8fwref [MAXMODE][4];       // [mode][block]
+signed char best8x8bwref [MAXMODE][4];       // [mode][block]
 
 
 CSptr cs_mb=NULL, cs_b8=NULL, cs_cm=NULL, cs_imb=NULL, cs_ib8=NULL, cs_ib4=NULL, cs_pc=NULL;
@@ -124,7 +124,7 @@ void RestoreMV8x8(int dir);
 //Adaptive Rounding update function
 void update_offset_params(int mode, int luma_transform_size_8x8_flag);
 
-char  b4_ipredmode[16], b4_intra_pred_modes[16];
+signed char b4_ipredmode[16], b4_intra_pred_modes[16];
 
 /*!
  ************************************************************************
@@ -544,8 +544,8 @@ int Mode_Decision_for_4x4IntraBlocks (int  b8,  int  b4,  double  lambda,  int* 
 
   int left_available, up_available, all_available;
 
-  char   upMode;
-  char   leftMode;
+  signed char upMode;
+  signed char leftMode;
   int     mostProbableMode;
 
   PixelPos left_block;
@@ -685,9 +685,9 @@ int Mode_Decision_for_4x4IntraBlocks (int  b8,  int  b4,  double  lambda,  int* 
   cbp_bits |= (int64)(best_coded_block_flag<<bit_pos);
 #endif
   //===== set intra mode prediction =====
-  img->ipredmode[pic_block_y][pic_block_x] = (char) best_ipmode;
+  img->ipredmode[pic_block_y][pic_block_x] = (signed char) best_ipmode;
   img->mb_data[img->current_mb_nr].intra_pred_modes[4*b8+b4] =
-    (char) (mostProbableMode == best_ipmode ? -1 : (best_ipmode < mostProbableMode ? best_ipmode : best_ipmode-1));
+    (signed char) (mostProbableMode == best_ipmode ? -1 : (best_ipmode < mostProbableMode ? best_ipmode : best_ipmode-1));
 
   if (!input->rdopt)
   {
@@ -1927,7 +1927,7 @@ void set_stored_macroblock_parameters ()
   int         bframe = (img->type==B_SLICE);
   int         i, j, k, ****i4p, ***i3p;
   int         block_x, block_y;
-  char    **ipredmodes = img->ipredmode;
+  signed char **ipredmodes = img->ipredmode;
   short   *cur_mv;
 
   //===== reconstruction values =====
@@ -2758,7 +2758,7 @@ void set_mbaff_parameters()
   Macroblock  *currMB  = &img->mb_data[img->current_mb_nr];
   int         mode     = best_mode;
   int         bframe   = (img->type==B_SLICE);
-  char    **ipredmodes = img->ipredmode;
+  signed char    **ipredmodes = img->ipredmode;
 
 
   //===== reconstruction values =====
@@ -2906,7 +2906,7 @@ void update_offset_params(int mode, int luma_transform_size_8x8_flag)
   }
 }
 
-void assign_enc_picture_params(int mode, char best_pdir, int block, int list_offset, int best_fw_ref, int best_bw_ref, int bframe)
+void assign_enc_picture_params(int mode, signed char best_pdir, int block, int list_offset, int best_fw_ref, int best_bw_ref, int bframe)
 {
   int i,j;
   int block_x, block_y;

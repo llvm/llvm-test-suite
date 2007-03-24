@@ -45,9 +45,9 @@ void encode_one_macroblock_low ()
 {
 
   int         block, mode, i, j, k, dummy, MEPos;
-  char        best_pdir;
+  signed char best_pdir;
   RD_PARAMS   enc_mb;
-  char        best_ref[2] = {0, -1};
+  signed char best_ref[2] = {0, -1};
   int         bmcost[5] = {INT_MAX};
   int         cost=0;
   int         min_cost = INT_MAX, cost_direct=0, have_direct=0, i16mode=0;
@@ -65,7 +65,7 @@ void encode_one_macroblock_low ()
   int         prev_mb_nr  = FmoGetPreviousMBNr(img->current_mb_nr);
   Macroblock* prevMB      = (prev_mb_nr >= 0) ? &img->mb_data[prev_mb_nr]:NULL ;
 
-  char   **ipredmodes = img->ipredmode;
+  signed char **ipredmodes = img->ipredmode;
   short   *allmvs = img->all_mv[0][0][0][0][0];
   int     ****i4p;  //for non-RD-opt. mode
 

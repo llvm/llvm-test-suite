@@ -208,7 +208,7 @@ void ClosePanScanRectInfo();
 //! User_data_unregistered Information
 typedef struct
 {
-  char *byte;
+  signed char *byte;
   int total_byte;
   Bitstream *data;
   int payloadSize;
@@ -226,7 +226,7 @@ void CloseUser_data_unregistered();
 //! User_data_registered_itu_t_t35 Information
 typedef struct
 {
-  char *byte;
+  signed char *byte;
   int total_byte;
   int itu_t_t35_country_code;
   int itu_t_t35_country_code_extension_byte;

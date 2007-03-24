@@ -40,10 +40,10 @@ void encode_one_macroblock_high ()
 {
   int         max_index;
   int         block, index, mode, i, j, ctr16x16, MEPos;
-  char        best_pdir;
+  signed char best_pdir;
   RD_PARAMS   enc_mb;
   double      min_rdcost, max_rdcost=1e30;
-  char        best_ref[2] = {0, -1};
+  signed char best_ref[2] = {0, -1};
   int         bmcost[5] = {INT_MAX};
   int         cost=0;
   int         min_cost = INT_MAX, cost_direct=0, have_direct=0, i16mode=0;
@@ -338,7 +338,7 @@ void encode_one_macroblock_high ()
         //--- for INTER16x16 check all prediction directions ---
         if (mode==1 && bslice)
         {
-          best8x8pdir[1][0] = best8x8pdir[1][1] = best8x8pdir[1][2] = best8x8pdir[1][3] = (char) ctr16x16;
+          best8x8pdir[1][0] = best8x8pdir[1][1] = best8x8pdir[1][2] = best8x8pdir[1][3] = (signed char) ctr16x16;
 
           if ( (bslice) && (input->BiPredMotionEstimation)
             && (ctr16x16 == 2 && img->bi_pred_me[mode] < 2 && mode == 1))

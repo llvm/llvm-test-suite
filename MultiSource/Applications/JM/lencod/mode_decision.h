@@ -40,14 +40,14 @@ extern int    qp_mbaff[2][2], qp_mbaff[2][2];
 extern int    delta_qp_mbaff[2][2],delta_qp_mbaff[2][2];
 
 // Residue Color Transform
-extern char   b4_ipredmode[16], b4_intra_pred_modes[16];
+extern signed char b4_ipredmode[16], b4_intra_pred_modes[16];
 
 extern short  bi_pred_me;
 extern short  best_mode;
 extern short  best8x8mode          [4]; // [block]
-extern char   best8x8pdir [MAXMODE][4]; // [mode][block]
-extern char   best8x8fwref[MAXMODE][4]; // [mode][block]
-extern char   best8x8bwref[MAXMODE][4]; // [mode][block]
+extern signed char best8x8pdir [MAXMODE][4]; // [mode][block]
+extern signed char best8x8fwref[MAXMODE][4]; // [mode][block]
+extern signed char best8x8bwref[MAXMODE][4]; // [mode][block]
 extern imgpel pred[16][16];
 
 extern void   set_stored_macroblock_parameters (void);
@@ -57,7 +57,7 @@ extern void   store_macroblock_parameters (int);
 extern void   SetModesAndRefframeForBlocks (int);
 extern void   SetRefAndMotionVectors (int, int, int, int, int);
 extern void   StoreNewMotionVectorsBlock8x8(int, int, int, int, int, int, int);
-extern void   assign_enc_picture_params(int, char, int, int, int, int, int);
+extern void   assign_enc_picture_params(int, signed char, int, int, int, int, int);
 extern void   update_refresh_map(int intra, int intra1, Macroblock *currMB);
 extern void   SetMotionVectorsMB (Macroblock*, int);
 extern void   SetCoeffAndReconstruction8x8 (Macroblock*);
@@ -77,8 +77,8 @@ extern const int  mb_mode_table[9];
 void rc_store_diff(int cpix_x, int cpix_y, imgpel prediction[16][16]);
 void submacroblock_mode_decision(RD_PARAMS, RD_8x8DATA *, Macroblock *,int ***, int *, short, int, int *, int *, int *, int);
 void init_enc_mb_params(Macroblock* currMB, RD_PARAMS *enc_mb, int intra, int bslice);
-void list_prediction_cost(int list, int block, int mode, RD_PARAMS enc_mb, int bmcost[5], char best_ref[2]);
-void determine_prediction_list(int, int [5], char [2], char *, int *, short *);
+void list_prediction_cost(int list, int block, int mode, RD_PARAMS enc_mb, int bmcost[5], signed char best_ref[2]);
+void determine_prediction_list(int, int [5], signed char [2], signed char *, int *, short *);
 void compute_mode_RD_cost(int mode, Macroblock *currMB, RD_PARAMS enc_mb,
                                double *min_rdcost, double *min_rate,
                                int i16mode, short bslice, short *inter_skip);

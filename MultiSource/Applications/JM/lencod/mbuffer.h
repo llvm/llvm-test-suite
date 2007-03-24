@@ -56,7 +56,7 @@ typedef struct storable_picture
 
   byte *      mb_field;      //!< field macroblock indicator
 
-  char  ***   ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
+  signed char *** ref_idx;  //!< reference picture   [list][subblock_y][subblock_x]
 
   int64 ***   ref_pic_id;    //!< reference picture identifier [list][subblock_y][subblock_x]
                              //   (not  simply index)
@@ -91,21 +91,21 @@ typedef struct colocated_params
 
   int64       ref_pic_num[6][MAX_LIST_SIZE];
 
-  char  ***   ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
+  signed char *** ref_idx;   //!< reference picture   [list][subblock_y][subblock_x]
   int64 ***   ref_pic_id;    //!< reference picture identifier [list][subblock_y][subblock_x]
   short ****  mv;            //!< motion vector       [list][subblock_x][subblock_y][component]
   byte **     moving_block;
 
   // Top field params
   int64       top_ref_pic_num[6][MAX_LIST_SIZE];
-  char  ***   top_ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
+  signed char *** top_ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
   int64 ***   top_ref_pic_id;    //!< reference picture identifier [list][subblock_y][subblock_x]
   short ****  top_mv;            //!< motion vector       [list][subblock_x][subblock_y][component]
   byte **     top_moving_block;
 
   // Bottom field params
   int64       bottom_ref_pic_num[6][MAX_LIST_SIZE];
-  char  ***   bottom_ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
+  signed char *** bottom_ref_idx;       //!< reference picture   [list][subblock_y][subblock_x]
   int64 ***   bottom_ref_pic_id;    //!< reference picture identifier [list][subblock_y][subblock_x]
   short ****  bottom_mv;            //!< motion vector       [list][subblock_x][subblock_y][component]
   byte **     bottom_moving_block;
