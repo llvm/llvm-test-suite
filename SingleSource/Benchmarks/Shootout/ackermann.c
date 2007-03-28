@@ -3,8 +3,8 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-int printf(const char *, int, int);
-int atoi(const char *);
+#include <stdio.h>
+#include <stdlib.h>
 
 int 
 Ack(int M, int N) {
