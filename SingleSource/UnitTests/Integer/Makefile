@@ -19,6 +19,7 @@ ENABLE_LARGE_INTEGERS := 0
 # LLC-BETA, and JIT test cases. This leaves the CBE which can
 # handle the arbitrary precision integers.
 
+DISABLE_CBE := 1
 DISABLE_LLC := 1
 DISABLE_JIT := 1
 ENABLE_LLI  := 1
