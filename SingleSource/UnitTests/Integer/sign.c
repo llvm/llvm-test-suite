@@ -39,12 +39,12 @@ main ( int argc, char** argv)
   ux = num; // = 1
   printf("x = %d, ux = %u, y=%d, uy = %u\n", x, ux, y, uy);
     
-  z = x * y;  // 0x1000001 * (-1)
-  uz = ux * uy;
+  z = x * y;     // 0x1000001 * -1
+  uz = ux * uy;  // 1 * -1
   printf("z=%d, uz=%u\n", z, uz);
 
-  z = x % 314;
-  uz = ux % 314;
+  z = x % 314;   // 0x1000001 % 314
+  uz = ux % 314; // 1 % 314 == 1
   printf("z=%d, uz=%u\n", z, uz);
 
   z = x / 314;
