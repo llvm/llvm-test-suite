@@ -51,6 +51,20 @@
 #include "output.h"
 #include "cabac.h"
 
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+#include <sys/time.h>
+int ftime(struct timeb *tp)
+{ 
+  struct timeval tv;
+  struct timezone tz;
+  gettimeofday(&tv, &tz);
+  tp->time = tv.tv_sec;
+  tp->millitm = tv.tv_usec / 1000;
+  tp->timezone = tz.tz_minuteswest;
+  tp->dstflag = tz.tz_dsttime;
+}
+#endif
+
 extern pic_parameter_set_rbsp_t *PicParSet[MAXPPS];
 
 void code_a_picture(Picture *pic);
