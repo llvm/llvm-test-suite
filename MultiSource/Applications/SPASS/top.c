@@ -62,7 +62,7 @@
 #include "rules-red.h"
 #include "analyze.h"
 #include "clock.h"
-#include "strings.h"
+#include "stringsx.h"
 #include "options.h"
 #include "context.h"
 #include "cnf.h"

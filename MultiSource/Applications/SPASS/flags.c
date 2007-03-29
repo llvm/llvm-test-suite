@@ -50,7 +50,7 @@
 
 #include "flags.h"
 #include "misc.h"
-#include "strings.h"
+#include "stringsx.h"
 
 /**************************************************************/
 /* Global Declarations                                        */

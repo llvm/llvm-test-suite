@@ -196,7 +196,7 @@
 #include "symbol.h"
 #include "term.h"
 #include "foldfg.h"
-#include "strings.h"
+#include "stringsx.h"
 
 /* Used for the texts from description section. */
 typedef struct {
