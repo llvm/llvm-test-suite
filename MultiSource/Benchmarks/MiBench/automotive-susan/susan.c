@@ -302,7 +302,7 @@ typedef float      TOTAL_TYPE; /* for my PowerPC accelerator only */
 #include <string.h>
 #include <math.h>
 #include <sys/file.h>    /* may want to remove this line */
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__OpenBSD__)
 #include <malloc.h>      /* may want to remove this line */
 #endif
 #define  exit_error(IFB,IFC) { fprintf(stderr,IFB,IFC); exit(0); }
