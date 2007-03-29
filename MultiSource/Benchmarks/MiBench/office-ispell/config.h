@@ -55,6 +55,10 @@
  * $Id$
  *
  * $Log$
+ * Revision 1.2  2007/03/29 17:00:52  jeffc
+ * Fix for src != obj.
+ * Don't use obsolete header file.
+ *
  * Revision 1.1  2007/01/09 23:57:18  lattner
  * initial recheckin of mibench
  *
@@ -114,7 +118,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #ifndef USG
-#include <sys/dir.h>
+#include <sys/dirent.h>
 #endif /* USG */
 
 /*
