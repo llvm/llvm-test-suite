@@ -63,6 +63,10 @@
 
 #include "vlc.h"
 
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+#include <sys/time.h>
+#endif
+
 #include "erc_api.h"
 extern objectBuffer_t *erc_object_list;
 extern ercVariables_t *erc_errorVar;
@@ -81,6 +85,21 @@ int non_conforming_stream;
 StorablePicture *dec_picture;
 
 OldSliceParams old_slice;
+
+void ftime_hack(struct timeb *tp)
+{ 
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+  struct timeval tv;
+  struct timezone tz;
+  gettimeofday(&tv, &tz);
+  tp->time = tv.tv_sec;
+  tp->millitm = tv.tv_usec / 1000;
+  tp->timezone = tz.tz_minuteswest;
+  tp->dstflag = tz.tz_dsttime;
+#else
+  ftime(tp);
+#endif
+}
 
 void MbAffPostProc()
 {
@@ -1289,7 +1308,7 @@ void init_picture(struct img_par *img, struct inp_par *inp)
 #ifdef WIN32
     _ftime (&(img->tstruct_start));             // start time ms
 #else
-    ftime (&(img->tstruct_start));              // start time ms
+    ftime_hack (&(img->tstruct_start));         // start time ms
 #endif
     time( &(img->ltime_start));                // start time s
   }
@@ -1513,7 +1532,7 @@ void exit_picture()
 #ifdef WIN32
     _ftime (&(img->tstruct_end));             // start time ms
 #else
-    ftime (&(img->tstruct_end));              // start time ms
+    ftime_hack (&(img->tstruct_end));         // start time ms
 #endif
 
     time( &(img->ltime_end));                // start time s
