@@ -87,7 +87,7 @@ void HexxagonMoveList::sortList()
 
 int getTime()
 {
-#if defined(__FreeBSD__) || defined(__APPLE__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__ )|| defined(__APPLE__)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
