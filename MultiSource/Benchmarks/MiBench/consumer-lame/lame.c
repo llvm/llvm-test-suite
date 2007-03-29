@@ -1187,6 +1187,9 @@ int lame_encode(lame_global_flags *gfp, short int in_buffer[2][1152],char *mp3bu
 }
 
 
+#ifdef __FreeBSD__
+# include <floatingpoint.h>
+#endif
 
 
 /* initialize mp3 encoder */
@@ -1196,8 +1199,6 @@ void lame_init(lame_global_flags *gfp)
   /*
    *  Disable floating point exepctions
    */
-#ifdef __FreeBSD__
-# include <floatingpoint.h>
   {
   /* seet floating point mask to the Linux default */
   fp_except_t mask;
@@ -1206,7 +1207,6 @@ void lame_init(lame_global_flags *gfp)
   fpsetmask(mask & ~(FP_X_INV|FP_X_DZ));
   /*  fprintf(stderr,"FreeBSD mask is 0x%x\n",mask); */
   }
-#endif
 #if defined(__riscos__) && !defined(ABORTFP)
   /* Disable FPE's under RISC OS */
   /* if bit is set, we disable trapping that error! */
