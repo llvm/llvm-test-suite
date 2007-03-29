@@ -118,9 +118,9 @@ main(argc, argv) int argc; char *argv[];
   FILE *Bp, *Ap, *Cp, *ckopen();
   char *arg1, *arg2, *arg3;
 
-  if ((Cp = fopen("sim.res","a+")) == NULL)
+  if ((Cp = fopen("Output/sim.res","a+")) == NULL)
     {
-	printf("Can not open sim.res\n\n");
+	printf("Can not open Output/sim.res\n\n");
 	exit(1);
     }
 
@@ -222,7 +222,7 @@ main(argc, argv) int argc; char *argv[];
   /*printf("\nRun Time (sec) = %9.1lf\n",benchtime);*/
   
   fprintf(Cp,"\n");
-  fprintf(Cp,"  Run Line: sim 8 tob.38-44 liv.42-48\n");
+  fprintf(Cp,"  Run Line: %s %s %s\n", arg1, arg2, arg3);
   /*fprintf(Cp,"  Run Time: %9.1lf (sec)\n",benchtime);*/
   fprintf(Cp,"#######################################################\n");
   fclose(Cp);
