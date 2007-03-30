@@ -46,7 +46,7 @@ typedef struct
   void *var;
 } ParmT;
 
-char IMAGE[80];
+char IMAGE[800];
 double SIGMA;
 int VAR_THRESHOLD = -1;
 double VSPREAD_THRESHOLD = 0.02;
@@ -116,6 +116,10 @@ void ParseInputFile(char *file)
   };
   char read_parm[25];
   char read_val[80];
+
+  /* Hack: put image file in same directory as input file */
+  strcpy(IMAGE, file);
+  parms[0].var = strrchr(IMAGE, '/') + 1;
 
   if ((fp = fopen(file, "r")) == NULL)
     {
