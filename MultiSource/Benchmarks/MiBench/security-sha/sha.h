@@ -7,7 +7,7 @@
 /* Useful defines & typedefs */
 
 typedef unsigned char BYTE;
-typedef unsigned long LONG;
+typedef unsigned int LONG;
 
 #define SHA_BLOCKSIZE		64
 #define SHA_DIGESTSIZE		20
