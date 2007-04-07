@@ -1518,6 +1518,9 @@ LISP load_so(LISP fname,LISP iname)
    {put_st("so-loading ");
     put_st(get_c_string(fname));
     put_st("\n");}
+#if 0
+/* Too platform-dependent for llvm-test to handle, and the test doesn't
+ * use it anyway. */
 #if defined(__osf__) || defined(sun) || defined(linux) || defined(sgi)
 #if !defined(__osf__)
  /* Observed bug: values of LD_LIBRARY_PATH established with putenv
@@ -1564,6 +1567,7 @@ LISP load_so(LISP fname,LISP iname)
    err("LoadLibrary",fname);
  if (!(fcn = (LPVOID)GetProcAddress(handle,get_c_string(init_name))))
    err("GetProcAddress",init_name);
+#endif
 #endif
  if (fcn)
    (*fcn)();
