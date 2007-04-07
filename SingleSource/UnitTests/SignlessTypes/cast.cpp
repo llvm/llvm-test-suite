@@ -138,10 +138,11 @@ int main(int argc, char**argv) {
   
   // Cast of malloc result to another type
   {
-    int* int_ptr = (int*) malloc(sizeof(long));
-    *int_ptr = 42;
-    long* long_ptr = (long*) int_ptr;
-    printf("%ld\n", *long_ptr);
+    // Note: must use volatile, otherwise g++ miscompiles at -O2 (but not LLVM)
+    volatile float* float_ptr = (float*) malloc(sizeof(unsigned));
+    *float_ptr = 10;
+    volatile unsigned* unsigned_ptr = (volatile unsigned*) float_ptr;
+    printf("%x\n", *unsigned_ptr);
   }
 
   // Propagation of single-use casts into other instructions
