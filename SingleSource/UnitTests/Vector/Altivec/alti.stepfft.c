@@ -76,7 +76,6 @@ int n;
 float x[][2],y[][2],w[][2],sign;
 {
    int jb, m, j, mj, tgle;
-   void ccopy(),step();
    m    = (int) (log((float) n)/log(1.99));
    mj   = 1;
    tgle = 1;  /* toggling switch for work array */
