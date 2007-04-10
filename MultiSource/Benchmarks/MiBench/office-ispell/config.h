@@ -55,6 +55,9 @@
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2007/04/10 02:59:31  jeffc
+ * Use correct dirent.h header file.
+ *
  * Revision 1.2  2007/03/29 17:00:52  jeffc
  * Fix for src != obj.
  * Don't use obsolete header file.
@@ -118,7 +121,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #ifndef USG
-#include <sys/dirent.h>
+#include <dirent.h>
 #endif /* USG */
 
 /*
