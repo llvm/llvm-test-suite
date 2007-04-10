@@ -2,7 +2,7 @@
 LEVEL = ../..
 include $(LEVEL)/Makefile.config
 
-DIRS := 
+DIRS := SetjmpLongjmp
 
 # llvm-gcc3 does not support any vector tests.
 ifneq ($(LLVMGCC_MAJVERS),3)
