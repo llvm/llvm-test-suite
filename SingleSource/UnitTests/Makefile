@@ -15,5 +15,6 @@ endif
 
 DIRS += SignlessTypes
 
+LDFLAGS += -lpthread
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
