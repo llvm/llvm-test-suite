@@ -13,8 +13,7 @@ DIRS :=
 DIRS += Vector 
 endif
 
-DIRS += SignlessTypes
+DIRS += SignlessTypes Threads
 
-LDFLAGS += -lpthread
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
