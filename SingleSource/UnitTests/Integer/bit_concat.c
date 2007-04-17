@@ -1,4 +1,4 @@
-//===--- part_select.c --- Test The bit_select builtin --------------------===//
+//===--- bit_concat.c --- Test The bit_concat builtin --------------------===//
 //
 // This file was developed by Reid Spencer and is distributed under the 
 // University of Illinois Open Source License. See LICENSE.TXT for details.
@@ -12,28 +12,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "bits.h"
 
-typedef unsigned int __attribute__((bitwidth(17))) BitType1;
-typedef unsigned int __attribute__((bitwidth(19))) BitType2;
-typedef unsigned long long __attribute__((bitwidth(36))) ConcatType;
-int numbits1 = 17;
-int numbits2 = 19;
-
-void printBits(ConcatType val, int numbits ) {
-  int j;
-  for (j = numbits; j > 0; --j) {
-    if (__builtin_bit_select(val, j))
-      printf("1");
-    else
-      printf("0");
-  }
-}
 
 int main(int argc, char** argv)
 {
-  BitType1 X = 0;
-  BitType2 Y = 0;
-  ConcatType Z = 0;
+  Int17 X = 0;
+  Int19 Y = 0;
+  Int36 Z = 0;
   int i, j;
   int count = (argc > 1 ? atoi(argv[1]) % 128 : 128);
 
@@ -41,21 +27,21 @@ int main(int argc, char** argv)
 
   for (i = 0; i < count; i++) {
     Y = X = 0;
-    for (j = 0; j < numbits1; j++) {
-      X += (rand() % 2 == 0 ? 0 : 1);
+    for (j = 0; j < bitwidthof(Int17); j++) {
       X <<= 1;
+      X += (rand() % 2 == 0 ? 0 : 1);
     }
-    for (j = 0; j < numbits2; j++) {
-      Y += (rand() % 2 == 0 ? 0 : 1);
+    for (j = 0; j < bitwidthof(Int19); j++) {
       Y <<= 1;
+      Y += (rand() % 2 == 0 ? 0 : 1);
     }
-    Z = __builtin_bit_concat(X, Y);
+    Z = bit_concat(X, Y);
     printf("bit_concat(");
-    printBits(X, numbits1);
+    printBits(X);
     printf(",");
-    printBits(Y, numbits2);
+    printBits(Y);
     printf(") = ");
-    printBits(Z, numbits1 + numbits2);
+    printBits(Z);
     printf("\n");
   }
   return 0;
