@@ -13,25 +13,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef unsigned int __attribute__((bitwidth(1))) Int1;
-typedef unsigned int __attribute__((bitwidth(2))) Int2;
-typedef unsigned int __attribute__((bitwidth(3))) Int3;
-typedef unsigned int __attribute__((bitwidth(4))) Int4;
-typedef unsigned int __attribute__((bitwidth(5))) Int5;
-typedef unsigned int __attribute__((bitwidth(6))) Int6;
-typedef unsigned int __attribute__((bitwidth(7))) Int7;
-typedef unsigned int __attribute__((bitwidth(8))) Int8;
-typedef unsigned int __attribute__((bitwidth(16))) Int16;
-typedef unsigned int __attribute__((bitwidth(17))) Int17;
-typedef unsigned int __attribute__((bitwidth(19))) Int19;
-typedef unsigned int __attribute__((bitwidth(17))) Int32;
-typedef unsigned int __attribute__((bitwidth(36))) Int36;
-typedef unsigned int __attribute__((bitwidth(47))) Int47;
-typedef unsigned int __attribute__((bitwidth(48))) Int48;
-typedef unsigned int __attribute__((bitwidth(64))) Int64;
-typedef unsigned int __attribute__((bitwidth(65))) Int65;
-typedef unsigned int __attribute__((bitwidth(128))) Int128;
-/*typedef unsigned int __attribute__((bitwidth(256))) Int256; */
+typedef unsigned int __attribute__((bitwidth(1))) uint1;
+typedef unsigned int __attribute__((bitwidth(2))) uint2;
+typedef unsigned int __attribute__((bitwidth(3))) uint3;
+typedef unsigned int __attribute__((bitwidth(4))) uint4;
+typedef unsigned int __attribute__((bitwidth(5))) uint5;
+typedef unsigned int __attribute__((bitwidth(6))) uint6;
+typedef unsigned int __attribute__((bitwidth(7))) uint7;
+typedef unsigned int __attribute__((bitwidth(8))) uint8;
+typedef unsigned int __attribute__((bitwidth(9))) uint9;
+typedef unsigned int __attribute__((bitwidth(10))) uint10;
+typedef unsigned int __attribute__((bitwidth(16))) uint16;
+typedef unsigned int __attribute__((bitwidth(17))) uint17;
+typedef unsigned int __attribute__((bitwidth(19))) uint19;
+typedef unsigned int __attribute__((bitwidth(21))) uint21;
+typedef unsigned int __attribute__((bitwidth(17))) uint32;
+typedef unsigned int __attribute__((bitwidth(36))) uint36;
+typedef unsigned int __attribute__((bitwidth(47))) uint47;
+typedef unsigned int __attribute__((bitwidth(48))) uint48;
+typedef unsigned int __attribute__((bitwidth(64))) uint64;
+typedef unsigned int __attribute__((bitwidth(65))) uint65;
+typedef unsigned int __attribute__((bitwidth(128))) uint128;
+
+typedef int __attribute__ ((bitwidth(9))) int9;
+typedef int __attribute__((bitwidth(10))) int10;
+typedef int __attribute__((bitwidth(21))) int21;
+typedef int __attribute__((bitwidth(24))) int24;
+typedef int __attribute__((bitwidth(32))) int32;
+typedef int __attribute__((bitwidth(33))) int33;
+
+typedef int __attribute__((bitwidth(169))) int169;
+typedef unsigned int __attribute__((bitwidth(250))) Int250;
+typedef unsigned int __attribute__((bitwidth(256))) Int256;
 
 #define bitwidthof(TORV) (__bitwidthof__(typeof(TORV)))
 
@@ -52,7 +65,7 @@ typedef unsigned int __attribute__((bitwidth(128))) Int128;
   typeof(Val) Result = 0; \
   typeof(Val) Val2 = Val; \
   typeof(Repl) Repl2 = Repl; \
-  __builtin_bit_set(&Result, &Val2, &Repl, Bit); \
+  __builtin_bit_set(&Result, &Val2, &Repl2, Bit); \
   Result; \
 })
 
@@ -87,3 +100,8 @@ typedef unsigned int __attribute__((bitwidth(128))) Int128;
   } \
 } 
 
+#define bitsFromString(str,bits) ({ \
+  int __attribute__((bitwidth(bits))) Result; \
+  __builtin_bit_from_string(&Result, str, 10); \
+  Result; \
+})

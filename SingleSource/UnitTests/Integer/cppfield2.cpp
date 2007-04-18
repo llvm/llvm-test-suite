@@ -10,11 +10,8 @@
 
 
 #include <stdio.h>
+#include "bits.h"
 
-typedef unsigned char __attribute__ ((bitwidth(7))) int7;
-typedef unsigned int __attribute__ ((bitwidth(17))) int17;
-typedef unsigned int __attribute__ ((bitwidth(32))) int32;
-typedef unsigned int __attribute__ ((bitwidth(8))) int8;
 
 class bitFieldStruct {
   public:
@@ -26,10 +23,10 @@ class bitFieldStruct {
 
 class bitAccurateStruct {
   public:
-  int32 i;
-  int7 c : 7;
-  int17 s : 17;
-  int8 c2;
+  uint32 i;
+  uint7 c : 7;
+  uint17 s : 17;
+  uint8 c2;
 };
 
 int main()

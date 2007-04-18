@@ -11,13 +11,13 @@
 //===----------------------------------------------------------------------===//
 
 #include <stdio.h>
-#include <bits.h>
+#include "bits.h"
 
 #ifdef ENABLE_LARGE_INTEGERS
-typedef Int250 BitType;
+typedef uint250 BitType;
 const BitType X = 0xAAAAAAAAAAAAAAAAULL;
 #else
-typedef Int47 BitType;
+typedef uint47 BitType;
 const BitType X = 0xAAAAAAAAAAAAULL;
 #endif
 

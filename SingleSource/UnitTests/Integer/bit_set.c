@@ -11,35 +11,27 @@
 //===----------------------------------------------------------------------===//
 
 #include <stdio.h>
+#include "bits.h"
 
 #ifdef ENABLE_LARGE_INTEGERS
-typedef int __attribute__((bitwidth(250))) BitType;
-const BitType X = 0xAAAAAAAAAAAAAAAAULL;
-int numbits = 250;
+typedef uint250 BitType;
+BitType X = 0;
 #else
-typedef int __attribute__((bitwidth(47))) BitType;
-const BitType X = 0xAAAAAAAAAAAAULL;
-int numbits = 47;
+typedef uint47 BitType;
+BitType X = 0;
 #endif
 
 int main(int argc, char** argv)
 {
 
-#ifdef ENABLE_LARGE_INTEGERS
-  BitType Y = X * X;
-#else
-  BitType Y = X;
-#endif
+  int i;
 
-  BitType i;
-
-  for (i = numbits-1; i >= 0; --i) {
-    if (__builtin_bit_select(&Y, i)) 
-      printf("1");
-    else
-      printf("0");
-  }
-
+  printBits(X);
   printf("\n");
+  for (i = bitwidthof(BitType); i > 0; --i) {
+    X = bit_set(X, 1, i-1);
+    printBits(X);
+    printf("\n");
+  }
   return 0;
 }

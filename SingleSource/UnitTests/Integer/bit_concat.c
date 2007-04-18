@@ -17,9 +17,9 @@
 
 int main(int argc, char** argv)
 {
-  Int17 X = 0;
-  Int19 Y = 0;
-  Int36 Z = 0;
+  uint17 X = 0;
+  uint19 Y = 0;
+  uint36 Z = 0;
   int i, j;
   int count = (argc > 1 ? atoi(argv[1]) % 128 : 128);
 
@@ -27,11 +27,11 @@ int main(int argc, char** argv)
 
   for (i = 0; i < count; i++) {
     Y = X = 0;
-    for (j = 0; j < bitwidthof(Int17); j++) {
+    for (j = 0; j < bitwidthof(uint17); j++) {
       X <<= 1;
       X += (rand() % 2 == 0 ? 0 : 1);
     }
-    for (j = 0; j < bitwidthof(Int19); j++) {
+    for (j = 0; j < bitwidthof(uint19); j++) {
       Y <<= 1;
       Y += (rand() % 2 == 0 ? 0 : 1);
     }

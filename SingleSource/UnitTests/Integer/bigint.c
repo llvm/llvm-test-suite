@@ -8,7 +8,8 @@
 // This is a general test for big integer type.
 //
 //===----------------------------------------------------------------------===//
-#include "bigint.h"
+
+#include "bits.h"
 #include <stdio.h>
 
 typedef enum bool{false=0, true=1} bool;

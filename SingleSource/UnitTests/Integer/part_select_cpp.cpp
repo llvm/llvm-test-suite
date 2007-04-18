@@ -13,15 +13,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "bits.h"
 
 #ifdef ENABLE_LARGE_INTEGERS
-typedef unsigned __attribute__((bitwidth(256))) BitType;
+typedef uint256 BitType;
 const BitType X = 0xFEDCBA9876543210ULL;
-unsigned numbits = 256;
 #else
-typedef unsigned __attribute__((bitwidth(47))) BitType;
+typedef uint47 BitType;
 const BitType X = 0xFEDCBA9876543210ULL;
-unsigned numbits = 47;
 #endif
 
 int main(int argc, char** argv)
@@ -37,19 +36,17 @@ int main(int argc, char** argv)
 
   unsigned i, j;
 
-  for (i = 0; i < numbits; ++i) {
-    BitType left = rand() % numbits;
+  printf("Selecting bits from:     ");
+  printBits(X);
+  printf("\n");
+  for (i = 0; i < bitwidthof(BitType); ++i) {
+    BitType left = rand() % bitwidthof(BitType);
     BitType right = i;
-    printf("part_select(Y, %3u, %3u) = ", (unsigned)left, (unsigned)right);
-    BitType Z = __builtin_bit_part_select(Y, left, right);
-    for (j = numbits; j > 0; --j) {
-      if (__builtin_bit_select(Z, j-1))
-        printf("1");
-      else
-        printf("0");
-    }
+    printf("part_select(Y,%3u,%3u) = ", (unsigned)right, (unsigned)left);
+    BitType Z = part_select(Y, right, left);
+    printBits(Z);
     uint64_t val = Z;
-    printf(" (%lx)", val);
+    printf(" (%llx)", val);
     printf("\n");
   }
 

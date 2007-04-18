@@ -18,9 +18,9 @@ int main(int argc, char** argv)
 {
   int count = (argc > 1 ? atoi(argv[1]) % 128 : 128);
 
-  Int17 X = 0; 
-  Int19 Y = 0; 
-  Int36 Z = 0;
+  uint17 X = 0; 
+  uint19 Y = 0; 
+  uint36 Z = 0;
 
   srand(count);
 
