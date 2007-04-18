@@ -17,7 +17,7 @@ typedef enum bool{false=0, true=1} bool;
 const uint10 bnd = 1023;
 
 
-int169 x = 0xffffffffULL;
+int500 x = 0xffffffffULL;
 int169 y = -0xabcdefdeULL;
 
 int my_test()
