@@ -43,8 +43,9 @@ typedef int __attribute__((bitwidth(32))) int32;
 typedef int __attribute__((bitwidth(33))) int33;
 
 typedef int __attribute__((bitwidth(169))) int169;
-typedef unsigned int __attribute__((bitwidth(250))) Int250;
-typedef unsigned int __attribute__((bitwidth(256))) Int256;
+typedef unsigned int __attribute__((bitwidth(250))) int250;
+typedef unsigned int __attribute__((bitwidth(256))) int256;
+typedef unsigned int __attribute__((bitwidth(256))) int500;
 
 #define bitwidthof(TORV) (__bitwidthof__(typeof(TORV)))
 
