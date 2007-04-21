@@ -14,13 +14,10 @@ int main(int argc, char ** argv)
   printBits(t4);
   printf("\n");
   
-
-
   n = -1;
   t3 = bit_concat(n, (uint60)-1);
   printBits(t3);
   printf("\n");
-  
   
   return 0;
 }
