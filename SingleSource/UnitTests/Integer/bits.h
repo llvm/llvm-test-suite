@@ -27,12 +27,17 @@ typedef unsigned int __attribute__((bitwidth(16))) uint16;
 typedef unsigned int __attribute__((bitwidth(17))) uint17;
 typedef unsigned int __attribute__((bitwidth(19))) uint19;
 typedef unsigned int __attribute__((bitwidth(21))) uint21;
+typedef unsigned int __attribute__((bitwidth(25))) uint25;
 typedef unsigned int __attribute__((bitwidth(17))) uint32;
 typedef unsigned int __attribute__((bitwidth(36))) uint36;
+typedef unsigned int __attribute__((bitwidth(39))) uint39;
 typedef unsigned int __attribute__((bitwidth(47))) uint47;
 typedef unsigned int __attribute__((bitwidth(48))) uint48;
+typedef unsigned int __attribute__((bitwidth(60))) uint60;
+typedef unsigned int __attribute__((bitwidth(63))) uint63;
 typedef unsigned int __attribute__((bitwidth(64))) uint64;
 typedef unsigned int __attribute__((bitwidth(65))) uint65;
+typedef unsigned int __attribute__((bitwidth(68))) uint68;
 typedef unsigned int __attribute__((bitwidth(128))) uint128;
 
 typedef int __attribute__ ((bitwidth(9))) int9;
