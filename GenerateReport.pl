@@ -185,7 +185,10 @@ if ($TrimAllDirectories and scalar(@Values)) {
 # Sort table now...
 #
 if ($SortNumeric) {
-  @Values = sort { $a->[$SortCol] <=> $b->[$SortCol] } @Values;
+  @Values = sort { $lhs = $a->[$SortCol]; $rhs = $b->[$SortCol];
+                   $lhs = 0 if ($lhs eq "*");
+                   $rhs = 0 if ($rhs eq "*");
+                   $lhs <=> $rhs } @Values;
 } else {
   @Values = sort { $a->[$SortCol] cmp $b->[$SortCol] } @Values;
 }
