@@ -2003,9 +2003,6 @@ ac_config_commands="$ac_config_commands Makefile.tests"
 ac_config_commands="$ac_config_commands TEST.aa.Makefile"
 
 
-ac_config_commands="$ac_config_commands TEST.dsgraph.report"
-
-
 ac_config_commands="$ac_config_commands TEST.aa.report"
 
 
@@ -2024,16 +2021,10 @@ ac_config_commands="$ac_config_commands TEST.jit.Makefile"
 ac_config_commands="$ac_config_commands TEST.nightly.report"
 
 
-ac_config_commands="$ac_config_commands TEST.dsgraph.Makefile"
-
-
 ac_config_commands="$ac_config_commands TEST.jit.report"
 
 
 ac_config_commands="$ac_config_commands TEST.typesafe.Makefile"
-
-
-ac_config_commands="$ac_config_commands TEST.dsgraph.gnuplot"
 
 
 ac_config_commands="$ac_config_commands TEST.vtl.Makefile"
@@ -21422,17 +21413,14 @@ do
     "Makefile.programs") CONFIG_COMMANDS="$CONFIG_COMMANDS Makefile.programs" ;;
     "Makefile.tests") CONFIG_COMMANDS="$CONFIG_COMMANDS Makefile.tests" ;;
     "TEST.aa.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.aa.Makefile" ;;
-    "TEST.dsgraph.report") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.dsgraph.report" ;;
     "TEST.aa.report") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.aa.report" ;;
     "TEST.example.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.example.Makefile" ;;
     "TEST.nightly.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.nightly.Makefile" ;;
     "TEST.buildrepo.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.buildrepo.Makefile" ;;
     "TEST.jit.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.jit.Makefile" ;;
     "TEST.nightly.report") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.nightly.report" ;;
-    "TEST.dsgraph.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.dsgraph.Makefile" ;;
     "TEST.jit.report") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.jit.report" ;;
     "TEST.typesafe.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.typesafe.Makefile" ;;
-    "TEST.dsgraph.gnuplot") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.dsgraph.gnuplot" ;;
     "TEST.vtl.Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS TEST.vtl.Makefile" ;;
     "External/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/Makefile" ;;
     "External/Makefile.external") CONFIG_COMMANDS="$CONFIG_COMMANDS External/Makefile.external" ;;
@@ -21987,8 +21975,6 @@ echo "$as_me: executing $ac_file commands" >&6;}
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.tests Makefile.tests ;;
     "TEST.aa.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.aa.Makefile`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.aa.Makefile TEST.aa.Makefile ;;
-    "TEST.dsgraph.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.dsgraph.report`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.dsgraph.report TEST.dsgraph.report ;;
     "TEST.aa.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.aa.report`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.aa.report TEST.aa.report ;;
     "TEST.example.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.example.Makefile`
@@ -22001,14 +21987,10 @@ echo "$as_me: executing $ac_file commands" >&6;}
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.jit.Makefile TEST.jit.Makefile ;;
     "TEST.nightly.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.nightly.report`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.nightly.report TEST.nightly.report ;;
-    "TEST.dsgraph.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.dsgraph.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.dsgraph.Makefile TEST.dsgraph.Makefile ;;
     "TEST.jit.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.jit.report`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.jit.report TEST.jit.report ;;
     "TEST.typesafe.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.typesafe.Makefile`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.typesafe.Makefile TEST.typesafe.Makefile ;;
-    "TEST.dsgraph.gnuplot":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.dsgraph.gnuplot`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.dsgraph.gnuplot TEST.dsgraph.gnuplot ;;
     "TEST.vtl.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.vtl.Makefile`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.vtl.Makefile TEST.vtl.Makefile ;;
     "External/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/Makefile`
