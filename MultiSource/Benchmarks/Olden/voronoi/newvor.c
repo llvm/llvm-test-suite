@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "defines.h"
 
-#if defined(__alpha__) || defined(__x86_64__)
+#if defined(__linux__)
 #include <malloc.h>
 #endif
 
