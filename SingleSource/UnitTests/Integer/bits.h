@@ -40,12 +40,14 @@ typedef unsigned int __attribute__((bitwidth(65))) uint65;
 typedef unsigned int __attribute__((bitwidth(68))) uint68;
 typedef unsigned int __attribute__((bitwidth(128))) uint128;
 
-typedef int __attribute__ ((bitwidth(9))) int9;
+typedef int __attribute__((bitwidth(9)))  int9;
 typedef int __attribute__((bitwidth(10))) int10;
 typedef int __attribute__((bitwidth(21))) int21;
 typedef int __attribute__((bitwidth(24))) int24;
 typedef int __attribute__((bitwidth(32))) int32;
 typedef int __attribute__((bitwidth(33))) int33;
+typedef int __attribute__((bitwidth(68))) int68;
+typedef int __attribute__((bitwidth(69))) int69;
 
 typedef int __attribute__((bitwidth(169))) int169;
 typedef unsigned int __attribute__((bitwidth(250))) int250;
@@ -109,5 +111,11 @@ typedef unsigned int __attribute__((bitwidth(256))) int500;
 #define bitsFromString(str,bits) ({ \
   int __attribute__((bitwidth(bits))) Result; \
   __builtin_bit_from_string(&Result, str, 10); \
+  Result; \
+})
+
+#define bitsFromHexString(str,bits) ({ \
+  int __attribute__((bitwidth(bits))) Result; \
+  __builtin_bit_from_string(&Result, str, 16); \
   Result; \
 })
