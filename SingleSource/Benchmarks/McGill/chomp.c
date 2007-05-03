@@ -375,11 +375,7 @@ int main(void)
 #if 0
 	scanf("%d",&ncol);
 #else
-#ifdef SMALL_PROBLEM_SIZE
-	ncol = 7;
-#else
         ncol = 7;
-#endif
 #endif
 	printf("Enter number of Rows    : ");
 #if 0
