@@ -43,7 +43,12 @@ private:
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 1000000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 100000000
+#else
+#define LENGTH 1000000000
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
 
     bool val = true;
     Toggle *toggle = new Toggle(val);

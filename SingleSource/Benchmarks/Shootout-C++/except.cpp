@@ -61,7 +61,12 @@ void some_function(size_t num) {
 
 int
 main(int argc, char* argv[]) {
-    size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 100000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 10000
+#else
+#define LENGTH 100000
+#endif
+    size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): LENGTH);
     while (NUM--) {
         some_function(NUM);
     }

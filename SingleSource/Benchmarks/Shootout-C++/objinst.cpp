@@ -40,7 +40,12 @@ private:
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 70000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 7000000
+#else
+#define LENGTH 70000000
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
 
     Toggle *toggle1 = new Toggle(true);
     for (int i=0; i<5; i++) {

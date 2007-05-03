@@ -7,7 +7,12 @@
 
 int
 main(int argc, char *argv[]) {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 9000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 900000
+#else
+#define LENGTH 9000000
+#endif
+    int i, n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     typedef std::vector<int> ARY;
     ARY x(n);
     ARY y(n);

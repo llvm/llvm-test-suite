@@ -66,7 +66,12 @@ NthToggle *new_NthToggle(char start_state, int max_count) {
 
 
 int main(int argc, char *argv[]) {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 70000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 7000000
+#else
+#define LENGTH 70000000
+#endif
+    int i, n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     Toggle *tog;
     NthToggle *ntog;
 

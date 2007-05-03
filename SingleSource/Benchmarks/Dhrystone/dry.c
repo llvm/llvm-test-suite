@@ -88,7 +88,11 @@ void free(void*);
 /*#define MYSTRFNS */
 
 /* Accuracy of timings and human fatigue controlled by next two lines */
+#ifdef SMALL_PROBLEM_SIZE
+#define LOOPS	2000000
+#else
 #define LOOPS	20000000
+#endif
 
 /* Compiler dependent options */
 #undef	NOENUM			/* Define if compiler has no enum's */

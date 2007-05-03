@@ -7,7 +7,11 @@ int main()
     // number of iterations before we quit
     int maxiter = 255;
 
+#ifdef SMALL_PROBLEM_SIZE
+    int slowdown = 20;
+#else
     int slowdown = 2000;
+#endif
 
     // size and position of the rect on the imaginary plane
     double fViewRectReal = -2.3, fViewRectImg = -1.0;

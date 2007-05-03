@@ -25,7 +25,12 @@ void sieve(list<int>& unknown, vector<int>& primes)
 
 int main(int argc, char *argv[]) 
 {
-  size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 500);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 50
+#else
+#define LENGTH 500
+#endif
+  size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): LENGTH);
 
   vector<int> primes;
 

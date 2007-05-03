@@ -220,7 +220,11 @@ int main(int argc, char **argv)
 
    /****   DECODE COMMAND LINE ARGUMENTS   ****/
    printing = 0;
+#ifdef SMALL_PROBLEM_SIZE
+   queens = 13;
+#else
    queens = 14;
+#endif
    findall = 1;
 
    for(i = 1; i < argc; ++i) {			/* Scan through arguments */

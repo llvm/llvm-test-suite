@@ -43,7 +43,11 @@ static const int TEST_SIZE   =   262144;
 static const int TEST_SIZE   =   131072;
 #endif
 #else
+#ifdef SMALL_PROBLEM_SIZE
+static const int TEST_SIZE   =  50000;
+#else
 static const int TEST_SIZE   =  2097152;
+#endif
 #endif
 
 //---------------------------------------------------------------------------

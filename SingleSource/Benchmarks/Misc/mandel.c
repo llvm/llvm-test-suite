@@ -6,7 +6,11 @@ int main() { return 0; }
 #else /* sparc */
 
 #define ESCAPE 2
+#ifdef SMALL_PROBLEM_SIZE
+#define IMAGE_SIZE 500
+#else
 #define IMAGE_SIZE 5000
+#endif
 #define START_X -2.0
 #define START_Y START_X
 #define MAX_ITER 10

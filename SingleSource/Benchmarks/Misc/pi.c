@@ -29,7 +29,11 @@ int main(int argc, char *argv[]) {
       yran = 5813.0;
       ymult = 1307.0;
       ymod = 5471.0;
+#ifdef SMALL_PROBLEM_SIZE
+      itot = 4000000;
+#else
       itot = 40000000;
+#endif
 
       for(j=1; j<=itot; j++) {
 /*

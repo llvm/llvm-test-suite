@@ -344,6 +344,10 @@ ifdef EXTRA_OPTIONS
 TARGET_FLAGS += $(EXTRA_OPTIONS)
 endif
 
+ifdef SMALL_PROBLEM_SIZE
+CPPFLAGS += -DSMALL_PROBLEM_SIZE
+endif
+
 #
 # Compile commands with libtool.
 #

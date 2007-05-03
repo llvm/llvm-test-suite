@@ -48,7 +48,12 @@ int **mmult(int rows, int cols, int **m1, int **m2, int **m3) {
 }
 
 int main(int argc, char *argv[]) {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 100000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 10000
+#else
+#define LENGTH 100000
+#endif
+    int i, n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
 	
     int **m1 = mkmatrix(SIZE, SIZE);
     int **m2 = mkmatrix(SIZE, SIZE);

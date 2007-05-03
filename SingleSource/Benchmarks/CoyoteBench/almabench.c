@@ -53,10 +53,18 @@ static const int TEST_LOOPS  =     4;
 static const int TEST_LOOPS  =     1;
 #endif
 #else
+#ifdef SMALL_PROBLEM_SIZE
+static const int TEST_LOOPS  =    1;
+#else
 static const int TEST_LOOPS  =    20;
 #endif
+#endif
 
+#ifdef SMALL_PROBLEM_SIZE
+static const int TEST_LENGTH = 3652;
+#else
 static const int TEST_LENGTH = 36525;
+#endif
 
 // sin and cos of j2000 mean obliquity (iau 1976)
 static const double sineps = 0.3977771559319137;

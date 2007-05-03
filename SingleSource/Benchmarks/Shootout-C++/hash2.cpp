@@ -16,7 +16,12 @@ struct eqstr {
 
 int
 main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 2000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 200
+#else
+#define LENGTH 2000
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     char buf[16];
     typedef hash_map<const char*, int, hash<const char*>, eqstr> HM;
     HM hash1, hash2;

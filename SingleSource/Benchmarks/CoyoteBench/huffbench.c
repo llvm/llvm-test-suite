@@ -71,8 +71,13 @@ static const int NUM_LOOPS =        2;
 static const int TEST_SIZE =  5000000;
 #endif
 #else
+#ifdef SMALL_PROBLEM_SIZE
+static const int NUM_LOOPS =        2;
+static const int TEST_SIZE =  5000000;
+#else
 static const int NUM_LOOPS =       30;
 static const int TEST_SIZE = 10000000;
+#endif
 #endif
 
 typedef unsigned long bits32;

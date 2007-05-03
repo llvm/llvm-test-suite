@@ -19,7 +19,12 @@ inline double gen_random(double max) {
 }
 
 int main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 400000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 4000000
+#else
+#define LENGTH 400000000
+#endif
+    int N = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     double result = 0;
     
     while (N--) {

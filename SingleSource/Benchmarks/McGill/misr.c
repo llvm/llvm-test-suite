@@ -80,7 +80,11 @@ int main(int argc,char *argv[])
 
         reg_len = num_vect = 10;
         prob = .25;
+#ifdef SMALL_PROBLEM_SIZE
+        num_times = 30000;
+#else
         num_times = 100000;
+#endif
 
 
 	if (argc > 6) strcpy(structure, argv[6]);

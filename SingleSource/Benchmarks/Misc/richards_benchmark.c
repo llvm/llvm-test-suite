@@ -21,9 +21,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef SMALL_PROBLEM_SIZE
+#define                Count           1000*1000
+#define                Qpktcountval    2326389
+#define                Holdcountval     930555
+#else
 #define                Count           10000*1000
 #define                Qpktcountval    23263894
 #define                Holdcountval     9305557
+#endif
 
 
 #define                TRUE            1

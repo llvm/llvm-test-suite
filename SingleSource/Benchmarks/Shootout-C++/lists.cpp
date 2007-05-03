@@ -46,7 +46,12 @@ size_t test_lists() {
 }
 
 int main(int argc, char* argv[]) {
-    size_t ITER = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): 3000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 300
+#else
+#define LENGTH 3000
+#endif
+    size_t ITER = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): LENGTH);
 
     size_t result = 0;
     while (ITER > 0) {

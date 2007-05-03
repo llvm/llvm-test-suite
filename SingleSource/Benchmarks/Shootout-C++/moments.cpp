@@ -66,7 +66,12 @@ mid);
 };
 
 int main(int argc, char**argv) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 5000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 500000
+#else
+#define LENGTH 5000000
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     vector<double> v;
     double d;
 

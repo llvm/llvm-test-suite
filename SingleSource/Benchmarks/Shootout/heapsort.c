@@ -56,7 +56,12 @@ heapsort(int n, double *ra) {
 
 int
 main(int argc, char *argv[]) {
-    int N = ((argc == 2) ? atoi(argv[1]) : 8000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 800000
+#else
+#define LENGTH 8000000
+#endif
+    int N = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     double *ary;
     int i;
     

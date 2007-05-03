@@ -15,7 +15,12 @@ unsigned long fib(unsigned long n) {
 }
 
 int main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 43);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 40
+#else
+#define LENGTH 43
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
 
     cout << fib(n) << endl;
     return(0);

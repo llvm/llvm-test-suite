@@ -8,7 +8,12 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    int n = ((argc == 2) ? atoi(argv[1]) : 46);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 30
+#else
+#define LENGTH 46
+#endif
+    int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     int a, b, c, d, e, f, x=0;
 	
     for (a=0; a<n; a++)

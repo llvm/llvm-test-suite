@@ -375,13 +375,21 @@ int main(void)
 #if 0
 	scanf("%d",&ncol);
 #else
+#ifdef SMALL_PROBLEM_SIZE
 	ncol = 7;
+#else
+        ncol = 7;
+#endif
 #endif
 	printf("Enter number of Rows    : ");
 #if 0
 	scanf("%d",&nrow);
 #else
-	nrow = 8;
+#ifdef SMALL_PROBLEM_SIZE
+	nrow = 7;
+#else
+        nrow = 8;
+#endif
 #endif
 	tree = make_play(1); /* create entire tree structure, not just the */
 	player = 0;          /* needed part for first move */

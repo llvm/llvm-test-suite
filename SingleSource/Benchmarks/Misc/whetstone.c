@@ -99,7 +99,11 @@ main(int argc, char *argv[])
 	float KIPS;
 	int continuous;
 
+#ifdef SMALL_PROBLEM_SIZE
+	loopstart = 2500;
+#else
 	loopstart = 100000;		/* see the note about LOOP below */
+#endif
 	continuous = 0;
 
 	II = 1;		/* start at the first arg (temp use of II here) */

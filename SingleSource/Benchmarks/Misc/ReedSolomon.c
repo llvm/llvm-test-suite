@@ -416,8 +416,14 @@ void rsenc_204(unsigned char* data_out, unsigned char* data_in)
 int main(void) {
   unsigned char rs_in[204], rs_out[204];
   int i, j, k;
-  
-  for (i=0; i<150000; ++i) {
+
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 15000
+#else
+#define LENGTH 150000
+#endif
+
+  for (i=0; i<LENGTH; ++i) {
     /* Generate random data */
     for (j=0; j<188; ++j) {
       rs_in[j] = (random() & 0xFF);

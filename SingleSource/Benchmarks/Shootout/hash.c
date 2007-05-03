@@ -9,7 +9,12 @@
 #include "simple_hash.h"
 
 int main(int argc, char *argv[]) {
-    int i, c=0, n = ((argc == 2) ? atoi(argv[1]) : 3500000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 350000
+#else
+#define LENGTH 3500000
+#endif
+    int i, c=0, n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     char buf[32];
 	
     struct ht_ht *ht = ht_create(n);
