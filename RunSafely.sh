@@ -11,17 +11,23 @@
 #           fourth argument specified, and outputs a <outfile>.time file which
 #           contains a timing of the program and the program's exit code.
 #          
-#           If the <exitok> (2nd) parameter is 0 then this script always
-#           returns 0, regardless of the actual exit of the <program>.
+#           If the <exitok> parameter is 0 then this script always returns 0,
+#           regardless of the actual exit of the <program>.
 #           If the <exitok> parameter is non-zero then this script returns
 #           the exit code of the <program>. If there is an error in getting
 #           the <program>'s exit code, this script returns 99.
 #
+#           If optional parameters -r <remote host> -l <remote user> are
+#           specified, it execute the program remotely using rsh.
+#
 # Syntax: 
 #
-#   RunSafely.sh <timeout> <exitok> <infile> <outfile> <program> <args...>
+#   RunSafely.sh [-r <rhost>] [-l <ruser>]
+#                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
+#     <rhost>   is the remote host to execute the program
+#     <ruser>   is the username on the remote host
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
@@ -35,6 +41,19 @@ if [ $# -lt 4 ]; then
 fi
 
 DIR=${0%%`basename $0`}
+
+RHOST=
+RUSER=`id -un`
+FLAG=$1
+if [ $1 = "-r" ]; then
+  RHOST=$2
+  shift 2
+fi
+if [ $1 = "-l" ]; then
+  RUSER=$2
+  shift 2
+fi
+
 ULIMIT=$1
 EXITOK=$2
 INFILE=$3
@@ -75,18 +94,31 @@ rm -f core core.*
 # we tell time to launch a shell which in turn executes $PROGRAM with the
 # necessary I/O redirection.
 #
+PWD=`pwd`
 COMMAND="$PROGRAM $*"
 if [ "$SYSTEM" = "Darwin" ]; then
-  COMMAND="${DIR}TimedExec.sh $ULIMIT $COMMAND"
+  COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 fi
 
-( time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
-  | awk -- '\
+if [ "x$RHOST" = x ] ; then
+  ( time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+    | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
 /^sys/    { cpu += $2; print; }
 !/^user/ && !/^sys/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+else
+  ( rsh -l $RUSER $RHOST "cd $PWD; time -p $COMMAND >$OUTFILE.remote 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+    | awk -- '\
+BEGIN     { cpu = 0.0; }
+/^user/   { cpu += $2; print; }
+/^sys/    { cpu += $2; print; }
+!/^user/ && !/^sys/  { print; }
+END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+cp $OUTFILE.remote $OUTFILE
+rm -f $OUTFILE.remote
+fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
 if [ -z "$exitval" ] ; then

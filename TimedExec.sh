@@ -4,11 +4,11 @@
 #
 # Synopsis: This script is a watchdog wrapper. It runs the specified program
 # but times out if it does not complete in the allocated time frame.
-# Syntax: ./TimedExec.sh <timeout> <program> <args...>
+# Syntax: ./TimedExec.sh <timeout> <dir> <program> <args...>
 #
 
-if [ $# -lt 2 ]; then
-    echo "./TimedExec.sh <timeout> <program> <args...>"
+if [ $# -lt 3 ]; then
+    echo "./TimedExec.sh <timeout> <dir> <program> <args...>"
     exit 1
 fi
 
@@ -18,11 +18,13 @@ if [ "$1" = "-p" ]; then
 fi
 
 TIMEOUT=$1
-shift
+DIR=$2
+shift 2
 
 if [ -z "$PARENT" ]; then
     # Start a watchdog process
     $0 -p $$ $TIMEOUT $* &
+    cd $DIR
     exec "$@"
 else
     # Sleep for a specified time then wake up to kill the parent process.

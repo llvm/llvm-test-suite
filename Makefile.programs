@@ -88,10 +88,18 @@ EXIT_OK := 1
 else
 EXIT_OK := 0
 endif
-ifndef GET_STABLE_NUMBERS
-RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT) $(EXIT_OK)
-else
+ifdef GET_STABLE_NUMBERS
 RUNSAFELY := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT) $(EXIT_OK)
+else
+ifdef REMOTE_HOST
+ifdef REMOTE_USER
+RUNSAFELY := $(PROGDIR)/RunSafely.sh -r $(REMOTE_HOST) -l $(REMOTE_USER) $(RUNTIMELIMIT) $(EXIT_OK)
+else
+RUNSAFELY := $(PROGDIR)/RunSafely.sh -r $(REMOTE_HOST) $(RUNTIMELIMIT) $(EXIT_OK)
+endif
+else
+RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT) $(EXIT_OK)
+endif
 endif
 
 # LLVMGCCLD - This sets up the command to use for linking test programs
@@ -229,6 +237,9 @@ endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
+ifeq ($(TARGET_ARCH),ARM)
+LLCBETAOPTION := -march=thumb
+endif
 
 print-llcbeta-option:
 	@echo $(LLCBETAOPTION)
@@ -300,6 +311,11 @@ Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
 LLCFLAGS += -enable-correct-eh-support
+endif
+
+# Pass target specific llc flags
+ifdef TARGET_LLCFLAGS
+LLCFLAGS += $(TARGET_LLCFLAGS)
 endif
 
 #
@@ -407,6 +423,15 @@ Output/%.out-cbe: Output/%.cbe
 # or else it will get false positives when it diff's the reference
 # output with the program's output.
 BUGPOINT_OPTIONS += -append-exit-code
+
+# Support remote execution
+ifdef REMOTE_HOST
+ifdef REMOTE_USER
+BUGPOINT_OPTIONS += -rsh-host=$(REMOTE_HOST) -rsh-user=$(REMOTE_USER)
+else
+BUGPOINT_OPTIONS += -rsh-host=$(REMOTE_HOST)
+endif
+endif
 
 # If a tolerance is set, pass it off to bugpoint
 ifdef FP_TOLERANCE
