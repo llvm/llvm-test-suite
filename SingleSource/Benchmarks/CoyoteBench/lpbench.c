@@ -78,9 +78,15 @@ static const int NM1 =  599; // N - 1
 static const int NP1 =  601; // N + 1
 #endif
 #else
+#ifdef SMALL_PROBLEM_SIZE
+static const int N   = 400;
+static const int NM1 = 399; // N - 1
+static const int NP1 = 401; // N + 1
+#else
 static const int N   = 2000;
 static const int NM1 = 1999; // N - 1
 static const int NP1 = 2001; // N + 1
+#endif
 #endif
 
 // benchmark code
