@@ -3,7 +3,11 @@
 
 #include "common.h"
 
+#ifdef SMALL_PROBLEM_SIZE
+#define INPUT_FILE PROJ_SRC_DIR "/Dist_demux_small"
+#else
 #define INPUT_FILE PROJ_SRC_DIR "/Dist_demux"
+#endif
 
 size_t read_dmatrix(dvarray* out, const char* filename);
 void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit_stream,
