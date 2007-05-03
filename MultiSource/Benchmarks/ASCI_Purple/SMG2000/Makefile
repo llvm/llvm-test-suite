@@ -11,7 +11,7 @@ LDFLAGS += -lm
 #include $(LLVM_OBJ_ROOT)/Makefile.config
 
 ifdef SMALL_PROBLEM_SIZE
-RUN_OPTIONS ="-n 40 20 40 -c 0.1 1.0 10.0"
+RUN_OPTIONS ="-n 30 15 30 -c 0.1 1.0 10.0"
 else
 RUN_OPTIONS ="-n 100 40 100 -c 0.1 1.0 10.0"
 endif
