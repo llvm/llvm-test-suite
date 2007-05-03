@@ -274,7 +274,11 @@ int main (int argc, char **argv)
     // usage (argv);
     // return 1;
     option = TH_FIB;
+#ifdef SMALL_PROBLEM_SIZE
+    N = 15000;
+#else
     N = 50000;
+#endif
   } else {
     N = atoi (argv[2]);
   }
