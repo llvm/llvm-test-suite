@@ -12,10 +12,14 @@ CPPFLAGS += -DSPEC_CPU2006
 # RUN_TYPE - Either ref, test, or train. May be specified on the command line.
 # Individual tests may override this to provide better input sizes.
 ifndef RUN_TYPE
-ifdef LARGE_PROBLEM_SIZE
-  RUN_TYPE := train
-else
+ifdef SMALL_PROBLEM_SIZE
   RUN_TYPE := test
+else
+  ifdef LARGE_PROBLEM_SIZE
+    RUN_TYPE := train
+  else
+    RUN_TYPE := test
+  endif
 endif
 endif
 
