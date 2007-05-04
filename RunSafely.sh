@@ -62,24 +62,25 @@ PROGRAM=$5
 shift 5
 SYSTEM=`uname -s`
 
+ULIMITCMD=""
 case $SYSTEM in
   CYGWIN*) 
     ;;
   Darwin*)
     # Disable core file emission, the script doesn't find it anyway because it is put 
     # into /cores.
-    ulimit -c 0
-    ulimit -t $ULIMIT
+    ULIMITCMD="$ULIMITCMD ulimit -c 0;"
+    ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
     # To prevent infinite loops which fill up the disk, specify a limit on size of
     # files being output by the tests. 10 MB should be enough for anybody. ;)
-    ulimit -f 10485760
+    ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
     ;;
   *)
-    ulimit -t $ULIMIT
-    ulimit -c unlimited
+    ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
+    ULIMITCMD="$ULIMITCMD ulimit -c unlimited;"
     # To prevent infinite loops which fill up the disk, specify a limit on size of
     # files being output by the tests. 10 MB should be enough for anybody. ;)
-    ulimit -f 10485760
+    ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
 esac
 rm -f core core.*
 
@@ -101,7 +102,7 @@ if [ "$SYSTEM" = "Darwin" ]; then
 fi
 
 if [ "x$RHOST" = x ] ; then
-  ( time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+  ( time -p sh -c "$ULIMITCMD $COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
@@ -109,7 +110,7 @@ BEGIN     { cpu = 0.0; }
 !/^user/ && !/^sys/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 else
-  ( rsh -l $RUSER $RHOST "cd $PWD; time -p $COMMAND >$OUTFILE.remote 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+  ( rsh -l $RUSER $RHOST "$ULIMITCMD cd $PWD; time -p $COMMAND >$OUTFILE.remote 2>&1 < $INFILE; echo exit \$?" ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
