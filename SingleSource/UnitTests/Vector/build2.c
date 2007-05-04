@@ -62,7 +62,13 @@ int main(int argc, char **argv) {
   v4f32 y = {0.0f, 0.0f, 0.0f, 0.0f};
   v4f32 z = {0.0f, 0.0f, 0.0f, 0.0f};
 
-  for (j = 0; j < 100; ++j) {
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 2
+#else
+#define LENGTH 100
+#endif
+
+  for (j = 0; j < LENGTH; ++j) {
     x = (v4f32){0.0f, 0.0f, 0.0f, 0.0f};
     y = (v4f32){0.0f, 0.0f, 0.0f, 0.0f};
     z = (v4f32){0.0f, 0.0f, 0.0f, 0.0f};
