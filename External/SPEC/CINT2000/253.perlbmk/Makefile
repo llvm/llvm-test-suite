@@ -8,8 +8,20 @@ include $(LEVEL)/External/SPEC/Makefile.spec.config
 
 CPPFLAGS += -DSPEC_CPU2000_LINUX_I386 -DSPEC_CPU2000_NEED_BOOL
 
+# Not sure why this is needed. 
+ifdef SMALL_PROBLEM_SIZE
+RUN_TYPE=test
+else
+ifdef LARGE_PROBLEM_SIZE
+RUN_TYPE=ref
+else
+RUN_TYPE=train
+endif
+endif
+
 ifeq ($(RUN_TYPE),test)
 RUN_OPTIONS     = test.pl
+STDIN_FILENAME  := test.in
 STDOUT_FILENAME := test.out
 else
 RUN_OPTIONS      = scrabbl.pl
