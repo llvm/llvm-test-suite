@@ -37,10 +37,10 @@ typedef char kc_cchar_t;
 typedef unsigned short kc_wchar_t;
 
 typedef std::string kc_cstring_t;
-typedef std::wstring kc_wstring_t;
 
 #ifdef KC_UNICODE
 #define kc_t(TEXT) L ## TEXT
+typedef std::wstring kc_wstring_t;
 typedef kc_wchar_t kc_char;
 typedef kc_wstring_t kc_string_t;
 
