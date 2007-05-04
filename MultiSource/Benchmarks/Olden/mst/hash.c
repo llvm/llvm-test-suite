@@ -5,9 +5,6 @@
 
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
-#ifdef __llvm__
-#define localmalloc malloc
-#else
 static int remaining = 0;
 static char *temp;
 
@@ -26,7 +23,6 @@ static char *localmalloc(int size)
   remaining -= size;
   return blah;
 }
-#endif
 
 #define localfree(sz)
 
