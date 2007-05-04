@@ -170,6 +170,10 @@ all:: $(BYTECODE)
 profile:: $(PROFOUTPUT)
 print-profile:: $(PRINTPROFOUTPUT)
 
+# JIT remote tests are not supported yet.
+ifdef REMOTE_HOST
+  DISABLE_JIT := 1
+endif
 
 ifdef RUN_GCC_ONLY
 DISABLE_DIFFS = 1
@@ -237,7 +241,7 @@ endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
-ifeq ($(TARGET_ARCH),ARM)
+ifeq ($(ARCH),ARM)
 LLCBETAOPTION := -march=thumb
 endif
 

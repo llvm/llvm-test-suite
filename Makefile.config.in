@@ -28,6 +28,34 @@ ifndef SourceDir
 SourceDir=$(PROJ_SRC_DIR)
 endif
 
+ifdef TARGET_ARCH
+ARCH := $(TARGET_ARCH)
+endif
+
+ifdef TARGET_CC
+CC := $(TARGET_CC)
+endif
+
+ifdef TARGET_CXX
+CXX := $(TARGET_CXX)
+endif
+
+ifdef TARGET_LLVMGCC
+LLVMGCC := $(TARGET_LLVMGCC)
+endif
+
+ifdef TARGET_LLVMGXX
+LLVMGXX := $(TARGET_LLVMGXX)
+endif
+
+ifdef TARGET_LLVMGCCDIR
+LLVMGCCDIR := $(TARGET_LLVMGCCDIR)
+endif
+
+ifdef TARGET_LLVMGCCLIBDIR
+LLVMGCCLIBDIR := $(TARGET_LLVMGCCLIBDIR)
+endif
+
 #
 # Provide variables specific to llvm-test
 #
