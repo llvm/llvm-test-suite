@@ -56,6 +56,10 @@ ifdef TARGET_LLVMGCCLIBDIR
 LLVMGCCLIBDIR := $(TARGET_LLVMGCCLIBDIR)
 endif
 
+ifeq ($(ARCH),THUMB)
+TARGET_FLAGS += -mthumb
+endif
+
 #
 # Provide variables specific to llvm-test
 #
