@@ -37,7 +37,9 @@ $TrimRepeatedPrefix = 1;
  ["#memref", sub { return AddColumns(@_,-1,-3,-4); }],
  ["#spill" , '([0-9]+).*Number of register spills'],
  ["#i-mov" , '([0-9]+).*Number of identity moves eliminated'],
- ["#peep"  , '([0-9]+).*Number of peephole optimization performed'],
  ["#tot-el", sub { return AddColumns(@_,-1,-2); }],
+ ["#pre", '([0-9]+).*Number of pre-indexed nodes created'],
+ ["#post", '([0-9]+).*Number of post-indexed nodes created'],
+ ["#indexed", sub { return AddColumns(@_,-1,-2); }],
  []
  );
