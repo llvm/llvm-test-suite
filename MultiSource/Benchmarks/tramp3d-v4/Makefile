@@ -4,7 +4,7 @@ PROG     = tramp3d-v4
 CPPFLAGS = -fno-exceptions
 LDFLAGS  = -lstdc++
 ifdef SMALL_PROBLEM_SIZE
-RUN_OPTIONS =  --cartvis 1.0 0.0 --rhomin 1e-8 -n 2
+RUN_OPTIONS =  --cartvis 1.0 0.0 --rhomin 1e-8 -n 4 --domain 32 32 32
 else
 RUN_OPTIONS =  --cartvis 1.0 0.0 --rhomin 1e-8 -n 25
 endif
