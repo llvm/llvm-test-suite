@@ -25,6 +25,15 @@ endif
 ifeq ($(ARCH),Sparc)
    CPPFLAGS += -DSUN_BSD
 endif
+ifeq ($(TARGET_ARCH),ARM)
+   CPPFLAGS += -DHAS_LONGLONG
+endif
+ifeq ($(OS),Darwin)
+   CPPFLAGS += -DUNIX -DLINUX
+endif
+ifeq ($(ENDIAN),little)
+   CPPFLAGS += -DLITTLE_ENDIAN_ARCH
+endif
 
 include ../../Makefile.spec2000
 
