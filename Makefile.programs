@@ -242,7 +242,11 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -march=thumb
+LLCBETAOPTION := --enable-tail-merge
+#-march=thumb
+endif
+ifeq ($(ARCH),THUMB)
+LLCBETAOPTION := --enable-tail-merge
 endif
 
 print-llcbeta-option:
