@@ -32,12 +32,7 @@ int main(int argc, char** argv)
 
   BitType i;
 
-  for (i = bitwidthof(BitType); i > 0; --i) {
-    if (bit_select(Y, i-1)) 
-      printf("1");
-    else
-      printf("0");
-  }
+  printBits(Y);
 
   printf("\n");
   return 0;
