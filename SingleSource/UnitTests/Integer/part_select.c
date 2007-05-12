@@ -17,10 +17,10 @@
 
 #ifdef ENABLE_LARGE_INTEGERS
 typedef uint256 BitType;
-const BitType X = 0xFEDCBA9876543210ULL;
+const BitType X = 0xAAAAAAAAAAAAAAAAULL;
 #else
 typedef uint47 BitType;
-const BitType X = 0xFEDCBA9876543210ULL;
+const BitType X = 0xAAAAAAAAAAAAAAAAULL;
 #endif
 
 int main(int argc, char** argv)
@@ -37,15 +37,26 @@ int main(int argc, char** argv)
   unsigned i, j;
 
   for (i = 0; i < bitwidthof(BitType); ++i) {
-    BitType left = rand() % bitwidthof(BitType);
-    BitType right = i;
-    printf("part_select(Y, %3u, %3u) = ", (unsigned)left, (unsigned)right);
-    BitType Z = part_select(Y, right, left );
+    BitType high = rand() % bitwidthof(BitType);
+    BitType low = i;
+    printf("part_select(Y, %3u, %3u) = ", (unsigned)low, (unsigned)high);
+    BitType Z = part_select(Y, low, high );
     printBits(Z);
     uint64_t val = Z;
-    printf(" (%lx)", val);
+    printf(" (%llx)", val);
     printf("\n");
   }
+
+  BitType Z = part_select(Y, 0, bitwidthof(Y)-1);
+  if (Z == Y)
+    printf(" True: ");
+  else
+    printf("False: ");
+  printBits(Z);
+  printf(" == ");
+  printBits(Y);
+  printf("\n");
+
 
   return 0;
 }
