@@ -33,11 +33,13 @@ typedef unsigned int __attribute__((bitwidth(36))) uint36;
 typedef unsigned int __attribute__((bitwidth(39))) uint39;
 typedef unsigned int __attribute__((bitwidth(47))) uint47;
 typedef unsigned int __attribute__((bitwidth(48))) uint48;
+typedef unsigned int __attribute__((bitwidth(54))) uint54;
 typedef unsigned int __attribute__((bitwidth(60))) uint60;
 typedef unsigned int __attribute__((bitwidth(63))) uint63;
 typedef unsigned int __attribute__((bitwidth(64))) uint64;
 typedef unsigned int __attribute__((bitwidth(65))) uint65;
 typedef unsigned int __attribute__((bitwidth(68))) uint68;
+typedef unsigned int __attribute__((bitwidth(69))) uint69;
 typedef unsigned int __attribute__((bitwidth(128))) uint128;
 
 typedef int __attribute__((bitwidth(9)))  int9;
@@ -46,6 +48,7 @@ typedef int __attribute__((bitwidth(21))) int21;
 typedef int __attribute__((bitwidth(24))) int24;
 typedef int __attribute__((bitwidth(32))) int32;
 typedef int __attribute__((bitwidth(33))) int33;
+typedef int __attribute__((bitwidth(54))) int54;
 typedef int __attribute__((bitwidth(68))) int68;
 typedef int __attribute__((bitwidth(69))) int69;
 
@@ -93,10 +96,10 @@ typedef unsigned int __attribute__((bitwidth(256))) int500;
   Result; \
 })
 
-#define reduce(how, what) { \
+#define reduce(how, what) ({ \
   typeof(what) what2 = what; \
-  __bulitin_bit_reduce_ ## how(&what2); \
-}
+  __builtin_bit_ ## how ## _reduce(&what2); \
+})
 
 #define printBits(val) { \
   int bit = bitwidthof(val); \
