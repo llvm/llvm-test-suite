@@ -22,22 +22,18 @@ typedef int __attribute__ ((bitwidth(31))) int31;
 typedef union {short i; int9 i9; int31 i31;} myUnion;
 typedef struct myStruct {int9* ptr; short i;} myStruct;
 
-myStruct test(myUnion u)
+myStruct test(myUnion *u)
 {
   myStruct x;
   int9* ptr;
   
-  u.i31 = -1;
-  u.i = 0x0;
-  ptr = &(u.i9);
+  u->i31 = -1;
+  u->i = 0x0;
+  ptr = &(u->i9);
   *ptr= -1;
 
-  printf("u.i = %hd\n", u.i);
-  printf("u.i9 = %hd\n", u.i9);
-  printf("u.i31 = %d\n", u.i31);
- 
   x.ptr = ptr;
-  x.i = u.i;
+  x.i = u->i;
 
   return x;   
 }
@@ -46,7 +42,11 @@ static myUnion uu;
 
 int main()
 {
-  myStruct s = test(uu);
+  myStruct s = test(&uu);
+  printf("uu.i  = %hd\n", uu.i);
+  printf("uu.i9 = %d\n", (int)uu.i9);
+  printf("uu.i31= %d\n", uu.i31);
+ 
   if(s.i == 0x0)
     printf("error: s.i=%x\n", s.i);
   return 0;
