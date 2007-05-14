@@ -17,37 +17,49 @@ typedef enum bool{false=0, true=1} bool;
 const uint10 bnd = 1023;
 
 
-int500 x = 0xffffffffULL;
+int500 x = -1;
 int169 y = -0xabcdefdeULL;
 
 int my_test()
 {
+  printf("Initially:\n");
+  printf("int500 x = ");
+  printBits(x);
+  printf("\n");
+  printf("int169 y = ");
+  printBits(y);
+  printf("\n");
+
   uint10 i = 0;
   int169 result;
   int32 l_result;
   long long rem;
   long long rem2;
-  {
-    ;
-    for ( ; ; ) {
-      bool ssdm_tmp_1 = (i < bnd);
-      if (!ssdm_tmp_1) break;
-      if (i % 2 == 0)
-        x = x + 1;
-      else 
-        y = y - x;
-    
-      ++i;
-    }
+  for ( i = 0 ; i < bnd ; ++i) {
+    if (i % 2 == 0)
+      x = x + 1;
+    else 
+      y = y - x;
   }
+
+  printf("\nAfter modification:\n");
+  printf("int500 x = ");
+  printBits(x);
+  printf("\n");
+  printf("int169 y = ");
+  printBits(y);
+  printf("\n");
+
+  printf("\nresult = x * y = ");
   result = x*y;
+  printBits(result);
+  printf("\n");
+
   l_result = result % 0x37015; 
-  rem = l_result;
-  printf("rem = %lld\n", rem);
+  printf("\nresult %% 0x37015 = %d\n", l_result);
 
   l_result = result % -198721;
-  rem2 = l_result;
-  printf("rem2 = %lld\n", rem2);
+  printf("\nresult %% -198721 = %d\n", l_result);
   return 0;
 }
 
