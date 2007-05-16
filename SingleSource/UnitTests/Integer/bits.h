@@ -124,3 +124,15 @@ typedef int __attribute__((bitwidth(256))) int500;
   __builtin_bit_from_string(&Result, str, 16); \
   Result; \
 })
+
+#define bitsFromOctalString(str,bits) ({ \
+  int __attribute__((bitwidth(bits))) Result; \
+  __builtin_bit_from_string(&Result, str, 8); \
+  Result; \
+})
+
+#define bitsFromBinaryString(str,bits) ({ \
+  int __attribute__((bitwidth(bits))) Result; \
+  __builtin_bit_from_string(&Result, str, 2); \
+  Result; \
+})
