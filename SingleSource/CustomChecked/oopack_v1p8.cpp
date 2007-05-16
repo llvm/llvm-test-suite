@@ -1,4 +1,5 @@
-// RUN: %s Max=15000 Matrix=200 Complex=20000 Iterator=20000 | grep DONE
+// ARGS: Max=15000 Matrix=200 Complex=20000 Iterator=20000
+// GREP: DONE
 
 //=============================================================================
 //

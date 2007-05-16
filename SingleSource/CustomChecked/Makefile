@@ -36,24 +36,35 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-lli): \
 Output/%.run-lli: Output/%.llvm.bc $(LLI)
-	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$(LLI) $(LLI_OPTS) $<" $@
+	-ARGS=`grep ARGS: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*ARGS://'` ; \
+	GREP=`grep GREP: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*GREP: *//'` ; \
+	$(LLI) $(LLI_OPTS) $< $$ARGS | grep "$$GREP" > $@ ; \
+	if test "$$?" -ne 0 ; then \
+	  echo
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-jit): \
 Output/%.run-jit: Output/%.llvm.bc $(LLI)
-	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$(LLI) $(JIT_OPTS) $<" $@
+	-ARGS=`grep ARGS: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*ARGS://'` ; \
+	GREP=`grep GREP: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*GREP: *//'` ; \
+	$(LLI) $(JIT_OPTS) $< $$ARGS | grep "$$GREP" > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-llc): \
 Output/%.run-llc: Output/%.llc
-	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+	-ARGS=`grep ARGS: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*ARGS://'` ; \
+	GREP=`grep GREP: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*GREP: *//'` ; \
+	$< $(RUN_OPTIONS) $$ARGS | grep "$$GREP" > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-llc-ls): \
 Output/%.run-llc-ls: Output/%.llc-ls
-	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
+	-ARGS=`grep ARGS: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*ARGS://'` ; \
+	GREP=`grep GREP: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*GREP: *//'` ; \
+	$< $(RUN_OPTIONS) $$ARGS | grep "$$GREP" > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.run-cbe): \
 Output/%.run-cbe: Output/%.cbe
-	-$(TESTRUNR) $(SourceDir)/$(filter $*.%, $(Source)) "$< $(RUN_OPTIONS)" $@
-
+	-ARGS=`grep ARGS: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*ARGS://'` ; \
+	GREP=`grep GREP: $(SourceDir)/$(filter $*.%, $(Source)) | sed 's/.*GREP: *//'` ; \
+	$< $(RUN_OPTIONS) $$ARGS | grep "$$GREP" > $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
 Output/%.exe-lli: Output/%.run-lli

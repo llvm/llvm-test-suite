@@ -1,4 +1,4 @@
-// RUN: %s | grep 'Abstraction Penalty'
+// GREP: Abstraction Penalty
 /* KAI's version of Stepanov Benchmark -- Version 1.2
 
    Version 1.2 -- removed some special code for GNU systems that
