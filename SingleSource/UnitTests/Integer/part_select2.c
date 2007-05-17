@@ -27,9 +27,9 @@ int main()
   printf("\n r  ="); // Wrong!
   printBits(r);
 
-  printf("\n r1 ="); // Wrong!
+  printf("\n r1 ="); // Zero
   printBits(r1);
   printf("\n");
 
-  return 0;
+  return r;
 }
