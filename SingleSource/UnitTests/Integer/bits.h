@@ -44,8 +44,12 @@ typedef unsigned int __attribute__((bitwidth(128))) uint128;
 typedef unsigned int __attribute__((bitwidth(250))) uint250;
 typedef unsigned int __attribute__((bitwidth(256))) uint256;
 typedef unsigned int __attribute__((bitwidth(500))) uint500;
+typedef unsigned int __attribute__((bitwidth(512))) uint512;
+typedef unsigned int __attribute__((bitwidth(768))) uint768;
+typedef unsigned int __attribute__((bitwidth(1000))) uint1000;
 typedef unsigned int __attribute__((bitwidth(1024))) uint1024;
 
+typedef int __attribute__((bitwidth(3))) int3;
 typedef int __attribute__((bitwidth(9)))  int9;
 typedef int __attribute__((bitwidth(10))) int10;
 typedef int __attribute__((bitwidth(21))) int21;
@@ -56,10 +60,15 @@ typedef int __attribute__((bitwidth(54))) int54;
 typedef int __attribute__((bitwidth(63))) int63;
 typedef int __attribute__((bitwidth(68))) int68;
 typedef int __attribute__((bitwidth(69))) int69;
+typedef int __attribute__((bitwidth(128))) int128;
 typedef int __attribute__((bitwidth(169))) int169;
 typedef int __attribute__((bitwidth(250))) int250;
 typedef int __attribute__((bitwidth(256))) int256;
-typedef int __attribute__((bitwidth(256))) int500;
+typedef int __attribute__((bitwidth(500))) int500;
+typedef int __attribute__((bitwidth(512))) int512;
+typedef int __attribute__((bitwidth(768))) int768;
+typedef int __attribute__((bitwidth(1000))) int1000;
+typedef int __attribute__((bitwidth(1024))) int1024;
 
 #define bitwidthof(TORV) (__bitwidthof__(typeof(TORV)))
 
