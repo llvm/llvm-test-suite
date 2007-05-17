@@ -23,7 +23,7 @@ int main(int argc, char** argv)
   printBits(X);
   printf("\n");
   for (i = bitwidthof(BitType); i > 0; --i) {
-    X = part_set(X, 1, i-1, bitwidthof(BitType)-1);
+    X = part_set(X, 1, i-1, i-1);
     printf("0b0");
     printBits(X);
     printf("\n");
