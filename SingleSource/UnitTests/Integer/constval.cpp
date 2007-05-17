@@ -29,9 +29,15 @@ void my_test()
   int69 a = bitsFromOctalString("01234567012345670123456", 69);
   printf( "\na = " );
   printBits(a);
+
   int68 b = bitsFromBinaryString("10101010101010101010101010101010101010101010101010101010101010101010", 68);
   printf( "\nb = " );
   printBits(b);
+
+  int169 c = bitsFromString("-1234567890123456789012345678901234567890", 169);
+  printf( "\nc = " );
+  printBits(c);
+
   printf("\n");
 }
 
