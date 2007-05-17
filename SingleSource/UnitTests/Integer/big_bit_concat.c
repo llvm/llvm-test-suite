@@ -27,8 +27,7 @@ int main(int argc, char** argv)
 
   printf("Attempting %d bit_concat operations\n", count);
   for (i = 0; i < count; i++) {
-    Y = 0; 
-    X = 0;
+    Y = X = 0; 
     for (j = 0; j < bitwidthof(uint500); j++) {
       X <<= 1;
       X += (rand() % 2 == 0 ? 0 : 1);
