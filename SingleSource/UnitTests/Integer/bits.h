@@ -43,6 +43,8 @@ typedef unsigned int __attribute__((bitwidth(69))) uint69;
 typedef unsigned int __attribute__((bitwidth(128))) uint128;
 typedef unsigned int __attribute__((bitwidth(250))) uint250;
 typedef unsigned int __attribute__((bitwidth(256))) uint256;
+typedef unsigned int __attribute__((bitwidth(500))) uint500;
+typedef unsigned int __attribute__((bitwidth(1024))) uint1024;
 
 typedef int __attribute__((bitwidth(9)))  int9;
 typedef int __attribute__((bitwidth(10))) int10;
