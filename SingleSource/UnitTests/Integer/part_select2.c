@@ -19,7 +19,7 @@ int main()
 
   r0 = part_select(X0, 0, 18);
   r = part_select(X, 0, 18);
-  r1 = part_select(X1, 0, 18);
+  r1 = part_select(X1, 0, 7);
 
   printf("\n r0 =");
   printBits(r0);
