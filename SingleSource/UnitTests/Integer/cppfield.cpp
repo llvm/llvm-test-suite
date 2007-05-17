@@ -18,18 +18,18 @@ typedef unsigned int __attribute__ ((bitwidth(8))) int8;
 
 class bitFieldStruct {
   public:
-  int i;
-  unsigned char c:7;
-  int s:17;
-  char c2;
+    int i;
+    unsigned char c:7;
+    int s:17;
+    char c2;
 };
 
 class bitAccurateStruct {
   public:
-  int32 i;
-  int7 c;
-  int17 s;
-  int8 c2;
+    int32 i;
+    int7 c;
+    int17 s;
+    int8 c2;
 };
 
 int main()
