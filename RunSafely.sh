@@ -35,6 +35,7 @@
 #     <program> is the path to the program to run
 #     <args...> are the arguments to pass to the program.
 #
+
 if [ $# -lt 4 ]; then
   echo "./RunSafely.sh <timeout> <exitok> <infile> <outfile> <program> <args...>"
   exit 1
@@ -102,7 +103,7 @@ if [ "$SYSTEM" = "Darwin" ]; then
 fi
 
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD"; time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+  ( eval $ULIMITCMD time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
