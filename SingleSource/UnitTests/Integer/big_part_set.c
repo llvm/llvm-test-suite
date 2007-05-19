@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "bits.h"
 
-typedef uint1000 BitType;
+typedef uint169 BitType;
 BitType X = 0;
 
 int main(int argc, char** argv)
