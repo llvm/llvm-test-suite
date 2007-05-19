@@ -1,10 +1,6 @@
 
 #include "bits.h"
 
-typedef  int __attribute__ ((bitwidth(128))) int128;
-typedef  int __attribute__ ((bitwidth(8))) int8;
-// typedef unsigned int __attribute__ ((bitwidth(19))) uint19;
-
 int main()
 {
   int128 X = 0xde7ed959bcfdb200ULL;
