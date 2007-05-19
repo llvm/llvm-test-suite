@@ -289,9 +289,9 @@ int main()
 						   /*  THIS PRINTOUT!  */
 						   /********************/
    printf("     1   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[2]* /* stabilize output */  0.0000001,
-          T[4] * /* stabilize output */  0.0000001);
+          sc* /* stabilize output */  1e-30,
+          T[2]* /* stabilize output */  1e-30,
+          T[4] * /* stabilize output */  1e-30);
 
    m = n;
 
@@ -350,9 +350,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     2   %13.4lf  %10.4lf  %10.4lf\n",
-          pierr* /* stabilize output */  0.00000001,
-          (T[6]-T[5])* /* stabilize output */  0.00000001,
-          T[8]* /* stabilize output */  0.00000001);
+          pierr* /* stabilize output */  1e-30,
+          (T[6]-T[5])* /* stabilize output */  1e-30,
+          T[8]* /* stabilize output */  1e-30);
 
 /*******************************************************/
 /* Module 3.  Calculate integral of sin(x) from 0.0 to */
@@ -392,9 +392,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     3   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.000000001,
-          T[9]* /* stabilize output */  0.000000001,
-          T[11]* /* stabilize output */  0.000000001);
+          sc* /* stabilize output */  1e-30,
+          T[9]* /* stabilize output */  1e-30,
+          T[11]* /* stabilize output */  1e-30);
 
 /************************************************************/
 /* Module 4.  Calculate Integral of cos(x) from 0.0 to PI/3 */
@@ -436,9 +436,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     4   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[12]* /* stabilize output */ 0.0000001 ,
-          T[14]* /* stabilize output */ 0.0000001 );
+          sc* /* stabilize output */  1e-30,
+          T[12]* /* stabilize output */ 1e-30 ,
+          T[14]* /* stabilize output */ 1e-30 );
 
 /************************************************************/
 /* Module 5.  Calculate Integral of tan(x) from 0.0 to PI/3 */
@@ -480,9 +480,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     5   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[15]* /* stabilize output */ 0.0000001 ,
-          T[17]* /* stabilize output */ 0.0000001 );
+          sc* /* stabilize output */  1e-30,
+          T[15]* /* stabilize output */ 1e-30 ,
+          T[17]* /* stabilize output */ 1e-30 );
 
 /************************************************************/
 /* Module 6.  Calculate Integral of sin(x)*cos(x) from 0.0  */
@@ -524,9 +524,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     6   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[18]* /* stabilize output */ 0.0000001 ,
-          T[20]* /* stabilize output */  0.0000001);
+          sc* /* stabilize output */  1e-30,
+          T[18]* /* stabilize output */ 1e-30 ,
+          T[20]* /* stabilize output */  1e-30);
 
 
 /*******************************************************/
@@ -573,9 +573,9 @@ int main()
 						  /*  THIS PRINTOUT!  */
 						  /********************/
    printf("     7   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[21]* /* stabilize output */ 0.0000001 ,
-          T[23]* /* stabilize output */ 0.0000001 );
+          sc* /* stabilize output */  1e-30,
+          T[21]* /* stabilize output */ 1e-30 ,
+          T[23]* /* stabilize output */ 1e-30 );
 
 /************************************************************/
 /* Module 8.  Calculate Integral of sin(x)*cos(x)*cos(x)    */
@@ -618,9 +618,9 @@ int main()
 						  /*   THIS PRINTOUT!  */
 						  /*********************/
    printf("     8   %13.4lf  %10.4lf  %10.4lf\n",
-          sc* /* stabilize output */  0.0000001,
-          T[24]* /* stabilize output */ 0.000001 ,
-          T[26]* /* stabilize output */ 0.000001 );
+          sc* /* stabilize output */  1e-30,
+          T[24]* /* stabilize output */ 1e-30 ,
+          T[26]* /* stabilize output */ 1e-30 );
 
 /**************************************************/   
 /* MFLOPS(1) output. This is the same weighting   */
@@ -656,11 +656,11 @@ int main()
 
    printf("\n");
    printf("   Iterations      = %10ld\n",m);
-   printf("   NullTime (usec) = %10.4lf\n",nulltime* /* stabilize */ 0.0000001);
-   printf("   MFLOPS(1)       = %10.4lf\n",T[28]* /* stabilize */ 0.0000001);
-   printf("   MFLOPS(2)       = %10.4lf\n",T[30]* /* stabilize */ 0.0000001);
-   printf("   MFLOPS(3)       = %10.4lf\n",T[32]* /* stabilize */ 0.0000001);
-   printf("   MFLOPS(4)       = %10.4lf\n\n",T[34]* /* stabilize */ 0.0000001);
+   printf("   NullTime (usec) = %10.4lf\n",nulltime* /* stabilize */ 1e-30);
+   printf("   MFLOPS(1)       = %10.4lf\n",T[28]* /* stabilize */ 1e-30);
+   printf("   MFLOPS(2)       = %10.4lf\n",T[30]* /* stabilize */ 1e-30);
+   printf("   MFLOPS(3)       = %10.4lf\n",T[32]* /* stabilize */ 1e-30);
+   printf("   MFLOPS(4)       = %10.4lf\n\n",T[34]* /* stabilize */ 1e-30);
    return 0;
 }
 
