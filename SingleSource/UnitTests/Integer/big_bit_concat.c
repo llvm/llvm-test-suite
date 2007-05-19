@@ -17,18 +17,18 @@
 
 int main(int argc, char** argv)
 {
-  uint256 X = 0;
+  uint169 X = 0;
   uint69 Y = 0;
-  uint500 Z = 0;
+  uint256 Z = 0;
   int i, j;
-  int count = (argc > 1 ? atoi(argv[1]) % 128 : 128);
+  int count = (argc > 1 ? atoi(argv[1]) % 65 : 64);
 
   srand(count);
 
   printf("Attempting %d bit_concat operations\n", count);
   for (i = 0; i < count; i++) {
     Y = X = 0; 
-    for (j = 0; j < bitwidthof(uint500); j++) {
+    for (j = 0; j < bitwidthof(uint169); j++) {
       X <<= 1;
       X += (rand() % 2 == 0 ? 0 : 1);
     }
