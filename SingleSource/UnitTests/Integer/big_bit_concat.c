@@ -17,9 +17,9 @@
 
 int main(int argc, char** argv)
 {
-  uint500 X = 0;
+  uint256 X = 0;
   uint69 Y = 0;
-  uint1024 Z = 0;
+  uint500 Z = 0;
   int i, j;
   int count = (argc > 1 ? atoi(argv[1]) % 128 : 128);
 
