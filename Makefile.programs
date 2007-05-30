@@ -235,18 +235,17 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-tail-merge
-#-regalloc=local -fast
+LLCBETAOPTION := -regalloc=local -fast
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := --enable-tail-merge
+LLCBETAOPTION := -enable-arm-if-conversion
 #-march=thumb
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := --enable-tail-merge
+LLCBETAOPTION := --enable-thumb-reg-scavenging
 endif
 
 print-llcbeta-option:
