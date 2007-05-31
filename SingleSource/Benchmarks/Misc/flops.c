@@ -258,8 +258,11 @@ int main()
    if ( n == NLimit ) break;
    /* printf(" %10ld  %12.5lf\n",n,sa); */
    }
-
+#ifdef SMALL_PROBLEM_SIZE
+   scale = 1;
+#else
    scale = 0.015895;
+#endif
    T[1]  = scale;
 
 /****************************************/
