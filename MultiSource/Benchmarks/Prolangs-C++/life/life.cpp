@@ -5,7 +5,7 @@ const int N=40, STATES=4;			// size of square board
 const int DRAB=3;
 const int DFOX=8;
 #ifdef SMALL_PROBLEM_SIZE
-const int CYCLES=1000
+const int CYCLES=1000;
 #else
 const int CYCLES=10000;
 #endif
