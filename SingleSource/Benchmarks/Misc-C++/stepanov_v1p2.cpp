@@ -192,7 +192,11 @@ Number accumulate(Iterator first, Iterator last, Number result) {
   return result;
 }
 
+#ifdef SMALL_PROBLEM_SIZE
+int iterations = 10000;
+#else
 int iterations = 250000;
+#endif
 #define SIZE 2000
 
 int current_test = 0;
