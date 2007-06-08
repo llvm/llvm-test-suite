@@ -41,7 +41,7 @@ private:
 int
 main(int argc, char *argv[]) {
 #ifdef SMALL_PROBLEM_SIZE
-#define LENGTH 7000000
+#define LENGTH 1000000
 #else
 #define LENGTH 70000000
 #endif

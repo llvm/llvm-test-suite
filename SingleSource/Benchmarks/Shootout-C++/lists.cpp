@@ -9,7 +9,11 @@
 
 using namespace std;
 
+#ifdef SMALL_PROBLEM_SIZE
+const size_t SIZE = 1000;
+#else
 const size_t SIZE = 10000;
+#endif
 
 template <class _ForwardIterator, class _Tp>
 void 
