@@ -256,7 +256,7 @@ print-llcbeta-option:
 # standard compilation optimizations.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
-	-$(LOPT) -std-compile-opts $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
+	-$(LOPT) -std-compile-opts -time-passes -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
