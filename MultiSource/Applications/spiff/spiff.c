@@ -38,6 +38,12 @@ static int _Y_vflag = 0;	/* use visual mode */
 */
 static int _Y_flags;
 
+#ifdef SMALL_PROBLEM_SIZE
+#define SPIFF_ITER 1000
+#else
+#define SPIFF_ITER 30000
+#endif
+
 int
 main(argc,argv)
 int argc;
@@ -107,16 +113,19 @@ char *argv[];
 	if (-1 == max_d)
 		max_d = K_gettmax(0) + K_gettmax(1);
 
-	if (_Y_eflag)
-	{
+	for(i=0;i<=SPIFF_ITER;i++)
+        {
+	  if (_Y_eflag)
+	  {
 		edit_end = Q_do_exact(K_gettmax(0),K_gettmax(1),
 					max_d,_Y_flags);
-	}
-	else
-	{
+	  }
+	  else
+	  {
 		edit_end = G_do_miller(K_gettmax(0), K_gettmax(1),
 				     max_d,_Y_flags);
-	}
+	  }
+        }
 
 	if (E_NULL != edit_end)
 	{
