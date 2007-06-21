@@ -33,10 +33,10 @@ EXTRA_LLI_OPTS = $(TIMEOPT)
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
 Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LOPT)
 	@echo > $@
-	@-if test -f Output/$@.info; then \
+	@-if test -f Output/$*.linked.bc.info; then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
+	  grep "Total Execution Time" Output/$*.linked.bc.info >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
 	  wc -c $< >> $@;\
