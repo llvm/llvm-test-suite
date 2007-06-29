@@ -1,9 +1,0 @@
-*.d
-Debug
-DebugGTK
-Release
-ReleaseGTK
-*.ncb
-*.plg
-*.opt
-*.dll
