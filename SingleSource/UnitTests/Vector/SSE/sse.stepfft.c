@@ -156,11 +156,15 @@ int n, mj;
 float a[][2],b[][2],c[][2],d[][2],w[][2],sign;
 {
    int j,k,jc,jw,l,lj,mj2,mseg;
-   float rp,up,wr[4],wu[4];
+   float rp,up,wra[7],wua[7];
    __m128 xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
+   float *wr = wra, *wu = wua;
 
    mj2 = 2*mj;
    lj  = n/mj2;
+
+   wr += (4 - ((unsigned int) wr >> 2)) & 0x03; // align wr
+   wu += (4 - ((unsigned int) wu >> 2)) & 0x03; // align wu
 
    for(j=0; j<lj; j++){
       jw  = j*mj; jc  = j*mj2;

@@ -30,7 +30,8 @@ int isamax0(int n, float *x)
   float bbig,ebig,bres,*xp;
   int eres,i,ibbig,iebig,align,nsegs,mb,nn;
   __m128 offset4,V0,V1,V2,V3,V6,V7;
-  float xbig[8],indx[8];
+  float xbiga[11],indxa[11];
+  float *xbig = xbiga, *indx = indxa;
 // n < NS done in scalar mode
   if(n < NS){
      iebig = 0;
@@ -63,7 +64,7 @@ int isamax0(int n, float *x)
      if(fabsf(x[1]) > bbig){
         bbig  = fabsf(x[1]); ibbig = 1;
      }
-  } else if(align == 1){    // bres = 1 case
+  } else if(align == 3){    // bres = 1 case
      bbig = fabsf(x[0]); ibbig = 0;
      bres = 1.0; nn = n - 1;
   } else {                  // bres = 0 case
@@ -99,6 +100,8 @@ int isamax0(int n, float *x)
      V7 = _mm_max_ps(V7,V3);
   }
 // Now finish up: segment maxima are in V0, indices in V7
+  xbig += (4 - ((unsigned int) xbig >> 2)) & 0x03; // align xbig
+  indx += (4 - ((unsigned int) indx >> 2)) & 0x03; // align indx
   _mm_store_ps(xbig,V0);
   _mm_store_ps(indx,V7);
   if(eres>0){
@@ -112,7 +115,7 @@ int isamax0(int n, float *x)
   for(i=0;i<4+eres;i++){
      if(xbig[i] > ebig){
         ebig = xbig[i];
-        iebig = (int) indx[i];
+        iebig = (int) (indx[i]+bres);
      }
   }
   return(iebig);
