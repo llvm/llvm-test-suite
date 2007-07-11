@@ -1,4 +1,7 @@
 #include "custom.h"
+#ifdef __arm__
+#error "Temporarily disabled!"
+#endif
 double spot_control ;
 int spotPenalty ;
 int spotXhash ;
