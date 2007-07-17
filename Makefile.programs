@@ -109,9 +109,7 @@ endif
 # the LINK_WITH_LLVMGCC_LIBS variable is set, then the link is done that
 # way. Unfortunately, this can't help JIT because it is always linked with
 # the libraries of lli.
-ifndef LLVMGCCLD
 LLVMGCCLD := $(CC)
-endif
 ifdef LINK_WITH_LLVMGCC_LIBS
 #LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib/debug -L$(LLVMGCCDIR)/lib
 LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib
@@ -237,7 +235,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -regalloc=bigblock -fast
+LLCBETAOPTION := -disable-fp-elim
+#-regalloc=bigblock -fast
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
