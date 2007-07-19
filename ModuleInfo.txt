@@ -1,2 +1,2 @@
-DepModule: llvm llvm-gcc
-BuildTarget: build-for-llvm-top
+DepModule: llvm llvm-gcc-4.0
+BuildTarget: ./build-for-llvm-top.sh
