@@ -5,12 +5,12 @@ STDERR_FILENAME = cook_log.err
 FP_ABSTOLERANCE := 0.005
 LINK_WITH_LLVMGCC_LIBS := 1
 
-# Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
-CPPFLAGS = -include errno.h -Wno-deprecated -Wno-non-template-friend -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
+CPPFLAGS = -include errno.h -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
 
 include $(LEVEL)/Makefile.config
 
-CFLAGS += -fno-exceptions
+# Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
+CFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend 
 
 ifeq ($(ARCH),PowerPC)
  CPPFLAGS += -DFMAX_IS_DOUBLE
