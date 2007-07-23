@@ -30,8 +30,8 @@ int isamax0(int n, float *x)
   float bbig,ebig,bres,*xp;
   int eres,i,ibbig,iebig,align,nsegs,mb,nn;
   __m128 offset4,V0,V1,V2,V3,V6,V7;
-  float xbiga[11],indxa[11];
-  float *xbig = xbiga, *indx = indxa;
+  float xbig[8] __attribute__ ((aligned (16)));
+  float indx[8] __attribute__ ((aligned (16)));
 // n < NS done in scalar mode
   if(n < NS){
      iebig = 0;
@@ -100,8 +100,6 @@ int isamax0(int n, float *x)
      V7 = _mm_max_ps(V7,V3);
   }
 // Now finish up: segment maxima are in V0, indices in V7
-  xbig += (4 - ((unsigned int) xbig >> 2)) & 0x03; // align xbig
-  indx += (4 - ((unsigned int) indx >> 2)) & 0x03; // align indx
   _mm_store_ps(xbig,V0);
   _mm_store_ps(indx,V7);
   if(eres>0){

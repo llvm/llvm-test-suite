@@ -94,8 +94,9 @@ float x[][2],y[][2],w[][2],sign;
    int jb, jc, jw, k, k2, lj, m, j, mj, mj2, pass, tgle;
    float (*a)[2],(*b)[2],(*c)[2],(*d)[2];
    float (*aa)[2],(*bb)[2],(*cb)[2],(*dd)[2];
-   float rp,up,wra[7],wua[7];
-   float *wr = wra, *wu = wua;
+   float rp,up;
+   float wr[4] __attribute__ ((aligned (16)));
+   float wu[4] __attribute__ ((aligned (16)));
    __m128 V0,V1,V2,V3,V4,V5,V6,V7;
    __m128 V8,V9,V10,V11,V12,V13,V14,V15;
 
@@ -108,8 +109,6 @@ float x[][2],y[][2],w[][2],sign;
    mj   = 1;
    mj2  = 2;
    lj   = n/2;
-   wr += (4 - ((unsigned int) wr >> 2)) & 0x03; // align wr
-   wu += (4 - ((unsigned int) wu >> 2)) & 0x03; // align wu
 // first pass thru data: x -> y
    a = (void *)&x[0][0];
    b = (void *)&x[n/2][0];
