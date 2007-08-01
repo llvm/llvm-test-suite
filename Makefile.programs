@@ -237,8 +237,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -disable-fp-elim
-#-regalloc=bigblock -fast
+LLCBETAOPTION := -regalloc=local -fast
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
