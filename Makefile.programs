@@ -102,21 +102,6 @@ RUNSAFELY := $(PROGDIR)/RunSafely.sh $(RUNTIMELIMIT) $(EXIT_OK)
 endif
 endif
 
-# LLVMGCCLD - This sets up the command to use for linking test programs
-# that were generated with llvm-gcc. Usually $(CC) is sufficient but, 
-# depending on libstdc++ and libgcc.a usage, it may be necessary to ensure
-# that the link is done against llvm-gcc's version of those libraries. If
-# the LINK_WITH_LLVMGCC_LIBS variable is set, then the link is done that
-# way. Unfortunately, this can't help JIT because it is always linked with
-# the libraries of lli.
-ifndef LLVMGCCLD
-LLVMGCCLD := $(CC)
-endif
-ifdef LINK_WITH_LLVMGCC_LIBS
-#LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib/debug -L$(LLVMGCCDIR)/lib
-LLVMGCCLD := $(CC) -L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib
-endif
-
 ifndef STDIN_FILENAME
 STDIN_FILENAME := /dev/null
 endif
@@ -272,7 +257,7 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LLVM_LDDPROG)
-	-$(LLVMLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -lc $(LIBS) -o Output/$*.llvm
+	-$(LLVMLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
@@ -280,7 +265,7 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LLVMLDPROG)
-	-$(LLVMLD) $(STATS) $< -lc $(LIBS) -o Output/$*.llvm
+	-$(LLVMLD) $(STATS) $< $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
@@ -288,20 +273,20 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
 Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
 Output/%.noopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
 
 
 $(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm.bc): \
 Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
+	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm): \
 Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $< -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
+	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
@@ -319,8 +304,8 @@ Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
-LLCFLAGS += -enable-correct-eh-support
-LLVMGCCLD := $(CXX)
+LLCFLAGS += -enable-eh
+LLVMLD_FLAGS += -disable-inlining
 endif
 
 # Pass target specific llc flags
@@ -335,9 +320,14 @@ $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -march=c $< -o $@ -f
 
+ifdef REQUIRES_EH_SUPPORT
+MORE_LDFLAGS=-L$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) -L$(LLVMGCCDIR)/lib -lstdc++
+endif
+
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(LLVMGCCLD) $< $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -fno-inline $(TARGET_FLAGS) -o $@
+	-$(CC) $< -o $@ $(LDFLAGS) $(MORE_LDFLAGS) $(CFLAGS) \
+	  -fno-strict-aliasing -O2 -fno-inline $(TARGET_FLAGS)
 
 #
 # Compile a linked program to machine code with LLC.
@@ -363,13 +353,13 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(LLVMGCCLD) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
-	  $(TARGET_FLAGS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
+	  $(TARGET_FLAGS) $(LDFLAGS) $(MORE_LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(LLVMGCCLD) $(CFLAGS) $< $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
-	  $(TARGET_FLAGS) $(LDFLAGS) -o $@
+	-$(CC) $(CFLAGS) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) \
+	  $(TARGET_FLAGS) $(LDFLAGS) $(MORE_LDFLAGS)
 
 
 #
@@ -387,7 +377,7 @@ JIT_OPTS = -force-interpreter=false --disable-core-files $(EXTRA_LLI_OPTS)
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
-JIT_OPTS += -enable-correct-eh-support
+JIT_OPTS += -enable-eh
 endif
 
 native: $(PROGRAMS_TO_TEST:%=Output/%.native)
