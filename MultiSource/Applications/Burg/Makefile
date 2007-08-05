@@ -4,7 +4,7 @@ include $(LEVEL)/Makefile.common
 
 PROG     = burg
 CPPFLAGS = -DDEBUG
-LDFLAGS  = 
+LDFLAGS  = -lstdc++
 
 ExtraSource := y.tab.c
 

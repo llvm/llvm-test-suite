@@ -10,5 +10,5 @@ SEED := $(shell date +%j)
 # the same results regardless of whether you make clean or not.
 RUN_OPTIONS := 31415926
 
-include $(LEVEL)/Makefile.config
+LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc
