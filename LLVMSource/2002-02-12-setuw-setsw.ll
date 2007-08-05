@@ -1,15 +1,14 @@
-; The sparc back-end is generating set-unsigned (setuw) for -2, when it
-; should be using setsw.  
+; ModuleID = '2002-02-12-setuw-setsw.ll'
 
-implementation
+define i32 @main(i32 %argc, i8** %argv) {
+	%T1 = bitcast i32 2 to i32		; <i32> [#uses=1]
+	%tmp = add i32 %T1, -2		; <i32> [#uses=1]
+	%cond = icmp eq i32 %tmp, 0		; <i1> [#uses=1]
+	br i1 %cond, label %Ok, label %Fail
 
-int %main(int %argc, sbyte * * %argv) {
-	%T1 = cast int 2 to uint
-	%tmp = add uint %T1, 4294967294  ; == -2
-	%cond = seteq uint %tmp, 0
-	br bool %cond, label %Ok, label %Fail
-Ok:
-	ret int 0
-Fail:
-	ret int 1
+Ok:		; preds = %0
+	ret i32 0
+
+Fail:		; preds = %0
+	ret i32 1
 }
