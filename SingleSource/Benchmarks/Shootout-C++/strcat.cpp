@@ -9,7 +9,12 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    int i, n = ((argc == 2) ? atoi(argv[1]) : 5000000);
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 1000000
+#else
+#define LENGTH 5000000
+#endif
+    int i, n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     string str;
     size_t capacity = 31;
     str.reserve(capacity); // as per C-string
