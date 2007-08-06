@@ -23,6 +23,9 @@ PROJ_INSTALL_ROOT := @prefix@
 # Include LLVM's configuration Makefile.
 include $(LLVM_OBJ_ROOT)/Makefile.config
 
+# Ignore the LIBS set by $(LLVM_OBJ_ROOT)/Makefile.config
+LIBS :=
+
 #Set SourceDir for backwards compatbility.
 ifndef SourceDir
 SourceDir=$(PROJ_SRC_DIR)
