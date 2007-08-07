@@ -49,7 +49,7 @@ main(argc,argv)
 int argc;
 char *argv[];
 {
-	E_edit edit_end;
+	E_edit edit_end = E_NULL;
 	char *filename[2];
 
 	int max_d; 	/* max number of differences allowed */
@@ -115,6 +115,9 @@ char *argv[];
 
 	for(i=0;i<=SPIFF_ITER;i++)
         {
+          if (edit_end != E_NULL)
+            free(edit_end);
+
 	  if (_Y_eflag)
 	  {
 		edit_end = Q_do_exact(K_gettmax(0),K_gettmax(1),
