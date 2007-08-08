@@ -151,8 +151,11 @@ int main(int argc, char *argv[])
 	int quit = 0;
 	
 	int mode = 1;
-	
-	int level = 4;
+#ifdef SMALL_PROBLEM_SIZE
+        int level = 3;
+#else
+        int level = 4;
+#endif
 	int time = 12;
 	
   int llvm_index;

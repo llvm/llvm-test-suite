@@ -158,13 +158,13 @@ void HexxagonMoveList::scoreAllMoves(HexxagonBoard board, int depth, void (*call
 {
 	int t = getTime();
 
-	for(int i = 1; (i < depth) && (getTime() - t <= maxtime); i++)
+	for(int i = 1; (i < depth)/* && (getTime() - t <= maxtime) */; i++)
 	{
 		int best  = -SCR_INFINITY;
 		int alpha = -SCR_INFINITY;
 		int beta  = SCR_INFINITY;
 
-		for(int j = 0; (j < getNrMoves()) && (getTime() - t <= maxtime) && (best < beta); j++)
+		for(int j = 0; (j < getNrMoves()) && /* (getTime() - t <= maxtime) && */ (best < beta); j++)
 		{
 			if(best > alpha)
 				alpha = best;
