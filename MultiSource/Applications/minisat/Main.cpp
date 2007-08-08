@@ -23,7 +23,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <errno.h>
 
 #include <signal.h>
-#include <zlib.h>
+#include <stdio.h>
 
 #include "Solver.h"
 
@@ -84,7 +84,7 @@ static inline uint64_t memUsed() { return 0; }
 #define CHUNK_LIMIT 1048576
 
 class StreamBuffer {
-    gzFile  in;
+    FILE   *in;
     char    buf[CHUNK_LIMIT];
     int     pos;
     int     size;
@@ -92,10 +92,10 @@ class StreamBuffer {
     void assureLookahead() {
         if (pos >= size) {
             pos  = 0;
-            size = gzread(in, buf, sizeof(buf)); } }
+            size = read(fileno(in), buf, sizeof(buf)); } }
 
 public:
-    StreamBuffer(gzFile i) : in(i), pos(0), size(0) {
+    StreamBuffer(FILE *i) : in(i), pos(0), size(0) {
         assureLookahead(); }
 
     int  operator *  () { return (pos >= size) ? EOF : buf[pos]; }
@@ -177,7 +177,7 @@ static void parse_DIMACS_main(B& in, Solver& S) {
 
 // Inserts problem into solver.
 //
-static void parse_DIMACS(gzFile input_stream, Solver& S) {
+static void parse_DIMACS(FILE *input_stream, Solver& S) {
     StreamBuffer in(input_stream);
     parse_DIMACS_main(in, S); }
 
@@ -300,7 +300,7 @@ int main(int argc, char** argv)
     if (argc == 1)
         reportf("Reading from standard input... Use '-h' or '--help' for help.\n");
 
-    gzFile in = (argc == 1) ? gzdopen(0, "rb") : gzopen(argv[1], "rb");
+    FILE *in = (argc == 1) ? stdin : fopen(argv[1], "rb");
     if (in == NULL)
         reportf("ERROR! Could not open file: %s\n", argc == 1 ? "<stdin>" : argv[1]), exit(1);
 
@@ -308,7 +308,7 @@ int main(int argc, char** argv)
     reportf("|                                                                             |\n");
 
     parse_DIMACS(in, S);
-    gzclose(in);
+    fclose(in);
     FILE* res = (argc >= 3) ? fopen(argv[2], "wb") : NULL;
 
     if (!S.simplify()){
