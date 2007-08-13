@@ -39,7 +39,7 @@ static int _Y_vflag = 0;	/* use visual mode */
 static int _Y_flags;
 
 #ifdef SMALL_PROBLEM_SIZE
-#define SPIFF_ITER 1000
+#define SPIFF_ITER 700
 #else
 #define SPIFF_ITER 30000
 #endif
@@ -49,7 +49,7 @@ main(argc,argv)
 int argc;
 char *argv[];
 {
-	E_edit edit_end = E_NULL;
+	E_edit edit_end;
 	char *filename[2];
 
 	int max_d; 	/* max number of differences allowed */
@@ -115,9 +115,6 @@ char *argv[];
 
 	for(i=0;i<=SPIFF_ITER;i++)
         {
-          if (edit_end != E_NULL)
-            free(edit_end);
-
 	  if (_Y_eflag)
 	  {
 		edit_end = Q_do_exact(K_gettmax(0),K_gettmax(1),
