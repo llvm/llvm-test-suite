@@ -7,7 +7,7 @@ union Array {
 
 union Array TheArray;
 
-void main() {
+int main() {
   int i;
   v4sf sum = { 0, 0, 0, 0};
   FV sumFV;
@@ -19,4 +19,5 @@ void main() {
 
   sumFV.V = sum;
   printFV(&sumFV);
+  return 0;
 }
