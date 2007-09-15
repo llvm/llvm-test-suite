@@ -161,6 +161,13 @@ Output/%.bugpoint-jit-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	    $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-cbe): \
+Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	    $(LBUGPOINT) ../$*.llvm.bc -cbe-bug $(BUGPOINT_OPTIONS) \
+	    $(BUGPOINT_ARGS)
+	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
+
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
 
