@@ -2,7 +2,7 @@
 #include <math.h>
 #include <float.h>
 #include <altivec.h>
-#define N 1027
+#define N 1028
 main()
 {
 /* 
@@ -12,7 +12,7 @@ main()
   Oxford Univ. Press, 2004
                                            wpp 5/8/2002 
 */
-  float x[N];
+  float x[N] __attribute__((aligned(16)));
   float xb;
   int err,flag,i,im,k,ki,kl,ib,n0,n;
   int isamax(int,float *);
@@ -43,6 +43,7 @@ main()
      kl   = 4;                    // for n > 1, 3 steps of increase in n
   }
   if(flag==0) printf(" All n tests pass\n");
+  return 0;
 }
 #define NS 12
 int isamax(int n, float *x)
@@ -55,7 +56,9 @@ int isamax(int n, float *x)
   vector float V7 = (vector float) (0.0,1.0,2.0,3.0);
   const vector float incr_4 = (vector float) (4.0,4.0,4.0,4.0);
   const vector float minus0 = (vector float) (-0.0,-0.0,-0.0,-0.0);
-  float big,xbig[4],indx[4];
+  float big;
+  float xbig[4]  __attribute__((aligned(16)));
+  float indx[4]  __attribute__((aligned(16)));
 // n < NS done in scalar mode
   if(n < NS){
      ibig = 0;
