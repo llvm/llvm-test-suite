@@ -11,4 +11,5 @@ void bar() {}
 int main() {
   if ((foo(1) || foo(2)))
     bar();
+  return 0;
 }

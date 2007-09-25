@@ -2,5 +2,6 @@
 #include <fstream>
 int main() {
   std::ofstream X;
+  return 0;
 }
 
