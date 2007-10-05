@@ -40,7 +40,6 @@
 #include <assert.h>
 
 #include <sys/time.h>
-#include <sys/resource.h>
 
 #include "Fheap.h"
 #include "graph.h"
@@ -51,12 +50,15 @@
 #define DEFAULT_N_VERTEX	10
 #define DEFAULT_N_EDGE		9
 
+#ifdef __MINGW32__
+#define srandom(x) srand(x)
+#endif
+
 /*
  * Local functions.
  */
 void      PrintMST(Vertices * graph);
 Vertices * MST(Vertices * graph);
-void      PrintRUsage(struct rusage * rUBuf1, struct rusage * rUBuf2);
 
 /*
  * Local variables.
@@ -69,8 +71,6 @@ main(int argc, char *argv[])
   int            nVertex;
   int            nEdge;
   Vertices *  graph;
-  struct rusage * rUBuf1;
-  struct rusage * rUBuf2;
 
   nVertex = DEFAULT_N_VERTEX;
   nEdge = DEFAULT_N_EDGE;
@@ -88,11 +88,6 @@ main(int argc, char *argv[])
     }
   }
 
-  rUBuf1 = (struct rusage *)malloc(sizeof(struct rusage));
-  assert(rUBuf1 != NULL);
-  rUBuf2 = (struct rusage *)malloc(sizeof(struct rusage));
-  assert(rUBuf1 != NULL);
-
   if(debug)
   {
     printf("Generating a connected graph ... ");
@@ -105,11 +100,7 @@ main(int argc, char *argv[])
     printf("done\nFinding the mininmum spanning tree ... ");
   }
 
-  getrusage(RUSAGE_SELF, rUBuf1);
-
   graph = MST(graph);
-
-  getrusage(RUSAGE_SELF, rUBuf2);
 
   if(debug)
   {
@@ -123,7 +114,6 @@ main(int argc, char *argv[])
   {
     printf("Time spent in finding the mininum spanning tree:\n");
   }
-  PrintRUsage(rUBuf1, rUBuf2);
 #ifdef PLUS_STATS
   PrintDerefStats(stderr);
   PrintHeapSize(stderr);
@@ -200,34 +190,3 @@ PrintMST(Vertices * graph)
 
 }
 
-void
-PrintRUsage(struct rusage * rUBuf1, struct rusage * rUBuf2)
-{
-  long sec;
-  long usec;
-
-  sec = (*rUBuf2).ru_utime.tv_sec - (*rUBuf1).ru_utime.tv_sec;
-  usec = (*rUBuf2).ru_utime.tv_usec - (*rUBuf1).ru_utime.tv_usec;
-  if(usec < 0)
-  {
-    sec--;
-    usec += 1000000;
-  }
-  assert(sec >= 0);
-  assert(usec >= 0);
-
-  /*fprintf(stderr, "User time: %d%06d usec\n", sec, usec); */
-
-  sec = (*rUBuf2).ru_stime.tv_sec - (*rUBuf1).ru_stime.tv_sec;
-  usec = (*rUBuf2).ru_stime.tv_usec - (*rUBuf1).ru_stime.tv_usec;
-
-  if(usec < 0)
-  {
-    sec--;
-    usec += 1000000;
-  }
-  assert(sec >= 0);
-  assert(usec >= 0);
-
-  /*fprintf(stderr, "Sys time:  %d%06d usec\n", sec, usec); */
-}

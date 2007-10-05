@@ -36,6 +36,10 @@
 #define TRUE 1
 #define FALSE 0
 
+#ifdef __MINGW32__
+#define random() rand()
+#endif
+
 #define GET_WEIGHT	(random() + 1) % MAX_WEIGHT
 
 /*
