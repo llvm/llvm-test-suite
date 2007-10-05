@@ -19,7 +19,9 @@
  */
 
 #include <time.h>
+#ifndef __MINGW32__
 #include <sys/times.h>
+#endif
 #ifdef TIMER_USE_MPI
 #include "mpi.h"
 #endif
