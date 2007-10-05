@@ -423,6 +423,10 @@ int main(void) {
 #define LENGTH 150000
 #endif
 
+#ifdef __MINGW32__
+#define random() rand()
+#endif
+
   for (i=0; i<LENGTH; ++i) {
     /* Generate random data */
     for (j=0; j<188; ++j) {

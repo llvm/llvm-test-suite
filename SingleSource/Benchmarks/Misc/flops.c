@@ -978,7 +978,7 @@ double p[];
 /* Another UNIX timer using gettimeofday(). */
 /* However, getrusage() is preferred.       */
 /********************************************/
-#ifdef GTODay
+#if defined(GTODay) && !defined(__MINGW32__)
 #include <sys/time.h>
 
 struct timeval tnow;
