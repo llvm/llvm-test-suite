@@ -12,16 +12,14 @@
 
 #include "TransGame.h"
 #include <sys/time.h>
-#include <sys/resource.h>
  
 #define BOOKPLY 0  // full-width search up to this depth
 #define REPORTPLY -1
 
 uint64 millisecs()
 {
-  struct rusage rusage;
-  getrusage(RUSAGE_SELF,&rusage);
-  return rusage.ru_utime.tv_sec * 1000 + rusage.ru_utime.tv_usec / 1000;
+  static int64 Time = 0;
+  return Time++; // No time count for LLVM
 }
 
 int history[2][SIZE1];

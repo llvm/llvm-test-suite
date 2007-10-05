@@ -42,7 +42,8 @@
 #define TOP (BOTTOM << HEIGHT)
 
 #include <sys/types.h>
-typedef u_int64_t uint64;
+#include <stdint.h>
+typedef uint64_t uint64;
 typedef int64_t int64;
 
 uint64 color[2];  // black and white bitboard
