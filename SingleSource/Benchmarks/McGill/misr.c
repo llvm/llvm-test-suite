@@ -40,6 +40,11 @@ prob described above.
 #define TRUE 1
 #define FALSE 0
 
+#ifdef __MINGW32__
+# define seed48(x) srand(x)
+# define lrand48() ((rand() << 16) ^ (rand()))
+#endif
+
 int reg_len;
 
 typedef struct cells {
@@ -217,7 +222,7 @@ int simulate(int iterations, misr_type *present, double prob, char *structure)
 	misr_type *temp;
 	int different, savef_free, savefaulty;
 	int rem, quot, h, i, j;
-	long rand;
+	long randv;
 	double randprob;
 
 	different = FALSE;
@@ -231,7 +236,7 @@ int simulate(int iterations, misr_type *present, double prob, char *structure)
 		savefaulty = 0;
 		for (i=0; i<quot; i++)
 		{
-			rand = lrand48();
+			randv = lrand48();
 			for (j=0; j<31; j++)
 			{
 				if (structure[i*31 + j] == '1')
@@ -239,15 +244,15 @@ int simulate(int iterations, misr_type *present, double prob, char *structure)
 					savef_free += temp->f_free;
 					savefaulty += temp->faulty;
 				}
-				temp->f_free = ((temp->next->f_free + rand) & BIN_MASK);
+				temp->f_free = ((temp->next->f_free + randv) & BIN_MASK);
 				randprob = ((double)(lrand48() % 1000) / 1000);
-				if (prob > randprob) rand ^= BIN_MASK;
-				temp->faulty = ((temp->next->faulty + rand) & BIN_MASK);
+				if (prob > randprob) randv ^= BIN_MASK;
+				temp->faulty = ((temp->next->faulty + randv) & BIN_MASK);
 				temp = temp->next;
-				rand >>= 1;
+				randv >>= 1;
 			}
 		}
-		rand = lrand48();
+		randv = lrand48();
 		for (j=0; j<rem; j++)
 		{
                         if (structure[quot*31 + j] == '1')
@@ -255,22 +260,23 @@ int simulate(int iterations, misr_type *present, double prob, char *structure)
                                 savef_free += temp->f_free;
                                 savefaulty += temp->faulty;
                         }
-                        temp->f_free = ((temp->next->f_free + rand) & BIN_MASK);                                             
-                        randprob = ((double)(lrand48() % 1000) / 1000);                                if (prob > randprob) rand ^= BIN_MASK;
-                        temp->faulty = ((temp->next->faulty + rand) & BIN_MASK);
+                        temp->f_free = ((temp->next->f_free + randv) & BIN_MASK);                                             
+                        randprob = ((double)(lrand48() % 1000) / 1000);                                
+			if (prob > randprob) randv ^= BIN_MASK;
+                        temp->faulty = ((temp->next->faulty + randv) & BIN_MASK);
                         temp = temp->next;
-                        rand >>= 1;
+                        randv >>= 1;
                 }
-		rand = lrand48();
+		randv = lrand48();
 		if (structure[reg_len - 1] == '1')
 		{
 			savef_free += temp->f_free;
 			savefaulty += temp->faulty;
 		}
-		temp->f_free = ((savef_free + rand) & BIN_MASK);
+		temp->f_free = ((savef_free + randv) & BIN_MASK);
 		randprob = ((double)(lrand48() % 10000) / 10000);
-		if (prob > randprob) rand ^= BIN_MASK;
-		temp->faulty = ((savefaulty + rand) & BIN_MASK);
+		if (prob > randprob) randv ^= BIN_MASK;
+		temp->faulty = ((savefaulty + randv) & BIN_MASK);
 
 		temp = present;
 	}
