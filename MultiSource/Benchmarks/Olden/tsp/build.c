@@ -17,6 +17,10 @@
 
 #ifdef TORONTO
 #include <math.h>
+#ifdef __MINGW32__
+#define drand48() (1.0 * rand() / RAND_MAX)
+#define srand48(x) srand(x)
+#endif
 #else
 extern double drand48();
 extern void srand48(long seedval);

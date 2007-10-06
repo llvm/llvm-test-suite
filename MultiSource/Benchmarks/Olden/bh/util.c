@@ -43,24 +43,6 @@ double xrand(double xl, double xh, double r)
 
 
 /*
- * CPUTIME: compute CPU time in min.
- */
-
-#include <sys/types.h>
-#include <sys/times.h>
-
-#  define HZ  60.0
-
-double cputime()
-{
-    struct tms buffer;
-
-    if (times(&buffer) == -1)
-	error("times() call failed\n");
-    return (buffer.tms_utime / (60.0 * HZ));
-}
-
-/*
  * ERROR: scream and die quickly.
  */
 

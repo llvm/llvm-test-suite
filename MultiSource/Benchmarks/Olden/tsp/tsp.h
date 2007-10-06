@@ -7,7 +7,6 @@ extern int NumNodes, NDim;
 
 extern int flag;
 
-double drand48(void);
 int atoi(const char *);
 int dealwithargs(int argc, char *argv[]);
 

@@ -38,11 +38,7 @@ http://www.gnu.org/copyleft/gpl.html
 #include <sys/param.h>
 #endif
 
-#ifdef WIN32
-void
-#else
 int
-#endif
 main(int argc, char** argv)
 {
 	printf(
@@ -233,8 +229,6 @@ main(int argc, char** argv)
 		}
 	}
 	tokstr.close();
-#ifndef WIN32
 	return 0;
-#endif
 }
 

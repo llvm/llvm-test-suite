@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <sys/resource.h>
 #include <unistd.h>
 
 /* 64 bit type needed */

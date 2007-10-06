@@ -88,6 +88,10 @@ programs.
 #include   <string.h>
 #define long int
 
+#ifdef __MINGW32__
+#undef UNIX
+#endif
+
 /* ckalloc - allocate space; check for success */
 #if 1
 #define ckalloc(x) malloc(x)
