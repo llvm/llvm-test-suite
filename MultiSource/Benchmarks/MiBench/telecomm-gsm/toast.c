@@ -339,7 +339,9 @@ static void update_own P0()
 #ifdef HAS_FCHOWN
 	(void)fchown(fileno(out), instat.st_uid, instat.st_gid);
 #else 
+#ifndef __MINGW32__
 	(void)chown(outname, instat.st_uid, instat.st_gid);
+#endif	
 #endif /* HAS_FCHOWN */
 }
 
