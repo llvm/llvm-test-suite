@@ -338,8 +338,10 @@ static void update_own P0()
 	if (!instat.st_nlink) return; /* couldn't stat in */
 #ifdef HAS_FCHOWN
 	(void)fchown(fileno(out), instat.st_uid, instat.st_gid);
-#else 
+#else
+#ifndef __MINGW32__
 	(void)chown(outname, instat.st_uid, instat.st_gid);
+#endif	
 #endif /* HAS_FCHOWN */
 }
 
