@@ -221,7 +221,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -regalloc=local -fast
+LLCBETAOPTION := -tailcallopt
+#-regalloc=local -fast
 #-disable-rematerialization
 #-disable-fp-elim
 #-regalloc=bigblock -fast
