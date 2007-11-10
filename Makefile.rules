@@ -326,7 +326,9 @@ CPPFLAGS += -D__STDC_LIMIT_MACROS
 CompileOptimizeOpts := -O3 -DNDEBUG -finline-functions
 
 ifeq ($(OS),Darwin)
+ifndef TARGET_FLAGS
 TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
+endif
 endif
 
 ifeq ($(OS),Linux)
