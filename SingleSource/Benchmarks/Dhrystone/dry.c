@@ -91,7 +91,7 @@ void free(void*);
 #ifdef SMALL_PROBLEM_SIZE
 #define LOOPS	2000000
 #else
-#define LOOPS	20000000
+#define LOOPS	100000000
 #endif
 
 /* Compiler dependent options */
