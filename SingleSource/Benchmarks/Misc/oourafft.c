@@ -1,8 +1,10 @@
 #include <math.h>
-#include <malloc.h>
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef __APPLE__ // memalign
+#include <malloc.h>
+#endif
 
 /* random number generator, 0 <= RND < 1 */
 #define RND(p) ((*(p) = (*(p) * 7141 + 54773) % 259200) * (1.0 / 259200.0))
@@ -35,14 +37,25 @@ int main()
   t_overhead = t_end - t_start;
 
   /* Prepare aux data */
+#ifndef __APPLE__  /* Darwin always 16-byte aligns malloc data */
   ip = memalign(16, sqrt(N)*sizeof(int));
   w  = memalign(16, 2*N*5/4*sizeof(double));
+#else
+  ip = malloc(sqrt(N)*sizeof(int));
+  w  = malloc(2*N*5/4*sizeof(double));
+#endif
   makewt(N >> 1, ip, w);
   
   /* Allocate buffers */
+#ifndef __APPLE__  /* Darwin always 16-byte aligns malloc data */
   ref = memalign(16, 2*N*sizeof(double));
   cmp = memalign(16, 2*N*sizeof(double));
   src = memalign(16, 2*N*sizeof(double));
+#else
+  ref = malloc(2*N*sizeof(double));
+  cmp = malloc(2*N*sizeof(double));
+  src = malloc(2*N*sizeof(double));
+#endif
   
   /* Perform sanity check of FFT */
   putdata(0, 2*N - 1, ref);
