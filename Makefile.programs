@@ -300,12 +300,12 @@ endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 Output/opt-pass-args: $(LOPT) Output/.dir
 	-$(LLVMAS) < /dev/null -o - | \
 	  $(LOPT) $(EXTRA_LOPT_OPTIONS) -std-compile-opts -disable-output -debug-pass=Arguments 2>&1 | \
-	  sed 's/Pass Arguments: //' | sed 's/-emitbytecode//' > $@
+	  sed 's/Pass Arguments: //' > $@
 
 Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
 	$(LLVMAS) < /dev/null > Output/llvm-ld.test.bc
 	$(LLVMLD) Output/llvm-ld.test.bc -o Output/llvm-ld.test-out -debug-pass=Arguments > $@.1 2>&1
-	sed 's/Pass Arguments: //' < $@.1 | sed 's/-emitbytecode//' > $@
+	sed 's/Pass Arguments: //' < $@.1 > $@
 
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
