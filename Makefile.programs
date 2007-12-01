@@ -209,8 +209,9 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION :=  --enable-tail-merge
-# --enable-ppc-preinc
+LLCBETAOPTION := -split-intervals-at-bb
+#--enable-tail-merge
+#--enable-ppc-preinc
 #-regalloc=local -fast
 endif
 ifeq ($(ARCH),Alpha)
@@ -233,7 +234,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -disable-rematerialization
+LLCBETAOPTION := -split-intervals-at-bb
+#-disable-rematerialization
 #-enable-arm-if-conversion
 #-march=thumb
 endif
