@@ -209,7 +209,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -split-intervals-at-bb
+LLCBETAOPTION := -new-coalescer-heuristic=true
 #--enable-tail-merge
 #--enable-ppc-preinc
 #-regalloc=local -fast
@@ -222,8 +222,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -split-intervals-at-bb
-#-new-coalescer-heuristic=true
+LLCBETAOPTION := -new-coalescer-heuristic=true
 #-tailcallopt
 #-regalloc=local -fast
 #-disable-rematerialization
@@ -234,9 +233,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -split-intervals-at-bb
+LLCBETAOPTION := -new-coalescer-heuristic=true
 #-disable-rematerialization
-#-enable-arm-if-conversion
 #-march=thumb
 endif
 ifeq ($(ARCH),THUMB)
