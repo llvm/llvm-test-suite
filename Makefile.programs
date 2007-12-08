@@ -209,7 +209,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -new-coalescer-heuristic=true
+LLCBETAOPTION := -machine-licm
 #--enable-tail-merge
 #--enable-ppc-preinc
 #-regalloc=local -fast
