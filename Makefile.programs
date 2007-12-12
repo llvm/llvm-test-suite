@@ -233,7 +233,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -new-coalescer-heuristic=true
+LLCBETAOPTION := -optimize-ext-uses
+#-new-coalescer-heuristic=true
 #-disable-rematerialization
 #-march=thumb
 endif
