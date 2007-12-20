@@ -310,8 +310,17 @@ Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
+# PPC and X86 support DWARF exceptions, for everything else, default to SJLJ
+ifeq ($(ARCH),PowerPC)
+LLCFLAGS += -enable-eh
+else
+ifeq ($(ARCH),x86)
+LLCFLAGS += -enable-eh
+else
 LLCFLAGS += -enable-correct-eh-support
 LLVMLD_FLAGS += -disable-inlining
+endif
+endif
 endif
 
 # Pass target specific llc flags
