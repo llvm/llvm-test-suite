@@ -1,7 +1,7 @@
 //===--- big_part_set.c --- Test The part_set builtin ---------------------===//
 //
-// This file was developed by Sheng Zhou and is distributed under the 
-// University of Illinois Open Source License. See LICENSE.TXT for details.
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
 //

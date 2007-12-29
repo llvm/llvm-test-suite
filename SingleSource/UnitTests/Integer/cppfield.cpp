@@ -1,7 +1,7 @@
 //===-- cppfield.cpp - Test C++ Fields With Bit Accurate Types ------------===//
 //
-// This file was developed by Guoling Han and is distributed under the 
-// University of Illinois Open Source License. See LICENSE.TXT for details.
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
 // This is a test for conversion between different int types.

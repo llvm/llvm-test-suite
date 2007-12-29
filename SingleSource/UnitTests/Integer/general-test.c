@@ -1,7 +1,7 @@
 //===--- general-test.c - General Bit Accurate Type Test ------------------===//
 //
-// This file was developed by Reid Spencer and is distributed under the 
-// the University of Illinois Open Source License. See LICENSE.TXT for 
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
 // details.
 //
 //===----------------------------------------------------------------------===//
