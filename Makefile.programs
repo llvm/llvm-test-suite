@@ -222,7 +222,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -new-coalescer-heuristic=true
+LLCBETAOPTION := -machine-licm
+#-new-coalescer-heuristic=true
 #-tailcallopt
 #-regalloc=local -fast
 #-disable-rematerialization
