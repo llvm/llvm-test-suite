@@ -7,10 +7,6 @@
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
-# Do not pass -Wall to compile commands...
-LCCFLAGS  := -O3
-LCXXFLAGS := -O3
-
 CPPFLAGS += -I $(SPEC_BENCH_DIR)/src/
 SPEC_SANDBOX := $(PROGDIR)/External/SPEC/Sandbox.sh
 

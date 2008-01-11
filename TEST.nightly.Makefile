@@ -8,7 +8,6 @@
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
-CFLAGS  := -O3
 
 REPORTS_TO_GEN := compile nat
 ifndef DISABLE_LLC

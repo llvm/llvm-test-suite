@@ -10,7 +10,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
 PROGRAMS_TO_TEST := $(PROG)
 
 ## LLVM bytecode libraries that must be linked with an application
@@ -29,16 +28,16 @@ NObjects := $(addprefix Output/,$(NObjs))
 .PRECIOUS: $(LObjects) $(NObjects)
 
 Output/%.o: %.c Output/.dir
-	-$(CC) $(CPPFLAGS) $(CFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.C Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cpp Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cc Output/.dir
-	-$(CC) $(CPPFLAGS) $(CXXFLAGS) -O2 $(TARGET_FLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) -c $< -o $@
 
 bugpoint-opt: Output/$(PROG).bugpoint-opt
 bugpoint-gccas: Output/$(PROG).bugpoint-opt

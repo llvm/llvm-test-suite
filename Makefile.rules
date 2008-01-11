@@ -350,6 +350,11 @@ ifdef SMALL_PROBLEM_SIZE
 CPPFLAGS += -DSMALL_PROBLEM_SIZE
 endif
 
+ifdef DISABLE_LTO
+EXTRA_LOPT_OPTIONS += -disable-opt -disable-inlining
+EXTRA_LINKTIME_OPT_FLAGS += -disable-opt -disable-inlining
+endif
+
 #
 # Compile commands with libtool.
 #

@@ -348,7 +348,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(CC) $< -o $@ $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -O2 -fno-inline $(TARGET_FLAGS) $(LIBS)
+	-$(CC) $< -o $@ $(LDFLAGS) $(CFLAGS) -fno-strict-aliasing -fno-inline $(TARGET_FLAGS) $(LIBS)
 
 #
 # Compile a linked program to machine code with LLC.
