@@ -224,7 +224,7 @@ const char* hasPrefix(const char* str, const char* prefix)
 {
     int len = strlen(prefix);
     if (strncmp(str, prefix, len) == 0)
-        return str + len;
+        return strdup(str + len);
     else
         return NULL;
 }
