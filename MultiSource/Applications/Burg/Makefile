@@ -1,7 +1,5 @@
 LEVEL = ../../..
 
-include $(LEVEL)/Makefile.common
-
 PROG     = burg
 CPPFLAGS = -DDEBUG
 LDFLAGS  = -lstdc++
@@ -10,11 +8,11 @@ ExtraSource := y.tab.c
 
 STDIN_FILENAME = $(PROJ_SRC_DIR)/sample.gr
 
-include $(LLVM_OBJ_ROOT)/Makefile.config
+include $(LEVEL)/Makefile.config
 
 Source  := $(ExtraSource) $(wildcard $(PROJ_SRC_DIR)/*.c)
 
-include	../../Makefile.multisrc
+include	$(LEVEL)/MultiSource/Makefile.multisrc
 
 #
 # JTC -
