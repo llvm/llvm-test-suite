@@ -203,6 +203,9 @@ int current_test = 0;
 
 double result_times[20];
 
+/* This is an llvm hack to make the output not cause spurious diffs. */
+#define STABILIZE(X) (X)*0.0000001
+
 void summarize() {
   printf("\ntest      absolute   additions      ratio with\n");
   printf("number    time       per second     test0\n\n");
@@ -211,9 +214,9 @@ void summarize() {
   for (i = 0; i < current_test; ++i)
     printf("%2i       %5.2fsec    %5.2fM         %.2f\n",
 	   i,
-	   result_times[i]/*make the output stable*/ * 0.00001,
-	   millions/result_times[i]/*make the output stable*/ * 0.00001,
-	   result_times[i]/result_times[0]/*make the output stable*/ * 0.00001);
+	   STABILIZE(result_times[i]),
+	   STABILIZE(millions/result_times[i]),
+	   STABILIZE(result_times[i]/result_times[0]));
   double gmean_times = 0.;
   double total_absolute_times = 0.;  // sam added 12/05/95
   double gmean_rate = 0.;
@@ -225,13 +228,13 @@ void summarize() {
     gmean_ratio += log(result_times[i]/result_times[0]);
   } 
   printf("mean:    %5.2fsec    %5.2fM         %.2f\n",
-	 exp(gmean_times/current_test/*make the output stable*/ * 0.00001),
-	 exp(gmean_rate/current_test/*make the output stable*/ * 0.00001),
-	 exp(gmean_ratio/current_test)/*make the output stable*/ * 0.00001);
-  printf("\nTotal absolute time: %.2f sec\n", total_absolute_times
-         /*make the output stable*/ * 0.00001);  // sam added 12/05/95
-  printf("\nAbstraction Penalty: %.2f\n\n", exp(gmean_ratio/current_test)
-         /*make the output stable*/ * 0.00001);
+	 exp(STABILIZE(gmean_times/current_test)),
+	 exp(STABILIZE(gmean_rate/current_test)),
+	 exp(STABILIZE(gmean_ratio/current_test)));
+  printf("\nTotal absolute time: %.2f sec\n", STABILIZE(total_absolute_times));
+  // sam added 12/05/95
+  printf("\nAbstraction Penalty: %.2f\n\n", 
+         STABILIZE(exp(gmean_ratio/current_test)));
 }
 
 clock_t start_time, end_time;
