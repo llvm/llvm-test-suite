@@ -374,11 +374,11 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(LLVMGCCLD) $(CFLAGS) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(LLVMGCCLD) $(CFLAGS) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 
 #
