@@ -322,8 +322,19 @@ endif
 CPPFLAGS += -D_GNU_SOURCE
 # Pull in limit macros from stdint.h, even in C++:
 CPPFLAGS += -D__STDC_LIMIT_MACROS
+CPPFLAGS += -DNDEBUG
 
-CompileOptimizeOpts := -O3 -DNDEBUG -finline-functions
+# Default optimization level:
+OPTFLAGS := -O3
+
+# If LTO is on, compile each .c .cpp file with -O0 and optimize with
+# opt and llvm-ld.
+ifdef DISABLE_LTO
+LOPTFLAGS := $(OPTFLAGS)
+else
+LOPTFLAGS := -O0
+endif
+
 
 ifeq ($(OS),Darwin)
 ifndef TARGET_FLAGS
@@ -358,18 +369,18 @@ endif
 #
 # Compile commands with libtool.
 #
-Compile  := $(LIBTOOL) --tag=CXX --mode=compile $(CXX) -c $(CPPFLAGS) $(CXXFLAGS)
-CompileC  := $(LIBTOOL) --mode=compile $(CC) -c $(CPPFLAGS) $(CFLAGS)
+Compile  := $(LIBTOOL) --tag=CXX --mode=compile $(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS)
+CompileC  := $(LIBTOOL) --mode=compile $(CC) -c $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS)
 
 # Compile a cpp file, don't link...
 CompileG := $(Compile) -g  -D_DEBUG
-CompileO := $(Compile) $(CompileOptimizeOpts) -felide-constructors -fomit-frame-pointer
-CompileP := $(Compile) $(CompileOptimizeOpts) -felide-constructors $(PROFILE)
+CompileO := $(Compile) $(OPTFLAGS) -felide-constructors -fomit-frame-pointer
+CompileP := $(Compile) $(OPTFLAGS) -felide-constructors $(PROFILE)
 
 # Compile a c file, don't link...
 CompileCG := $(CompileC) -g  -D_DEBUG
-CompileCO := $(CompileC) $(CompileOptimizeOpts) -fomit-frame-pointer
-CompileCP := $(CompileC) $(CompileOptimizeOpts) $(PROFILE)
+CompileCO := $(CompileC) $(OPTFLAGS) -fomit-frame-pointer
+CompileCP := $(CompileC) $(OPTFLAGS) $(PROFILE)
 
 ###########################################################################
 # Link Time Options

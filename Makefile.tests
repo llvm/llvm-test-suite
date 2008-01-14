@@ -34,23 +34,6 @@ endif
 .PRECIOUS: Output/%.llvm.bc
 .PRECIOUS: Output/%.llvm
 
-ifndef CFLAGS
-CFLAGS = -O3
-endif
-ifndef CXXFLAGS
-CXXFLAGS = -O3
-endif
-
-# If LTO is on, compile each .c .cpp file with -O0 and optimize with
-# opt and llvm-ld.
-ifndef DISABLE_LTO
-LCCFLAGS := -O0 $(CPPFLAGS)
-LCXXFLAGS := -O0 $(CPPFLAGS)
-else
-LCCFLAGS := $(CFLAGS) $(CPPFLAGS)
-LCXXFLAGS := $(CXXFLAGS) $(CPPFLAGS)
-endif
-
 FAILURE  = $(LLVM_SRC_ROOT)/test/Failure.sh
 LLCLIBS := $(LLCLIBS) -lm
 
@@ -58,24 +41,24 @@ clean::
 	$(RM) -f a.out core
 	$(RM) -rf Output/
 
-# Compile from X.c to Output/X.ll
+# Compile from X.c to Output/X.bc
 Output/%.bc: %.c $(LCC1) Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CPPFLAGS) $(LCCFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
 	-$(call UPGRADE_LL,$@)
 
-# Compile from X.cpp to Output/X.ll
+# Compile from X.cpp to Output/X.bc
 Output/%.bc: %.cpp $(LCC1XX) Output/.dir $(INCLUDES)
-	-$(LLVMGXX) $(CPPFLAGS) $(LCXXFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LLVMGXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
 	-$(call UPGRADE_LL,$@)
 
-# Compile from X.cc to Output/X.ll
+# Compile from X.cc to Output/X.bc
 Output/%.bc: %.cc $(LCC1XX) Output/.dir $(INCLUDES)
-	-$(LLVMGXX) $(CPPFLAGS) $(LCXXFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LLVMGXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
 	-$(call UPGRADE_LL,$@)
 
-# Compile from X.C to Output/X.ll
+# Compile from X.C to Output/X.bc
 Output/%.bc: %.C $(LCC1XX) Output/.dir $(INCLUDES)
-	-$(LLVMGXX) $(CPPFLAGS) $(LCXXFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LLVMGXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
 	-$(call UPGRADE_LL,$@)
 
 # LLVM Assemble from X.ll to Output/X.bc.  Because we are coming directly from
