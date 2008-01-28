@@ -22,25 +22,20 @@
 
 /* Traces automatically drop the TCP checksum and urgent pointer, so header is 36 bytes */
 #define HEADER_SIZE 36
-int packets_processed = 0;
 
 #ifdef CONSTANT_PACKET
 unsigned int packet_index = 0;
 #endif
 
 char *
-get_next_packet ()
+get_next_packet (int packet_number)
 {
+  packet_number %= MAX_PACKETS;
   char *packet;
   unsigned int packet_length;
   
-  if (packets_processed == MAX_PACKETS)
-    {
-      fprintf (stderr, "All packets (%d) processed, recompile with larger MAX_PACKETS \n", MAX_PACKETS);
-      exit (1);
-    }
   
-  packet_length = (packet_lengths[packets_processed]);
+  packet_length = (packet_lengths[packet_number]);
   if (packet_length < 40)
     {
       /* Should never happen */
@@ -61,10 +56,9 @@ get_next_packet ()
     }
 
   /* Copy the header information */
-  memcpy ((void *)packet, (void *)headers[packets_processed], HEADER_SIZE);
+  memcpy ((void *)packet, (void *)headers[packet_number], HEADER_SIZE);
 #endif
 
-  packets_processed ++;
   return packet;
 }
 
@@ -72,7 +66,6 @@ get_next_packet ()
 unsigned int 
 packet_size (unsigned int packet_number)
 {
-  if (packet_number == MAX_PACKETS)
-    return (packet_lengths[packets_processed]);
-  else return (packet_lengths[packet_number]);
+  packet_number %= MAX_PACKETS;
+  return (packet_lengths[packet_number]);
 }

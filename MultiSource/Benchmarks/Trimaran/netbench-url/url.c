@@ -113,7 +113,7 @@ int main (int argc, char **argv)
     {
       long original_checksum, checksum;
       
-      packet = get_next_packet();
+      packet = get_next_packet(i);
       
       /* We only have to check the checksum to make sure nothing is changed.. */
 #ifdef LITTLE_ENDIAN
