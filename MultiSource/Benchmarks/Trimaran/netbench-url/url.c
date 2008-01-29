@@ -139,6 +139,7 @@ int main (int argc, char **argv)
       are done in route application. */
 
       /* Done for the packet... */
+      free(packet);
     }
   
   fprintf (stderr, "URL finished for %d packets \n", num_packets);

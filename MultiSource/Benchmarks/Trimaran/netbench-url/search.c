@@ -281,6 +281,7 @@ find_lcs (char *largepattern, int largepatternsize, char *smallpattern, int smal
 	}
     }
   *lcssize = sub_pat_size;
+  free(bmBc);
   return sub_pattern;
 }
 
