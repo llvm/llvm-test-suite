@@ -236,7 +236,9 @@ int main(int argc, char **argv)
 	}
 	mb = info.blocks * (CL_COUNT_PRECISION / 1024) / 1024.0;
 	logg("Data scanned: %2.2lf MB\n", mb);
+#if 0
 	logg("Time: %u.%3.3u sec (%u m %u s)\n", ds, dms/1000, ds/60, ds%60);
+#endif
     }
 
     opt_free(opt);

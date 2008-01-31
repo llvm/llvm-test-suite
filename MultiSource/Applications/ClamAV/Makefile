@@ -26,7 +26,7 @@ Source = $(addprefix libclamav_, \
 PROG = clamscan
 CPPFLAGS += -DHAVE_CONFIG_H -I.
 LDFLAGS = -lz
-RUN_OPTIONS = --debug --no-summary -d$(PROJ_SRC_DIR)/dbdir -r $(PROJ_SRC_DIR)/inputs/*
+RUN_OPTIONS = --debug --verbose -d$(PROJ_SRC_DIR)/dbdir -r $(PROJ_SRC_DIR)/inputs/*
 
 include $(LEVEL)/Makefile.config
 
