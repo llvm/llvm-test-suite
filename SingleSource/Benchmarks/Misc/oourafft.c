@@ -19,7 +19,7 @@ double get_time(void);
 
 #define N 1024
 #ifdef SMALL_PROBLEM_SIZE
-#define TRIES 15000
+#define TRIES 5000
 #else
 #define TRIES 150000
 #endif
