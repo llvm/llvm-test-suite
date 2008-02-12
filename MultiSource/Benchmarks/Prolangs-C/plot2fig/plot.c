@@ -21,7 +21,7 @@
    to draw the graphics. */
 
 #include <stdio.h>
-#include "/usr/include/stdlib.h"
+#include <stdlib.h>
 #include <ctype.h>
 #ifdef sequent
 #include <strings.h>
