@@ -101,8 +101,14 @@ Scene *create(int level, const Vec &c, double r) {
   return new Group(Sphere(c, 3*r), child);
 }
 
+#ifdef SMALL_PROBLEM_SIZE
+#define TEST_SIZE 128
+#else
+#define TEST_SIZE 512
+#endif
+
 int main(int argc, char *argv[]) {
-  int level = 6, n = 512, ss = 4;
+  int level = 6, n = TEST_SIZE, ss = 4;
   if (argc == 2) level = atoi(argv[1]);
   Vec light = unitise(Vec(-1, -3, 2));
   Scene *s(create(level, Vec(0, -1, 0), 1));

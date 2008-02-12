@@ -162,8 +162,14 @@ static node_t *create(node_t*n,const int lvl,int dist,v_t c,v_t d,double r) {
 	return n;
 }
 
+#ifdef SMALL_PROBLEM_SIZE
+#define TEST_SIZE 256
+#else
+#define TEST_SIZE 1024
+#endif
+
 int main(int argc,char*argv[]){
-	enum{ w = 1024, h = w }; /* resolution */
+	enum{ w = TEST_SIZE, h = w }; /* resolution */
 	const int lvl=(argc==2?std::max(atoi(argv[1]),2):6);
 	int count=childs, dec=lvl;
 	while(--dec > 1) count=(count*childs)+childs;
