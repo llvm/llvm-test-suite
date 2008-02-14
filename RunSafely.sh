@@ -81,6 +81,9 @@ case $SYSTEM in
     # To prevent infinite loops which fill up the disk, specify a limit on size of
     # files being output by the tests. 10 MB should be enough for anybody. ;)
     ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
+
+    # stack size: 100 MB should be enough for anybody. ;)
+    ULIMITCMD="$ULIMITCMD ulimit -s 100000;"
 esac
 rm -f core core.*
 
@@ -102,7 +105,7 @@ if [ "$SYSTEM" = "Darwin" ]; then
 fi
 
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD"; time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+  ( sh -c "$ULIMITCMD time -p $COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?" ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
