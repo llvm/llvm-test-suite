@@ -209,7 +209,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -coalescer-commute-instrs
+#-enable-sinking
 #-machine-licm
 #--enable-tail-merge
 #--enable-ppc-preinc
@@ -223,7 +224,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -coalescer-commute-instrs
+#-enable-sinking
 #-machine-licm
 #-new-coalescer-heuristic=true
 #-tailcallopt
@@ -236,7 +238,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -new-coalescer-heuristic=true
+LLCBETAOPTION := -coalescer-commute-instrs
+#-new-coalescer-heuristic=true
 #-disable-rematerialization
 #-march=thumb
 endif
