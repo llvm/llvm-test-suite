@@ -104,5 +104,10 @@ include ../../Makefile.multisrc
 #compare debug output
 DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
 
+ifeq ($(OS),Darwin)
+EXTRA_LLI_OPTS += -load=libz.dylib
+EXTRA_JIT_OPTS += -load=libz.dylib
+else
 EXTRA_LLI_OPTS += -load=libz
 EXTRA_JIT_OPTS += -load=libz
+endif
