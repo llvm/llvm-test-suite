@@ -14,4 +14,4 @@ RUN_OPTIONS      = --input namd.input --iterations 1 --output namd.out
 STDOUT_FILENAME := namd.out
 
 LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
+LIBS    = -lm
