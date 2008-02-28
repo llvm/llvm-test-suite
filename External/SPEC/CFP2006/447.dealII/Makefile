@@ -24,4 +24,4 @@ endif
 STDOUT_FILENAME := log
 
 LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
+LIBS    = -lm
