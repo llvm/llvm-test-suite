@@ -224,7 +224,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -align-loops=false
+#-enable-sinking
 #-coalescer-commute-instrs
 #-machine-licm
 #-new-coalescer-heuristic=true
