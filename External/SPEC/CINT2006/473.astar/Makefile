@@ -25,4 +25,4 @@ else
 endif
 
 LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
+LIBS    = -lm
