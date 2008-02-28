@@ -66,5 +66,5 @@ include ../../Makefile.spec2000
 CXXFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend 
 
 LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
+LIBS    = -lm
 
