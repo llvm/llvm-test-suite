@@ -62,7 +62,7 @@ RUN_OPTIONS      = omnetpp.ini
 STDOUT_FILENAME := omnetpp.log
 
 LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
+LIBS    = -lm
 
 ##===----------------------------------------------------------------------===##
 # Copy the source files to the working directory. Some files may have
