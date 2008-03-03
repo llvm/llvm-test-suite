@@ -99,7 +99,7 @@ rm -f core core.*
 # necessary I/O redirection.
 #
 PWD=`pwd`
-COMMAND="$PROGRAM $*"
+COMMAND="$PWD/$PROGRAM $*"
 if [ "$SYSTEM" = "Darwin" ]; then
   COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 fi
