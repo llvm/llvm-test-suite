@@ -99,16 +99,10 @@ rm -f core core.*
 # necessary I/O redirection.
 #
 PWD=`pwd`
-COMMAND="$PWD/$PROGRAM $*"
+COMMAND="$PROGRAM $*"
 if [ "$SYSTEM" = "Darwin" ]; then
   COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 fi
-
-rm -f "$PWD/${PROGRAM}.command"
-rm -f "$PWD/${PROGRAM}.remote"
-rm -f "$PWD/${PROGRAM}.remote.time"
-echo "$ULIMITCMD (time -p ($COMMAND > $PWD/$OUTFILE.remote 2>&1 < $INFILE;); echo exit $?) > $PWD/$OUTFILE.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
-chmod +x "$PWD/${PROGRAM}.command"
 
 if [ "x$RHOST" = x ] ; then
   ( sh -c "$ULIMITCMD"; time -p sh -c "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
@@ -119,6 +113,12 @@ BEGIN     { cpu = 0.0; }
 !/^user/ && !/^sys/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 else
+  rm -f "$PWD/${PROGRAM}.command"
+  rm -f "$PWD/${PROGRAM}.remote"
+  rm -f "$PWD/${PROGRAM}.remote.time"
+  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $OUTFILE.remote 2>&1 < $INFILE;); echo exit $?) > $OUTFILE.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
+  chmod +x "$PWD/${PROGRAM}.command"
+
   ( rsh -l $RUSER $RHOST "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
   ( rsh -l $RUSER $RHOST "$PWD/${PROGRAM}.command" )
   cat $OUTFILE.remote.time | awk -- '\
