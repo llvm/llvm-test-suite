@@ -11,7 +11,8 @@ static void printIV(IV *F) {
 }
 
 int main() {
-  __m128i allones, zeroones, onezeros;
+  __m128i allones = _mm_set1_epi32(0);
+  __m128i zeroones, onezeros;
   allones = _mm_cmpeq_epi32(allones, allones);
   zeroones = _mm_srli_epi16(allones, 8);
   printIV((IV*)&zeroones);
