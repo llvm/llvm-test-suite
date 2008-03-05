@@ -220,8 +220,11 @@ int main()
 /*************************/
 /* Initialize the timer. */
 /*************************/
-   
-  m = loops*20000;
+#ifdef SMALL_PROBLEM_SIZE
+   m = loops*400;
+#else
+   m = loops*20000;
+#endif
 
 
 /*******************************************************/

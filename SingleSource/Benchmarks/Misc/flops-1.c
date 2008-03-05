@@ -228,7 +228,11 @@ int main()
 /*            in the timing.                           */
 /*            50.0% +, 00.0% -, 42.9% *, and 07.1% /   */
 /*******************************************************/
+#ifdef SMALL_PROBLEM_SIZE
+   n = loops*200;
+#else
    n = loops*10000;
+#endif
    sa = 0.0;
 
    n = 2 * n;
