@@ -105,7 +105,7 @@ if [ "$SYSTEM" = "Darwin" ]; then
 fi
 
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD"; time -p "$COMMAND >$OUTFILE 2>&1 < $INFILE" ; echo exit $? ) 2>&1 \
+  ( sh -c "$ULIMITCMD time -p $COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?" ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
