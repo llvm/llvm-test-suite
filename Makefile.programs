@@ -224,7 +224,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -align-loops=false
+LLCBETAOPTION := -schedule-livein-copies
+#-align-loops=false
 #-enable-sinking
 #-coalescer-commute-instrs
 #-machine-licm
@@ -239,7 +240,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -schedule-livein-copies
+#-enable-sinking
 #-coalescer-commute-instrs
 #-new-coalescer-heuristic=true
 #-disable-rematerialization
