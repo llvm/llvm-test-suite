@@ -3,7 +3,7 @@
 # This directory contains regression tests for LLVM backends written in LLVM
 # assembly language.
 #
-LEVEL = ../../..
+LEVEL = ..
 DISABLE_FOR_LLVM_PROGRAMS := 1
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 REQUIRES_EH_SUPPORT := 1
