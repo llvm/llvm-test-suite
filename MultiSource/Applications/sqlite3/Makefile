@@ -17,10 +17,10 @@ DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
 
 # the input files are generated from a tcl script
 # it needs to be generated before sqlite is run
-sqlite3.c: test15.sql 
+$(SourceDir)/sqlite3.c: test15.sql 
 
-test15.sql: speedtest.tcl
-	$(TCLSH) speedtest.tcl
+test15.sql: $(SourceDir)/speedtest.tcl
+	$(TCLSH) $<
 
 clean::
 	rm -f test*.sql
