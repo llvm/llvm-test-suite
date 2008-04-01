@@ -323,10 +323,10 @@ ifdef REQUIRES_EH_SUPPORT
 # PPC and X86 support DWARF exceptions, for everything else, default to SJLJ
 # -enable-eh is no longer required to get DWARF exceptions.
 ifeq ($(ARCH),PowerPC)
-#LLCFLAGS += -enable-eh
+LLCFLAGS += -enable-eh
 else
 ifeq ($(ARCH),x86)
-#LLCFLAGS += -enable-eh
+LLCFLAGS += -enable-eh
 else
 LLCFLAGS += -enable-correct-eh-support
 LLVMLD_FLAGS += -disable-inlining
