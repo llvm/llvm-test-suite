@@ -41,8 +41,6 @@
  *        Kernel 2  change i = ipntp - 1; to i = ipntp;                 *
  *        Kernel 7  third line of inner loop change r to q              *
  ************************************************************************
- *  Because of the inaccuracy of the PC clock, this version arranges    
- *  for timing to be based on at least five seconds.
  *
  *  The kernels are executed as follows:
  *
