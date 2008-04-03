@@ -4,7 +4,7 @@ LEVEL = ../../..
 
 ## NOTE: This must remain in this order, so that the labels in the nightly 
 ## tester gnuplot scripts are correct.
-PARALLEL_DIRS  := five11
+PARALLEL_DIRS  := five11 drop3 huffman uudecode uuencode
 
 include $(LEVEL)/Makefile.programs
 
