@@ -45,12 +45,6 @@ include $(LEVEL)/Makefile.tests
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc Output/%.linked.bc
 
-# If we're using the llvm-gcc3 compiler then we need to also link with the
-# llvm c runtime library, othwerwise we don't
-ifneq ($(LLVMGCC_MAJVERS),4)
-LIBS += -lcrtend
-endif
-
 PROGDIR = $(PROJ_SRC_ROOT)
 
 #
