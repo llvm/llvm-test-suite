@@ -26,7 +26,7 @@ include $(LLVM_OBJ_ROOT)/Makefile.config
 # Ignore the LIBS set by $(LLVM_OBJ_ROOT)/Makefile.config
 LIBS :=
 
-#Set SourceDir for backwards compatbility.
+# Set SourceDir for backwards compatibility.
 ifndef SourceDir
 SourceDir=$(PROJ_SRC_DIR)
 endif
