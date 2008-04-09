@@ -2045,6 +2045,9 @@ ac_config_commands="$ac_config_commands External/SPEC/Makefile"
 ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec"
 
 
+ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec.config"
+
+
 ac_config_commands="$ac_config_commands External/SPEC/Makefile.spec2006"
 
 
@@ -5239,7 +5242,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5242 "configure"' > conftest.$ac_ext
+  echo '#line 5245 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7404,11 +7407,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7407: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7410: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7411: \$? = $ac_status" >&5
+   echo "$as_me:7414: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7672,11 +7675,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7675: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7678: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7679: \$? = $ac_status" >&5
+   echo "$as_me:7682: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7776,11 +7779,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7779: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7782: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7783: \$? = $ac_status" >&5
+   echo "$as_me:7786: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10228,7 +10231,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10231 "configure"
+#line 10234 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10328,7 +10331,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10331 "configure"
+#line 10334 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12696,11 +12699,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12699: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12702: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12703: \$? = $ac_status" >&5
+   echo "$as_me:12706: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12800,11 +12803,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12803: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12806: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12807: \$? = $ac_status" >&5
+   echo "$as_me:12810: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14370,11 +14373,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14373: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14376: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14377: \$? = $ac_status" >&5
+   echo "$as_me:14380: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14474,11 +14477,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14477: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14480: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14481: \$? = $ac_status" >&5
+   echo "$as_me:14484: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16709,11 +16712,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16712: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16715: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16716: \$? = $ac_status" >&5
+   echo "$as_me:16719: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16977,11 +16980,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16980: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16983: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16984: \$? = $ac_status" >&5
+   echo "$as_me:16987: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17081,11 +17084,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17084: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17087: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17088: \$? = $ac_status" >&5
+   echo "$as_me:17091: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -21427,6 +21430,7 @@ do
     "External/Povray/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/Povray/Makefile" ;;
     "External/SPEC/Makefile") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile" ;;
     "External/SPEC/Makefile.spec") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec" ;;
+    "External/SPEC/Makefile.spec.config") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec.config" ;;
     "External/SPEC/Makefile.spec2006") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec2006" ;;
     "External/SPEC/Makefile.spec2000") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec2000" ;;
     "External/SPEC/Makefile.spec95") CONFIG_COMMANDS="$CONFIG_COMMANDS External/SPEC/Makefile.spec95" ;;
@@ -22003,6 +22007,8 @@ echo "$as_me: executing $ac_file commands" >&6;}
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile External/SPEC/Makefile ;;
     "External/SPEC/Makefile.spec":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec External/SPEC/Makefile.spec ;;
+    "External/SPEC/Makefile.spec.config":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec.config`
+   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec.config External/SPEC/Makefile.spec.config ;;
     "External/SPEC/Makefile.spec2006":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2006`
    ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec2006 External/SPEC/Makefile.spec2006 ;;
     "External/SPEC/Makefile.spec2000":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2000`
