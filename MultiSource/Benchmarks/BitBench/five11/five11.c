@@ -177,7 +177,11 @@ int main(int argc, char *argv[])
   }
   size = read_data(in, inbuf);
   gettimeofday(&pre,0);
+#ifdef SMALL_PROBLEM_SIZE
+  for(i=0;i<500;i++){
+#else
   for(i=0;i<10000;i++){
+#endif    
     list = five11(inbuf);
     outsize = calc_sum2(list);
     free_list2(list);
