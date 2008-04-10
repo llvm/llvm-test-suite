@@ -18,8 +18,13 @@ DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
 # it needs to be generated before sqlite is run
 sqlite3.c: $(PROJ_SRC_DIR)/test15.sql 
 
+ifdef SMALL_PROBLEM_SIZE
+$(PROJ_SRC_DIR)/test15.sql: $(PROJ_SRC_DIR)/smalltest.tcl
+	$(TCLSH) $(PROJ_SRC_DIR)/smalltest.tcl
+else
 $(PROJ_SRC_DIR)/test15.sql: $(PROJ_SRC_DIR)/speedtest.tcl
 	$(TCLSH) $(PROJ_SRC_DIR)/speedtest.tcl
+endif
 
 clean::
 	rm -f test*.sql
