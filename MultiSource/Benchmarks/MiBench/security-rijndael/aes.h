@@ -149,6 +149,8 @@
 #ifndef _AES_H
 #define _AES_H
 
+#include <stdint.h>
+
 #define BLOCK_SIZE  16
 
 #define AES_BIG_ENDIAN      1   /* do not change */
@@ -221,7 +223,7 @@
 /* End of configuration options, but see also aes.c */
 
 typedef unsigned char   byte;           /* must be an 8-bit storage unit */
-typedef unsigned long   word;           /* must be a 32-bit storage unit */
+typedef uint32_t        word;           /* must be a 32-bit storage unit */
 typedef short           aes_ret;        /* function return value         */
 
 #define aes_bad     0
