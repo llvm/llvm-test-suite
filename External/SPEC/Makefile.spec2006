@@ -26,7 +26,7 @@ endif
 # Don't use CINT2006/CFP2006, always use CPU2006.
 SPEC_SUITEDIR := CPU2006
 
-include $(LEVEL)/External/SPEC/Makefile.spec.config
+include $(PROJ_SRC_ROOT)/External/SPEC/Makefile.spec.config
 include $(LEVEL)/External/SPEC/Makefile.spec
 
 CPPFLAGS += -DSPEC_CPU

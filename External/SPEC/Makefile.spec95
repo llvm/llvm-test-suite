@@ -23,5 +23,5 @@ endif
 endif
 endif
 
-include $(LEVEL)/External/SPEC/Makefile.spec.config
+include $(PROJ_SRC_ROOT)/External/SPEC/Makefile.spec.config
 include $(LEVEL)/External/SPEC/Makefile.spec

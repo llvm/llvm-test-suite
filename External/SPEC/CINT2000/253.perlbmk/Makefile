@@ -4,7 +4,7 @@ include $(LEVEL)/Makefile.config
 
 SPEC_ROOT := $(SPEC2000_ROOT)
 
-include $(LEVEL)/External/SPEC/Makefile.spec.config
+include $(PROJ_SRC_ROOT)/External/SPEC/Makefile.spec.config
 
 CPPFLAGS += -DSPEC_CPU2000_LINUX_I386 -DSPEC_CPU2000_NEED_BOOL
 
