@@ -67,19 +67,19 @@ case $SYSTEM in
   CYGWIN*) 
     ;;
   Darwin*)
-    # Disable core file emission, the script doesn't find it anyway because it is put 
-    # into /cores.
+    # Disable core file emission, the script doesn't find it anyway because it
+    # is put into /cores.
     ULIMITCMD="$ULIMITCMD ulimit -c 0;"
     ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
-    # To prevent infinite loops which fill up the disk, specify a limit on size of
-    # files being output by the tests. 10 MB should be enough for anybody. ;)
+    # To prevent infinite loops which fill up the disk, specify a limit on size
+    # of files being output by the tests. 10 MB should be enough for anybody. ;)
     ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
     ;;
   *)
     ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
     ULIMITCMD="$ULIMITCMD ulimit -c unlimited;"
-    # To prevent infinite loops which fill up the disk, specify a limit on size of
-    # files being output by the tests. 10 MB should be enough for anybody. ;)
+    # To prevent infinite loops which fill up the disk, specify a limit on size
+    # of files being output by the tests. 10 MB should be enough for anybody. ;)
     ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
 
     # virtual memory: 200 MB should be enough for anybody. ;)
