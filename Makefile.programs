@@ -44,6 +44,7 @@ include $(LEVEL)/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc Output/%.linked.bc
+.PRECIOUS: Output/%.linked.optbeta.bc Output/%.llvm.optbeta.bc 
 
 PROGDIR = $(PROJ_SRC_ROOT)
 
@@ -129,6 +130,7 @@ JITDIFFS  := $(addsuffix .diff-jit, $(PREFIXED_PROGRAMS_TO_TEST))
 JITBETADIFFS  := $(addsuffix .diff-jit-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCBETADIFFS  := $(addsuffix .diff-llc-beta, $(PREFIXED_PROGRAMS_TO_TEST))
+OPTBETADIFFS  := $(addsuffix .diff-opt-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Profiles for the program.
@@ -137,11 +139,11 @@ PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
 .PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-beta
-.PRECIOUS: Output/%.out-nat Output/%.out-cbe
+.PRECIOUS: Output/%.out-nat Output/%.out-cbe Output/%.out-opt-beta
 
 # Build diffs from the output...
-.PRECIOUS: Output/%.diff-lli Output/%.diff-jit
-.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe
+.PRECIOUS: Output/%.diff-lli Output/%.diff-jit Output/%.diff-opt-beta
+.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe 
 
 
 # Regardless of what other options are specified, build the program's bytecode
@@ -259,6 +261,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 	-$(LOPT) -mstrip $< -o $@ -f
 
+$(PROGRAMS_TO_TEST:%=Output/%.linked.optbeta.bc): \
+Output/%.linked.optbeta.bc: Output/%.linked.rbc $(LOPT)
+	-$(LOPT) $(OPTBETAOPTIONS) -time-passes -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
+
 
 ifndef DISABLE_FOR_LLVM_PROGRAMS
 # Rule to produce final program bytecode file from linked, optimized, bytecode.
@@ -280,6 +286,14 @@ ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
 endif
+
+$(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta.bc): \
+Output/%.llvm.optbeta.bc: Output/%.linked.optbeta.bc $(LLVMLDPROG)
+	-$(LLVMLD) $(STATS) $<  $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
+
+$(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta): \
+Output/%.llvm.optbeta: Output/%.linked.optbeta.bc $(LLVMLDPROG)
+	-$(LLVMLD) $(STATS) $<  $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
 Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LLVMLDPROG)
@@ -359,6 +373,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
 	-$(LLC) $(LLCFLAGS) -f $(LLCBETAOPTION) $< -o $@
 
+$(PROGRAMS_TO_TEST:%=Output/%.opt-beta.s): \
+Output/%.opt-beta.s: Output/%.llvm.optbeta.bc $(LLC)
+	-$(LLC) $(LLCFLAGS) -f  $< -o $@
+
 # On darwin, pass -force_cpusubtype_ALL to allow all ppc instructions.
 ifeq ($(ARCH),PowerPC)
 LLCASSEMBLERFLAGS = -force_cpusubtype_ALL
@@ -376,6 +394,10 @@ Output/%.llc: Output/%.llc.s
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
+	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
+Output/%.opt-beta: Output/%.opt-beta.s
 	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 
@@ -429,6 +451,10 @@ Output/%.out-llc: Output/%.llc
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
+	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.out-opt-beta): \
+Output/%.out-opt-beta: Output/%.opt-beta
 	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
@@ -489,6 +515,10 @@ Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
 Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
+	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_ARGS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt-beta): \
+Output/%.bugpoint-opt-beta: Output/%.llvm.optbeta.bc $(LBUGPOINT) Output/%.out-nat
 	$(LBUGPOINT) $< -run-llc $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
@@ -561,6 +591,10 @@ $(PROGRAMS_TO_TEST:%=Output/%.diff-llc-beta): \
 Output/%.diff-llc-beta: Output/%.out-nat Output/%.out-llc-beta
 	-$(DIFFPROG) llc-beta $* $(HIDEDIFF)
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-opt-beta): \
+Output/%.diff-opt-beta: Output/%.out-nat Output/%.out-opt-beta
+	-$(DIFFPROG) opt-beta $* $(HIDEDIFF)
+
 $(PROGRAMS_TO_TEST:%=Output/%.diff-cbe): \
 Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	-$(DIFFPROG) cbe $* $(HIDEDIFF)
@@ -588,6 +622,11 @@ Output/%.exe-llc: Output/%.diff-llc
 
 $(PROGRAMS_TO_TEST:%=Output/%.exe-llc-beta): \
 Output/%.exe-llc-beta: Output/%.diff-llc-beta
+	-rm -f $@
+	-cp $< $@
+
+$(PROGRAMS_TO_TEST:%=Output/%.exe-opt-beta): \
+Output/%.exe-opt-beta: Output/%.diff-opt-beta
 	-rm -f $@
 	-cp $< $@
 

@@ -56,6 +56,17 @@ sub LLCLLC_BETARatio {   # LLC/LLC-BETA
   return "-";
 }
 
+sub OPTOPT_BETARatio {   # OPT/OPT-BETA
+  my ($Cols, $Col) = @_;
+  my $LLC = $Cols->[$Col-9];
+  my $OPT_BETA = $Cols->[$Col-7];
+  return "n/allc" if ($LLC eq "*");
+  return "n/aopt" if ($OPT_BETA eq "*");
+  return "n/a" if ($LLC eq "*" or $OPT_BETA eq "*");
+  return sprintf("%3.2f", $LLC/$OPT_BETA) if ($LLC >= 0.1 and $OPT_BETA >= 0.1);
+  return "-";
+}
+
 # highlight the RATIO columns with green/red.
 $HilightColumns{14} = 1;
 $HilightColumns{15} = 1;
@@ -74,16 +85,19 @@ $HilightColumns{17} = 1;
  ["Bytecode" , 'TEST-RESULT-compile: *([0-9]+)'],
  ["LLC compile" , "TEST-RESULT-llc: .*$WallTimeRE"],
  ["LLC-BETA compile" , "TEST-RESULT-llc-beta: .*$WallTimeRE"],
+ ["OPT-BETA compile" , "TEST-RESULT-opt-beta: .*$WallTimeRE"],
  ["JIT codegen" , "TEST-RESULT-jit-comptime: .*$WallTimeRE"],
  [],
  ["GCC"      , 'TEST-RESULT-nat-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["CBE"      , 'TEST-RESULT-cbe-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC"      , 'TEST-RESULT-llc-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-BETA" , 'TEST-RESULT-llc-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
+ ["OPT-BETA" , 'TEST-RESULT-opt-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: program\s*([.0-9m:]+)', \&FormatTime],
  [],
  ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
  ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio],
- ["LLC/LLC-BETA"  , \&LLCLLC_BETARatio]
+ ["LLC/LLC-BETA"  , \&LLCLLC_BETARatio],
+ ["OPT/OPT-BETA"  , \&OPTOPT_BETARatio]
 );

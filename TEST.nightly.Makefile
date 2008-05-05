@@ -22,6 +22,9 @@ endif
 ifdef ENABLE_LLCBETA
 REPORTS_TO_GEN += llc-beta
 endif
+ifdef ENABLE_OPTBETA
+REPORTS_TO_GEN += opt-beta
+endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
 
@@ -85,7 +88,22 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 	  echo "TEST-FAIL: llc-beta $(RELDIR)/$*" >> $@;\
 	fi
 
-
+# OPT experimental tests
+$(PROGRAMS_TO_TEST:%=Output/%.nightly.opt-beta.report.txt): \
+Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta $(LLC)
+	@echo > $@
+	-head -n 100 Output/$*.exe-opt-beta >> $@
+	@-if test -f Output/$*.exe-opt-beta; then \
+	  echo "TEST-PASS: opt-beta $(RELDIR)/$*" >> $@;\
+	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
+	  printf "TEST-RESULT-opt-beta: " >> $@;\
+	  grep "Total Execution Time" $@.info >> $@;\
+	  printf "TEST-RESULT-opt-beta-time: " >> $@;\
+	  grep "^program" Output/$*.out-opt-beta.time >> $@;\
+	  echo >> $@;\
+	else  \
+	  echo "TEST-FAIL: opt-beta $(RELDIR)/$*" >> $@;\
+	fi
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
