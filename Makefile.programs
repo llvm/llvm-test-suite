@@ -205,8 +205,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -machine-licm
-#-enable-sinking
+LLCBETAOPTION := -enable-sinking
+#-machine-licm
 #-coalescer-commute-instrs
 #--enable-tail-merge
 #--enable-ppc-preinc
@@ -220,8 +220,7 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -machine-licm
-#-schedule-livein-copies
+LLCBETAOPTION := -schedule-livein-copies
 #-align-loops=false
 #-enable-sinking
 #-coalescer-commute-instrs
