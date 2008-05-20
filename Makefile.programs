@@ -345,6 +345,8 @@ endif
 
 # It is important to link C++ programs with G++ so look for -lstdc++ in LDFLAGS
 # and set the LLVMGCCLD variable to the correct compiler interface to use.
+# Note that LDFLAGS must already be defined at the time this file is included,
+# or this will not work.
 ifneq ($(filter -lstdc++,$(LDFLAGS)),)
 LLVMGCCLD := $(CXX) 
 else
