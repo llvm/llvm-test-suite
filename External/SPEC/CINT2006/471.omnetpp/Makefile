@@ -56,13 +56,13 @@ CPPFLAGS += -DNDEBUG=1                            \
             -I$(SPEC_BENCH_DIR)/src               \
             -I$(SPEC_BENCH_DIR)/src/include
 
-include ../../Makefile.spec2006
-
 RUN_OPTIONS      = omnetpp.ini
 STDOUT_FILENAME := omnetpp.log
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lm
+
+include ../../Makefile.spec2006
 
 ##===----------------------------------------------------------------------===##
 # Copy the source files to the working directory. Some files may have

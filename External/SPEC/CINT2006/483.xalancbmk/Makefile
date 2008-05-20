@@ -19,8 +19,6 @@ CPPFLAGS += -DNDEBUG -DAPP_NO_THREADS -DXALAN_INMEM_MSG_LOADER        \
             -I$(SPEC_BENCH_DIR)/src/xercesc/util/Transcoders/Iconv    \
             -I$(SPEC_BENCH_DIR)/src/xalanc/include
 
-include ../../Makefile.spec2006
-
 ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
@@ -35,3 +33,6 @@ endif
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lstdc++ -lm
+
+include ../../Makefile.spec2006
+
