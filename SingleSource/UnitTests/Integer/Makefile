@@ -32,9 +32,9 @@ ENABLE_LLI  := 1
 
 USE_REFERENCE_OUTPUT := 1
 
-include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 LDFLAGS += -lstdc++
 ifeq (1,$(ENABLE_LARGE_INTEGERS))
 CPPFLAGS += -DENABLE_LARGE_INTEGERS
 endif
+include $(LEVEL)/SingleSource/Makefile.singlesrc
