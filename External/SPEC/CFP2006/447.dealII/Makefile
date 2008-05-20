@@ -13,8 +13,6 @@ CPPFLAGS += \
         -DBOOST_DISABLE_THREADS   \
         -I$(SPEC_BENCH_DIR)/src/include
 
-include ../../Makefile.spec2006
-
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS := 8
 else
@@ -25,3 +23,5 @@ STDOUT_FILENAME := log
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lm
+
+include ../../Makefile.spec2006
