@@ -60,11 +60,12 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             mrInstance.cc mrMaterial.cc mrPhongAreaTriangleLuminaire.cc \
             mrSolidTexture.cc mrSphere.cc mrSurface.cc mrSurfaceTexture.cc \
             mrXYRectangle.cc mrXZRectangle.cc mrYZRectangle.cc myrand.cc)
-include ../../Makefile.spec2000
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
 CXXFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend 
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lm
+
+include ../../Makefile.spec2000
 

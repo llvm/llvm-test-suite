@@ -8,8 +8,6 @@ LEVEL = ../../../..
 
 FP_TOLERANCE = 0.001
 
-include ../../Makefile.spec2006
-
 ifeq ($(ENDIAN),big)
   CPPFLAGS += -DSPEC_CPU_BIG_ENDIAN
 else
@@ -26,3 +24,6 @@ endif
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lm
+
+include ../../Makefile.spec2006
+

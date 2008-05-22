@@ -8,8 +8,6 @@ LEVEL = ../../../..
 
 FP_ABSTOLERANCE = 1.0e-5
 
-include ../../Makefile.spec2006
-
 CPPFLAGS += -DNDEBUG
 
 ifeq ($(RUN_TYPE),test)
@@ -24,3 +22,5 @@ endif
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lstdc++ -lm
+
+include ../../Makefile.spec2006

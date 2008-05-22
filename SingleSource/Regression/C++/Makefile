@@ -6,6 +6,6 @@
 #
 LEVEL = ../../..
 DIRS=EH
-include $(LEVEL)/SingleSource/Makefile.singlesrc
 CFLAGS += -std=c99
 LDFLAGS += -lstdc++
+include $(LEVEL)/SingleSource/Makefile.singlesrc
