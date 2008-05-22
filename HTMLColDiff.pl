@@ -189,7 +189,7 @@ foreach my $Line (@File2) {
   # changes or highlights if those options are enabled.
   if ($LineNo == -1 || (!$excludeNoHighlight || $highlightCells) && (!$excludeNoShow || $showCells)) {
     print $row;
+    $LineNo++;
   }
-  $LineNo++;
 }
 print "</table>\n";
