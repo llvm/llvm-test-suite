@@ -3,6 +3,7 @@
 DIRS = 
 LEVEL = ../../../..
 FP_TOLERANCE := 0.016
+LDFLAGS += -lm
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
