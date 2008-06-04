@@ -207,7 +207,6 @@ endif#DISABLE_DIFFS
 ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -enable-sinking
 #-machine-licm
-#-coalescer-commute-instrs
 #--enable-tail-merge
 #--enable-ppc-preinc
 #-regalloc=local -fast
@@ -220,15 +219,13 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -schedule-livein-copies
-#-align-loops=false
+LLCBETAOPTION := -stack-coloring
+#-schedule-livein-copies
 #-enable-sinking
-#-coalescer-commute-instrs
 #-machine-licm
 #-new-coalescer-heuristic=true
 #-tailcallopt
 #-regalloc=local -fast
-#-disable-rematerialization
 #-disable-fp-elim
 #-regalloc=bigblock -fast
 endif
@@ -236,11 +233,10 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -schedule-livein-copies
+LLCBETAOPTION := -stack-coloring
+#-schedule-livein-copies
 #-enable-sinking
-#-coalescer-commute-instrs
 #-new-coalescer-heuristic=true
-#-disable-rematerialization
 #-march=thumb
 endif
 ifeq ($(ARCH),THUMB)
