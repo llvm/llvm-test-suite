@@ -219,9 +219,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -stack-coloring
+LLCBETAOPTION := -enable-sinking
 #-schedule-livein-copies
-#-enable-sinking
 #-machine-licm
 #-new-coalescer-heuristic=true
 #-tailcallopt
@@ -233,9 +232,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -stack-coloring
+LLCBETAOPTION := -enable-sinking
 #-schedule-livein-copies
-#-enable-sinking
 #-new-coalescer-heuristic=true
 #-march=thumb
 endif
