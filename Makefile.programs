@@ -205,7 +205,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -enable-sinking -empty-bb-index
 #-machine-licm
 #--enable-tail-merge
 #--enable-ppc-preinc
