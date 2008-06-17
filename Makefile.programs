@@ -219,7 +219,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-sinking
+LLCBETAOPTION := -enable-value-prop
+#-enable-sinking
 #-schedule-livein-copies
 #-machine-licm
 #-new-coalescer-heuristic=true
