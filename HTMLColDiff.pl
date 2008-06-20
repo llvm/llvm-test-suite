@@ -161,10 +161,17 @@ foreach my $Line (@File2) {
           }
           
         } elsif ($Field ne $FieldComp) {
-          # Always show but never highlight changes in non-numeric
-          # fields
           $Show    = 1;
-          $Field = "$FieldComp => $FieldComp";
+          # Specially handle tests that are failing to compile but were not
+          # doing so previously
+          if ($Field eq "*") {
+            $Highlight = 1;
+            $Colour = "red";
+            $Field = "FAIL";
+          }
+          # Always show but never highlight other changes in non-numeric
+          # fields
+          $Field = "$FieldComp => $Field";
         }
       }
       # Remove spaces, we don't want wrapping inside cells
