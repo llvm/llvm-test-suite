@@ -219,7 +219,9 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -enable-value-prop
+LLCBETAOPTION := -new-spilling-heuristic
+#-two-addr-remat
+#-enable-value-prop
 #-enable-sinking
 #-schedule-livein-copies
 #-machine-licm
