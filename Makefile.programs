@@ -243,6 +243,7 @@ endif
 ifeq ($(ARCH),THUMB)
 LLCBETAOPTION := --enable-thumb-reg-scavenging
 endif
+LLCBETAOPTION += --enable-legalize-types
 
 print-llcbeta-option:
 	@echo $(LLCBETAOPTION)
