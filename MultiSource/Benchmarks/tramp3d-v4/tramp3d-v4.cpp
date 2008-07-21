@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <limits>
 #include <math.h>
+#include <cstring>
 
 namespace Smarts {
 template<class T>
