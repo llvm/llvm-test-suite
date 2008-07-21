@@ -2,7 +2,7 @@
 
 #include "intersection.h"
 #include <cstdlib>
-
+#include <cstring>
 
 void intersection_4x4::connectNin (roadlet *leftlane, roadlet *rightlane)
 {
@@ -50,7 +50,7 @@ void intersection_4x4::connectWout(roadlet *leftlane, roadlet *rightlane)
 }
 
 
-intersection_4x4::intersection_4x4(char *name)
+intersection_4x4::intersection_4x4(const char *name)
 {
     char *buff;
 

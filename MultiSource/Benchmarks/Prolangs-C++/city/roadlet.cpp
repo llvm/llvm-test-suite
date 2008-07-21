@@ -3,7 +3,7 @@
 #include <iostream>
 #include "roadlet.h"
 
-void roadlet::init(char *n)      
+void roadlet::init(const char *n)
 {
   occupant = 0;
   neighbors[0] = neighbors[1] = neighbors[2] = neighbors[3] = 0;

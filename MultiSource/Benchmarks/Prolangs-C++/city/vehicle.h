@@ -10,10 +10,10 @@ class vehicle
 private:
     enum { DEFAULT_SPEED = 100 };
     roadlet *location;
-    char *name;
+    const char *name;
     int speed;
     int move_points;			// move units accumulated towards moving
-    void init(roadlet *l, char *n, int s) 
+    void init(roadlet *l, const char *n, int s) 
 	{plan=-1,location=l, name=n, speed=s, move_points=0, dir = N;};
 
 protected:
@@ -23,7 +23,7 @@ protected:
 
 public:
     vehicle() {init(NULL, NULL, DEFAULT_SPEED);};
-    vehicle(char *n) {init(NULL, n, DEFAULT_SPEED);};
+    vehicle(const char *n) {init(NULL, n, DEFAULT_SPEED);};
     vehicle(roadlet *r, char *n) {init(r, n, DEFAULT_SPEED);};
     vehicle(roadlet *r, char *n, int s) {init(r, n, s);};
     // others include: r, s, rs, sr, ....
@@ -42,7 +42,7 @@ class car : public vehicle
 {
 public:
     car() : vehicle() { };
-    car(char *n) : vehicle(n) { };
+    car(const char *n) : vehicle(n) { };
     friend ostream& operator<< (ostream&, car);
 };
 

@@ -15,10 +15,10 @@ typedef roadlet * (*move_function)(roadlet *, vehicle *, direction);
 class roadlet
 {
 private:
-    void init(char *n);
+    void init(const char *n);
 
 protected:
-    char *name;
+    const char *name;
     vehicle *occupant;
     roadlet *neighbors[8];
     move_function the_moves[8];
@@ -27,7 +27,7 @@ public:
     roadlet() {
       init("unnamed");
     };
-    roadlet(char *n)         {
+    roadlet(const char *n)   {
       init(n);
     };
     int occupied()           { return(occupiedby() != NULL);};
@@ -52,7 +52,7 @@ protected:
     light *l;
 
 public:
-    intersection_roadlet(char *name, light *alight) : roadlet(name) {l = alight;} ;
+    intersection_roadlet(const char *name, light *alight) : roadlet(name) {l = alight;} ;
     light *get_light() { return(l);};
 };
 

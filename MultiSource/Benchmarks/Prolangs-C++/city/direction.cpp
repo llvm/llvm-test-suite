@@ -2,10 +2,10 @@
 
 #include "direction.h"
 
-char *direction::as_string()
+const char *direction::as_string()
 {
-    char *dirs[] = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", 
-		     "No direction"};
+    const char *dirs[] = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", 
+			   "No direction"};
     return(dirs[dir]);
 }
 int operator== (direction d1, direction d2)

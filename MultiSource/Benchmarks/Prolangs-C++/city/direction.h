@@ -15,7 +15,7 @@ public:
     direction(int i) 	{dir = i % 9;};
 
     int as_int()	{return (dir);};
-    char *as_string();
+    const char *as_string();
     direction right_front()	{return(direction((dir + 1) % 8));};
     direction right()		{return(direction((dir + 2) % 8));};
     direction right_back()	{return(direction((dir + 3) % 8));};

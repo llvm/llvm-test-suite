@@ -36,7 +36,7 @@ protected:
     roadlet *roadlets[4][4];
 
 public:
-    intersection_4x4(char *name);
+    intersection_4x4(const char *name);
     void connectSin(roadlet*, roadlet*) ;
     void connectNout(roadlet*, roadlet*);
     void connectNin(roadlet*, roadlet*);
