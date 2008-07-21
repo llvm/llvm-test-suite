@@ -1,6 +1,7 @@
 // sphere flake bvh raytracer (c) 2005, thierry berger-perrin <tbptbp@gmail.com>
 // this code is released under the GNU Public License.
 #include <cmath>       // see http://ompf.org/ray/sphereflake/
+#include <cstdlib>
 #include <iostream>    // compile with ie g++ -O2 -ffast-math sphereflake.cc
 #define GIMME_SHADOWS  // usage: ./sphereflake [lvl=6] >pix.ppm
 
