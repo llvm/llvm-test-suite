@@ -36,6 +36,7 @@
 #ifndef _EMPLOYEE_H
 #define _EMPLOYEE_H
 
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 using namespace std;
