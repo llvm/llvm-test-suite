@@ -3,6 +3,7 @@
 // http://www.bagley.org/~doug/shootout/
 // with help from PeterB
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 using namespace std;

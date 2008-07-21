@@ -3,6 +3,7 @@
 // http://www.bagley.org/~doug/shootout/
 // from Bill Lear
 
+#include <cstdlib>
 #include <iostream>
 #include <list>
 #include <numeric>

@@ -2,6 +2,7 @@
 // $Id$
 // http://www.bagley.org/~doug/shootout/
 
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 
