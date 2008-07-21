@@ -8,6 +8,7 @@
 
 // http://groups.google.com/groups?selm=bo4nls%2417vfq6%241%40ID-79865.news.uni-berlin.de
 
+#include <climits>
 #include <cstdlib>
 #include <cassert>
 #include <string>
