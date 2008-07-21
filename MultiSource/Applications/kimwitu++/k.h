@@ -20,6 +20,8 @@
 #define KIMWITUVERSIONMINOR 3
 #define KIMWITUVERSIONMICRO 6
 
+#include <cstdlib>
+#include <cstring>
 #include <stdio.h>
 #include <stddef.h>
 #include <string>
