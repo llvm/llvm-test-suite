@@ -675,6 +675,7 @@ double ray_h;
 
 /*  Initialise when called the first time  */
 
+int
 main(argc, argv)
 int argc;
 char *argv[];
@@ -824,4 +825,5 @@ char *argv[];
 	} else
            printf("\nNo errors in results.\n");
 #endif
+	return 0;
 }
