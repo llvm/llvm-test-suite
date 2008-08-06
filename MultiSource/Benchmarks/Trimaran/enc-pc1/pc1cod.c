@@ -260,7 +260,7 @@ main(int argc, const char **argv)
   /* if the user enter a key < 32 characters, characters of the default */ 
   /* password will be used */ 
   
-  strcpy(cle, "abcdefghijklmnopqrstuvwxyz012345");
+  memcpy(cle, "abcdefghijklmnopqrstuvwxyz012345", 32);
   
   
   printf("PC1 Cipher 256 bits \nENCRYPT file IN.BIN to OUT.BIN\n");
