@@ -80,8 +80,7 @@
 
 /*#include "defns.h"*/
 
-void *malloc(unsigned);
-void free(void*);
+#include <stdlib.h>
 
 /* Define if should use homemade str* functions. */
 
@@ -154,7 +153,6 @@ typedef struct Record 	RecordType;
 typedef RecordType *	RecordPtr;
 typedef int		boolean;
 
-#define	NULL		0
 #define	TRUE		1
 #define	FALSE		0
 
