@@ -205,8 +205,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -enable-sinking
-#-machine-licm
+LLCBETAOPTION := -machine-licm
+#-enable-sinking
 #--enable-tail-merge
 #--enable-ppc-preinc
 #-regalloc=local -fast
@@ -219,12 +219,12 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -new-spilling-heuristic
+LLCBETAOPTION := -machine-licm
+#-new-spilling-heuristic
 #-two-addr-remat
 #-enable-value-prop
 #-enable-sinking
 #-schedule-livein-copies
-#-machine-licm
 #-new-coalescer-heuristic=true
 #-tailcallopt
 #-regalloc=local -fast
