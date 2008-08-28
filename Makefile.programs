@@ -221,7 +221,6 @@ endif
 ifeq ($(ARCH),x86)
 LLCBETAOPTION := -machine-licm
 #-new-spilling-heuristic
-#-two-addr-remat
 #-enable-value-prop
 #-enable-sinking
 #-schedule-livein-copies
