@@ -205,8 +205,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -aggressive-remat
-#-machine-licm
+LLCBETAOPTION := -machine-licm
+#-aggressive-remat
 #-enable-sinking
 #--enable-tail-merge
 #--enable-ppc-preinc
@@ -220,7 +220,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -aggressive-remat
+LLCBETAOPTION := -fast-isel
+#-aggressive-remat
 #-machine-licm
 #-new-spilling-heuristic
 #-enable-value-prop
