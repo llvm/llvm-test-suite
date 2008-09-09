@@ -22,12 +22,14 @@
 #
 # Syntax: 
 #
-#   RunSafely.sh [-r <rhost>] [-l <ruser>]
+#   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-ro <roptions>]
 #                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
 #     <rhost>   is the remote host to execute the program
 #     <ruser>   is the username on the remote host
+#     <client>  is the remote client used to execute the program
+#     <roptions>is the extra options passed to the remote client
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
@@ -44,13 +46,22 @@ DIR=${0%%`basename $0`}
 
 RHOST=
 RUSER=`id -un`
-FLAG=$1
+RCLIENT=rsh
+ROPTIONS=""
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
 fi
 if [ $1 = "-l" ]; then
   RUSER=$2
+  shift 2
+fi
+if [ $1 = "-rc" ]; then
+  RCLIENT=$2
+  shift 2
+fi
+if [ $1 = "-ro" ]; then
+  ROPTIONS=$2
   shift 2
 fi
 
@@ -119,8 +130,8 @@ else
   echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $OUTFILE.remote 2>&1 < $INFILE;); echo exit $?) > $OUTFILE.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
   chmod +x "$PWD/${PROGRAM}.command"
 
-  ( rsh -l $RUSER $RHOST "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
-  ( rsh -l $RUSER $RHOST "$PWD/${PROGRAM}.command" )
+  ( $RCLIENT -l $RUSER $RHOST $ROPTIONS "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
+  ( $RCLIENT -l $RUSER $RHOST $ROPTIONS "$PWD/${PROGRAM}.command" )
   cat $OUTFILE.remote.time | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
