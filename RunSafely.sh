@@ -22,14 +22,14 @@
 #
 # Syntax: 
 #
-#   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-ro <roptions>]
+#   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
 #                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
 #     <rhost>   is the remote host to execute the program
 #     <ruser>   is the username on the remote host
 #     <client>  is the remote client used to execute the program
-#     <roptions>is the extra options passed to the remote client
+#     <port>    is the port used by the remote client
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
@@ -47,7 +47,7 @@ DIR=${0%%`basename $0`}
 RHOST=
 RUSER=`id -un`
 RCLIENT=rsh
-ROPTIONS=""
+RPORT=
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -60,8 +60,8 @@ if [ $1 = "-rc" ]; then
   RCLIENT=$2
   shift 2
 fi
-if [ $1 = "-ro" ]; then
-  ROPTIONS=$2
+if [ $1 = "-rp" ]; then
+  RPORT="-p $2"
   shift 2
 fi
 
@@ -127,21 +127,21 @@ else
   rm -f "$PWD/${PROGRAM}.command"
   rm -f "$PWD/${PROGRAM}.remote"
   rm -f "$PWD/${PROGRAM}.remote.time"
-  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $OUTFILE.remote 2>&1 < $INFILE;); echo exit $?) > $OUTFILE.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
+  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit $?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
   chmod +x "$PWD/${PROGRAM}.command"
 
-  ( $RCLIENT -l $RUSER $RHOST $ROPTIONS "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
-  ( $RCLIENT -l $RUSER $RHOST $ROPTIONS "$PWD/${PROGRAM}.command" )
-  cat $OUTFILE.remote.time | awk -- '\
+  ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
+  ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROGRAM}.command" )
+  cat $PWD/${OUTFILE}.remote.time | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
 /^sys/    { cpu += $2; print; }
 !/^user/ && !/^sys/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 sleep 1
-cp -f $OUTFILE.remote $OUTFILE
-rm -f $OUTFILE.remote
-rm -f $OUTFILE.remote.time
+cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
+rm -f $PWD/${OUTFILE}.remote
+rm -f $PWD/${OUTFILE}.remote.time
 fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
