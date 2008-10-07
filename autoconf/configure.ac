@@ -58,7 +58,7 @@ AC_ARG_WITH(llvmsrc,
 
 dnl Location of LLVM object code
 AC_ARG_WITH(llvmobj,
-  AS_HELP_STRING([--with-llvmobj],Location of LLVM Object Code),
+  AS_HELP_STRING([--with-llvmobj=DIR],Location of LLVM Object Code),
   AC_SUBST(LLVM_OBJ,[$withval]),
   AC_SUBST(LLVM_OBJ,[`cd ../..; pwd`]))
 
