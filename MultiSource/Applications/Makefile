@@ -5,7 +5,11 @@ LEVEL = ../..
 include $(LEVEL)/Makefile.config
 
 PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc SPASS \
-                 hexxagon oggenc JM viterbi minisat SIBsim4 ClamAV sqlite3 lemon lua
+                 hexxagon oggenc JM viterbi minisat SIBsim4 ClamAV sqlite3 lemon
+
+ifndef SMALL_PROBLEM_SIZE
+PARALLEL_DIRS += lua
+endif
 
 # Obsequi uses Linux-only features; need to fix that
 ifeq ($(OS),Linux)
