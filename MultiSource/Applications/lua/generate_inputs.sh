@@ -8,10 +8,10 @@ geninput() {
 	input1=$1
 	input10=""
 	input50=""
-	for c in `seq 1 10`; do
+	for c in 1 2 3 4 5 6 7 8 9 10; do
 		input10="$input10 $input1"
 	done
-	for c in `seq 1 5`; do
+	for c in 1 2 3 4 5; do
 		input50="$input50 $input10"
 	done
 	declare -i count=$2
