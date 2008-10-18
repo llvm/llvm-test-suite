@@ -1,7 +1,7 @@
 LEVEL = ../../..
 PROG = oggenc
 
-CPPFLAGS =
+CPPFLAGS = -fno-strict-aliasing
 LDFLAGS  = -lm
 
 STDIN_FILENAME = $(SourceDir)/tune
