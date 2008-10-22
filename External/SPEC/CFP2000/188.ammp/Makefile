@@ -5,6 +5,9 @@ STDIN_FILENAME  = ammp.in
 STDOUT_FILENAME = ammp.out
 CPPFLAGS =
 
+FP_ABSTOLERANCE=0.0001
+FP_TOLERANCE=0.003
+
 # override RUN_TYPE (this is a long running test):
 ifndef RUN_TYPE
 ifdef SMALL_PROBLEM_SIZE
