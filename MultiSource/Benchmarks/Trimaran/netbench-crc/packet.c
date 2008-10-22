@@ -16,6 +16,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "packet_lengths.h"
 #include "headers.h"
 #include "packet.h"
@@ -56,6 +57,7 @@ get_next_packet (int packet_number)
     }
 
   /* Copy the header information */
+  memset((void*)packet, 0, packet_length);
   memcpy ((void *)packet, (void *)headers[packet_number], HEADER_SIZE);
 #endif
 
