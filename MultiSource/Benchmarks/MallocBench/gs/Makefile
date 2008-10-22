@@ -2,7 +2,8 @@ LEVEL = ../../../..
 PROG = gs
 LIBS += -lm
 LDFLAGS += -lm
-CPPFLAGS += -DNOMEMOPT -DGS_LIB_DEFAULT=\"$(shell pwd):$(shell pwd)/fonts\"
+CPPFLAGS += -DNOMEMOPT \
+            -DGS_LIB_DEFAULT=\"$(PROJ_SRC_DIR):$(PROJ_SRC_DIR)/fonts\"
 
 #
 # This is to work around a bug where having a function prototype that is
