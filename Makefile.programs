@@ -548,6 +548,7 @@ Output/%.misopt.out: Output/%.linked.rbc $(LFINDMISOPT)
 
 clean::
 	rm -f bugpoint-* 
+	rm -f bugpoint.* 
 	rm -rf Output/misopt-*
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
