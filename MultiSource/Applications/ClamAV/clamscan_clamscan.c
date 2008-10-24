@@ -92,6 +92,9 @@ int main(int argc, char **argv)
 
 
     if(opt_check(opt, "debug")) {
+#if 0 // In the context of the LLVM testsuite, we don't want to override
+      // the setrlimit values. Among other problems, it can fail, leading
+      // to spurious diffs.
 #if defined(C_LINUX)
 	    /* njh@bandsman.co.uk: create a dump if needed */
 	    struct rlimit rlim;
@@ -99,6 +102,7 @@ int main(int argc, char **argv)
 	rlim.rlim_cur = rlim.rlim_max = RLIM_INFINITY;
 	if(setrlimit(RLIMIT_CORE, &rlim) < 0)
 	    perror("setrlimit");
+#endif
 #endif
 	cl_debug(); /* enable debug messages */
     }
