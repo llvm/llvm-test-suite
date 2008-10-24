@@ -108,6 +108,11 @@ ifeq ($(OS),Darwin)
 EXTRA_LLI_OPTS += -load=libz.dylib
 EXTRA_JIT_OPTS += -load=libz.dylib
 else
+ifeq ($(OS),Linux)
+EXTRA_LLI_OPTS += -load=libz.so.1
+EXTRA_JIT_OPTS += -load=libz.so.1
+else
 EXTRA_LLI_OPTS += -load=libz
 EXTRA_JIT_OPTS += -load=libz
+endif
 endif
