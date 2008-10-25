@@ -23,7 +23,9 @@ $(PROJ_SRC_DIR)/lua.c: .input_generated
 	if [ ! -f ./generate_inputs.sh ]; \
 	then \
 		cp -f $(PROJ_SRC_DIR)/generate_inputs.sh . ; \
-		cp -f -r $(PROJ_SRC_DIR)/{test,bench,input} . ; \
+		cp -f -r $(PROJ_SRC_DIR)/test . ; \
+		cp -f -r $(PROJ_SRC_DIR)/bench . ; \
+		cp -f -r $(PROJ_SRC_DIR)/input . ; \
 		cp -f $(PROJ_SRC_DIR)/*.lua . ; \
 	fi
 	./generate_inputs.sh
