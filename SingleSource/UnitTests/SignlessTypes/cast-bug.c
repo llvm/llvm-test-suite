@@ -11,5 +11,5 @@ main ( int argc, char** argv)
 	    result = result + 17;
 	}
     }
-  return (result);
+  return result == 35;
 }
