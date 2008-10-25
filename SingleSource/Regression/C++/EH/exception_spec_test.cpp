@@ -5,8 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void TerminateHandler() {
-  printf("std::terminate called\n");
+static void TerminateHandler0() {
+  printf("std::terminate called, as expected\n");
+  exit(0);
+}
+
+static void TerminateHandler1() {
+  printf("std::terminate called, but it was not expected!\n");
   exit(1);
 }
 
@@ -31,13 +36,14 @@ void test(bool Int) throw (double) {
 }
 
 int main() {
+  std::set_terminate(TerminateHandler1);
+
   try {
     test(false);
   } catch (double D) {
     printf("Double successfully caught!\n");
   }
 
-  std::set_terminate(TerminateHandler);
   std::set_unexpected(UnexpectedHandler1);
 
   try {
@@ -46,6 +52,10 @@ int main() {
     printf("Double successfully caught!\n");
   }
 
+  std::set_terminate(TerminateHandler0);
   std::set_unexpected(UnexpectedHandler2);
   test(true);
+
+  printf("TerminateHandler0 should have been called!\n");
+  return 1;
 }
