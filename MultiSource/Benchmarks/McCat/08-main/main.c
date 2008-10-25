@@ -129,5 +129,5 @@ main(int argc, char **argv)
 
   Draw_All(o);
   
-  return 1;
+  return 0;
 }
