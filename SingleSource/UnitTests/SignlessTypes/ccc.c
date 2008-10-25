@@ -50,5 +50,5 @@ int main(int argc, char**argv) {
 
   printf("%d %hd %hu\n", TestVal, sh, ush);
 
-  return TestVal;
+  return 0;
 }
