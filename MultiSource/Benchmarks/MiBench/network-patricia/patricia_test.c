@@ -78,7 +78,7 @@ main(int argc, char **argv)
 	 */
 	if ((fp = fopen(argv[1], "r")) == NULL) {
 		printf("File %s doesn't seem to exist\n",argv[1]);
-		exit(0);
+		exit(1);
 	}
 
 	/*
@@ -94,21 +94,21 @@ main(int argc, char **argv)
 	phead = (struct ptree *)malloc(sizeof(struct ptree));
 	if (!phead) {
 		perror("Allocating p-trie node");
-		exit(0);
+		exit(1);
 	}
 	bzero(phead, sizeof(*phead));
 	phead->p_m = (struct ptree_mask *)malloc(
 			sizeof(struct ptree_mask));
 	if (!phead->p_m) {
 		perror("Allocating p-trie mask data");
-		exit(0);
+		exit(1);
 	}
 	bzero(phead->p_m, sizeof(*phead->p_m));
 	pm = phead->p_m;
 	pm->pm_data = (struct MyNode *)malloc(sizeof(struct MyNode));
 	if (!pm->pm_data) {
 		perror("Allocating p-trie mask's node data");
-		exit(0);
+		exit(1);
 	}
 	bzero(pm->pm_data, sizeof(*pm->pm_data));
 	/*******
@@ -137,7 +137,7 @@ main(int argc, char **argv)
 		p = (struct ptree *)malloc(sizeof(struct ptree));
 		if (!p) {
 			perror("Allocating p-trie node");
-			exit(0);
+			exit(1);
 		}
 		bzero(p, sizeof(*p));
 
@@ -148,7 +148,7 @@ main(int argc, char **argv)
 				sizeof(struct ptree_mask));
 		if (!p->p_m) {
 			perror("Allocating p-trie mask data");
-			exit(0);
+			exit(1);
 		}
 		bzero(p->p_m, sizeof(*p->p_m));
 
@@ -160,7 +160,7 @@ main(int argc, char **argv)
 		pm->pm_data = (struct MyNode *)malloc(sizeof(struct MyNode));
 		if (!pm->pm_data) {
 			perror("Allocating p-trie mask's node data");
-			exit(0);
+			exit(1);
 		}
 		bzero(pm->pm_data, sizeof(*pm->pm_data));
 
@@ -191,9 +191,9 @@ main(int argc, char **argv)
 		}
 		if (!p) {
 			fprintf(stderr, "Failed on pat_insert\n");
-			exit(0);
+			exit(1);
 		}
 	}
 
-	exit(1);
+	exit(0);
 }
