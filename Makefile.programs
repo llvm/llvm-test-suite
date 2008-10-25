@@ -441,37 +441,37 @@ ifndef USE_PRECOMPILED_BYTECODE
 ifndef USE_REFERENCE_OUTPUT
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 endif
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-opt-beta): \
 Output/%.out-opt-beta: Output/%.opt-beta
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	-$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 
 # The RunSafely.sh script puts an "exit <retval>" line at the end of
 # the program's output. We have to make bugpoint do the same thing
@@ -556,7 +556,7 @@ LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
 	@rm -f $@
-	-$(RUNSAFELY) $(STDIN_FILENAME) Output/$*.out-prof $(LLI) $(JIT_OPTS) \
+	$(RUNSAFELY) $(STDIN_FILENAME) Output/$*.out-prof $(LLI) $(JIT_OPTS) \
             -fake-argv0 'Output/$*.llvm.bc' -load $(LIBPROFILESO) $< -llvmprof-output $@ $(RUN_OPTIONS)
 	@cmp -s Output/$*.out-prof Output/$*.out-nat || \
 		printf "***\n***\n*** WARNING: Output of profiled program (Output/$*.out-prof)\n*** doesn't match the output of the native program (Output/$*.out-nat)!\n***\n***\n";
