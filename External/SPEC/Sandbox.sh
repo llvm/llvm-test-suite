@@ -32,9 +32,5 @@ cp -r $UP2/all/input/* . > /dev/null 2>&1
 bunzip2 *.bz2 > /dev/null 2>&1
 
 # Run the program now.
-echo Running: $*
-$*
-
-# This script is always successful.
-exit 0
-
+echo Running: "$@"
+exec "$@"
