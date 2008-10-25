@@ -26,6 +26,6 @@ int test(int r) {
 }
 
 int main() {
-    return test(1) == 1;
+    return test(1) != 1;
 }
 
