@@ -27,7 +27,7 @@ SPEC_OUTPUT_FILE_FILTER = cat
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
-	-$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.native $(RUN_OPTIONS)
 	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -36,7 +36,7 @@ Output/%.out-nat: Output/%.native
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	-$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLI_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -45,7 +45,7 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	-$(SPEC_SANDBOX) jit-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) jit-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -54,7 +54,7 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
-	-$(SPEC_SANDBOX) jit-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) jit-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) ../$*.llvm.bc $(RUN_OPTIONS)
 	-(cd Output/jit-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -63,7 +63,7 @@ Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
-	-$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) llc-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.llc $(RUN_OPTIONS)
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -72,7 +72,7 @@ Output/%.out-llc: Output/%.llc
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
-	-$(SPEC_SANDBOX) llc-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) llc-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.llc-beta $(RUN_OPTIONS)
 	-(cd Output/llc-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
@@ -81,7 +81,7 @@ Output/%.out-llc-beta: Output/%.llc-beta
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
-	-$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
              $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
                   ../$*.cbe $(RUN_OPTIONS)
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
