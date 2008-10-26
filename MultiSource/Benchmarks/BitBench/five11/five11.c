@@ -187,6 +187,6 @@ int main(int argc, char *argv[])
     free_list2(list);
   }
   gettimeofday(&post,0);
-  printf("%d", outsize);  
+  printf("%d\n", outsize);  
   exit(0); 
 }

@@ -171,6 +171,6 @@ int main(int argc, char *argv[])
     outsize = do_decode(inbuf,outbuf,outfilename);
   }
 
-  printf("%d", outsize);
+  printf("%d\n", outsize);
   exit(0); 
 }

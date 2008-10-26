@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
   gettimeofday(&post,0);
   time = ((post.tv_sec*1000000+post.tv_usec)-(pre.tv_sec*1000000+pre.tv_usec));
   
-  printf("%d", outsize);
+  printf("%d\n", outsize);
   
   exit(0); 
 }
