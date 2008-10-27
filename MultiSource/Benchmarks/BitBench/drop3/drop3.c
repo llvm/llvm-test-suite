@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
   size_t size;
   int outsize,time;
   unsigned char *inbuf, *outbuf, *temp;
-  char outfilename[100];
+  char *outfilename;
   char postfix[] = ".c";
   struct timeval pre,post;
   
@@ -77,12 +77,15 @@ int main(int argc, char *argv[])
       perror(argv[1]);
       exit(1);
     }
+    outfilename = malloc(strlen(argv[1]) + strlen(postfix) + 1);
     strcpy(outfilename,argv[1]);
     strcat(outfilename,postfix);
     if ((out = fopen(outfilename, "w")) == NULL) {
       perror(outfilename);
+      free(outfilename);
       exit(1);
     }
+    free(outfilename);
     argv++; argc--;
   }
   else
