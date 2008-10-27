@@ -155,8 +155,6 @@ int main(int argc, char *argv[])
   size_t size;
   int outsize,time;
   unsigned char *inbuf, *outbuf, *temp;
-  char outfilename[100];
-  char postfix[] = ".c";
   struct timeval pre,post;
   
   /* optional input arg */
@@ -169,8 +167,6 @@ int main(int argc, char *argv[])
       perror(argv[1]);
       exit(1);
     }
-    strcpy(outfilename,argv[1]);
-    strcat(outfilename,postfix);
     argc--;
   }
   
