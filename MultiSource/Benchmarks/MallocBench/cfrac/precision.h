@@ -118,7 +118,14 @@ extern inline precision psetq(precision *up, precision v) {
 #endif
 
 #ifdef __STDC__		/* if ANSI compiler */
+/* LLVM - Disable all of the inlining */
+#if 0
 #ifndef __GNUC__
+extern	precision 	pnew(precision);		/* initialization */
+extern	precision 	presult(precision);		/* function result */
+extern	precision	psetq(precision *, precision);	/* quick assignment */
+#endif
+#else
 extern	precision 	pnew(precision);		/* initialization */
 extern	precision 	presult(precision);		/* function result */
 extern	precision	psetq(precision *, precision);	/* quick assignment */
@@ -225,7 +232,14 @@ pvector pvset(pvector, unsigned size, precision value);
  * Function versions of above if you still want side effects
  */
 
+/* LLVM - Disable all of the inlining */
+#if 0
 #ifndef __GNUC__
+extern	precision 	pnew();		/* initialization */
+extern	precision 	presult();	/* function result */
+extern	precision	psetq();	/* quick assignment */
+#endif
+#else
 extern	precision 	pnew();		/* initialization */
 extern	precision 	presult();	/* function result */
 extern	precision	psetq();	/* quick assignment */

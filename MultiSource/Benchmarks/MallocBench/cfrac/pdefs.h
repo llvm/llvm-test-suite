@@ -43,9 +43,10 @@ extern void  deallocate();
 /*
  * These next four types are used only used in this include file
  */
-typedef	unsigned char	u8;				  /*  8 bits */
-typedef unsigned short	u16;				  /* 16 bits */
-typedef unsigned long	u32;			  	  /* 32 bits */
+#include <stdint.h>
+typedef	uint8_t		u8;				  /*  8 bits */
+typedef uint16_t	u16;				  /* 16 bits */
+typedef uint32_t	u32;			  	  /* 32 bits */
 typedef u8           	boolean;		          /*  1 bit  */
 
 #define BASE	  	65536		/* Base * (Base-1) <= MAXINT */
