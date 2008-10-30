@@ -431,7 +431,7 @@ ifdef REQUIRES_EH_SUPPORT
 JIT_OPTS += -enable-correct-eh-support
 endif
 
-native: $(PROGRAMS_TO_TEST:%=Output/%.native)
+native:: $(PROGRAMS_TO_TEST:%=Output/%.native)
 stripped-bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc)
 
 ifndef PROGRAMS_HAVE_CUSTOM_RUN_RULES

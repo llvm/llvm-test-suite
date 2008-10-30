@@ -123,7 +123,7 @@ prdirs::
 # which are marked as Phony.
 #
 .PHONY: all dynamic bytecodelib install-bytecode-library
-.PHONY: clean distclean install test bytecode prdirs
+.PHONY: clean distclean install test bytecode native prdirs
 
 ###########################################################################
 # Miscellaneous paths and commands:
@@ -462,7 +462,7 @@ RObjectsG := $(addprefix $(PROJ_OBJ_DIR)/Debug/,$(RObjs))
 #---------------------------------------------------------
 
 ifdef DIRS
-all install clean test bytecode stripped-bytecode install-bytecode::
+all install clean test bytecode native stripped-bytecode install-bytecode::
 	$(VERB) for dir in ${DIRS}; do \
 		if [ ! -f $$dir/Makefile ]; \
 		then \
@@ -480,10 +480,12 @@ install  :: $(addsuffix /.makeinstall , $(PARALLEL_DIRS))
 clean    :: $(addsuffix /.makeclean   , $(PARALLEL_DIRS))
 test     :: $(addsuffix /.maketest    , $(PARALLEL_DIRS))
 bytecode :: $(addsuffix /.makebytecode, $(PARALLEL_DIRS))
+native   :: $(addsuffix /.makenative, $(PARALLEL_DIRS))
 stripped-bytecode :: $(addsuffix /.makestripped-bytecode, $(PARALLEL_DIRS))
 install-bytecode :: $(addsuffix /.makeinstall-bytecode, $(PARALLEL_DIRS))
 
-%/.makeall %/.makeinstall %/.makeclean %/.maketest %/.makebytecode %/.makestripped-bytecode %/.makeinstall-bytecode:
+%/.makeall %/.makeinstall %/.makeclean %/.maketest %/.makebytecode \
+%/.makestripped-bytecode %/.makeinstall-bytecode %/.makenative:
 	$(VERB) if [ ! -f $(@D)/Makefile ]; \
 	then \
 		$(MKDIR) $(@D); \
