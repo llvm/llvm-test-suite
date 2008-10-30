@@ -137,11 +137,11 @@ prdirs::
 
 BURG_OPTS = -I
 
-ifdef ENABLE_PROFILING
+ifeq ($(ENABLE_PROFILING),1)
   ENABLE_OPTIMIZED = 1
   CONFIGURATION := Profile
 else
-  ifdef ENABLE_OPTIMIZED
+  ifeq ($(ENABLE_OPTIMIZED),1)
     CONFIGURATION := Release
   else
     CONFIGURATION := Debug
@@ -150,7 +150,7 @@ endif
 
 # If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
 # then adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
-ifdef DISABLE_ASSERTIONS
+ifeq ($(DISABLE_ASSERTIONS),1)
   CONFIGURATION := $(CONFIGURATION)-Asserts
 endif
 
@@ -158,7 +158,7 @@ endif
 # Enable this for profiling support with 'gprof'
 # This automatically enables optimized builds.
 #
-ifdef ENABLE_PROFILING
+ifeq ($(ENABLE_PROFILING),1)
   PROFILE = -pg
 endif
 
