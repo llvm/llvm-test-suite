@@ -6,8 +6,10 @@
 
 /* Useful defines & typedefs */
 
+#include <inttypes.h>
+
 typedef unsigned char BYTE;
-typedef unsigned int LONG;
+typedef uint32_t LONG;
 
 #define SHA_BLOCKSIZE		64
 #define SHA_DIGESTSIZE		20
