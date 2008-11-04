@@ -231,7 +231,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -fast-isel
+LLCBETAOPTION := -enable-stack-protector=2
+#-fast-isel
 #-aggressive-remat
 #-machine-licm
 #-new-spilling-heuristic
