@@ -487,9 +487,9 @@ BUGPOINT_OPTIONS += -append-exit-code
 # Support remote execution
 ifdef REMOTE_HOST
 ifdef REMOTE_USER
-BUGPOINT_OPTIONS += -rsh-host=$(REMOTE_HOST) -rsh-user=$(REMOTE_USER)
+BUGPOINT_OPTIONS += -remote-host=$(REMOTE_HOST) -remote-user=$(REMOTE_USER)
 else
-BUGPOINT_OPTIONS += -rsh-host=$(REMOTE_HOST)
+BUGPOINT_OPTIONS += -remote-host=$(REMOTE_HOST)
 endif
 endif
 
