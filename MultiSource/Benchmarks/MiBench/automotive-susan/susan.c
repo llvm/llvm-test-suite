@@ -2119,6 +2119,7 @@ CORNER_LIST corner_list;
 /* }}} */
 
   put_image(argv[2],in,x_size,y_size);
+  return 0;
 }
 
 /* }}} */
