@@ -232,7 +232,7 @@ LLCBETAOPTION := -sched=simple
 endif
 ifeq ($(ARCH),x86)
 ifeq ($(OS),Darwin)
-LLCBETAOPTION := -enable-stack-protector=2
+LLCBETAOPTION := -enable-stack-protector=all
 else
 LLCBETAOPTION := -fast-isel
 endif
