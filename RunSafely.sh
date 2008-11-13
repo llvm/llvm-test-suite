@@ -79,6 +79,11 @@ PROGRAM=$5
 shift 5
 SYSTEM=`uname -s`
 
+PROG=${PROGRAM}
+if [ `basename ${PROGRAM}` == "lli" ]; then
+  PROG=`basename ${PROGRAM}`
+fi
+
 ULIMITCMD=""
 case $SYSTEM in
   CYGWIN*) 
@@ -130,14 +135,14 @@ BEGIN     { cpu = 0.0; }
 !/^user/ && !/^sys/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 else
-  rm -f "$PWD/${PROGRAM}.command"
-  rm -f "$PWD/${PROGRAM}.remote"
-  rm -f "$PWD/${PROGRAM}.remote.time"
-  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit $?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROGRAM}.command"
-  chmod +x "$PWD/${PROGRAM}.command"
+  rm -f "$PWD/${PROG}.command"
+  rm -f "$PWD/${PROG}.remote"
+  rm -f "$PWD/${PROG}.remote.time"
+  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit $?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
+  chmod +x "$PWD/${PROG}.command"
 
-  ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROGRAM}.command" ) > /dev/null 2>&1
-  ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROGRAM}.command" )
+  ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
+  ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROG}.command" )
   cat $PWD/${OUTFILE}.remote.time | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }

@@ -163,11 +163,6 @@ all:: $(BYTECODE)
 profile:: $(PROFOUTPUT)
 print-profile:: $(PRINTPROFOUTPUT)
 
-# JIT remote tests are not supported yet.
-ifdef REMOTE_HOST
-  DISABLE_JIT := 1
-endif
-
 ifdef RUN_GCC_ONLY
 DISABLE_DIFFS = 1
 all:: $(GCCOUTPUT)
