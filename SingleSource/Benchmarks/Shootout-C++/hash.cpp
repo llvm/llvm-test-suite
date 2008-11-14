@@ -4,9 +4,11 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <hash_map.h>
+#include <ext/hash_map>
+#include <cstring>
 
 using namespace std;
+using namespace __gnu_cxx;
 
 struct eqstr {
     bool operator()(const char* s1, const char* s2) const {
