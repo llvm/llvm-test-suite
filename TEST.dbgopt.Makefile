@@ -7,8 +7,8 @@
 # first.bc and second.bc should match. Otherwise debugging information
 # is influencing the optimizer.
 #
-# $ opt input.bc -strip -std-compile-output -o first.bc
-# $ opt input.bc -std-compile-output -strip -o second.bc
+# $ opt input.bc -strip-nondebug -strip-debug -std-compile-output -strip -o first.bc
+# $ opt input.bc -strip-nondebug -std-compile-output -strip -o second.bc
 #
 ##===----------------------------------------------------------------------===##
 
@@ -19,10 +19,10 @@ test.$(TEST).%: Output/%.diff
 
 Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 	$(LLVMGXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip -std-compile-opts -f -o Output/$*.bc 
-	$(LDIS) Output/$*.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -std-compile-opts -strip -f -o Output/$*.bc 
-	$(LDIS) Output/$*.bc -f -o Output/$*.second.ll 
+	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
+	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
 	else \
@@ -32,12 +32,13 @@ Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 
 Output/%.diff: %.c Output/.dir $(LLVMGCC) $(LOPT) $(LDIS)
 	$(LLVMGCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip -std-compile-opts -f -o Output/$*.bc 
-	$(LDIS) Output/$*.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -std-compile-opts -strip -f -o Output/$*.bc 
-	$(LDIS) Output/$*.bc -f -o Output/$*.second.ll 
+	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
+	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
 	else \
 	 echo "--------- TEST-FAIL: $*"; \
 	fi
+
