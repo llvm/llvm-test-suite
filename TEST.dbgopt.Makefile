@@ -8,7 +8,7 @@
 # is influencing the optimizer.
 #
 # $ opt input.bc -strip-nondebug -strip-debug -std-compile-output -strip -o first.bc
-# $ opt input.bc -strip-nondebug -std-compile-output -strip -o second.bc
+# $ opt input.bc -strip-nondebug -std-compile-output -strip-debug -strip -o second.bc
 #
 ##===----------------------------------------------------------------------===##
 
@@ -21,7 +21,7 @@ Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 	$(LLVMGXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
 	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip-debug -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
@@ -34,7 +34,7 @@ Output/%.diff: %.c Output/.dir $(LLVMGCC) $(LOPT) $(LDIS)
 	$(LLVMGCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
 	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip-debug -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
