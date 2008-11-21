@@ -15,5 +15,12 @@ endif
 
 DIRS += SignlessTypes Threads
 
+# Only test Obj-C on darwin/x86 for time being.
+ifeq ($(ARCH),x86)
+ifeq ($(OS),Darwin)
+DIRS += ObjC ObjC++
+endif
+endif
+
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc
