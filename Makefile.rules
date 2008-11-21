@@ -437,7 +437,7 @@ AR       = $(AR_PATH) cr
 ifndef Source
 Source  := $(notdir $(ExtraSource) $(wildcard $(SourceDir)/*.cpp \
                     $(SourceDir)/*.cc $(SourceDir)/*.c $(SourceDir)/*.y \
-                    $(SourceDir)/*.l))
+                    $(SourceDir)/*.l $(SourceDir)/*.m $(SourceDir)/*.mm))
 endif
 
 #

@@ -61,6 +61,16 @@ Output/%.bc: %.C $(LCC1XX) Output/.dir $(INCLUDES)
 	-$(LLVMGXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
 	-$(call UPGRADE_LL,$@)
 
+# Compile from X.m to Output/X.bc
+Output/%.bc: %.m $(LCC1) Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(call UPGRADE_LL,$@)
+
+# Compile from X.mm to Output/X.bc
+Output/%.bc: %.mm $(LCC1XX) Output/.dir $(INCLUDES)
+	-$(LLVMGXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(call UPGRADE_LL,$@)
+
 # LLVM Assemble from X.ll to Output/X.bc.  Because we are coming directly from
 # LLVM source, use the non-transforming assembler.
 #
@@ -74,3 +84,6 @@ Output/%.bc: %.ll $(LLVMAS) Output/.dir
 
 %.o: %.c
 
+%.o: %.m
+
+%.o: %.mm
