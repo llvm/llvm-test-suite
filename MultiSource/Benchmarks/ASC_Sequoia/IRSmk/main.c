@@ -38,7 +38,6 @@ int main()
   clock_t t0_cpu = 0,
           t1_cpu = 0;
 
-  double del_wtime = 0.0;
   double *x;
   double *b;
 
@@ -57,20 +56,14 @@ int main()
 
   init(domain_ptr, rblk_ptr, x, b);
 
-  gettimeofday(&t0, ((void *)0));
-  t0_cpu = clock();
   for (i=0; i<noIter; ++i) {
      rmatmult3(domain_ptr, rblk_ptr, x, b);
   }
-  gettimeofday(&t1, ((void *)0)); 
-  t1_cpu = clock();
 
   printf("***** results \n");  
   for (i=0; i<i_ub; i+=i_ub/5) {
     printf("i = %10d      b[i] = %e \n", i, b[i]);
   }
 
-  del_wtime = (double)(t1.tv_sec - t0.tv_sec) +
-              (double)(t1.tv_usec - t0.tv_usec)/1000000.0;
-
+  return(0);
 }
