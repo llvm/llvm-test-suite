@@ -80,7 +80,7 @@ shift 5
 SYSTEM=`uname -s`
 
 PROG=${PROGRAM}
-if [ `basename ${PROGRAM}` == "lli" ]; then
+if [ `basename ${PROGRAM}` = "lli" ]; then
   PROG=`basename ${PROGRAM}`
 fi
 
