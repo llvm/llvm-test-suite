@@ -226,7 +226,8 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -disable-post-RA-scheduler=false
+LLCBETAOPTION := -enable-smarter-addr-folding
+#-disable-post-RA-scheduler=false
 #-machine-licm
 #-fast-isel
 #-aggressive-remat
