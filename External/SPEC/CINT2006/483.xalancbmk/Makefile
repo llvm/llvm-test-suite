@@ -5,6 +5,7 @@
 ##===----------------------------------------------------------------------===##
 
 LEVEL = ../../../..
+include $(LEVEL)/Makefile.config
 
 CPPFLAGS += -DNDEBUG -DAPP_NO_THREADS -DXALAN_INMEM_MSG_LOADER        \
             -DPROJ_XMLPARSER -DPROJ_XMLUTIL -DPROJ_PARSERS            \
