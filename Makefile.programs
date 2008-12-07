@@ -261,7 +261,8 @@ print-llcbeta-option:
 # standard compilation optimizations.
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
-	-$(LOPT) -std-compile-opts -time-passes -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	-$(LOPT) -std-compile-opts -time-passes -stats -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
@@ -269,7 +270,8 @@ Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.optbeta.bc): \
 Output/%.linked.optbeta.bc: Output/%.linked.rbc $(LOPT)
-	-$(LOPT) $(OPTBETAOPTIONS) -time-passes -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	-$(LOPT) $(OPTBETAOPTIONS) -time-passes -stats -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
 
 
 ifndef DISABLE_FOR_LLVM_PROGRAMS
