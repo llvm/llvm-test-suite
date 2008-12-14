@@ -512,12 +512,12 @@ BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/opt-pass-args Output/%.out-nat
-	$(LBUGPOINT) $< `cat Output/opt-pass-args` $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	$(LBUGPOINT) -llc-safe $< `cat Output/opt-pass-args` $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
 Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
                          Output/llvm-ld-pass-args Output/%.out-nat
-	$(LBUGPOINT) $< `cat Output/llvm-ld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	$(LBUGPOINT) -llc-safe $< `cat Output/llvm-ld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
@@ -529,7 +529,7 @@ Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt-beta): \
 Output/%.bugpoint-opt-beta: Output/%.linked.rbc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $<  $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_ARGS)
+	$(LBUGPOINT) -llc-safe $<  $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat

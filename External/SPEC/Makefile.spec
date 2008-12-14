@@ -119,7 +119,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/opt-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
@@ -127,7 +127,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
 Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
                          Output/llvm-ld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
+	    $(LBUGPOINT) -llc-safe ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
