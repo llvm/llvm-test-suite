@@ -18,9 +18,9 @@ DISABLE_AUTO_DEPENDENCIES=1
 
 include ${LEVEL}/Makefile.common
 
-# Specify ENABLE_STATS on the command line to enable -stats and -time-passes
+# Specify DISABLE_STATS on the command line to disable -stats and -time-passes
 # output from opt and llvm-ld.
-ifdef ENABLE_STATS
+ifndef DISABLE_STATS
 STATS = -stats -time-passes
 endif
 
