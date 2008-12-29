@@ -14,20 +14,20 @@ geninput() {
 	for c in 1 2 3 4 5; do
 		input50="$input50 $input10"
 	done
-	declare -i count=$2
-	output=${1/.txt/${3}.txt}
+	count=$2
+	output=${1%.txt}$3.txt
 	echo "gen. input file: '$output'"
 	rm -f $output
-	while (($count > 50)); do
-		let count=$((count - 50))
+	while [ $count -gt 50 ]; do
+		count=$(($count - 50))
 		cat $input50 >>$output
 	done
-	while (($count > 10)); do
-		let count=$((count - 10))
+	while [ $count -gt 10 ]; do
+		count=$(($count - 10))
 		cat $input10 >>$output
 	done
-	while (($count > 0)); do
-		let count=$((count - 1))
+	while [ $count -gt 0 ]; do
+		count=$(($count - 1))
 		cat $input1 >>$output
 	done
 }
