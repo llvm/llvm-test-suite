@@ -262,7 +262,7 @@ print-llcbeta-option:
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
-	-$(LOPT) -std-compile-opts -time-passes -stats -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
+	-$(LOPT) -std-compile-opts -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
@@ -271,7 +271,7 @@ Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
 $(PROGRAMS_TO_TEST:%=Output/%.linked.optbeta.bc): \
 Output/%.linked.optbeta.bc: Output/%.linked.rbc $(LOPT)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
-	-$(LOPT) $(OPTBETAOPTIONS) -time-passes -stats -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
+	-$(LOPT) $(OPTBETAOPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
 
 
 ifndef DISABLE_FOR_LLVM_PROGRAMS
@@ -281,7 +281,8 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
 Output/%.llvm.bc: Output/%.linked.bc $(LLVM_LDDPROG)
-	-$(LLVMLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
+	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
@@ -289,7 +290,8 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm): \
 Output/%.llvm: Output/%.linked.bc $(LLVMLDPROG)
-	-$(LLVMLD) $(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
+	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
 	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
 	$(MV) -f $@.tmp $@
@@ -297,28 +299,34 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta.bc): \
 Output/%.llvm.optbeta.bc: Output/%.linked.optbeta.bc $(LLVMLDPROG)
-	-$(LLVMLD) $(STATS) $<  $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
+	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta): \
 Output/%.llvm.optbeta: Output/%.linked.optbeta.bc $(LLVMLDPROG)
-	-$(LLVMLD) $(STATS) $<  $(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
+	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
 Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+	-$(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.noopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
 Output/%.noopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.noopt-llvm
+	-$(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.noopt-llvm
 
 
 $(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm.bc): \
 Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
+	-$(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
 
 $(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm): \
 Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
-	-$(LLVMLD) -disable-opt $(STATS) $(LLVMLD_FLAGS) $< -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
+	-$(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
+		$(LLVMLD_FLAGS) -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
