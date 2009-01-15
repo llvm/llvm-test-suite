@@ -541,7 +541,7 @@ Output/%.bugpoint-opt-beta: Output/%.linked.rbc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	$(LBUGPOINT) $< -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	$(LBUGPOINT) $< -run-jit -safe-run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-cbe): \
 Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
