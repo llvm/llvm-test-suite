@@ -24,6 +24,11 @@ ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
 
+LDFLAGS = -lstdc++ -lm
+LIBS    = -lstdc++ -lm
+
+include ../../Makefile.spec2006
+
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS      = -v test.xml xalanc.xsl
   STDOUT_FILENAME := test.out
@@ -31,9 +36,3 @@ else
   RUN_OPTIONS      = -v allbooks.xml xalanc.xsl
   STDOUT_FILENAME := train.out
 endif
-
-LDFLAGS = -lstdc++ -lm
-LIBS    = -lstdc++ -lm
-
-include ../../Makefile.spec2006
-
