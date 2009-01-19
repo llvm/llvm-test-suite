@@ -9,6 +9,7 @@ include $(PROJ_SRC_ROOT)/External/SPEC/Makefile.spec.config
 CPPFLAGS += -DSPEC_CPU2000_LINUX_I386 -DSPEC_CPU2000_NEED_BOOL
 
 # Not sure why this is needed. 
+ifndef RUN_TYPE
 ifdef SMALL_PROBLEM_SIZE
 RUN_TYPE=test
 else
@@ -16,6 +17,7 @@ ifdef LARGE_PROBLEM_SIZE
 RUN_TYPE=ref
 else
 RUN_TYPE=train
+endif
 endif
 endif
 

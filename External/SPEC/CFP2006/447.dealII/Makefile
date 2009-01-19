@@ -13,6 +13,18 @@ CPPFLAGS += \
         -DBOOST_DISABLE_THREADS   \
         -I$(SPEC_BENCH_DIR)/src/include
 
+ifndef RUN_TYPE
+ifdef SMALL_PROBLEM_SIZE
+RUN_TYPE=test
+else
+ifdef LARGE_PROBLEM_SIZE
+RUN_TYPE=ref
+else
+RUN_TYPE=train
+endif
+endif
+endif
+
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS := 8
 else
