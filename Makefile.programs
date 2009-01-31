@@ -226,9 +226,9 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -pre-alloc-split
+LLCBETAOPTION := -disable-post-RA-scheduler=false
+#-pre-alloc-split
 #-join-cross-class-copies
-#-disable-post-RA-scheduler=false -machine-licm
 #-machine-licm
 #-fast-isel
 #-aggressive-remat
