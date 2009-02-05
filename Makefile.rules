@@ -321,12 +321,14 @@ CPPFLAGS += -DNDEBUG
 # Default optimization level:
 OPTFLAGS := -O3
 
-# If LTO is on, compile each .c .cpp file with -O0 and optimize with
-# opt and llvm-ld.
+# If LTO is on, compile each .c .cpp file with -mllvm -disable-llvm-optzns.
+# This is similar to -O0, except it just disables optimizations and doesn't
+# change the behavior of the front-end. Optimization will be done separately
+# with opt and llvm-ld.
 ifdef DISABLE_LTO
 LOPTFLAGS := $(OPTFLAGS)
 else
-LOPTFLAGS := -O0
+LOPTFLAGS := $(OPTFLAGS) -mllvm -disable-llvm-optzns
 endif
 
 
