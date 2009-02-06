@@ -211,9 +211,8 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -machine-licm
+LLCBETAOPTION := -enable-sinking
 #-aggressive-remat
-#-enable-sinking
 #--enable-tail-merge
 #--enable-ppc-preinc
 #-regalloc=local -fast
@@ -229,7 +228,6 @@ ifeq ($(ARCH),x86)
 LLCBETAOPTION := -disable-post-RA-scheduler=false
 #-pre-alloc-split
 #-join-cross-class-copies
-#-machine-licm
 #-fast-isel
 #-aggressive-remat
 #-new-spilling-heuristic
