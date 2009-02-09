@@ -223,6 +223,9 @@ endif
 ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
+ifeq ($(ARCH),x86_64)
+LLCBETAOPTION := -disable-post-RA-scheduler=false
+endif
 ifeq ($(ARCH),x86)
 LLCBETAOPTION := -disable-post-RA-scheduler=false
 #-pre-alloc-split
@@ -347,8 +350,10 @@ ifdef REQUIRES_EH_SUPPORT
 # -enable-eh is no longer required to get DWARF exceptions.
 ifneq ($(ARCH),PowerPC)
 ifneq ($(ARCH),x86)
+ifneq ($(ARCH),x86_64)
 LLCFLAGS += -enable-correct-eh-support
 LLVMLD_FLAGS += -disable-inlining
+endif
 endif
 endif
 endif
