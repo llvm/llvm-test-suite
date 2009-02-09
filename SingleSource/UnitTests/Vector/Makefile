@@ -12,6 +12,9 @@ endif
 ifeq ($(ARCH),x86)
 DIRS += SSE
 endif
+ifeq ($(ARCH),x86_64)
+DIRS += SSE
+endif
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
