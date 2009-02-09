@@ -338,12 +338,6 @@ TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
 endif
 endif
 
-ifeq ($(OS),Linux)
-ifeq ($(ARCH),x86)
-CPPFLAGS += -D__NO_MATH_INLINES
-endif
-endif
-
 ifeq ($(ARCH),Alpha)
 CPPFLAGS += -mieee
 CFLAGS += -mieee
