@@ -1,4 +1,4 @@
-/* #include <malloc.h> (brg) */
+#include <stdlib.h>
 #include "Stopwatch.h"
 
 double seconds()

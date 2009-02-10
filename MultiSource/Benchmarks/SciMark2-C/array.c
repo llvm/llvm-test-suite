@@ -1,5 +1,5 @@
-/* #include <malloc.h> (brg) */
 #include <stdio.h>
+#include <stdlib.h>
 #include "array.h"
 
 #ifndef NULL

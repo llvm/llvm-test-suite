@@ -1,7 +1,6 @@
 
 
-/* #include <malloc.h>  (brg) */
-
+#include <stdlib.h>
 #include "Random.h"
 
 #ifndef NULL

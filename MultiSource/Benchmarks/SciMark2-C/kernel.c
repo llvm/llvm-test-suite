@@ -1,5 +1,4 @@
 #include <stdio.h>
-/* #include <malloc.h>  (brg) */
 #include <stdlib.h>
 #include "LU.h"
 #include "FFT.h"
