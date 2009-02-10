@@ -10,12 +10,6 @@ include ../../Makefile.spec2000
 ifeq ($(ARCH),Sparc)
 CPPFLAGS+= -DSPEC_CPU2000_LP64
 endif
-ifeq ($(ARCH),Alpha)
-CPPFLAGS+= -DSPEC_CPU2000_LP64
-endif
-ifeq ($(ARCH),IA64)
-CPPFLAGS+= -DSPEC_CPU2000_LP64
-endif
 
 ifeq ($(OS),Darwin)
 CPPFLAGS += -DSYS_IS_BSD

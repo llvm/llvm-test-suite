@@ -10,7 +10,7 @@ FP_TOLERANCE = 0.001
 
 include ../../Makefile.spec2006
 
-CPPFLAGS += -I$(SPEC_BENCH_DIR)/src/libutil -DHAVE_CONFIG_H -DSPEC_CPU
+CPPFLAGS += -I$(SPEC_BENCH_DIR)/src/libutil -DHAVE_CONFIG_H
 
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS      = `cp an406-fcaw-b.be.raw an406-fcaw-b.raw` \

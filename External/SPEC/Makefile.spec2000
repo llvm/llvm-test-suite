@@ -9,6 +9,16 @@ include $(LEVEL)/Makefile.config
 SPEC_ROOT := $(SPEC2000_ROOT)
 CPPFLAGS += -DSPEC_CPU2000
 
+ifeq ($(ARCH),x86_64)
+  CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
+ifeq ($(ARCH),Alpha)
+  CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
+ifeq ($(ARCH),IA64)
+  CPPFLAGS += -DSPEC_CPU2000_LP64
+endif
+
 # RUN_TYPE - Either ref, test, or train.  May be specified on the command line.
 # individual tests may override this to provide better input sizes
 ifndef RUN_TYPE
