@@ -1,4 +1,4 @@
-##===- TEST.libcalls.Makefile -------------------------------*- Makefile -*-===##
+##===- TEST.libcalls.Makefile ------------------------------*- Makefile -*-===##
 #
 # This recursively traverses the programs, and runs the -simplify-libcalls pass
 # on each *.linked.rbc bytecode file with -stats set so that it is possible to

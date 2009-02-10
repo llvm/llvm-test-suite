@@ -1,4 +1,4 @@
-##=== TEST.beta-compare.report - Compare llc vs llcbeta -*- perl -*-===##
+##=== TEST.beta-compare.report - Compare llc vs llcbeta --------*- perl -*-===##
 #
 # This file defines a report to be generated for the beta-compare test.
 #

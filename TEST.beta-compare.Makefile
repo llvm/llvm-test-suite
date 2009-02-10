@@ -1,4 +1,4 @@
-##===- TEST.beta-compare.Makefile -----------------------------------*- Makefile -*-===##
+##===- TEST.beta-compare.Makefile --------------------------*- Makefile -*-===##
 #
 # This test runs llc and llc-beta and generates numbers to compare their static
 # values produced by -stats.

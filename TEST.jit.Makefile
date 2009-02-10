@@ -1,4 +1,4 @@
-##===- TEST.jit.Makefile ----------------------------------*- Makefile -*-===##
+##===- TEST.jit.Makefile -----------------------------------*- Makefile -*-===##
 #
 # This test tries running the Just-In-Time compiler on all of the programs to
 # see which ones work and which ones don't.  It provides a report to tabulate
