@@ -14,6 +14,7 @@
 ****/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "struktur.h"
 #include "headers.h"
 extern int default_radius;
