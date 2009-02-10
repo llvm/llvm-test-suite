@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         int Sparse_size_M = SPARSE_SIZE_M;
         int Sparse_size_nz = SPARSE_SIZE_nz;
         int LU_size = LU_SIZE;
+  int SCALE;
 
 
         /* run the benchmark */
@@ -67,20 +68,22 @@ int main(int argc, char *argv[])
                 Sparse_size_nz, min_time, R);           
         res[5] = kernel_measureLU( LU_size, min_time, R);  
 
-
-
+        /* make output determinstic by scaling results to 0.  change this to 1
+         * to see the actual output. */
+        SCALE = 10000000;
+  
         res[0] = (res[1] + res[2] + res[3] + res[4] + res[5]) / 5;
 
         /* print out results  */
         printf("NOTE!!! All Mflops disabled to prevent diffs from failing!\n");
-        printf("Composite Score:        %8.2f\n" ,res[0]/10000000);
-        printf("FFT             Mflops: %8.2f    (N=%d)\n", res[1]/10000000, FFT_size);
+        printf("Composite Score:        %8.2f\n" ,res[0]/SCALE);
+        printf("FFT             Mflops: %8.2f    (N=%d)\n", res[1]/SCALE, FFT_size);
         printf("SOR             Mflops: %8.2f    (%d x %d)\n", 		
-				res[2]/10000000, SOR_size, SOR_size);
-        printf("MonteCarlo:     Mflops: %8.2f\n", res[3]/10000000);
-        printf("Sparse matmult  Mflops: %8.2f    (N=%d, nz=%d)\n", res[4]/10000000, 
+				res[2]/SCALE, SOR_size, SOR_size);
+        printf("MonteCarlo:     Mflops: %8.2f\n", res[3]/SCALE);
+        printf("Sparse matmult  Mflops: %8.2f    (N=%d, nz=%d)\n", res[4]/SCALE, 
 					Sparse_size_M, Sparse_size_nz);
-        printf("LU              Mflops: %8.2f    (M=%d, N=%d)\n", res[5]/10000000,
+        printf("LU              Mflops: %8.2f    (M=%d, N=%d)\n", res[5]/SCALE,
 				LU_size, LU_size);
 
 
