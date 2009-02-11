@@ -17,7 +17,10 @@ ifeq ($(ARCH),Alpha)
   CPPFLAGS += -DALPHA -DLINUX
 endif
 ifeq ($(ARCH),x86)
-  CPPFLAGS += -DLINUX_i386
+  CPPFLAGS += -DHAS_LONGLONG
+endif
+ifeq ($(ARCH),x86_64)
+  CPPFLAGS += -DLONG_HAS_64BITS -DHAS_LONGLONG
 endif
 ifeq ($(ARCH),PowerPC)
    CPPFLAGS += -DLINUX_PPC32
@@ -26,13 +29,16 @@ ifeq ($(ARCH),Sparc)
    CPPFLAGS += -DSUN_BSD
 endif
 ifeq ($(TARGET_ARCH),ARM)
-   CPPFLAGS += -DHAS_LONGLONG
+  CPPFLAGS += -DHAS_LONGLONG
 endif
 ifeq ($(OS),Darwin)
-   CPPFLAGS += -DUNIX -DLINUX
+  CPPFLAGS += -DUNIX -DLINUX
+endif
+ifeq ($(OS),Linux)
+  CPPFLAGS += -DUNIX -DLINUX
 endif
 ifeq ($(ENDIAN),little)
-   CPPFLAGS += -DLITTLE_ENDIAN_ARCH
+  CPPFLAGS += -DLITTLE_ENDIAN_ARCH
 endif
 
 include ../../Makefile.spec2000
