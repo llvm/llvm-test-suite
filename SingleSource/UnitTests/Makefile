@@ -16,8 +16,11 @@ endif
 DIRS += SignlessTypes Threads
 
 # Only test Obj-C on darwin/x86 for time being.
-ifeq ($(ARCH),x86)
 ifeq ($(OS),Darwin)
+ifeq ($(ARCH),x86)
+DIRS += ObjC ObjC++
+endif
+ifeq ($(ARCH),x86_64)
 DIRS += ObjC ObjC++
 endif
 endif
