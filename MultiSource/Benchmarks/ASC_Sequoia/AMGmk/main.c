@@ -17,7 +17,11 @@
 #include "headers.h"
 
 //
+#ifdef SMALL_PROBLEM_SIZE
+const int testIter   = 100;
+#else
 const int testIter   = 2000;
+#endif
 double totalWallTime = 0.0;
 double totalCPUTime  = 0.0;
 

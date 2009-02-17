@@ -42,7 +42,11 @@ int main()
   double *b;
 
   int i = 0;
+#ifdef SMALL_PROBLEM_SIZE
+  const int noIter = 250;
+#else
   const int noIter = 5000;
+#endif
 
   printf ("\nSequoia Benchmark Version 1.0\n\n");
 

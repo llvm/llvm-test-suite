@@ -51,7 +51,11 @@ double SPEdriver(double slipRate[MS_XTAL_NSLIP_MAX],
   double del_wtime = 0.0;
   double tmp;
 
+#ifdef SMALL_PROBLEM_SIZE
+  const int noIter = 200000;
+#else
   const int noIter = 2000000;
+#endif
   int i = 0;
   int j, k;
 
