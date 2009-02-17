@@ -227,8 +227,7 @@ ifeq ($(ARCH),x86_64)
 LLCBETAOPTION := -disable-post-RA-scheduler=false
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -xx
-#-disable-post-RA-scheduler=false
+LLCBETAOPTION := -disable-post-RA-scheduler=false
 #-pre-alloc-split
 #-join-cross-class-copies
 #-fast-isel
