@@ -227,14 +227,14 @@ ifeq ($(ARCH),x86_64)
 LLCBETAOPTION := -disable-post-RA-scheduler=false
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -disable-post-RA-scheduler=false
+LLCBETAOPTION := -xx
+#-disable-post-RA-scheduler=false
 #-pre-alloc-split
 #-join-cross-class-copies
 #-fast-isel
 #-aggressive-remat
 #-new-spilling-heuristic
 #-enable-value-prop
-#-enable-sinking
 #-schedule-livein-copies
 #-new-coalescer-heuristic=true
 #-tailcallopt
@@ -246,8 +246,7 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -enable-sinking
-#-schedule-livein-copies
+LLCBETAOPTION := -schedule-livein-copies
 #-new-coalescer-heuristic=true
 #-march=thumb
 endif
