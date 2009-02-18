@@ -211,10 +211,10 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := --enable-ppc-preinc
+LLCBETAOPTION := -regalloc=local -fast
+#--enable-ppc-preinc
 #-aggressive-remat
 #--enable-tail-merge
-#-regalloc=local -fast
 endif
 ifeq ($(ARCH),Alpha)
 LLCBETAOPTION := -sched=list-td 
