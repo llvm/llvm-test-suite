@@ -10,4 +10,5 @@ CPPFLAGS = -DLLVM
 RUN_OPTIONS = -b 62 -g 0.100 -f 2.00 -h 0.100 -L
 STDIN_FILENAME = pyruvate_decarboxylase.fasta
 LDFLAGS = -lm
+FP_TOLERANCE = 0.00001
 include $(LEVEL)/MultiSource/Makefile.multisrc
