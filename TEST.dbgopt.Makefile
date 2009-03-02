@@ -19,9 +19,9 @@ test.$(TEST).%: Output/%.diff
 
 Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 	$(LLVMGXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip-debug -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
@@ -32,9 +32,9 @@ Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 
 Output/%.diff: %.c Output/.dir $(LLVMGCC) $(LOPT) $(LDIS)
 	$(LLVMGCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug -std-compile-opts -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug -std-compile-opts -strip-debug -strip -f -o Output/$*.t.bc 
+	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
 	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
 	 echo "--------- TEST-PASS: $*"; \
