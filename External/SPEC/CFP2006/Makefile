@@ -11,7 +11,8 @@ PARALLEL_DIRS :=  \
     433.milc      \
     444.namd      \
     447.dealII    \
-    470.lbm
+    470.lbm       \
+    450.soplex
 
 ifdef USE_F95
 PARALLEL_DIRS +=  \
@@ -40,7 +41,6 @@ endif
 endif   # End USE_F95
 
 # These compile but need other things to run:
-#   450.soplex    - enter.cc:535, works at -O0, not at -O2
 #   453.povray    - c++ exceptions
 #   465.tonto     - infinite loop, works at -O0, not at -O2
 #   482.sphinx3   - generates control file at run time
