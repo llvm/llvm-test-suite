@@ -16,9 +16,8 @@ PARALLEL_DIRS := \
         462.libquantum \
         464.h264ref    \
         471.omnetpp    \
-        473.astar
-
-# 483.xalancbmk -- Needs C++ Exceptions
+        473.astar      \
+        483.xalancbmk
 
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
