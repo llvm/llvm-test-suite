@@ -94,13 +94,15 @@ Output/%.out-cbe: Output/%.cbe
 # output with the program's output.
 BUGPOINT_OPTIONS += -append-exit-code
 
-# If a tolerance is set, pass it off to bugpoint
-ifdef FP_TOLERANCE
-BUGPOINT_OPTIONS += -rel-tolerance $(FP_TOLERANCE)
-endif
-ifdef FP_ABSTOLERANCE
-BUGPOINT_OPTIONS += -abs-tolerance $(FP_ABSTOLERANCE)
-endif
+# If a tolerance is set, pass it off to bugpoint.
+#
+# Note: this uses '$(if ...)' instead of ifeq so that FP_TOLERANCE and
+# FP_ABSTOLERANCE can be "recursively expanded". The purpose of this is
+# to allow the indivdiaul benchmark Makefiles to set FP_TOLERANCE
+# after including this file, which they may need to do if they wish to
+# have it depend on the value of RUN_TYPE.
+BUGPOINT_OPTIONS += $(if $(FP_TOLERANCE),-rel-tolerance $(FP_TOLERANCE),)
+BUGPOINT_OPTIONS += $(if $(FP_ABSTOLERANCE),-abs-tolerance $(FP_ABSTOLERANCE),)
 
 
 # Give bugpoint information about LDFLAGS to pass down to the actual link stage
