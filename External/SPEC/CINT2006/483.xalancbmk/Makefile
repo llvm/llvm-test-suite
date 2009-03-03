@@ -23,6 +23,9 @@ CPPFLAGS += -DNDEBUG -DAPP_NO_THREADS -DXALAN_INMEM_MSG_LOADER        \
 ifeq ($(OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
+ifeq ($(OS),Linux)
+  CPPFLAGS += -DSPEC_CPU_LINUX
+endif
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lstdc++ -lm
