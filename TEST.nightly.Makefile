@@ -29,7 +29,7 @@ REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
 
 TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
-EXTRA_LLI_OPTS = $(TIMEOPT)
+EXTRA_LLIFLAGS = $(TIMEOPT)
 
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \

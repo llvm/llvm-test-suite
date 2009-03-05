@@ -331,16 +331,28 @@ else
 LOPTFLAGS := $(OPTFLAGS) -mllvm -disable-llvm-optzns
 endif
 
-
-ifeq ($(OS),Darwin)
-ifndef TARGET_FLAGS
-TARGET_FLAGS := -mdynamic-no-pic -fomit-frame-pointer
+# Explicitly specify -m32 / -m64 so there is no mismatch between llvm-gcc
+# default and system compiler default.
+ifeq ($(ARCH),x86)
+TARGET_FLAGS += -m32
 endif
+
+ifeq ($(ARCH),x86_64)
+TARGET_FLAGS += -m64
 endif
 
 ifeq ($(ARCH),Alpha)
 CPPFLAGS += -mieee
 CFLAGS += -mieee
+endif
+
+# gcc / llvm-gcc default is -fPIC -fno-omit-frame-pointer
+# llc / lli default is equal to -mdynamic-no-pic -fomit-frame-pointer
+ifdef PIC_CODEGEN
+TARGET_LLCFLAGS += -relocation-model=pic -disable-fp-elim
+TARGET_LLIFLAGS += -relocation-model=pic -disable-fp-elim
+else
+TARGET_FLAGS += -mdynamic-no-pic -fomit-frame-pointer
 endif
 
 ifdef EXTRA_OPTIONS

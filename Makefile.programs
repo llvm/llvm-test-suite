@@ -360,6 +360,9 @@ endif
 ifdef TARGET_LLCFLAGS
 LLCFLAGS += $(TARGET_LLCFLAGS)
 endif
+ifdef EXTRA_LLCFLAGS
+LLCFLAGS += $(EXTRA_LLCFLAGS)
+endif
 
 # It is important to link C++ programs with G++ so look for -lstdc++ in LDFLAGS
 # and set the LLVMGCCLD variable to the correct compiler interface to use.
@@ -425,13 +428,18 @@ Output/%.opt-beta: Output/%.opt-beta.s
 # Rules to execute the program
 #
 
-# EXTRA_LLI_OPTS is used by the nightly tester to add arguments to invocations
-# of the JIT and LLI in order to get timing info and statistics.
-EXTRA_LLI_OPTS = 
+LLI_OPTS = -force-interpreter=true --disable-core-files
+JIT_OPTS = -force-interpreter=false --disable-core-files
 
-LLI_OPTS = -force-interpreter=true --disable-core-files $(EXTRA_LLI_OPTS)
-JIT_OPTS = -force-interpreter=false --disable-core-files $(EXTRA_LLI_OPTS)
-
+# Pass target specific lli flags
+ifdef TARGET_LLIFLAGS
+LLI_OPTS += $(TARGET_LLIFLAGS)
+JIT_OPTS += $(TARGET_LLIFLAGS)
+endif
+ifdef EXTRA_LLIFLAGS
+LLI_OPTS += $(EXTRA_LLIFLAGS)
+JIT_OPTS += $(EXTRA_LLIFLAGS)
+endif
 
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
