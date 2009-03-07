@@ -352,7 +352,10 @@ ifdef PIC_CODEGEN
 TARGET_LLCFLAGS += -relocation-model=pic -disable-fp-elim
 TARGET_LLIFLAGS += -relocation-model=pic -disable-fp-elim
 else
-TARGET_FLAGS += -mdynamic-no-pic -fomit-frame-pointer
+TARGET_FLAGS += -fomit-frame-pointer
+  ifeq ($(OS),Darwin)
+  TARGET_FLAGS += -mdynamic-no-pic
+  endif
 endif
 
 ifdef EXTRA_OPTIONS
