@@ -154,6 +154,13 @@ ifeq ($(DISABLE_ASSERTIONS),1)
   CONFIGURATION := $(CONFIGURATION)-Asserts
 endif
 
+# If ENABLE_EXPENSIVE_CHECKS=1 is specified (make command line or
+# configured), then adjust the CONFIGURATION name appropriately
+# (to match LLVM makefiles)
+ifeq ($(ENABLE_EXPENSIVE_CHECKS),1)
+  CONFIGURATION := $(CONFIGURATION)+Checks
+endif
+
 #
 # Enable this for profiling support with 'gprof'
 # This automatically enables optimized builds.
