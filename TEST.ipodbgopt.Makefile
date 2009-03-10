@@ -14,7 +14,7 @@
 
 TESTNAME = $*
 TARGET_FLAGS = -g -O0
-.PRECIOUS: Output/%.t1.bc Output/%.t2.bc Output/%.first.ll Output/%.second.ll
+.PRECIOUS: Output/%.first.ll Output/%.second.ll
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.diff
