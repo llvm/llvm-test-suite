@@ -44,7 +44,6 @@ Output/%.t2c.bc: Output/%.t2b.bc Output/.dir $(LOPT)
 Output/%.t2d.bc: Output/%.t2c.bc Output/.dir $(LOPT)
 	$(LOPT) -strip $< -f -o $@
 
-# FIXME add -strip-debug-declare when available
 # force both t's to have the same name to avoid bogus filename difference
 # force first to be completed before second to avoid race condition copying t
 Output/%.second.ll: Output/%.t2d.bc Output/%.first.ll $(LDIS)
