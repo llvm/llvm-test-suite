@@ -10,8 +10,6 @@
 
 #define MAX_FILE_NAME_LEN 100
 
-extern char *strcat(char *s1, const char *s2);
-
 BOOL preseason = NO;
 int num_games;
 
