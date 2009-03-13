@@ -10,8 +10,8 @@
 /*
 extern char *strncpy(), *strcat(), *strcpy();
 extern int  strlen();
-*/
 extern char *strcat(char *s1, const char *s2);
+*/
 
 #define TRUE	1
 /*
