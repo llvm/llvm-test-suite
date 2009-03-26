@@ -9,21 +9,27 @@ CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
-REPORTS_TO_GEN := compile nat
+REPORTS_TO_GEN := nat
+REPORT_DEPENDENCIES :=
 ifndef DISABLE_LLC
-REPORTS_TO_GEN +=  llc
+REPORTS_TO_GEN +=  llc compile
+REPORT_DEPENDENCIES += $(LLC) $(LOPT)
 endif
 ifndef DISABLE_JIT
-REPORTS_TO_GEN +=  jit
+REPORTS_TO_GEN +=  jit compile
+REPORT_DEPENDENCIES += $(LLI) $(LOPT)
 endif
 ifndef DISABLE_CBE
-REPORTS_TO_GEN +=  cbe
+REPORTS_TO_GEN +=  cbe compile
+REPORT_DEPENDENCIES += $(CBE) $(LOPT)
 endif
 ifdef ENABLE_LLCBETA
-REPORTS_TO_GEN += llc-beta
+REPORTS_TO_GEN += llc-beta compile
+REPORT_DEPENDENCIES += $(LLC) $(LOPT)
 endif
 ifdef ENABLE_OPTBETA
-REPORTS_TO_GEN += opt-beta
+REPORTS_TO_GEN += opt-beta compile
+REPORT_DEPENDENCIES += $(LOPT)
 endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
@@ -149,5 +155,3 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo ">>> ========= '$(RELDIR)/$*' Program"
 	@echo "---------------------------------------------------------------"
 	@-cat $<
-
-REPORT_DEPENDENCIES := $(LOPT) $(LLI) $(LLC)
