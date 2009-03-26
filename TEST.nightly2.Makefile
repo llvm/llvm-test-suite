@@ -90,7 +90,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 
 # OPT experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.opt-beta.report.txt): \
-Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta $(LLC)
+Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta $(LOPT)
 	@echo > $@
 	-head -n 100 Output/$*.exe-opt-beta >> $@
 	@-if test -f Output/$*.exe-opt-beta; then \
@@ -107,7 +107,7 @@ Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
-Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LDIS)
+Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LLC)
 	@echo > $@
 	-head -n 100 Output/$*.exe-cbe >> $@
 	@-if test -f Output/$*.exe-cbe; then \
@@ -150,4 +150,4 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 	@echo "---------------------------------------------------------------"
 	@-cat $<
 
-REPORT_DEPENDENCIES := $(LDIS) $(LLI) $(LLC)
+REPORT_DEPENDENCIES := $(LOPT) $(LLI) $(LLC)
