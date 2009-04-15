@@ -6,6 +6,8 @@ PROG = hmmcalibrate
 SourceDir := $(HMMER_ROOT)
 
 CPPFLAGS = -DSSE2
+LIBS +=    -lpthread
+LDFLAGS += -lpthread
 
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = --fixed 400 --cpu 1 --num 200000 --seed 1158818515 $(HMMER_ROOT)/globin.hmm
