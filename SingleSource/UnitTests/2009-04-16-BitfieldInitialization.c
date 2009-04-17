@@ -1,4 +1,4 @@
-// PR3510
+// PR3510 & rdar://6564697
 
 struct ty { 
   int info;
