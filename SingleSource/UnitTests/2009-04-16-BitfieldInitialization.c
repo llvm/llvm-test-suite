@@ -66,6 +66,12 @@ struct sDescrItem {
 } t8 = {16, 0, 32};
 
 
+struct resword {
+  const int *a;
+  unsigned b : 16;
+  int c : 16;
+} t9 = { 0, 123, 456 };
+
 
 #include <stdio.h>
 
@@ -81,5 +87,6 @@ int main() {
   printf("7: %d %d %d %d\n", t7.x, t7.y, t7.q, t7.z);
   printf("7a: %d %d %d\n", t7a.x, t7a.y, t7a.q);
   printf("8: %d %d\n", t8.what, t8.type);
+  printf("9: %d %d\n", t9.b, t9.c);
   return 0;
 }
