@@ -59,6 +59,14 @@ struct {
   unsigned short q : 12;
 } __attribute__((packed)) t7a  = { 101,  15, 123 };
 
+struct sDescrItem {
+  char what;
+  char *types;
+  char type;
+} t8 = {16, 0, 32};
+
+
+
 #include <stdio.h>
 
 int main() {
@@ -72,5 +80,6 @@ int main() {
   printf("6: %Lf %d\n", t6.x, t6.y);
   printf("7: %d %d %d %d\n", t7.x, t7.y, t7.q, t7.z);
   printf("7a: %d %d %d\n", t7a.x, t7a.y, t7a.q);
+  printf("8: %d %d\n", t8.what, t8.type);
   return 0;
 }
