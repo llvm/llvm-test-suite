@@ -8,9 +8,8 @@ struct rtx_def {
   int mode : 8;
   long long :0;
   long long x :31;
-  //long long y:31;
-} N = {2, 7, 1 };
-int Nsize = sizeof(N);  // Size = 8
+  long long y:31;
+} N = {2, 7, 1 }; int Nsize = sizeof(N);  // Size = 8
 
 struct test1 {
   char x:1;
@@ -55,5 +54,14 @@ struct test {
 } M;   int Msize = sizeof(M);  // Size = 8
 
 int main() {
+  printf("N: %d %d %d %d\n", N.code, N.mode, N.x, N.y);
+  printf("F1: %d\n", F1.x);
+  printf("F2: %d\n", F2.x);
+  printf("F3: %d\n", F3.x);
+  printf("F4: %d %d\n", F4.x, F4.Y);
+  printf("F5: %d %d\n", F5.x, F5.Y);
+  printf("F6: %d %d\n", F6.x, F6.Y);
+  printf("M: %d %d %d %d %d\n", M.c, M.d, M.e, M.f, (int)M.x);
+  
   return 0;
 }
