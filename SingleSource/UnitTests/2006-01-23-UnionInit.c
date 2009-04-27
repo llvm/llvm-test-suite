@@ -121,6 +121,22 @@ union ucast ucast_test (void) {
   return z;
 }
 
+
+//===- rdar://6828787 -----------------------------------------------------===//
+
+#pragma pack(4)
+
+struct foo2 {
+  short a;
+  long  x;
+  short y;
+};
+
+#pragma pack()
+
+struct foo2 foo2 = { 23122, -12312731, -312 };
+
+
 //===- Checker ------------------------------------------------------------===//
 
 int main() {
@@ -128,7 +144,7 @@ int main() {
   spinlock_t lock;
   printf("PR156: %s\n", init_task_union.task.comm);
   printf("PR295/PR568: %d, %d\n", fixed_tl[0].word.pad, fixed_tl[0].base);
-  printf("PR574: %d, %d, %d, %d\n", bkv4.gv4.av4, cav1.dv1, cav1.ev1,
+  printf("PR574: %d, %d, %d, %d\n", (int)bkv4.gv4.av4, cav1.dv1, cav1.ev1,
          cav1.fv1[0]);
   printf("PR162: %d, %d, %d\n", V.X.A, V.X.B, V.C);
   printf("PR650: %s, %d\n", nd.data, nd.alignmentDummy);
@@ -141,8 +157,9 @@ int main() {
   printf("PR654: %p, '%s'\n", s.inplace, s.chunk_data);
   printf("PR323: %d, '%s'\n", ai.lsk.agid, ai.lsk.key);
   lock = (spinlock_t) { .raw_lock = one_raw_spinlock() };
-  printf("PR627: %d\n", sizeof(lock));
+  printf("PR627: %d\n", (int)sizeof(lock));
   XX = ucast_test();
   printf("PR684: %d, %d, %d %d\n", XX.s.i1, XX.s.i2, XX.s.i3, XX.i);
+  printf("rdar://6828787: %d, %d, %d\n", foo2.a, foo2.x, foo2.y);
   return 0;
 }
