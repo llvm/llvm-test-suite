@@ -160,6 +160,6 @@ int main() {
   printf("PR627: %d\n", (int)sizeof(lock));
   XX = ucast_test();
   printf("PR684: %d, %d, %d %d\n", XX.s.i1, XX.s.i2, XX.s.i3, XX.i);
-  printf("rdar://6828787: %d, %d, %d\n", foo2.a, foo2.x, foo2.y);
+  printf("rdar://6828787: %d, %d, %d\n", foo2.a, (int)foo2.x, foo2.y);
   return 0;
 }
