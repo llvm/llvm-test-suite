@@ -211,7 +211,7 @@ endif
 endif#DISABLE_DIFFS
 
 ifeq ($(ARCH),PowerPC)
-LLCBETAOPTION := -regalloc=local -fast
+LLCBETAOPTION := -regalloc=local -O0
 #--enable-ppc-preinc
 #-aggressive-remat
 #--enable-tail-merge
@@ -237,9 +237,9 @@ LLCBETAOPTION := -disable-post-RA-scheduler=false
 #-schedule-livein-copies
 #-new-coalescer-heuristic=true
 #-tailcallopt
-#-regalloc=local -fast
+#-regalloc=local -O0
 #-disable-fp-elim
-#-regalloc=bigblock -fast
+#-regalloc=bigblock -O0
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
