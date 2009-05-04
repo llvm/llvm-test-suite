@@ -356,6 +356,11 @@ endif
 endif
 endif
 
+# llc optimization level
+ifdef LLC_OPTFLAGS
+LLCFLAGS += $(LLC_OPTFLAGS)
+endif
+
 # Pass target specific llc flags
 ifdef TARGET_LLCFLAGS
 LLCFLAGS += $(TARGET_LLCFLAGS)
@@ -430,6 +435,12 @@ Output/%.opt-beta: Output/%.opt-beta.s
 
 LLI_OPTS = -force-interpreter=true --disable-core-files
 JIT_OPTS = -force-interpreter=false --disable-core-files
+
+# lli optimization level
+ifdef LLI_OPTFLAGS
+LLI_OPTFLAGS += $(LLI_OPTFLAGS)
+JIT_OPTFLAGS += $(LLI_OPTFLAGS)
+endif
 
 # Pass target specific lli flags
 ifdef TARGET_LLIFLAGS
