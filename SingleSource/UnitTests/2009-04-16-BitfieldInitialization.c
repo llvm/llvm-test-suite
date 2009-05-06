@@ -72,6 +72,21 @@ struct resword {
   int c : 16;
 } t9 = { 0, 123, 456 };
 
+// rdar://6861719
+#pragma pack(4)
+
+struct t10s {
+  short a;
+  int *b;
+};
+
+#pragma pack()
+
+int x = 42;
+struct t10s t10 = { 
+.b = &x
+};
+
 
 #include <stdio.h>
 
@@ -88,5 +103,6 @@ int main() {
   printf("7a: %d %d %d\n", t7a.x, t7a.y, t7a.q);
   printf("8: %d %d\n", t8.what, t8.type);
   printf("9: %d %d\n", t9.b, t9.c);
+  printf("10: %d\n", *t10.b);
   return 0;
 }
