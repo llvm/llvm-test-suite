@@ -354,6 +354,10 @@ CPPFLAGS += -mieee
 CFLAGS += -mieee
 endif
 
+# Set llc / lli optimization level to -O3 to match gcc.
+LLC_OPTFLAGS := -O3
+LLI_OPTFLAGS := -O3
+
 # gcc / llvm-gcc default is -fPIC -fno-omit-frame-pointer
 # llc / lli default is equal to -mdynamic-no-pic -fomit-frame-pointer
 ifdef PIC_CODEGEN
