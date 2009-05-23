@@ -44,7 +44,7 @@ Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LOPT)
 	@-if test -f Output/$*.linked.bc.info; then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
-	  grep "Total Execution Time" Output/$*.linked.bc.info >> $@;\
+	  grep "Total Execution Time" Output/$*.linked.bc.info | tail -n 1 >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-compile: " >> $@;\
 	  wc -c $< >> $@;\
@@ -69,7 +69,7 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
+	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
 	  grep "^program" Output/$*.out-llc.time >> $@;\
 	  echo >> $@;\
@@ -86,7 +86,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
 	  $(LLC) $< $(LLCFLAGS) $(LLCBETAOPTION) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
+	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
 	  grep "^program" Output/$*.out-llc-beta.time >> $@;\
 	  echo >> $@;\
@@ -103,7 +103,7 @@ Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-
 	  echo "TEST-PASS: opt-beta $(RELDIR)/$*" >> $@;\
 	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-opt-beta: " >> $@;\
-	  grep "Total Execution Time" $@.info >> $@;\
+	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-opt-beta-time: " >> $@;\
 	  grep "^program" Output/$*.out-opt-beta.time >> $@;\
 	  echo >> $@;\
@@ -136,7 +136,7 @@ Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
 	  grep "^program" Output/$*.out-jit.time >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-jit-comptime: " >> $@;\
-	  grep "Total Execution Time" Output/$*.out-jit.info >> $@;\
+	  grep "Total Execution Time" Output/$*.out-jit.info | tail -n 1 >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: jit $(RELDIR)/$*" >> $@;\
