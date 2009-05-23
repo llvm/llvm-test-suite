@@ -33,6 +33,8 @@ e-mail address: manli@cs.uh.edu         (Internet)
                 70070,404               (CompuServe)
 */
 
+/* LLVM test-suite: Use a deterministic seed. */
+#if 0
 /*
 #define  IBM  8086
 */
@@ -77,3 +79,12 @@ void seed(int *i)
 
 #endif
 
+#else
+
+void seed(int *i)
+/* start seed of random number generator for LLVM test-suite */
+  {
+   *i = 281701264; /* This number was chosen purely arbitrarily. */
+}  /* end seed */
+
+#endif
