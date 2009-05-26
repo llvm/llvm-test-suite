@@ -433,6 +433,8 @@ Output/%.opt-beta: Output/%.opt-beta.s
 # Rules to execute the program
 #
 
+# Note, these must be lazily expanded by make (for EXTRA_LLIFLAGS to work, it is
+# redefined in other Makefiles).
 LLI_OPTS = -force-interpreter=true --disable-core-files
 JIT_OPTS = -force-interpreter=false --disable-core-files
 
@@ -447,10 +449,14 @@ ifdef TARGET_LLIFLAGS
 LLI_OPTS += $(TARGET_LLIFLAGS)
 JIT_OPTS += $(TARGET_LLIFLAGS)
 endif
-ifdef EXTRA_LLIFLAGS
+
+# EXTRA_LLIFLAGS is used by the nighly tester to add arugments to invocations of
+# the JIT and LLI in order to get timing info and statistics.
+ifndef EXTRA_LLIFLAGS
+EXTRA_LLIFLAGS =
+endif
 LLI_OPTS += $(EXTRA_LLIFLAGS)
 JIT_OPTS += $(EXTRA_LLIFLAGS)
-endif
 
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
