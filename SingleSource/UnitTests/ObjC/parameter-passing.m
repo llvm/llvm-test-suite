@@ -92,14 +92,14 @@ typedef struct {
 
 -(void) unary_ll: (long long) a0 {
   D(__FUNCTION__);
-  printf("\ta0: %ld\n",  a0);
+  printf("\ta0: %lld\n",  a0);
   self.ll_ivar = a0;
 }
 
 -(long long) return_ll {
   D(__FUNCTION__);
   long long rv = self.ll_ivar;
-  printf("\t  returning: %ld\n", rv);
+  printf("\t  returning: %lld\n", rv);
   return rv;
 }
 
@@ -220,7 +220,7 @@ int main() {
   }
   {
     long long rv = [a return_ll];
-    printf("\tresult: %ld\n\n", rv);
+    printf("\tresult: %lld\n\n", rv);
     assert(rv == ll_test_var);
   }
   {
