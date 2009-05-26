@@ -228,9 +228,9 @@ void summarize() {
     gmean_ratio += log(result_times[i]/result_times[0]);
   } 
   printf("mean:    %5.2fsec    %5.2fM         %.2f\n",
-	 exp(STABILIZE(gmean_times/current_test)),
-	 exp(STABILIZE(gmean_rate/current_test)),
-	 exp(STABILIZE(gmean_ratio/current_test)));
+	 STABILIZE(exp(gmean_times/current_test)),
+	 STABILIZE(exp(gmean_rate/current_test)),
+	 STABILIZE(exp(gmean_ratio/current_test)));
   printf("\nTotal absolute time: %.2f sec\n", STABILIZE(total_absolute_times));
   // sam added 12/05/95
   printf("\nAbstraction Penalty: %.2f\n\n", 
