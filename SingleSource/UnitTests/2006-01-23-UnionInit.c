@@ -1,9 +1,5 @@
 #include <stdio.h>
 
-#if defined(__arm__) && defined(__APPLE__)
-#error "Temporarily disabled"
-#endif
-
 //===- PR156 --------------------------------------------------------------===//
 struct task_struct {
   char comm[16];
