@@ -4,4 +4,9 @@ LEVEL = ../../..
 include $(LEVEL)/Makefile.config
 LDFLAGS += -lpthread
 
+# Darwin doesn't support tls.
+ifeq ($(OS),Darwin)
+PROGRAMS_TO_SKIP := tls
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc

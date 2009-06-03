@@ -25,5 +25,11 @@ DIRS += ObjC ObjC++
 endif
 endif
 
+# Darwin doesn't support weak/weak_import in a way that we can test in this
+# framework.
+ifeq ($(OS),Darwin)
+PROGRAMS_TO_SKIP := 2007-04-25-weak
+endif
+
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include $(LEVEL)/SingleSource/Makefile.singlesrc

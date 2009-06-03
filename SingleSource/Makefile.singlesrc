@@ -16,7 +16,9 @@
 #
 ##===----------------------------------------------------------------------===##
 
-PROGRAMS_TO_TEST = $(patsubst $(SourceDir)%,%,$(basename $(Source)))
+
+PROGRAMS_TO_TEST = $(filter-out $(PROGRAMS_TO_SKIP), \
+	$(patsubst $(SourceDir)%,%,$(basename $(Source))))
 
 include $(LEVEL)/Makefile.programs
 .PRECIOUS: Output/%.linked.rll
