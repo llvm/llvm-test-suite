@@ -92,7 +92,9 @@
 #define FILEBUFF 8192
 
 /* FPU byte ordering is little endian */
+#ifndef FPU_WORDS_BIGENDIAN
 #define FPU_WORDS_BIGENDIAN 0
+#endif
 
 /* enable workaround for broken DNS servers */
 /* #undef FRESHCLAM_DNS_FIX */
