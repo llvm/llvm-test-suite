@@ -9,6 +9,11 @@ CPPFLAGS = -DSSE2
 LIBS +=    -lpthread
 LDFLAGS += -lpthread
 
+ifeq ($(ARCH),PowerPC)
+TARGET_FLAGS += -maltivec -faltivec
+LCCFLAGS += -maltivec -faltivec
+endif
+
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = --fixed 400 --cpu 1 --num 200000 --seed 1158818515 $(HMMER_ROOT)/globin.hmm
 else
