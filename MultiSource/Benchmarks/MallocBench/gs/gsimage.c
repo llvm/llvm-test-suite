@@ -32,6 +32,7 @@ copies.  */
 #include "gzcolor.h"			/* requires gxdevice.h */
 #include "gzpath.h"
 #include "gximage.h"
+#include <stdint.h>
 
 /* Exported size of enumerator */
 int gs_image_enum_sizeof = sizeof(gs_image_enum);
@@ -108,19 +109,19 @@ gs_imagemask_init(gs_image_enum *penum, gs_state *pgs,
 /* Common setup for image and imagemask. */
 /* Note that the mask tables depend on the end-orientation of the CPU. */
 /* We can't simply define them as byte arrays, because */
-/* they might not wind up properly long- or short-aligned. */
+/* they might not wind up properly 32-bit or 16-bit-aligned. */
 #define map4tox(a,b,c,d)\
 	0, a, b, a+b, c, a+c, b+c, a+b+c,\
 	d, a+d, b+d, a+b+d, c+d, a+c+d, b+c+d, a+b+c+d
 #if big_endian
-private unsigned long map_4_to_32[16] =
+private uint32_t map_4_to_32[16] =
    {	map4tox(0xffL, 0xff00L, 0xff0000L, 0xff000000L)	};
-private unsigned short map_4_to_16[16] =
+private uint16_t map_4_to_16[16] =
    {	map4tox(0x55, 0xaa, 0x5500, 0xaa00)	};
 #else					/* !big_endian */
-private unsigned long map_4_to_32[16] =
+private uint32_t map_4_to_32[16] =
    {	map4tox(0xff000000L, 0xff0000L, 0xff00L, 0xffL)	};
-private unsigned short map_4_to_16[16] =
+private uint16_t map_4_to_16[16] =
    {	map4tox(0x5500, 0xaa00, 0x55, 0xaa)	};
 #endif
 private int
@@ -321,7 +322,7 @@ err:	/* Error, abort */
 private void
 image_unpack_0(gs_image_enum *penum, byte *bptr,
   register byte *data, uint dsize)
-{	register unsigned long *bufp = (unsigned long *)bptr;
+{	register uint32_t *bufp = (uint32_t *)bptr;
 	int left = dsize;
 	while ( left-- )
 	   {	register unsigned b = *data++;
@@ -351,7 +352,7 @@ image_unpack_0_spread(gs_image_enum *penum, register byte *bufp,
 private void
 image_unpack_1(gs_image_enum *penum, byte *bptr,
   register byte *data, uint dsize)
-{	register unsigned short *bufp = (unsigned short *)bptr;
+{	register uint16_t *bufp = (uint16_t *)bptr;
 	int left = dsize;
 	while ( left-- )
 	   {	register unsigned b = *data++;

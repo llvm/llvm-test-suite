@@ -73,11 +73,11 @@ typedef unsigned int uint;
 typedef unsigned long ulong;
 
 /* Maximum values for the unsigned types. */
-/* The "+0" is to get around apparent bugs in the UTek compiler. */
-#define max_uchar ((uchar)0xff + (uchar)0)
-#define max_ushort ((ushort)0xffff + (ushort)0)
-#define max_uint ((uint)0xffffffff + (uint)0)
-#define max_ulong ((ulong)0xffffffffL + (ulong)0)
+#include <limits.h>
+#define max_uchar UCHAR_MAX
+#define max_ushort USHRT_MAX
+#define max_uint UINT_MAX
+#define max_ulong ULONG_MAX
 
 /* Define a reliable arithmetic right shift. */
 #if (-2 >> 1) == -1

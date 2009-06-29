@@ -30,6 +30,7 @@ copies.  */
 #include "store.h"
 #include "stream.h"
 #include "scanchar.h"
+#include <stdint.h>
 
 /* Array packing flag */
 int array_packing;
@@ -78,10 +79,10 @@ typedef struct dynamic_area_s {
 private int
 dynamic_grow(register dynamic_area *pda)
 {	uint num = pda->num_elts;
-	uint size = num * pda->elt_size;
-	uint new_num;
+	uintptr_t size = num * pda->elt_size;
+	uintptr_t new_num;
 	uint pos = pda->next - pda->base;
-	size = (size < 10 ? 20 : size >= (max_uint >> 1) ? max_uint : size << 1);
+	size = (size < 10 ? 20 : size >= (max_uint >> 1) ? UINTPTR_MAX : size << 1);
 	new_num = size / pda->elt_size;
 	if ( pda->is_dynamic )
 	   {	pda->base = alloc_grow(pda->base, num, new_num, pda->elt_size, "scanner");

@@ -173,7 +173,7 @@ gs_screen_init(gs_screen_enum *penum, gs_state *pgs,
 	/* Convert the frequency to cell width and height */
 	   {	float cell_size = 72.0 / freq;
 		gs_point pcwh;
-		gs_matrix imat;
+		gs_matrix imat = {};
 		int dev_w, dev_h;
 		gs_deviceparams(gs_currentdevice(pgs), &imat, &dev_w, &dev_h);
 		if ( (code = gs_distance_transform(cell_size, cell_size,

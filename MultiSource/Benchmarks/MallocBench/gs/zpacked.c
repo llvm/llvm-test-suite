@@ -23,6 +23,7 @@ copies.  */
 #include "errors.h"
 #include "oper.h"
 #include "store.h"
+#include <stdint.h>
 
 /* Import the array packing flag */
 extern int array_packing;
@@ -70,7 +71,7 @@ zpackedarray(register ref *op)
 {	int code = make_array(op, t_packedarray, a_read+a_execute, "packedarray");
 	if ( code < 0 ) return code;
 	   {	/* Fill the array from the stack. */
-		uint size = op->size;
+		uintptr_t size = op->size;
 		if ( size > op - osbot ) return e_stackunderflow;
 		refcpy(op->value.refs, op - size, size);
 		op[-size] = *op;

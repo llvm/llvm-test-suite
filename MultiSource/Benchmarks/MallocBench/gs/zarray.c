@@ -26,6 +26,7 @@ copies.  */
 #include "oper.h"
 #include "store.h"
 #include "sstorei.h"
+#include <stdint.h>
 
 /* The generic operators (copy, get, put, getinterval, putinterval, */
 /* length, and forall) are implemented in zgeneric.c. */
@@ -63,7 +64,7 @@ zaload(register ref *op)
 /* astore */
 int
 zastore(register ref *op)
-{	uint size;
+{	uintptr_t size;
 	check_type(*op, t_array);
 	check_write(*op);
 	size = op->size;
