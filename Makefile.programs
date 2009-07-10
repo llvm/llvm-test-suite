@@ -514,10 +514,15 @@ BUGPOINT_OPTIONS += -append-exit-code
 
 # Support remote execution
 ifdef REMOTE_HOST
-ifdef REMOTE_USER
-BUGPOINT_OPTIONS += -remote-host=$(REMOTE_HOST) -remote-user=$(REMOTE_USER)
-else
 BUGPOINT_OPTIONS += -remote-host=$(REMOTE_HOST)
+ifdef REMOTE_PORT
+BUGPOINT_OPTIONS += -remote-port=$(REMOTE_PORT)
+endif
+ifdef REMOTE_USER
+BUGPOINT_OPTIONS += -remote-user=$(REMOTE_USER)
+endif
+ifdef REMOTE_CLIENT
+BUGPOINT_OPTIONS += -remote-client=$(REMOTE_CLIENT)
 endif
 endif
 
