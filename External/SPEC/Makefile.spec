@@ -121,7 +121,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/opt-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
@@ -129,40 +129,40 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
 Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
                          Output/llvm-ld-pass-args Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) -llc-safe ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) -llc-safe ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
 Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) \
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) ../$*.llvm.bc -run-llc $(BUGPOINT_OPTIONS) \
 	    $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit): \
 Output/%.bugpoint-jit: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.llvm.bc -safe-run-llc -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) ../$*.llvm.bc -safe-run-llc -run-jit $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-jit-beta): \
 Output/%.bugpoint-jit-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) \
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) ../$*.llvm.bc -run-jit $(BUGPOINT_OPTIONS) \
 	    $(LLCBETAOPTION) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-cbe): \
 Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    $(LBUGPOINT) ../$*.llvm.bc -cbe-bug $(BUGPOINT_OPTIONS) \
+	    PWD=$(shell /bin/pwd) $(LBUGPOINT) ../$*.llvm.bc -cbe-bug $(BUGPOINT_OPTIONS) \
 	    $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
