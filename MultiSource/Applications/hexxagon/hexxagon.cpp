@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 	
 	for (llvm_index = 0; llvm_index < 1; llvm_index++)
 	{
-          const char * tmp = "newgame CC";
+          char tmp[] = "newgame CC";
 
 		int len = strlen(tmp);
 		if(len && tmp[len - 1] == ' ')
