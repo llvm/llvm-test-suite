@@ -2,6 +2,7 @@
 LEVEL = ../../..
 include $(LEVEL)/Makefile.config
 
+DISABLE_JIT := 1
 DIRS :=
 
 LDFLAGS += -lobjc -framework Foundation
