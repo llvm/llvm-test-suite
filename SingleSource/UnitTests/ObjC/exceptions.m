@@ -1,4 +1,4 @@
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -143,6 +143,8 @@ void t5() {
 }
 
 int main() {
+  id Pool = [[NSAutoreleasePool alloc] init];
+
   t1();
   t2();
   t3();
@@ -151,6 +153,8 @@ int main() {
   t4();
 #endif
   t5();
+
+  [Pool release];
 
   return 0;
 }
