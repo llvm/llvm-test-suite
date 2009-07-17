@@ -16,10 +16,8 @@ typedef struct {
   long long _ll_ivar;
   float _f_ivar;
   double _d_ivar;
-#ifdef TEST_COMPLEX
   _Complex int _i_complex_ivar;
   _Complex float _f_complex_ivar;
-#endif
   IntPair _i_pair_ivar;
   FloatPair _f_pair_ivar;
 }
@@ -30,10 +28,8 @@ typedef struct {
 @property (assign) long long ll_ivar;
 @property (assign) float f_ivar;
 @property (assign) double d_ivar;
-#ifdef TEST_COMPLEX
 @property (assign) _Complex int i_complex_ivar;
 @property (assign) _Complex float f_complex_ivar;
-#endif
 @property (assign) IntPair i_pair_ivar;
 @property (assign) FloatPair f_pair_ivar;
 
@@ -48,12 +44,10 @@ typedef struct {
 -(float) return_f;
 -(void) unary_d: (double) a0;
 -(double) return_d;
-#ifdef TEST_COMPLEX
 -(void) unary_i_complex: (_Complex int) a0;
 -(_Complex int) return_i_complex;
 -(void) unary_f_complex: (_Complex float) a0;
 -(_Complex float) return_f_complex;
-#endif
 -(void) unary_i_pair: (IntPair) a0;
 -(IntPair) return_i_pair;
 -(void) unary_f_pair: (FloatPair) a0;
@@ -66,10 +60,8 @@ typedef struct {
 @synthesize ll_ivar = _ll_ivar;
 @synthesize f_ivar = _f_ivar;
 @synthesize d_ivar = _d_ivar;
-#ifdef TEST_COMPLEX
 @synthesize i_complex_ivar = _i_complex_ivar;
 @synthesize f_complex_ivar = _f_complex_ivar;
-#endif
 @synthesize i_pair_ivar = _i_pair_ivar;
 @synthesize f_pair_ivar = _f_pair_ivar;
 
@@ -129,7 +121,6 @@ typedef struct {
   return rv;
 }
 
-#ifdef TEST_COMPLEX
 -(void) unary_i_complex: (_Complex int) a0 {
   D(__FUNCTION__);
   printf("\ta0: %d + %dj\n",  __real a0, __imag a0);
@@ -155,7 +146,6 @@ typedef struct {
   printf("\t  returning: (%f, %f)\n", __real rv, __imag rv);
   return rv;
 }
-#endif
 
 -(void) unary_i_pair: (IntPair) a0 {
   D(__FUNCTION__);
@@ -194,10 +184,8 @@ int main() {
   long long ll_test_var = 0xABCDABCDABCDABCDLL;
   float f_test_var = 52.5;
   double d_test_var = 25.2;
-#ifdef TEST_COMPLEX
   _Complex int i_complex_test_var = 123 + 456j;
   _Complex float f_complex_test_var = 123.4 + 678.5j;
-#endif
   IntPair i_pair_test_var = { 0xABCDABCD, 0xDBCADBCA };
   FloatPair f_pair_test_var = { 25.2, 52.5 };
 
@@ -206,10 +194,8 @@ int main() {
   [a unary_ll: ll_test_var];
   [a unary_f: f_test_var];
   [a unary_d: d_test_var];
-#ifdef TEST_COMPLEX
   [a unary_i_complex: i_complex_test_var];
   [a unary_f_complex: f_complex_test_var];
-#endif
   [a unary_i_pair: i_pair_test_var];
   [a unary_f_pair: f_pair_test_var];
 
@@ -233,7 +219,6 @@ int main() {
     printf("\tresult: %f\n\n", rv);
     assert(rv == d_test_var);
   }
-#ifdef TEST_COMPLEX
   {
     _Complex int rv = [a return_i_complex];
     printf("\tresult: (%d, %d)\n\n", __real rv, __imag rv);
@@ -244,7 +229,6 @@ int main() {
     printf("\tresult: (%f, %f)\n\n", __real rv, __imag rv);
     assert(rv == f_complex_test_var);
   }
-#endif
   {
     IntPair rv = [a return_i_pair];
     printf("\tresult: (%d, %d)\n\n", rv.first, rv.second);
