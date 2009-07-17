@@ -823,40 +823,31 @@ LCOLLECT2 :=$(LLVMGCCLIBEXEC)/collect2
 
 # Create .lo files in the ObjectFiles directory from the .cpp and .c files...
 $(PROJ_OBJ_DIR)/Release/%.lo: %.cpp $(PROJ_OBJ_DIR)/Release/.dir
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileO) $< -o $@
+	$(CompileO) $< -o $@
 
 $(PROJ_OBJ_DIR)/Release/%.lo: %.c $(PROJ_OBJ_DIR)/Release/.dir
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileCO) $< -o $@
+	$(CompileCO) $< -o $@
 
 $(PROJ_OBJ_DIR)/Profile/%.lo: %.cpp $(PROJ_OBJ_DIR)/Profile/.dir
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileP) $< -o $@
+	$(CompileP) $< -o $@
 
 $(PROJ_OBJ_DIR)/Profile/%.lo: %.c $(PROJ_OBJ_DIR)/Profile/.dir
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileCP) $< -o $@
+	$(CompileCP) $< -o $@
 
 $(PROJ_OBJ_DIR)/Debug/%.lo: %.cpp $(PROJ_OBJ_DIR)/Debug/.dir
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileG) $< -o $@
+	$(CompileG) $< -o $@
 
 $(PROJ_OBJ_DIR)/Debug/%.lo: %.c $(PROJ_OBJ_DIR)/Debug/.dir 
-	@${ECHO} "Compiling `basename $<`"
-	$(VERB) $(CompileCG) $< -o $@
+	$(CompileCG) $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1XX)
-	@${ECHO} "Compiling `basename $<` to bytecode"
-	$(VERB) $(LLVMGXX) $(CPPFLAGS) -c $< -o $@
+	$(LLVMGXX) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
-	@${ECHO} "Compiling `basename $<` to bytecode"
-	$(VERB) $(LLVMGCC) $(CPPFLAGS) -c $< -o $@
+	$(LLVMGCC) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
-	@${ECHO} "Compiling `basename $<` to bytecode"
-	$(VERB) $(LLVMAS) $< -f -o $@
+	$(LLVMAS) $< -f -o $@
 
 
 #
