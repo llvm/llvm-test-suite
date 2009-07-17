@@ -7,7 +7,7 @@
 
 #define kNumThreads 10
 #define kLoopCount 10
-unsigned numThreads = kNumThreads;
+volatile unsigned numThreads = kNumThreads;
 unsigned sum = 0;
 
 @implementation A
