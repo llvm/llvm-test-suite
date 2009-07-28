@@ -330,17 +330,6 @@ Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
-# Targets to get the pass arguments that opt and llvm-ld are using...
-Output/opt-pass-args: $(LOPT) Output/.dir
-	-$(LLVMAS) < /dev/null -o - | \
-	  $(LOPT) $(EXTRA_LOPT_OPTIONS) -std-compile-opts -disable-output -debug-pass=Arguments 2>&1 | \
-	  sed 's/Pass Arguments: //' > $@
-
-Output/llvm-ld-pass-args: $(LLVMLDPROG) Output/.dir
-	$(LLVMAS) < /dev/null > Output/llvm-ld.test.bc
-	$(LLVMLD) Output/llvm-ld.test.bc -o Output/llvm-ld.test-out -debug-pass=Arguments > $@.1 2>&1
-	sed 's/Pass Arguments: //' < $@.1 > $@
-
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
@@ -557,13 +546,13 @@ BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 # Rules to bugpoint the opt, llvm-ld, llc, or lli commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
-                         Output/opt-pass-args Output/%.out-nat
-	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< `cat Output/opt-pass-args` $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+                         Output/%.out-nat
+	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -std-compile-opts $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
 Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
-                         Output/llvm-ld-pass-args Output/%.out-nat
-	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< `cat Output/llvm-ld-pass-args` $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
+                         Output/%.out-nat
+	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -std-link-opts $(OPTPASSES) $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
