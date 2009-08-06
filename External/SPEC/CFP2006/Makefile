@@ -11,8 +11,13 @@ PARALLEL_DIRS :=  \
     433.milc      \
     444.namd      \
     447.dealII    \
-    470.lbm       \
     450.soplex
+
+ifndef SMALL_PROBLEM_SIZE
+# Skip tests that take too much memory to run.
+PARALLEL_DIRS +=  \
+    470.lbm
+endif
 
 ifdef USE_F95
 PARALLEL_DIRS +=  \
