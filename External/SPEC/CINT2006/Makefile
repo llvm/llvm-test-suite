@@ -16,8 +16,13 @@ PARALLEL_DIRS := \
         462.libquantum \
         464.h264ref    \
         471.omnetpp    \
-        473.astar      \
         483.xalancbmk
+
+ifndef SMALL_PROBLEM_SIZE
+# Temporary. 
+PARALLEL_DIRS +=  \
+        473.astar      \
+endif
 
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
