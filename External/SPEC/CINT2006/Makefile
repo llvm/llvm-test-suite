@@ -21,7 +21,7 @@ PARALLEL_DIRS := \
 ifndef SMALL_PROBLEM_SIZE
 # Temporary. 
 PARALLEL_DIRS +=  \
-        473.astar      \
+        473.astar
 endif
 
 # Get the $(ARCH) setting
