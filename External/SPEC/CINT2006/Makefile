@@ -8,7 +8,6 @@ LEVEL = ../../..
 PARALLEL_DIRS := \
         400.perlbench  \
         401.bzip2      \
-        403.gcc        \
         429.mcf        \
         445.gobmk      \
         456.hmmer      \
@@ -21,6 +20,7 @@ PARALLEL_DIRS := \
 ifndef SMALL_PROBLEM_SIZE
 # Temporary. 
 PARALLEL_DIRS +=  \
+        403.gcc        \
         473.astar
 endif
 
