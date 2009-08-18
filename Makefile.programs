@@ -330,6 +330,10 @@ Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLDPROG)
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
+# Disable asm-verbose.  This can slow down compilation and is not what the
+# compilers default to using.
+LLCFLAGS += -asm-verbose=false
+
 # If the program requires exception handling support, enable (potentially
 # expensive) support for it.
 ifdef REQUIRES_EH_SUPPORT
