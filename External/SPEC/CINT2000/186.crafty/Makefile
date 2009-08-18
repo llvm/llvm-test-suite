@@ -31,10 +31,10 @@ endif
 ifeq ($(TARGET_ARCH),ARM)
   CPPFLAGS += -DHAS_LONGLONG
 endif
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DUNIX -DLINUX
 endif
-ifeq ($(OS),Linux)
+ifeq ($(TARGET_OS),Linux)
   CPPFLAGS += -DUNIX -DLINUX
 endif
 ifeq ($(ENDIAN),little)

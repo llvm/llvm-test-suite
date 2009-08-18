@@ -365,7 +365,7 @@ TARGET_LLCFLAGS += -relocation-model=pic -disable-fp-elim
 TARGET_LLIFLAGS += -relocation-model=pic -disable-fp-elim
 else
 TARGET_FLAGS += -fomit-frame-pointer
-  ifeq ($(OS),Darwin)
+  ifeq ($(TARGET_OS),Darwin)
   TARGET_FLAGS += -mdynamic-no-pic
   endif
 endif

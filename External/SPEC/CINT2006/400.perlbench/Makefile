@@ -19,7 +19,7 @@ include $(LEVEL)/Makefile.config
 
 CPPFLAGS += -DPERL_CORE -DI_TIME
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 ifeq ($(ARCH),PowerPC)
   CPPFLAGS += -DSPEC_CPU_MACOSX_PPC
 endif

@@ -34,7 +34,7 @@ endif
 NT_SOURCES     = nt_perlmain.c win32.c win32sck.c win32threads.c perllib.c
 UNIX_SOURCES   = unix_perlmain.c
 
-ifeq ($(strip $(OS)),Win32)
+ifeq ($(strip $(TARGET_OS)),Win32)
 CPPFLAGS       += -Iwin32 -I. -DWIN32 -D_CONSOLE
 LIBS           += advapi32.lib wsock32.lib
 DO_NOT_COMPILE := $(UNIX_SOURCES)
@@ -48,7 +48,7 @@ Source := $(filter-out $(foreach xyz,$(DO_NOT_COMPILE),%/$(xyz)),$(Source))
 SPEC2K_DO_NOT_RECONFIGURE := 1
 include $(LEVEL)/External/SPEC/Makefile.spec2000
 
-ifeq ($(strip $(OS)),Linux)
+ifeq ($(strip $(TARGET_OS)),Linux)
 CPPFLAGS := $(filter-out -DSPEC_CPU2000,$(CPPFLAGS))
 ifeq ($(ARCH),Alpha)
   CPPFLAGS += -DSPEC_CPU2000_LINUX_ALPHA

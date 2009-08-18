@@ -10,7 +10,7 @@ include $(LEVEL)/Makefile.config
 
 CPPFLAGS += -DINLINE=__inline__
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
 

@@ -12,16 +12,16 @@ PARALLEL_DIRS += lua
 endif
 
 # Obsequi uses Linux-only features; need to fix that
-ifeq ($(OS),Linux)
+ifeq ($(TARGET_OS),Linux)
 PARALLEL_DIRS += obsequi
 endif
 
 # kimwitu++ uses multi-byte chars, not available on sparc/solaris
-ifneq ($(OS),SunOS)
+ifneq ($(TARGET_OS),SunOS)
 PARALLEL_DIRS += kimwitu++
 endif
 
-ifeq ($(OS),SunOS)
+ifeq ($(TARGET_OS),SunOS)
 PARALLEL_DIRS := $(filter-out SPASS, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out hexxagon, $(PARALLEL_DIRS))
 endif

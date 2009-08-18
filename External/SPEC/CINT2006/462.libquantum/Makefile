@@ -15,11 +15,11 @@ endif
 
 include ../../Makefile.spec2006
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
 
-ifeq ($(OS),Linux)
+ifeq ($(TARGET_OS),Linux)
   CPPFLAGS += -DSPEC_CPU_LINUX
 endif
 

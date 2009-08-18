@@ -37,40 +37,40 @@ include $(LEVEL)/Makefile.config
 # -- OS macros --
 #  It is especially important to get this correctly defined for windows.
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
    CPPFLAGS += -DC_DARWIN
 endif
-ifeq ($(OS),AIX)
+ifeq ($(TARGET_OS),AIX)
    CPPFLAGS += -DC_AIX
 endif
-ifeq ($(OS), IRIX)
+ifeq ($(TARGET_OS), IRIX)
    CPPFLAGS += -DC_IRIX
 endif
-ifeq ($(OS), Cygwin)
+ifeq ($(TARGET_OS), Cygwin)
    CPPFLAGS += -DC_CYGWIN
 endif
-ifeq ($(OS), FreeBSD)
+ifeq ($(TARGET_OS), FreeBSD)
    CPPFLAGS += -DC_BSD
 endif
-ifeq ($(OS), OpenBSD)
+ifeq ($(TARGET_OS), OpenBSD)
    CPPFLAGS += -DC_BSD
 endif
-ifeq ($(OS), NetBSD)
+ifeq ($(TARGET_OS), NetBSD)
    CPPFLAGS += -DC_BSD
 endif
-ifeq ($(OS), HP-UX)
+ifeq ($(TARGET_OS), HP-UX)
    CPPFLAGS += -DC_HPUX
 endif
-ifeq ($(OS), Interix)
+ifeq ($(TARGET_OS), Interix)
   CPPFLAGS += -DC_INTERIX -DC_WINDOWS
 endif
-ifeq ($(OS), Win32)
+ifeq ($(TARGET_OS), Win32)
   CPPFLAGS += -DC_WINDOWS
 endif
-ifeq ($(OS), mingw)
+ifeq ($(TARGET_OS), mingw)
   CPPFLAGS += -DC_WINDOWS
 endif
-ifeq ($(OS), Linux)
+ifeq ($(TARGET_OS), Linux)
   CPPFLAGS += -DC_LINUX
 endif
 
@@ -104,10 +104,10 @@ include ../../Makefile.multisrc
 #compare debug output
 DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 EXTRA_LLIFLAGS += -load=libz.dylib
 else
-ifeq ($(OS),Linux)
+ifeq ($(TARGET_OS),Linux)
 EXTRA_LLIFLAGS += -load=libz.so.1
 else
 EXTRA_LLIFLAGS += -load=libz

@@ -16,7 +16,7 @@ endif
 DIRS += SignlessTypes Threads
 
 # Only test Obj-C on darwin/x86 for time being.
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 ifeq ($(ARCH),x86)
 DIRS += ObjC ObjC++
 endif
@@ -27,7 +27,7 @@ endif
 
 # Darwin doesn't support weak/weak_import in a way that we can test in this
 # framework.
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 PROGRAMS_TO_SKIP := 2007-04-25-weak
 endif
 

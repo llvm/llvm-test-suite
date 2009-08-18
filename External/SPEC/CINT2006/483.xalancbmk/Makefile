@@ -20,10 +20,10 @@ CPPFLAGS += -DNDEBUG -DAPP_NO_THREADS -DXALAN_INMEM_MSG_LOADER        \
             -I$(SPEC_BENCH_DIR)/src/xercesc/util/Transcoders/Iconv    \
             -I$(SPEC_BENCH_DIR)/src/xalanc/include
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DSPEC_CPU_MACOSX
 endif
-ifeq ($(OS),Linux)
+ifeq ($(TARGET_OS),Linux)
   CPPFLAGS += -DSPEC_CPU_LINUX
 endif
 

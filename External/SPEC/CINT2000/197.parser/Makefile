@@ -6,7 +6,7 @@ CPPFLAGS =
 
 include $(LEVEL)/Makefile.config
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 CPPFLAGS += -D_ANSI_SOURCE=1
 endif
 

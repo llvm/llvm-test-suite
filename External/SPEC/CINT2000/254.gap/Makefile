@@ -11,7 +11,7 @@ ifeq ($(ARCH),Sparc)
 CPPFLAGS+= -DSPEC_CPU2000_LP64
 endif
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 CPPFLAGS += -DSYS_IS_BSD
 else
 CPPFLAGS += -DSYS_IS_USG

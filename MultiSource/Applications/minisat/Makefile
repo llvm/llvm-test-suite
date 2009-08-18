@@ -17,7 +17,7 @@ FP_TOLERANCE = 0.1
 
 include ../../Makefile.multisrc
 
-ifeq ($(OS),Darwin)
+ifeq ($(TARGET_OS),Darwin)
 SHLIBEXT := .dylib
 endif
 
