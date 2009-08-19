@@ -119,17 +119,17 @@ BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 # Rules to bugpoint the opt, llvm-ld, llc, or lli commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
-                         Output/opt-pass-args Output/%.out-nat
+                         Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc `cat Output/opt-pass-args` $(OPTPASSES) \
+	    PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc -std-compile-opts $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
 Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
-                         Output/llvm-ld-pass-args Output/%.out-nat
+                         Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.nollvm-ldopt-llvm.bc `cat Output/llvm-ld-pass-args` $(OPTPASSES) \
+	    PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.nollvm-ldopt-llvm.bc -std-link-opts $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
