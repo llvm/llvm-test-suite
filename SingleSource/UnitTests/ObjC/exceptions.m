@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define D() printf("%s:%d\n", __FILE__, __LINE__)
+#define D() printf("exceptions.m:%d\n", __LINE__)
 
 @interface A @end
 @implementation A @end
