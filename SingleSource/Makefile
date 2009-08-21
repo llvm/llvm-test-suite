@@ -1,6 +1,6 @@
 LEVEL = ..
 
-PARALLEL_DIRS  = UnitTests Regression Benchmarks CustomChecked
+PARALLEL_DIRS  = UnitTests Regression Benchmarks 
 
 LDFLAGS += -lm
 
