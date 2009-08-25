@@ -65,7 +65,7 @@ Output/%.bc: %.mm $(LCC1XX) Output/.dir $(INCLUDES)
 # LLVM source, use the non-transforming assembler.
 #
 Output/%.bc: %.ll $(LLVMAS) Output/.dir
-	-$(LLVMAS) -f $< -o $@
+	-$(LLVMAS) $< -o $@
 
 ## Cancel built-in implicit rules that override above rules
 %: %.s

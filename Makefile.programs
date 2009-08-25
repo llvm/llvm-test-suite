@@ -262,16 +262,16 @@ print-llcbeta-option:
 $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
-	-$(LOPT) -std-compile-opts -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@ -f
+	-$(LOPT) -std-compile-opts -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
-	-$(LOPT) -mstrip $< -o $@ -f
+	-$(LOPT) -mstrip $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.optbeta.bc): \
 Output/%.linked.optbeta.bc: Output/%.linked.rbc $(LOPT)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
-	-$(LOPT) $(OPTBETAOPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@ -f
+	-$(LOPT) $(OPTBETAOPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)  $< -o $@
 
 
 ifndef DISABLE_FOR_LLVM_PROGRAMS
@@ -284,7 +284,7 @@ Output/%.llvm.bc: Output/%.linked.bc $(LLVM_LDDPROG)
 	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
 		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
+	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp
 	$(MV) -f $@.tmp $@
 endif
 
@@ -293,7 +293,7 @@ Output/%.llvm: Output/%.linked.bc $(LLVMLDPROG)
 	-$(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
 		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
 ifneq ($(OPTPASSES),)
-	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp -f
+	-$(LOPT) -q $(OPTPASSES) $@ -o $@.tmp
 	$(MV) -f $@.tmp $@
 endif
 
@@ -377,7 +377,7 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -march=c $< -o $@ -f
+	-$(LLC) $(LLCFLAGS) -march=c $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
@@ -388,15 +388,15 @@ Output/%.cbe: Output/%.cbe.c
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f $< -o $@
+	-$(LLC) $(LLCFLAGS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f $(LLCBETAOPTION) $< -o $@
+	-$(LLC) $(LLCFLAGS) $(LLCBETAOPTION) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.opt-beta.s): \
 Output/%.opt-beta.s: Output/%.llvm.optbeta.bc $(LLC)
-	-$(LLC) $(LLCFLAGS) -f  $< -o $@
+	-$(LLC) $(LLCFLAGS) $< -o $@
 
 # On darwin, pass -force_cpusubtype_ALL to allow all ppc instructions.
 ifeq ($(ARCH),PowerPC)
@@ -610,7 +610,7 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llvm-prof.bc): \
 Output/%.llvm-prof.bc: Output/%.llvm.bc
-	$(LOPT) -insert-edge-profiling $< -o $@ -f
+	$(LOPT) -insert-edge-profiling $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.printprof): \
 Output/%.printprof: Output/%.llvm.bc Output/%.prof $(LPROF)

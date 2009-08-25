@@ -847,7 +847,7 @@ $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
 	$(LLVMGCC) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
-	$(LLVMAS) $< -f -o $@
+	$(LLVMAS) $< -o $@
 
 
 #
