@@ -224,10 +224,11 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -combiner-alias-analysis -combiner-global-alias-analysis
+LLCBETAOPTION := -disable-16bit
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -combiner-alias-analysis -combiner-global-alias-analysis
+LLCBETAOPTION := -disable-16bit
+#-combiner-alias-analysis -combiner-global-alias-analysis
 #-pre-alloc-split
 #-join-cross-class-copies
 #-fast-isel
@@ -239,7 +240,6 @@ LLCBETAOPTION := -combiner-alias-analysis -combiner-global-alias-analysis
 #-tailcallopt
 #-regalloc=local -O0
 #-disable-fp-elim
-#-regalloc=bigblock -O0
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
