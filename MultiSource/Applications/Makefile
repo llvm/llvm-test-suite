@@ -4,8 +4,11 @@ LEVEL = ../..
 
 include $(LEVEL)/Makefile.config
 
-PARALLEL_DIRS  = Burg aha sgefa siod lambda-0.1.3 d spiff hbd treecc SPASS \
-                 hexxagon oggenc JM viterbi minisat SIBsim4 ClamAV sqlite3 lemon
+PARALLEL_DIRS  = Burg aha sgefa siod d spiff treecc SPASS \
+                 oggenc JM viterbi SIBsim4 ClamAV sqlite3 lemon
+ifndef DISABLE_CXX
+PARALLEL_DIRS += lambda-0.1.3 hbd hexxagon minisat 
+endif
 
 ifndef SMALL_PROBLEM_SIZE
 PARALLEL_DIRS += lua
@@ -18,7 +21,9 @@ endif
 
 # kimwitu++ uses multi-byte chars, not available on sparc/solaris
 ifneq ($(TARGET_OS),SunOS)
+ifndef DISABLE_CXX
 PARALLEL_DIRS += kimwitu++
+endif
 endif
 
 ifeq ($(TARGET_OS),SunOS)

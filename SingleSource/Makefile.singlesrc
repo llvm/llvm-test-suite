@@ -16,8 +16,16 @@
 #
 ##===----------------------------------------------------------------------===##
 
+# Force lazy substitution.
+ALL_PROGRAMS_TO_SKIP = $(PROGRAMS_TO_SKIP)
 
-PROGRAMS_TO_TEST = $(filter-out $(PROGRAMS_TO_SKIP), \
+# If DISABLE_CXX is given, add any C++ programs to the list to skip.
+ifdef DISABLE_CXX
+  CXX_SOURCES = $(filter %.cpp %.cc %.mm, $(Source))
+  ALL_PROGRAMS_TO_SKIP += $(patsubst $(SourceDir)%,%,$(basename $(CXX_SOURCES)))
+endif
+
+PROGRAMS_TO_TEST = $(filter-out $(ALL_PROGRAMS_TO_SKIP), \
 	$(patsubst $(SourceDir)%,%,$(basename $(Source))))
 
 include $(LEVEL)/Makefile.programs
