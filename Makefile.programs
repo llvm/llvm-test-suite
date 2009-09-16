@@ -224,11 +224,11 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -disable-16bit
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -disable-16bit
-#-combiner-alias-analysis -combiner-global-alias-analysis
+LLCBETAOPTION := -combiner-alias-analysis
+#-combiner-global-alias-analysis
 #-pre-alloc-split
 #-join-cross-class-copies
 #-fast-isel
