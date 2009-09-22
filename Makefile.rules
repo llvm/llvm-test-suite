@@ -811,9 +811,8 @@ install:: $(TOOLEXENAMES)
 
 endif
 
-LCC1 := $(LLVMGCCLIBEXEC)/cc1
-LCC1XX := $(LLVMGCCLIBEXEC)/cc1plus
-LCOLLECT2 :=$(LLVMGCCLIBEXEC)/collect2 
+LCC1 := $(LLVMCC1)
+LCC1XX := $(LLVMCC1PLUS)
 
 
 #---------------------------------------------------------
