@@ -245,12 +245,15 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -schedule-livein-copies
+LLCBETAOPTION := -post-RA-scheduler
+#-arm-pre-alloc-loadstore-opti
+#-schedule-livein-copies
 #-new-coalescer-heuristic=true
 #-march=thumb
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := --enable-thumb-reg-scavenging
+LLCBETAOPTION := -post-RA-scheduler
+#--enable-thumb-reg-scavenging
 endif
 
 print-llcbeta-option:
