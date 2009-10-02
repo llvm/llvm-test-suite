@@ -230,7 +230,6 @@ ifeq ($(ARCH),x86)
 LLCBETAOPTION := -combiner-alias-analysis
 #-combiner-global-alias-analysis
 #-pre-alloc-split
-#-join-cross-class-copies
 #-fast-isel
 #-aggressive-remat
 #-new-spilling-heuristic
@@ -245,14 +244,12 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -ldstopti-before-sched2
-#-arm-pre-alloc-loadstore-opti
+LLCBETAOPTION := -combiner-alias-analysis
 #-schedule-livein-copies
 #-new-coalescer-heuristic=true
-#-march=thumb
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -ldstopti-before-sched2
+LLCBETAOPTION := -combiner-alias-analysis
 #--enable-thumb-reg-scavenging
 endif
 
