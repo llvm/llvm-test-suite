@@ -2,7 +2,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef __APPLE__ // memalign
+#if !defined(__APPLE__) && !defined(__FreeBSD__) // memalign
 #include <malloc.h>
 #endif
 
@@ -37,7 +37,7 @@ int main()
   t_overhead = t_end - t_start;
 
   /* Prepare aux data */
-#ifndef __APPLE__  /* Darwin always 16-byte aligns malloc data */
+#if !defined(__APPLE__) && !defined(__FreeBSD__) /* Darwin always 16-byte aligns malloc data */
   ip = memalign(16, sqrt(N)*sizeof(int));
   w  = memalign(16, 2*N*5/4*sizeof(double));
 #else
@@ -47,7 +47,7 @@ int main()
   makewt(N >> 1, ip, w);
   
   /* Allocate buffers */
-#ifndef __APPLE__  /* Darwin always 16-byte aligns malloc data */
+#if !defined(__APPLE__) && !defined(__FreeBSD__) /* Darwin always 16-byte aligns malloc data */
   ref = memalign(16, 2*N*sizeof(double));
   cmp = memalign(16, 2*N*sizeof(double));
   src = memalign(16, 2*N*sizeof(double));
