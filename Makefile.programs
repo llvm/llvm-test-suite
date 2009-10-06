@@ -249,7 +249,7 @@ LLCBETAOPTION := -combiner-alias-analysis
 #-new-coalescer-heuristic=true
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -combiner-alias-analysis
+LLCBETAOPTION := -combiner-alias-analysis -enable-frame-index-scavenging
 #--enable-thumb-reg-scavenging
 endif
 
