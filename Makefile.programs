@@ -213,7 +213,6 @@ endif#DISABLE_DIFFS
 ifeq ($(ARCH),PowerPC)
 LLCBETAOPTION := -regalloc=local -O0
 #--enable-ppc-preinc
-#-aggressive-remat
 #--enable-tail-merge
 endif
 ifeq ($(ARCH),Alpha)
@@ -234,7 +233,6 @@ LLCBETAOPTION := -remat-pic-stub-load
 #-combiner-alias-analysis
 #-combiner-global-alias-analysis
 #-fast-isel
-#-aggressive-remat
 #-new-spilling-heuristic
 #-enable-value-prop
 #-schedule-livein-copies
