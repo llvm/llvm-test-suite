@@ -224,20 +224,20 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -pre-alloc-split
+LLCBETAOPTION := -remat-pic-stub-load
+#-pre-alloc-split
 #-combiner-alias-analysis
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -pre-alloc-split
+LLCBETAOPTION := -remat-pic-stub-load
+#-pre-alloc-split
 #-combiner-alias-analysis
 #-combiner-global-alias-analysis
-#-pre-alloc-split
 #-fast-isel
 #-aggressive-remat
 #-new-spilling-heuristic
 #-enable-value-prop
 #-schedule-livein-copies
-#-new-coalescer-heuristic=true
 #-tailcallopt
 #-regalloc=local -O0
 #-disable-fp-elim
@@ -248,7 +248,6 @@ endif
 ifeq ($(ARCH),ARM)
 LLCBETAOPTION := -combiner-alias-analysis
 #-schedule-livein-copies
-#-new-coalescer-heuristic=true
 endif
 ifeq ($(ARCH),THUMB)
 LLCBETAOPTION :=
