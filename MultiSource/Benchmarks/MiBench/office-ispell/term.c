@@ -72,7 +72,7 @@ static char Rcs_Id[] =
 #include "msgs.h"
 #include <signal.h>
 
-#ifdef __GLIBC__
+#if defined(__GLIBC__) || defined(__FreeBSD__)
 /* Use termios under at least glibc */
 #include <termios.h>
 #define USE_TERMIOS
