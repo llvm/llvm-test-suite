@@ -223,13 +223,13 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -host-constants
+LLCBETAOPTION := -hoist-constants
 #-combiner-alias-analysis
 #-pre-alloc-split
 #-remat-pic-stub-load
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -host-constants
+LLCBETAOPTION := -hoist-constants
 #-combiner-alias-analysis
 #-pre-alloc-split
 #-remat-pic-stub-load
