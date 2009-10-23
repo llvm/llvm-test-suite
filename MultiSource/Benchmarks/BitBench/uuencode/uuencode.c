@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
   }
   size = read_data(in, inbuf);
   gettimeofday(&pre,0);
-  for(i=0;i<100;i++){
+  for(i=0;i<1000;i++){
     outsize = do_encode(inbuf,outbuf, size, argv[1]);
    
   }
