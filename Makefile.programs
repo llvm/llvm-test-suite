@@ -246,12 +246,14 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -combiner-alias-analysis
+LLCBETAOPTION := -arm-virtual-frame-index-vals -arm-reuse-frame-index-vals
+#-combiner-alias-analysis
 #-schedule-livein-copies
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -combiner-alias-analysis
-#--enable-thumb-reg-scavenging
+LLCBETAOPTION := -arm-virtual-frame-index-vals -arm-reuse-frame-index-vals
+#-combiner-alias-analysis
+#-enable-thumb-reg-scavenging
 endif
 
 print-llcbeta-option:
