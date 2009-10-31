@@ -223,14 +223,12 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -hoist-constants
-#-combiner-alias-analysis
+LLCBETAOPTION := -combiner-alias-analysis
 #-pre-alloc-split
 #-remat-pic-stub-load
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -hoist-constants
-#-combiner-alias-analysis
+LLCBETAOPTION := -combiner-alias-analysis
 #-pre-alloc-split
 #-remat-pic-stub-load
 #-combiner-global-alias-analysis
