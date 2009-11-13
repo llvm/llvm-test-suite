@@ -244,11 +244,12 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -combiner-alias-analysis
+LLCBETAOPTION := -arm-adjust-jump-tables
 #-schedule-livein-copies
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -combiner-alias-analysis
+LLCBETAOPTION := -arm-adjust-jump-tables
+#-combiner-alias-analysis
 #-enable-thumb-reg-scavenging
 endif
 
