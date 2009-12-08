@@ -16,7 +16,6 @@ $TrimRepeatedPrefix = 1;
  ["Name:" , '\'([^\']+)\' Program'],
  [],
 # Times
- ["InstrCr", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Instruction Creation'],
  ["LiveVar", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Live Variable'],
  ["LiveInt", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+Live Interval'],
  ["RASetup", sub { return AddColumns(@_,-1,-2); }],
