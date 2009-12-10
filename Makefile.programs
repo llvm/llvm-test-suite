@@ -481,15 +481,15 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLI_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(JIT_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
