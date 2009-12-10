@@ -799,7 +799,7 @@ endif
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	$(MAKE) $(FORCE_SERIAL_ARG) TEST=$(TEST)
-	cat Output/*.$(TEST).report.txt | tee $@
+	find . -name \*.$(TEST).report.txt -exec cat {} \; | tee $@
 
 ifneq ($(TestReport),)
 report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
