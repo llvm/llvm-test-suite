@@ -798,7 +798,8 @@ FORCE_SERIAL_ARG := -j1
 endif
 
 report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
-	$(MAKE) $(FORCE_SERIAL_ARG) TEST=$(TEST) 2>&1 | tee $@
+	$(MAKE) $(FORCE_SERIAL_ARG) TEST=$(TEST)
+	cat Output/*.$(TEST).report.txt | tee $@
 
 ifneq ($(TestReport),)
 report.$(TEST).txt: report.$(TEST).raw.out $(TestReport) $(GENERATEREPORT)
