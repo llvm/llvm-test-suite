@@ -738,10 +738,7 @@ endif
 # the default target is the test target.  Here we dispatch to a specific set of
 # tests.
 #
-.PHONY: test-setup test-finish
-test-setup::
-test-finish::
-test:: test-setup $(PROGRAMS_TO_TEST:%=test.$(TEST).%) test-finish
+test:: $(PROGRAMS_TO_TEST:%=test.$(TEST).%)
 
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #

@@ -17,8 +17,6 @@ DESTDIR := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 
 .PRECIOUS: $(DESTDIR)/.dir $(DESTDIR)/%.bc
 
-test-setup:: $(DESTDIR)/.dir
-
 # To Make a file up-to-date, just copy it over.
 $(PROGRAMS_TO_TEST:%=$(DESTDIR)/%.bc): \
 $(DESTDIR)/%.bc: Output/%.llvm.bc
