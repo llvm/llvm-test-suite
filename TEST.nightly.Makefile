@@ -58,7 +58,7 @@ Output/%.nightly.nat.report.txt: Output/%.out-nat
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
-Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc
+Output/%.nightly.llc.report.txt: Output/%.exe-llc
 	@echo > $@
 	-head -n 100 Output/$*.exe-llc >> $@
 	@-if test -f Output/$*.exe-llc; then \
@@ -90,7 +90,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta
 
 # OPT experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.opt-beta.report.txt): \
-Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta
+Output/%.nightly.opt-beta.report.txt: Output/%.exe-opt-beta
 	@echo > $@
 	-head -n 100 Output/$*.exe-opt-beta >> $@
 	@-if test -f Output/$*.exe-opt-beta; then \
@@ -106,7 +106,7 @@ Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
-Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe
+Output/%.nightly.cbe.report.txt: Output/%.exe-cbe
 	@echo > $@
 	-head -n 100 Output/$*.exe-cbe >> $@
 	@-if test -f Output/$*.exe-cbe; then \
@@ -120,7 +120,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
-Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit
+Output/%.nightly.jit.report.txt: Output/%.exe-jit
 	@echo > $@
 	-head -n 100 Output/$*.exe-jit >> $@
 	@-if test -f Output/$*.exe-jit; then \
