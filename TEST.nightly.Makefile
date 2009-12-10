@@ -138,13 +138,14 @@ Output/%.nightly.jit.report.txt: Output/%.exe-jit
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: $(addprefix Output/%.nightly., $(REPORTS_SUFFIX))
-	-cat $(addprefix Output/$*.nightly., $(REPORTS_SUFFIX)) > $@
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
+	-cat $(addprefix Output/$*.nightly., $(REPORTS_SUFFIX)) >> $@
 
 
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$(RELDIR)/$*' Program"
-	@echo "---------------------------------------------------------------"
 	@-cat $<

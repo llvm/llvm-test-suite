@@ -21,16 +21,17 @@ Output/%.$(TEST).llc-beta-info.txt: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.$(TEST).llc-info.txt Output/%.$(TEST).llc-beta-info.txt
-	-@printf "LLC: " > $@
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
+	-@printf "LLC: " >> $@
 	-grep 'Number of machine instrs printed' Output/$*.$(TEST).llc-info.txt >> $@
 	-@printf "LLCBETA: " >> $@
 	-grep 'Number of machine instrs printed' Output/$*.$(TEST).llc-beta-info.txt >> $@
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$(RELDIR)/$*' Program"
-	@echo "---------------------------------------------------------------"
 	@cat $<
 
 # Define REPORT_DEPENDENCIES so that the report is regenerated if llc changes

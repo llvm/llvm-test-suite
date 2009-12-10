@@ -18,16 +18,17 @@ RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$(RELDIR)/$*' Program"
-	@echo "---------------------------------------------------------------"
 	@cat $<
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt):  \
 Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT) \
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
 	$(PROJ_SRC_ROOT)/TEST.libcalls.Makefile 
 	@-$(LOPT) -simplify-libcalls -stats -debug-only=simplify-libcalls \
-	         -time-passes -disable-output $< 2>$@ 
+	         -time-passes -disable-output $< 2>>$@ 
 summary:
 	@$(MAKE) TEST=libcalls | egrep '======|simplify-libcalls -'
 

@@ -13,14 +13,15 @@ RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.llvm.bc $(LLI)
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
 	-(time -p $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS) > /dev/null \
-                < $(STDIN_FILENAME)) > $@ 2>&1
+                < $(STDIN_FILENAME)) >> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$(RELDIR)/$*' Program"
-	@echo "---------------------------------------------------------------"
 	@cat $<
 
 # Define REPORT_DEPENDENCIES so that the report is regenerated if lli changes

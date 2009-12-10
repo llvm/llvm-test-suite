@@ -13,13 +13,14 @@ RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: Output/%.llvm.bc $(LLC)
-	-(time -p $(LLC) $(LLC_OPTS) $<) > $@ 2>&1
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
+	-(time -p $(LLC) $(LLC_OPTS) $<) >> $@ 2>&1
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$(RELDIR)/$*' Program"
-	@echo "---------------------------------------------------------------"
 	@cat $<
 
 # Define REPORT_DEPENDENCIES so that the report is regenerated if llc changes

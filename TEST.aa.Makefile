@@ -38,7 +38,11 @@ AA_OUTPUTS := $(addsuffix .txt, $(AA_IMPLS))
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
 Output/%.$(TEST).report.txt: $(addprefix Output/%.aa., $(AA_OUTPUTS))
-	-$(LDIS) < Output/$*.lib.bc | grep ^declare > $@
+	$(VERB) $(RM) -f $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
+	-$(LDIS) < Output/$*.lib.bc | grep ^declare >> $@
 	@-for output in $(addprefix Output/$*.aa., $(AA_OUTPUTS)); do \
 		echo -n "$$output:" >> $@; \
 		grep Summary $$output >> $@; \
@@ -50,9 +54,6 @@ Output/%.$(TEST).report.txt: $(addprefix Output/%.aa., $(AA_OUTPUTS))
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
-	@echo "---------------------------------------------------------------"
-	@echo ">>> ========= '$*' Program"
-	@echo "---------------------------------------------------------------"
 	@cat $<
 
 # Define REPORT_DEPENDENCIES so that the report is regenerated if analyze or
