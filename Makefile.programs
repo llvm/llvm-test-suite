@@ -381,7 +381,8 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.cbe.c): \
 Output/%.cbe.c: Output/%.llvm.bc $(LLC)
-	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) -march=c $< -o $@
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) -march=c $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
@@ -392,15 +393,18 @@ Output/%.cbe: Output/%.cbe.c
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
-	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $< -o $@
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
-	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $(LLCBETAOPTION) $< -o $@
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $(LLCBETAOPTION) $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.opt-beta.s): \
 Output/%.opt-beta.s: Output/%.llvm.optbeta.bc $(LLC)
-	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $< -o $@
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 # On darwin, pass -force_cpusubtype_ALL to allow all ppc instructions.
 ifeq ($(ARCH),PowerPC)
@@ -477,15 +481,15 @@ endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLI_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(JIT_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
-	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS) -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc

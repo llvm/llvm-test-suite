@@ -33,13 +33,9 @@ REPORT_DEPENDENCIES += $(LOPT)
 endif
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 
-
-TIMEOPT = -time-passes -stats -info-output-file=$(CURDIR)/$@.info
-EXTRA_LLIFLAGS = $(TIMEOPT)
-
 # Compilation tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.compile.report.txt): \
-Output/%.nightly.compile.report.txt: Output/%.llvm.bc $(LOPT)
+Output/%.nightly.compile.report.txt: Output/%.llvm.bc
 	@echo > $@
 	@-if test -f Output/$*.linked.bc.info; then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@;\
@@ -62,14 +58,13 @@ Output/%.nightly.nat.report.txt: Output/%.out-nat
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
-Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
+Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc
 	@echo > $@
 	-head -n 100 Output/$*.exe-llc >> $@
 	@-if test -f Output/$*.exe-llc; then \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc: " >> $@;\
-	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
+	  grep "Total Execution Time" Output/$*.llc.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
 	  grep "^program" Output/$*.out-llc.time >> $@;\
 	  echo >> $@;\
@@ -79,14 +74,13 @@ Output/%.nightly.llc.report.txt: Output/%.llvm.bc Output/%.exe-llc $(LLC)
 
 # LLC experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-beta.report.txt): \
-Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(LLC)
+Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta
 	@echo > $@
 	-head -n 100 Output/$*.exe-llc-beta >> $@
 	@-if test -f Output/$*.exe-llc-beta; then \
 	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< $(LLCFLAGS) $(LLCBETAOPTION) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
-	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
+	  grep "Total Execution Time" Output/$*.llc-beta.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
 	  grep "^program" Output/$*.out-llc-beta.time >> $@;\
 	  echo >> $@;\
@@ -96,14 +90,13 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta $(L
 
 # OPT experimental tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.opt-beta.report.txt): \
-Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta $(LOPT)
+Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-beta
 	@echo > $@
 	-head -n 100 Output/$*.exe-opt-beta >> $@
 	@-if test -f Output/$*.exe-opt-beta; then \
 	  echo "TEST-PASS: opt-beta $(RELDIR)/$*" >> $@;\
-	  $(LLC) $< $(LLCFLAGS) -o /dev/null -f $(TIMEOPT) >> $@ 2>&1; \
 	  printf "TEST-RESULT-opt-beta: " >> $@;\
-	  grep "Total Execution Time" $@.info | tail -n 1 >> $@;\
+	  grep "Total Execution Time" Output/$*.opt-beta.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-opt-beta-time: " >> $@;\
 	  grep "^program" Output/$*.out-opt-beta.time >> $@;\
 	  echo >> $@;\
@@ -113,7 +106,7 @@ Output/%.nightly.opt-beta.report.txt: Output/%.llvm.optbeta.bc Output/%.exe-opt-
 
 # CBE tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
-Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LLC)
+Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe
 	@echo > $@
 	-head -n 100 Output/$*.exe-cbe >> $@
 	@-if test -f Output/$*.exe-cbe; then \
@@ -127,7 +120,7 @@ Output/%.nightly.cbe.report.txt: Output/%.llvm.bc Output/%.exe-cbe $(LLC)
 
 # JIT tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
-Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit $(LLI)
+Output/%.nightly.jit.report.txt: Output/%.llvm.bc Output/%.exe-jit
 	@echo > $@
 	-head -n 100 Output/$*.exe-jit >> $@
 	@-if test -f Output/$*.exe-jit; then \
