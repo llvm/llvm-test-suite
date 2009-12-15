@@ -50,6 +50,12 @@ endif   # End USE_F95
 #   465.tonto     - infinite loop, works at -O0, not at -O2
 #   482.sphinx3   - generates control file at run time
 
+ifdef DISABLE_CXX
+PARALLEL_DIRS := $(filter-out 444.namd, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 447.dealII, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 450.soplex, $(PARALLEL_DIRS))
+endif
+
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 

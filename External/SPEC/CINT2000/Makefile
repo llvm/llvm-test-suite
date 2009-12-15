@@ -26,4 +26,8 @@ PARALLEL_DIRS := $(filter-out 254.gap, $(PARALLEL_DIRS))
 
 endif
 
+ifdef DISABLE_CXX
+PARALLEL_DIRS := $(filter-out 252.eon, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs

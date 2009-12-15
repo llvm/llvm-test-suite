@@ -39,4 +39,8 @@ ifeq ($(ARCH),Sparc)
 PARALLEL_DIRS := $(filter-out Namd, $(PARALLEL_DIRS))
 endif
 
+ifdef DISABLE_CXX
+PARALLEL_DIRS := $(filter-out Nurbs, $(PARALLEL_DIRS))
+endif
+
 include Makefile.external

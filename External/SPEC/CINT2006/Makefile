@@ -24,6 +24,11 @@ PARALLEL_DIRS +=  \
         473.astar
 endif
 
+ifdef DISABLE_CXX
+PARALLEL_DIRS := $(filter-out 471.omnetpp, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 483.xalancbmk, $(PARALLEL_DIRS))
+endif
+
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 
