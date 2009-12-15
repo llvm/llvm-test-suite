@@ -8,7 +8,12 @@ include $(LEVEL)/Makefile.config
 #
 # Create the list of directories to compile
 #
-PARALLEL_DIRS := SPEC Povray Namd FPGrowth BoxedSim Nurbs HMMER
+PARALLEL_DIRS := SPEC Povray Namd FPGrowth BoxedSim HMMER
+
+ifneq (,$(findstring x86,$(ARCH)))
+# Nurbs uses SSE and only works on x86 and x86_64.
+PARALLEL_DIRS += Nurbs
+endif
 
 ifndef USE_POVRAY
 PARALLEL_DIRS := $(filter-out Povray, $(PARALLEL_DIRS))
