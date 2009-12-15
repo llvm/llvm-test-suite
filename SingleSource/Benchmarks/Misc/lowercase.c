@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <xmmintrin.h>
+
+void *malloc(size_t);
 
 typedef unsigned short UChar;
 
