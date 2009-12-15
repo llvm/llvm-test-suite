@@ -33,7 +33,7 @@ void setinp(int argc,char **argv);
 int swapin(void);
 
 
-void main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
 extern init_options();
 # ifdef unix
@@ -45,6 +45,7 @@ if(!intss()) tabout = fopen("qq", "w"); /* default media code is type 5 */
 # endif
 init_options();
 exit(tbl(argc,argv));
+return 0;
 }
 
 

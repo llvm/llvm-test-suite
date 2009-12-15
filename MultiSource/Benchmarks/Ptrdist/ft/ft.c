@@ -65,7 +65,7 @@ Vertices * MST(Vertices * graph);
  */
 int debug = 1;
 
-void
+int
 main(int argc, char *argv[])
 {
   int            nVertex;
@@ -119,6 +119,7 @@ main(int argc, char *argv[])
   PrintHeapSize(stderr);
 #endif /* PLUS_STATS */
   exit(0);
+  return 0;
 }
 
 Vertices *

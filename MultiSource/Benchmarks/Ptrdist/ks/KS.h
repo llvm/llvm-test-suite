@@ -95,4 +95,4 @@ void UpdateDs(ModuleRecPtr max, Groups group);
 float FindMaxGpAndSwap();
 void SwapSubsetAndReset(unsigned long iMax);
 void PrintResults(int verbose);
-void main(int argc, char **argv);
+int main(int argc, char **argv);

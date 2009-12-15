@@ -323,7 +323,7 @@ PrintResults(int verbose)
 		netStats[i].edgesCut, netStats[i].netsCut);
 }
 
-void
+int
 main(int argc, char **argv)
 {
     unsigned long p, iMax;
@@ -405,4 +405,5 @@ main(int argc, char **argv)
     PrintHeapSize(stderr);
 #endif /* PLUS_STATS */
     exit(0);
+    return 0;
 }

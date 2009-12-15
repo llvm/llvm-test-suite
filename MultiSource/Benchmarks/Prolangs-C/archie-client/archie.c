@@ -63,7 +63,7 @@ extern int	rdgram_priority;
 
 #define ARCHIE_HOST "archie.rutgers.edu"
 
-void main(int argc,char *argv[])
+int main(int argc,char *argv[])
     {
 	char		*cur_arg;
 	char		qtype = '=';    /* Default to exact string match  */
@@ -287,4 +287,5 @@ void main(int argc,char *argv[])
 	netshut();
 #endif
 	exit(0);
+        return 0;
     }

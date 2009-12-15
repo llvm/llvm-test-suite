@@ -1,4 +1,5 @@
 
+
 #include "scanner.h"                /* Useful Macro Definitions */
 #include <stdio.h>
 
@@ -39,7 +40,7 @@ static void GETSTR(void)   /* read in a string from the input stream */
     EOF_FLAG = 0;
 }
 
-void main(void)
+int main(void)
 {
   int CODE;     /* TOKEN CODE */
   int I1,I2;    /* temp storage */
@@ -318,4 +319,5 @@ void main(void)
     printf("****** %d format errors found in output of your scanner.\n",
 	   ERROR_CNT);
   exit(0);
+  return 0;
 }

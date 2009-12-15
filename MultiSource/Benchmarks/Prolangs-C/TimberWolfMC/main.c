@@ -51,7 +51,7 @@ extern void rmain(void);
 void TW_oldinput( FILE *fp );
 void prepSpots(void);
 
-void main( int argc , char *argv[])
+int main( int argc , char *argv[])
 {
 
 FILE *fp , *fopen() ;
@@ -330,6 +330,7 @@ fprintf(fpo,"TimberWolfMC has completed its mission\n");
 fprintf(fpo,"\n\n************************************ \n\n");
 fclose(fpo);
 exit(0);
+return 0;
 }
 
 

@@ -406,7 +406,7 @@ KK 7/81
 }
 
 #ifdef TEST1
-void main(void)
+int main(void)
 {
   int selection;
   MT *t;
@@ -475,5 +475,6 @@ void main(void)
       default:
 	printf("What?\n");
 	break; } }
+  return 0;
 }
 #endif

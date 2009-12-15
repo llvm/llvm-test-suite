@@ -40,7 +40,7 @@ extern void terse(void);
 extern void output(void);
 extern void done(int k);
 
-void main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
   failure = 0;
   lineno = 0;
@@ -78,6 +78,7 @@ void main(int argc,char *argv[])
   /* output the tables and the parser to ftable.  In file output. */
   output();
   done(failure);
+  return 0;
 }
 
 /* functions to report errors which prevent a parser from being generated */
