@@ -340,7 +340,7 @@ int main(int argc, char ** argv)
     int i, n, p;
     double jd[2];
     double pv[2][3];
-    double position[3];
+    double position[8][3];
     bool   ga_testing = false;
     
     // do we have verbose output?
@@ -371,13 +371,15 @@ int main(int argc, char ** argv)
             for (p = 0; p < 8; ++p)
             {
                 planetpv(jd,p,pv);
-                radecdist(pv,position);
-              
-                printf("%f %f %f\n", position[0], position[1], position[2]);
+                radecdist(pv,position[p]);
             }
         }
     }
 
+    for (p = 0; p < 8; ++p)
+      printf("%f %f %f\n", position[p][0], position[p][1], position[p][2]);
+
+  
     // get final time
 
     // report runtime
