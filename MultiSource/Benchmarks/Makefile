@@ -8,7 +8,7 @@ PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  BitBench ASC_Sequoia
 
 ifndef DISABLE_CXX
-PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4
+PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet
 endif
 
 ifndef SMALL_PROBLEM_SIZE
