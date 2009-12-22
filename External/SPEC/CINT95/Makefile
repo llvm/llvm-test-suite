@@ -9,6 +9,10 @@ PARALLEL_DIRS := \
   134.perl \
   147.vortex
 
+ifeq ($(ARCH),x86_64)
+PARALLEL_DIRS := $(filter-out 147.vortex, $(PARALLEL_DIRS))
+endif
+
 # Include the standard makefiles
 include ${LEVEL}/External/Makefile.external
 
