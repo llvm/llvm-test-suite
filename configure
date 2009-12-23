@@ -2117,7 +2117,7 @@ if test "${with_externals+set}" = set; then
   withval=$with_externals; LLVM_EXTERNALS=$withval
 
 else
-  LLVM_EXTERNALS=/home/vadve/shared/benchmarks
+  LLVM_EXTERNALS=$LLVM_SRC/projects/test-suite-externals
 
 fi
 
@@ -21966,75 +21966,75 @@ echo "$as_me: executing $ac_file commands" >&6;}
 
   case $ac_file$ac_mode in
     "Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile Makefile ;;
     "Makefile.common":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile.common`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.common Makefile.common ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile.common Makefile.common ;;
     "Makefile.nagfortran":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile.nagfortran`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.nagfortran Makefile.nagfortran ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile.nagfortran Makefile.nagfortran ;;
     "Makefile.f2c":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile.f2c`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.f2c Makefile.f2c ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile.f2c Makefile.f2c ;;
     "Makefile.programs":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile.programs`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.programs Makefile.programs ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile.programs Makefile.programs ;;
     "Makefile.tests":C) ${llvm_src}/autoconf/mkinstalldirs `dirname Makefile.tests`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/Makefile.tests Makefile.tests ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/Makefile.tests Makefile.tests ;;
     "TEST.aa.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.aa.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.aa.Makefile TEST.aa.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.aa.Makefile TEST.aa.Makefile ;;
     "TEST.aa.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.aa.report`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.aa.report TEST.aa.report ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.aa.report TEST.aa.report ;;
     "TEST.example.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.example.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.example.Makefile TEST.example.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.example.Makefile TEST.example.Makefile ;;
     "TEST.nightly.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.nightly.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.nightly.Makefile TEST.nightly.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.nightly.Makefile TEST.nightly.Makefile ;;
     "TEST.buildrepo.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.buildrepo.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.buildrepo.Makefile TEST.buildrepo.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.buildrepo.Makefile TEST.buildrepo.Makefile ;;
     "TEST.jit.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.jit.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.jit.Makefile TEST.jit.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.jit.Makefile TEST.jit.Makefile ;;
     "TEST.nightly.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.nightly.report`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.nightly.report TEST.nightly.report ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.nightly.report TEST.nightly.report ;;
     "TEST.jit.report":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.jit.report`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.jit.report TEST.jit.report ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.jit.report TEST.jit.report ;;
     "TEST.typesafe.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.typesafe.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.typesafe.Makefile TEST.typesafe.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.typesafe.Makefile TEST.typesafe.Makefile ;;
     "TEST.vtl.Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname TEST.vtl.Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/TEST.vtl.Makefile TEST.vtl.Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/TEST.vtl.Makefile TEST.vtl.Makefile ;;
     "External/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/Makefile External/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/Makefile External/Makefile ;;
     "External/Makefile.external":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/Makefile.external`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/Makefile.external External/Makefile.external ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/Makefile.external External/Makefile.external ;;
     "External/Povray/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/Povray/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/Povray/Makefile External/Povray/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/Povray/Makefile External/Povray/Makefile ;;
     "External/SPEC/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile External/SPEC/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile External/SPEC/Makefile ;;
     "External/SPEC/Makefile.spec":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec External/SPEC/Makefile.spec ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile.spec External/SPEC/Makefile.spec ;;
     "External/SPEC/Makefile.spec.config":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec.config`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec.config External/SPEC/Makefile.spec.config ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile.spec.config External/SPEC/Makefile.spec.config ;;
     "External/SPEC/Makefile.spec2006":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2006`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec2006 External/SPEC/Makefile.spec2006 ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile.spec2006 External/SPEC/Makefile.spec2006 ;;
     "External/SPEC/Makefile.spec2000":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec2000`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec2000 External/SPEC/Makefile.spec2000 ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile.spec2000 External/SPEC/Makefile.spec2000 ;;
     "External/SPEC/Makefile.spec95":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/Makefile.spec95`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/Makefile.spec95 External/SPEC/Makefile.spec95 ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/Makefile.spec95 External/SPEC/Makefile.spec95 ;;
     "External/SPEC/CFP2006/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CFP2006/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CFP2006/Makefile External/SPEC/CFP2006/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CFP2006/Makefile External/SPEC/CFP2006/Makefile ;;
     "External/SPEC/CINT2006/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CINT2006/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CINT2006/Makefile External/SPEC/CINT2006/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CINT2006/Makefile External/SPEC/CINT2006/Makefile ;;
     "External/SPEC/CFP2000/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CFP2000/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CFP2000/Makefile External/SPEC/CFP2000/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CFP2000/Makefile External/SPEC/CFP2000/Makefile ;;
     "External/SPEC/CINT2000/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CINT2000/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CINT2000/Makefile External/SPEC/CINT2000/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CINT2000/Makefile External/SPEC/CINT2000/Makefile ;;
     "External/SPEC/CFP95/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CFP95/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CFP95/Makefile External/SPEC/CFP95/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CFP95/Makefile External/SPEC/CFP95/Makefile ;;
     "External/SPEC/CINT95/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname External/SPEC/CINT95/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/External/SPEC/CINT95/Makefile External/SPEC/CINT95/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/External/SPEC/CINT95/Makefile External/SPEC/CINT95/Makefile ;;
     "MultiSource/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname MultiSource/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/MultiSource/Makefile MultiSource/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/MultiSource/Makefile MultiSource/Makefile ;;
     "MultiSource/Makefile.multisrc":C) ${llvm_src}/autoconf/mkinstalldirs `dirname MultiSource/Makefile.multisrc`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/MultiSource/Makefile.multisrc MultiSource/Makefile.multisrc ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/MultiSource/Makefile.multisrc MultiSource/Makefile.multisrc ;;
     "SingleSource/Makefile":C) ${llvm_src}/autoconf/mkinstalldirs `dirname SingleSource/Makefile`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/SingleSource/Makefile SingleSource/Makefile ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/SingleSource/Makefile SingleSource/Makefile ;;
     "SingleSource/Makefile.singlesrc":C) ${llvm_src}/autoconf/mkinstalldirs `dirname SingleSource/Makefile.singlesrc`
-   ${SHELL} ${llvm_src}/autoconf/install-sh -c ${srcdir}/SingleSource/Makefile.singlesrc SingleSource/Makefile.singlesrc ;;
+   ${SHELL} ${llvm_src}/autoconf/install-sh -m 0644 -c ${srcdir}/SingleSource/Makefile.singlesrc SingleSource/Makefile.singlesrc ;;
 
   esac
 done # for ac_tag

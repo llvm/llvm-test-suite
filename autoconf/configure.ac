@@ -66,7 +66,7 @@ dnl Location of the parent directory of the external tests
 AC_ARG_WITH(externals,
   AS_HELP_STRING([--with-externals=DIR],Location of External Test code),
   AC_SUBST(LLVM_EXTERNALS,[$withval]),
-  AC_SUBST(LLVM_EXTERNALS,[/home/vadve/shared/benchmarks]))
+  AC_SUBST(LLVM_EXTERNALS,[$LLVM_SRC/projects/test-suite-externals]))
 
 dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,${LLVM_EXTERNALS}/spec95/benchspec)
