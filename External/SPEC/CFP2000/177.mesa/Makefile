@@ -4,7 +4,11 @@ FP_ABSTOLERANCE := 4
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS := -frames 500
 else
+ifdef SMALL_PROBLEM_SIZE
+RUN_OPTIONS := -frames 10
+else
 RUN_OPTIONS := -frames 100
+endif
 endif
 
 RUN_OPTIONS += -meshfile mesa.in -ppmfile mesa.ppm
