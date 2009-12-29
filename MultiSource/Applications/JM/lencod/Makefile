@@ -11,3 +11,6 @@ RUN_OPTIONS = -d $(PROJ_SRC_DIR)/data/encoder.cfg -p InputFile=$(PROJ_SRC_DIR)/d
 endif
 
 include ../../../Makefile.multisrc
+
+clean::
+	rm -f data.txt log.dat stats.dat

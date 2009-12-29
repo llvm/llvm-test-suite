@@ -12,3 +12,6 @@ STDIN_FILENAME = pyruvate_decarboxylase.fasta
 LDFLAGS = -lm
 FP_TOLERANCE = 0.00001
 include $(LEVEL)/MultiSource/Makefile.multisrc
+
+clean::
+	rm -f pre hat2 trace

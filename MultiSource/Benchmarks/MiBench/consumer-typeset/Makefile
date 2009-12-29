@@ -5,3 +5,6 @@ CPPFLAGS = -DOS_UNIX=1 -DOS_DOS=0 -DOS_MAC=0 -DDB_FIX=0 -DUSE_STAT=1 -DSAFE_DFT=
 LDFLAGS  = -lm
 RUN_OPTIONS = -x -I $(PROJ_SRC_DIR)/data/include -D $(PROJ_SRC_DIR)/data/data -F $(PROJ_SRC_DIR)/data/font -C $(PROJ_SRC_DIR)/data/maps -H $(PROJ_SRC_DIR)/data/hyph $(PROJ_SRC_DIR)/large.lout
 include $(LEVEL)/MultiSource/Makefile.multisrc
+
+clean::
+	rm -f $(PROJ_SRC_DIR)/data/hyph/*.lp

@@ -12,5 +12,5 @@ Source = display.c  gethdr.c  idct.c     mpeg2dec.c  store.c    verify.c\
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
-
-
+clean::
+	rm -f $(SourceDir)/../data/tmp*
