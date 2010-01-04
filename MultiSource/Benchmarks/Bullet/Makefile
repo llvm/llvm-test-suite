@@ -1,6 +1,6 @@
 LEVEL = ../../../
 PROG = bullet
-CPPFLAGS += -I$(PROJ_SRC_DIR/include -DNO_TIME
+CPPFLAGS += -I$(PROJ_SRC_DIR)/include -DNO_TIME
 LDFLAGS = -lstdc++
 
 include $(LEVEL)/Makefile.config
