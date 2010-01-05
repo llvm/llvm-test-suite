@@ -21,8 +21,7 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 	@cat $<
 
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt):  \
-Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT) \
-	$(VERB) $(RM) -f $@
+Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT)
 	@echo "---------------------------------------------------------------" >> $@
 	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
 	@echo "---------------------------------------------------------------" >> $@
