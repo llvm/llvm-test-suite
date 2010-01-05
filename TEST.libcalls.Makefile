@@ -23,6 +23,7 @@ test.$(TEST).%: Output/%.$(TEST).report.txt
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt):  \
 Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT) \
 	$(PROJ_SRC_ROOT)/TEST.libcalls.Makefile 
+	$(VERB) $(RM) -f $@
 	@echo "---------------------------------------------------------------" >> $@
 	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
 	@echo "---------------------------------------------------------------" >> $@
