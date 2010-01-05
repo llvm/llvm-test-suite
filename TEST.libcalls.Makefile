@@ -27,7 +27,6 @@ Output/%.$(TEST).report.txt: Output/%.linked.rbc $(LOPT) \
 	@echo "---------------------------------------------------------------" >> $@
 	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
 	@echo "---------------------------------------------------------------" >> $@
-	$(VERB) $(RM) -f $@
 	@-$(LOPT) -simplify-libcalls -stats -debug-only=simplify-libcalls \
 	         -time-passes -disable-output $< 2>>$@ 
 summary:
