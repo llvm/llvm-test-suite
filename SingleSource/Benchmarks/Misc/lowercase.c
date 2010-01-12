@@ -30,7 +30,7 @@ static const size_t staticDataLength = sizeof(staticData) / sizeof(staticData[0]
 static void doTest(size_t numberOfIterations)
 {
   const size_t numberOfCharacters = numberOfIterations;
-  const size_t testDataLength = (numberOfCharacters + staticDataLength) / staticDataLength;
+  const size_t testDataLength = ((numberOfCharacters + staticDataLength - 1) / staticDataLength) * staticDataLength;
   UChar* testData = malloc(sizeof(UChar) * testDataLength);
   size_t i;
   for (i = 0; i < testDataLength; i += staticDataLength)
