@@ -25,6 +25,7 @@
 # Syntax: 
 #
 #   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
+#                [-u <under>]
 #                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -32,6 +33,7 @@
 #     <ruser>   is the username on the remote host
 #     <client>  is the remote client used to execute the program
 #     <port>    is the port used by the remote client
+#     <under>   is a wrapper that the program is run under
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
@@ -54,6 +56,7 @@ RHOST=
 RUSER=`id -un`
 RCLIENT=rsh
 RPORT=
+RUN_UNDER=
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -68,6 +71,10 @@ if [ $1 = "-rc" ]; then
 fi
 if [ $1 = "-rp" ]; then
   RPORT="-p $2"
+  shift 2
+fi
+if [ $1 = "-u" ]; then
+  RUN_UNDER=$2
   shift 2
 fi
 
@@ -121,7 +128,7 @@ rm -f core core.*
 # necessary I/O redirection.
 #
 PWD=`pwd`
-COMMAND="$PROGRAM $*"
+COMMAND="$RUN_UNDER $PROGRAM $*"
 if [ "$SYSTEM" = "Darwin" ]; then
   COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 fi
