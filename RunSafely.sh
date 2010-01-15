@@ -145,7 +145,7 @@ else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${PROG}.remote.time"
-  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit $?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
+  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
