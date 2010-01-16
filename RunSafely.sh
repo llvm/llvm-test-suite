@@ -129,9 +129,7 @@ rm -f core core.*
 #
 PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
-if [ "$SYSTEM" = "Darwin" ]; then
-  COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
-fi
+COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 
 if [ "x$RHOST" = x ] ; then
   ( sh -c "$ULIMITCMD time -p sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \

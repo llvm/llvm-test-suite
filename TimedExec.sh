@@ -33,7 +33,7 @@ else
     while [ $SEC -lt $TIMEOUT ]; do
         sleep 1
         # Check if parent has completed.
-        kill -s INFO $PARENT 2>/dev/null
+        kill -0 $PARENT 2>/dev/null
         if [ $? -eq 1 ]; then
             exit 0
         fi
