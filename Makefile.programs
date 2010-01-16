@@ -232,19 +232,19 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION := -pre-regalloc-taildup
+LLCBETAOPTION :=
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION := -pre-regalloc-taildup
+LLCBETAOPTION :=
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -pre-regalloc-taildup
+LLCBETAOPTION :=
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -pre-regalloc-taildup
+LLCBETAOPTION :=
 endif
 
 print-llcbeta-option:
