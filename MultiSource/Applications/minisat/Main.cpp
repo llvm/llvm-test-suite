@@ -178,8 +178,12 @@ static void parse_DIMACS_main(B& in, Solver& S) {
 // Inserts problem into solver.
 //
 static void parse_DIMACS(FILE *input_stream, Solver& S) {
-    StreamBuffer in(input_stream);
-    parse_DIMACS_main(in, S); }
+    // LLVM: Allocate StreamBuffer on the heap instead of the stack so that
+    // this test can run on systems with limited stack size.
+    StreamBuffer *in = new StreamBuffer(input_stream);
+    parse_DIMACS_main(*in, S);
+    delete in;
+}
 
 
 //=================================================================================================
