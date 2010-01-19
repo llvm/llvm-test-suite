@@ -33,10 +33,15 @@ LIBS    = -lstdc++ -lm
 include ../../Makefile.spec2006
 
 ifdef SMALL_PROBLEM_SIZE
-Output/483.xalancbmk.out-nat Output/483.xalancbmk.out-llc Output/483.xalancbmk.out-llc-beta: Output/small-test.xml
+
+Output/483.xalancbmk.out-nat Output/483.xalancbmk.out-llc Output/483.xalancbmk.out-llc-beta: Output/small-test.xml Output/100mb.xsd
 
 Output/small-test.xml: $(SPEC_BENCH_DIR)/data/test/input/test.xml
 	$(VERB) sed -E -e 's/([a-z]+ ){5}//g' $< > $@
+
+Output/100mb.xsd: $(SPEC_BENCH_DIR)/data/test/input/100mb.xsd
+	$(VERB) cp $< $@
+
 endif
 
 ifeq ($(RUN_TYPE),test)
