@@ -10,6 +10,12 @@ double loop(float *x, float *y, long length) {
   return accumulator;
 }
 
+#ifdef SMALL_PROBLEM_SIZE
+#define COUNT 100000
+#else
+#define COUNT 500000
+#endif
+
 int main(int argc, char *argv[]) {
   int i, j;
   float x[2048];
@@ -18,7 +24,7 @@ int main(int argc, char *argv[]) {
   float a = 0.0f;
   float b = 1.0f;
     
-  for (i=0; i<500000; ++i) {
+  for (i=0; i<COUNT; ++i) {
     if (i % 10) {
       a = 0.0f;
       b = 1.0f;
