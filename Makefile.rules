@@ -363,6 +363,9 @@ LLI_OPTFLAGS := -O3
 ifdef PIC_CODEGEN
 TARGET_LLCFLAGS += -relocation-model=pic -disable-fp-elim
 TARGET_LLIFLAGS += -relocation-model=pic -disable-fp-elim
+  ifeq ($(TARGET_OS),Darwin)
+    TARGET_LLIFLAGS += -code-model=small
+  endif
 else
 TARGET_FLAGS += -fomit-frame-pointer
   ifeq ($(TARGET_OS),Darwin)
