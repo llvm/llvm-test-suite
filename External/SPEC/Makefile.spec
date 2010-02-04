@@ -79,6 +79,15 @@ Output/%.out-llc-beta: Output/%.llc-beta
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/llc-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+$(PROGRAMS_TO_TEST:%=Output/%.out-opt-beta): \
+Output/%.out-opt-beta: Output/%.opt-beta
+	$(SPEC_SANDBOX) opt-beta-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../$*.opt-beta $(RUN_OPTIONS)
+	-(cd Output/opt-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
+	-cp Output/opt-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	$(SPEC_SANDBOX) cbe-$(RUN_TYPE) $@ $(REF_IN_DIR) \
