@@ -18829,7 +18829,8 @@ public:
   Pooma::DataObject_t* dataObject2() const { return lhs2_m; }
   Pooma::Iterate_t& iterate() const { return iterate_m; }
 private:
-  mutable Pooma::Iterate_t& iterate_m;
+  // LLVM: Remove 'mutable' keyword from iterate_m.
+  Pooma::Iterate_t& iterate_m;
   mutable Pooma::DataObject_t* lhs1_m;
   mutable Pooma::DataObject_t* lhs2_m;
 };
@@ -36281,7 +36282,8 @@ public:
     AssignProxy(Element_t &elem, int where)
       : elem_m(elem), where_m(where) { }
     AssignProxy(const AssignProxy &model)
-      : elem_m(model.elem_m), where_m(where_m) { }
+      // LLVM: Initialize where_m with model.where_m
+      : elem_m(model.elem_m), where_m(model.where_m) { }
     AssignProxy &operator=(const AssignProxy &a) const
     {
       ;
@@ -36299,7 +36301,8 @@ public:
       return (where_m < 0 ? -elem_m : elem_m);
     }
   private:
-    mutable Element_t &elem_m;
+    // LLVM: Remove 'mutable' keyword from elem_m.
+    Element_t &elem_m;
     mutable int where_m;
   };
   typedef AssignProxy ElementRef_t;
@@ -36619,7 +36622,8 @@ public:
     AssignProxy(Element_t &elem, int where)
       : elem_m(elem), where_m(where) { }
     AssignProxy(const AssignProxy &model)
-      : elem_m(model.elem_m), where_m(where_m) { }
+      // LLVM: Initialize where_m with model.where_m
+      : elem_m(model.elem_m), where_m(model.where_m) { }
     AssignProxy &operator=(const AssignProxy &a) const
     {
       ;
@@ -36637,7 +36641,8 @@ public:
       return (elem_m);
     }
   private:
-    mutable Element_t &elem_m;
+    // LLVM: Remove 'mutable' keyword from elem_m.
+    Element_t &elem_m;
     mutable int where_m;
   };
   typedef AssignProxy ElementRef_t;
