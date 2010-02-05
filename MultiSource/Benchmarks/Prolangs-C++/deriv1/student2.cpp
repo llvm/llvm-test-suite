@@ -67,7 +67,8 @@ expr *quotient_expr::deriv(strng var)
   return new quotient_expr(new sum_expr(new prod_expr(second, first->deriv(var)), new prod_expr(new const_expr(-1), new prod_expr(first, second->deriv(var)))), new prod_expr(second, second));
 }
 
-main() {
+// LLVM: add main return type.
+int main() {
  const_expr c(8);
  var_expr x("x");
  prod_expr simple(new const_expr(123.45), new var_expr("y"));

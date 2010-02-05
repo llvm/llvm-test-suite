@@ -162,7 +162,8 @@ void eden(world w)
     }
 }
 
-main ()
+// LLVM: add main return type.
+int main ()
 {
   world odd, even;
   int i;

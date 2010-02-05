@@ -96,7 +96,8 @@ Truck t3("FFY 808");
 Truck t4("PCS 909");
 Truck t5("SLY 000");
 
-main () {
+// LLVM: add main return type.
+int main () {
 
   Garage park(15);
 

@@ -168,7 +168,8 @@ expr *quotient_expr::deriv(strng var)
     }
 }
 
-main() {
+// LLVM: add main return type.
+int main() {
  const_expr c(8);
  var_expr x("x");
  prod_expr simple(new const_expr(123.45), new var_expr("y"));

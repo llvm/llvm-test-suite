@@ -96,7 +96,8 @@ public:
   }
 };
 
-main() {
+// LLVM: add main return type.
+int main() {
   Parent p("Jones");
   Child c("Jones", "Henry");
   GrandChild g("Jones", "Cynthia", "Murray");
