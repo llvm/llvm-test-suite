@@ -10,6 +10,7 @@ PARALLEL_DIRS := \
   147.vortex
 
 ifeq ($(ARCH),x86_64)
+PARALLEL_DIRS := $(filter-out 126.gcc, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out 147.vortex, $(PARALLEL_DIRS))
 endif
 
