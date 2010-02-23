@@ -296,7 +296,9 @@ LFINDMISOPT= $(LLVM_SRC_ROOT)/utils/findmisopt
 
 LCC := $(LLVMCC)
 LCXX := $(LLVMCXX)
-LCC_PROGRAMS := $(LCC) $(LCXX)
+
+# FIXME: Fix these dependencies for Clang, and for overridden TARGET_LLVMGCC.
+LCC_PROGRAMS :=
 ifeq ($(LLVMCC_OPTION),llvm-gcc)
   LCC_PROGRAMS += $(LLVMCC1) $(LLVMCC1PLUS)
 endif
