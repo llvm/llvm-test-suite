@@ -271,6 +271,9 @@ LPROF     = $(LLVMTOOLCURRENT)/llvm-prof$(EXEEXT)
 LBUGPOINT = $(LLVMTOOLCURRENT)/bugpoint$(EXEEXT)
 LFINDMISOPT= $(LLVM_SRC_ROOT)/utils/findmisopt
 
+LCC := $(LLVMGCC)
+LCXX := $(LLVMGXX)
+LCC_PROGRAMS := $(LCC) $(LCXX) $(LLVMCC1) $(LLVMCC1PLUS)
 
 
 ###########################################################################
@@ -597,7 +600,7 @@ endif
 # Rules for building libraries
 #--------------------------------------------------------------------
 
-LinkBCLib := $(LLVMGCC) -shared -nostdlib
+LinkBCLib := $(LCC) -shared -nostdlib
 ifdef EXPORTED_SYMBOL_LIST
 LinkBCLib += -Xlinker -internalize-public-api-list=$(EXPORTED_SYMBOL_LIST)
 else
@@ -793,8 +796,6 @@ install:: $(TOOLEXENAMES)
 
 endif
 
-LCC_PROGRAMS := $(LLVMCC1) $(LLVMCC1PLUS)
-
 #---------------------------------------------------------
 .PRECIOUS: $(PROJ_OBJ_DIR)/Depend/.dir $(PROJ_OBJ_DIR)/BytecodeObj/.dir
 .PRECIOUS: $(PROJ_OBJ_DIR)/Debug/.dir $(PROJ_OBJ_DIR)/Release/.dir
@@ -820,10 +821,10 @@ $(PROJ_OBJ_DIR)/Debug/%.lo: %.c $(PROJ_OBJ_DIR)/Debug/.dir
 	$(CompileCG) $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC_PROGRAMS)
-	$(LLVMGXX) $(CPPFLAGS) -c $< -o $@
+	$(LCXX) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC_PROGRAMS)
-	$(LLVMGCC) $(CPPFLAGS) -c $< -o $@
+	$(LCC) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
 	$(LLVMAS) $< -o $@
@@ -951,3 +952,11 @@ endif
 endif
 
 endif  # ifndef DISABLE_AUTO_DEPENDENCIES
+
+###
+# Debugging
+
+# General debugging rule, use 'make dbg-print-XXX' to print the
+# definition, value and origin of XXX.
+make-print-%:
+	$(error PRINT: $(value $*) = "$($*)" (from $(origin $*)))

@@ -17,8 +17,8 @@ TESTNAME = $*
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.diff
 
-Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
-	$(LLVMGXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
+Output/%.diff: %.cpp Output/.dir $(LCC_PROGRAMS) $(LOPT) $(LDIS)
+	$(LCXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
 	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
 	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
@@ -30,8 +30,8 @@ Output/%.diff: %.cpp Output/.dir $(LLVMGXX) $(LOPT) $(LDIS)
 	fi
 
 
-Output/%.diff: %.c Output/.dir $(LLVMGCC) $(LOPT) $(LDIS)
-	$(LLVMGCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
+Output/%.diff: %.c Output/.dir $(LCC_PROGRAMS) $(LOPT) $(LDIS)
+	$(LCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
 	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
 	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
 	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
