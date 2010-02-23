@@ -248,6 +248,29 @@ VERB := @
 LIBTOOL += --silent
 endif
 
+#--------------------------------------------------------------------
+# LLVM Capable Compiler
+#--------------------------------------------------------------------
+
+# FIXME: We shouldn't need to duplicate this from LLVM's Makefile.rules.
+
+ifeq ($(LLVMCC_OPTION),llvm-gcc)
+  LLVMCC := $(LLVMGCC)
+  LLVMCXX := $(LLVMGXX)
+else
+  ifeq ($(LLVMCC_OPTION),clang)
+    ifneq ($(CLANGPATH),)
+      LLVMCC := $(CLANGPATH)
+      LLVMCXX := $(CLANGXXPATH)
+    else
+      ifeq ($(ENABLE_BUILT_CLANG),1)
+        LLVMCC := $(LLVMTOOLCURRENT)/clang
+        LLVMCXX := $(LLVMTOOLCURRENT)/clang++
+      endif
+    endif
+  endif
+endif
+
 ###########################################################################
 # Miscellaneous paths and commands (part deux):
 #	This section defines various configuration macros, such as where
@@ -271,9 +294,12 @@ LPROF     = $(LLVMTOOLCURRENT)/llvm-prof$(EXEEXT)
 LBUGPOINT = $(LLVMTOOLCURRENT)/bugpoint$(EXEEXT)
 LFINDMISOPT= $(LLVM_SRC_ROOT)/utils/findmisopt
 
-LCC := $(LLVMGCC)
-LCXX := $(LLVMGXX)
-LCC_PROGRAMS := $(LCC) $(LCXX) $(LLVMCC1) $(LLVMCC1PLUS)
+LCC := $(LLVMCC)
+LCXX := $(LLVMCXX)
+LCC_PROGRAMS := $(LCC) $(LCXX)
+ifeq ($(LLVMCC_OPTION),llvm-gcc)
+  LCC_PROGRAMS += $(LLVMCC1) $(LLVMCC1PLUS)
+endif
 
 
 ###########################################################################
