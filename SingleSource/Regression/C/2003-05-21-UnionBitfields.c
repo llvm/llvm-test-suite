@@ -17,6 +17,6 @@ int target_isinf(double x) {
 }
 
 int main() {
-  printf("%d %d\n", target_isinf(1234.42), target_isinf(1.0/1.0e-1000));
+  printf("%d %d\n", target_isinf(1234.42), target_isinf(1.0/5.0e-324));
   return 0;
 }
