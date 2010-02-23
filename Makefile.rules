@@ -255,11 +255,6 @@ endif
 ###########################################################################
 
 #--------------------------------------------------------------------------
-# Utilities used while building the LLVM tree, which live in the utils dir
-#
-LLVMLDPROG := $(LLVMTOOLCURRENT)/llvm-ld$(EXEEXT)
-
-#--------------------------------------------------------------------------
 # The LLVM GCC front-end in C and C++ flavors
 #
 ifeq ($(LLVMGCC_MAJVERS),3)
@@ -278,7 +273,7 @@ LLVMGCCLIBDIR=$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH)
 # Makefile.rules) 
 LLI       = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
 LLC       = $(LLVMTOOLCURRENT)/llc$(EXEEXT)
-LLVMLD    = $(LLVMLDPROG)
+LLVMLD    = $(LLVMTOOLCURRENT)/llvm-ld$(EXEEXT)
 LDIS      = $(LLVMTOOLCURRENT)/llvm-dis$(EXEEXT)
 LOPT      = $(LLVMTOOLCURRENT)/opt$(EXEEXT)
 LLINK     = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
