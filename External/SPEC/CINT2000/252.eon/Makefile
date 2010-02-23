@@ -3,7 +3,6 @@ RUN_OPTIONS     = chair.control.cook chair.camera chair.surfaces chair.cook.ppm 
 STDOUT_FILENAME = cook_log.out
 STDERR_FILENAME = cook_log.err
 FP_ABSTOLERANCE := 0.005
-LINK_WITH_LLVMGCC_LIBS := 1
 
 CPPFLAGS = -include errno.h -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP -DNDEBUG
 
