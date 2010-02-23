@@ -15,9 +15,9 @@ static char *outFileName;
 
 static char version[] = "BURG, Version 1.0";
 
-extern void main ARGS((int argc, char **argv));
+extern int main ARGS((int argc, char **argv));
 
-void
+int
 main(argc, argv) int argc; char **argv;
 {
 	int i;
@@ -179,4 +179,5 @@ main(argc, argv) int argc; char **argv;
 
 	yypurge();
 	exit(0);
+	return 0;
 }
