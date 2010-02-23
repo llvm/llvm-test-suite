@@ -357,13 +357,13 @@ LLCFLAGS += $(EXTRA_LLCFLAGS)
 endif
 
 # It is important to link C++ programs with G++ so look for -lstdc++ in LDFLAGS
-# and set the LLVMGCCLD variable to the correct compiler interface to use.
+# and set the PROGRAMLD variable to the correct compiler interface to use.
 # Note that LDFLAGS must already be defined at the time this file is included,
 # or this will not work.
 ifneq ($(filter -lstdc++,$(LDFLAGS)),)
-LLVMGCCLD := $(CXX) 
+PROGRAMLD := $(CXX)
 else
-LLVMGCCLD := $(CC)
+PROGRAMLD := $(CC)
 endif
 
 #
@@ -409,15 +409,15 @@ endif
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
 Output/%.opt-beta: Output/%.opt-beta.s
-	-$(LLVMGCCLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
 
 #
