@@ -814,9 +814,7 @@ install:: $(TOOLEXENAMES)
 
 endif
 
-LCC1 := $(LLVMCC1)
-LCC1XX := $(LLVMCC1PLUS)
-
+LCC_PROGRAMS := $(LLVMCC1) $(LLVMCC1PLUS)
 
 #---------------------------------------------------------
 .PRECIOUS: $(PROJ_OBJ_DIR)/Depend/.dir $(PROJ_OBJ_DIR)/BytecodeObj/.dir
@@ -842,10 +840,10 @@ $(PROJ_OBJ_DIR)/Debug/%.lo: %.cpp $(PROJ_OBJ_DIR)/Debug/.dir
 $(PROJ_OBJ_DIR)/Debug/%.lo: %.c $(PROJ_OBJ_DIR)/Debug/.dir 
 	$(CompileCG) $< -o $@
 
-$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1XX)
+$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.cpp $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC_PROGRAMS)
 	$(LLVMGXX) $(CPPFLAGS) -c $< -o $@
 
-$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC1)
+$(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.c $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LCC_PROGRAMS)
 	$(LLVMGCC) $(CPPFLAGS) -c $< -o $@
 
 $(PROJ_OBJ_DIR)/BytecodeObj/%.bc: %.ll $(PROJ_OBJ_DIR)/BytecodeObj/.dir $(LLVMAS)
