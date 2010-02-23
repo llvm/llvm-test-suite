@@ -135,8 +135,6 @@ prdirs::
 # Variables derived from configuration options... 
 #--------------------------------------------------------------------
 
-BURG_OPTS = -I
-
 ifeq ($(ENABLE_PROFILING),1)
   ENABLE_OPTIMIZED = 1
   CONFIGURATION := Profile
@@ -259,9 +257,6 @@ endif
 #--------------------------------------------------------------------------
 # Utilities used while building the LLVM tree, which live in the utils dir
 #
-BURG       := $(LLVMTOOLCURRENT)/burg$(EXEEXT)
-RunBurg    := $(BURG) $(BURG_OPTS)
-TBLGEN     := $(LLVMTOOLCURRENT)/tblgen$(EXEEXT)
 LLVMLDPROG := $(LLVMTOOLCURRENT)/llvm-ld$(EXEEXT)
 
 #--------------------------------------------------------------------------
@@ -290,7 +285,6 @@ LLINK     = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
 LPROF     = $(LLVMTOOLCURRENT)/llvm-prof$(EXEEXT)
 LBUGPOINT = $(LLVMTOOLCURRENT)/bugpoint$(EXEEXT)
 LFINDMISOPT= $(LLVM_SRC_ROOT)/utils/findmisopt
-LLVMC     = $(LLVMTOOLCURRENT)/llvmc$(EXEEXT)
 
 
 
