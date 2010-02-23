@@ -255,14 +255,6 @@ endif
 ###########################################################################
 
 #--------------------------------------------------------------------------
-# The LLVM GCC front-end in C and C++ flavors
-#
-ifeq ($(LLVMGCC_MAJVERS),3)
-LLVMGCC := PATH="$(LLVMTOOLCURRENT):$(PATH)" $(LLVMGCC)
-LLVMGXX := PATH="$(LLVMTOOLCURRENT):$(PATH)" $(LLVMGXX)
-endif
-
-#--------------------------------------------------------------------------
 # The compiled LLVM tools
 #
 
