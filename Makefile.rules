@@ -259,8 +259,6 @@ endif
 #
 
 LLVMAS  := $(LLVMTOOLCURRENT)/llvm-as$(EXEEXT)
-# Find the location of the platform specific LLVM GCC libraries
-LLVMGCCLIBDIR=$(LLVMGCCDIR)/lib/gcc/$(LLVMGCCARCH) 
 # LLVM Tool Definitions (LLVMGCC, LLVMGXX, LLVMAS are provided by
 # Makefile.rules) 
 LLI       = $(LLVMTOOLCURRENT)/lli$(EXEEXT)
