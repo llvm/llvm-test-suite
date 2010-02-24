@@ -25,6 +25,11 @@ endif
 # framework.
 ifeq ($(TARGET_OS),Darwin)
 PROGRAMS_TO_SKIP := 2007-04-25-weak
+# The gcc on Darwin PPC doesn't support atomic ops, so we can't test them in this
+# framework (even though they work OK in llvm).
+ifeq ($(ARCH),PowerPC)
+PROGRAMS_TO_SKIP += AtomicOps
+endif
 endif
 
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
