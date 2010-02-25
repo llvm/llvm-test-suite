@@ -268,6 +268,10 @@ else
         LLVMCXX := $(LLVMTOOLCURRENT)/clang++
       endif
     endif
+  else
+    # Compatibility with older LLVM checkouts.
+    LLVMCC := $(LLVMGCC)
+    LLVMCXX := $(LLVMGXX)
   endif
 endif
 
