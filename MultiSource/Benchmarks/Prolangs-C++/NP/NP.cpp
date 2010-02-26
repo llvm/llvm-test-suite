@@ -30,7 +30,7 @@ True *False::and_m (True *arg)
 True *v1, *nv1, *v2, *nv2, *v3, *nv3;
 True *c;
 
-main () {
+int main(int argc, char **argv) {
    if (0) {v1 = &tru; nv1 = &fals;} else {v1 = &fals; nv1= &tru;}
    if (0) {v2 = &tru; nv2 = &fals;} else {v2 = &fals; nv2 = &tru;}
    if (0) {v3 = &tru; nv3 = &fals;} else {v3 = &fals; nv3 = &tru;}
