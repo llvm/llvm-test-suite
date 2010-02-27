@@ -2,6 +2,7 @@ LEVEL = ../../..
 
 PROG     = burg
 CPPFLAGS = -DDEBUG
+CFLAGS  += -std=gnu89
 LDFLAGS  = -lstdc++
 
 ExtraSource := y.tab.c
