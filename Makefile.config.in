@@ -55,6 +55,10 @@ LLVMCXX := $(TARGET_LLVMGXX)
 LLVMCC_OPTION := llvm-gcc
 endif
 
+ifdef TARGET_LLVMGCCARCH
+LLVMGCCARCH := $(TARGET_LLVMGCCARCH)
+endif
+
 ifeq ($(ARCH),THUMB)
 TARGET_FLAGS += -mthumb
 endif
