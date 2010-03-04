@@ -14,10 +14,10 @@
 char *errmsgs[] = {
   "Unknown error.",
   "Out of memory error.",
-  DEBUG_ON? "Usage: %s [-O] [-D] InFile.class [OutFile.java]\n"
-           :"Usage: %s [-O] InFile.class [OutFile.java]\n",
-  DEBUG_ON? "Usage: %s [-D] -Ifuncname InFile.class\n"
-           :"Usage: %s -Ifuncname InFile.class\n",
+  DEBUG_ON? (char*)"Usage: %s [-O] [-D] InFile.class [OutFile.java]\n"
+           :(char*)"Usage: %s [-O] InFile.class [OutFile.java]\n",
+  DEBUG_ON? (char*)"Usage: %s [-D] -Ifuncname InFile.class\n"
+           :(char*)"Usage: %s -Ifuncname InFile.class\n",
   "Not a class.",
   "Unsupported Class Version.",
   "3"
