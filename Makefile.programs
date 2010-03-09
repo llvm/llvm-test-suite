@@ -241,8 +241,7 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -enable-arm-eh-test
-# -enable-machine-cse
+LLCBETAOPTION := -enable-machine-cse
 endif
 ifeq ($(ARCH),THUMB)
 LLCBETAOPTION := -enable-machine-cse
