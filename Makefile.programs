@@ -405,7 +405,41 @@ ifeq ($(ARCH),Sparc)
 LLCASSEMBLERFLAGS = -mcpu=v9
 endif
 
-# Assemble (and link) an LLVM-linked program using the system assembler...
+# Generate a .o file from the llvm.bc file with the integrated assembler.
+$(PROGRAMS_TO_TEST:%=Output/%.llc.o): \
+Output/%.llc.o: Output/%.llvm.bc $(LLC)
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) -filetype=obj $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.llc-beta.o): \
+Output/%.llc-beta.o: Output/%.llvm.bc $(LLC)
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $(LLCBETAOPTION) -filetype=obj $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.opt-beta.o): \
+Output/%.opt-beta.o: Output/%.llvm.optbeta.bc $(LLC)
+	$(VERB) $(RM) -f $(CURDIR)/$@.info
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) -filetype=obj  $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
+
+
+ifdef TEST_INTEGRATED_ASSEMBLER
+
+# Link an LLVM-linked program using the system linker.
+$(PROGRAMS_TO_TEST:%=Output/%.llc): \
+Output/%.llc: Output/%.llc.o
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
+Output/%.llc-beta: Output/%.llc-beta.o
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+
+$(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
+Output/%.opt-beta: Output/%.opt-beta.o
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+
+else
+
+# Assemble/Link an LLVM-linked program using the system assembler and linker.
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
@@ -419,6 +453,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
 Output/%.opt-beta: Output/%.opt-beta.s
 	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
 
+endif
 
 #
 # Rules to execute the program
