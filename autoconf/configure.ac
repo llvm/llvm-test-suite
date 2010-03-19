@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([[LLVM-TEST]],[[2.7svn]],[llvmbugs@cs.uiuc.edu])
+AC_INIT([[LLVM-TEST]],[[2.7]],[llvmbugs@cs.uiuc.edu])
 
 dnl Place all of the extra autoconf files into the config subdirectory
 AC_CONFIG_AUX_DIR([autoconf])
@@ -110,8 +110,6 @@ if test -z "$llvm_cv_gnu_make_command" ; then
 fi
 
 dnl Checks for other tools
-AC_PROG_FLEX
-AC_PROG_BISON
 AC_PROG_LIBTOOL
 
 dnl Check for GNU f2c FORTRAN -> C translator
