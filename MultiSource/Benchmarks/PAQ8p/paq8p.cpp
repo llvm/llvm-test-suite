@@ -605,7 +605,9 @@ Added wav Model. Slightly improved bmp model.
 #include <time.h>
 #include <math.h>
 #include <ctype.h>
+#ifndef NDEBUG
 #define NDEBUG  // remove for debugging (turns on Array bound checks)
+#endif
 #include <assert.h>
 
 #ifdef UNIX
@@ -4389,7 +4391,7 @@ int paqmain(int argc, char** argv) {
         while (*p && *p!='\t') ++p;
         fname[i]=p+1;
         while (*p && *p!='\r') ++p;
-        if (!*p) printf("%s: header corrupted at %d\n", archiveName.c_str(),
+        if (!*p) printf("%s: header corrupted at %ld\n", archiveName.c_str(),
           p-&filenames[0]), quit();
         assert(p-&filenames[0]<header_size);
         *p++=0;
