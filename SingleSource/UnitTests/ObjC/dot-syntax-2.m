@@ -11,7 +11,7 @@
 @end
 
 @implementation A
--(int) x { 
+-(int) x {
   return x + 2;
 }
 
@@ -27,6 +27,9 @@ int main() {
   int res = (a.x += 1);
   printf("res: %d\n", res);
 
+  // This is a case where clang diverges from gcc in Objective-C code
+  // generation. Clang correctly truncates the value in the this assignment to
+  // char, and extends, which is consistent with C semantics.
   res = (a.y = 0xFFFF);
   printf("res: %d\n", res);
 
