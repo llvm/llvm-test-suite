@@ -241,10 +241,10 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -arm-use-vmlx=false
+LLCBETAOPTION :=
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -arm-use-vmlx=false
+LLCBETAOPTION :=
 endif
 
 print-llcbeta-option:
