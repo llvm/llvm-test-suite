@@ -6,7 +6,9 @@
 main()
 {
 /* Mac G-4 sdot for arbitrary N wpp 6/8/2002 */
-  float x[N],y[N],tres,res,eps;
+  float x[N] __attribute__((aligned(16)));
+  float y[N] __attribute__((aligned(16)));
+  float tres,res,eps;
   int flag,i,k,ki,kl,n0,n;
   static float seed = 331.0;
   float sdot(int,float *,float *);
