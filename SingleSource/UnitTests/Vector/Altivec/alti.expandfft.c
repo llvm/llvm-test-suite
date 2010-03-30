@@ -92,6 +92,7 @@ main()
       if((ln2%4)==0) nits /= 10;
       n *= 2;
    }
+ return 0;
 }
 void cfft2(unsigned int n,float x[][2],float y[][2],float w[][2], float sign)
 {
@@ -103,7 +104,8 @@ void cfft2(unsigned int n,float x[][2],float y[][2],float w[][2], float sign)
 */
 
    int jb,jc,jd,jw,k,k2,k4,lj,m,j,mj,mj2,pass,tgle;
-   float rp,up,wr[4],wu[4];
+   float rp,up,wr[4] __attribute((aligned(16)));
+   float wu[4] __attribute((aligned(16)));
    float *a,*b,*c,*d;
    const vector float vminus = (vector float)(-0.,0.,-0.,0.);
    const vector float vzero  = (vector float)(0.,0.,0.,0.);

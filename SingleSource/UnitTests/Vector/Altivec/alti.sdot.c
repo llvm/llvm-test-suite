@@ -36,6 +36,7 @@ main()
      kl  = 4;
   }
   if(flag == 0) printf(" All n tests passed\n");
+  return 0;
 }
 #define NS 12
 float sdot(int n, float *x, float *y)
