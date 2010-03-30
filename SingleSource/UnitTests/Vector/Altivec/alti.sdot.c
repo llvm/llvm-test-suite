@@ -44,7 +44,7 @@ float sdot(int n, float *x, float *y)
   int i,ii,nres,nsegs;
   vector float V7 = (vector float)(0.0,0.0,0.0,0.0);
   vector float V0,V1;
-  float psum[4];
+  float psum[4] __attribute__((aligned(16)));
 // n < NS done in scalar mode
   if(n < NS){
      sum = x[0]*y[0];
