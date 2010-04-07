@@ -18,7 +18,7 @@ TESTNAME = $*
 TARGET_FLAGS = -g -O0
 LLC_DEBUG_FLAGS = -O3
 OPT_FLAGS = -std-compile-opts
-.PRECIOUS: Output/%.first.s Output/%.second.s Output/%.t2c.s Output/%.t1c.s Output/%.t2b.bc Output/%.t1b.bc
+.PRECIOUS: Output/%.first.s Output/%.second.s Output/%.t2c.s Output/%.t1c.s Output/%.t2b.bc Output/%.t1b.bc Output/%.t1a.bc Output/%.t2a.bc
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.diff
