@@ -192,7 +192,7 @@ bodyptr testdata()
     real rsc, vsc, r, v, x, y;
     vector cmr, cmv;
     bodyptr head, p, prev;
-    register i;
+    register int i;
     double temp, t1;
     double seed = 123.0;
     register int k;
@@ -397,7 +397,7 @@ datapoints uniform_testdata(int proc, int nbodyx, int seedfactor)
   datapoints retval;
   real rsc, vsc, r, v, x, y;
   bodyptr head, p, prev;
-  register i;
+  register int i;
   double temp, t1;
   double seed = 123.0 * (double) seedfactor;
   register int k;
