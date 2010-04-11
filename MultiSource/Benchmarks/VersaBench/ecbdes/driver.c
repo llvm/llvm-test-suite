@@ -157,7 +157,7 @@ static unsigned char cipher_data[NUM_TESTS][8]={
 /*
  * The main driver for testing.
  */
-driver(int size)
+void driver(int size)
 {
 	int k,j;
 	des_cblock out[NUM_TESTS];
