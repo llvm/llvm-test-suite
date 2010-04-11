@@ -10,7 +10,7 @@ struct adpcm_state state;
 char	abuf[NSAMPLES/2];
 short	sbuf[NSAMPLES];
 
-main() {
+int main(void) {
     int n;
 
     while(1) {
