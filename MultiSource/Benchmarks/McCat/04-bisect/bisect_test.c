@@ -43,7 +43,7 @@ void test_matrix(int n, double *C, double *B)
 }
 
 
-main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
   int rep,n,k,i,j;
   double eps,eps2;
