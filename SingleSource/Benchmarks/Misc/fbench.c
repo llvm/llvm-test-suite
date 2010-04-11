@@ -583,7 +583,7 @@ double x;
 
 */
 
-static transit_surface() {
+static void transit_surface() {
 	double iang,		   /* Incidence angle */
 	       rang,		   /* Refraction angle */
 	       iang_sin,	   /* Incidence angle sin */
