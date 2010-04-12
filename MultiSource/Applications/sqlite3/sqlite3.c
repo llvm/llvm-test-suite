@@ -72903,7 +72903,7 @@ static void yy_reduce(
         break;
       case 104: /* cmd ::= select */
 {
-  SelectDest dest = {SRT_Callback, 0, 0, 0};
+  SelectDest dest = {SRT_Callback, 0, 0};
   sqlite3Select(pParse, yymsp[0].minor.yy219, &dest, 0, 0, 0, 0);
   sqlite3SelectDelete(yymsp[0].minor.yy219);
 }
