@@ -23,5 +23,10 @@ PARALLEL_DIRS  := \
    telecomm-adpcm \
    telecomm-gsm
 
-include $(LEVEL)/Makefile.programs
+# FIXME: This is a hack, office-ispell requires termio which is less likely to
+# be available on an embedded target. We should have configure support for this.
+ifeq ($(TARGET_ARCH),ARM)
+  PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
+endif
 
+include $(LEVEL)/Makefile.programs
