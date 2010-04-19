@@ -136,8 +136,7 @@ if [ "x$RHOST" = x ] ; then
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
-/^sys/    { if (!ENVIRON["RUNSAFELY_UTIME_ONLY"]) { cpu += $2; }; print; }
-!/^user/ && !/^sys/  { print; }
+!/^user/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 else
   rm -f "$PWD/${PROG}.command"
@@ -151,8 +150,7 @@ else
   cat $PWD/${OUTFILE}.remote.time | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
-/^sys/    { if (!ENVIRON["RUNSAFELY_UTIME_ONLY"]) { cpu += $2; }; print; }
-!/^user/ && !/^sys/  { print; }
+!/^user/  { print; }
 END       { printf("program %f\n", cpu); }' > $OUTFILE.time
 sleep 1
 cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
