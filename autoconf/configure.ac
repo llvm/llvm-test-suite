@@ -110,8 +110,6 @@ if test -z "$llvm_cv_gnu_make_command" ; then
 fi
 
 dnl Checks for other tools
-AC_PROG_FLEX
-AC_PROG_BISON
 AC_PROG_LIBTOOL
 
 dnl Check for GNU f2c FORTRAN -> C translator
