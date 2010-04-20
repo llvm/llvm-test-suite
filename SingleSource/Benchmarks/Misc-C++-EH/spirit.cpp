@@ -2,6 +2,11 @@
 #include <fstream>
 #include <vector>
 #include <utility>
+#include <typeinfo>
+#include <memory>
+#include <algorithm>
+#include <limits>
+#include <string.h>
 namespace boost { namespace spirit
 {
     struct nil_t {};
