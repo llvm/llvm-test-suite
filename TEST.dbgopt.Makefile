@@ -3,42 +3,66 @@
 # This test checks whether presense of debugging information influences
 # the optimizer or not. 
 #
-# If input.bc includes llvm.dbg intrinsics and llvm.dbg variables then
-# first.bc and second.bc should match. Otherwise debugging information
-# is influencing the optimizer.
-#
-# $ opt input.bc -strip-nondebug -strip-debug -std-compile-output -strip -o first.bc
-# $ opt input.bc -strip-nondebug -std-compile-output -strip-debug -strip -o second.bc
+# $ llvm-gcc -g -fdebug-disable-debug-info-print -Os -S foo.c -o foo.first.s
+# $ llvm-gcc -Os -S foo.c -o foo.second.s
+# $ diff foo.first.s foo.second.s
 #
 ##===----------------------------------------------------------------------===##
 
 TESTNAME = $*
+.PRECIOUS: Output/%.first.s Output/%.second.s 
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.diff
 
-Output/%.diff: %.cpp Output/.dir $(LCC_PROGRAMS) $(LOPT) $(LDIS)
-	$(LCXX) $*.cpp -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
-	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
-	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
-	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
+Output/%.s: %.c Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.second.s
+	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*"; \
 	else \
 	 echo "--------- TEST-FAIL: $*"; \
 	fi
 
-
-Output/%.diff: %.c Output/.dir $(LCC_PROGRAMS) $(LOPT) $(LDIS)
-	$(LCC) $*.c -g --emit-llvm -c -o Output/$*.bc 
-	$(LOPT) Output/$*.bc -strip-nondebug -strip-debug | $(LOPT) -std-compile-opts | $(LOPT) -strip -f -o Output/$*.t.bc 
-	$(LDIS) Output/$*.t.bc -f -o Output/$*.first.ll 
-	$(LOPT) Output/$*.bc -strip-nondebug | $(LOPT) -std-compile-opts | $(LOPT) -strip-debug -strip -f -o Output/$*.t.bc 
-	$(LDIS) Output/$*.t.bc -f -o Output/$*.second.ll 
-	@-if diff Output/$*.first.ll Output/$*.second.ll > Output/$*.diff; then \
+Output/%.s: %.cpp Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.second.s
+	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*"; \
 	else \
 	 echo "--------- TEST-FAIL: $*"; \
 	fi
+
+Output/%.s: %.cc Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.second.s
+	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
+	 echo "--------- TEST-PASS: $*"; \
+	else \
+	 echo "--------- TEST-FAIL: $*"; \
+	fi
+
+Output/%.s: %.m Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.first.s
+	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.second.s
+	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
+	 echo "--------- TEST-PASS: $*"; \
+	else \
+	 echo "--------- TEST-FAIL: $*"; \
+	fi
+
+Output/%.s: %.mm Output/.dir $(INCLUDES)
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.second.s
+	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
+	 echo "--------- TEST-PASS: $*"; \
+	else \
+	 echo "--------- TEST-FAIL: $*"; \
+	fi
+
+Asms    := $(sort $(addsuffix .s, $(notdir $(basename $(Source)))))
+AllAsms := $(addprefix Output/,$(Asms))
+
+Output/%.diff: $(AllAsms)
+	
 
