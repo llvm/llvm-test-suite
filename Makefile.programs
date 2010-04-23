@@ -604,7 +604,7 @@ Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc-beta): \
 Output/%.bugpoint-llc-beta: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
-	PWD=$(CURDIR) $(LBUGPOINT) $< -run-llc \
+	PWD=$(CURDIR) $(LBUGPOINT) $< -llc-safe \
           $(BUGPOINT_OPTIONS) $(LLCBETAOPTION) $(BUGPOINT_TOOL_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt-beta): \
