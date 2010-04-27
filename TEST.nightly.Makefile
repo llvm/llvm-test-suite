@@ -61,7 +61,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
 Output/%.nightly.llc.report.txt: Output/%.exe-llc
 	@echo > $@
 	@-if test -f Output/$*.exe-llc; then \
-	  head -n 100 Output/$*.exe-llc >> $@ \
+	  head -n 100 Output/$*.exe-llc >> $@; \
 	  echo "TEST-PASS: llc $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" Output/$*.llc.s.info | tail -n 1 >> $@;\
@@ -77,7 +77,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc-beta.report.txt): \
 Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta
 	@echo > $@
 	@-if test -f Output/$*.exe-llc-beta; then \
-	  head -n 100 Output/$*.exe-llc-beta >> $@ \
+	  head -n 100 Output/$*.exe-llc-beta >> $@; \
 	  echo "TEST-PASS: llc-beta $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
 	  grep "Total Execution Time" Output/$*.llc-beta.s.info | tail -n 1 >> $@;\
@@ -93,7 +93,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.opt-beta.report.txt): \
 Output/%.nightly.opt-beta.report.txt: Output/%.exe-opt-beta
 	@echo > $@
 	@-if test -f Output/$*.exe-opt-beta; then \
-	  head -n 100 Output/$*.exe-opt-beta >> $@ \
+	  head -n 100 Output/$*.exe-opt-beta >> $@; \
 	  echo "TEST-PASS: opt-beta $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-opt-beta: " >> $@;\
 	  grep "Total Execution Time" Output/$*.opt-beta.s.info | tail -n 1 >> $@;\
@@ -109,7 +109,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
 Output/%.nightly.cbe.report.txt: Output/%.exe-cbe
 	@echo > $@
 	@-if test -f Output/$*.exe-cbe; then \
-	  head -n 100 Output/$*.exe-cbe >> $@ \
+	  head -n 100 Output/$*.exe-cbe >> $@; \
 	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-cbe-time: " >> $@;\
 	  grep "^program" Output/$*.out-cbe.time >> $@;\
@@ -123,7 +123,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.jit.report.txt): \
 Output/%.nightly.jit.report.txt: Output/%.exe-jit
 	@echo > $@
 	@-if test -f Output/$*.exe-jit; then \
-	  head -n 100 Output/$*.exe-jit >> $@ \
+	  head -n 100 Output/$*.exe-jit >> $@; \
 	  echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-jit-time: " >> $@;\
 	  grep "^program" Output/$*.out-jit.time >> $@;\
