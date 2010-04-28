@@ -1,7 +1,7 @@
 #include "helpers.h"
 
 #define ARRAYSIZE 100000
-double TheArray[ARRAYSIZE];
+double TheArray[ARRAYSIZE] __attribute__((aligned));
 
 #define ProcessArray(VECTY) {     \
   VECTY V = (VECTY)((v4i32){0,0,0,0}); \
