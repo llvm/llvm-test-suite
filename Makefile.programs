@@ -232,19 +232,19 @@ ifeq ($(ARCH),IA64)
 LLCBETAOPTION := -sched=simple 
 endif
 ifeq ($(ARCH),x86_64)
-LLCBETAOPTION :=
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),x86)
-LLCBETAOPTION :=
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION :=
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION :=
+LLCBETAOPTION := -combiner-alias-analysis
 endif
 
 print-llcbeta-option:
