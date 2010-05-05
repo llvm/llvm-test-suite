@@ -11,7 +11,6 @@ PARALLEL_DIRS := \
         429.mcf        \
         445.gobmk      \
         456.hmmer      \
-        458.sjeng      \
         462.libquantum \
         464.h264ref    \
         471.omnetpp    \
@@ -21,6 +20,7 @@ ifndef SMALL_PROBLEM_SIZE
 # Temporary. 
 PARALLEL_DIRS +=  \
         403.gcc        \
+        458.sjeng      \
         473.astar
 endif
 
