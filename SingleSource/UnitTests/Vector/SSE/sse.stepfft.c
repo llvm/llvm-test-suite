@@ -5,6 +5,13 @@
 #include "xmmintrin.h"
 #define N 1024
 #define N2 N/2
+
+/* allocate storage for x,y,z,w on 4-word bndr. */
+float x[2*N] __attribute__ ((aligned (16)));
+float y[2*N] __attribute__ ((aligned (16)));
+float z[2*N] __attribute__ ((aligned (16)));
+float w[  N] __attribute__ ((aligned (16)));
+
 int main()
 {
 /* 
@@ -16,11 +23,7 @@ int main()
    float *x,*y,*z,*w;
    float t1,ln2,mflops;
    void cffti(),cfft2();
-/* allocate storage for x,y,z,w on 4-word bndr. */
-   x = (float *)valloc(8*N);
-   y = (float *)valloc(8*N);
-   z = (float *)valloc(8*N);
-   w = (float *)valloc(4*N);
+
    first = 1;
    seed  = 331.0;
    for(icase=0;icase<2;icase++){
