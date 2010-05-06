@@ -23,7 +23,6 @@ int main()
    int first,i,icase,it,n;
    double error;
    float fnm1,seed,sign,z0,z1,ggl();
-   float *x,*y,*z,*w;
    float t1,ln2,mflops;
    void cffti(),cfft2();
 
