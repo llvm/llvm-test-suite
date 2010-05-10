@@ -73,12 +73,6 @@ ifndef RUNTIMELIMIT
   RUNTIMELIMIT := 500
 endif
 
-# If the program specified a REFERENCE_OUTPUT_FILE, they obviously want to
-# USE_REFERENCE_OUTPUT.
-ifdef REFERENCE_OUTPUT_FILE
-USE_REFERENCE_OUTPUT := 1
-endif
-
 # RUNSAFELY - This program simply runs another program.  If the program works
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
@@ -764,17 +758,10 @@ Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
 else 
 ifdef USE_REFERENCE_OUTPUT
-
-# If the app wants to USE_REFERENCE_OUTPUT, but hasn't specified a file
-# containing the reference output, default to programname.reference_output.
-ifndef REFERENCE_OUTPUT_FILE
-REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
-endif
-
 # In this case, we opt out of generating the native output and just
 # copy it from a reference output
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
-Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
+Output/%.out-nat: $(PROJ_SRC_DIR)/%.reference_output Output/.dir
 	cp $< $@
 endif
 endif
