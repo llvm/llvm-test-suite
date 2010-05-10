@@ -98,7 +98,6 @@ static	char	const	rcsid[] = "$Id: text.c,v 1.25 2007/02/12 20:46:09 njh Exp $";
 #include <stdlib.h>
 #ifdef	C_DARWIN
 #include <sys/types.h>
-#include <sys/malloc.h>
 #else
 #ifdef HAVE_MALLOC_H /* tk: FreeBSD-CURRENT doesn't support malloc.h */
 #ifndef	C_BSD	/* BSD now uses stdlib.h */
