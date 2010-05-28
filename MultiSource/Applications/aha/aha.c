@@ -70,7 +70,7 @@ print_pgm()
 
 // -------------------- simulate_one_instruction -----------------------
 
-inline void
+static inline void
 simulate_one_instruction(int i)
 {
    int arg0, arg1, arg2;
@@ -278,7 +278,7 @@ more unused computed values; it hasn't been tried. */
 
 // --------------------------- increment -------------------------------
 
-inline int
+static inline int
 increment(void)
 {
 
