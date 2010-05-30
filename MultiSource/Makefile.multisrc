@@ -25,7 +25,10 @@ LObjects := $(addprefix Output/,$(LObjs))
 NObjs    := $(sort $(addsuffix .o, $(notdir $(basename $(Source)))))
 NObjects := $(addprefix Output/,$(NObjs))
 
-.PRECIOUS: $(LObjects) $(NObjects)
+NLObjs    := $(sort $(addsuffix .llvm.o, $(notdir $(basename $(Source)))))
+NLObjects := $(addprefix Output/,$(NLObjs))
+
+.PRECIOUS: $(LObjects) $(NObjects) $(NLObjects)
 
 Output/%.o: %.c Output/.dir
 	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
@@ -38,6 +41,25 @@ Output/%.o: %.cpp Output/.dir
 
 Output/%.o: %.cc Output/.dir
 	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+
+Output/%.llvm.o: %.c Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.m Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.C Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.cpp Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.cc Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.mm Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
 
 bugpoint-opt: Output/$(PROG).bugpoint-opt
 bugpoint-gccas: Output/$(PROG).bugpoint-opt
@@ -61,6 +83,14 @@ Output/%.LOC.txt: $(Source)
 	cat $^ $(wildcard $(SourceDir)/*.h) | wc -l > $@
 
 endif
+
+Output/%.simple: $(NLObjects)
+	@-cat $(NLObjects:%=%.compile.time) | awk -- '\
+BEGIN     { sum = 0.0; }\
+/^program/   { sum += $$2; }\
+!/^program/  { print; }\
+END       { printf("program %f\n", sum); }' > $@.compile.time
+	-$(LCXX) -o $@ $^ $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
 Output/%.native: $(NObjects)
 	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)

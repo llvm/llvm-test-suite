@@ -42,7 +42,7 @@ INCLUDES := $(ExtraHeaders) $(wildcard $(SourceDir)/*.h)
 
 include $(LEVEL)/Makefile.tests
 
-.PRECIOUS: Output/%.llvm Output/%.native Output/%.llc Output/%.llc.s
+.PRECIOUS: Output/%.llvm Output/%.native Output/%.simple Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc Output/%.linked.bc
 .PRECIOUS: Output/%.linked.optbeta.bc Output/%.llvm.optbeta.bc 
 
@@ -91,8 +91,10 @@ endif
 
 ifdef GET_STABLE_NUMBERS
 RUNSAFELY := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT) $(EXIT_OK)
+RUNSAFELYLOCAL := $(PROGDIR)/RunSafelyAndStable.sh $(RUNTIMELIMIT) $(EXIT_OK)
 else
 RUNSAFELY := $(PROGDIR)/RunSafely.sh
+RUNSAFELYLOCAL := $(PROGDIR)/RunSafely.sh
 
 ifdef REMOTE_HOST
 RUNSAFELY := $(RUNSAFELY) -r $(REMOTE_HOST)
@@ -118,6 +120,7 @@ RUNSAFELY := $(RUNSAFELY) -u $(RUNUNDER)
 endif
 
 RUNSAFELY := $(RUNSAFELY) $(RUNTIMELIMIT) $(EXIT_OK)
+RUNSAFELYLOCAL := $(RUNSAFELYLOCAL) $(RUNTIMELIMIT) $(EXIT_OK)
 endif
 
 RUNTOOLSAFELY := $(PROGDIR)/RunToolSafely.sh $(RUNTIMELIMIT)
@@ -508,6 +511,10 @@ Output/%.out-nat: Output/%.native
 endif
 endif
 
+$(PROGRAMS_TO_TEST:%=Output/%.out-simple): \
+Output/%.out-simple: Output/%.simple
+	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLI_OPTS) $< $(RUN_OPTIONS)
@@ -669,6 +676,10 @@ ifdef PROGRAM_IS_NONDETERMINISTIC
 DIFFPROG = touch $@ \#
 endif
 
+$(PROGRAMS_TO_TEST:%=Output/%.diff-simple): \
+Output/%.diff-simple: Output/%.out-nat Output/%.out-simple
+	-$(DIFFPROG) simple $* $(HIDEDIFF)
+
 $(PROGRAMS_TO_TEST:%=Output/%.diff-lli): \
 Output/%.diff-lli: Output/%.out-nat Output/%.out-lli
 	-$(DIFFPROG) lli $* $(HIDEDIFF)
@@ -698,6 +709,11 @@ Output/%.diff-cbe: Output/%.out-nat Output/%.out-cbe
 	-$(DIFFPROG) cbe $* $(HIDEDIFF)
 
 ifndef DISABLE_DIFFS
+$(PROGRAMS_TO_TEST:%=Output/%.exe-simple): \
+Output/%.exe-simple: Output/%.diff-simple
+	-rm -f $@
+	-cp $< $@
+
 $(PROGRAMS_TO_TEST:%=Output/%.exe-lli): \
 Output/%.exe-lli: Output/%.diff-lli
 	-rm -f $@

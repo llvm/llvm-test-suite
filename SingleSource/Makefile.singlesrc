@@ -48,6 +48,30 @@ Output/%.LOC.txt: $(SourceDir)/%.mm
 	cat $< | wc -l > $@
 endif
 
+Output/%.llvm.o: %.c Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.m Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.C Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.cpp Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.cc Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+Output/%.llvm.o: %.mm Output/.dir
+	$(RUNSAFELYLOCAL) /dev/null $@.compile \
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+.PRECIOUS: Output/%.llvm.o
+
+Output/%.simple: Output/%.llvm.o Output/.dir
+	-$(CP) $<.compile.time $@.compile.time
+	-$(LCXX) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: $(SourceDir)/%.c Output/.dir
 	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
