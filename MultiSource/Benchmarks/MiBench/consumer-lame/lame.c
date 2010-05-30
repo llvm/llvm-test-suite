@@ -56,6 +56,11 @@ static int mf_size;
 static int mf_samples_to_encode;
 
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 
 /********************************************************************
  *   initialize internal params based on data in gf
@@ -542,8 +547,8 @@ void lame_print_config(lame_global_flags *gfp)
   }
   else {
     fprintf(stderr, "Encoding %s to %s\n",
-	    (strcmp(gfp->inPath, "-")? gfp->inPath : "stdin"),
-	    (strcmp(gfp->outPath, "-")? gfp->outPath : "stdout"));
+	    (strcmp(gfp->inPath, "-")? basename(gfp->inPath) : "stdin"),
+	    (strcmp(gfp->outPath, "-")? basename(gfp->outPath) : "stdout"));
     if (gfp->VBR)
       fprintf(stderr, "Encoding as %.1fkHz VBR(q=%i) %s MPEG%i LayerIII  qval=%i\n",
 	      gfp->out_samplerate/1000.0,

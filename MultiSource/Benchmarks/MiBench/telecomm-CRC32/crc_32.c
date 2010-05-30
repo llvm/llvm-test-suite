@@ -171,6 +171,11 @@ DWORD crc32buf(char *buf, size_t len)
       
 }
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -181,7 +186,7 @@ main(int argc, char *argv[])
       while(--argc > 0)
       {
             errors |= crc32file(*++argv, &crc, &charcnt);
-            printf("%08lX %7ld %s\n", crc, charcnt, *argv);
+            printf("%08lX %7ld %s\n", crc, charcnt, basename(*argv));
       }
       return(errors != 0);
 }

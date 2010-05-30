@@ -75,6 +75,11 @@ dev_t procdev;
 #define	O_BINARY    0
 #endif
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 static int scandirs(const char *dirname, struct cl_engine *engine, const struct passwd *user, const struct optstruct *opt, const struct cl_limits *limits, int options)
 {
     return treewalk(dirname, engine, user, opt, limits, options, 1);
@@ -641,7 +646,7 @@ static int checkfile(const char *filename, const struct cl_engine *engine, const
 	const char *virname;
 
 
-    logg("*Scanning %s\n", filename);
+    logg("*Scanning %s\n", basename(filename));
 
     if((fd = open(filename, O_RDONLY|O_BINARY)) == -1) {
 	logg("^Can't open file %s\n", filename);
@@ -657,7 +662,7 @@ static int checkfile(const char *filename, const struct cl_engine *engine, const
 
     } else if(ret == CL_CLEAN) {
 	if(!printinfected && printclean)
-	    mprintf("%s: OK\n", filename);
+            mprintf("%s: OK\n", basename(filename));
     } else
 	if(!printinfected)
 	    logg("%s: %s\n", filename, cl_strerror(ret));

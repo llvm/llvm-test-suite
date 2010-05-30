@@ -34,6 +34,11 @@
 #include "config.h"
 #include "global.h"
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 /* private prototypes */
 static void store_one _ANSI_ARGS_((char *outname, unsigned char *src[],
   int offset, int incr, int height));
@@ -155,7 +160,7 @@ int offset,incr,width,height;
   unsigned char *p;
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",name);
+    fprintf(stderr,"saving %s\n",basename(name));
 
   if ((outfile = open(name,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {
@@ -217,7 +222,7 @@ int offset, incr, height;
   strcat(outname,".SIF");
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",outname);
+    fprintf(stderr,"saving %s\n",basename(outname));
 
   if ((outfile = open(outname,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {
@@ -310,7 +315,7 @@ int tgaflag;
   strcat(outname,tgaflag ? ".tga" : ".ppm");
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",outname);
+    fprintf(stderr,"saving %s\n",basename(outname));
 
   if ((outfile = open(outname,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {

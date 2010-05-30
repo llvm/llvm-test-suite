@@ -34,6 +34,11 @@ extern int access();
 #define MAXRHS 1000
 #endif
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 static char *msort(char*,char**,int(*)(const char*,const char*));
 
 static struct action *Action_new(void);
@@ -3070,6 +3075,7 @@ FILE *out;
 int lineno;
 char *filename;
 {
+  filename = basename(filename);
   fprintf(out,"#line %d \"",lineno);
   while( *filename ){
     if( *filename == '\\' ) putc('\\',out);
@@ -4852,12 +4858,13 @@ int main(int argc, char **argv)
 			if(p == 0) {
 				char *argv_child[] = {"lemon-child","-s",argv[i],NULL};
 				/* child */
-				fprintf(stdout,"Processing %s\n",argv[i]);
+				fprintf(stdout,"Processing %s\n",basename(argv[i]));
 				exit( lemon_main(3, argv_child) );
 			}
 			while(wait(&status) == -1 && errno == EINTR) {}
 			if(status) {
-				fprintf(stderr,"Error while running on: %s\n",argv[i]);
+                                fflush(stdout);
+				fprintf(stderr,"Error while running on: %s\n",basename(argv[i]));
 			}
 		}
 	}

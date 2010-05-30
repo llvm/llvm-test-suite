@@ -33,6 +33,11 @@ using namespace kc;
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 #include "defs.h"
 #ifndef KIMWITUCOPYRIGHT
 # define KIMWITUCOPYRIGHT "@(#) Kimwitu++ version: (unknown) (c) 2003 Humboldt-University of Berlin"
@@ -603,7 +608,7 @@ static  void do_parse()
 
 	IncludeFile( mkfunctionincname(INC_KC_FUNCTIONS))->inc_type = include_file;
 	IncludeFile( mkfunctionincname(INC_KC_FUNCTIONS_HEADER))->inc_type = include_header;
-	if (g_options.verbose) cout << " " << pg_filename->name << flush;
+	if (g_options.verbose) cout << " " << basename(pg_filename->name) << flush;
 	try {
 	    yyparse(); 
 	    FnFile( pg_filename )->fns = Thefndeclarations;

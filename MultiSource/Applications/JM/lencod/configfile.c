@@ -68,6 +68,11 @@
 #include "configfile.h"
 #include "fmo.h"
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 char *GetConfigFileContent (char *Filename);
 static void ParseContent (char *buf, int bufsize);
 static int ParameterNameToMapIndex (char *s);
@@ -161,7 +166,7 @@ void Configure (int ac, char *av[])
       JMHelpExit();
     }
   }
-  printf ("Parsing Configfile %s", filename);
+  printf ("Parsing Configfile %s", basename(filename));
   content = GetConfigFileContent (filename);
   if (NULL==content)
     error (errortext, 300);
@@ -227,7 +232,7 @@ void Configure (int ac, char *av[])
           *destin = '\0';
           CLcount++;
         }
-        printf ("Parsing command line string '%s'", content);
+        printf ("Parsing command line string '%s'", "IGNORED");
         ParseContent (content, strlen(content));
         free (content);
         printf ("\n");

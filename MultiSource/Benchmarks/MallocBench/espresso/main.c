@@ -10,6 +10,11 @@
 static FILE *last_fp;
 static int input_type = FD_type;
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 main(argc, argv)
 int argc;
 char *argv[];
@@ -166,7 +171,7 @@ char *argv[];
 	/* echo command line and arguments */
 	printf("# espresso");
 	for(i = 1; i < argc; i++) {
-	    printf(" %s", argv[i]);
+            printf(" %s", basename(argv[i]));
 	}
 	printf("\n");
 	printf("# %s\n", VERSION);

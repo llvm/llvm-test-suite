@@ -38,6 +38,11 @@ http://www.gnu.org/copyleft/gpl.html
 #include <sys/param.h>
 #endif
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 int
 main(int argc, char** argv)
 {
@@ -58,7 +63,7 @@ main(int argc, char** argv)
 		char buf[MAXPATHLEN+1];
 		char* cwd = getcwd(buf,sizeof(buf)-1);
 		if( cwd ){
-			printf( "%s\n", cwd);
+                        printf( "%s\n", basename(cwd));
 		}
 	}
 	#endif

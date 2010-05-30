@@ -366,13 +366,18 @@ void verbose_conflict_log(void)
 }
 
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
 
 void total_conflicts(void)
 {
   if (src_total == expected_conflicts && rrc_total == 0)
     return;
 
-  fprintf(stderr, "%s contains", infile);
+  fflush(stdout);
+  fprintf(stderr, "%s contains", basename(infile));
 
   if (src_total == 1)
     fprintf(stderr, " 1 shift/reduce conflict");

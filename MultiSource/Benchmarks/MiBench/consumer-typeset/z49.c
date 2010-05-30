@@ -112,6 +112,11 @@ typedef struct
   pos = pos % ltab_size(S);						\
 }
 
+static const char *basename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 static LINK_DEST_TABLE ltab_new(int newsize)
 { LINK_DEST_TABLE S;  int i;
   /* ifdebug(DMA, D, DebugRegisterUsage(MEM_LINK_TAB, 1,
@@ -531,7 +536,7 @@ static void PS_PrintBeforeFirstPage(FULL_LENGTH h, FULL_LENGTH v,
 	Error(49, 5, "%s file %s lacks PostScript BeginResource comment",
 	  WARN, PosOfFile(fnum), KW_PREPEND, FileName(fnum));
       StringFPuts(buff, out_fp);
-      p2("%% %s file %s\n", KW_PREPEND, FileName(fnum));
+      p2("%% %s file %s\n", KW_PREPEND, basename(FileName(fnum)));
       while( StringFGets(buff, MAX_BUFF, fp) != NULL )
 	StringFPuts(buff, out_fp);
       p0("\n");
@@ -1328,7 +1333,7 @@ static void PS_LinkDest(OBJECT name, FULL_LENGTH llx, FULL_LENGTH lly,
   if( prev == nilobj )
   {
     /* not used previously, so print it and remember it */
-    fprintf(out_fp, "\n[ /Dest /%s /DEST pdfmark\n", ConvertToPDFName(name));
+    fprintf(out_fp, "\n[ /Dest /%s /DEST pdfmark\n", "IGNORED");
     ltab_insert(name, &link_dest_tab);
   }
   else
