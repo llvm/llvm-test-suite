@@ -33,7 +33,7 @@ using namespace kc;
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -155,7 +155,7 @@ namespace kc {
 #endif
 
 static  FILE *openfile (const char *file, const char *mode);
-static  char *get_basename (char *s);
+static  char *get_mybasename (char *s);
 static  void print_version ();
 static  void print_help ();
 static  void processargs (int argc, char *argv[]);
@@ -188,15 +188,15 @@ static  FILE *openfile(const char *file, const char *mode)
 
 }
 
-static  char *get_basename(char *s)
+static  char *get_mybasename(char *s)
 {
-    char *basename = strrchr( s, '/');
-    if (basename == NULL) {
-	basename = s;
+    char *mybasename = strrchr( s, '/');
+    if (mybasename == NULL) {
+	mybasename = s;
     } else {
-	basename++;
+	mybasename++;
     }
-    return basename;
+    return mybasename;
 
 }
 
@@ -268,7 +268,7 @@ Options:\n\
 
 static  void processargs(int argc, char *argv[])
 {
-    g_progname = mkcasestring(get_basename(argv[0]));
+    g_progname = mkcasestring(get_mybasename(argv[0]));
 
     enum { O_stdafx = 1, O_commment_line, O_dir_line, O_rw_loop, O_operator_cast };
 
@@ -481,22 +481,22 @@ static  void processargs(int argc, char *argv[])
     if(!(g_options.no_csgio && g_options.no_printdot))
     g_options.no_hashtables=false;
 
-    char *basename;
+    char *mybasename;
 
 
     for (int i=optind; i < argc; ++i) {
 
 	size_t len = strlen(argv[i]);
-	basename = get_basename( argv[i] );
+	mybasename = get_mybasename( argv[i] );
 	if ( ! (argv[i][len-1] == 'k') && (argv[i][len-2] == '.') ) {
 	    v_report( NonFatal( NoFileLine(), Problem2S( "input file must have '.k' suffix:", argv[i] )));
-	} else if (  (strcmp(basename, (g_options.prefix+"k.k").c_str()) == 0)
-	    || (strcmp(basename,  (g_options.prefix+"rk.k").c_str()) == 0)
-	    || (strcmp(basename,  (g_options.prefix+"unpk.k").c_str()) == 0)
-	    || (strcmp(basename,  (g_options.prefix+"csgiok.k").c_str()) == 0)
-	    || (strcmp(basename, "stdin.k") == 0)
+	} else if (  (strcmp(mybasename, (g_options.prefix+"k.k").c_str()) == 0)
+	    || (strcmp(mybasename,  (g_options.prefix+"rk.k").c_str()) == 0)
+	    || (strcmp(mybasename,  (g_options.prefix+"unpk.k").c_str()) == 0)
+	    || (strcmp(mybasename,  (g_options.prefix+"csgiok.k").c_str()) == 0)
+	    || (strcmp(mybasename, "stdin.k") == 0)
 	) {
-	    string tmp="reserved file basenames '"+g_options.prefix+"k.k', '"+g_options.prefix+"rk.k', '"+g_options.prefix+"unpk.k', '"+g_options.prefix+"csgiok.k' and 'stdin.k' not allowed:";
+	    string tmp="reserved file mybasenames '"+g_options.prefix+"k.k', '"+g_options.prefix+"rk.k', '"+g_options.prefix+"unpk.k', '"+g_options.prefix+"csgiok.k' and 'stdin.k' not allowed:";
 	    v_report( NonFatal( NoFileLine(), Problem2S(tmp.c_str(), argv[i] )));
 	} else if ((yyin = fopen(argv[i], "r"))== NULL){
 	    v_report( NonFatal( NoFileLine(), Problem2S( "cannot open ", argv[i] )));
@@ -608,7 +608,7 @@ static  void do_parse()
 
 	IncludeFile( mkfunctionincname(INC_KC_FUNCTIONS))->inc_type = include_file;
 	IncludeFile( mkfunctionincname(INC_KC_FUNCTIONS_HEADER))->inc_type = include_header;
-	if (g_options.verbose) cout << " " << basename(pg_filename->name) << flush;
+	if (g_options.verbose) cout << " " << mybasename(pg_filename->name) << flush;
 	try {
 	    yyparse(); 
 	    FnFile( pg_filename )->fns = Thefndeclarations;

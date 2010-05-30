@@ -29,7 +29,7 @@ AUTHOR     : Fady Habra, 8715030, fady@cs.mcgill.ca
 #include <math.h>
 #include "pgm.h"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -92,7 +92,7 @@ void PGM_PrintInfo(ImgP img)
 {
   if (img->valid)
     {
-      printf("filename:\t%s\n", basename(img->filename));
+      printf("filename:\t%s\n", mybasename(img->filename));
       printf("width   :\t%d\n", img->width);
       printf("height  :\t%d\n", img->height);
       printf("max gray:\t%d\n", img->maxgray);

@@ -56,7 +56,7 @@ static int mf_size;
 static int mf_samples_to_encode;
 
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -547,8 +547,8 @@ void lame_print_config(lame_global_flags *gfp)
   }
   else {
     fprintf(stderr, "Encoding %s to %s\n",
-	    (strcmp(gfp->inPath, "-")? basename(gfp->inPath) : "stdin"),
-	    (strcmp(gfp->outPath, "-")? basename(gfp->outPath) : "stdout"));
+	    (strcmp(gfp->inPath, "-")? mybasename(gfp->inPath) : "stdin"),
+	    (strcmp(gfp->outPath, "-")? mybasename(gfp->outPath) : "stdout"));
     if (gfp->VBR)
       fprintf(stderr, "Encoding as %.1fkHz VBR(q=%i) %s MPEG%i LayerIII  qval=%i\n",
 	      gfp->out_samplerate/1000.0,

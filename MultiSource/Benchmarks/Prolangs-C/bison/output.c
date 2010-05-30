@@ -1291,7 +1291,7 @@ void output_parser(void)
 
 
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -1301,7 +1301,7 @@ void output_program(void)
   register int c;
   extern int lineno;
 
-  fprintf(ftable, "#line %d \"%s\"\n", lineno, basename(infile));
+  fprintf(ftable, "#line %d \"%s\"\n", lineno, mybasename(infile));
 
   c = getc(finput);
   while (c != EOF)

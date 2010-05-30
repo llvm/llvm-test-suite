@@ -76,7 +76,7 @@
 #define DATADECFILE "dataDec.txt"
 #define TRACEFILE   "trace_dec.txt"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -266,16 +266,16 @@ void Configure(int ac, char *av[])
   fprintf(stdout,"----------------------------- JM %s %s -----------------------------\n", VERSION, EXT_VERSION);
   fprintf(stdout," Decoder config file                    : %s \n",config_filename);
   fprintf(stdout,"--------------------------------------------------------------------------\n");
-  fprintf(stdout," Input H.264 bitstream                  : %s \n",basename(input->infile));
+  fprintf(stdout," Input H.264 bitstream                  : %s \n",mybasename(input->infile));
   fprintf(stdout," Output decoded YUV                     : %s \n",input->outfile);
   fprintf(stdout," Output status file                     : %s \n",LOGFILE);
   if ((p_ref=open(input->reffile,OPENFLAGS_READ))==-1)
   {
-    fprintf(stdout," Input reference file                   : %s does not exist \n",basename(input->reffile));
+    fprintf(stdout," Input reference file                   : %s does not exist \n",mybasename(input->reffile));
     fprintf(stdout,"                                          SNR values are not available\n");
   }
   else
-    fprintf(stdout," Input reference file                   : %s \n",basename(input->reffile));
+    fprintf(stdout," Input reference file                   : %s \n",mybasename(input->reffile));
 
   fprintf(stdout,"--------------------------------------------------------------------------\n");
 #ifdef _LEAKYBUCKET_

@@ -92,7 +92,7 @@ programs.
 #undef UNIX
 #endif
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -385,9 +385,9 @@ SIM(A,B,M,N,K,V,Q,R,nseq)
 	for ( i = 0; i < K ; i++ )
 	   LIST[i] = ( vertexptr ) ckalloc( (long) sizeof(vertex));
 
-	printf("                 Upper Sequence : %s\n", basename(name1));
+	printf("                 Upper Sequence : %s\n", mybasename(name1));
 	printf("                         Length : %d\n", M);
-	printf("                 Lower Sequence : %s\n", basename(name2));
+	printf("                 Lower Sequence : %s\n", mybasename(name2));
 	printf("                         Length : %d\n", N);
 
 	numnode = min = 0;

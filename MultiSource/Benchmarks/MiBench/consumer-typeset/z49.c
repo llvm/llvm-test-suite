@@ -112,7 +112,7 @@ typedef struct
   pos = pos % ltab_size(S);						\
 }
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -536,7 +536,7 @@ static void PS_PrintBeforeFirstPage(FULL_LENGTH h, FULL_LENGTH v,
 	Error(49, 5, "%s file %s lacks PostScript BeginResource comment",
 	  WARN, PosOfFile(fnum), KW_PREPEND, FileName(fnum));
       StringFPuts(buff, out_fp);
-      p2("%% %s file %s\n", KW_PREPEND, basename(FileName(fnum)));
+      p2("%% %s file %s\n", KW_PREPEND, mybasename(FileName(fnum)));
       while( StringFGets(buff, MAX_BUFF, fp) != NULL )
 	StringFPuts(buff, out_fp);
       p0("\n");

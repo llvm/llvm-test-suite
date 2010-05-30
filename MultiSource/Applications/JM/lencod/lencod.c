@@ -68,7 +68,7 @@
 #define VERSION "12.1"
 #define EXT_VERSION "(FRExt)"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -1858,7 +1858,7 @@ void information_init(void)
     printf("------------------------------- JM %s %s --------------------------------\n",VERSION, EXT_VERSION);
   else
     printf("------------------------------- JM %s %s ------------------------------------------\n",VERSION, EXT_VERSION);
-  printf(" Input YUV file                    : %s \n",basename(input->infile));
+  printf(" Input YUV file                    : %s \n",mybasename(input->infile));
   printf(" Output H.264 bitstream            : %s \n",input->outfile);
   if (p_dec != -1)
     printf(" Output YUV file                   : %s \n",input->ReconFile);

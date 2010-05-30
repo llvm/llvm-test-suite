@@ -34,7 +34,7 @@
 #include "config.h"
 #include "global.h"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -160,7 +160,7 @@ int offset,incr,width,height;
   unsigned char *p;
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",basename(name));
+    fprintf(stderr,"saving %s\n",mybasename(name));
 
   if ((outfile = open(name,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {
@@ -222,7 +222,7 @@ int offset, incr, height;
   strcat(outname,".SIF");
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",basename(outname));
+    fprintf(stderr,"saving %s\n",mybasename(outname));
 
   if ((outfile = open(outname,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {
@@ -315,7 +315,7 @@ int tgaflag;
   strcat(outname,tgaflag ? ".tga" : ".ppm");
 
   if (!Quiet_Flag)
-    fprintf(stderr,"saving %s\n",basename(outname));
+    fprintf(stderr,"saving %s\n",mybasename(outname));
 
   if ((outfile = open(outname,O_CREAT|O_TRUNC|O_WRONLY|O_BINARY,0666))==-1)
   {

@@ -3,7 +3,7 @@
 */
 #include "d.h"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -563,7 +563,7 @@ write_code_as_C(FILE *fp, Grammar *g, Rule *r, char *code,
 
   fprintf(fp, "{\n");
   if (g->write_line_directives)
-    fprintf(fp, "#line %d \"%s\"\n", line, basename(pathname));
+    fprintf(fp, "#line %d \"%s\"\n", line, mybasename(pathname));
   c = code;
   while (*c) {
     if (*c == '$') {
@@ -635,7 +635,7 @@ write_global_code_as_C(FILE *fp, Grammar *g, char *tag) {
 
   for (i = 0; i < g->ncode; i++) {
     if (g->write_line_directives)
-      fprintf(fp, "#line %d \"%s\"\n", g->code[i].line, basename(g->pathname));
+      fprintf(fp, "#line %d \"%s\"\n", g->code[i].line, mybasename(g->pathname));
     c = g->code[i].code;
     while (*c) {
       if (*c == '$') {

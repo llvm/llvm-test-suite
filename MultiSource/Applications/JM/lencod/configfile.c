@@ -68,7 +68,7 @@
 #include "configfile.h"
 #include "fmo.h"
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -166,7 +166,7 @@ void Configure (int ac, char *av[])
       JMHelpExit();
     }
   }
-  printf ("Parsing Configfile %s", basename(filename));
+  printf ("Parsing Configfile %s", mybasename(filename));
   content = GetConfigFileContent (filename);
   if (NULL==content)
     error (errortext, 300);

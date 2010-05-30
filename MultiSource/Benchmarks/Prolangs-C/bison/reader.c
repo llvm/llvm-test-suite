@@ -34,7 +34,7 @@ The entry point is reader().  */
 #include "gram.h"
 
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -154,7 +154,7 @@ void reader(void)
   getsym("$illegal.")->class = STOKEN;
   /* Read the declaration section.  Copy %{ ... %} groups to ftable and fdefines file.
      Also notice any %token, %left, etc. found there.  */
-  fprintf(ftable, "\n/*  A Bison parser, made from %s  */\n\n", basename(infile));
+  fprintf(ftable, "\n/*  A Bison parser, made from %s  */\n\n", mybasename(infile));
   read_declarations();
   /* output the definition of YYLTYPE into the fattrs and fdefines files.  */
   output_ltype();
@@ -273,7 +273,7 @@ void copy_definition(void)
   register int after_percent;  /* -1 while reading a character if prev char was % */
 
   if (!nolinesflag)
-    fprintf(fattrs, "#line %d \"%s\"\n", lineno, basename(infile));
+    fprintf(fattrs, "#line %d \"%s\"\n", lineno, mybasename(infile));
 
   after_percent = 0;
 
@@ -610,7 +610,7 @@ void parse_union_decl(void)
   typed = 1;
 
   if (!nolinesflag)
-    fprintf(fattrs, "\n#line %d \"%s\"\n", lineno, basename(infile));
+    fprintf(fattrs, "\n#line %d \"%s\"\n", lineno, mybasename(infile));
   else
     fprintf(fattrs, "\n");
 
@@ -802,7 +802,7 @@ void copy_guard(symbol_list *rule,int stack_offset)
 
   fprintf(fguard, "\ncase %d:\n", nrules);
   if (!nolinesflag)
-    fprintf(fguard, "#line %d \"%s\"\n", lineno, basename(infile));
+    fprintf(fguard, "#line %d \"%s\"\n", lineno, mybasename(infile));
   putc('{', fguard);
 
   count = 0;
@@ -1014,7 +1014,7 @@ void copy_action(symbol_list *rule,int stack_offset)
 
   fprintf(faction, "\ncase %d:\n", nrules);
   if (!nolinesflag)
-    fprintf(faction, "#line %d \"%s\"\n", lineno, basename(infile));
+    fprintf(faction, "#line %d \"%s\"\n", lineno, mybasename(infile));
   putc('{', faction);
 
   count = 1;

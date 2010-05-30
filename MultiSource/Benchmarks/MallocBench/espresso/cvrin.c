@@ -8,7 +8,7 @@
 static bool line_length_error;
 static int lineno;
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -585,7 +585,7 @@ pPLA PLA;
     symbolic_list_t *p2;
     symbolic_t *p1;
 
-    printf("# PLA is %s", basename(PLA->filename));
+    printf("# PLA is %s", mybasename(PLA->filename));
     if (cube.num_binary_vars == cube.num_vars - 1)
 	printf(" with %d inputs and %d outputs\n",
 	    cube.num_binary_vars, cube.part_size[cube.num_vars - 1]);

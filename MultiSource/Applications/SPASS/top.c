@@ -73,7 +73,7 @@
 #include <stdlib.h>
 
 
-static const char *basename(const char *str) {
+static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
 }
@@ -118,7 +118,7 @@ static void top_SigHandler(int Signal)
     printf("\nSPASS %s ", misc_VERSION);
     puts("\nSPASS beiseite: Ran out of time. SPASS was killed.");
     printf("Problem: %s ", 
-	   (top_InputFile != (char*)NULL ? basename(top_InputFile) : "Read from stdin."));
+	   (top_InputFile != (char*)NULL ? mybasename(top_InputFile) : "Read from stdin."));
     printf("\nSPASS derived %d clauses, backtracked %d clauses "
 	   "and kept %d clauses.",
 	   (*top_PROOFSEARCH == (PROOFSEARCH)NULL ? 0 : prfs_DerivedClauses(*top_PROOFSEARCH)),
@@ -1489,7 +1489,7 @@ int main(int argc, const char* argv[])
 	fputs("Completion found.", stdout);
       }
       printf("\nProblem: %s ",
-	     (top_InputFile != (char*)NULL ? basename(top_InputFile) : "Read from stdin."));
+	     (top_InputFile != (char*)NULL ? mybasename(top_InputFile) : "Read from stdin."));
       if (flag_GetFlagValue(Flags, flag_PSTATISTIC)) {
 	clock_StopPassedTime(clock_OVERALL);
 	printf("\nSPASS derived %d clauses,", prfs_DerivedClauses(Search));
