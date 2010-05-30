@@ -34,6 +34,15 @@ Output/%.out-nat: Output/%.native
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
 
+$(PROGRAMS_TO_TEST:%=Output/%.out-simple): \
+Output/%.out-simple: Output/%.simple
+	$(SPEC_SANDBOX) simple-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+             $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../$*.simple $(RUN_OPTIONS)
+	-(cd Output/simple-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+	  $(SPEC_OUTPUT_FILE_FILTER) > $@
+	-cp Output/simple-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
