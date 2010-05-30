@@ -61,6 +61,11 @@
 
 #define MAX_SIZE 1000000
 
+static const char *mybasename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 encode_char(char c) {								/*1*/
   return (32+(c & 63));								/*2*/
 }
@@ -181,7 +186,7 @@ int main(int argc, char *argv[])
   size = read_data(in, inbuf);
   gettimeofday(&pre,0);
   for(i=0;i<1000;i++){
-    outsize = do_encode(inbuf,outbuf, size, argv[1]);
+    outsize = do_encode(inbuf,outbuf, size, mybasename(argv[1]));
    
   }
 
