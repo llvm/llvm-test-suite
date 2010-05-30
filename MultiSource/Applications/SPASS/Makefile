@@ -10,4 +10,5 @@ else
 RUN_OPTIONS="$(PROJ_SRC_DIR)/problem.dfg"
 endif
 
+HASH_PROGRAM_OUTPUT = 1
 include ../../Makefile.multisrc

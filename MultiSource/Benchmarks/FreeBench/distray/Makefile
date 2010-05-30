@@ -8,5 +8,6 @@ RUN_OPTIONS = $(PROJ_SRC_DIR)/ref.in
 else
 RUN_OPTIONS = $(PROJ_SRC_DIR)/test.in
 endif
+HASH_PROGRAM_OUTPUT = 1
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
