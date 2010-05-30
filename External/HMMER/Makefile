@@ -14,6 +14,9 @@ TARGET_FLAGS += -maltivec -faltivec
 LCCFLAGS += -maltivec -faltivec
 endif
 
+# Make sure HMMER temporary file is removed, it will break the test.
+$(shell rm -f $(HMMER_ROOT)/globin.hmm.xxx)
+
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = --fixed 400 --cpu 1 --num 200000 --seed 1158818515 $(HMMER_ROOT)/globin.hmm
 else
