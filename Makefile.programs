@@ -497,6 +497,13 @@ ifdef REQUIRES_EH_SUPPORT
 JIT_OPTS += -enable-correct-eh-support
 endif
 
+# If the program wants its output hashed, add an output filter.
+ifdef ENABLE_HASHED_PROGRAM_OUTPUT
+ifdef HASH_PROGRAM_OUTPUT
+PROGRAM_OUTPUT_FILTER := $(PROGDIR)/HashProgramOutput.sh
+endif
+endif
+
 native:: $(PROGRAMS_TO_TEST:%=Output/%.native)
 stripped-bytecode:: $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc)
 
@@ -508,40 +515,67 @@ ifndef USE_REFERENCE_OUTPUT
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 endif
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-simple): \
 Output/%.out-simple: Output/%.simple
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLI_OPTS) $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(JIT_OPTS) $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLCBETAOPTION) $(JIT_OPTS) $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-opt-beta): \
 Output/%.out-opt-beta: Output/%.opt-beta
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 # The RunSafely.sh script puts an "exit <retval>" line at the end of
 # the program's output. We have to make bugpoint do the same thing
