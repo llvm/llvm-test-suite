@@ -33,8 +33,16 @@ Output/%.simple.compile.report.txt: Output/%.out-simple
 $(PROGRAMS_TO_TEST:%=Output/%.simple.exec.report.txt): \
 Output/%.simple.exec.report.txt: Output/%.exe-simple
 	@echo > $@
-	@-if test -f Output/$*.exe-simple; then \
-	  head -n 100 Output/$*.exe-simple >> $@; \
+	@-is_xfail=0; \
+	for i in $(EXEC_XFAILS); do \
+	   if test "$*" == $$i; then \
+	     is_xfail=1; \
+	   fi; \
+	done; \
+	if test $$is_xfail == 1; then \
+	  echo "TEST-XFAIL: exec $(RELDIR)/$*" >> $@;\
+	  echo "TEST-RESULT-exec-success: xfail" >> $@;\
+	elif test -f Output/$*.exe-simple; then \
 	  echo "TEST-PASS: exec $(RELDIR)/$*" >> $@;\
 	  echo "TEST-RESULT-exec-success: pass" >> $@;\
 	else  \
