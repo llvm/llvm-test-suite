@@ -25,6 +25,8 @@ SPEC_OUTPUT_FILE_FILTER = cat
 # the program in a sandbox (a special directory we create), then we cat all of
 # the outputs together.
 
+ifndef USE_REFERENCE_OUTPUT
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	$(SPEC_SANDBOX) nat-$(RUN_TYPE) $@ $(REF_IN_DIR) \
@@ -33,6 +35,36 @@ Output/%.out-nat: Output/%.native
 	-(cd Output/nat-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/nat-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
+ifdef UPDATE_REFERENCE_OUTPUTS
+ifeq ($(REFERENCE_OUTPUT_KEY),)
+	cp $@ $(PROJ_SRC_DIR)/$*.reference_output
+else
+	if [ ! -f $(PROJ_SRC_DIR)/$*.reference_output ]; then \
+	  echo "error: no normal reference output!"; \
+	  exit 1; \
+	elif (! diff -q $@ $(PROJ_SRC_DIR)/$*.reference_output); then \
+	  cp $@ $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY); \
+	else \
+	  echo "no need to update $(REFERENCE_OUTPUT_KEY) reference," \
+	       "matches normal reference!"; \
+	fi
+endif
+endif
+
+else
+
+# In this case, we opt out of generating the native output and just copy it from
+# a reference output. We accept either a generic reference output, or one
+# specific to the current test configuration (i.e., SMALL_PROBLEM_SIZE).
+Output/%.out-nat: $(KEYED_REFERENCE_OUTPUT_FILE) Output/.dir
+	cp $< $@
+
+Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
+	cp $< $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-simple): \
 Output/%.out-simple: Output/%.simple
@@ -42,6 +74,9 @@ Output/%.out-simple: Output/%.simple
 	-(cd Output/simple-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/simple-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
@@ -51,6 +86,9 @@ Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	-(cd Output/lli-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/lli-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit): \
 Output/%.out-jit: Output/%.llvm.bc $(LLI)
@@ -60,6 +98,9 @@ Output/%.out-jit: Output/%.llvm.bc $(LLI)
 	-(cd Output/jit-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/jit-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-jit-beta): \
 Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
@@ -69,6 +110,9 @@ Output/%.out-jit-beta: Output/%.llvm.bc $(LLI)
 	-(cd Output/jit-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/jit-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc): \
 Output/%.out-llc: Output/%.llc
@@ -78,6 +122,9 @@ Output/%.out-llc: Output/%.llc
 	-(cd Output/llc-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/llc-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-llc-beta): \
 Output/%.out-llc-beta: Output/%.llc-beta
@@ -87,6 +134,9 @@ Output/%.out-llc-beta: Output/%.llc-beta
 	-(cd Output/llc-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/llc-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-opt-beta): \
 Output/%.out-opt-beta: Output/%.opt-beta
@@ -96,6 +146,9 @@ Output/%.out-opt-beta: Output/%.opt-beta
 	-(cd Output/opt-beta-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/opt-beta-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-cbe): \
 Output/%.out-cbe: Output/%.cbe
@@ -105,6 +158,9 @@ Output/%.out-cbe: Output/%.cbe
 	-(cd Output/cbe-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
 	  $(SPEC_OUTPUT_FILE_FILTER) > $@
 	-cp Output/cbe-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 # The RunSafely.sh script puts an "exit <retval>" line at the end of
 # the program's output. We have to make bugpoint do the same thing

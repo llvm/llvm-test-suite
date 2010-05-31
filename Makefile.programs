@@ -79,6 +79,31 @@ ifdef REFERENCE_OUTPUT_FILE
 USE_REFERENCE_OUTPUT := 1
 endif
 
+# Figure out what kind of configuration specific reference output file to look
+# for.
+ifdef SMALL_PROBLEM_SIZE
+REFERENCE_OUTPUT_KEY := small
+else
+ifdef LARGE_PROBLEM_SIZE
+REFERENCE_OUTPUT_KEY := large
+else
+REFERENCE_OUTPUT_KEY :=
+endif
+endif
+
+# If the app wants to USE_REFERENCE_OUTPUT, but hasn't specified a file
+# containing the reference output, default to programname.reference_output.
+ifndef REFERENCE_OUTPUT_FILE
+REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
+ifeq ($(REFERENCE_OUTPUT_KEY),)
+KEYED_REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
+else
+KEYED_REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output.$(REFERENCE_OUTPUT_KEY)
+endif
+else
+KEYED_REFERENCE_OUTPUT_FILE = $(REFERENCE_OUTPUT_FILE)
+endif
+
 # RUNSAFELY - This program simply runs another program.  If the program works
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
@@ -514,12 +539,29 @@ ifndef PROGRAMS_HAVE_CUSTOM_RUN_RULES
 # Rules to build the test output...
 ifndef USE_PRECOMPILED_BYTECODE
 ifndef USE_REFERENCE_OUTPUT
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: Output/%.native
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $< $(RUN_OPTIONS)
 ifdef PROGRAM_OUTPUT_FILTER
 	$(PROGRAM_OUTPUT_FILTER) $@
 endif
+ifdef UPDATE_REFERENCE_OUTPUTS
+ifeq ($(REFERENCE_OUTPUT_KEY),)
+	cp $@ $(PROJ_SRC_DIR)/$*.reference_output
+else
+	if [ ! -f $(PROJ_SRC_DIR)/$*.reference_output ]; then \
+	  echo "error: no normal reference output!"; \
+	  exit 1; \
+	elif (! diff -q $@ $(PROJ_SRC_DIR)/$*.reference_output); then \
+	  cp $@ $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY); \
+	else \
+	  echo "no need to update $(REFERENCE_OUTPUT_KEY) reference," \
+	       "matches normal reference!"; \
+	fi
+endif
+endif
+
 endif
 endif
 
@@ -815,15 +857,12 @@ Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 else 
 ifdef USE_REFERENCE_OUTPUT
 
-# If the app wants to USE_REFERENCE_OUTPUT, but hasn't specified a file
-# containing the reference output, default to programname.reference_output.
-ifndef REFERENCE_OUTPUT_FILE
-REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
-endif
+# In this case, we opt out of generating the native output and just copy it from
+# a reference output. We accept either a generic reference output, or one
+# specific to the current test configuration (i.e., SMALL_PROBLEM_SIZE).
+Output/%.out-nat: $(KEYED_REFERENCE_OUTPUT_FILE) Output/.dir
+	cp $< $@
 
-# In this case, we opt out of generating the native output and just
-# copy it from a reference output
-$(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
 Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
 	cp $< $@
 endif
