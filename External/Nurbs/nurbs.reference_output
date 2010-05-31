@@ -1,0 +1,4 @@
+/Users/ddunbar/llvm-test-suite/TimedExec.sh: line 28: /Volumes/Data/Users/ddunbar/llvm-test-suite/External/Nurbs/Output/nurbs.native: No such file or directory
+/Users/ddunbar/llvm-test-suite/TimedExec.sh: line 28: exec: /Volumes/Data/Users/ddunbar/llvm-test-suite/External/Nurbs/Output/nurbs.native: cannot execute: No such file or directory
+exit 126
+RunSafely.sh detected a failure with these command-line arguments:  500 0 /dev/null Output/nurbs.out-nat Output/nurbs.native /k all timed /t 500 /vsteps 192 /usteps 192 /vcp 20 /ucp 20

@@ -1,0 +1,12 @@
+sizeof(struct Test) = 24
+
+ 72 12 4
+&TestArray[3] - TestArray = 0x48
+Xptr - Aptr          = 0xc
+NextPtr - Xptr       = 0x4
+
+&TestArray[3] - TestArray = 0x48
+Xptr - Aptr          = 0xc
+NextPtr - Xptr       = 0x4
+
+exit 0
