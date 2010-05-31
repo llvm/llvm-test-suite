@@ -12,10 +12,4 @@ endif
 
 HASH_PROGRAM_OUTPUT = 1
 
-ifeq ($(ARCH),x86)
-ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = SPASS
-endif
-endif
-
 include ../../Makefile.multisrc

@@ -124,7 +124,6 @@ static void top_SigHandler(int Signal)
 	   (*top_PROOFSEARCH == (PROOFSEARCH)NULL ? 0 : prfs_DerivedClauses(*top_PROOFSEARCH)),
 	   (*top_PROOFSEARCH == (PROOFSEARCH)NULL ? 0 : prfs_BacktrackedClauses(*top_PROOFSEARCH)),
 	   (*top_PROOFSEARCH == (PROOFSEARCH)NULL ? 0 : prfs_KeptClauses(*top_PROOFSEARCH)));
-    printf("\nSPASS allocated %lu KBytes.", memory_DemandedBytes()/1024);
     fputs("\nSPASS spent\t", stdout);
     clock_PrintTime(clock_OVERALL);
     fputs(" on the problem.\n\t\t", stdout);
@@ -1495,7 +1494,6 @@ int main(int argc, const char* argv[])
 	printf("\nSPASS derived %d clauses,", prfs_DerivedClauses(Search));
 	printf(" backtracked %d clauses", prfs_BacktrackedClauses(Search));
 	printf(" and kept %d clauses.", prfs_KeptClauses(Search));
-	printf("\nSPASS allocated %lu KBytes.", memory_DemandedBytes()/1024);
 	fputs("\nSPASS spent\t", stdout);
 	clock_PrintTime(clock_OVERALL);
 	fputs(" on the problem.\n\t\t", stdout);
