@@ -167,10 +167,12 @@ PROFOUTPUT := $(addsuffix .prof, $(PREFIXED_PROGRAMS_TO_TEST))
 PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Build Program outputs:
+.PRECIOUS: Output/%.out-simple
 .PRECIOUS: Output/%.out-lli Output/%.out-jit Output/%.out-llc Output/%.out-llc-beta
 .PRECIOUS: Output/%.out-nat Output/%.out-cbe Output/%.out-opt-beta
 
 # Build diffs from the output...
+.PRECIOUS: Output/%.diff-simple
 .PRECIOUS: Output/%.diff-lli Output/%.diff-jit Output/%.diff-opt-beta
 .PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe 
 
