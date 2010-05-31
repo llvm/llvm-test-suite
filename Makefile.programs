@@ -546,7 +546,7 @@ Output/%.out-nat: Output/%.native
 ifdef PROGRAM_OUTPUT_FILTER
 	$(PROGRAM_OUTPUT_FILTER) $@
 endif
-ifdef UPDATE_REFERENCE_OUTPUTS
+ifdef UPDATE_REFERENCE_OUTPUT
 ifeq ($(REFERENCE_OUTPUT_KEY),)
 	cp $@ $(PROJ_SRC_DIR)/$*.reference_output
 else
