@@ -7,15 +7,14 @@ LDFLAGS  = -lm
 FP_TOLERANCE = 0.0001
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 1000000 20 32 7
-HASH_PROGRAM_OUTPUT = 1
 else
 ifdef SMALL_PROBLEM_SIZE
 RUN_OPTIONS = 10000 20 32 7
 else
 RUN_OPTIONS = 100000 20 32 7
+endif
+endif
 HASH_PROGRAM_OUTPUT = 1
-endif
-endif
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
