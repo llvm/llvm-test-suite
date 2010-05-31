@@ -28,7 +28,7 @@ endif
 ifeq ($(ARCH),Sparc)
    CPPFLAGS += -DSUN_BSD
 endif
-ifeq ($(TARGET_ARCH),ARM)
+ifeq ($(ARCH),ARM)
   CPPFLAGS += -DHAS_LONGLONG
 endif
 ifeq ($(TARGET_OS),Darwin)

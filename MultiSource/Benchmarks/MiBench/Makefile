@@ -25,7 +25,7 @@ PARALLEL_DIRS  := \
 
 # FIXME: This is a hack, office-ispell requires termio which is less likely to
 # be available on an embedded target. We should have configure support for this.
-ifeq ($(TARGET_ARCH),ARM)
+ifeq ($(ARCH),ARM)
   PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
 endif
 
