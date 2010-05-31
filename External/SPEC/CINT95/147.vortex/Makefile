@@ -6,6 +6,12 @@ STDOUT_FILENAME := vortex.out
 LDFLAGS += -lm
 LIBS    += -lm
 
+ifeq ($(ARCH),x86)
+ifdef USE_REFERENCE_OUTPUT
+EXEC_XFAILS = 147.vortex
+endif
+endif
+
 include ../../Makefile.spec95
 
 ifeq ($(ARCH),Sparc)

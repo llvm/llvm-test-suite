@@ -10,5 +10,11 @@ else
 RUN_OPTIONS = 12000
 endif
 endif
-include $(LEVEL)/MultiSource/Makefile.multisrc
 
+ifeq ($(ARCH),x86)
+ifdef USE_REFERENCE_OUTPUT
+EXEC_XFAILS = netbench-crc
+endif
+endif
+
+include $(LEVEL)/MultiSource/Makefile.multisrc

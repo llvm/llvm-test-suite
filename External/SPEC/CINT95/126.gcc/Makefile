@@ -2,6 +2,12 @@ LEVEL = ../../../..
 
 HASH_PROGRAM_OUTPUT = 1
 
+ifeq ($(ARCH),x86)
+ifdef USE_REFERENCE_OUTPUT
+EXEC_XFAILS = 126.gcc
+endif
+endif
+
 include ../../Makefile.spec95
 
 CPPFLAGS += -DSPEC -idirafter $(SPEC95_ROOT)/CINT95/126.gcc/src/src.alt
