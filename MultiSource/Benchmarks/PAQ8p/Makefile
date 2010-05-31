@@ -9,10 +9,4 @@ else
 RUN_OPTIONS = -4 file1.in
 endif
 
-ifeq ($(ARCH),x86)
-ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = PAQ8p
-endif
-endif
-
 include $(LEVEL)/MultiSource/Makefile.multisrc

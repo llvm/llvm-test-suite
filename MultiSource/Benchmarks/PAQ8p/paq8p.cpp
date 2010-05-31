@@ -677,10 +677,7 @@ public:
     assert(sizeof(int)==4);
   }
   void print() const {  // print time and memory used
-#ifdef LLVM
-    printf("used %d bytes of memory\n",
-      maxmem);
-#else
+#ifndef LLVM
     printf("Time %1.2f sec, used %d bytes of memory\n",
       double(clock()-start_time)/CLOCKS_PER_SEC, maxmem);
 #endif
