@@ -1,5 +1,7 @@
 LEVEL = ../../../..
 
+HASH_PROGRAM_OUTPUT = 1
+
 include ../../Makefile.spec95
 
 CPPFLAGS += -DSPEC -idirafter $(SPEC95_ROOT)/CINT95/126.gcc/src/src.alt

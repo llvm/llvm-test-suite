@@ -13,6 +13,7 @@ endif
 
 RUN_OPTIONS += -meshfile mesa.in -ppmfile mesa.ppm
 CPPFLAGS =
+HASH_PROGRAM_OUTPUT = 1
 
 Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
            accum.c alpha.c alphabuf.c api1.c api2.c attrib.c bitmap.c blend.c \

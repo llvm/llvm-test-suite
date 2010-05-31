@@ -18,6 +18,8 @@ ifeq ($(ENDIAN),big)
   CPPFLAGS += -DHOST_WORDS_BIG_ENDIAN
 endif
 
+HASH_PROGRAM_OUTPUT = 1
+
 include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)

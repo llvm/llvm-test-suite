@@ -1,5 +1,7 @@
 LEVEL = ../../../..
 
+HASH_PROGRAM_OUTPUT = 1
+
 include ../../Makefile.spec2000
 
 ifeq ($(RUN_TYPE),test)
