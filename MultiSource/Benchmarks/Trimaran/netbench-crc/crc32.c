@@ -142,7 +142,7 @@ int main (int argc, char **argv)
     }
   
   fprintf (stdout, "CRC completed for %d packets \n", numpackets);
-  fprintf (stdout, "crc_accum is %lu\n", crc_accum);
+  fprintf (stdout, "crc_accum is %u\n", (unsigned) crc_accum);
   
   return 0;
 }
