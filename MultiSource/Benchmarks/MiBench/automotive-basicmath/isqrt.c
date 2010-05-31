@@ -5,11 +5,11 @@
 
 #define BITSPERLONG 32
 
-#define TOP2BITS(x) ((x & (3L << (BITSPERLONG-2))) >> (BITSPERLONG-2))
+#define TOP2BITS(x) ((x & (3 << (BITSPERLONG-2))) >> (BITSPERLONG-2))
 
 
 /* usqrt:
-    ENTRY x: unsigned long
+    ENTRY x: unsigned int
     EXIT  returns floor(sqrt(x) * pow(2, BITSPERLONG/2))
 
     Since the square root never uses more than half the bits
@@ -42,11 +42,11 @@
         This means it'll be fast on a wide range of processors.
 */
 
-void usqrt(unsigned long x, struct int_sqrt *q)
+void usqrt(unsigned int x, struct int_sqrt *q)
 {
-      unsigned long a = 0L;                   /* accumulator      */
-      unsigned long r = 0L;                   /* remainder        */
-      unsigned long e = 0L;                   /* trial product    */
+      unsigned int a = 0;                   /* accumulator      */
+      unsigned int r = 0;                   /* remainder        */
+      unsigned int e = 0;                   /* trial product    */
 
       int i;
 
@@ -61,7 +61,7 @@ void usqrt(unsigned long x, struct int_sqrt *q)
                   a++;
             }
       }
-      memcpy(q, &a, sizeof(long));
+      memcpy(q, &a, sizeof(int));
 }
 
 #ifdef TEST

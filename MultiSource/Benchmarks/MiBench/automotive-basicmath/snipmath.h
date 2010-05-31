@@ -69,7 +69,7 @@ struct int_sqrt {
                frac;
 };
 
-void usqrt(unsigned long x, struct int_sqrt *q);
+void usqrt(unsigned int x, struct int_sqrt *q);
 
 
 #endif /* SNIPMATH__H */

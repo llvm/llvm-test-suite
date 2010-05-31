@@ -10,7 +10,7 @@ int main(void)
   double X;
   int     solutions;
   int i;
-  unsigned long l = 0x3fed0169L;
+  unsigned int l = 0x3fed0169;
   struct int_sqrt q;
   long n = 0;
 
@@ -100,7 +100,7 @@ int main(void)
 	     i, q.sqrt);
     }
   printf("\n");
-  for (l = 0x3fed0169L; l < 0x3fed4169L; l++)
+  for (l = 0x3fed0169; l < 0x3fed4169; l++)
     {
 	 usqrt(l, &q);
 	 //printf("\nsqrt(%lX) = %X, remainder = %X\n", l, q.sqrt, q.frac);
