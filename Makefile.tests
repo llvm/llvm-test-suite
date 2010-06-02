@@ -18,6 +18,11 @@ DISABLE_AUTO_DEPENDENCIES=1
 
 include ${LEVEL}/Makefile.common
 
+# TARGET_FLAGS can come in from the command line, and tests may add to them,
+# so use an internal target name to combine them. Just using += to add to
+# TARGET_FLAGS in the TEST.* makefiles doesn't work out.
+X_TARGET_FLAGS = $(TARGET_FLAGS) $(TEST_TARGET_FLAGS)
+
 STATS = -stats -time-passes
 
 .PHONY: clean default
@@ -39,27 +44,27 @@ clean::
 
 # Compile from X.c to Output/X.bc
 Output/%.bc: %.c $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # Compile from X.cpp to Output/X.bc
 Output/%.bc: %.cpp $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # Compile from X.cc to Output/X.bc
 Output/%.bc: %.cc $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # Compile from X.C to Output/X.bc
 Output/%.bc: %.C $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # Compile from X.m to Output/X.bc
 Output/%.bc: %.m $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # Compile from X.mm to Output/X.bc
 Output/%.bc: %.mm $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
-	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(TARGET_FLAGS) -c $< -o $@ -emit-llvm
+	-$(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@ -emit-llvm
 
 # LLVM Assemble from X.ll to Output/X.bc.  Because we are coming directly from
 # LLVM source, use the non-transforming assembler.

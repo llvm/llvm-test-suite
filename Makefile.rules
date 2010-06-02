@@ -356,11 +356,11 @@ endif
 # Explicitly specify -m32 / -m64 so there is no mismatch between llvm-gcc
 # default and system compiler default.
 ifeq ($(ARCH),x86)
-TARGET_FLAGS += -m32
+TEST_TARGET_FLAGS += -m32
 endif
 
 ifeq ($(ARCH),x86_64)
-TARGET_FLAGS += -m64
+TEST_TARGET_FLAGS += -m64
 endif
 
 ifeq ($(ARCH),Alpha)
@@ -381,14 +381,14 @@ TARGET_LLIFLAGS += -relocation-model=pic -disable-fp-elim
     TARGET_LLIFLAGS += -code-model=small
   endif
 else
-TARGET_FLAGS += -fomit-frame-pointer
+TEST_TARGET_FLAGS += -fomit-frame-pointer
   ifeq ($(TARGET_OS),Darwin)
-  TARGET_FLAGS += -mdynamic-no-pic
+  TEST_TARGET_FLAGS += -mdynamic-no-pic
   endif
 endif
 
 ifdef EXTRA_OPTIONS
-TARGET_FLAGS += $(EXTRA_OPTIONS)
+TEST_TARGET_FLAGS += $(EXTRA_OPTIONS)
 endif
 
 ifdef SMALL_PROBLEM_SIZE

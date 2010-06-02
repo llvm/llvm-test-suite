@@ -60,7 +60,7 @@ LLVMGCCARCH := $(TARGET_LLVMGCCARCH)
 endif
 
 ifeq ($(ARCH),THUMB)
-TARGET_FLAGS += -mthumb
+TEST_TARGET_FLAGS += -mthumb
 endif
 
 #

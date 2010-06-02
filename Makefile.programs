@@ -410,7 +410,7 @@ Output/%.cbe.c: Output/%.llvm.bc $(LLC)
 
 $(PROGRAMS_TO_TEST:%=Output/%.cbe): \
 Output/%.cbe: Output/%.cbe.c
-	-$(RUNTOOLSAFELY) $(CC) $< -o $@ $(LDFLAGS) $(CFLAGS) $(OPTFLAGS) -fno-strict-aliasing -fno-inline $(TARGET_FLAGS) $(LIBS)
+	-$(RUNTOOLSAFELY) $(CC) $< -o $@ $(LDFLAGS) $(CFLAGS) $(OPTFLAGS) -fno-strict-aliasing -fno-inline $(X_TARGET_FLAGS) $(LIBS)
 
 #
 # Compile a linked program to machine code with LLC.
@@ -461,15 +461,15 @@ ifdef TEST_INTEGRATED_ASSEMBLER
 # Link an LLVM-linked program using the system linker.
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.o
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.o
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
 Output/%.opt-beta: Output/%.opt-beta.o
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 else
 
@@ -477,15 +477,15 @@ else
 #
 $(PROGRAMS_TO_TEST:%=Output/%.llc): \
 Output/%.llc: Output/%.llc.s
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta): \
 Output/%.llc-beta: Output/%.llc-beta.s
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.opt-beta): \
 Output/%.opt-beta: Output/%.opt-beta.s
-	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(TARGET_FLAGS) $(LDFLAGS)
+	-$(PROGRAMLD) $< -o $@ $(LLCLIBS) $(LLCASSEMBLERFLAGS) $(X_TARGET_FLAGS) $(LDFLAGS)
 
 endif
 

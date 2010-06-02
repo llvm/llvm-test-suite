@@ -13,7 +13,7 @@
 ##===----------------------------------------------------------------------===##
 
 TESTNAME = $*
-TARGET_FLAGS = -g -O0
+TEST_TARGET_FLAGS = -g -O0
 .PRECIOUS: Output/%.first.ll Output/%.second.ll
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \

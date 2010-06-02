@@ -15,8 +15,8 @@
 ##===----------------------------------------------------------------------===##
 
 TESTNAME = $*
-TARGET_FLAGS = -g -O0
-LLC_DEBUG_FLAGS = -O0 -regalloc=local
+TEST_TARGET_FLAGS = -g -O0
+LLC_DEBUG_FLAGS = -O0 -regalloc=local $(LLCFLAGS)
 .PRECIOUS: Output/%.first.s Output/%.second.s Output/%.t2b.s Output/%.t1b.s
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
