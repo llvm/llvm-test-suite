@@ -32,6 +32,9 @@ LIBS    = -lstdc++ -lm
 
 include ../../Makefile.spec2006
 
+# When building with -g, opt and llvm-link can take a long time to run.
+RUNTIMELIMIT = 1500
+
 ifdef SMALL_PROBLEM_SIZE
 
 Output/483.xalancbmk.out-nat Output/483.xalancbmk.out-llc Output/483.xalancbmk.out-llc-beta Output/483.xalancbmk.out-opt-beta: Output/small-test.xml Output/100mb.xsd
