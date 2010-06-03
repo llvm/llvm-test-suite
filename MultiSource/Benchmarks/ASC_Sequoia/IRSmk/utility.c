@@ -16,15 +16,15 @@
 //--------------
 void readInput()
 {
-  // Fixed test data.
-  kmin = 2;
-  kmax = 27;
-  jmin = 2;
-  jmax = 27;
-  imin = 2;
-  imax = 27;
-  kp = 841;
-  jp = 29;
+  FILE *fp;
+  if ((fp = fopen("irsmk_input", "r"))==NULL) {
+    printf("***** ERROR \n");
+    printf("      Cannot open input file irsmk_input \n");
+    exit(1);
+  }
+
+  fscanf(fp, "%d %d %d %d %d %d %d %d",
+	 &kmin, &kmax, &jmin, &jmax, &imin, &imax, &kp, &jp);
 
   printf("***** input  \n");
   printf("kmin = %8d     kmax = %8d \n"  
@@ -61,6 +61,9 @@ void readInput()
   printf("***** array bounds  \n");
   printf("i_lb = %10d    i_ub = %10d    x_size = %10d \n \n \n",
 	  i_lb, i_ub, x_size);
+
+  fclose(fp);
+
 }
 
 
