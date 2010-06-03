@@ -34,10 +34,4 @@ endif
 
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 
-ifeq ($(ARCH),x86)
-ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = 2002-05-19-DivTest
-endif
-endif
-
 include $(LEVEL)/SingleSource/Makefile.singlesrc
