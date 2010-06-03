@@ -8,9 +8,9 @@
 #include <math.h>
 #include "health.h"
 
-float my_rand(long idum) 
+float my_rand(long long idum)
 {
-  long  k;
+  long long  k;
   float answer;
   
   idum ^= MASK;

@@ -118,7 +118,7 @@ struct List *check_patients_assess(struct Village *village, struct List *list) {
   float rand;
   struct Patient *p;
   struct List *up = NULL;
-  long s;
+  long long s;
   int label, t;
 
   while (list != NULL) {
@@ -193,7 +193,7 @@ void put_in_hosp(struct Hosp *hosp, struct Patient *patient) {
 
 struct Patient *generate_patient(struct Village *village) 
 {
-  long            s,newseed; 
+  long long       s,newseed;
   struct Patient *patient;
   float rand;
   int label;

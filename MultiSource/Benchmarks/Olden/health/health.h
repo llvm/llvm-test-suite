@@ -69,7 +69,7 @@ struct Village {
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
-  long                   seed;
+  long long              seed;
 #else
   struct Hosp            hosp;   
   long                   seed;
@@ -82,7 +82,7 @@ struct Village {
 
 struct Village *alloc_tree(int level, int label, struct Village *back);
 void dealwithargs(int argc, char *argv[]);
-float my_rand(long idum);
+float my_rand(long long idum);
 struct Patient *generate_patient(struct Village *village);
 void put_in_hosp(struct Hosp *hosp, struct Patient *patient);
 void addList(struct List *list, struct Patient *patient);
