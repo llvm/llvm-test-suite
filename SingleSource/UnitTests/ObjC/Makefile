@@ -8,10 +8,11 @@ DIRS :=
 LDFLAGS += -lobjc -framework Foundation
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 
-ifeq ($(ARCH),x86)
-ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = exceptions print-class-info
+ifneq ($(ARCH),x86)
+PROGRAMS_TO_SKIP += print-class-info-x86-32
 endif
+ifneq ($(ARCH),x86_64)
+PROGRAMS_TO_SKIP += print-class-info-x86-64
 endif
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
