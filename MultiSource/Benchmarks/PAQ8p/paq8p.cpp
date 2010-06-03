@@ -636,6 +636,11 @@ inline int min(int a, int b) {return a<b?a:b;}
 inline int max(int a, int b) {return a<b?b:a;}
 #endif
 
+static const char *mybasename(const char *str) {
+  const char *base = strrchr(str, '/');
+  return base ? base+1 : str;
+}
+
 // Error handler: print message if any, and exit
 void quit(const char* message=0) {
   throw message;
@@ -3970,7 +3975,7 @@ void compress(const char* filename, long filesize, Encoder& en) {
   FILE *f=fopen(filename, "rb");
   if (!f) perror(filename), quit();
   long start=en.size();
-  printf("%s %ld -> ", filename, filesize);
+  printf("%s %ld -> ", mybasename(filename), filesize);
 
   // Transform and test in blocks
   const int BLOCK=MEM*64;
@@ -4044,7 +4049,7 @@ void decompress(const char* filename, long filesize, Encoder& en) {
   // Test if output file exists.  If so, then compare.
   FILE* f=fopen(filename, "rb");
   if (f) {
-    printf("Comparing %s %ld -> ", filename, filesize);
+    printf("Comparing %s %ld -> ", mybasename(filename), filesize);
     bool found=false;  // mismatch?
     for (int i=0; i<filesize; ++i) {
       printStatus(i);
@@ -4081,7 +4086,7 @@ void decompress(const char* filename, long filesize, Encoder& en) {
 
     // Decompress
     if (f) {
-      printf("Extracting %s %ld -> ", filename, filesize);
+      printf("Extracting %s %ld -> ", mybasename(filename), filesize);
       for (int i=0; i<filesize; ++i) {
         printStatus(i);
         putc(decode(en), f);
@@ -4093,7 +4098,7 @@ void decompress(const char* filename, long filesize, Encoder& en) {
     // Can't create, discard data
     else {
       perror(filename);
-      printf("Skipping %s %ld -> ", filename, filesize);
+      printf("Skipping %s %ld -> ", mybasename(filename), filesize);
       for (int i=0; i<filesize; ++i) {
         printStatus(i);
         decode(en);
@@ -4337,7 +4342,7 @@ int paqmain(int argc, char** argv) {
       fprintf(archive, PROGNAME " -%d\r\n%s\x1A",
         level, header_string.c_str());
       printf("Creating archive %s with %d file(s)...\n",
-        archiveName.c_str(), files);
+        mybasename(archiveName.c_str()), files);
 
       // Fill fname[files], fsize[files] with input filenames and sizes
       fname.resize(files);
@@ -4373,7 +4378,7 @@ int paqmain(int argc, char** argv) {
       // Fill fname[files], fsize[files] with output file names and sizes
       while (getline(archive)) ++files;  // count files
       printf("Extracting %d file(s) from %s -%d\n", files,
-        archiveName.c_str(), level);
+        mybasename(archiveName.c_str()), level);
       long header_size=ftell(archive);
       filenames.resize(header_size+4);  // copy of header
       rewind(archive);
