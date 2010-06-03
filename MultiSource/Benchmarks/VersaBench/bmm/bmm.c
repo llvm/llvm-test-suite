@@ -148,10 +148,10 @@ int NUM, BLOCK;
 
 
 /* Use Linear congruential PRNG */
-int my_rand_r(int *seedp)
+unsigned my_rand_r(unsigned *seedp)
 {
   /* Knuth & Lewis */
-  unsigned x = *seedp * 1664525 + 1013904223;
+  unsigned x = *seedp * 1664525u + 1013904223u;
   *seedp = x;
   return (x >> 16) & 0x7fff;
 }
@@ -159,11 +159,11 @@ int my_rand_r(int *seedp)
 
 void init() {
   int   i,j;
-  int random_seed = 1;
+  unsigned random_seed = 1;
   for (i=0 ; i < SIZE ; i++) {
     for (j=0 ; j < SIZE; j++) {
-      a[i][j] = (my_rand_r(&random_seed) >> j-i) & 0xF;
-      b[i][j] = (my_rand_r(&random_seed) << i+j) & 0xF;
+      a[i][j] = (my_rand_r(&random_seed) >> ((j-i) & 31)) & 0xF;
+      b[i][j] = (my_rand_r(&random_seed) << ((i+j) & 31)) & 0xF;
     }
   }
 }
