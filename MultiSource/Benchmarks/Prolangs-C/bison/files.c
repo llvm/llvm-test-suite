@@ -158,8 +158,13 @@ void openfiles(void)
 
   finput = tryopen(infile, "r");
 
+/* JSO: Don't attempt to read the skeleton file for the LLVM test suite. This
+   file is simply appended to the end of the output, so it shouldn't affect the
+   test */
+#if 0
   filename = (char *) getenv ("BISON_SIMPLE");
   fparser = tryopen(filename ? filename : PFILE, "r");
+#endif
 
   if (verboseflag)
     {
