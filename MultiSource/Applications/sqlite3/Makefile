@@ -7,12 +7,11 @@ CPPFLAGS += -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STD
 LDFLAGS =
 STDIN_FILENAME = $(PROJ_SRC_DIR)/commands
 RUN_OPTIONS = :memory:
+FP_TOLERANCE = 1.0e-9
 
 include $(LEVEL)/Makefile.config
 
 include ../../Makefile.multisrc
-#compare debug output
-DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
 
 # the input files are generated from a tcl script
 # it needs to be generated before sqlite is run
