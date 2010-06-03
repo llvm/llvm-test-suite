@@ -3052,7 +3052,7 @@ struct lemon *lemp;
   }else if( access(templatename,004)==0 ){
     tpltname = templatename;
   }else{
-    tpltname = pathsearch(lemp->argv0,templatename,0);
+    tpltname = pathsearch(lemp->filename,templatename,0);
   }
   if( tpltname==0 ){
     fprintf(stderr,"Can't find the parser driver template file \"%s\".\n",
