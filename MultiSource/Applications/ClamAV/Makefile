@@ -24,7 +24,7 @@ Source = $(addprefix libclamav_, \
 #	 LzmaStateDecode.c) \
 
 PROG = clamscan
-CPPFLAGS += -DHAVE_CONFIG_H -I.
+CPPFLAGS += -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS
 LDFLAGS = -lz
 RUN_OPTIONS = --debug --exclude-dir .svn --verbose -d$(PROJ_SRC_DIR)/dbdir -r $(PROJ_SRC_DIR)/inputs/*
 
