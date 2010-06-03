@@ -175,7 +175,7 @@ int main(int argc,char*argv[]){
 	int count=childs, dec=lvl;
 	while(--dec > 1) count=(count*childs)+childs;
 	++count;
-	std::cerr << count << " spheres,claiming " << (count*sizeof(node_t))/(1024.*1024) << " MB." << std::endl;
+	std::cerr << count << " spheres.";
 	pool=new node_t[count];  /* raw */
 	end=pool+count;
 	create(pool,lvl,count,v_t(0,0,0),v_t(+.25,+1,-.5).norm(),1.); /* cooked */
