@@ -22,11 +22,11 @@
 
 void allocMem(RadiationData_t *);
 void init(Domain_t *, RadiationData_t *, double *, double *);
-void readInput();
+void readInput(const char *);
 void rmatmult3(Domain_t *, RadiationData_t *, double *, double *);
 
 
-int main()
+int main(int argc, const char *argv[])
 {
   Domain_t domain;
   Domain_t *domain_ptr = &domain;
@@ -50,8 +50,12 @@ int main()
 
   printf ("\nSequoia Benchmark Version 1.0\n\n");
 
+  if (argc != 2) {
+    printf("Usage: %s <input>\n", argv[0]);
+    return 1;
+  }
   // 
-  readInput();
+  readInput(argv[1]);
 
   b = (double *)malloc(i_ub*sizeof(double));
   x = (double *)malloc(x_size*sizeof(double));

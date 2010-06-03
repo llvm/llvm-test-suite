@@ -14,12 +14,12 @@
 //--------------
 // read input date
 //--------------
-void readInput()
+void readInput(const char *filename)
 {
   FILE *fp;
-  if ((fp = fopen("irsmk_input", "r"))==NULL) {
+  if ((fp = fopen(filename, "r"))==NULL) {
     printf("***** ERROR \n");
-    printf("      Cannot open input file irsmk_input \n");
+    printf("      Cannot open input file: %s\n", filename);
     exit(1);
   }
 
