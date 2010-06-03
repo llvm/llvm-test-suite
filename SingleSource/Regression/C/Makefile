@@ -2,7 +2,7 @@ LEVEL = ../../..
 
 ifeq ($(ARCH),x86)
 ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = casts globalrefs
+EXEC_XFAILS = casts
 endif
 endif
 

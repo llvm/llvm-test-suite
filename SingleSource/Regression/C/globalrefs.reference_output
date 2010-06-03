@@ -1,12 +1,10 @@
-sizeof(struct Test) = 24
+ 8 8
+&TestArray[3] - TestArray = 0x3
+Xptr - Aptr          = 0x8
+NextPtr - Xptr       = 0x8
 
- 72 12 4
-&TestArray[3] - TestArray = 0x48
-Xptr - Aptr          = 0xc
-NextPtr - Xptr       = 0x4
-
-&TestArray[3] - TestArray = 0x48
-Xptr - Aptr          = 0xc
-NextPtr - Xptr       = 0x4
+&TestArray[3] - TestArray = 0x3
+Xptr - Aptr          = 0x8
+NextPtr - Xptr       = 0x8
 
 exit 0

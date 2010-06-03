@@ -11,8 +11,9 @@
 #include <inttypes.h>
 
 struct test {
-  long A;
+  int A;
   struct { unsigned X; unsigned Y; } S;
+  int B;
   struct test* next;
 };
 
@@ -37,9 +38,6 @@ main(int argc, char** argv)
 {
   unsigned long diff1, diff2, diff3, diff4; 
 
-  printf("sizeof(struct Test) = %d\n\n", (int)sizeof(struct test));
-
-  printdiff(&TestArray[3], TestArray);
   printdiff(&Test1.S.Y, &Test1.A);
   printdiff(&Test1.next, &Test1.S.Y);
   printf("\n");
@@ -48,7 +46,9 @@ main(int argc, char** argv)
   diff3 = (unsigned long) &Test1.S.Y - (unsigned long) &Test1.A;
   diff4 = (unsigned long) &Test1.next - (unsigned long) &Test1.S.Y;
 
-  printf("&TestArray[3] - TestArray = 0x%lx\n", diff1);
+  if (diff1 != (diff1 / sizeof(*TestArray)) * sizeof(*TestArray))
+    return 1;
+  printf("&TestArray[3] - TestArray = 0x%lx\n", diff1 / sizeof(*TestArray));
   printf("Xptr - Aptr          = 0x%lx\n", diff3);
   printf("NextPtr - Xptr       = 0x%lx\n\n", diff4);
 
@@ -56,7 +56,9 @@ main(int argc, char** argv)
   diff3 = (unsigned long) Yptr - (unsigned long) Aptr;
   diff4 = (unsigned long) NextPtr - (unsigned long) Yptr;
 
-  printf("&TestArray[3] - TestArray = 0x%lx\n", diff1);
+  if (diff1 != (diff1 / sizeof(*TestArray)) * sizeof(*TestArray))
+    return 1;
+  printf("&TestArray[3] - TestArray = 0x%lx\n", diff1 / sizeof(*TestArray));
   printf("Xptr - Aptr          = 0x%lx\n", diff3);
   printf("NextPtr - Xptr       = 0x%lx\n\n", diff4);
 
