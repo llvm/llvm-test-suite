@@ -4234,6 +4234,10 @@ int expand(String& archive, String& s, const char* fname, int base) {
 // To compress to file1.paq8p: paq8p [-n] file1 [file2...]
 // To decompress: paq8p file1.paq8p [output_dir]
 int paqmain(int argc, char** argv) {
+  // LLVM hack: Use the executable name as a suffix to allow nat and llc tests
+  // to run in parallel.
+  const char *suffix = mybasename(argv[0]);
+
   bool pause=argc<=2;  // Pause when done?
   try {
 
@@ -4292,17 +4296,17 @@ int paqmain(int argc, char** argv) {
     Mode mode=COMPRESS;
     String archiveName(mybasename(argv[1]));
     {
-      const int prognamesize=strlen(PROGNAME);
+      const int prognamesize=strlen(suffix);
       const int arg1size=strlen(argv[1]);
       if (arg1size>prognamesize+1 && argv[1][arg1size-prognamesize-1]=='.'
-          && equals(PROGNAME, argv[1]+arg1size-prognamesize)) {
+          && equals(suffix, argv[1]+arg1size-prognamesize)) {
         mode=DECOMPRESS;
       }
       else if (doExtract)
         mode=DECOMPRESS;
       else {
         archiveName+=".";
-        archiveName+=PROGNAME;
+        archiveName+=suffix;
       }
     }
    
@@ -4341,8 +4345,7 @@ int paqmain(int argc, char** argv) {
       if (!archive) perror(archiveName.c_str()), quit();
       fprintf(archive, PROGNAME " -%d\r\n%s\x1A",
         level, header_string.c_str());
-      printf("Creating archive %s with %d file(s)...\n",
-        archiveName.c_str(), files);
+      printf("Creating archive with %d file(s)...\n", files);
 
       // Fill fname[files], fsize[files] with input filenames and sizes
       fname.resize(files);
@@ -4377,8 +4380,7 @@ int paqmain(int argc, char** argv) {
 
       // Fill fname[files], fsize[files] with output file names and sizes
       while (getline(archive)) ++files;  // count files
-      printf("Extracting %d file(s) from %s -%d\n", files,
-        archiveName.c_str(), level);
+      printf("Extracting %d file(s) from archive -%d\n", files, level);
       long header_size=ftell(archive);
       filenames.resize(header_size+4);  // copy of header
       rewind(archive);
@@ -4486,7 +4488,8 @@ int main(int argc, char **argv)
   argv++;
   while(argc && argv[0][0] == '-') {argc--; argv++;}  
   String archiveName(argv[0]);
-  archiveName += "."PROGNAME;
+  archiveName += ".";
+  archiveName += mybasename(deargv[0]);
   deargv[2] = strdup(archiveName.c_str());
   if (paqmain(3, deargv))
     return 1;
