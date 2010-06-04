@@ -4086,7 +4086,7 @@ void decompress(const char* filename, long filesize, Encoder& en) {
 
     // Decompress
     if (f) {
-      printf("Extracting %s %ld -> ", mybasename(filename), filesize);
+      printf("Extracting %s %ld -> ", filename, filesize);
       for (int i=0; i<filesize; ++i) {
         printStatus(i);
         putc(decode(en), f);
@@ -4098,7 +4098,7 @@ void decompress(const char* filename, long filesize, Encoder& en) {
     // Can't create, discard data
     else {
       perror(filename);
-      printf("Skipping %s %ld -> ", mybasename(filename), filesize);
+      printf("Skipping %s %ld -> ", filename, filesize);
       for (int i=0; i<filesize; ++i) {
         printStatus(i);
         decode(en);
@@ -4290,7 +4290,7 @@ int paqmain(int argc, char** argv) {
 
     // Compress or decompress?  Get archive name
     Mode mode=COMPRESS;
-    String archiveName(argv[1]);
+    String archiveName(mybasename(argv[1]));
     {
       const int prognamesize=strlen(PROGNAME);
       const int arg1size=strlen(argv[1]);
@@ -4342,7 +4342,7 @@ int paqmain(int argc, char** argv) {
       fprintf(archive, PROGNAME " -%d\r\n%s\x1A",
         level, header_string.c_str());
       printf("Creating archive %s with %d file(s)...\n",
-        mybasename(archiveName.c_str()), files);
+        archiveName.c_str(), files);
 
       // Fill fname[files], fsize[files] with input filenames and sizes
       fname.resize(files);
@@ -4378,7 +4378,7 @@ int paqmain(int argc, char** argv) {
       // Fill fname[files], fsize[files] with output file names and sizes
       while (getline(archive)) ++files;  // count files
       printf("Extracting %d file(s) from %s -%d\n", files,
-        mybasename(archiveName.c_str()), level);
+        archiveName.c_str(), level);
       long header_size=ftell(archive);
       filenames.resize(header_size+4);  // copy of header
       rewind(archive);
