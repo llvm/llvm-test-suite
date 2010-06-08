@@ -38,6 +38,7 @@ Output/%.first.s: Output/%.t1c.s Output/.dir $(LLC)
 	  | grep -v '\.short' \
 	  | grep -v '\.asci' \
 	  | grep -v '\.quad' \
+	  | grep -v '\.align' \
 	  | grep -v '## DW_AT' \
 	  | grep -v '## Abbrev' \
 	  | grep -v '## End Of Children' \
@@ -53,7 +54,11 @@ Output/%.first.s: Output/%.t1c.s Output/.dir $(LLC)
 	  | grep -v 'debug_loc' \
 	  | grep -v 'Lpubtypes' \
 	  | grep -v 'Lpubnames' \
-	  | grep -v 'Linfo_' > $@
+	  | grep -v 'Linfo_' \
+	  | grep -v 'Lfunc_begin' \
+	  | grep -v 'Lfunc_end' \
+	  | grep -v 'Ldebug_frame_begin' \
+	  | grep -v 'Ldebug_frame_end' > $@
 
 Output/%.t2a.bc: Output/%.linked.rbc Output/.dir $(LOPT)
 	$(LOPT) -strip-nondebug $< -f -o $@
@@ -70,6 +75,7 @@ Output/%.second.s: Output/%.t2c.s Output/.dir
 	  | grep -v '\.short' \
 	  | grep -v '\.asci' \
 	  | grep -v '\.quad' \
+	  | grep -v '\.align' \
 	  | grep -v '## DW_AT' \
 	  | grep -v '## Abbrev' \
 	  | grep -v '## End Of Children' \
@@ -85,7 +91,11 @@ Output/%.second.s: Output/%.t2c.s Output/.dir
 	  | grep -v 'debug_loc' \
 	  | grep -v 'Lpubtypes' \
 	  | grep -v 'Lpubnames' \
-	  | grep -v 'Linfo_' > $@
+	  | grep -v 'Linfo_' \
+	  | grep -v 'Lfunc_begin' \
+	  | grep -v 'Lfunc_end' \
+	  | grep -v 'Ldebug_frame_begin' \
+	  | grep -v 'Ldebug_frame_end' > $@
 
 Output/%.diff: Output/%.first.s Output/%.second.s
 	@-if diff $^ > $@; then \
