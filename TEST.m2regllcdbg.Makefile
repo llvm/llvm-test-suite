@@ -29,7 +29,7 @@ Output/%.t1b.bc: Output/%.t1a.bc Output/.dir $(LOPT)
 	$(LOPT) -mem2reg $< -f -o $@
 
 Output/%.t1c.s: Output/%.t1b.bc Output/.dir $(LLC)
-	$(LLC) $(LLC_DEBUG_FLAGS) $< -f -o $@
+	$(LLC) $(LLC_DEBUG_FLAGS) $< -o $@
 
 Output/%.first.s: Output/%.t1c.s Output/.dir $(LLC)
 	grep -v '\.long' < $< | grep -v '\.byte' | grep -v '\.short' | grep -v '\.asci' | grep -v '\.quad' | grep -v '## DW_AT' | grep -v '## Abbrev' | grep -v '## End Of Children' | grep -v '## Extended Op' | grep -v 'Ltmp[0-9]' | grep -v '## DIE' | grep -v '## $$' | grep -v '^#.*' | grep -v '^$$' > $@
@@ -41,7 +41,7 @@ Output/%.t2b.bc: Output/%.t2a.bc Output/.dir $(LOPT)
 	$(LOPT) -mem2reg $< -f -o $@
 
 Output/%.t2c.s: Output/%.t2b.bc Output/.dir $(LLC)
-	$(LLC) $(LLC_DEBUG_FLAGS) $< -f -o $@
+	$(LLC) $(LLC_DEBUG_FLAGS) $< -o $@
 
 Output/%.second.s: Output/%.t2c.s Output/.dir
 	grep -v DEBUG_VALUE < $< | grep -v '\.long' | grep -v '\.byte' | grep -v '\.short' | grep -v '\.asci' | grep -v '## DW_AT' | grep -v '## Abbrev' |  grep -v '## End Of Children' | grep -v '## Extended Op' | grep -v 'Ltmp[0-9]' | grep -v '## DIE' | grep -v '## $$' | grep -v '\.quad' | grep -v '^#' | grep -v '^$$' > $@
