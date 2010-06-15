@@ -13,9 +13,9 @@ int main() {
   intptr_t ret;
   pthread_create(&t, NULL, f, NULL);
   pthread_join(t, (void **) &ret);
-  printf("Thread 1: %" PRIdPTR "\n",ret);
+  printf("Thread 1: %d\n", (int) ret);
   pthread_create(&t, NULL, f, NULL);
   pthread_join(t, (void **) &ret);
-  printf("Thread 2: %" PRIdPTR "\n",ret);
+  printf("Thread 2: %d\n", (int) ret);
   return 0;
 }
