@@ -1,4 +1,4 @@
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <tr1/memory>
 // rdar: //7501812
 
@@ -56,10 +56,8 @@ int main()
     ValuePtr valuePtr(new Value(42));
     ValueUser* valueUser = [[ValueUser alloc] initWithValue:valuePtr];
     
-#ifdef __clang__
-    ::NSLog(@"The value's amount is %d", (valueUser.value)->GetAmount());
-#endif
-    ::NSLog(@"The value's amount is %d", [valueUser value]->GetAmount());
+    printf("The value's amount is %d\n", (valueUser.value)->GetAmount());
+    printf("The value's amount is %d\n", [valueUser value]->GetAmount());
     
     [valueUser release];
     
