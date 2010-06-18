@@ -31,6 +31,9 @@ endif
 ifeq ($(ARCH),ARM)
   CPPFLAGS += -DHAS_LONGLONG
 endif
+ifeq ($(ARCH),THUMB)
+  CPPFLAGS += -DHAS_LONGLONG
+endif
 ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DUNIX -DLINUX
 endif
