@@ -56,7 +56,9 @@ int main()
     ValuePtr valuePtr(new Value(42));
     ValueUser* valueUser = [[ValueUser alloc] initWithValue:valuePtr];
     
-    printf("The value's amount is %d\n", (valueUser.value)->GetAmount());
+#ifdef __clang__
+    volatile int GetAmountVal = (valueUser.value)->GetAmount();
+#endif
     printf("The value's amount is %d\n", [valueUser value]->GetAmount());
     
     [valueUser release];
