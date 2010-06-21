@@ -1,48 +1,24 @@
-.endnum = -1; };
+#include <stdio.h>
 
-%%
-
-void
-yyerror(char* s) {
-    fprintf(stderr,"%s\n",s);
-    }
-
-int
-main() {
-    printf("1\t");
-    yyparse();
-    return 1;
-    }
-#line 751 "parse.y.in"
+#ifndef __STDC__
+#define const
+#endif
 
 
-void
-yyerror(char* s) {
-    fprintf(stderr,"%s\n",s);
-    }
 
-int
-main() {
-    printf("1\t");
-    yyparse();
-    return 1;
-    }
-            {   };
+#define	YYFINAL		152
+#define	YYFLAG		-32768
+#define	YYNTBASE	48
 
-writestmt: WRITELN '(' exp ')'
-        { if ((  ')'
-         { ID
-        {   /* Same as above up until where 'stype' is */
-	   symTabEntry find;
-	   if (lookup(mt;
+#define YYTRANSLATE(x) ((unsigned)(x) <= 291 ? yytranslate[x] : 84)
 
-procdcls : procdcls procdcl | /* empty */ ;
-
-procdcl : PROC ID 
-        {  
-	   symTabEntry find;
-
-	   if (lookup(  2,     2,     2,     2,     2,     2,    42,    41,     2,
+static const char yytranslate[] = {     0,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,    43,
+    44,    38,    35,    45,    36,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,    42,    41,     2,
     29,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -211,56 +187,56 @@ static const short yycheck[] = {     5,
 };
 #define YYPURE 1
 
-%{
-#include <malloc.h>
-#include <string.h>
-#include "attr.h"
-int yylex();
-void yyerror(char* s);
-#include "symtab.h"
-/* Global variables */
-scopeEntry current = NULL;  /* Points to current scope */
-scopeEntry temp = NULL;     /* Used temporarily for adding and/or
-			       removing scopes */
-%}
+#line 751 "parse.y.in"
 
-%union { int number;
-	 tokentype token;
-	 BaseType basetype;
-	 typeinfo totaltype;
-	 namelist names;
-	 expnode exps;
-	 explist elist;}
 
-%token PROG PERIOD PROC FUNC VAR ARRAY RANGE OF
-%token INT CHAR BOOL WRITELN THEN ELSE IF DO WHILE
-%token BEG END ASG NOT TRUE_TOK FALSE_TOK
-%token <token> ID CCONST ICONST
+void
+yyerror(char* s) {
+    fprintf(stderr,"%s\n",s);
+    }
 
-%type <basetype> stype
-%type <totaltype> type exp constant lhs var
-%type <names> idlist vardcl vardcls parmlist parms parm variables
-%type <elist> explist optexplist
-
-%start program
-%nonassoc '=' NEQ LT LEQ GEQ GT
-%left '+' '-' OR
-%left '*' AND DIV
-%right NOT
-
-%%
-program : PROG ID
-        { enterblock(); }
-        ';' block PERIOD 
-        {leaveblock();};
-
-block : variables
-      {
-      /* Seen all the variables so declare them in the current scope */
-	 symTabEntry s;
-         namenode tmpnode;
-
-	 tmpnode = 
+int
+main() {
+    printf("1\t");
+    yyparse();
+    return 1;
+    }
+ck the parameters */
+		 int check;
+		 check = checkparams( s -> formals , yyp->yyvsp[0].elist );
+	      }
+	   }
+        ;
+    break;}
+case 44:
+#line 302 "parse.y.in"
+{  /* only booleans */
+	   if (yyp->yyvsp[0].totaltype.basetype != BOOLTYPE)
+	      printf("\n***Error: exp in if stmt must be boolean\n");
+	;
+    break;}
+case 46:
+#line 310 "parse.y.in"
+{  /* only booleans */
+	   if (yyp->yyvsp[0].totaltype.basetype != BOOLTYPE)
+	      printf("\n***Error: exp in while stmt must be boolean\n");
+	;
+    break;}
+case 48:
+#line 318 "parse.y.in"
+{  /* Make sure the assignment types match */
+           if (!(match(yyp->yyvsp[-1].totaltype,yyp->yyvsp[0].totaltype)))
+	      printf("\n***Error: assignment types do not match\n");
+        ;
+    break;}
+case 49:
+#line 324 "parse.y.in"
+{ yyval.totaltype = yyp->yyvsp[-1].totaltype; ;
+    break;}
+case 50:
+#line 327 "parse.y.in"
+{ yyval.elist.firstexp = NULL;   /* No optexplist = NULL list */
+	  yyval.elist.lastexp = NULL; ;
     break;}
 case 51:
 #line 330 "parse.y.in"
