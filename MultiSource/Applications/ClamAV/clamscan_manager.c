@@ -979,8 +979,10 @@ int scanfile(const char *filename, struct cl_engine *engine, const struct passwd
 	argument = opt_firstarg(opt, "exclude", &optnode);
 	while(argument) {
 	    if(match_regex(filename, argument) == 1) {
+#if 0
 		if(!printinfected)
 		    logg("%s: Excluded\n", filename);
+#endif
 		return 0;
 	    }
 	    argument = opt_nextarg(&optnode, "exclude");
