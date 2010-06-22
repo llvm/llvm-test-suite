@@ -56,14 +56,20 @@ endif
 
 else
 
-# In this case, we opt out of generating the native output and just copy it from
-# a reference output. We accept either a generic reference output, or one
-# specific to the current test configuration (i.e., SMALL_PROBLEM_SIZE).
-Output/%.out-nat: $(KEYED_REFERENCE_OUTPUT_FILE) Output/.dir
-	cp $< $@
+# Otherwise, pick the best reference output based on
+# 'progamname.reference_output'.
+#
+# Note that this rule needs to be in both Makefile.programs and Makefile.spec.
+Output/%.out-nat: Output/.dir
+	-if [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY)" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY) $@; \
+	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output $@; \
+	else \
+	  printf "ERROR: %s: %s\n" "NO REFERENCE OUTPUT" "$(PROJ_SRC_DIR)/$*.reference_output" > $@; \
+	  cat $@; \
+	fi
 
-Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
-	cp $< $@
 endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-simple): \

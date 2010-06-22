@@ -96,19 +96,6 @@ REFERENCE_OUTPUT_KEY :=
 endif
 endif
 
-# If the app wants to USE_REFERENCE_OUTPUT, but hasn't specified a file
-# containing the reference output, default to programname.reference_output.
-ifndef REFERENCE_OUTPUT_FILE
-REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
-ifeq ($(REFERENCE_OUTPUT_KEY),)
-KEYED_REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output
-else
-KEYED_REFERENCE_OUTPUT_FILE = $(PROJ_SRC_DIR)/%.reference_output.$(REFERENCE_OUTPUT_KEY)
-endif
-else
-KEYED_REFERENCE_OUTPUT_FILE = $(REFERENCE_OUTPUT_FILE)
-endif
-
 # RUNSAFELY - This program simply runs another program.  If the program works
 # correctly, this script has no effect, otherwise it will do things like print a
 # stack trace of a core dump.  It always returns "successful" so that tests will
@@ -860,16 +847,34 @@ $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
 else 
+
+# Rules to support USE_REFERENCE_OUTPUT.
 ifdef USE_REFERENCE_OUTPUT
 
-# In this case, we opt out of generating the native output and just copy it from
-# a reference output. We accept either a generic reference output, or one
-# specific to the current test configuration (i.e., SMALL_PROBLEM_SIZE).
-Output/%.out-nat: $(KEYED_REFERENCE_OUTPUT_FILE) Output/.dir
-	cp $< $@
+# If a reference output file is specified, use that.
+ifdef REFERENCE_OUTPUT_FILE
 
 Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
 	cp $< $@
+
+else
+
+# Otherwise, pick the best reference output based on
+# 'progamname.reference_output'.
+#
+# Note that this rule needs to be in both Makefile.programs and Makefile.spec.
+Output/%.out-nat: Output/.dir
+	-if [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY)" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY) $@; \
+	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output $@; \
+	else \
+	  printf "ERROR: %s: %s\n" "NO REFERENCE OUTPUT" "$(PROJ_SRC_DIR)/$*.reference_output" > $@; \
+	  cat $@; \
+	fi
+
+endif
+
 endif
 endif
 
