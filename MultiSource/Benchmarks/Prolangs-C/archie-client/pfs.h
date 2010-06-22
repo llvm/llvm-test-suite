@@ -210,7 +210,7 @@ struct acl {
     char		*atype;           /* Authentication type            */
     char		*rights;          /* Rights                         */
     char		*principals;      /* Authorized principals          */
-    struct restrict     *restrictions;    /* Restrictions on use            */
+    struct restrict_    *restrictions;    /* Restrictions on use            */
     struct acl		*previous;        /* Previous elt in linked list    */
     struct acl		*next;		  /* Next element in linked list    */
 };
@@ -232,7 +232,7 @@ typedef struct acl ACL_ST;
 
 /* Definition of structure contining access restrictions */
 /* for future extensions                                 */
-struct restrict {
+struct restrict_ {
     struct acl		*previous;        /* Previous elt in linked list    */
     struct acl		*next;		  /* Next element in linked list    */
 };
