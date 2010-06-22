@@ -1,0 +1,2 @@
+exit 134
+RunSafely.sh detected a failure with these command-line arguments:  500 1 /dev/null Output/initp1.out-nat Output/initp1.native
