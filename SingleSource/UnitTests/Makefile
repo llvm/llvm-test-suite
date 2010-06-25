@@ -34,4 +34,5 @@ endif
 
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 
+LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc
