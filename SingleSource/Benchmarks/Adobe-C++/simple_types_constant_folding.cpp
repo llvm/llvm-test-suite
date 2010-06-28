@@ -57,7 +57,11 @@ NOTE - in some cases, loop invariant code motion might move the constant calcula
 
 // this constant may need to be adjusted to give reasonable minimum times
 // For best results, times should be about 1.0 seconds for the minimum test run
+#ifdef SMALL_PROBLEM_SIZE
+int base_iterations = 100;
+#else
 int base_iterations = 5000;
+#endif
 int iterations = base_iterations;
 
 

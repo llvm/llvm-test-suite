@@ -32,8 +32,11 @@ Assumptions:
 
 // this constant may need to be adjusted to give reasonable minimum times
 // For best results, times should be about 1.0 seconds for the minimum test run
+#ifdef SMALL_PROBLEM_SIZE
+int iterations = 50;
+#else
 int iterations = 1000;
-
+#endif
 
 // 8000 items, or between 8k and 64k of data
 // this is intended to remain within the L2 cache of most common CPUs
