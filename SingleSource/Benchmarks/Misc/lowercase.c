@@ -40,7 +40,11 @@ static void doTest(size_t numberOfIterations)
   printf("iterations (%ld characters)\n", numberOfIterations, numberOfCharacters);
 
   memset(result, 0, sizeof(UChar) * testDataLength);
+#ifdef SMALL_PROBLEM_SIZE
+  for (i = 0; i < 100000; i++)
+#else
   for (i = 0; i < 10000000; i++)
+#endif
     lower_StringImpl(testData, numberOfCharacters, result);
 }
 
