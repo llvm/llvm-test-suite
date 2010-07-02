@@ -137,13 +137,19 @@ prdirs::
 
 ifeq ($(ENABLE_PROFILING),1)
   ENABLE_OPTIMIZED = 1
-  CONFIGURATION := Profile
-else
-  ifeq ($(ENABLE_OPTIMIZED),1)
-    CONFIGURATION := Release
-  else
-    CONFIGURATION := Debug
+endif
+
+ifeq ($(ENABLE_OPTIMIZED),1)
+  CONFIGURATION := Release
+  ifdef DEBUG_SYMBOLS
+    CONFIGURATION := $(CONFIGURATION)+Debug
   endif
+else
+  CONFIGURATION := Debug
+endif
+
+ifeq ($(ENABLE_PROFILING),1)
+  CONFIGURATION := $(CONFIGURATION)+Profile
 endif
 
 # If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
