@@ -154,9 +154,8 @@ endif
 
 # If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
 # then adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
-ifeq ($(DISABLE_ASSERTIONS),1)
-  # Indicate that assertions are turned off using a minus sign
-  CONFIGURATION := $(CONFIGURATION)-Asserts
+ifneq ($(DISABLE_ASSERTIONS),1)
+  CONFIGURATION := $(CONFIGURATION)+Asserts
 endif
 
 # If ENABLE_EXPENSIVE_CHECKS=1 is specified (make command line or
