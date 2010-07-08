@@ -152,8 +152,8 @@ ifeq ($(ENABLE_PROFILING),1)
   CONFIGURATION := $(CONFIGURATION)+Profile
 endif
 
-# If ENABLE_ASSERTIONS=1 is specified (make command line or configured),
-# then adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
+# Unless DISABLE_ASSERTIONS=1 is specified (make command line or configured),
+# adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
 ifneq ($(DISABLE_ASSERTIONS),1)
   CONFIGURATION := $(CONFIGURATION)+Asserts
 endif
