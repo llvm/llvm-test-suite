@@ -53,14 +53,14 @@ int main(int argc, char**argv) {
     TRIPLECAST(i, signed   int, unsigned int, signed   int);
     TRIPLECAST(i, signed   int, signed   int, unsigned int);
     TRIPLECAST(i, signed   int, signed   int, signed   int);
-    TRIPLECAST(i, unsigned long, unsigned long, unsigned long);
-    TRIPLECAST(i, unsigned long, unsigned long, signed   long);
-    TRIPLECAST(i, unsigned long, signed   long, unsigned long);
-    TRIPLECAST(i, unsigned long, signed   long, signed   long);
-    TRIPLECAST(i, signed   long, unsigned long, unsigned long);
-    TRIPLECAST(i, signed   long, unsigned long, signed   long);
-    TRIPLECAST(i, signed   long, signed   long, unsigned long);
-    TRIPLECAST(i, signed   long, signed   long, signed   long);
+    TRIPLECAST(i, unsigned long long, unsigned long long, unsigned long long);
+    TRIPLECAST(i, unsigned long long, unsigned long long, signed   long long);
+    TRIPLECAST(i, unsigned long long, signed   long long, unsigned long long);
+    TRIPLECAST(i, unsigned long long, signed   long long, signed   long long);
+    TRIPLECAST(i, signed   long long, unsigned long long, unsigned long long);
+    TRIPLECAST(i, signed   long long, unsigned long long, signed   long long);
+    TRIPLECAST(i, signed   long long, signed   long long, unsigned long long);
+    TRIPLECAST(i, signed   long long, signed   long long, signed   long long);
 
     // Same size through larger size
     TRIPLECAST(i, unsigned char, unsigned short, unsigned char);
@@ -79,14 +79,14 @@ int main(int argc, char**argv) {
     TRIPLECAST(i, signed   short, unsigned int, signed   short);
     TRIPLECAST(i, signed   short, signed   int, unsigned short);
     TRIPLECAST(i, signed   short, signed   int, signed   short);
-    TRIPLECAST(i, unsigned int, unsigned long, unsigned int);
-    TRIPLECAST(i, unsigned int, unsigned long, signed   int);
-    TRIPLECAST(i, unsigned int, signed   long, unsigned int);
-    TRIPLECAST(i, unsigned int, signed   long, signed   int);
-    TRIPLECAST(i, signed   int, unsigned long, unsigned int);
-    TRIPLECAST(i, signed   int, unsigned long, signed   int);
-    TRIPLECAST(i, signed   int, signed   long, unsigned int);
-    TRIPLECAST(i, signed   int, signed   long, signed   int);
+    TRIPLECAST(i, unsigned int, unsigned long long, unsigned int);
+    TRIPLECAST(i, unsigned int, unsigned long long, signed   int);
+    TRIPLECAST(i, unsigned int, signed   long long, unsigned int);
+    TRIPLECAST(i, unsigned int, signed   long long, signed   int);
+    TRIPLECAST(i, signed   int, unsigned long long, unsigned int);
+    TRIPLECAST(i, signed   int, unsigned long long, signed   int);
+    TRIPLECAST(i, signed   int, signed   long long, unsigned int);
+    TRIPLECAST(i, signed   int, signed   long long, signed   int);
 
     // Larger size through smaller size
     TRIPLECAST(i, unsigned short, unsigned char, unsigned short);
@@ -105,14 +105,14 @@ int main(int argc, char**argv) {
     TRIPLECAST(i, signed   int, unsigned short, signed   int);
     TRIPLECAST(i, signed   int, signed   short, unsigned int);
     TRIPLECAST(i, signed   int, signed   short, signed   int);
-    TRIPLECAST(i, unsigned long, unsigned int, unsigned long);
-    TRIPLECAST(i, unsigned long, unsigned int, signed   long);
-    TRIPLECAST(i, unsigned long, signed   int, unsigned long);
-    TRIPLECAST(i, unsigned long, signed   int, signed   long);
-    TRIPLECAST(i, signed   long, unsigned int, unsigned long);
-    TRIPLECAST(i, signed   long, unsigned int, signed   long);
-    TRIPLECAST(i, signed   long, signed   int, unsigned long);
-    TRIPLECAST(i, signed   long, signed   int, signed   long);
+    TRIPLECAST(i, unsigned long long, unsigned int, unsigned long long);
+    TRIPLECAST(i, unsigned long long, unsigned int, signed   long long);
+    TRIPLECAST(i, unsigned long long, signed   int, unsigned long long);
+    TRIPLECAST(i, unsigned long long, signed   int, signed   long long);
+    TRIPLECAST(i, signed   long long, unsigned int, unsigned long long);
+    TRIPLECAST(i, signed   long long, unsigned int, signed   long long);
+    TRIPLECAST(i, signed   long long, signed   int, unsigned long long);
+    TRIPLECAST(i, signed   long long, signed   int, signed   long long);
   }
 
   // Check cast to bool
@@ -123,7 +123,7 @@ int main(int argc, char**argv) {
   printf("%d(%s) -> bool = %d\n", num, #type, (int)X); \
 }
   CASTTOBOOL(testVal, float);
-  CASTTOBOOL(testVal, long);
+  CASTTOBOOL(testVal, long long);
   CASTTOBOOL(testVal, unsigned int);
   CASTTOBOOL(testVal, signed char);
   CASTTOBOOL(testVal, bool);
@@ -132,8 +132,8 @@ int main(int argc, char**argv) {
   {
     static int sillyArray[8] = { 2, 3, 5, 7, 11, 13, 17, 19 };
     int* i_ptr = &sillyArray[ 0 ];
-    long* l_ptr = (long*) i_ptr;
-    printf("%ld\n", *l_ptr);
+    long long* l_ptr = (long long*) i_ptr;
+    printf("%lld\n", *l_ptr);
   }
   
   // Cast of malloc result to another type
