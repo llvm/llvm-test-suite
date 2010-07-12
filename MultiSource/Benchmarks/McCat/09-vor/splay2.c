@@ -204,7 +204,7 @@ CHpoints *CHdelete_max(CHsplay_node **root) {
     free(max_node); }
   else {  
       printf("No elements in tree! [CHdelete_max]\n");
-      return; }
+      return 0; }
   return max_elm.point;
 }
 

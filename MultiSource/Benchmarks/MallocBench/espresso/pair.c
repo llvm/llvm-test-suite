@@ -585,7 +585,7 @@ int (*action)();
 
     if (set_ord(candidate) < 2) {
 	(*action)(pair);
-	return;
+	return 0;
     }
 
     recur_pair = pair_save(pair, n);

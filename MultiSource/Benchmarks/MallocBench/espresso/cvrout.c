@@ -504,7 +504,7 @@ int output_symbolic;
     int size, var, npermute, *permute, *weight, noweight;
 
     if ((cube.num_vars - cube.num_binary_vars) <= 1) {
-	return;
+	return 0;
     }
     makeup_labels(PLA);
 

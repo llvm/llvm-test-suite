@@ -431,12 +431,12 @@ float  sa, *sx;
     if( incx < 0 ) sx += (-n+1)*incx;
     for( i=0; i<n; i++, sx+=incx )
 	  *sx *= sa;
-        return;
+        return 0;
   }
   /*  Code for unit increment. */
   for( i=0; i<n; i++, sx++ )
     *sx *= sa;
-  return;
+  return 0;
 }
 void vexopy( n, v, x, y, itype )
 int	n, itype;

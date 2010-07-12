@@ -368,7 +368,7 @@ int (*func1)();
 	/* Call a routine to do something with the cover */
 	if ((*func)(PLA1, i) == 0) {
 	    free_PLA(PLA1);
-	    return;
+	    return 0;
 	}
 
 	/* intersect with the particular output part again */
@@ -379,7 +379,7 @@ int (*func1)();
 	/* Call a routine to do something with the final result */
 	if ((*func1)(PLA1, i) == 0) {
 	    free_PLA(PLA1);
-	    return;
+	    return 0;
 	}
 
 	/* Cleanup for next go-around */

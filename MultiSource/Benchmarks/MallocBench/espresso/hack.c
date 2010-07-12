@@ -9,7 +9,7 @@ pPLA PLA;
     pcube cplus, cminus, last, p;
 
     if (PLA->label == NIL(char *) || PLA->label[0] == NIL(char))
-	return;
+	return 0;
 
     /* try to find a binary variable named "DONT_CARE" */
     var = -1;
@@ -23,7 +23,7 @@ pPLA PLA;
 	}
     }
     if (var == -1) {
-	return;
+	return 0;
     }
 
     /* form the cofactor cubes for the don't-care variable */
@@ -408,7 +408,7 @@ int new_size, old_size, size_added;
 
     /* hack with the labels */
     if ((oldlabel = PLA->label) == NIL(char *))
-	return;
+	return 0;
     PLA->label = ALLOC(char *, new_size);
     for(i = 0; i < new_size; i++) {
 	PLA->label[i] = NIL(char);

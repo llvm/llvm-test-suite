@@ -129,7 +129,7 @@ void *insert(splay_node **root, point p)
     {
       splay(root,temp->element.key);
       if (temp->element.key == (*root)->element.key) 
-	return;
+	return 0;
       else if ((*root)->element.key > temp->element.key) {
 	temp->left = (*root)->left;
 	if (temp->left != NULL) temp->left->father = temp; 
@@ -165,7 +165,7 @@ point delete_min(splay_node **root)
   else 
     {  
       printf("No elements in tree! [delete_min]\n");
-      return;
+      return min_elm.p;
     }
   return min_elm.p;
 }
