@@ -7,3 +7,5 @@ STDIN_FILENAME = bigtest.in
 else
 STDIN_FILENAME = test.in
 endif
+
+CFLAGS += -Wno-return-type
