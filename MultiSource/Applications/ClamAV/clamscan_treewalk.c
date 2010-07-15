@@ -70,8 +70,10 @@ int treewalk(const char *dirname, struct cl_engine *engine, const struct passwd 
 	argument = opt_firstarg(opt, "exclude-dir", &optnode);
 	while(argument) {
 	    if(match_regex(dirname, argument) == 1) {
+#if 0
 		if(!printinfected)
 		    logg("%s: Excluded\n", dirname);
+#endif
 		return 0;
 	    }
 	    argument = opt_nextarg(&optnode, "exclude-dir");
