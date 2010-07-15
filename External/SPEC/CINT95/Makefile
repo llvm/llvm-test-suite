@@ -9,6 +9,11 @@ PARALLEL_DIRS := \
   134.perl \
   147.vortex
 
+# Disable 126.gcc when testing with Clang, which doesn't support lvalue casts.
+ifdef CC_UNDER_TEST_IS_CLANG
+PARALLEL_DIRS := $(filter-out 126.gcc, $(PARALLEL_DIRS))
+endif
+
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 
