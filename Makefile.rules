@@ -152,10 +152,23 @@ ifeq ($(ENABLE_PROFILING),1)
   CONFIGURATION := $(CONFIGURATION)+Profile
 endif
 
+# We cleverly reversed the sense of this variable in r107758, support use of
+# LLVM_RELEASE_IS_PLUS_ASSERTS to allow testing old LLVM revs. We can eliminate
+# this when we kill the dependency on LLVM's Makefiles.
+ifeq ($(LLVM_RELEASE_IS_PLUS_ASSERTS),1)
+
+ifeq ($(DISABLE_ASSERTIONS),1)
+  CONFIGURATION := $(CONFIGURATION)-Asserts
+endif
+
+else
+
 # Unless DISABLE_ASSERTIONS=1 is specified (make command line or configured),
 # adjust the CONFIGURATION name appropriately (to match LLVM makefiles)
 ifneq ($(DISABLE_ASSERTIONS),1)
   CONFIGURATION := $(CONFIGURATION)+Asserts
+endif
+
 endif
 
 # If ENABLE_EXPENSIVE_CHECKS=1 is specified (make command line or
