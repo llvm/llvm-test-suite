@@ -1,7 +1,7 @@
 ##===- TEST.optllcdbg.Makefile -----------------------------*- Makefile -*-===##
 #
 # This test checks whether presence of debug declarations influences
-# the code generator or not. 
+# the code generator or not.
 #
 # If input.bc includes llvm.dbg intrinsics and llvm.dbg variables then
 # the code in first.s and second.s should match. Otherwise debugging information
@@ -14,6 +14,10 @@
 #
 ##===----------------------------------------------------------------------===##
 
+CURDIR  := $(shell cd .; pwd)
+PROGDIR := $(PROJ_SRC_ROOT)
+RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+
 TESTNAME = $*
 TEST_TARGET_FLAGS = -g -O0
 LLC_DEBUG_FLAGS = -O3 $(LLCFLAGS)
@@ -21,7 +25,21 @@ OPT_FLAGS = -std-compile-opts
 .PRECIOUS: Output/%.first.s Output/%.second.s Output/%.t2c.s Output/%.t1c.s Output/%.t2b.bc Output/%.t1b.bc Output/%.t1a.bc Output/%.t2a.bc
 
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
-test.$(TEST).%: Output/%.diff
+test.$(TEST).%: Output/%.$(TEST).report.txt
+	@-cat $<
+
+$(PROGRAMS_TO_TEST:%=Output/%.optllcdbg.report.txt): \
+Output/%.optllcdbg.report.txt: Output/%.report.diff
+	@echo > $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo ">>> ========= '$(RELDIR)/$*' Program" >> $@
+	@echo "---------------------------------------------------------------" >> $@
+	@echo >> $@
+	@-if test -s Output/$^ ; then \
+	  echo "TEST-FAIL" >> $@;\
+	else \
+	  echo "TEST-PASS" >> $@;\
+	fi
 
 Output/%.t1a.bc: Output/%.linked.rbc Output/.dir $(LOPT)
 	$(LOPT) -strip-debug-declare -strip-nondebug $< -f -o $@
@@ -103,3 +121,7 @@ Output/%.diff: Output/%.first.s Output/%.second.s
 	else \
 	 echo "--------- TEST-FAIL: $*"; \
 	fi
+
+Output/%.report.diff: Output/%.first.s Output/%.second.s
+	@diff $^ > $@
+
