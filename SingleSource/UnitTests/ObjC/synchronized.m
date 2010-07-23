@@ -23,7 +23,7 @@ unsigned sum = 0;
   unsigned i;
   for (i = 0; i < kLoopCount; ++i)
     [self addToSum: i];
-  --numThreads;
+  __sync_fetch_and_sub(&numThreads, 1);
 }
 @end
 
