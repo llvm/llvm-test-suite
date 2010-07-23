@@ -143,6 +143,25 @@ struct basis_t{ /* bogus and compact, exactly what we need */
 	}
 };
 
+// LLVM LOCAL begin
+// Implementations of sin() and cos() may vary slightly in the accuracy of
+// their results, typically only in the least significant bit.  Round to make
+// the results consistent across platforms.
+typedef union { double d; unsigned long long ll; } dbl_ll_union;
+static double LLVMsin(double d) {
+  dbl_ll_union u;
+  u.d = sin(d);
+  u.ll = (u.ll + 1) & ~1ULL;
+  return u.d;
+}
+static double LLVMcos(double d) {
+  dbl_ll_union u;
+  u.d = cos(d);
+  u.ll = (u.ll + 1) & ~1ULL;
+  return u.d;
+}
+// LLVM LOCAL end
+
 static node_t *create(node_t*n,const int lvl,int dist,v_t c,v_t d,double r) {
 	n = 1 + new (n) node_t(sphere_t(c,2.*r),sphere_t(c,r), lvl > 1 ? dist : 1);
 	if (lvl <= 1)
@@ -151,13 +170,13 @@ static node_t *create(node_t*n,const int lvl,int dist,v_t c,v_t d,double r) {
 	dist=std::max((dist-childs)/childs,1); const basis_t b(d); 
 	const double nr=r*1/3.,daL=2.*M_PI/6.,daU=2.*M_PI/3.; double a=0;
 	for(int i=0;i<6;++i){ /*lower ring*/
-		const v_t ndir((d*-.2+b.b1*sin(a)+b.b2*cos(a)).norm()); /*transcendentals?!*/
+		const v_t ndir((d*-.2+b.b1*LLVMsin(a)+b.b2*LLVMcos(a)).norm()); /*transcendentals?!*/
 		n=create(n,lvl-1,dist,c+ndir*(r+nr),ndir,nr);
 		a+=daL;
 	}
 	a-=daL/3.;/*tweak*/
 	for(int i=0;i<3;++i){ /*upper ring*/
-		const v_t ndir((d*+.6+b.b1*sin(a)+b.b2*cos(a)).norm());
+		const v_t ndir((d*+.6+b.b1*LLVMsin(a)+b.b2*LLVMcos(a)).norm());
 		n=create(n,lvl-1,dist,c+ndir*(r+nr),ndir,nr); a+=daU;
 	}
 	return n;
