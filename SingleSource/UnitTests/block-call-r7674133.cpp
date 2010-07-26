@@ -1,4 +1,4 @@
-#ifdef __clang__
+#if defined(__BLOCKS__) && defined(__clang__)
 extern "C" void abort(void);
 
 class Test {
@@ -10,7 +10,7 @@ public:
     
     ~Test()
     {
-	i = -1;;
+	i = -1;
     }
     
     Test(const Test&r)
@@ -28,7 +28,7 @@ public:
 
 int main (int , char * const []) 
 {
-#ifdef __clang__
+#if defined(__BLOCKS__) && defined(__clang__)
     Test t;
     ^{  t.speak();  }();
 #endif
