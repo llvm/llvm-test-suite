@@ -1,7 +1,7 @@
 dofile("test/bisect.lua");
 dofile("test/cf.lua");
 dofile("test/echo.lua");
-dofile("test/env.lua");
+-- dofile("test/env.lua");
 dofile("test/factorial.lua");
 dofile("test/fibfor.lua");
 dofile("test/fib.lua");
