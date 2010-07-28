@@ -121,6 +121,10 @@ NURBS_ROOT := @NURBS_ROOT@
 @USE_HMMER@
 HMMER_ROOT := @HMMER_ROOT@
 
+# Path to the Skidmarks source code
+@USE_SKIDMARKS10@
+SKIDMARKS10_ROOT := @SKIDMARKS10_ROOT@
+
 # Disable LLC diffs for testing.
 @DISABLE_LLC_DIFFS@
 
