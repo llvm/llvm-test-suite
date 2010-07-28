@@ -10,6 +10,7 @@ CPPFLAGS += -DLUA_USE_POSIX
 
 PROG = lua
 RUN_OPTIONS = alltests.lua "\<in"
+HASH_PROGRAM_OUTPUT = 1
 
 include $(LEVEL)/Makefile.config
 
