@@ -39,6 +39,10 @@ ifndef USE_HMMER
 PARALLEL_DIRS := $(filter-out HMMER, $(PARALLEL_DIRS))
 endif
 
+ifndef USE_SKIDMARKS10
+PARALLEL_DIRS := $(filter-out skidmarks10, $(PARALLEL_DIRS))
+endif
+
 # Sparc can't handle Namd: infinite loop, cause unknown
 ifeq ($(ARCH),Sparc)
 PARALLEL_DIRS := $(filter-out Namd, $(PARALLEL_DIRS))
