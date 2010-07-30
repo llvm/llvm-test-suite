@@ -29,8 +29,7 @@ unsigned sum = 0;
 
 int main() {
   unsigned i;
-  numThreads = 10;
-  for (i = 0; i < numThreads; ++i) {
+  for (i = 0; i < kNumThreads; ++i) {
     [[[A alloc] init] start];
   }
   while (numThreads) ;
