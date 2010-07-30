@@ -16,10 +16,4 @@ RUN_OPTIONS = 9 20 1
 endif
 endif
 
-ifeq ($(ARCH),x86)
-ifdef USE_REFERENCE_OUTPUT
-EXEC_XFAILS = health
-endif
-endif
-
 include $(LEVEL)/MultiSource/Makefile.multisrc
