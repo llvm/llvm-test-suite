@@ -50,6 +50,9 @@ Output/%.simple.exec.report.txt: Output/%.exe-simple
 	fi
 	@-printf "TEST-RESULT-exec-time: " >> $@
 	@-grep "^program" Output/$*.out-simple.time >> $@
+	if test -f Output/$*.extra-results.txt; then \
+	  $(PROGDIR)/ParseMultipleResults $(RELDIR)/$* Output/$*.extra-results.txt >> $@; \
+	fi
 
 # Overall tests: just run subordinate tests
 $(PROGRAMS_TO_TEST:%=Output/%.$(TEST).report.txt): \
