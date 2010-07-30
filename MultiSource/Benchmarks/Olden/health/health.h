@@ -21,7 +21,8 @@
 #define MASK 123459876
 
 extern int  max_level;
-extern long max_time, seed;
+extern long max_time;
+extern long long seed;
 
 struct Results {
   float                   total_patients;

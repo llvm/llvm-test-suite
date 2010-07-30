@@ -11,7 +11,8 @@
 #include <assert.h>
 
 int  max_level;
-long max_time, seed;
+long max_time;
+long long seed;
 
 struct Village *alloc_tree(int level, int label, struct Village *back) {
   if (level == 0)
@@ -129,7 +130,7 @@ struct List *check_patients_assess(struct Village *village, struct List *list) {
     if (p->time_left == 0) { 
       s = village->seed;
       rand = my_rand(s);
-      village->seed = (long)(rand * IM);
+      village->seed = (long long)(rand * IM);
       label = village->label;
       if (rand > 0.1 || label == 0) {
         removeList(&village->hosp.assess, p);
@@ -200,7 +201,7 @@ struct Patient *generate_patient(struct Village *village)
   
   s = village->seed;
   rand = my_rand(s);
-  village->seed = (long)(rand * IM);
+  village->seed = (long long)(rand * IM);
   newseed = village->seed;
   label = village->label;
   if (rand > 0.666) {
