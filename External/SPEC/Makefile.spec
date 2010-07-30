@@ -13,7 +13,7 @@ SPEC_SANDBOX := $(PROGDIR)/External/SPEC/Sandbox.sh
 # Information about testing the program...
 REF_IN_DIR  := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/input/
 REF_OUT_DIR := $(SPEC_BENCH_DIR)/data/$(RUN_TYPE)/output/
-LOCAL_OUTPUTS := $(notdir $(wildcard $(REF_OUT_DIR)/*))
+LOCAL_OUTPUTS = $(notdir $(wildcard $(REF_OUT_DIR)/*))
 
 # Sometimes a test will output its program name or some other gunk that
 # we don't want to diff against. Tests can override this definition to

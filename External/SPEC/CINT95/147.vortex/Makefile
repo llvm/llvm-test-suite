@@ -2,11 +2,14 @@ LEVEL = ../../../..
 
 #include $(LEVEL)/Makefile.config
 
-STDOUT_FILENAME := vortex.out
 LDFLAGS += -lm
 LIBS    += -lm
 
 include ../../Makefile.spec95
+
+# The executable writes virtex.out, and RunSafely.sh appends the exit code to
+# $(STDOUT_FILENAME). We need both.
+LOCAL_OUTPUTS := vortex.out $(STDOUT_FILENAME)
 
 ifeq ($(ARCH),Sparc)
   ## SPEC portability note for vortex says to use this flag on 64-bit machines
