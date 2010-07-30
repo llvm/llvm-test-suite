@@ -1515,9 +1515,6 @@ int lemon_main(int argc,char **argv)
     printf("                   %d states, %d parser table entries, %d conflicts\n",
       lem.nstate, lem.tablesize, lem.nconflict);
   }
-  if( lem.nconflict ){
-    fprintf(stderr,"%d parsing conflicts.\n",lem.nconflict);
-  }
   exit(lem.errorcnt + lem.nconflict);
   return (lem.errorcnt + lem.nconflict);
 }
