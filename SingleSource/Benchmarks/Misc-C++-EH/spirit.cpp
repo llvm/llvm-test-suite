@@ -14199,7 +14199,11 @@ int
 main(int argc, char* argv[])
 {
   c_grammar g;
+#ifdef SMALL_PROBLEM_SIZE
+  unsigned long n = 4;
+#else
   unsigned long n = 40;
+#endif
   if (argc > 1)
     n = atol(argv[1]);
   for (unsigned long i=0;i<n;i++)
