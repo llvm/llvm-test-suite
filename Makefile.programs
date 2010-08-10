@@ -267,7 +267,8 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -arm-code-placement
+LLCBETAOPTION := -enable-optimize-cmps
+#LLCBETAOPTION := -arm-code-placement
 endif
 ifeq ($(ARCH),THUMB)
 LLCBETAOPTION := -arm-code-placement
