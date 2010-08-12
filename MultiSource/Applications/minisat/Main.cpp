@@ -22,7 +22,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <stdint.h>
 #include <errno.h>
 
-#include <signal.h>
 #include <stdio.h>
 
 #include "Solver.h"
@@ -298,8 +297,6 @@ int main(int argc, char** argv)
     double cpu_time = cpuTime();
 
     solver = &S;
-    signal(SIGINT,SIGINT_handler);
-    signal(SIGHUP,SIGINT_handler);
 
     if (argc == 1)
         reportf("Reading from standard input... Use '-h' or '--help' for help.\n");
