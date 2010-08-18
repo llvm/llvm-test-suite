@@ -15,5 +15,5 @@ if [ ! -x "$md5cmd" ]; then
 fi
 
 mv $1 $1.bak
-md5 < $1.bak > $1
+$md5cmd < $1.bak > $1
 rm -f $1.bak
