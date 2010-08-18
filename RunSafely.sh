@@ -111,8 +111,8 @@ case $SYSTEM in
     # of files being output by the tests. 10 MB should be enough for anybody. ;)
     ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
 
-    # virtual memory: 300 MB should be enough for anybody. ;)
-    ULIMITCMD="$ULIMITCMD ulimit -v 300000;"
+    # virtual memory: 400 MB should be enough for anybody. ;)
+    ULIMITCMD="$ULIMITCMD ulimit -v 400000;"
 esac
 rm -f core core.*
 
