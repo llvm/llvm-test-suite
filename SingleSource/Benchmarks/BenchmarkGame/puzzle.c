@@ -8,7 +8,7 @@
 int randInt(int min, int max) {
     int k, n;
     n = (max - min) + 1;
-    k = (int)(n * (rand() / (RAND_MAX + 1.0)));
+    k = (int)(n * (lrand48() / (RAND_MAX + 1.0)));
     return (k == n) ? k + min - 1 : k + min;
 }
 
@@ -53,7 +53,7 @@ int main() {
     int i, j, duplicate;
     int *rndArr;
 
-    srand(1);
+    srand48(1);
 
 	for (i = 0; i < NLOOPS1; i++) {
 		rndArr = createRandomArray(ARRAY_SIZE);

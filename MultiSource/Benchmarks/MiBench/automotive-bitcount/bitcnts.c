@@ -53,12 +53,13 @@ int main(int argc, char *argv[])
   
   puts("Bit counter algorithm benchmark\n");
   
+  srand48(1);
   for (i = 0; i < FUNCS; i++) {
     #if 0
     start = clock();
     #endif
     
-    for (j = n = 0, seed = rand(); j < iterations; j++, seed += 13)
+    for (j = n = 0, seed = lrand48(); j < iterations; j++, seed += 13)
 	 n += pBitCntFunc[i](seed);
 
     #if 0
