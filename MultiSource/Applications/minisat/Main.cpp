@@ -197,7 +197,6 @@ void printStats(Solver& solver)
     reportf("decisions             : %-12lld   (%4.2f %% random)\n", solver.decisions, (float)solver.rnd_decisions*100 / (float)solver.decisions);
     reportf("propagations          : %-12lld\n", solver.propagations);
     reportf("conflict literals     : %-12lld   (%4.2f %% deleted)\n", solver.tot_literals, (solver.max_literals - solver.tot_literals)*100 / (double)solver.max_literals);
-    if (mem_used != 0) reportf("Memory used           : %.2f MB\n", mem_used / 1048576.0);
 }
 
 Solver* solver;
@@ -286,7 +285,6 @@ int main(int argc, char** argv)
 #if defined(__linux__) && defined(_FPU_EXTENDED) && defined(_FPU_DOUBLE)
     fpu_control_t oldcw, newcw;
     _FPU_GETCW(oldcw); newcw = (oldcw & ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);
-    reportf("WARNING: for repeatability, setting FPU to use double precision\n");
 #endif
     double cpu_time = cpuTime();
 
