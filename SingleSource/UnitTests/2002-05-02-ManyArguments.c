@@ -3,7 +3,7 @@
 
 void printfn(int a, short b, double C, float D, signed char E, char F, void *G, double *H, int I, long long J) {
 	printf("%d, %d, %f, %f, %d\n", a, b, C, D, E);
-	printf("%d, 0x%p, 0x%p, %d, %lld\n", F, G, H, I, J);
+	printf("%d, %ld, %ld, %d, %lld\n", F, (long) G, (long) H, I, J);
 }
 
 int main() {

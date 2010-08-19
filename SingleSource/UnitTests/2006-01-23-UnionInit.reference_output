@@ -6,7 +6,7 @@ PR650: relname, 1852597618
 PR199: 5, 1, 2, 3
 PR199: 5, 1, 2, 3
 PR431: 0, 1, 2, 3
-PR654: 0x0, '   xyzkasjdlf     '
+PR654: 0, '   xyzkasjdlf     '
 PR323: 3, 'foo'
 returning raw_lock
 PR627: 0

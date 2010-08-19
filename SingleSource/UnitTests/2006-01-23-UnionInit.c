@@ -150,7 +150,7 @@ int main() {
          hobbit2.values[1], hobbit2.values[2]);
   printf("PR431: %d, %d, %d, %d\n", data.x, data.v[0], 
          data.v[1], data.v[2]);
-  printf("PR654: %p, '%s'\n", s.inplace, s.chunk_data);
+  printf("PR654: %ld, '%s'\n", (long) s.inplace, s.chunk_data);
   printf("PR323: %d, '%s'\n", ai.lsk.agid, ai.lsk.key);
   lock = (spinlock_t) { .raw_lock = one_raw_spinlock() };
   printf("PR627: %d\n", (int)sizeof(lock));
