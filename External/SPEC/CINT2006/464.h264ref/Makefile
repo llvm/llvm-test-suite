@@ -6,10 +6,10 @@
 
 LEVEL = ../../../..
 
-include ../../Makefile.spec2006
-
 # This test can take more than the default 500s timeout at -O0.
 RUNTIMELIMIT:=750
+
+include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS     := -d foreman_test_encoder_baseline.cfg
