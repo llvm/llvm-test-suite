@@ -3,6 +3,8 @@
 -[ Bot1 _getX ]
 -[ Bot1 _setX: 10 ]
 -[ Bot2 _getX ]
+-[ Top2 _setX: 10 ]
+-[ Top3 _getX ]
 -[ Bot3 _setX: 10 ]
 -[ Bot4 _getX ]
 -[ Top4 _setX: 10 ]
