@@ -85,6 +85,9 @@
 @end
 
 @implementation Bot2
+// default synthesis of Bot2 synthesizes Bot2::_setX as a setter.
+// So it gets called instead of Top2's _setX when Bot2 is not
+// default synthesized.
 -(int) _getX {
   printf("-[ Bot2 _getX ]\n");
   return 0;
@@ -116,6 +119,9 @@
 @end
 
 @implementation Bot3
+// default synthesis of Bot3 synthesizes Bot3::_getX as getter
+// which is then called, instead of calling Top3::_getX which 
+// would get called had Bot3 not default synthesized.
 -(int) x {
   printf("-[ Bot3 x ]\n");
   return 0;
