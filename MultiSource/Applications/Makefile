@@ -1,4 +1,4 @@
-# MultiSource/Applications Makefile:  Build all subdirectories automatically
+# MultiSource/Applications/Makefile:  Build all subdirectories automatically
 
 LEVEL = ../..
 
