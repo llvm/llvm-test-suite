@@ -8,3 +8,4 @@ once natively.  The output is recorded and diff'ed.
 
 In the future, given 'make thorough' we can add trace instrumentation and diff
 the trace logs as well.
+
