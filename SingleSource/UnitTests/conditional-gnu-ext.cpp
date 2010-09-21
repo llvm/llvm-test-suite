@@ -8,15 +8,29 @@ _Complex int getComplex(_Complex int val) {
   return val;
 }
 
-_Complex int doo() {
+_Complex int cmplx_test() {
     _Complex int cond;
     _Complex int rhs;
 
     return getComplex(1+2i) ? : rhs;
 }
 
-int main() {
-  doo();
-  return 0;
+// lvalue test
+int global = 1;
+void foo (int& lv) {
+  ++lv;
 }
 
+int &cond() {
+  static int count;
+  if (count++)
+    abort();
+  return global;
+}
+
+int  main() {
+    cmplx_test();
+    int rhs = 10;
+    foo (cond()? : rhs);
+    return  global-2;
+}
