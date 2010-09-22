@@ -70,7 +70,7 @@ Output/%.llvm.o: %.mm Output/.dir
 
 Output/%.simple: Output/%.llvm.o Output/.dir
 	-$(CP) $<.compile.time $@.compile.time
-	-$(LCXX) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: $(SourceDir)/%.c Output/.dir

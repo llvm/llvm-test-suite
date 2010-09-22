@@ -90,7 +90,7 @@ BEGIN     { sum = 0.0; }\
 /^program/   { sum += $$2; }\
 !/^program/  { print; }\
 END       { printf("program %f\n", sum); }' > $@.compile.time
-	-$(LCXX) -o $@ $^ $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $^ $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
 Output/%.native: $(NObjects)
 	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
