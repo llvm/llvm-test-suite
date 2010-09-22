@@ -16,6 +16,11 @@ ifeq ($(ARCH),x86_64)
 DIRS += SSE
 endif
 
+# Assume ARMv7 implies NEON.
+ifneq ($(CC_UNDER_TEST_TARGET_IS_ARMV7)$(CC_UNDER_TEST_TARGET_IS_THUMBV7),)
+DIRS += NEON
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 
