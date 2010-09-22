@@ -57,7 +57,7 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
             mrXYRectangle.cc mrXZRectangle.cc mrYZRectangle.cc myrand.cc)
 
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
-CXXFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend 
+CXXFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend -fpermissive
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lm
