@@ -15,4 +15,9 @@ ifneq ($(ARCH),x86_64)
 PROGRAMS_TO_SKIP += print-class-info-x86-64
 endif
 
+# This is a known gcc / llvm-gcc miscompilation fixed in clang.
+ifdef CC_UNDER_TEST_IS_LLVM_GCC
+EXEC_XFAILS = dot-syntax-2
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
