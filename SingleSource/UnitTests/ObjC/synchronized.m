@@ -1,4 +1,4 @@
-#include <Cocoa/Cocoa.h>
+#include <Foundation/Foundation.h>
 #include <stdio.h>
 
 @interface A : NSThread

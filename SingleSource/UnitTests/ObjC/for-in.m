@@ -1,4 +1,4 @@
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #define S(n) @#n
 #define L1(n) S(n+0),S(n+1)
