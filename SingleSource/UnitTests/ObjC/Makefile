@@ -8,13 +8,6 @@ DIRS :=
 LDFLAGS += -lobjc -framework Foundation
 PROGRAM_REQUIRED_TO_EXIT_OK := 1
 
-ifneq ($(ARCH),x86)
-PROGRAMS_TO_SKIP += print-class-info-x86-32
-endif
-ifneq ($(ARCH),x86_64)
-PROGRAMS_TO_SKIP += print-class-info-x86-64
-endif
-
 # This is a known gcc / llvm-gcc miscompilation fixed in clang.
 ifdef CC_UNDER_TEST_IS_LLVM_GCC
 EXEC_XFAILS = dot-syntax-2
