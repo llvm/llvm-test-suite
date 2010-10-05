@@ -42,9 +42,20 @@ void test2(int n) {
  l2: if (count) abort();
 }
 
+void test3(int n) {
+  {
+    L a(n);
+    if (n) goto l1;
+    goto l1;
+  }
+
+ l1: if (count) abort();
+}
+
 int main(int argc, char *argv[]) {
   test0(1);
   test1(1);
   test2(1);
+  test3(1);
   return 0;
 }
