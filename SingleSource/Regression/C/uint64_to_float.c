@@ -14,14 +14,11 @@
 // We test in all four basic rounding modes, to further flush out any
 // double-rounding issues, or behavior at zero.
 
-float convert(uint64_t x) {
-  return (float)x;
-}
-
+extern float __floatundisf(uint64_t);
 void test(uint64_t x) {
     union floatbits { uint32_t x; float f; };
-	const union floatbits expected = { .f = x };
-	const union floatbits observed = { .f = convert(x) };
+	const union floatbits expected = { .f = __floatundisf(x) };
+	const union floatbits observed = { .f = x };
     
 	if (expected.x != observed.x) {
 		printf("Error detected @ 0x%016llx\n", x);
@@ -34,13 +31,14 @@ int main(int argc, char *argv[]) {
   int i, j, k, l, m;
 	const uint64_t one = 1;
 	const uint64_t mone = -1;
-
-    const int roundingModes[4] = { FE_TONEAREST,
-        FE_DOWNWARD, FE_UPWARD, FE_TOWARDZERO };
+    
+    // FIXME: Other rounding modes are temporarily disabled until we have
+    // a canonical source to compare against.
+    const int roundingModes[4] = { FE_TONEAREST };
     const char *modeNames[4] = {"to nearest", "down", "up", "towards zero"};
     
     for ( m=0; m<4; ++m) {
-        fesetround(roundingModes[m]);
+        fesetround(roundingModes[0]);
         printf("Testing uint64_t --> float conversions in round %s...\n",
                modeNames[m]);
     
