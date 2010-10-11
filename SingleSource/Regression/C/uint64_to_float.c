@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <fenv.h>
+#include <float.h>
 
 // tests uint64_t --> float conversions.  Not an exhaustive test, but sufficent
 // to identify all reasonable bugs in such routines that I have yet encountered.
@@ -14,16 +15,73 @@
 // We test in all four basic rounding modes, to further flush out any
 // double-rounding issues, or behavior at zero.
 
-extern float __floatundisf(uint64_t);
+typedef union
+{
+    uint32_t u;
+    float f;
+} float_bits;
+
+
+float
+floatundisf(uint64_t a)
+{
+    if (a == 0)
+        return 0.0F;
+    const unsigned N = sizeof(uint64_t) * 8;
+    int sd = N - __builtin_clzll(a);  /* number of significant digits */
+    int e = sd - 1;             /* 8 exponent */
+    if (sd > FLT_MANT_DIG)
+    {
+        /*  start:  0000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQxxxxxxxxxxxxxxxxxx
+         *  finish: 000000000000000000000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQR
+         *                                                12345678901234567890123456
+         *  1 = msb 1 bit
+         *  P = bit FLT_MANT_DIG-1 bits to the right of 1
+         *  Q = bit FLT_MANT_DIG bits to the right of 1
+         *  R = "or" of all bits to the right of Q
+         */
+        switch (sd)
+        {
+        case FLT_MANT_DIG + 1:
+            a <<= 1;
+            break;
+        case FLT_MANT_DIG + 2:
+            break;
+        default:
+            a = (a >> (sd - (FLT_MANT_DIG+2))) |
+                ((a & ((uint64_t)(-1) >> ((N + FLT_MANT_DIG+2) - sd))) != 0);
+        };
+        /* finish: */
+        a |= (a & 4) != 0;  /* Or P into R */
+        ++a;  /* round - this step may add a significant bit */
+        a >>= 2;  /* dump Q and R */
+        /* a is now rounded to FLT_MANT_DIG or FLT_MANT_DIG+1 bits */
+        if (a & ((uint64_t)1 << FLT_MANT_DIG))
+        {
+            a >>= 1;
+            ++e;
+        }
+        /* a is now rounded to FLT_MANT_DIG bits */
+    }
+    else
+    {
+        a <<= (FLT_MANT_DIG - sd);
+        /* a is now rounded to FLT_MANT_DIG bits */
+    }
+    float_bits fb;
+    fb.u = ((e + 127) << 23)       |  /* exponent */
+           ((int32_t)a & 0x007FFFFF);  /* mantissa */
+    return fb.f;
+}
+
 void test(uint64_t x) {
-    union floatbits { uint32_t x; float f; };
-	const union floatbits expected = { .f = __floatundisf(x) };
-	const union floatbits observed = { .f = x };
+	const float_bits expected = { .f = floatundisf(x) };
+	const float_bits observed = { .f = x };
     
-	if (expected.x != observed.x) {
+	if (expected.u != observed.u) {
 		printf("Error detected @ 0x%016llx\n", x);
-		printf("\tExpected result: %a (0x%08x)\n", expected.f, expected.x);
-		printf("\tObserved result: %a (0x%08x)\n", observed.f, observed.x);
+		printf("\tExpected result: %a (0x%08x)\n", expected.f, expected.u);
+		printf("\tObserved result: %a (0x%08x)\n", observed.f, observed.u);
 	}
 }
 
