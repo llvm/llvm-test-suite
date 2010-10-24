@@ -8,6 +8,10 @@ LEVEL = ../../../..
 
 FP_ABSTOLERANCE = 0.0000001
 
+# At -O0 on arm this takes too long. Set RUNTIMELIMIT - this is still close
+# to the edge so we'll know if it regresses too much.
+RUNTIMELIMIT := 1000
+
 CPPFLAGS += \
         -Ddeal_II_dimension=3     \
         -DBOOST_DISABLE_THREADS   \
