@@ -386,9 +386,9 @@ CPPFLAGS += -mieee
 CFLAGS += -mieee
 endif
 
-# Set llc / lli optimization level to -O3 to match gcc.
-LLC_OPTFLAGS := -O3
-LLI_OPTFLAGS := -O3
+# Set llc / lli optimization level
+LLC_OPTFLAGS := $(OPTFLAGS)
+LLI_OPTFLAGS := $(OPTFLAGS)
 
 # gcc / llvm-gcc default is -fPIC -fno-omit-frame-pointer
 # llc / lli default is equal to -mdynamic-no-pic -fomit-frame-pointer
@@ -446,8 +446,8 @@ Link     := $(LIBTOOL) --tag=CXX --mode=link $(CXX)
 
 # link both projlib and llvmlib libraries
 LinkG    := $(Link) -g -L$(PROJLIBDEBUGSOURCE)  -L$(LLVMLIBDEBUGSOURCE) $(STRIP)
-LinkO    := $(Link) -O3 -L$(PROJLIBRELEASESOURCE) -L$(LLVMLIBRELEASESOURCE)
-LinkP    := $(Link) -O3 -L$(PROJLIBPROFILESOURCE) -L$(LLVMLIBPROFILESOURCE) $(PROFILE)
+LinkO    := $(Link) $(OPTFLAGS) -L$(PROJLIBRELEASESOURCE) -L$(LLVMLIBRELEASESOURCE)
+LinkP    := $(Link) $(OPTFLAGS) -L$(PROJLIBPROFILESOURCE) -L$(LLVMLIBPROFILESOURCE) $(PROFILE)
 
 # TOOLLINKOPTSB to pass options to the linker like library search path etc
 # Note that this is different from TOOLLINKOPTS, these options
