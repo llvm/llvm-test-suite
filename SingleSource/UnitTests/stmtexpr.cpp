@@ -1,23 +1,22 @@
 // rdar: //8540501
-extern "C" int printf(...);
 extern "C" void abort();
 
 struct A
 {
   int i;
-  A (int j) : i(j) {printf("this = %p A(%d)\n", this, j);}
-  A (const A &j) : i(j.i) {printf("this = %p const A&(%d)\n", this, i);}
+  A (int j) : i(j) {}
+  A (const A &j) : i(j.i) {}
   A& operator= (const A &j) { i = j.i; abort(); return *this; }
-  ~A() { printf("this = %p ~A(%d)\n", this, i); }
+  ~A() { }
 };
 
 struct B
 {
   int i;
   B (const A& a) { i = a.i; }
-  B() {printf("this = %p B()\n", this);}
-  B (const B &j) : i(j.i) {printf("this = %p const B&(%d)\n", this, i);}
-  ~B() { printf("this = %p ~B(%d)\n", this, i); }
+  B() {}
+  B (const B &j) : i(j.i) {}
+  ~B() { }
 };
 
 A foo(int j)
