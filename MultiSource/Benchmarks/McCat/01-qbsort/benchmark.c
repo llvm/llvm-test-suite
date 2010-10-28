@@ -26,8 +26,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sort.h"
 #include "readlist.h"
+
+#ifdef TIMEREPEAT
+#include <sys/time.h>
+#endif
 
 BOOL LessThan(int x, int y);
 
@@ -36,13 +41,39 @@ BOOL LessThan(int x, int y)
   return (x < y);
 }
 
-int main()
+int main(int argc, char **argv)
 {
   int listno = 1;
   int err;
   LinkList *ll; /* ll = lINKED lIST */
   List *l;      /* l = lIST */
+  /* Andrew Trick: added "repeat" to measure performance, not just correctness.
+   * This also required adding origList. */
+  int repeat = 0;
+  int *origList;
+  if (argc > 1) {
+    repeat = strtol(argv[1], 0, 0);
+  }
+#ifdef TIMEREPEAT
+  long long stime = 0;
+  struct timeval t, tt;
+#endif
   while ((err = ReadList(&ll, &l)) == 0) {
+    origList = l->l;
+    l->l = (int*) malloc(sizeof(int)*l->n);
+    memcpy(l->l, origList, sizeof(int)*l->n);
+#ifdef TIMEREPEAT
+    gettimeofday(&t,0);
+#endif
+    for (; repeat > 0; --repeat) {
+      l = BubbleSort(l, LessThan);
+      memcpy(l->l, origList, sizeof(int)*l->n);
+      ll = QuickSort(ll, LessThan);
+    }
+#ifdef TIMEREPEAT
+    gettimeofday(&tt,0);
+    stime += (tt.tv_sec-t.tv_sec)*1000000 + (tt.tv_usec-t.tv_usec);
+#endif
     printf("\nList read (reverse order): ");fflush(stdout);
     PrintList(l);
     printf("\nBubbleSort: "); fflush(stdout);
@@ -68,5 +99,8 @@ int main()
     exit(1);
     break;
   }
+#ifdef TIMEREPEAT
+  printf("sort time = %lld usec\n", stime);
+#endif
   exit(0);
 }
