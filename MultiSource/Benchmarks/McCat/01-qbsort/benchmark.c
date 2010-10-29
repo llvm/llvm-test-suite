@@ -48,9 +48,11 @@ int main(int argc, char **argv)
   LinkList *ll; /* ll = lINKED lIST */
   List *l;      /* l = lIST */
   /* Andrew Trick: added "repeat" to measure performance, not just correctness.
-   * This also required adding origList. */
-  int repeat = 0;
+   * Also added FreeLinkList and removed leaks.
+   * This required adding origList and origLinkList. */
+  LinkList *origLinkList;
   int *origList;
+  int repeat = 0;
   if (argc > 1) {
     repeat = strtol(argv[1], 0, 0);
   }
@@ -59,6 +61,7 @@ int main(int argc, char **argv)
   struct timeval t, tt;
 #endif
   while ((err = ReadList(&ll, &l)) == 0) {
+    origLinkList = ll;
     origList = l->l;
     l->l = (int*) malloc(sizeof(int)*l->n);
     memcpy(l->l, origList, sizeof(int)*l->n);
@@ -68,7 +71,9 @@ int main(int argc, char **argv)
     for (; repeat > 0; --repeat) {
       l = BubbleSort(l, LessThan);
       memcpy(l->l, origList, sizeof(int)*l->n);
-      ll = QuickSort(ll, LessThan);
+      /* QuickSort returns a new list, and origLinkList is unmodified */
+      ll = QuickSort(origLinkList, LessThan);
+      FreeLinkList(ll);
     }
 #ifdef TIMEREPEAT
     gettimeofday(&tt,0);
@@ -80,9 +85,14 @@ int main(int argc, char **argv)
     l = BubbleSort(l, LessThan);
     PrintList(l);
     printf("\nQuickSort:  "); fflush(stdout);
-    ll = QuickSort(ll, LessThan);
+    ll = QuickSort(origLinkList, LessThan);
     PrintLinkList(ll);
     printf("\n");
+    FreeLinkList(ll);
+    FreeLinkList(origLinkList);
+    free(l->l);
+    free(l);
+    free(origList);
     listno++;
   }
 

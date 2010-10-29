@@ -57,7 +57,8 @@ LinkList *QuickSort(LinkList *l, BOOL (*compare)(int, int))
   if (l==NULL) return(NULL);
   else
     {
-      FirstElement=l;
+      FirstElement=(LinkList*) malloc(sizeof(LinkList));
+      *FirstElement=*l;
       /* Build the Inf- and the SupList */
       for (p=l->next; p!=NULL; p=p->next)
 	{
@@ -79,10 +80,12 @@ LinkList *QuickSort(LinkList *l, BOOL (*compare)(int, int))
 	    }
 	}
       /* Sort Inf- and SupList by means of recursion */ 
-      InfList=QuickSort(InfList, compare);
-      SupList=QuickSort(SupList, compare);
+      SortList=QuickSort(SupList, compare);
+      FreeLinkList(SupList);
+      SupList = SortList;
+      SortList=QuickSort(InfList, compare);
+      FreeLinkList(InfList);
       /* Join Lists to form quicksorted list */
-      SortList=InfList;
       if (SortList!=NULL)
 	{
 	  /* Fast forward to the end of SortList */
@@ -120,4 +123,11 @@ void PrintLinkList(LinkList *l)
     }
 }
 
-
+void FreeLinkList(LinkList *l)
+{
+  LinkList* next;
+  for (; l!=NULL; l=next) {
+    next = l->next;
+    free(l);
+  }
+}
