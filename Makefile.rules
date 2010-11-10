@@ -368,7 +368,7 @@ OPTFLAGS := -O3
 ifdef DISABLE_LTO
 LOPTFLAGS := $(OPTFLAGS)
 else
-LOPTFLAGS := $(OPTFLAGS) -mllvm -disable-llvm-optzns
+LOPTFLAGS := $(OPTFLAGS) $(LLVMGCC_DISABLEOPT_FLAGS)
 endif
 
 # Explicitly specify -m32 / -m64 so there is no mismatch between llvm-gcc
