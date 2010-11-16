@@ -1,4 +1,4 @@
-##===- TEST.nightly.Makefile ------------------------------*- Makefile -*--===##
+##===- TEST.simple.Makefile -------------------------------*- Makefile -*--===##
 #
 # This test is used in conjunction with the llvm/utils/NightlyTest* stuff to
 # generate information about program status for the nightly report.
