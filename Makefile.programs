@@ -870,7 +870,8 @@ Output/%.out-nat: Output/.dir
 	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output" ]; then \
 	  cp $(PROJ_SRC_DIR)/$*.reference_output $@; \
 	else \
-	  printf "ERROR: %s: %s\n" "NO REFERENCE OUTPUT" "$(PROJ_SRC_DIR)/$*.reference_output" > $@; \
+	  printf "WARNING: %s: %s\n" "NO REFERENCE OUTPUT (using default)" "$(PROJ_SRC_DIR)/$*.reference_output" > $@; \
+	  cp $(PROJ_SRC_ROOT)/default.reference_output $@; \
 	  cat $@; \
 	fi
 
