@@ -267,11 +267,10 @@ ifeq ($(ARCH),Sparc)
 LLCBETAOPTION := -enable-sparc-v9-insts
 endif
 ifeq ($(ARCH),ARM)
-LLCBETAOPTION := -enable-optimize-cmps
-#LLCBETAOPTION := -arm-code-placement
+LLCBETAOPTION :=
 endif
 ifeq ($(ARCH),THUMB)
-LLCBETAOPTION := -arm-code-placement
+LLCBETAOPTION :=
 endif
 
 print-llcbeta-option:
@@ -411,7 +410,7 @@ Output/%.cbe: Output/%.cbe.c
 $(PROGRAMS_TO_TEST:%=Output/%.llc.s): \
 Output/%.llc.s: Output/%.llvm.bc $(LLC)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
-	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
+	$(RUNTOOLSAFELY) $(LLC) $(LLCFLAGS) $(LLCOPTION) $< -o $@ -info-output-file=$(CURDIR)/$@.info $(STATS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.llc-beta.s): \
 Output/%.llc-beta.s: Output/%.llvm.bc $(LLC)
