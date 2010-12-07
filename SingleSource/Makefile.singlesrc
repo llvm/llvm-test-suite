@@ -85,6 +85,30 @@ Output/%.native: $(SourceDir)/%.m Output/.dir
 Output/%.native: $(SourceDir)/%.mm Output/.dir
 	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
+Output/%.dbg: $(SourceDir)/%.c Output/.dir
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg: $(SourceDir)/%.cpp Output/.dir
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg: $(SourceDir)/%.m Output/.dir
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg: $(SourceDir)/%.mm Output/.dir
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg.opt: $(SourceDir)/%.c Output/.dir
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg.opt: $(SourceDir)/%.cpp Output/.dir
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg.opt: $(SourceDir)/%.m Output/.dir
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.dbg.opt: $(SourceDir)/%.mm Output/.dir
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
 bugpoint-gccas bugpoint-opt bugpoint-llvm-ld bugpoint-gccld bugpoint-jit bugpoint-llc bugpoint-llc-beta:
 	@echo "The $@ target doesn't work in SingleSource.  Try:"
 	@echo "  'make Output/[programname].$@' instead."
