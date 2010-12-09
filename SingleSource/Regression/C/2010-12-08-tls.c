@@ -1,6 +1,13 @@
-extern const char *__crashreporter_info__;
+#include <stdio.h>
 
-int main() {
-   __crashreporter_info__ = "foo";
-   return 0;
+__thread int a = 4;
+
+int foo (void)
+{
+  return a;
+}
+
+int main (void) {
+  printf("a is %d\n", foo());
+  return 0;
 }
