@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Block.h>
-#include <auto_zone.h>
 
 static int expected_dtors;
 
