@@ -11,24 +11,19 @@ private:
 	void *p;
 public:
 	A() throw() {
-		printf("%u\t%p\t%s\n", __LINE__, this, __PRETTY_FUNCTION__);
 	}
 	A(const A &a) throw() : p(a.p) {
-		printf("%u\t%p\t%p\t%s\n", __LINE__, this, &a, __PRETTY_FUNCTION__);
 	}
 	A &operator =(const A &a) throw() {
-		printf("%u\t%p\t%p\t%s\n", __LINE__, this, &a, __PRETTY_FUNCTION__);
 		return *this;
 	}
 	~A() throw() {
-		printf("%u\t%p\t%s\n", __LINE__, this, __PRETTY_FUNCTION__);
 		expected_dtors--;
 		if (expected_dtors < 0) {
 			abort();
 		}
 	}
 	void m() const throw() {
-		printf("%u\t%p\t%s\n", __LINE__, this, __PRETTY_FUNCTION__);
 	}
 };
 
