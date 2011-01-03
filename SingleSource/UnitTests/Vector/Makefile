@@ -17,7 +17,7 @@ DIRS += SSE
 endif
 
 # Assume ARMv7 implies NEON.
-ifneq ($(CC_UNDER_TEST_TARGET_IS_ARMV7)$(CC_UNDER_TEST_TARGET_IS_THUMBV7),)
+ifneq ($(CC_UNDER_TEST_TARGET_IS_THUMBV7),)
 DIRS += NEON
 endif
 
