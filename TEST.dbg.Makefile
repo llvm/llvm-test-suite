@@ -23,6 +23,18 @@ Output/%.bp: %.c Output/.dir
 	$(LCC) $(CPPFLAGS) $(CFLAGS) -g -c -emit-llvm $< -o $@.bc
 	$(LOPT) -print-breakpoints-for-testing $@.bc -o $@
 
+Output/%.bp: %.cpp Output/.dir
+	$(LCXX) $(CPPFLAGS) $(CFLAGS) -g -c -emit-llvm $< -o $@.bc
+	$(LOPT) -print-breakpoints-for-testing $@.bc -o $@
+
+Output/%.bp: %.m Output/.dir
+	$(LCC) $(CPPFLAGS) $(CFLAGS) -g -c -emit-llvm $< -o $@.bc
+	$(LOPT) -print-breakpoints-for-testing $@.bc -o $@
+
+Output/%.bp: %.mm Output/.dir
+	$(LCXX) $(CPPFLAGS) $(CFLAGS) -g -c -emit-llvm $< -o $@.bc
+	$(LOPT) -print-breakpoints-for-testing $@.bc -o $@
+
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.bp Output/%.dbg Output/%.dbg.opt
 	echo $@
