@@ -85,6 +85,30 @@ Output/%.native: $(SourceDir)/%.m Output/.dir
 Output/%.native: $(SourceDir)/%.mm Output/.dir
 	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
+Output/%.native.dbg: $(SourceDir)/%.c Output/.dir
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg: $(SourceDir)/%.cpp Output/.dir
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg: $(SourceDir)/%.m Output/.dir
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg: $(SourceDir)/%.mm Output/.dir
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg.opt: $(SourceDir)/%.c Output/.dir
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg.opt: $(SourceDir)/%.cpp Output/.dir
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg.opt: $(SourceDir)/%.m Output/.dir
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
+Output/%.native.dbg.opt: $(SourceDir)/%.mm Output/.dir
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+
 Output/%.dbg: $(SourceDir)/%.c Output/.dir
 	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
