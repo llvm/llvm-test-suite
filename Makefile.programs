@@ -972,6 +972,24 @@ report.csv: report.$(TEST).csv
 
 report.tex: report.$(TEST).tex
 	@cat $<
+
+report.$(TEST).txtonly: report.$(TEST).raw.out $(TestReport)
+	@cat report.$(TEST).raw.out
+
+report.dbgopt.header:
+	@echo "***************************************************************"
+	@echo " Test failures in this report indicates that code generation"
+	@echo " for the test case is influenced by presense of debugging"
+	@echo " information."
+	@echo " "
+	@echo " Run following commands to investigate failures."
+	@echo " prompt> llvm-gcc -g -fdebug-disable-debug-info-print -Os -S foo.c -o foo.first.s"
+	@echo " prompt> llvm-gcc -Os -S foo.c -o foo.second.s"
+	@echo " prompt> diff foo.first.s foo.second.s"
+	@echo "***************************************************************"
+
+report.dbgopt: report.dbgopt.header report.$(TEST).txtonly
+
 endif
 
 clean::

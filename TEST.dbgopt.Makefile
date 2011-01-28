@@ -19,45 +19,45 @@ Output/%.s: %.c Output/.dir $(INCLUDES)
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.first.s
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
-	 echo "--------- TEST-PASS: $*"; \
+	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
-	 echo "--------- TEST-FAIL: $*"; \
+	 echo "--------- TEST-FAIL: $*" > Output/$*.dbgopt.report.txt; \
 	fi
 
 Output/%.s: %.cpp Output/.dir $(INCLUDES)
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.first.s
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
-	 echo "--------- TEST-PASS: $*"; \
+	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
-	 echo "--------- TEST-FAIL: $*"; \
+	 echo "--------- TEST-FAIL: $*" > Output/$*.dbgopt.report.txt; \
 	fi
 
 Output/%.s: %.cc Output/.dir $(INCLUDES)
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.first.s
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
-	 echo "--------- TEST-PASS: $*"; \
+	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
-	 echo "--------- TEST-FAIL: $*"; \
+	 echo "--------- TEST-FAIL: $*" > Output/$*.dbgopt.report.txt; \
 	fi
 
 Output/%.s: %.m Output/.dir $(INCLUDES)
 	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.first.s
 	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
-	 echo "--------- TEST-PASS: $*"; \
+	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
-	 echo "--------- TEST-FAIL: $*"; \
+	 echo "--------- TEST-FAIL: $*" > Output/$*.dbgopt.report.txt; \
 	fi
 
 Output/%.s: %.mm Output/.dir $(INCLUDES)
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.first.s
 	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
-	 echo "--------- TEST-PASS: $*"; \
+	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
-	 echo "--------- TEST-FAIL: $*"; \
+	 echo "--------- TEST-FAIL: $*" > Output/$*.dbgopt.report.txt; \
 	fi
 
 Asms    := $(sort $(addsuffix .s, $(notdir $(basename $(Source)))))
