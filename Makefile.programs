@@ -990,6 +990,30 @@ report.dbgopt.header:
 
 report.dbgopt: report.dbgopt.header report.$(TEST).txtonly
 
+report.dbg.html: $(REPORT_DEPENDENCIES) $(TestMakefile)
+	$(MAKE) $(FORCE_SERIAL_ARG) TEST=$(TEST)
+	@echo "<h1> Quality of debug info in optimized builds at -O3</h1>" > $@
+	@echo "<table border=\"0\">" >> $@
+	@echo "<tr><td></td><td>|</td>" >> $@
+	@echo "<td><b>GCC</b></td><td></td><td></td><td></td>" >> $@
+	@echo "<td>|</td>" >> $@
+	@echo "<td><b>LLVM</b></td><td></td><td></td><td></td>" >> $@
+	@echo "</tr>" >> $@
+	@echo "<tr>"  >> $@
+	@echo "<td>Name</td><td>|</td>" >> $@
+	@echo "<td>Total<br>Arguments</td>" >> $@
+	@echo "<td>Valid<br>Arguments</td>" >> $@
+	@echo "<td>Missing<br>Arguments</td>" >> $@
+	@echo "<td>Invalid<br>Arguments</td>" >> $@
+	@echo "<td>|</td>" >> $@
+	@echo "<td>Total<br>Arguments</td>" >> $@
+	@echo "<td>Valid<br>Arguments</td>" >> $@
+	@echo "<td>Missing<br>Arguments</td>" >> $@
+	@echo "<td>Invalid<br>Arguments</td>" >> $@
+	@echo "</tr>" >> $@
+	find . -name \*.$(TEST).report.html -exec cat {} \; >> $@
+	@echo "</table>" >> $@
+
 endif
 
 clean::
