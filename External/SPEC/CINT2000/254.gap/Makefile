@@ -16,3 +16,6 @@ CPPFLAGS += -DSYS_IS_BSD
 else
 CPPFLAGS += -DSYS_IS_USG
 endif
+
+# 254.gap relies on signed arithmetic overflow being well-defined.
+CFLAGS += -fwrapv
