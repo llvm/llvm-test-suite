@@ -1,7 +1,5 @@
 LEVEL=../../../..
 
-#include $(LLVM_OBJ_ROOT)/Makefile.config
-
 PROG = anagram
 #OBJS = anagram.o
 RUN_OPTIONS = $(PROJ_SRC_DIR)/words 2

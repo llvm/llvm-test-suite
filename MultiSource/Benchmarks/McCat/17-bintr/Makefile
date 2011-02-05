@@ -1,7 +1,5 @@
 LEVEL = ../../../..
 
-#include $(LLVM_OBJ_ROOT)/Makefile.config
-
 PROG = bintr
 LDFLAGS = -lm
 #RUN_OPTIONS += 

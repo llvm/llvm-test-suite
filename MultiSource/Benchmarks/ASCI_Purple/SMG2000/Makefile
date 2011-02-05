@@ -8,8 +8,6 @@ CPPFLAGS += -I.
 LIBS += -lm
 LDFLAGS += -lm
 
-#include $(LLVM_OBJ_ROOT)/Makefile.config
-
 ifdef SMALL_PROBLEM_SIZE
 RUN_OPTIONS ="-n 30 15 30 -c 0.1 1.0 10.0"
 else
