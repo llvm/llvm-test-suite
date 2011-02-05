@@ -11,6 +11,18 @@ LLVM_SRC_ROOT = @LLVM_SRC@
 #
 LLVM_OBJ_ROOT = @LLVM_OBJ@
 
+# Set this variable based on whether or not we have access to LLVM source and
+# object trees.
+ifeq ($(LLVM_SRC_ROOT),no)
+HAS_LLVM := 0
+else
+ifeq ($(LLVM_OBJ_ROOT),no)
+HAS_LLVM := 0
+else
+HAS_LLVM := 1
+endif
+endif
+
 # Set the directory root of this project's source files
 PROJ_SRC_ROOT := $(subst //,/,@abs_top_srcdir@)
 
@@ -20,8 +32,31 @@ PROJ_OBJ_ROOT := $(subst //,/,@abs_top_builddir@)
 # Set the root directory of this project's install prefix
 PROJ_INSTALL_ROOT := @prefix@
 
-# Include LLVM's configuration Makefile.
+# Include LLVM's configuration Makefile, if available.
+ifeq ($(HAS_LLVM),1)
 include $(LLVM_OBJ_ROOT)/Makefile.config
+else
+
+# Otherwise, define specific things we know we need.
+realpath = $(shell cd $(1); $(PWD))
+PROJ_OBJ_DIR  := $(call realpath, .)
+PROJ_OBJ_ROOT := $(call realpath, $(PROJ_OBJ_DIR)/$(LEVEL))
+PROJ_SRC_DIR := $(call realpath, $(PROJ_SRC_ROOT)/$(patsubst $(PROJ_OBJ_ROOT)%,%,$(PROJ_OBJ_DIR)))
+
+CP := cp
+DATE := date
+DOT := dot
+ECHO := echo
+INSTALL := install
+LIBS :=
+MKDIR := mkdir
+MV := mv
+PWD := pwd
+RM := rm
+SED := sed
+TCLSH := tclsh
+
+endif
 
 # Ignore the LIBS set by $(LLVM_OBJ_ROOT)/Makefile.config
 LIBS :=
