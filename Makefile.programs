@@ -69,7 +69,7 @@ endif
 # loop on some inputs, which blocks testing some historical revisions. We can
 # remove this once we build our own test tools.
 DIFFPROG := $(PROGDIR)/RunToolSafely.sh 60 \
-  $(PROGDIR)/DiffOutput.sh "\"$(LLVMTOOLCURRENT)/fpcmp $(TOLERANCEOPT)\""
+  $(PROGDIR)/DiffOutput.sh "\"$(FPCMP) $(TOLERANCEOPT)\""
 
 # RUNTIMELIMIT - The number of seconds we should wait before certain events
 # timeout.  This is overridable on the commandline or in tests makefiles.
