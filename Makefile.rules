@@ -317,7 +317,18 @@ LLINK     = $(LLVMTOOLCURRENT)/llvm-link$(EXEEXT)
 LPROF     = $(LLVMTOOLCURRENT)/llvm-prof$(EXEEXT)
 LBUGPOINT = $(LLVMTOOLCURRENT)/bugpoint$(EXEEXT)
 LFINDMISOPT= $(LLVM_SRC_ROOT)/utils/findmisopt
+
+ifeq ($(HAS_LLVM),1)
 FPCMP     = $(LLVMTOOLCURRENT)/fpcmp
+else
+FPCMP     = $(PROJ_OBJ_ROOT)/tools/fpcmp
+endif
+
+ifeq ($(HAS_LLVM),0)
+# Not strictly related to HAS_LLVM, but otherwise in generally tools weren't
+# being built.
+TIMEIT    = $(PROJ_OBJ_ROOT)/tools/timeit
+endif
 
 LCC := $(LLVMCC)
 LCXX := $(LLVMCXX)
