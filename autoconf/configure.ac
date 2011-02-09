@@ -46,6 +46,7 @@ AC_CONFIG_MAKEFILE(MultiSource/Makefile)
 AC_CONFIG_MAKEFILE(MultiSource/Makefile.multisrc)
 AC_CONFIG_MAKEFILE(SingleSource/Makefile)
 AC_CONFIG_MAKEFILE(SingleSource/Makefile.singlesrc)
+AC_CONFIG_MAKEFILE(tools/Makefile)
 
 dnl **************************************************************************
 dnl * Get command line options

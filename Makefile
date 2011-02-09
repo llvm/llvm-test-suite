@@ -20,3 +20,7 @@ include $(LEVEL)/Makefile.programs
 build-for-llvm-top:
 	./configure --with-llvmsrc=$(LLVM_TOP)/llvm --with-llvmobj=$(LLVM_TOP)/llvm --srcdir=$(LLVM_TOP)/test-suite --with-llvmgccdir=$(LLVM_TOP)/install --with-externals=$(LLVM_TOP)/externals
 	$(MAKE)
+
+tools:
+	$(MAKE) -C tools
+.PHONY: tools
