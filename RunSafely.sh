@@ -57,6 +57,7 @@ RUSER=`id -un`
 RCLIENT=rsh
 RPORT=
 RUN_UNDER=
+TIMEIT=time
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -75,6 +76,10 @@ if [ $1 = "-rp" ]; then
 fi
 if [ $1 = "-u" ]; then
   RUN_UNDER=$2
+  shift 2
+fi
+if [ $1 = "-t" ]; then
+  TIMEIT=$2
   shift 2
 fi
 
@@ -133,7 +138,7 @@ COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
 COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD time -p sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \
+  ( sh -c "$ULIMITCMD $TIMEIT -p sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
@@ -143,7 +148,7 @@ else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${PROG}.remote.time"
-  echo "$ULIMITCMD cd $PWD; (time -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
+  echo "$ULIMITCMD cd $PWD; ($TIMEIT -p ($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;); echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
