@@ -56,6 +56,11 @@ RM := rm
 SED := sed
 TCLSH := tclsh
 
+# Configure parameters.
+TARGET_OS := @TARGET_OS@
+ARCH := @ARCH@
+ENDIAN := @ENDIAN@
+
 endif
 
 # Ignore the LIBS set by $(LLVM_OBJ_ROOT)/Makefile.config

@@ -48,6 +48,101 @@ AC_CONFIG_MAKEFILE(SingleSource/Makefile)
 AC_CONFIG_MAKEFILE(SingleSource/Makefile.singlesrc)
 AC_CONFIG_MAKEFILE(tools/Makefile)
 
+dnl===-----------------------------------------------------------------------===
+dnl===
+dnl=== SECTION 2: Architecture, target, and host checks
+dnl===
+dnl===-----------------------------------------------------------------------===
+
+dnl Check the target for which we're compiling and the host that will do the
+dnl compilations. This will tell us which LLVM compiler will be used for
+dnl compiling SSA into object code. This needs to be done early because
+dnl following tests depend on it.
+AC_CANONICAL_TARGET
+
+AC_CACHE_CHECK([type of operating system we're going to target],
+               [llvm_cv_target_os_type],
+[case $target in
+  *-*-aix*)
+    llvm_cv_target_os_type="AIX" ;;
+  *-*-irix*)
+    llvm_cv_target_os_type="IRIX" ;;
+  *-*-cygwin*)
+    llvm_cv_target_os_type="Cygwin" ;;
+  *-*-darwin*)
+    llvm_cv_target_os_type="Darwin" ;;
+  *-*-minix*)
+    llvm_cv_target_os_type="Minix" ;;
+  *-*-freebsd*)
+    llvm_cv_target_os_type="FreeBSD" ;;
+  *-*-openbsd*)
+    llvm_cv_target_os_type="OpenBSD" ;;
+  *-*-netbsd*)
+    llvm_cv_target_os_type="NetBSD" ;;
+  *-*-dragonfly*)
+    llvm_cv_target_os_type="DragonFly" ;;
+  *-*-hpux*)
+    llvm_cv_target_os_type="HP-UX" ;;
+  *-*-interix*)
+    llvm_cv_target_os_type="Interix" ;;
+  *-*-linux*)
+    llvm_cv_target_os_type="Linux" ;;
+  *-*-solaris*)
+    llvm_cv_target_os_type="SunOS" ;;
+  *-*-auroraux*)
+    llvm_cv_target_os_type="AuroraUX" ;;
+  *-*-win32*)
+    llvm_cv_target_os_type="Win32" ;;
+  *-*-mingw*)
+    llvm_cv_target_os_type="MingW" ;;
+  *-*-haiku*)
+    llvm_cv_target_os_type="Haiku" ;;
+  *-unknown-eabi*)
+    llvm_cv_target_os_type="Freestanding" ;;
+  *)
+    llvm_cv_target_os_type="Unknown" ;;
+esac])
+
+dnl Set the "TARGET_OS" Makefile variable based on the target type.
+AC_SUBST(TARGET_OS,$llvm_cv_target_os_type)
+
+dnl Determine what our target architecture is and configure accordingly.
+dnl This will allow Makefiles to make a distinction between the hardware and
+dnl the OS.
+AC_CACHE_CHECK([target architecture],[llvm_cv_target_arch],
+[case $target in
+  i?86-*)                 llvm_cv_target_arch="x86" ;;
+  amd64-* | x86_64-*)     llvm_cv_target_arch="x86_64" ;;
+  sparc*-*)               llvm_cv_target_arch="Sparc" ;;
+  powerpc*-*)             llvm_cv_target_arch="PowerPC" ;;
+  alpha*-*)               llvm_cv_target_arch="Alpha" ;;
+  arm*-*)                 llvm_cv_target_arch="ARM" ;;
+  mips-*)                 llvm_cv_target_arch="Mips" ;;
+  xcore-*)                llvm_cv_target_arch="XCore" ;;
+  msp430-*)               llvm_cv_target_arch="MSP430" ;;
+  s390x-*)                llvm_cv_target_arch="SystemZ" ;;
+  bfin-*)                 llvm_cv_target_arch="Blackfin" ;;
+  mblaze-*)               llvm_cv_target_arch="MBlaze" ;;
+  ptx-*)                  llvm_cv_target_arch="PTX" ;;
+  *)                      llvm_cv_target_arch="Unknown" ;;
+esac])
+if test "$llvm_cv_target_arch" = "Unknown" ; then
+  AC_MSG_WARN([Configuring LLVM for an unknown target archicture])
+fi
+
+# Determine the LLVM native architecture for the target
+case "$llvm_cv_target_arch" in
+    x86)     LLVM_NATIVE_ARCH="X86" ;;
+    x86_64)  LLVM_NATIVE_ARCH="X86" ;;
+    *)       LLVM_NATIVE_ARCH="$llvm_cv_target_arch" ;;
+esac
+
+dnl Define a substitution, ARCH, for the target architecture
+AC_SUBST(ARCH,$llvm_cv_target_arch)
+
+dnl Check for the endianness of the target
+AC_C_BIGENDIAN(AC_SUBST([ENDIAN],[big]),AC_SUBST([ENDIAN],[little]))
+
 dnl **************************************************************************
 dnl * Get command line options
 dnl **************************************************************************
