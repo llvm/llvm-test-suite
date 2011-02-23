@@ -988,8 +988,8 @@ report.dbgopt.header:
 	@echo " information."
 	@echo " "
 	@echo " Run following commands to investigate failures."
-	@echo " prompt> llvm-gcc -g -fdebug-disable-debug-info-print -Os -S foo.c -o foo.first.s"
-	@echo " prompt> llvm-gcc -Os -S foo.c -o foo.second.s"
+	@echo " prompt> clang -g -fdebug-disable-debug-info-print -Os -S foo.c -o foo.first.s"
+	@echo " prompt> clang -Os -S foo.c -o foo.second.s"
 	@echo " prompt> diff foo.first.s foo.second.s"
 	@echo "***************************************************************"
 

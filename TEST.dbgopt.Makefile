@@ -3,8 +3,9 @@
 # This test checks whether presense of debugging information influences
 # the optimizer or not. 
 #
-# $ llvm-gcc -g -fdebug-disable-debug-info-print -Os -S foo.c -o foo.first.s
-# $ llvm-gcc -Os -S foo.c -o foo.second.s
+# $ clang -fno-verbose-asm -g -mllvm --disable-debug-info-print -Os \
+#      -S foo.c -o foo.first.s
+# $ clang -fno-verbose-asm -Os -S foo.c -o foo.second.s
 # $ diff foo.first.s foo.second.s
 #
 ##===----------------------------------------------------------------------===##
@@ -16,8 +17,11 @@ $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.diff
 
 Output/%.s: %.c Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.first.s
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.second.s
+	-$(LLVMCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os \
+	  -fno-verbose-asm -mllvm --disable-debug-info-print \
+	  -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.first.s
+	-$(LLVMCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os \
+	  -fno-verbose-asm -S ${PROJ_SRC_DIR}/$*.c -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
@@ -25,8 +29,11 @@ Output/%.s: %.c Output/.dir $(INCLUDES)
 	fi
 
 Output/%.s: %.cpp Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.first.s
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.second.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os \
+	  -fno-verbose-asm -mllvm --disable-debug-info-print \
+	  -S ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S \
+	  -fno-verbose-asm ${PROJ_SRC_DIR}/$*.cpp -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
@@ -34,8 +41,11 @@ Output/%.s: %.cpp Output/.dir $(INCLUDES)
 	fi
 
 Output/%.s: %.cc Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.first.s
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.second.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os \
+	  -fno-verbose-asm -mllvm -disable-debug-info-print \
+	  -S ${PROJ_SRC_DIR}/$*.cc -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S \
+	  -fno-verbose-asm ${PROJ_SRC_DIR}/$*.cc -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
@@ -43,8 +53,11 @@ Output/%.s: %.cc Output/.dir $(INCLUDES)
 	fi
 
 Output/%.s: %.m Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.first.s
-	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.second.s
+	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os \
+	  -fno-verbose-asm -mllvm --disable-debug-info-print \
+	  -S ${PROJ_SRC_DIR}/$*.m -o Output/$*.first.s
+	-$(LLVMGCC) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S \
+	  -fno-verbose-asm ${PROJ_SRC_DIR}/$*.m -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
@@ -52,8 +65,11 @@ Output/%.s: %.m Output/.dir $(INCLUDES)
 	fi
 
 Output/%.s: %.mm Output/.dir $(INCLUDES)
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os -fdebug-disable-debug-info-print -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.first.s
-	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.second.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -g -Os \
+	  -fno-verbose-asm -mllvm --disable-debug-info-print \
+	  -S ${PROJ_SRC_DIR}/$*.mm -o Output/$*.first.s
+	-$(LLVMGCC) $(CPPFLAGS) $(CFLAGS) $(LOPTFLAGS) $(X_TARGET_FLAGS) -Os -S \
+	  -fno-verbose-asm ${PROJ_SRC_DIR}/$*.mm -o Output/$*.second.s
 	@-if diff Output/$*.first.s Output/$*.second.s > $@; then \
 	 echo "--------- TEST-PASS: $*" > Output/$*.dbgopt.report.txt; \
 	else \
