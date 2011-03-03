@@ -8,7 +8,7 @@ static int assert_fail(const char* s, unsigned l)
 #define ASSERT(expr)    ((expr) ? 1 : assert_fail(#expr,__LINE__))
 
 int test(int r) {
-#if !defined(__i386__)
+#if !defined(__i386__) && !defined(__x86_64__)
   #if !defined(BYTE_ORDER) || !defined(LITTLE_ENDIAN)
      return r;
   #else
