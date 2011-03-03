@@ -9,6 +9,5 @@ PROGRAMS_TO_SKIP := inlined_cleanup
 endif
 endif
 
-CFLAGS += -std=c99
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc
