@@ -13,7 +13,7 @@ int main (int argc, const char * argv[]) {
       [array removeLastObject];
     }
   } @catch (NSException *e) {
-    exceptionThrown = YES
+    exceptionThrown = YES;
   }
 
   assert(enumerated == YES && exceptionThrown == YES);
