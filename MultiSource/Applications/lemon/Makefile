@@ -7,7 +7,7 @@ RUN_OPTIONS = $(PROJ_SRC_DIR)/parse.y $(PROJ_SRC_DIR)/example1.y $(PROJ_SRC_DIR)
 HASH_PROGRAM_OUTPUT = 1
 
 # With a Debug+Asserts build may time out if the default limit is used.
-RUNTIMELIMIT := 750
+RUNTIMELIMIT := 1500
 
 include $(LEVEL)/Makefile.config
 
