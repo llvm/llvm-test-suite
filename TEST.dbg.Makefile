@@ -15,6 +15,7 @@
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
+COLLECTOR := $(PROJ_SRC_ROOT)/CollectDebugInfoUsingLLDB.py 
 
 REPORTS_TO_GEN := dbg
 REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
@@ -56,11 +57,20 @@ test.$(TEST).%: Output/%.bp Output/%.dbg Output/%.dbg.opt Output/%.native.dbg Ou
 	if test "$*" == "exptree"; then \
 	  is_skip=1; \
 	fi; \
+	if test "$*" == "ray"; then \
+	  is_skip=1; \
+	fi; \
+	if test "$*" == "oscar"; then \
+	  is_skip=1; \
+	fi; \
+	if test "$*" == "spirit"; then \
+	  is_skip=1; \
+	fi; \
 	if test $$is_skip == 0; then \
-	  $(LLVM_SRC_ROOT)/utils/CollectDebugInfoUsingLLDB.py Output/$*.dbg Output/$*.bp Output/$*.dbg.out; \
-	  $(LLVM_SRC_ROOT)/utils/CollectDebugInfoUsingLLDB.py Output/$*.dbg.opt Output/$*.bp Output/$*.dbg.opt.out; \
-	  $(LLVM_SRC_ROOT)/utils/CollectDebugInfoUsingLLDB.py Output/$*.native.dbg Output/$*.bp Output/$*.native.dbg.out; \
-	  $(LLVM_SRC_ROOT)/utils/CollectDebugInfoUsingLLDB.py Output/$*.native.dbg.opt Output/$*.bp Output/$*.native.dbg.opt.out; \
-	  $(LLVM_SRC_ROOT)/utils/CompareDebugInfo.py $*; \
+	  $(COLLECTOR) Output/$*.dbg Output/$*.bp Output/$*.dbg.out; \
+	  $(COLLECTOR) Output/$*.dbg.opt Output/$*.bp Output/$*.dbg.opt.out; \
+	  $(COLLECTOR) Output/$*.native.dbg Output/$*.bp Output/$*.native.dbg.out; \
+	  $(COLLECTOR) Output/$*.native.dbg.opt Output/$*.bp Output/$*.native.dbg.opt.out; \
+	  $(PROJ_SRC_ROOT)/CompareDebugInfo.py $*; \
 	fi
 
