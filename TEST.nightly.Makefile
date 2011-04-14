@@ -149,3 +149,7 @@ Output/%.$(TEST).report.txt: $(addprefix Output/%.nightly., $(REPORTS_SUFFIX))
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@-cat $<
+
+$(PROGRAMS_TO_TEST:%=build.$(TEST).%): \
+build.$(TEST).%: Output/%.llc
+	@echo "Finished Building: $<"

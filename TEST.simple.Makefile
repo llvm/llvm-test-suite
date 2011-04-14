@@ -66,3 +66,7 @@ Output/%.$(TEST).report.txt: $(addprefix Output/%.simple., $(REPORTS_SUFFIX))
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@-cat $<
+
+$(PROGRAMS_TO_TEST:%=build.$(TEST).%): \
+build.$(TEST).%: Output/%.simple
+	@echo "Finished Building: $<"

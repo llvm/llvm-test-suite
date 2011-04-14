@@ -890,6 +890,10 @@ endif
 #
 test:: $(PROGRAMS_TO_TEST:%=test.$(TEST).%)
 
+# Support building with the TEST= option without executing tests.
+# Allows parallel builds to complete before running serial benchmarks.
+build:: $(PROGRAMS_TO_TEST:%=build.$(TEST).%)
+
 # AVAILABLE_TESTS - Compute the set of tests available for user help
 #
 TEST_FILES = $(wildcard $(PROGDIR)/TEST.*.Makefile) \
