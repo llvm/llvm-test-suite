@@ -44,7 +44,7 @@ include $(LEVEL)/Makefile.tests
 
 .PRECIOUS: Output/%.llvm Output/%.native Output/%.simple Output/%.llc Output/%.llc.s
 .PRECIOUS: Output/%.cbe Output/%.cbe.c Output/%.llvm.bc Output/%.linked.bc
-.PRECIOUS: Output/%.linked.optbeta.bc Output/%.llvm.optbeta.bc 
+.PRECIOUS: Output/%.linked.optbeta.bc Output/%.llvm.optbeta.bc
 
 PROGDIR = $(PROJ_SRC_ROOT)
 
@@ -155,7 +155,7 @@ endif
 # Targets to build for the default target...
 #
 
-# We will be working in the Output directory... 
+# We will be working in the Output directory...
 PREFIXED_PROGRAMS_TO_TEST := $(addprefix Output/,$(PROGRAMS_TO_TEST))
 
 # Completed bytecode for a program
@@ -196,7 +196,7 @@ PRINTPROFOUTPUT := $(addsuffix .printprof, $(PREFIXED_PROGRAMS_TO_TEST))
 # Build diffs from the output...
 .PRECIOUS: Output/%.diff-simple
 .PRECIOUS: Output/%.diff-lli Output/%.diff-jit Output/%.diff-opt-beta
-.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe 
+.PRECIOUS: Output/%.diff-llc Output/%.diff-llc-beta Output/%.diff-cbe
 
 
 # Regardless of what other options are specified, build the program's bytecode
@@ -256,11 +256,11 @@ LLCBETAOPTION := -regalloc=local -O0
 #--enable-tail-merge
 endif
 ifeq ($(ARCH),Alpha)
-LLCBETAOPTION := -sched=list-td 
+LLCBETAOPTION := -sched=list-td
 # -enable-alpha-FTOI -enable-alpha-intfpdiv
 endif
 ifeq ($(ARCH),IA64)
-LLCBETAOPTION := -sched=simple 
+LLCBETAOPTION := -sched=simple
 endif
 ifeq ($(ARCH),x86_64)
 LLCBETAOPTION := -combiner-alias-analysis
@@ -709,13 +709,13 @@ Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
           $(BUGPOINT_OPTIONS) $(BUGPOINT_TOOL_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.misopt.out): \
-Output/%.misopt.out: Output/%.linked.rbc $(LFINDMISOPT) 
+Output/%.misopt.out: Output/%.linked.rbc $(LFINDMISOPT)
 	$(LFINDMISOPT) $< Output/$*.misopt "$(RUN_OPTIONS)" \
 	  "$(STDIN_FILENAME)" > Output/$*.misopt.out 2>&1
 
 clean::
-	rm -f bugpoint-* 
-	rm -f bugpoint.* 
+	rm -f bugpoint-*
+	rm -f bugpoint.*
 	rm -rf Output/misopt-*
 
 LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
@@ -851,7 +851,7 @@ Output/%.out-nat: $(SRCDIR)/%.reference_output Output/.dir
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
 	cp $< $@
-else 
+else
 
 # Rules to support USE_REFERENCE_OUTPUT.
 ifdef USE_REFERENCE_OUTPUT
