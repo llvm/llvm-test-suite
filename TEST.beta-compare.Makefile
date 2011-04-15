@@ -34,6 +34,10 @@ $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@cat $<
 
+$(PROGRAMS_TO_TEST:%=build.$(TEST).%): \
+build.$(TEST).%: Output/%.llc Output/%.llc-beta
+	@echo "Finished Building: $<"
+
 # Define REPORT_DEPENDENCIES so that the report is regenerated if llc changes
 #
 REPORT_DEPENDENCIES := $(LLC)
