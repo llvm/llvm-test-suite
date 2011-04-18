@@ -150,6 +150,12 @@ $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.$(TEST).report.txt
 	@-cat $<
 
+ifdef ENABLE_LLCBETA
+$(PROGRAMS_TO_TEST:%=build.$(TEST).%): \
+build.$(TEST).%: Output/%.llc Output/%.llc-beta
+	@echo "Finished Building: $<"
+else
 $(PROGRAMS_TO_TEST:%=build.$(TEST).%): \
 build.$(TEST).%: Output/%.llc
 	@echo "Finished Building: $<"
+endif
