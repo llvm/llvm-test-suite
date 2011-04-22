@@ -10,8 +10,8 @@
 @property (assign) id prop;
 @end
 
-@interface Foo : NSObject <Proto> { int x; } @end
-@interface Bar : NSObject <Proto> @end
+@interface Foo : NSObject <Proto> { id prop; } @end
+@interface Bar : NSObject <Proto> { id prop; } @end
 
 @implementation Foo
 @synthesize prop;
