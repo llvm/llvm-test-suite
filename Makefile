@@ -22,5 +22,5 @@ build-for-llvm-top:
 	$(MAKE)
 
 tools:
-	$(MAKE) -C tools
+	$(MAKE) -C tools all
 .PHONY: tools
