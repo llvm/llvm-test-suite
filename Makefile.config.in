@@ -71,6 +71,9 @@ ifndef SourceDir
 SourceDir=$(PROJ_SRC_DIR)
 endif
 
+ORIGINAL_CC := $(CC)
+ORIGINAL_CXX := $(CC)
+
 ifdef TARGET_ARCH
 ARCH := $(TARGET_ARCH)
 endif
