@@ -38,7 +38,7 @@ struct {
   int i3;
   int : 0;
   int i4;
-} t3 = {1,2,3,4};
+} ATTR t3 = {1,2,3,4};
 
 int main() {
   if (sizeof(t1) != 2)
