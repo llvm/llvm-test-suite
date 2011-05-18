@@ -23,4 +23,6 @@ int main()
   } else {
     bar(buf, 37);
   }
+
+  return 0;
 }
