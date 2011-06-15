@@ -2,6 +2,9 @@
 
 #define ATTR __attribute__((__ms_struct__))
 
+// GCC only implements #pragma ms_struct on Darwin.
+#define HAVE_PRAGMA_MS_STRUCT (defined(__clang__) || defined(__MACH__))
+
 struct {
                    unsigned int bf_1 : 12;
                    unsigned int : 0;
@@ -17,6 +20,7 @@ struct
 } ATTR t2 = {3,4};
 static int a2[(sizeof(t2) == 4) -1];
 
+#if HAVE_PRAGMA_MS_STRUCT
 #pragma ms_struct on
 struct
 {
@@ -26,6 +30,7 @@ struct
 } t3 = {5,6};
 #pragma ms_struct off
 static int a3[(sizeof(t3) == 4) -1];
+#endif
 
 struct
 {
@@ -85,8 +90,10 @@ int main() {
     abort();
   if (t2.foo != 3 || t2.bar != 4)
     abort();
+#if HAVE_PRAGMA_MS_STRUCT
   if (t3.foo != 5 || t3.bar != 6)
     abort();
+#endif
   if (t5.foo != 7 || t5.bar != 8)
     abort();
   if (t6.foo != 5 || t6.bar != 10)
