@@ -202,7 +202,7 @@ if target.IsValid():
     # Launch the process. Since we specified synchronous mode, we won't return
     # from this function until we hit the breakpoint at main
     sberror = lldb.SBError()
-    process = target.Launch (None, None, os.ctermid(), os.ctermid(), os.ctermid(), None, 0, False, sberror)
+    process = target.LaunchSimple(None, None, None)
     # Make sure the launch went ok
     while stopped_at_breakpoint(process):
         # print "stopped at a bp"
