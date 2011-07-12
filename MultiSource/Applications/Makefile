@@ -5,7 +5,7 @@ LEVEL = ../..
 include $(LEVEL)/Makefile.config
 
 PARALLEL_DIRS  = Burg aha sgefa siod d spiff treecc SPASS \
-                 JM viterbi SIBsim4 ClamAV sqlite3 lemon
+                 oggenc JM viterbi SIBsim4 ClamAV sqlite3 lemon
 ifndef DISABLE_CXX
 PARALLEL_DIRS += lambda-0.1.3 hbd hexxagon minisat 
 endif
