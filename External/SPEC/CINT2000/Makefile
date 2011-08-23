@@ -13,11 +13,6 @@ PARALLEL_DIRS := \
 	256.bzip2 \
 	300.twolf
 
-# Disable 176.gcc when testing with Clang, which doesn't support lvalue casts.
-ifdef CC_UNDER_TEST_IS_CLANG
-PARALLEL_DIRS := $(filter-out 176.gcc, $(PARALLEL_DIRS))
-endif
-
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 
