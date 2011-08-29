@@ -6,7 +6,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-LLC_OPTS = $(LLCFLAGS) -f -o=/dev/null -stats -time-passes
+LLC_OPTS = $(LLCFLAGS) -o=/dev/null -stats -time-passes
 CURDIR  := $(shell cd .; pwd)
 PROGDIR := $(PROJ_SRC_ROOT)
 RELDIR  := $(subst $(PROGDIR),,$(CURDIR))
