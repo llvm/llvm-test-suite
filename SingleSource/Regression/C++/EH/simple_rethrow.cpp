@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-int throws() {
+void throws() {
   printf("Throwing int\n");
   throw 16;
 };
 
-int callsthrows() {
+void callsthrows() {
   try {
     throws();
   } catch (...) {
