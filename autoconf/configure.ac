@@ -165,6 +165,90 @@ AC_ARG_WITH(externals,
   AC_SUBST(LLVM_EXTERNALS,[$withval]),
   AC_SUBST(LLVM_EXTERNALS,[$LLVM_SRC/projects/test-suite-externals]))
 
+dnl Allow a specific llvm-gcc/llvm-g++ pair to be used with this LLVM config.
+AC_ARG_WITH(llvmgccdir,
+  AS_HELP_STRING([--with-llvmgccdir],
+    [Specify location of llvm-gcc install dir (default searches PATH)]),,
+    withval=default)
+case "$withval" in
+  default) WITH_LLVMGCCDIR=default ;;
+  /* | [[A-Za-z]]:[[\\/]]*)      WITH_LLVMGCCDIR=$withval ;;
+  *) AC_MSG_ERROR([Invalid path for --with-llvmgccdir. Provide full path]) ;;
+esac
+
+if test "$WITH_LLVMGCCDIR" = "default" ; then
+  LLVMGCC="llvm-gcc${EXEEXT}"
+  LLVMGXX="llvm-g++${EXEEXT}"
+  AC_PATH_PROG(LLVMGCC, $LLVMGCC, [])
+  AC_PATH_PROG(LLVMGXX, $LLVMGXX, [])
+else
+  if test -z "$LLVMGCC"; then
+    LLVMGCC="$WITH_LLVMGCCDIR/bin/llvm-gcc${EXEEXT}"
+  fi
+  if test -z "$LLVMGXX"; then
+    LLVMGXX="$WITH_LLVMGCCDIR/bin/llvm-g++${EXEEXT}"
+  fi
+
+  AC_SUBST(LLVMGCC,$LLVMGCC)
+  AC_SUBST(LLVMGXX,$LLVMGXX)
+fi
+
+dnl Check whether llvm-gcc is based on dragonegg
+AC_CACHE_CHECK([whether llvm-gcc is dragonegg],[llvm_cv_llvmgcc_dragonegg],
+[llvm_cv_llvmgcc_dragonegg="no"
+if test "$LLVMCC_OPTION" == "llvm-gcc" ; then
+  cp /dev/null conftest.c
+  $LLVMGCC -fplugin-arg-dragonegg-emit-ir -S -o - conftest.c > /dev/null 2>&1
+  if test $? -eq 0 ; then
+    llvm_cv_llvmgcc_dragonegg="yes"
+  fi
+  rm conftest.c
+fi])
+
+
+dnl Set the flags needed to emit LLVM IR and to disable optimizations
+dnl in clang/llvm-gcc.
+if test "$llvm_cv_llvmgcc_dragonegg" = "yes" ; then
+  LLVMCC_EMITIR_FLAG="-fplugin-arg-dragonegg-emit-ir"
+  LLVMCC_DISABLEOPT_FLAGS="-fplugin-arg-dragonegg-llvm-ir-optimize=0"
+else
+  LLVMCC_EMITIR_FLAG="-emit-llvm"
+  LLVMCC_DISABLEOPT_FLAGS="-mllvm -disable-llvm-optzns"
+fi
+
+AC_SUBST(LLVMCC_EMITIR_FLAG)
+
+dnl See if the llvm-gcc executable can compile to LLVM assembly
+AC_CACHE_CHECK([whether llvm-gcc is sane],[llvm_cv_llvmgcc_sanity],
+[llvm_cv_llvmgcc_sanity="no"
+if test "$LLVMCC_OPTION" != none ; then
+  cp /dev/null conftest.c
+  $LLVMGCC "$LLVMCC_EMITIR_FLAG" -S -o - conftest.c | \
+      grep 'target datalayout =' > /dev/null 2>&1
+  if test $? -eq 0 ; then
+    llvm_cv_llvmgcc_sanity="yes"
+  fi
+  rm conftest.c
+fi])
+
+dnl Since we have a sane llvm-gcc, identify it and its sub-tools
+dnl Furthermore, add some information about the tools
+if test "$LLVMCC_OPTION" == "llvm-gcc" ; then
+  AC_MSG_CHECKING([llvm-gcc component support])
+  llvmcc1path=`$LLVMGCC --print-prog-name=cc1`
+  AC_SUBST(LLVMCC1,$llvmcc1path)
+  llvmcc1pluspath=`$LLVMGCC --print-prog-name=cc1plus`
+  AC_SUBST(LLVMCC1PLUS,$llvmcc1pluspath)
+  llvmgccdir=`echo "$llvmcc1path" | sed 's,/libexec/.*,,'`
+  AC_SUBST(LLVMGCCDIR,$llvmgccdir)
+  llvmgcclangs=[`$LLVMGCC -v --help 2>&1 | grep '^Configured with:' | sed \
+'s/^.*--enable-languages=\([^ ]*\).*/\1/'`]
+  AC_SUBST(LLVMGCC_LANGS,$llvmgcclangs)
+  AC_SUBST(LLVMGCC_DRAGONEGG,$llvm_cv_llvmgcc_dragonegg)
+  AC_SUBST(LLVMCC_DISABLEOPT_FLAGS)
+  AC_MSG_RESULT([ok])
+fi
+
 dnl Configure the default locations of the external benchmarks
 EXTERNAL_BENCHMARK(spec95,${LLVM_EXTERNALS}/spec95/benchspec)
 EXTERNAL_BENCHMARK(spec2000,${LLVM_EXTERNALS}/speccpu2000/benchspec,[CINT2000])
