@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([[LLVM-TEST]],[[2.8svn]],[llvmbugs@cs.uiuc.edu])
+AC_INIT([[LLVM-TEST]],[[2.9svn]],[llvmbugs@cs.uiuc.edu])
 
 dnl Place all of the extra autoconf files into the config subdirectory
 AC_CONFIG_AUX_DIR([autoconf])
@@ -384,7 +384,6 @@ fi
 dnl Checks for header files.
 dnl We don't check for ancient stuff or things that are guaranteed to be there
 dnl by the C++ standard. We always use the <cfoo> versions of <foo.h> C headers.
-AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 
 dnl Determine if the linker supports the -R option.
