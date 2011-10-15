@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([[LLVM-TEST]],[[3.0svn]],[llvmbugs@cs.uiuc.edu])
+AC_INIT([[LLVM-TEST]],[[3.1svn]],[llvmbugs@cs.uiuc.edu])
 
 dnl Place all of the extra autoconf files into the config subdirectory
 AC_CONFIG_AUX_DIR([autoconf])
