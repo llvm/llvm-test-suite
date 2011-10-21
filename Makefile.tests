@@ -68,7 +68,7 @@ Output/%.ll: %.mm $(LCC_PROGRAMS) Output/.dir $(INCLUDES)
 
 # Compile from X.ll to X.bc
 %.bc: %.ll $(LLVMAS)
-	$(LLVMAS) $< -o $@
+	-$(LLVMAS) $< -o $@
 
 # LLVM Assemble from X.ll to Output/X.bc.  Because we are coming directly from
 # LLVM source, use the non-transforming assembler.
