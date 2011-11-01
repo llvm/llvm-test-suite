@@ -20,4 +20,4 @@ $(DUMMYLIB) : $(wildcard $(DUMMYSRC)/*.c)
 LINKED_PROGS := $(PROGRAMS_TO_TEST:%=Output/%.lib.bc)
 
 $(LINKED_PROGS): Output/%.lib.bc: Output/%.llvm.bc $(DUMMYLIB)
-	$(LLVMLD) --link-as-library $< $(DUMMYLIB) -o $@
+	$(LLINK) $< $(DUMMYLIB) -o $@

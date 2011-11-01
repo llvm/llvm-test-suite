@@ -75,8 +75,8 @@ misopt: Output/$(PROG).misopt.out
 ifndef USE_PRECOMPILED_BYTECODE
 
 $(PROGRAMS_TO_TEST:%=Output/%.linked.rbc): \
-Output/%.linked.rbc: $(LObjects) $(LLVMLD)
-	-$(LLVMLD) -link-as-library -disable-opt $(LObjects) -o $@
+Output/%.linked.rbc: $(LObjects) $(LLINK)
+	-$(LLINK) $(LObjects) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(Source)
