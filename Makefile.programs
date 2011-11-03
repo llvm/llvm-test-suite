@@ -309,53 +309,28 @@ ifndef DISABLE_FOR_LLVM_PROGRAMS
 # optimization...
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.bc): \
-Output/%.llvm.bc: Output/%.linked.bc $(LLVM_LDDPROG)
-	$(RUNTOOLSAFELY) $(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
-ifneq ($(OPTPASSES),)
-	$(RUNTOOLSAFELY) $(LOPT) -q $(OPTPASSES) $@ -o $@.tmp
-	$(MV) -f $@.tmp $@
-endif
-
-$(PROGRAMS_TO_TEST:%=Output/%.llvm): \
-Output/%.llvm: Output/%.linked.bc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm
-ifneq ($(OPTPASSES),)
-	$(RUNTOOLSAFELY) $(LOPT) -q $(OPTPASSES) $@ -o $@.tmp
-	$(MV) -f $@.tmp $@
-endif
+Output/%.llvm.bc: Output/%.linked.bc $(LOPT)
+	$(RUNTOOLSAFELY) $(LOPT) -std-link-opts $(OPTPASSES) \
+		-info-output-file=$(CURDIR)/$@.info \
+			$(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta.bc): \
-Output/%.llvm.optbeta.bc: Output/%.linked.optbeta.bc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
-
-$(PROGRAMS_TO_TEST:%=Output/%.llvm.optbeta): \
-Output/%.llvm.optbeta: Output/%.linked.optbeta.bc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(EXTRA_LINKTIME_OPT_FLAGS) $(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.llvm.optbeta
+Output/%.llvm.optbeta.bc: Output/%.linked.optbeta.bc $(LOPT)
+	$(RUNTOOLSAFELY) $(LOPT) -std-link-opts \
+		-info-output-file=$(CURDIR)/$@.info \
+			$(STATS) $< $(EXTRA_LINKTIME_OPT_FLAGS) -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm.bc): \
-Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.noopt-llvm
-
-$(PROGRAMS_TO_TEST:%=Output/%.noopt-llvm): \
-Output/%.noopt-llvm: Output/%.linked.rbc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.noopt-llvm
-
+Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LOPT)
+	$(RUNTOOLSAFELY) $(LOPT) \
+		-info-output-file=$(CURDIR)/$@.info \
+			$(STATS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm.bc): \
-Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(LLVMLD_FLAGS) -lc $(LIBS) -o Output/$*.nollvm-ldopt-llvm
-
-$(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm): \
-Output/%.nollvm-ldopt-llvm: Output/%.linked.rbc $(LLVMLD)
-	$(RUNTOOLSAFELY) $(LLVMLD) -disable-opt -info-output-file=$(CURDIR)/$@.info $(STATS) $< \
-		$(LLVMLD_FLAGS) -lc $(LIBS)  -o Output/$*.nollvm-ldopt-llvm
+Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LOPT)
+	$(RUNTOOLSAFELY) $(LOPT) \
+		-info-output-file=$(CURDIR)/$@.info \
+			$(STATS) $< -o $@
 
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
@@ -372,7 +347,7 @@ ifneq ($(ARCH),PowerPC)
 ifneq ($(ARCH),x86)
 ifneq ($(ARCH),x86_64)
 LLCFLAGS += -enable-correct-eh-support
-LLVMLD_FLAGS += -disable-inlining
+EXTRA_LINKTIME_OPT_FLAGS += -disable-inlining
 endif
 endif
 endif
