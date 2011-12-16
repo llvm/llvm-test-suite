@@ -198,7 +198,7 @@ else
    if test "$with_built_clang" != "check"; then
       AC_MSG_ERROR([invalid value for --with-built-clang.])
    fi
-   if test -f ${srcdir}/../../tools/clang/README.txt; then
+   if test -f $LLVM_SRC/tools/clang/README.txt; then
      WITH_BUILT_CLANG=1
    fi
 fi
