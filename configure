@@ -4388,7 +4388,7 @@ else
 echo "$as_me: error: invalid value for --with-built-clang." >&2;}
    { (exit 1); exit 1; }; }
    fi
-   if test -f ${srcdir}/../../tools/clang/README.txt; then
+   if test -f $LLVM_SRC/tools/clang/README.txt; then
      WITH_BUILT_CLANG=1
    fi
 fi
@@ -9854,7 +9854,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       hardcode_shlibpath_var=no
       ;;
 
-    freebsd1*)
+    freebsd1.*)
       ld_shlibs=no
       ;;
 
@@ -9870,7 +9870,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       ;;
 
     # Unfortunately, older versions of FreeBSD 2 do not have this feature.
-    freebsd2*)
+    freebsd2.*)
       archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'
       hardcode_direct=yes
       hardcode_minus_L=yes
@@ -10466,7 +10466,7 @@ dgux*)
   shlibpath_var=LD_LIBRARY_PATH
   ;;
 
-freebsd1*)
+freebsd1.*)
   dynamic_linker=no
   ;;
 
@@ -10489,7 +10489,7 @@ freebsd* | dragonfly*)
     objformat=`/usr/bin/objformat`
   else
     case $host_os in
-    freebsd[123]*) objformat=aout ;;
+    freebsd[123].*) objformat=aout ;;
     *) objformat=elf ;;
     esac
   fi
@@ -10507,7 +10507,7 @@ freebsd* | dragonfly*)
   esac
   shlibpath_var=LD_LIBRARY_PATH
   case $host_os in
-  freebsd2*)
+  freebsd2.*)
     shlibpath_overrides_runpath=yes
     ;;
   freebsd3.[01]* | freebsdelf3.[01]*)
@@ -13048,7 +13048,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	;;
     esac
     ;;
-  freebsd[12]*)
+  freebsd[12].*)
     # C++ shared libraries reported to be fairly broken before switch to ELF
     ld_shlibs_CXX=no
     ;;
@@ -14529,7 +14529,7 @@ dgux*)
   shlibpath_var=LD_LIBRARY_PATH
   ;;
 
-freebsd1*)
+freebsd1.*)
   dynamic_linker=no
   ;;
 
@@ -14552,7 +14552,7 @@ freebsd* | dragonfly*)
     objformat=`/usr/bin/objformat`
   else
     case $host_os in
-    freebsd[123]*) objformat=aout ;;
+    freebsd[123].*) objformat=aout ;;
     *) objformat=elf ;;
     esac
   fi
@@ -14570,7 +14570,7 @@ freebsd* | dragonfly*)
   esac
   shlibpath_var=LD_LIBRARY_PATH
   case $host_os in
-  freebsd2*)
+  freebsd2.*)
     shlibpath_overrides_runpath=yes
     ;;
   freebsd3.[01]* | freebsdelf3.[01]*)
@@ -16532,7 +16532,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       hardcode_shlibpath_var_F77=no
       ;;
 
-    freebsd1*)
+    freebsd1.*)
       ld_shlibs_F77=no
       ;;
 
@@ -16548,7 +16548,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       ;;
 
     # Unfortunately, older versions of FreeBSD 2 do not have this feature.
-    freebsd2*)
+    freebsd2.*)
       archive_cmds_F77='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'
       hardcode_direct_F77=yes
       hardcode_minus_L_F77=yes
@@ -17144,7 +17144,7 @@ dgux*)
   shlibpath_var=LD_LIBRARY_PATH
   ;;
 
-freebsd1*)
+freebsd1.*)
   dynamic_linker=no
   ;;
 
@@ -17167,7 +17167,7 @@ freebsd* | dragonfly*)
     objformat=`/usr/bin/objformat`
   else
     case $host_os in
-    freebsd[123]*) objformat=aout ;;
+    freebsd[123].*) objformat=aout ;;
     *) objformat=elf ;;
     esac
   fi
@@ -17185,7 +17185,7 @@ freebsd* | dragonfly*)
   esac
   shlibpath_var=LD_LIBRARY_PATH
   case $host_os in
-  freebsd2*)
+  freebsd2.*)
     shlibpath_overrides_runpath=yes
     ;;
   freebsd3.[01]* | freebsdelf3.[01]*)
@@ -19159,7 +19159,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       hardcode_shlibpath_var_GCJ=no
       ;;
 
-    freebsd1*)
+    freebsd1.*)
       ld_shlibs_GCJ=no
       ;;
 
@@ -19175,7 +19175,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       ;;
 
     # Unfortunately, older versions of FreeBSD 2 do not have this feature.
-    freebsd2*)
+    freebsd2.*)
       archive_cmds_GCJ='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'
       hardcode_direct_GCJ=yes
       hardcode_minus_L_GCJ=yes
@@ -19771,7 +19771,7 @@ dgux*)
   shlibpath_var=LD_LIBRARY_PATH
   ;;
 
-freebsd1*)
+freebsd1.*)
   dynamic_linker=no
   ;;
 
@@ -19794,7 +19794,7 @@ freebsd* | dragonfly*)
     objformat=`/usr/bin/objformat`
   else
     case $host_os in
-    freebsd[123]*) objformat=aout ;;
+    freebsd[123].*) objformat=aout ;;
     *) objformat=elf ;;
     esac
   fi
@@ -19812,7 +19812,7 @@ freebsd* | dragonfly*)
   esac
   shlibpath_var=LD_LIBRARY_PATH
   case $host_os in
-  freebsd2*)
+  freebsd2.*)
     shlibpath_overrides_runpath=yes
     ;;
   freebsd3.[01]* | freebsdelf3.[01]*)
