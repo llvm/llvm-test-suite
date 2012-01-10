@@ -48,7 +48,7 @@ int Foo::sNextId = 0;
 }
 
 @property (assign, readwrite, nonatomic) const Foo& cppObjectNonAtomic;
-@property (assign, readwrite) const Foo& cppObjectAtomic;
+@property (nonatomic, assign, readwrite) const Foo& cppObjectAtomic;
 @property (assign, readwrite, nonatomic) const Foo& cppObjectDynamic;
 @end
 
