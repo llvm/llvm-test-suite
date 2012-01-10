@@ -1,8 +1,10 @@
 #import <Foundation/Foundation.h>
 
+namespace {
 extern "C"
 void objc_copyCppObjectAtomic(void *dest, const void *src, void (*copyHelper) (void *dest, const void *source)) {
    copyHelper(dest, src);
+}
 }
 
 static int count;
