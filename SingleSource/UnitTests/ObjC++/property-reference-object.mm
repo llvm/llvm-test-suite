@@ -1,5 +1,10 @@
 #import <Foundation/Foundation.h>
 
+extern "C"
+void objc_copyCppObjectAtomic(void *dest, const void *src, void (*copyHelper) (void *dest, const void *source)) {
+   copyHelper(dest, src);
+}
+
 static int count;
 class Foo
 {
@@ -48,7 +53,7 @@ int Foo::sNextId = 0;
 }
 
 @property (assign, readwrite, nonatomic) const Foo& cppObjectNonAtomic;
-@property (nonatomic, assign, readwrite) const Foo& cppObjectAtomic;
+@property (assign, readwrite) const Foo  cppObjectAtomic;
 @property (assign, readwrite, nonatomic) const Foo& cppObjectDynamic;
 @end
 
