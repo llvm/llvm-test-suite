@@ -247,9 +247,11 @@ for(i=0;i<NUMTESTS;i++)
                         &bmean,
                         &bstdev,
                         &bnumrun)){
+#if 0
 		  output_string("\n** WARNING: The current test result is NOT 95 % statistically certain.\n");
 		  output_string("** WARNING: The variation among the individual results is too large.\n");
 		  output_string("                    :");
+#endif
 		}
 #ifdef LINUX
                 sprintf(buffer," %15.5g  :  %9.2f  :  %9.2f\n",
