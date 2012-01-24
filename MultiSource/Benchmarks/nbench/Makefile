@@ -1,7 +1,7 @@
 LEVEL = ../../..
 
 PROG     = nbench
-CPPFLAGS = -DBASE_ITERATIONS=50
+CPPFLAGS = -DBASE_ITERATIONS=25
 LDFLAGS  =
 
 include	../../Makefile.multisrc
