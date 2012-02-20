@@ -421,8 +421,10 @@ int main(int argc, char *argv[])
 	  "Basser Lout written by:", "Jeffrey H. Kingston (jeff@cs.usyd.edu.au)");
 	fprintf(stderr, "%-28s %s\n",
 	  "Free source available from:", "ftp://ftp.cs.usyd.edu.au/jeff/lout");
-	fprintf(stderr, "%-28s %s %s\n",
-	  "This executable compiled:", __TIME__, __DATE__);
+    //fprintf(stderr, "%-28s %s %s\n",
+    //        "This executable compiled:", __TIME__, __DATE__);
+    fprintf(stderr, "%-28s %s %s\n",
+            "This executable compiled:", "00:00:00", "Jan 01 1970");
 	fprintf(stderr, "%-28s %s%s%s\n", "System include directory:",
 	  lib, STR_DIR, INCL_DIR);
 	fprintf(stderr, "%-28s %s%s%s\n", "System database directory:",
