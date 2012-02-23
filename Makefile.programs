@@ -828,8 +828,10 @@ SRCDIR  := $(BYTECODE_REPOSITORY)/$(subst $(PROGDIR),,$(CURDIR))
 # Because we don't have source code, we cannot build a native version of the
 # executable.  Copy over pregenerated reference output.
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \
-Output/%.out-nat: $(SRCDIR)/%.reference_output Output/.dir
+Output/%.out-nat: $(SRCDIR)/%.reference_output Output/.dir $(PROJ_SRC_ROOT)/instant.txt
 	cp $< $@
+	# Pretend that the reference output was produced instantaneously.
+	cp $(PROJ_SRC_ROOT)/instant.txt $@.time
 
 $(PROGRAMS_TO_TEST:%=Output/%.LOC.txt): \
 Output/%.LOC.txt: $(SRCDIR)/%.LOC.txt Output/.dir
@@ -842,8 +844,10 @@ ifdef USE_REFERENCE_OUTPUT
 # If a reference output file is specified, use that.
 ifdef REFERENCE_OUTPUT_FILE
 
-Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir
+Output/%.out-nat: $(REFERENCE_OUTPUT_FILE) Output/.dir $(PROJ_SRC_ROOT)/instant.txt
 	cp $< $@
+	# Pretend that the reference output was produced instantaneously.
+	cp $(PROJ_SRC_ROOT)/instant.txt $@.time
 
 else
 
@@ -851,7 +855,7 @@ else
 # 'progamname.reference_output'.
 #
 # Note that this rule needs to be in both Makefile.programs and Makefile.spec.
-Output/%.out-nat: Output/.dir
+Output/%.out-nat: Output/.dir $(PROJ_SRC_ROOT)/instant.txt
 	-if [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY)" ]; then \
 	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY) $@; \
 	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output" ]; then \
@@ -861,6 +865,8 @@ Output/%.out-nat: Output/.dir
 	  cp $(PROJ_SRC_ROOT)/default.reference_output $@; \
 	  cat $@; \
 	fi
+	# Pretend that the reference output was produced instantaneously.
+	cp $(PROJ_SRC_ROOT)/instant.txt $@.time
 
 endif
 
