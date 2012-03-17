@@ -52,9 +52,6 @@ PROGDIR = $(PROJ_SRC_ROOT)
 # Scripts in the this directory...
 #
 
-# TIMEPROG - The program used to get timing results for a program
-TIMEPROG := $(PROGDIR)/TimeProgram.sh
-
 TOLERANCEOPT :=
 ifdef FP_TOLERANCE
 TOLERANCEOPT += -r $(FP_TOLERANCE)
