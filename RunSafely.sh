@@ -136,28 +136,20 @@ PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
 COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 
-TIMEITCMD="$TIMEIT --posix --timeout $TIMELIMIT --chdir $PWD"
+TIMEITCMD="$TIMEIT --timeout $TIMELIMIT --chdir $PWD"
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD $TIMEITCMD sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \
-    | awk -- '\
-BEGIN     { cpu = 0.0; }
-/^user/   { cpu += $2; print; }
-!/^user/  { print; }
-END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+  rm -f "$OUTFILE.time"
+  sh -c "$ULIMITCMD $TIMEITCMD --summary $OUTFILE.time sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE'"
 else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
-  rm -f "$PWD/${PROG}.remote.time"
-  echo "$ULIMITCMD cd $PWD; ($TIMEITCMD sh -c '($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;)'; echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
+  rm -f "$PWD/${OUTFILE}.remote.time"
+  echo "$ULIMITCMD cd $PWD; ($TIMEITCMD --summary $PWD/$OUTFILE.remote.time sh -c '($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;)')" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
   ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROG}.command" )
-  cat $PWD/${OUTFILE}.remote.time | awk -- '\
-BEGIN     { cpu = 0.0; }
-/^user/   { cpu += $2; print; }
-!/^user/  { print; }
-END       { printf("program %f\n", cpu); }' > $OUTFILE.time
+  cp $PWD/${OUTFILE}.remote.time $OUTFILE.time
 sleep 1
 cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
 rm -f $PWD/${OUTFILE}.remote
