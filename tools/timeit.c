@@ -60,6 +60,13 @@ static const char *g_target_exec_directory = 0;
  * and timing). */
 static const char *g_summary_file = 0;
 
+/* \brief If non-zero, the path to redirect the target standard input to. */
+static const char *g_target_redirect_input = 0;
+
+/* \brief If non-zero, the path to redirect the target standard output and
+ * standard error to. */
+static const char *g_target_redirect_output = 0;
+
 static double sample_wall_time(void) {
   struct timeval t;
   gettimeofday(&t, NULL);
@@ -187,6 +194,40 @@ static int execute_target_process(char * const argv[]) {
    */
   setpgrp();
 
+  /* Redirect the standard input, if requested. */
+  if (g_target_redirect_input) {
+    FILE *fp = fopen(g_target_redirect_input, "r");
+    if (!fp) {
+      perror("fopen");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+
+    int fd = fileno(fp);
+    if (dup2(fd, 0) < 0) {
+      perror("dup2");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+
+    fclose(fp);
+  }
+
+  /* Redirect the standard output, if requested. */
+  if (g_target_redirect_output) {
+    FILE *fp = fopen(g_target_redirect_output, "w");
+    if (!fp) {
+      perror("fopen");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+
+    int fd = fileno(fp);
+    if (dup2(fd, 1) < 0 || dup2(fd, 2) < 0) {
+      perror("dup2");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+
+    fclose(fp);
+  }
+
   /* Honor the desired target execute directory. */
   if (g_target_exec_directory) {
     if (chdir(g_target_exec_directory) < 0) {
@@ -248,6 +289,12 @@ static void usage(int is_error) {
           "Execute the subprocess with a timeout of N seconds.\n");
   fprintf(stderr, "  %-20s %s", "{-c,--chdir} <PATH>",
           "Execute the subprocess in the given working directory.\n");
+  fprintf(stderr, "  %-20s %s", "{--summary} <PATH>",
+          "Write monitored process summary (exit code and time) to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "{--redirect-output} <PATH>",
+          "Redirect stdout and stderr for the target to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "{--redirect-input} <PATH>",
+          "Redirect stdin for the target to PATH.\n");
   _exit(is_error);
 }
 
@@ -276,6 +323,33 @@ int main(int argc, char * const argv[]) {
         usage(/*is_error=*/1);
       }
       g_timeout_in_seconds = atoi(argv[++i]);
+      continue;
+    }
+
+    if (streq(arg, "--summary")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_summary_file = argv[++i];
+      continue;
+    }
+
+    if (streq(arg, "--redirect-input")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_target_redirect_input = argv[++i];
+      continue;
+    }
+
+    if (streq(arg, "--redirect-output")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_target_redirect_output = argv[++i];
       continue;
     }
 
