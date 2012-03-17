@@ -19,6 +19,22 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 
+/* Enumeration for our exit status codes. */
+enum ExitCode {
+  /* \brief Indicates a failure monitoring the target. */
+  EXITCODE_MONITORING_FAILURE = 66,
+
+  /* \brief Indicates a failure in exec() which usually means an invalid program
+   * name. */
+  EXITCODE_EXEC_FAILURE = 67,
+
+  /* \brief Indicates that we were unexpectedly signalled(). */
+  EXITCODE_SIGNALLED = 68,
+
+  /* \brief Indicates the child was signalled. */
+  EXITCODE_CHILD_SIGNALLED = 69
+};
+
 /* \brief Record our own program name, for error messages. */
 static const char *g_program_name = 0;
 
@@ -52,7 +68,7 @@ static void terminate_handler(int signal) {
    */
   if (g_monitored_pid) {
     fprintf(stderr, ("%s: error: received signal %d. "
-                     "Killing monitored process(es): %s\n"),
+                     "killing monitored process(es): %s\n"),
             g_program_name, signal, g_target_program);
 
     /* Kill the process group of monitored_pid.  Since we called
@@ -66,7 +82,7 @@ static void terminate_handler(int signal) {
           g_program_name, signal);
   /* Otherwise, we received a signal we should treat as for ourselves, and exit
    * quickly. */
-  _exit(69);
+  _exit(EXITCODE_SIGNALLED);
 }
 
 static void timeout_handler(int signal) {
@@ -101,20 +117,19 @@ int monitor_child_process(pid_t pid, double start_time) {
   } while (res < 0 && errno == EINTR);
   if (res < 0) {
     perror("waitpid");
-    return 68;
+    return EXITCODE_MONITORING_FAILURE;
   }
 
   /* Record the real elapsed time as soon as we can. */
   real_time = sample_wall_time() - start_time;
 
-  /* Just in case there was another error in waitpid, kill the child process
-   * group. */
+  /* Just in case, kill the child process group. */
   kill(-pid, SIGKILL);
 
   /* Collect the other resource data on the children. */
   if (getrusage(RUSAGE_CHILDREN, &usage) < 0) {
     perror("getrusage");
-    return 125;
+    return EXITCODE_MONITORING_FAILURE;
   }
   user_time = (double) usage.ru_utime.tv_sec + usage.ru_utime.tv_usec/1000000.0;
   sys_time = (double) usage.ru_stime.tv_sec + usage.ru_stime.tv_usec/1000000.0;
@@ -127,10 +142,22 @@ int monitor_child_process(pid_t pid, double start_time) {
             real_time, user_time, sys_time);
   }
 
-  return WEXITSTATUS(status);
+  /* If the process was signalled, report a more interesting status. */
+  if (WIFSIGNALED(status)) {
+    fprintf(stderr, "%s: error: child terminated by signal %d\n",
+            g_program_name, WTERMSIG(status));
+    return EXITCODE_CHILD_SIGNALLED;
+  }
+
+  if (WIFEXITED(status)) {
+    return WEXITSTATUS(status);
+  }
+
+  /* This should never happen, but if it does assume some kind of failure. */
+  return EXITCODE_MONITORING_FAILURE;
 }
 
-void execute_target_process(char * const argv[]) {
+static int execute_target_process(char * const argv[]) {
   /* Create a new process group for pid, and the process tree it may spawn. We
    * do this, because later on we might want to kill pid _and_ all processes
    * spawned by it and its descendants.
@@ -141,12 +168,13 @@ void execute_target_process(char * const argv[]) {
   if (g_target_exec_directory) {
     if (chdir(g_target_exec_directory) < 0) {
       perror("chdir");
-      return;
+      return EXITCODE_MONITORING_FAILURE;
     }
   }
 
   execv(argv[0], argv);
   perror("execv");
+  return EXITCODE_EXEC_FAILURE;
 }
 
 int execute(char * const argv[]) {
@@ -167,15 +195,14 @@ int execute(char * const argv[]) {
   pid = fork();
   if (pid < 0) {
     perror("fork");
-    return 66;
+    return EXITCODE_MONITORING_FAILURE;
   }
 
   /* If we are in the context of the child process, spawn it. */
   if (pid == 0) {
     /* Setup and execute the target process. This never returns except on
      * failure. */
-    execute_target_process(argv);
-    return 67;
+    return execute_target_process(argv);
   }
 
   /* Otherwise, we are in the context of the monitoring process. */
