@@ -172,7 +172,7 @@ static int execute_target_process(char * const argv[]) {
     }
   }
 
-  execv(argv[0], argv);
+  execvp(argv[0], argv);
   perror("execv");
   return EXITCODE_EXEC_FAILURE;
 }
