@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <errno.h>
 #include <signal.h>
@@ -169,38 +170,60 @@ int execute(char * const argv[]) {
   return monitor_child_process(pid, start_time);
 }
 
+static int streq(const char *a, const char *b) {
+  return strcmp(a, b) == 0;
+}
+
+static void usage(int is_error) {
+  fprintf(stderr, "usage: %s [options] command ... arguments ...\n",
+          g_program_name);
+  fprintf(stderr, "Options:\n");
+  fprintf(stderr, "  %-20s %s", "{-h,--help}",
+          "Show this help text.\n");
+  fprintf(stderr, "  %-20s %s", "{-p,--posix}",
+          "Report time in /usr/bin/time POSIX format.\n");
+  fprintf(stderr, "  %-20s %s", "{-t,--timeout} <N>",
+          "Execute the subprocess with a timeout of N seconds.\n");
+  _exit(is_error);
+}
+
 int main(int argc, char * const argv[]) {
   int i;
 
+  g_program_name = argv[0];
   for (i = 1; i != argc; ++i) {
-    if (argv[i][0] != '-')
+    const char *arg = argv[i];
+
+    if (arg[0] != '-')
       break;
 
-    switch (argv[i][1]) {
-    case 'p':
+    if (streq(arg, "-h") || streq(arg, "--help")) {
+      usage(/*is_error=*/0);
+    }
+
+    if (streq(arg, "-p") || streq(arg, "--posix")) {
       g_posix_mode = 1;
       continue;
+    }
 
-    case 't':
+    if (streq(arg, "-t") || streq(arg, "--timeout")) {
       if (i + 1 == argc) {
         fprintf(stderr, "error: -t argument requires an option\n");
-        return 1;
+        usage(/*is_error=*/1);
       }
       g_timeout_in_seconds = atoi(argv[++i]);
       continue;
-
-    default:
-      fprintf(stderr, "error: invalid argument '%s'\n", argv[i]);
-      return 1;
     }
+
+    fprintf(stderr, "error: invalid argument '%s'\n", argv[i]);
+    usage(/*is_error=*/1);
   }
 
   if (i == argc) {
     fprintf(stderr, "error: no command (or arguments) was given\n");
-    return 1;
+    usage(/*is_error=*/1);
   }
 
-  g_program_name = argv[0];
   g_target_program = argv[i];
   return execute(&argv[i]);
 }
