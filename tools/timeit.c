@@ -36,6 +36,10 @@ static int g_timeout_in_seconds = 0;
 /* \brief If non-zero, the PID of the process being monitored. */
 static pid_t g_monitored_pid = 0;
 
+/* \brief If non-zero, the path to attempt to chdir() to before executing the
+ * target. */
+static const char *g_target_exec_directory = 0;
+
 static double sample_wall_time(void) {
   struct timeval t;
   gettimeofday(&t, NULL);
@@ -133,6 +137,14 @@ void execute_target_process(char * const argv[]) {
    */
   setpgrp();
 
+  /* Honor the desired target execute directory. */
+  if (g_target_exec_directory) {
+    if (chdir(g_target_exec_directory) < 0) {
+      perror("chdir");
+      return;
+    }
+  }
+
   execv(argv[0], argv);
   perror("execv");
 }
@@ -184,6 +196,8 @@ static void usage(int is_error) {
           "Report time in /usr/bin/time POSIX format.\n");
   fprintf(stderr, "  %-20s %s", "{-t,--timeout} <N>",
           "Execute the subprocess with a timeout of N seconds.\n");
+  fprintf(stderr, "  %-20s %s", "{-c,--chdir} <PATH>",
+          "Execute the subprocess in the given working directory.\n");
   _exit(is_error);
 }
 
@@ -208,10 +222,19 @@ int main(int argc, char * const argv[]) {
 
     if (streq(arg, "-t") || streq(arg, "--timeout")) {
       if (i + 1 == argc) {
-        fprintf(stderr, "error: -t argument requires an option\n");
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
         usage(/*is_error=*/1);
       }
       g_timeout_in_seconds = atoi(argv[++i]);
+      continue;
+    }
+
+    if (streq(arg, "-c") || streq(arg, "--chdir")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_target_exec_directory = argv[++i];
       continue;
     }
 
