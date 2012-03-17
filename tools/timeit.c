@@ -56,6 +56,10 @@ static pid_t g_monitored_pid = 0;
  * target. */
 static const char *g_target_exec_directory = 0;
 
+/* \brief If non-zero, the path to write the summary information to (exit status
+ * and timing). */
+static const char *g_summary_file = 0;
+
 static double sample_wall_time(void) {
   struct timeval t;
   gettimeofday(&t, NULL);
@@ -134,27 +138,46 @@ int monitor_child_process(pid_t pid, double start_time) {
   user_time = (double) usage.ru_utime.tv_sec + usage.ru_utime.tv_usec/1000000.0;
   sys_time = (double) usage.ru_stime.tv_sec + usage.ru_stime.tv_usec/1000000.0;
 
-  if (g_posix_mode) {
-    fprintf(stderr, "real %12.4f\nuser %12.4f\nsys  %12.4f\n",
-            real_time, user_time, sys_time);
-  } else {
-    fprintf(stderr, "%12.4f real %12.4f user %12.4f sys\n",
-            real_time, user_time, sys_time);
-  }
-
   /* If the process was signalled, report a more interesting status. */
+  int exit_status;
   if (WIFSIGNALED(status)) {
     fprintf(stderr, "%s: error: child terminated by signal %d\n",
             g_program_name, WTERMSIG(status));
-    return EXITCODE_CHILD_SIGNALLED;
+    exit_status = EXITCODE_CHILD_SIGNALLED;
+  } else if (WIFEXITED(status)) {
+    exit_status = WEXITSTATUS(status);
+  } else {
+    /* This should never happen, but if it does assume some kind of failure. */
+    exit_status = EXITCODE_MONITORING_FAILURE;
   }
 
-  if (WIFEXITED(status)) {
-    return WEXITSTATUS(status);
+  // If we are not using a summary file, report the information as /usr/bin/time
+  // would.
+  if (!g_summary_file) {
+    if (g_posix_mode) {
+      fprintf(stderr, "real %12.4f\nuser %12.4f\nsys  %12.4f\n",
+              real_time, user_time, sys_time);
+    } else {
+      fprintf(stderr, "%12.4f real %12.4f user %12.4f sys\n",
+              real_time, user_time, sys_time);
+    }
+  } else {
+    /* Otherwise, write the summary data in a simple parsable format. */
+    FILE *fp = fopen(g_summary_file, "w");
+    if (!fp) {
+      perror("fopen");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+
+    fprintf(fp, "exit %d\n", exit_status);
+    fprintf(fp, "%-10s %.4f\n", "real", real_time);
+    fprintf(fp, "%-10s %.4f\n", "user", user_time);
+    fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
+    fprintf(fp, "program %.6f\n", user_time);
+    fclose(fp);
   }
 
-  /* This should never happen, but if it does assume some kind of failure. */
-  return EXITCODE_MONITORING_FAILURE;
+  return exit_status;
 }
 
 static int execute_target_process(char * const argv[]) {
@@ -253,6 +276,15 @@ int main(int argc, char * const argv[]) {
         usage(/*is_error=*/1);
       }
       g_timeout_in_seconds = atoi(argv[++i]);
+      continue;
+    }
+
+    if (streq(arg, "--summary")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_summary_file = argv[++i];
       continue;
     }
 
