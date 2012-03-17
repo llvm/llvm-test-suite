@@ -90,7 +90,7 @@ if [ $1 = "-nw" ]; then
   shift
 fi
 
-ULIMIT=$1
+TIMELIMIT=$1
 EXITOK=$2
 INFILE=$3
 OUTFILE=$4
@@ -111,13 +111,13 @@ case $SYSTEM in
     # Disable core file emission, the script doesn't find it anyway because it
     # is put into /cores.
     ULIMITCMD="$ULIMITCMD ulimit -c 0;"
-    ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
+    ULIMITCMD="$ULIMITCMD ulimit -t $TIMELIMIT;"
     # To prevent infinite loops which fill up the disk, specify a limit on size
     # of files being output by the tests. 10 MB should be enough for anybody. ;)
     ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
     ;;
   *)
-    ULIMITCMD="$ULIMITCMD ulimit -t $ULIMIT;"
+    ULIMITCMD="$ULIMITCMD ulimit -t $TIMELIMIT;"
     ULIMITCMD="$ULIMITCMD ulimit -c unlimited;"
     # To prevent infinite loops which fill up the disk, specify a limit on size
     # of files being output by the tests. 10 MB should be enough for anybody. ;)
@@ -142,7 +142,7 @@ rm -f core core.*
 PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
 if [ -n "$WATCHDOG" ]; then
-  COMMAND="${DIR}TimedExec.sh $ULIMIT $PWD $COMMAND"
+  COMMAND="${DIR}TimedExec.sh $TIMELIMIT $PWD $COMMAND"
 fi
 COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 
