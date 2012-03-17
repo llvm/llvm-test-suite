@@ -132,7 +132,7 @@ RUNSAFELY := $(RUNSAFELY) -t "$(TIMEIT_TARGET)"
 RUNSAFELYLOCAL := $(RUNSAFELYLOCAL) -t "$(TIMEIT)"
 
 ifdef NO_WATCHDOG
-RUNSAFELY := $(RUNSAFELY) -nw
+$(warning "NO_WATCHDOG make variable is no longer needed, please remove!")
 endif
 
 RUNSAFELY := $(RUNSAFELY) $(RUNTIMELIMIT) $(EXIT_OK)

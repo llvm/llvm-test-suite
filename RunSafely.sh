@@ -34,7 +34,6 @@
 #     <client>  is the remote client used to execute the program
 #     <port>    is the port used by the remote client
 #     <under>   is a wrapper that the program is run under
-#     -nw       disables the watchdog timer (allowing hung processes)
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
@@ -59,7 +58,6 @@ RCLIENT=rsh
 RPORT=
 RUN_UNDER=
 TIMEIT=time
-WATCHDOG="ON"
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -83,11 +81,6 @@ fi
 if [ $1 = "-t" ]; then
   TIMEIT=$2
   shift 2
-fi
-# Please, please remove this option once TimedExec.sh is replaced.
-if [ $1 = "-nw" ]; then
-  WATCHDOG=""
-  shift
 fi
 
 TIMELIMIT=$1
@@ -141,13 +134,11 @@ rm -f core core.*
 #
 PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
-if [ -n "$WATCHDOG" ]; then
-  COMMAND="${DIR}TimedExec.sh $TIMELIMIT $PWD $COMMAND"
-fi
 COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 
+TIMEITCMD="$TIMEIT --posix --timeout $TIMELIMIT --chdir $PWD"
 if [ "x$RHOST" = x ] ; then
-  ( sh -c "$ULIMITCMD $TIMEIT -p sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \
+  ( sh -c "$ULIMITCMD $TIMEITCMD sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE; echo exit \$?'" ) 2>&1 \
     | awk -- '\
 BEGIN     { cpu = 0.0; }
 /^user/   { cpu += $2; print; }
@@ -157,7 +148,7 @@ else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${PROG}.remote.time"
-  echo "$ULIMITCMD cd $PWD; ($TIMEIT -p sh -c '($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;)'; echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
+  echo "$ULIMITCMD cd $PWD; ($TIMEITCMD sh -c '($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;)'; echo exit \$?) > $PWD/${OUTFILE}.remote.time 2>&1" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
