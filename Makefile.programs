@@ -929,7 +929,7 @@ ifndef ENABLE_PARALLEL_REPORT
 FORCE_SERIAL_ARG := -j1
 endif
 
-report.$(TEST).raw.out: $(REPORT_DEPENDENCIES) $(TestMakefile)
+report.$(TEST).raw.out:: $(REPORT_DEPENDENCIES) $(TestMakefile)
 	$(MAKE) $(FORCE_SERIAL_ARG) TEST=$(TEST)
 	find . -name \*.$(TEST).report.txt -exec cat {} \; | tee $@
 

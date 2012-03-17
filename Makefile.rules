@@ -105,6 +105,9 @@ install-bytecode::
 ifeq ($(MAKELEVEL),0)
 test:: tools
 all:: tools
+ifdef TEST
+report.$(TEST).raw.out:: tools
+endif
 endif
 
 tools:
