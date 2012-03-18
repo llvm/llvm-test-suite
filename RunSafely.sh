@@ -96,64 +96,53 @@ if [ `basename ${PROGRAM}` = "lli" ]; then
   PROG=`basename ${PROGRAM}`
 fi
 
-ULIMITCMD=""
+LIMITARGS=""
 case $SYSTEM in
   CYGWIN*)
     ;;
-  Darwin*)
-    # Disable core file emission, the script doesn't find it anyway because it
-    # is put into /cores.
-    ULIMITCMD="$ULIMITCMD ulimit -c 0;"
-    ULIMITCMD="$ULIMITCMD ulimit -t $TIMELIMIT;"
-    # To prevent infinite loops which fill up the disk, specify a limit on size
-    # of files being output by the tests. 10 MB should be enough for anybody. ;)
-    ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
-    ;;
   *)
-    ULIMITCMD="$ULIMITCMD ulimit -t $TIMELIMIT;"
-    ULIMITCMD="$ULIMITCMD ulimit -c unlimited;"
+    # Disable core file emission.
+    LIMITARGS="$LIMITARGS --limit-core 0"
+
+    # Set the CPU limit. We watchdog the process, so this is mostly just for
+    # paranoia.
+    LIMITARGS="$LIMITARGS --limit-cpu $TIMELIMIT"
+
     # To prevent infinite loops which fill up the disk, specify a limit on size
     # of files being output by the tests. 10 MB should be enough for anybody. ;)
-    ULIMITCMD="$ULIMITCMD ulimit -f 10485760;"
+    LIMITARGS="$LIMITARGS --limit-file-size 10485760"
 
-    # virtual memory: 400 MB should be enough for anybody. ;)
-    ULIMITCMD="$ULIMITCMD ulimit -v 400000;"
+    # virtual memory: 800 MB should be enough for anybody. ;)
+    LIMITARGS="$LIMITARGS --limit-rss-size 800000000"
 esac
-rm -f core core.*
 
-#
-# Run the command, timing its execution.
-# The standard output and standard error of $PROGRAM should go in $OUTFILE,
-# and the standard error of time should go in $OUTFILE.time. Note that the
-# return code of the program is appended to the $OUTFILE on an "Exit Val ="
-# line.
-#
-# To get the time program and the specified program different output filenames,
-# we tell time to launch a shell which in turn executes $PROGRAM with the
-# necessary I/O redirection.
-#
+# Run the command, timing its execution and logging the status summary to
+# $OUTFILE.time.
 PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
-COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 
-TIMEITCMD="$TIMEIT --timeout $TIMELIMIT --chdir $PWD"
+TIMEITCMD="$TIMEIT $LIMITARGS --timeout $TIMELIMIT --chdir $PWD"
 if [ "x$RHOST" = x ] ; then
   rm -f "$OUTFILE.time"
-  sh -c "$ULIMITCMD $TIMEITCMD --summary $OUTFILE.time --redirect-input $INFILE --redirect-output $OUTFILE $COMMAND"
+  $TIMEITCMD \
+      --summary $OUTFILE.time \
+      --redirect-input $INFILE \
+      --redirect-output $OUTFILE \
+      $COMMAND
 else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${OUTFILE}.remote.time"
-  echo "$ULIMITCMD cd $PWD; $TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $INFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
+  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $INFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
   ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROG}.command" )
   cp $PWD/${OUTFILE}.remote.time $OUTFILE.time
-sleep 1
-cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
-rm -f $PWD/${OUTFILE}.remote
-rm -f $PWD/${OUTFILE}.remote.time
+  sleep 1
+  cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
+  rm -f $PWD/${OUTFILE}.remote
+  rm -f $PWD/${OUTFILE}.remote.time
 fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
@@ -187,22 +176,5 @@ if [ "${fail}" != "no" ]; then
        "$ORIG_ARGS" >> $OUTFILE
 fi
 
-if ls | egrep "^core" > /dev/null
-then
-    # If we are on a sun4u machine (UltraSparc), then the code we're generating
-    # is 64 bit code.  In that case, use gdb-64 instead of gdb.
-    myarch=`uname -m`
-    if [ "$myarch" = "sun4u" ]
-    then
-	GDB="gdb-64"
-    else
-	GDB=gdb
-    fi
-
-    corefile=`ls core* | head -n 1`
-    echo "where 100" > StackTrace.$$
-    $GDB -q -batch --command=StackTrace.$$ --core=$corefile $PROGRAM < /dev/null
-    rm -f StackTrace.$$ $corefile
-fi
 # Always return "successful" so that tests will continue to be run.
 exit 0
