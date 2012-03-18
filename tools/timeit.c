@@ -345,6 +345,7 @@ static int streq(const char *a, const char *b) {
 }
 
 static void usage(int is_error) {
+#define WRAPPED "\n                       "
   fprintf(stderr, "usage: %s [options] command ... arguments ...\n",
           g_program_name);
   fprintf(stderr, "Options:\n");
@@ -359,27 +360,27 @@ static void usage(int is_error) {
   fprintf(stderr, "  %-20s %s", "--summary <PATH>",
           "Write monitored process summary (exit code and time) to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--redirect-output <PATH>",
-          "Redirect stdout and stderr for the target to PATH.\n");
+          WRAPPED "Redirect stdout and stderr for the target to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--redirect-input <PATH>",
-          "Redirect stdin for the target to PATH.\n");
-  fprintf(stderr, "  %-20s %s", "--redirect-input <PATH>",
-          "Redirect stdin for the target to PATH.\n");
+          WRAPPED "Redirect stdin for the target to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--limit-cpu <N>",
-          "Limit the target to N seconds of CPU time.\n");
+          WRAPPED "Limit the target to N seconds of CPU time.\n");
   fprintf(stderr, "  %-20s %s", "--limit-stack-size <N>",
-          "Limit the target to N bytes of stack space.\n");
+          WRAPPED "Limit the target to N bytes of stack space.\n");
   fprintf(stderr, "  %-20s %s", "--limit-data-size <N>",
-          "Limit the target to N bytes of data.\n");
+          WRAPPED "Limit the target to N bytes of data.\n");
   fprintf(stderr, "  %-20s %s", "--limit-rss-size <N>",
-          "Limit the target to N bytes of resident memory.\n");
+          WRAPPED "Limit the target to N bytes of resident memory.\n");
   fprintf(stderr, "  %-20s %s", "--limit-file-size <N>",
-          "Limit the target to creating files no more than N bytes.\n");
+          WRAPPED "Limit the target to creating files no more than N bytes.\n");
   fprintf(stderr, "  %-20s %s", "--limit-core <N>",
-          "Limit the size for which core files will be generated.\n");
+          WRAPPED "Limit the size for which core files will be generated.\n");
   fprintf(stderr, "  %-20s %s", "--limit-file-count <N>",
-          "Limit the maximum number of open files the target can have.\n");
+          (WRAPPED
+           "Limit the maximum number of open files the target can have.\n"));
   fprintf(stderr, "  %-20s %s", "--limit-subprocess-count <N>",
-          ("Limit the maximum number of simultaneous processes "
+          (WRAPPED
+           "Limit the maximum number of simultaneous processes "
            "the target can use.\n"));
   _exit(is_error);
 }
