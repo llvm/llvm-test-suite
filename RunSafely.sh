@@ -115,11 +115,13 @@ case $SYSTEM in
     LIMITARGS="$LIMITARGS --limit-cpu $TIMELIMIT"
 
     # To prevent infinite loops which fill up the disk, specify a limit on size
-    # of files being output by the tests. 10 MB should be enough for anybody. ;)
-    LIMITARGS="$LIMITARGS --limit-file-size 10485760"
+    # of files being output by the tests.
+    #
+    # We set the limit at 100MB.
+    LIMITARGS="$LIMITARGS --limit-file-size 104857600"
 
-    # virtual memory: 800 MB should be enough for anybody. ;)
-    LIMITARGS="$LIMITARGS --limit-rss-size 800000000"
+    # Set the virtual memory limit at 800MB.
+    LIMITARGS="$LIMITARGS --limit-rss-size 838860800"
 esac
 
 # Run the command, timing its execution and logging the status summary to
