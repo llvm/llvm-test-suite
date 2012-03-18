@@ -139,12 +139,12 @@ COMMAND=$(echo "$COMMAND" | sed -e 's#"#\\"#g')
 TIMEITCMD="$TIMEIT --timeout $TIMELIMIT --chdir $PWD"
 if [ "x$RHOST" = x ] ; then
   rm -f "$OUTFILE.time"
-  sh -c "$ULIMITCMD $TIMEITCMD --summary $OUTFILE.time sh -c '$COMMAND >$OUTFILE 2>&1 < $INFILE'"
+  sh -c "$ULIMITCMD $TIMEITCMD --summary $OUTFILE.time --redirect-input $INFILE --redirect-output $OUTFILE $COMMAND"
 else
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${OUTFILE}.remote.time"
-  echo "$ULIMITCMD cd $PWD; ($TIMEITCMD --summary $PWD/$OUTFILE.remote.time sh -c '($COMMAND > $PWD/${OUTFILE}.remote 2>&1 < $INFILE;)')" > "$PWD/${PROG}.command"
+  echo "$ULIMITCMD cd $PWD; $TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $INFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
