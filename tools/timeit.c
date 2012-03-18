@@ -216,7 +216,10 @@ int monitor_child_process(pid_t pid, double start_time) {
   return exit_status;
 }
 
-static void set_resource_limit(int resource, rlim_t value) {
+#define set_resource_limit(resource, value) \
+  set_resource_limit_actual(#resource, resource, value)
+static void set_resource_limit_actual(const char *resource_name, int resource,
+                                      rlim_t value) {
   /* Get the current limit. */
   struct rlimit current;
   getrlimit(resource, &current);
@@ -225,7 +228,11 @@ static void set_resource_limit(int resource, rlim_t value) {
   struct rlimit requested;
   requested.rlim_cur = requested.rlim_max = \
     (value < current.rlim_max) ? value : current.rlim_max;
-  setrlimit(resource, &requested);
+  if (setrlimit(resource, &requested) < 0) {
+    fprintf(stderr, "%s: warning: unable to set limit for %s (to {%lu, %lu})\n",
+            g_program_name, resource_name, (unsigned long) requested.rlim_cur,
+            (unsigned long) requested.rlim_max);
+  }
 }
 
 static int execute_target_process(char * const argv[]) {
