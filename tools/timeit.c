@@ -67,6 +67,35 @@ static const char *g_target_redirect_input = 0;
  * standard error to. */
 static const char *g_target_redirect_output = 0;
 
+/* @name Resource Limit Variables */
+/* @{ */
+
+/* \brief If non-sentinel, the CPU time limit to set for the target. */
+static rlim_t g_target_cpu_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the stack size limit to set for the target. */
+static rlim_t g_target_stack_size_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the data size limit to set for the target. */
+static rlim_t g_target_data_size_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the RSS size limit to set for the target. */
+static rlim_t g_target_rss_size_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the file size limit to set for the target. */
+static rlim_t g_target_file_size_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the core limit to set for the target. */
+static rlim_t g_target_core_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the file count limit to set for the target. */
+static rlim_t g_target_file_count_limit = ~(rlim_t) 0;
+
+/* \brief If non-sentinel, the subprocess count limit to set for the target. */
+static rlim_t g_target_subprocess_count_limit = ~(rlim_t) 0;
+
+/* @} */
+
 static double sample_wall_time(void) {
   struct timeval t;
   gettimeofday(&t, NULL);
@@ -187,6 +216,18 @@ int monitor_child_process(pid_t pid, double start_time) {
   return exit_status;
 }
 
+static void set_resource_limit(int resource, rlim_t value) {
+  /* Get the current limit. */
+  struct rlimit current;
+  getrlimit(resource, &current);
+
+  /* Set the limits to as close as requested, assuming we are not super-user. */
+  struct rlimit requested;
+  requested.rlim_cur = requested.rlim_max = \
+    (value < current.rlim_max) ? value : current.rlim_max;
+  setrlimit(resource, &requested);
+}
+
 static int execute_target_process(char * const argv[]) {
   /* Create a new process group for pid, and the process tree it may spawn. We
    * do this, because later on we might want to kill pid _and_ all processes
@@ -228,6 +269,32 @@ static int execute_target_process(char * const argv[]) {
     fclose(fp);
   }
 
+  /* Honor any requested resource limits. */
+  if (g_target_cpu_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_CPU, g_target_cpu_limit);
+  }
+  if (g_target_stack_size_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_STACK, g_target_stack_size_limit);
+  }
+  if (g_target_data_size_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_DATA, g_target_data_size_limit);
+  }
+  if (g_target_rss_size_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_RSS, g_target_rss_size_limit);
+  }
+  if (g_target_file_size_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_FSIZE, g_target_file_size_limit);
+  }
+  if (g_target_core_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_CORE, g_target_core_limit);
+  }
+  if (g_target_file_count_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_NOFILE, g_target_file_count_limit);
+  }
+  if (g_target_subprocess_count_limit != ~(rlim_t) 0) {
+    set_resource_limit(RLIMIT_NPROC, g_target_subprocess_count_limit);
+  }
+  
   /* Honor the desired target execute directory. */
   if (g_target_exec_directory) {
     if (chdir(g_target_exec_directory) < 0) {
@@ -281,20 +348,39 @@ static void usage(int is_error) {
   fprintf(stderr, "usage: %s [options] command ... arguments ...\n",
           g_program_name);
   fprintf(stderr, "Options:\n");
-  fprintf(stderr, "  %-20s %s", "{-h,--help}",
+  fprintf(stderr, "  %-20s %s", "-h, --help",
           "Show this help text.\n");
-  fprintf(stderr, "  %-20s %s", "{-p,--posix}",
+  fprintf(stderr, "  %-20s %s", "-p, --posix",
           "Report time in /usr/bin/time POSIX format.\n");
-  fprintf(stderr, "  %-20s %s", "{-t,--timeout} <N>",
+  fprintf(stderr, "  %-20s %s", "-t, --timeout <N>",
           "Execute the subprocess with a timeout of N seconds.\n");
-  fprintf(stderr, "  %-20s %s", "{-c,--chdir} <PATH>",
+  fprintf(stderr, "  %-20s %s", "-c, --chdir <PATH>",
           "Execute the subprocess in the given working directory.\n");
-  fprintf(stderr, "  %-20s %s", "{--summary} <PATH>",
+  fprintf(stderr, "  %-20s %s", "--summary <PATH>",
           "Write monitored process summary (exit code and time) to PATH.\n");
-  fprintf(stderr, "  %-20s %s", "{--redirect-output} <PATH>",
+  fprintf(stderr, "  %-20s %s", "--redirect-output <PATH>",
           "Redirect stdout and stderr for the target to PATH.\n");
-  fprintf(stderr, "  %-20s %s", "{--redirect-input} <PATH>",
+  fprintf(stderr, "  %-20s %s", "--redirect-input <PATH>",
           "Redirect stdin for the target to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "--redirect-input <PATH>",
+          "Redirect stdin for the target to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-cpu <N>",
+          "Limit the target to N seconds of CPU time.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-stack-size <N>",
+          "Limit the target to N bytes of stack space.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-data-size <N>",
+          "Limit the target to N bytes of data.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-rss-size <N>",
+          "Limit the target to N bytes of resident memory.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-file-size <N>",
+          "Limit the target to creating files no more than N bytes.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-core <N>",
+          "Limit the size for which core files will be generated.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-file-count <N>",
+          "Limit the maximum number of open files the target can have.\n");
+  fprintf(stderr, "  %-20s %s", "--limit-subprocess-count <N>",
+          ("Limit the maximum number of simultaneous processes "
+           "the target can use.\n"));
   _exit(is_error);
 }
 
@@ -371,7 +457,39 @@ int main(int argc, char * const argv[]) {
       continue;
     }
 
-    fprintf(stderr, "error: invalid argument '%s'\n", argv[i]);
+    if (strncmp(arg, "--limit-", 8) == 0) {
+      rlim_t value;
+
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+
+      value = atoi(argv[++i]);
+      if (streq(arg, "--limit-cpu")) {
+        g_target_cpu_limit = value;
+      } else if (streq(arg, "--limit-stack-size")) {
+        g_target_stack_size_limit = value;
+      } else if (streq(arg, "--limit-data-size")) {
+        g_target_data_size_limit = value;
+      } else if (streq(arg, "--limit-rss-size")) {
+        g_target_rss_size_limit = value;
+      } else if (streq(arg, "--limit-file-size")) {
+        g_target_file_size_limit = value;
+      } else if (streq(arg, "--limit-core")) {
+        g_target_core_limit = value;
+      } else if (streq(arg, "--limit-file-count")) {
+        g_target_file_count_limit = value;
+      } else if (streq(arg, "--limit-subprocess-count")) {
+        g_target_subprocess_count_limit = value;
+      } else {
+        fprintf(stderr, "error: invalid limit argument '%s'\n", arg);
+        usage(/*is_error=*/1);
+      }
+      continue;
+    }
+
+    fprintf(stderr, "error: invalid argument '%s'\n", arg);
     usage(/*is_error=*/1);
   }
 
