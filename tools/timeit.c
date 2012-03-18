@@ -27,6 +27,8 @@ enum ExitCode {
   /* \brief Indicates a failure in exec() which usually means an invalid program
    * name. */
   EXITCODE_EXEC_FAILURE = 67,
+  EXITCODE_EXEC_NOENTRY = 127,
+  EXITCODE_EXEC_NOPERMISSION = 126,
 
   /* \brief Indicates that we were unexpectedly signalled(). */
   EXITCODE_SIGNALLED = 68,
@@ -179,7 +181,9 @@ int monitor_child_process(pid_t pid, double start_time) {
   if (WIFSIGNALED(status)) {
     fprintf(stderr, "%s: error: child terminated by signal %d\n",
             g_program_name, WTERMSIG(status));
-    exit_status = EXITCODE_CHILD_SIGNALLED;
+
+    /* Propagate the signalled status to the caller. */
+    exit_status = 128 + WTERMSIG(status);
   } else if (WIFEXITED(status)) {
     exit_status = WEXITSTATUS(status);
   } else {
@@ -312,6 +316,13 @@ static int execute_target_process(char * const argv[]) {
 
   execvp(argv[0], argv);
   perror("execv");
+
+  if (errno == ENOENT) {
+    return EXITCODE_EXEC_NOENTRY;
+  } else if (errno == EACCES) {
+    return EXITCODE_EXEC_NOPERMISSION;
+  }
+
   return EXITCODE_EXEC_FAILURE;
 }
 
