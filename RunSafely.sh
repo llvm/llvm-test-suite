@@ -42,7 +42,8 @@
 #     <args...> are the arguments to pass to the program.
 #
 if [ $# -lt 4 ]; then
-  echo "./RunSafely.sh <timeout> <exitok> <infile> <outfile> <program> <args...>"
+  echo "./RunSafely.sh [-t <PATH>] <timeout> <exitok> <infile> <outfile>" \
+       "<program> <args...>"
   exit 1
 fi
 
@@ -57,7 +58,7 @@ RUSER=`id -un`
 RCLIENT=rsh
 RPORT=
 RUN_UNDER=
-TIMEIT=time
+TIMEIT=
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -81,6 +82,11 @@ fi
 if [ $1 = "-t" ]; then
   TIMEIT=$2
   shift 2
+fi
+
+if [ "$TIMEIT" = "" ]; then
+  echo "error: missing required argument -t for path to 'timeit'"
+  exit 1
 fi
 
 TIMELIMIT=$1
