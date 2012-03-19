@@ -138,10 +138,16 @@ if [ "x$RHOST" = x ] ; then
       --redirect-output $OUTFILE \
       $COMMAND
 else
+  # Get the absolute path to INFILE.
+  if ( grep '/' $INFILE > /dev/null ); then
+      ABSINFILE=$INFILE
+  else
+      ABSINFILE=$PWD/$INFILE
+  fi
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${OUTFILE}.remote.time"
-  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $INFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
+  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $ABSINFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
   ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
