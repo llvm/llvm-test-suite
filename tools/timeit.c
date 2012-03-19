@@ -244,7 +244,7 @@ static int execute_target_process(char * const argv[]) {
    * do this, because later on we might want to kill pid _and_ all processes
    * spawned by it and its descendants.
    */
-  setpgrp();
+  setpgid(0, 0);
 
   /* Redirect the standard input, if requested. */
   if (g_target_redirect_input) {
