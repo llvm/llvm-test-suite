@@ -139,7 +139,7 @@ if [ "x$RHOST" = x ] ; then
       $COMMAND
 else
   # Get the absolute path to INFILE.
-  if ( grep '/' $INFILE > /dev/null ); then
+  if [ ! -z "$(echo $INFILE | sed -e 's#[^/]##g')" ]; then
       ABSINFILE=$INFILE
   else
       ABSINFILE=$PWD/$INFILE
