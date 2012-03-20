@@ -139,11 +139,7 @@ if [ "x$RHOST" = x ] ; then
       $COMMAND
 else
   # Get the absolute path to INFILE.
-  if [ ! -z "$(echo $INFILE | sed -e 's#[^/]##g')" ]; then
-      ABSINFILE=$INFILE
-  else
-      ABSINFILE=$PWD/$INFILE
-  fi
+  ABSINFILE=$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)
   rm -f "$PWD/${PROG}.command"
   rm -f "$PWD/${PROG}.remote"
   rm -f "$PWD/${OUTFILE}.remote.time"
