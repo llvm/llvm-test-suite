@@ -113,9 +113,7 @@ static void terminate_handler(int signal) {
                      "killing monitored process(es): %s\n"),
             g_program_name, signal, g_target_program);
 
-    /* Kill the process group of monitored_pid.  Since we called
-       setpgrp() for pid, this will not kill us, or any of our
-       ancestors */
+    /* Kill the process group of monitored_pid. */
     kill(-g_monitored_pid, SIGKILL);
     return;
   }
