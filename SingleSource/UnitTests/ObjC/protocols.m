@@ -1,5 +1,7 @@
 #include <Foundation/NSObject.h>
+#ifndef __arm__
 #include <objc/Object.h>
+#endif
 #include <objc/runtime.h>
 #include <stdio.h>
 
