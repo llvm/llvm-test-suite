@@ -84,15 +84,15 @@ Output/%.LOC.txt: $(Source)
 
 endif
 
-Output/%.simple: $(NLObjects)
+Output/%.simple: $(NLObjects) $(GeneratedTestInputs)
 	@-cat $(NLObjects:%=%.compile.time) | awk -- '\
 BEGIN     { sum = 0.0; }\
 /^program/   { sum += $$2; }\
 !/^program/  { print; }\
 END       { printf("program %f\n", sum); }' > $@.compile.time
-	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $^ $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $(NLObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
-Output/%.native: $(NObjects)
+Output/%.native: $(NObjects) $(GeneratedTestInputs)
 	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
 # A simple target to run findmisopt when bugpoint isn't helping

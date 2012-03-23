@@ -11,17 +11,17 @@ FP_TOLERANCE = 1.0e-9
 
 include $(LEVEL)/Makefile.config
 
+GeneratedTestInputs := $(PROJ_OBJ_DIR)/test15.sql
+
 include ../../Makefile.multisrc
 
-# the input files are generated from a tcl script
-# it needs to be generated before sqlite is run
-sqlite3.c: $(PROJ_SRC_DIR)/test15.sql 
-
+# The input files are generated from a tcl script and need to be generated
+# before sqlite is run.
 ifdef SMALL_PROBLEM_SIZE
-$(PROJ_SRC_DIR)/test15.sql: $(PROJ_SRC_DIR)/smalltest.tcl
+$(PROJ_OBJ_DIR)/test15.sql: $(PROJ_SRC_DIR)/smalltest.tcl
 	$(TCLSH) $(PROJ_SRC_DIR)/smalltest.tcl
 else
-$(PROJ_SRC_DIR)/test15.sql: $(PROJ_SRC_DIR)/speedtest.tcl
+$(PROJ_OBJ_DIR)/test15.sql: $(PROJ_SRC_DIR)/speedtest.tcl
 	$(TCLSH) $(PROJ_SRC_DIR)/speedtest.tcl
 endif
 
