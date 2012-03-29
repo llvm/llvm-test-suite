@@ -80,11 +80,6 @@ int main(int argc, char *argv[])
     outfilename = malloc(strlen(argv[1]) + strlen(postfix) + 1);
     strcpy(outfilename,argv[1]);
     strcat(outfilename,postfix);
-    if ((out = fopen(outfilename, "w")) == NULL) {
-      perror(outfilename);
-      free(outfilename);
-      exit(1);
-    }
     free(outfilename);
     argv++; argc--;
   }
