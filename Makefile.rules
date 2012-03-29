@@ -111,7 +111,9 @@ endif
 endif
 
 tools:
-	$(MAKE) -C $(PROJ_OBJ_ROOT)/tools all
+	$(MAKE) -C $(PROJ_OBJ_ROOT)/tools all \
+	  ORIGINAL_CC=$(ORIGINAL_CC) \
+	  ORIGINAL_CXX=$(ORIGINAL_CXX)
 .PHONY: tools
 
 # Print out the directories used for building
