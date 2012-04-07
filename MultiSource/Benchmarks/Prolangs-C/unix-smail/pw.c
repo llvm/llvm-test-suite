@@ -135,11 +135,20 @@ pwlist *pwparse(void)
 	unsigned int i;
 	static int pw_eof = 0;
 
-	if((pw_eof == 1)
-	|| ((pwent = getpwent()) == (struct passwd *) NULL)) {
+/*
+** Performance measurements indicate that the majority of time this
+** application spends is in getpwent(). As getpwent just tests how 
+** many authorized users there are, don't do the call.
+*/
+
+/*	if((pw_eof == 1)
+**	|| ((pwent = getpwent()) == (struct passwd *) NULL)) {
+*/
 		pw_eof = 1;
 		return(PNULL);
-	}
+/*
+**	}
+*/
 	/*
 	** Get an entry from the password file.
 	** Parse relevant strings.
