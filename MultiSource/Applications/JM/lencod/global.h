@@ -595,7 +595,7 @@ typedef struct
   int   frame_ctr;           //!< number of coded frames
 } SNRParameters;
 
-#define FILE_NAME_SIZE 200
+#define FILE_NAME_SIZE 256
                              //! all input parameters
 typedef struct
 {
