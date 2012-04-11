@@ -197,7 +197,7 @@ swproc(char sw, char *arg)
 /* Process file names */
 void
 argproc(char *arg, int index)
-{	char line[200];
+{	char line[256];
 	int code;
 	/* Finish initialization */
 	init2();
