@@ -14,7 +14,7 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
 #if 0
   /* FIXME */
   /* Time varies between runs giving false negatives about which run
-     (JIT, CBE, or LLC) failed */
+     (JIT or LLC) failed */
   double startTime, now, estTotal;
 #endif /* 0 */
   
@@ -38,7 +38,7 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
 #if 0
   /* FIXME */
   /* Time varies between runs giving false negatives about which run
-     (JIT, CBE, or LLC) failed */
+     (JIT or LLC) failed */
   startTime = sTime();
 #endif /* 0 */
   i_punct = 0;
@@ -46,7 +46,7 @@ void dec_viterbi_F(dvector* Metr_mem, unsigned char* history_mem, bitvector* bit
 #if 0
     /* FIXME */
     /* Time varies between runs giving false negatives about which run
-       (JIT, CBE, or LLC) failed */
+       (JIT or LLC) failed */
     if (i_in && (i_in % 10000 == 0)) {
       now = sTime();
       estTotal = ((double)1.02*bit_stream->length/((double)i_in))*(now-startTime);

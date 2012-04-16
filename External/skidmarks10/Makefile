@@ -4,7 +4,6 @@ include $(LEVEL)/Makefile.config
 PROG = skidmarks
 
 DISABLE_JIT = 1
-DISABLE_CBE = 1
 
 SourceDir := $(SKIDMARKS10_ROOT)/source
 RUN_OPTIONS = 0 $(SKIDMARKS10_ROOT)/golden

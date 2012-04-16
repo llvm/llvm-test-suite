@@ -17,33 +17,3 @@ P4_EVENTS := "-ec en='2nd Level Cache Read Misses' en='2nd-Level Cache Read Refe
 P3_EVENTS := "-ec en='L2 Cache Request Misses (highly correlated)'"
 
 EVENTS := $(P4_EVENTS)
-
-#
-# Generate events for LLC
-#
-#$(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
-#test.$(TEST).%: Output/%.llc
-	#@echo "========================================="
-	#@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
-	#$(VERB) $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
-	#-$(VERB) $(VTL) run $*
-	#-$(VERB) $(VTL) view > $@
-	#$(VERB)  $(VTL) delete $* -f
-
-
-#
-# Generate events for CBE
-#
-$(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
-test.$(TEST).%: Output/%.cbe
-	@echo "========================================="
-	@echo "Running '$(TEST)' test on '$(TESTNAME)' program"
-ifeq ($(RUN_OPTIONS),)
-	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<
-else
-	$(VERB) cat $(STDIN_FILENAME) | $(VTL) activity $* -d 50 -c sampling -o $(EVENTS) -app $<,"$(RUN_OPTIONS)"
-endif
-	-$(VERB) $(VTL) run $*
-	-$(VERB) $(VTL) view > $@
-	$(VERB)  $(VTL) delete $* -f
-

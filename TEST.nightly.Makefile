@@ -19,10 +19,6 @@ ifndef DISABLE_JIT
 REPORTS_TO_GEN +=  jit compile
 REPORT_DEPENDENCIES += $(LLI) $(LOPT)
 endif
-ifndef DISABLE_CBE
-REPORTS_TO_GEN +=  cbe compile
-REPORT_DEPENDENCIES += $(CBE) $(LOPT)
-endif
 ifdef ENABLE_LLCBETA
 REPORTS_TO_GEN += llc-beta compile
 REPORT_DEPENDENCIES += $(LLC) $(LOPT)
@@ -102,20 +98,6 @@ Output/%.nightly.opt-beta.report.txt: Output/%.exe-opt-beta
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: opt-beta $(RELDIR)/$*" >> $@;\
-	fi
-
-# CBE tests
-$(PROGRAMS_TO_TEST:%=Output/%.nightly.cbe.report.txt): \
-Output/%.nightly.cbe.report.txt: Output/%.exe-cbe
-	@echo > $@
-	@-if test -f Output/$*.exe-cbe; then \
-	  head -n 100 Output/$*.exe-cbe >> $@; \
-	  echo "TEST-PASS: cbe $(RELDIR)/$*" >> $@;\
-	  printf "TEST-RESULT-cbe-time: " >> $@;\
-	  grep "^program" Output/$*.out-cbe.time >> $@;\
-	  echo >> $@;\
-	else  \
-	  echo "TEST-FAIL: cbe $(RELDIR)/$*" >> $@;\
 	fi
 
 # JIT tests

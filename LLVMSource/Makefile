@@ -17,8 +17,6 @@ $(LLVM_SOURCE_BYTECODES): \
 Output/%.llvm.bc: %.ll $(LLVMAS) Output/.dir
 	$(LLVMAS) $< -f -o $@
 
-all:: $(CBEOUTPUT)
-
 ifdef TARGET_HAS_JIT
 all:: $(JITOUTPUT)
 endif

@@ -160,7 +160,6 @@ BYTECODE   := $(addsuffix .llvm.bc, $(PREFIXED_PROGRAMS_TO_TEST))
 
 LLCCODEGEN := $(addsuffix .llc.s,   $(PREFIXED_PROGRAMS_TO_TEST))
 LLCBETACODEGEN := $(addsuffix .llc-beta.s,   $(PREFIXED_PROGRAMS_TO_TEST))
-CBECODEGEN := $(addsuffix .cbe,     $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Output produced by programs run
 GCCOUTPUT := $(addsuffix .ll,       $(addprefix Output/,$basename $(Source)))
@@ -170,7 +169,6 @@ JITOUTPUT := $(addsuffix .out-jit,  $(PREFIXED_PROGRAMS_TO_TEST))
 JITBETAOUTPUT := $(addsuffix .out-jit-beta,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCOUTPUT := $(addsuffix .out-llc,  $(PREFIXED_PROGRAMS_TO_TEST))
 LLCBETAOUTPUT := $(addsuffix .out-llc-beta,  $(PREFIXED_PROGRAMS_TO_TEST))
-CBEOUTPUT := $(addsuffix .out-cbe,  $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Diffs of program runs vs the native program
 LLIDIFFS  := $(addsuffix .diff-lli, $(PREFIXED_PROGRAMS_TO_TEST))
@@ -179,7 +177,6 @@ JITBETADIFFS  := $(addsuffix .diff-jit-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCDIFFS  := $(addsuffix .diff-llc, $(PREFIXED_PROGRAMS_TO_TEST))
 LLCBETADIFFS  := $(addsuffix .diff-llc-beta, $(PREFIXED_PROGRAMS_TO_TEST))
 OPTBETADIFFS  := $(addsuffix .diff-opt-beta, $(PREFIXED_PROGRAMS_TO_TEST))
-CBEDIFFS  := $(addsuffix .diff-cbe, $(PREFIXED_PROGRAMS_TO_TEST))
 
 # Profiles for the program.
 PROFOUTPUT := $(addsuffix .prof, $(PREFIXED_PROGRAMS_TO_TEST))
@@ -215,12 +212,6 @@ ifdef DISABLE_LLC
 DISABLE_LLC_DIFFS = 1
 endif
 
-ifndef DISABLE_CBE
-all:: $(CBECODEGEN)
-else
-DISABLE_CBE_DIFFS = 1
-endif
-
 ifndef DISABLE_DIFFS
 ifndef DISABLE_LLC_DIFFS
 all:: $(LLCDIFFS)
@@ -228,10 +219,6 @@ ifdef ENABLE_LLCBETA
 all:: $(LLCBETADIFFS)
 endif
 endif#DISABLE_LLC_DIFFS
-
-ifndef DISABLE_CBE_DIFFS
-all:: $(CBEDIFFS)
-endif
 
 ifdef TARGET_HAS_JIT
 ifndef DISABLE_JIT

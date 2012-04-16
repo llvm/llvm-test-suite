@@ -73,7 +73,7 @@ int main(void) {
 
   /* note: we don't test zero, because the _native_ test will get it
    * wrong (GCC returns garbage for ctz/clz of 0), and the nightly tester
-   * will wrongly conclude that CBE and LLC are both failing.
+   * will wrongly conclude that LLC is failing.
    */
   for(i=10; i<139045193; i*=-3) {
     printf("LLVM: n: %d, clz(n): %d, popcount(n): %d, ctz(n): %d\n",

@@ -16,10 +16,8 @@ ENABLE_LARGE_INTEGERS := 0
 # None of these test cases can use a native code generator because
 # those targets are not set up to deal with arbitrary precision
 # integer types. Consequently, we must disable the LLI, LLC, 
-# LLC-BETA, and JIT test cases. This leaves the CBE which can
-# handle the arbitrary precision integers.
+# LLC-BETA, and JIT test cases.
 
-DISABLE_CBE := 1
 DISABLE_LLC := 1
 DISABLE_JIT := 1
 ENABLE_LLI  := 1

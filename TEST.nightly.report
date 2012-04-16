@@ -20,15 +20,6 @@ sub FormatTime {
   return sprintf("%7.4f", $Time);
 }
 
-sub GCCCBERatio {
-  my ($Cols, $Col) = @_;
-  my $GCC = $Cols->[$Col-6];
-  my $CBE = $Cols->[$Col-5];
-  return "n/a" if ($GCC eq "*" or $CBE eq "*");
-  return sprintf("%3.2f", $GCC/$CBE) if ($GCC >= 0.1 and $CBE >= 0.1);
-  return "-";
-}
-
 sub GCCLLCRatio {
   my ($Cols, $Col) = @_;
   my $GCC = $Cols->[$Col-7];
@@ -77,12 +68,10 @@ $HilightColumns{17} = 1;
  ["JIT codegen" , "TEST-RESULT-jit-comptime: .*$WallTimeRE"],
  [],
  ["GCC"      , 'TEST-RESULT-nat-time: program\s*([.0-9m:]+)', \&FormatTime],
- ["CBE"      , 'TEST-RESULT-cbe-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC"      , 'TEST-RESULT-llc-time: program\s*([.0-9m:]+)', \&FormatTime],
  ["LLC-BETA" , 'TEST-RESULT-llc-beta-time: program\s*([.0-9m:]+)',\&FormatTime],
  ["JIT"      , 'TEST-RESULT-jit-time: program\s*([.0-9m:]+)', \&FormatTime],
  [],
- ["GCC/CBE"  , \&GCCCBERatio],
  ["GCC/LLC"  , \&GCCLLCRatio],
  ["GCC/LLC-BETA"  , \&GCCLLC_BETARatio],
  ["LLC/LLC-BETA"  , \&LLCLLC_BETARatio]
