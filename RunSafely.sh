@@ -25,7 +25,7 @@
 # Syntax:
 #
 #   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
-#                [-u <under>] [-nw]
+#                [-u <under>] -t <timeit>
 #                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -34,6 +34,7 @@
 #     <client>  is the remote client used to execute the program
 #     <port>    is the port used by the remote client
 #     <under>   is a wrapper that the program is run under
+#     <timeit>  is a wrapper that is used to collect timing data
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
