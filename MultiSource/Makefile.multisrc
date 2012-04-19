@@ -63,8 +63,6 @@ Output/%.llvm.o: %.mm Output/.dir
 
 bugpoint-opt: Output/$(PROG).bugpoint-opt
 bugpoint-gccas: Output/$(PROG).bugpoint-opt
-bugpoint-llvm-ld: Output/$(PROG).bugpoint-llvm-ld
-bugpoint-gccld: Output/$(PROG).bugpoint-llvm-ld
 bugpoint-jit:   Output/$(PROG).bugpoint-jit
 bugpoint-llc:   Output/$(PROG).bugpoint-llc
 bugpoint-llc-beta: Output/$(PROG).bugpoint-llc-beta

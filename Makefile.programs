@@ -306,12 +306,6 @@ Output/%.noopt-llvm.bc: Output/%.linked.rbc $(LOPT)
 		-info-output-file=$(CURDIR)/$@.info \
 			$(STATS) $< -o $@
 
-$(PROGRAMS_TO_TEST:%=Output/%.nollvm-ldopt-llvm.bc): \
-Output/%.nollvm-ldopt-llvm.bc: Output/%.linked.bc $(LOPT)
-	$(RUNTOOLSAFELY) $(LOPT) \
-		-info-output-file=$(CURDIR)/$@.info \
-			$(STATS) $< -o $@
-
 endif   # ifndef DISABLE_FOR_LLVM_PROGRAMS
 
 # Disable asm-verbose.  This can slow down compilation and is not what the
@@ -629,18 +623,12 @@ BUGPOINT_TOOL_OPTIONS += -gcc-tool-args -m64
 endif
 BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 
-# Rules to bugpoint the opt, llvm-ld, llc, or lli commands...
+# Rules to bugpoint the opt, llc, or lli commands...
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/%.out-nat
 	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -std-compile-opts \
           $(BUGPOINT_OPTIONS) $(BUGPOINT_TOOL_OPTIONS) $(BUGPOINT_ARGS)
-
-$(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llvm-ld): \
-Output/%.bugpoint-llvm-ld: Output/%.nollvm-ldopt-llvm.bc $(LBUGPOINT) \
-                         Output/%.out-nat
-	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -std-link-opts $(OPTPASSES) \
-	  $(BUGPOINT_OPTIONS) $(BUGPOINT_TOOL_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \
 Output/%.bugpoint-llc: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat

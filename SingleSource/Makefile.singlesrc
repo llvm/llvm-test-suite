@@ -133,6 +133,6 @@ Output/%.dbg.opt: $(SourceDir)/%.m Output/.dir
 Output/%.dbg.opt: $(SourceDir)/%.mm Output/.dir
 	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
-bugpoint-gccas bugpoint-opt bugpoint-llvm-ld bugpoint-gccld bugpoint-jit bugpoint-llc bugpoint-llc-beta:
+bugpoint-gccas bugpoint-opt bugpoint-jit bugpoint-llc bugpoint-llc-beta:
 	@echo "The $@ target doesn't work in SingleSource.  Try:"
 	@echo "  'make Output/[programname].$@' instead."
