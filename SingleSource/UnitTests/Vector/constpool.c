@@ -4,10 +4,13 @@ v4sf f(v4sf x);
 
 int main(int argc, char **argv) {
   int i, j;
+  FV elems;
   v4f32 x = {0.0f, 0.0f, 0.0f, 0.0f};
   for (i = 0; i != 10; ++i)
     x = f(x);
-  printf("%.1f %.1f %.1f %.1f\n", x[0], x[1], x[2], x[3]);
+  elems.V = x;
+  printf("%.1f %.1f %.1f %.1f\n",
+         elems.A[0], elems.A[1], elems.A[2], elems.A[3]);
   return 0;
 }
 
