@@ -1,0 +1,8 @@
+                 Tom Kerrigan's Simple Chess Program (TSCP)
+                        Copyright 1997 Tom Kerrigan
+
+According to copyright law, you are not allowed to distribute copies of TSCP
+without Tom Kerrigian's authorization.
+
+This notice must not be removed.
+This software must not be sold for profit.

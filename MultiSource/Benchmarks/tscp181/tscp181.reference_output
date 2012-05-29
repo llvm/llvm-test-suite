@@ -1,0 +1,38 @@
+
+Tom Kerrigan's Simple Chess Program (TSCP)
+version 1.81, 2/5/03
+Copyright 1997 Tom Kerrigan
+
+"help" displays a list of commands.
+
+
+8  . r b . . r k .
+7  p . . . . p p p
+6  . p . q p . n .
+5  . . . n . . N .
+4  . . p P . . . .
+3  . . P . . . P .
+2  P P Q . . P B P
+1  R . B . R . K .
+
+   a b c d e f g h
+
+ply      nodes  score  pv
+  1        130     20  c1e3
+  2       3441      5  g5e4 d6c7
+  3       8911     30  g5e4 d6c7 c1e3
+  4     141367     10  g5e4 d6c7 c1e3 c8d7
+  5     550778     26  c2a4 d6c7 g2d5 e6d5 c1e3
+ply      nodes  score  pv
+  1        130     20  c1e3
+  2       3441      5  g5e4 d6c7
+  3       8911     30  g5e4 d6c7 c1e3
+  4     141367     10  g5e4 d6c7 c1e3 c8d7
+  5     550778     26  c2a4 d6c7 g2d5 e6d5 c1e3
+ply      nodes  score  pv
+  1        130     20  c1e3
+  2       3441      5  g5e4 d6c7
+  3       8911     30  g5e4 d6c7 c1e3
+  4     141367     10  g5e4 d6c7 c1e3 c8d7
+  5     550778     26  c2a4 d6c7 g2d5 e6d5 c1e3
+exit 0
