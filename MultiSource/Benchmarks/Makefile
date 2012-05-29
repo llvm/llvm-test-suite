@@ -1,12 +1,12 @@
 # MultiSource/Benchmarks Makefile:  Build all subdirectories automatically
 
 LEVEL = ../..
-# Disabled: OptimizerEval, tscp181.
+# Disabled: OptimizerEval.
 PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  McCat Olden Ptrdist llubenchmark \
                  sim FreeBench MallocBench Prolangs-C SciMark2-C mediabench\
                  nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial\
-                 BitBench ASC_Sequoia
+                 BitBench ASC_Sequoia tscp181
 
 ifndef DISABLE_CXX
 PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet

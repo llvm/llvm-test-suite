@@ -25,10 +25,12 @@ FILE *book_file;
 
 void open_book()
 {
+#if 0
 	srand(time(NULL));
 	book_file = fopen("book.txt", "r");
 	if (!book_file)
 		printf("Opening book missing.\n");
+#endif
 }
 
 
@@ -36,9 +38,11 @@ void open_book()
 
 void close_book()
 {
+#if 0
 	if (book_file)
 		fclose(book_file);
 	book_file = NULL;
+#endif
 }
 
 
@@ -55,8 +59,11 @@ int book_move()
 	int moves = 0;
 	int total_count = 0;
 
-	if (!book_file || hply > 25)
-		return -1;
+        /* Disable this. */
+        
+        return -1;
+	//if (!book_file || hply > 25)
+        //return -1;
 
 	/* line is a string with the current line, e.g., "e2e4 e7e5 g1f3 " */
 	line[0] = '\0';
