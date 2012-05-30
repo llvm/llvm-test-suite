@@ -14,6 +14,9 @@ GeneratedTestInputs := copy-hyph-files
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
 copy-hyph-files:
-	mkdir -p  $(PROJ_OBJ_DIR)/data/hyph/
-	cp $(PROJ_SRC_DIR)/data/hyph/* $(PROJ_OBJ_DIR)/data/hyph/
+	if [ ! $(PROJ_SRC_DIR) = $(PROJ_OBJ_DIR) ]; \
+	then \
+	  mkdir -p  $(PROJ_OBJ_DIR)/data/hyph/; \
+	  cp $(PROJ_SRC_DIR)/data/hyph/* $(PROJ_OBJ_DIR)/data/hyph/; \
+	fi
 .PHONY: copy-hyph-files
