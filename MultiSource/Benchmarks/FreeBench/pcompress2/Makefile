@@ -18,5 +18,8 @@ GeneratedTestInputs := copy-input-file
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
 copy-input-file:
-	cp $(PROJ_SRC_DIR)/$(INPUT_FILE) $(PROJ_OBJ_DIR)/$(INPUT_FILE)
+	if [ ! $(PROJ_SRC_DIR) = $(PROJ_OBJ_DIR) ]; \
+	then \
+	  cp  $(PROJ_SRC_DIR)/$(INPUT_FILE) $(PROJ_OBJ_DIR)/$(INPUT_FILE); \
+	fi
 .PHONY: copy-input-files
