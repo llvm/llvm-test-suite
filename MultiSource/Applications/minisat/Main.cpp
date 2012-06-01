@@ -261,8 +261,9 @@ int main(int argc, char** argv)
             S.var_decay = 1 / decay;
 
         }else if ((value = hasPrefix(argv[i], "-verbosity="))){
-            int verbosity = (int)strtol(value, NULL, 10);
-            if (verbosity == 0 && errno == EINVAL){
+            char *end;
+            int verbosity = (int)strtol(value, &end, 10);
+            if (end == value || *end != 0){
                 reportf("ERROR! illegal verbosity level %s\n", value);
                 exit(0); }
             S.verbosity = verbosity;
