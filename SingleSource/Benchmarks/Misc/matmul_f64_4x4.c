@@ -67,4 +67,6 @@ int main() {
       printf("%8.2f", C[n][m]);
     puts("");
   }
+
+  return 0;
 }
