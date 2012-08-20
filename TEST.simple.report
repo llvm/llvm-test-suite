@@ -24,7 +24,9 @@ sub FormatTime {
  ["Program"  , '\'([^\']+)\' Program'],
  [],
  ["CC"       , 'TEST-RESULT-compile-success: (pass|fail|xfail)'],
- ["CC_Time"  , 'TEST-RESULT-compile-time: program\s*([.0-9m:]+)', \&FormatTime],
+ ["CC_Time"  , 'TEST-RESULT-compile-time: user\s*([.0-9m:]+)', \&FormatTime],
+ ["CC_Real_Time", 'TEST-RESULT-compile-real-time: real\s*([.0-9m:]+)', \&FormatTime],
  ["Exec"     , 'TEST-RESULT-exec-success: (pass|fail|xfail)'],
- ["Exec_Time", 'TEST-RESULT-exec-time: program\s*([.0-9m:]+)', \&FormatTime],
+ ["Exec_Time", 'TEST-RESULT-exec-time: user\s*([.0-9m:]+)', \&FormatTime],
+ ["Exec_Real_Time", 'TEST-RESULT-exec-real-time: real\s*([.0-9m:]+)', \&FormatTime],
 );

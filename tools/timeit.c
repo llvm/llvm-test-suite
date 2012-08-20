@@ -211,7 +211,6 @@ int monitor_child_process(pid_t pid, double start_time) {
     fprintf(fp, "%-10s %.4f\n", "real", real_time);
     fprintf(fp, "%-10s %.4f\n", "user", user_time);
     fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
-    fprintf(fp, "program %.6f\n", user_time);
     fclose(fp);
   }
 

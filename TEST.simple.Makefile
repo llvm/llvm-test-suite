@@ -28,7 +28,9 @@ Output/%.simple.compile.report.txt: Output/%.out-simple
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@; \
 	fi
 	@-printf "TEST-RESULT-compile-time: " >> $@
-	@-grep "^program" Output/$*.simple.compile.time >> $@
+	@-grep "^user" Output/$*.simple.compile.time >> $@
+	@-printf "TEST-RESULT-compile-real-time: " >> $@
+	@-grep "^real" Output/$*.simple.compile.time >> $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.simple.exec.report.txt): \
 Output/%.simple.exec.report.txt: Output/%.exe-simple
@@ -49,7 +51,9 @@ Output/%.simple.exec.report.txt: Output/%.exe-simple
 	  echo "TEST-FAIL: exec $(RELDIR)/$*" >> $@;\
 	fi
 	@-printf "TEST-RESULT-exec-time: " >> $@
-	@-grep "^program" Output/$*.out-simple.time >> $@
+	@-grep "^user" Output/$*.out-simple.time >> $@
+	@-printf "TEST-RESULT-exec-real-time: " >> $@
+	@-grep "^real" Output/$*.out-simple.time >> $@
 	if test -f Output/$*.extra-results.txt; then \
 	  $(PROGDIR)/ParseMultipleResults $(RELDIR)/$* Output/$*.extra-results.txt >> $@; \
 	fi

@@ -84,10 +84,11 @@ endif
 
 Output/%.simple: $(NLObjects) $(GeneratedTestInputs)
 	@-cat $(NLObjects:%=%.compile.time) | awk -- '\
-BEGIN     { sum = 0.0; }\
-/^program/   { sum += $$2; }\
-!/^program/  { print; }\
-END       { printf("program %f\n", sum); }' > $@.compile.time
+BEGIN   { real = 0.0; user = 0.0; sys = 0.0; }\
+/^real/ { real += $$2; }\
+/^user/ { user += $$2; }\
+/^sys/ { sys += $$2; }\
+END { printf("real %f\nuser %f\nsys %f\n", real, user, sys); }' > $@.compile.time
 	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $(NLObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
 
 Output/%.native: $(NObjects) $(GeneratedTestInputs)

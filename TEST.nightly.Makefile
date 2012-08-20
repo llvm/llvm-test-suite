@@ -50,7 +50,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.nightly.nat.report.txt): \
 Output/%.nightly.nat.report.txt: Output/%.out-nat
 	@echo > $@
 	@printf "TEST-RESULT-nat-time: " >> $@
-	-grep "^program" Output/$*.out-nat.time >> $@
+	-grep "^user" Output/$*.out-nat.time >> $@
 
 # LLC tests
 $(PROGRAMS_TO_TEST:%=Output/%.nightly.llc.report.txt): \
@@ -62,7 +62,7 @@ Output/%.nightly.llc.report.txt: Output/%.exe-llc
 	  printf "TEST-RESULT-llc: " >> $@;\
 	  grep "Total Execution Time" Output/$*.llc.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-time: " >> $@;\
-	  grep "^program" Output/$*.out-llc.time >> $@;\
+	  grep "^user" Output/$*.out-llc.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc $(RELDIR)/$*" >> $@;\
@@ -78,7 +78,7 @@ Output/%.nightly.llc-beta.report.txt: Output/%.llvm.bc Output/%.exe-llc-beta
 	  printf "TEST-RESULT-llc-beta: " >> $@;\
 	  grep "Total Execution Time" Output/$*.llc-beta.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-llc-beta-time: " >> $@;\
-	  grep "^program" Output/$*.out-llc-beta.time >> $@;\
+	  grep "^user" Output/$*.out-llc-beta.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: llc-beta $(RELDIR)/$*" >> $@;\
@@ -94,7 +94,7 @@ Output/%.nightly.opt-beta.report.txt: Output/%.exe-opt-beta
 	  printf "TEST-RESULT-opt-beta: " >> $@;\
 	  grep "Total Execution Time" Output/$*.opt-beta.s.info | tail -n 1 >> $@;\
 	  printf "TEST-RESULT-opt-beta-time: " >> $@;\
-	  grep "^program" Output/$*.out-opt-beta.time >> $@;\
+	  grep "^user" Output/$*.out-opt-beta.time >> $@;\
 	  echo >> $@;\
 	else  \
 	  echo "TEST-FAIL: opt-beta $(RELDIR)/$*" >> $@;\
@@ -108,7 +108,7 @@ Output/%.nightly.jit.report.txt: Output/%.exe-jit
 	  head -n 100 Output/$*.exe-jit >> $@; \
 	  echo "TEST-PASS: jit $(RELDIR)/$*" >> $@;\
 	  printf "TEST-RESULT-jit-time: " >> $@;\
-	  grep "^program" Output/$*.out-jit.time >> $@;\
+	  grep "^user" Output/$*.out-jit.time >> $@;\
 	  echo >> $@;\
 	  printf "TEST-RESULT-jit-comptime: " >> $@;\
 	  grep "Total Execution Time" Output/$*.out-jit.info | tail -n 1 >> $@;\
