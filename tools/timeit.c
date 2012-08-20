@@ -456,15 +456,6 @@ int main(int argc, char * const argv[]) {
       continue;
     }
 
-    if (streq(arg, "--summary")) {
-      if (i + 1 == argc) {
-        fprintf(stderr, "error: %s argument requires an option\n", arg);
-        usage(/*is_error=*/1);
-      }
-      g_summary_file = argv[++i];
-      continue;
-    }
-
     if (streq(arg, "-c") || streq(arg, "--chdir")) {
       if (i + 1 == argc) {
         fprintf(stderr, "error: %s argument requires an option\n", arg);
