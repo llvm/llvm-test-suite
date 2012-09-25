@@ -31,6 +31,7 @@ PROJ_OBJ_ROOT := $(subst //,/,@abs_top_builddir@)
 
 # Set the root directory of this project's install prefix
 PROJ_INSTALL_ROOT := @prefix@
+program_prefix  := @program_prefix@
 
 # Include LLVM's configuration Makefile, if available.
 ifeq ($(HAS_LLVM),1)
