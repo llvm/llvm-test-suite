@@ -11,4 +11,8 @@ PROGRAMS_TO_SKIP := dt
 endif
 endif
 
+ifeq ($(ARCH),Mips)
+RUNTIMELIMIT := 2000
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
