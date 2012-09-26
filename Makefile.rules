@@ -869,7 +869,7 @@ $(TOOLEXENAME_P): $(ObjectsP) $(USED_LIB_PATHS_P) $(LLVM_LIB_PATHS_P) $(DESTTOOL
 install:: $(TOOLEXENAMES)
 	@${ECHO} Installing $(TOOLEXENAMES) to $(DESTDIR)$(bindir)
 	$(VERB)$(MKDIR) $(DESTDIR)$(bindir)
-	$(VERB)$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) -c -m 0755 $(TOOLEXENAMES) $(DESTDIR)$(bindir)/$(program_prefix)$(TOOLNAME)
+	$(VERB)$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) -c -m 0755 $(TOOLEXENAMES) $(DESTDIR)$(bindir)/$(TOOLNAME)
 
 endif
 

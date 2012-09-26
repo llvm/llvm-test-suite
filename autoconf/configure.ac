@@ -121,7 +121,6 @@ AC_CACHE_CHECK([target architecture],[llvm_cv_target_arch],
   mipsel-*)               llvm_cv_target_arch="Mips" ;;
   xcore-*)                llvm_cv_target_arch="XCore" ;;
   msp430-*)               llvm_cv_target_arch="MSP430" ;;
-  hexagon-*)              llvm_cv_target_arch="Hexagon" ;;
   s390x-*)                llvm_cv_target_arch="SystemZ" ;;
   bfin-*)                 llvm_cv_target_arch="Blackfin" ;;
   mblaze-*)               llvm_cv_target_arch="MBlaze" ;;
@@ -398,10 +397,6 @@ AC_CHECK_FUNC([re_comp],[AC_SUBST(HAVE_RE_COMP,[HAVE_RE_COMP:=1])],
 dnl Get the extension used for shared libraries
 AC_LTDL_SHLIBEXT
 AC_SUBST(SHLIBEXT,$libltdl_cv_shlibext)
-
-dnl Add --program-prefix value to Makefile.rules. Already an ARG variable.
-test "x$program_prefix" = "xNONE" && program_prefix=""
-AC_SUBST([program_prefix])
 
 dnl Create the output files
 AC_OUTPUT
