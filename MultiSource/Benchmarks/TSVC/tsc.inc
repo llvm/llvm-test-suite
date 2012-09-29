@@ -151,13 +151,13 @@ TYPE sum1d(TYPE arr[LEN]){
 	return ret;
 }
 
-inline int s471s(void)
+static inline int s471s(void)
 {
 // --  dummy subroutine call made in s471
 	return 0;
 }
 
-inline TYPE f(TYPE a, TYPE b){
+static inline TYPE f(TYPE a, TYPE b){
 	return a*b;
 }
 
