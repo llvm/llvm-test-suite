@@ -32,7 +32,6 @@
 #include <sys/times.h>
 #include <sys/types.h>
 #include <time.h>
-#include <malloc.h>
 #include <string.h>
 #include <assert.h>
 
@@ -5500,7 +5499,7 @@ int vbor()
 #endif // TESTS & CONTROL_LOOPS
 
 void set(int* ip, TYPE* s1, TYPE* s2){
-	xx = (TYPE*) memalign(ALIGNMENT, LEN*sizeof(TYPE));
+        posix_memalign(&xx, ALIGNMENT, LEN*sizeof(TYPE));
 	printf("\n");
 	for (int i = 0; i < LEN; i = i+5){
 		ip[i]	= (i+4);
@@ -5531,8 +5530,10 @@ void set(int* ip, TYPE* s1, TYPE* s2){
 int main(int argc, char *argv[]){
 	int n1 = 1;
 	int n3 = 1;
-	int* ip = (int *) memalign(ALIGNMENT, LEN*sizeof(TYPE));
+	int* ip;
 	TYPE s1,s2;
+
+        posix_memalign(&ip, ALIGNMENT, LEN*sizeof(TYPE));
 
         if (argc > 1)
           ntimes = atoi(argv[1]);
