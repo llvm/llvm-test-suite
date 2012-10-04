@@ -6,7 +6,12 @@ PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  McCat Olden Ptrdist llubenchmark \
                  sim FreeBench MallocBench Prolangs-C SciMark2-C mediabench\
                  nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial\
-                 BitBench ASC_Sequoia TSVC
+                 BitBench ASC_Sequoia
+
+# Disable TSVC on Darwin until PR-14025 is resolved.
+ifneq ($(TARGET_OS),Darwin)
+PARALLEL_DIRS += TSVC
+endif
 
 ifndef DISABLE_CXX
 PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet
