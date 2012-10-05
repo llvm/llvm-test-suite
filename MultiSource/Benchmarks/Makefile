@@ -1,6 +1,9 @@
 # MultiSource/Benchmarks Makefile:  Build all subdirectories automatically
 
 LEVEL = ../..
+
+include $(LEVEL)/Makefile.config
+
 # Disabled: OptimizerEval.
 PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  McCat Olden Ptrdist llubenchmark \
@@ -22,4 +25,4 @@ PARALLEL_DIRS += \
 		mafft
 endif
 
-include $(LEVEL)/Makefile.programs
+include $(LEVEL)/MultiSource/Makefile.multisrc
