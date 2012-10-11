@@ -635,6 +635,7 @@ int init(char* name)
 		a[LEN-1] = -one;
 	} else if (!strcmp(name, "s421 ")) {
 		set1d(a, any,frac2);
+		set1d(b, one,unit);
 	} else if (!strcmp(name, "s422 ")) {
 		set1d(array,one,unit);
 		set1d(a, any,frac2);
