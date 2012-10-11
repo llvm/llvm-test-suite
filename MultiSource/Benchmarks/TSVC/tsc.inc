@@ -4699,7 +4699,11 @@ int s451()
 
 	for (int nl = 0; nl < ntimes/5; nl++) {
 		for (int i = 0; i < LEN; i++) {
+#ifdef USE_FLOAT_TRIG
+			a[i] = sinf(b[i]) + cosf(c[i]);
+#else
 			a[i] = sin(b[i]) + cos(c[i]);
+#endif
 		}
 		dummy(a, b, c, d, e, aa, bb, cc, 0.);
 	}
