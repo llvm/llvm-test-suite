@@ -7,13 +7,15 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
-short getShort(char c, char c2, char c3, short s, short s2, int i);
-int   getUnknown(char c, ...);
+typedef signed char schar;
 
-int passShort(char c, short s)
+short getShort(schar c, schar c2, schar c3, short s, short s2, int i);
+int   getUnknown(schar c, ...);
+
+int passShort(schar c, short s)
 {
-  char  c2 = s + c;
-  char  c3 = s - c;
+  schar c2 = s + c;
+  schar c3 = s - c;
   short s2 = s * c;
   int    i = s * s * c * c;
   short s3 = getShort(c, c2, c3, s, s2, i);   /* args shd be sign-extended */
@@ -26,11 +28,11 @@ int main()
   return 0;
 }
 
-short getShort(char c, char c2, char c3, short s, short s2, int i)
+short getShort(schar c, schar c2, schar c3, short s, short s2, int i)
 {
-  int bc  = c  == (char) -128;
-  int bc2 = c2 == (char) 116;
-  int bc3 = c3 == (char) 116;
+  int bc  = c  == (schar) -128;
+  int bc2 = c2 == (schar) 116;
+  int bc3 = c3 == (schar) 116;
   int bs  = s  == (short) -3852;
   int bs2 = s2 == (short) -31232;
   int bi  = i  == (int) -1708916736;
@@ -40,16 +42,16 @@ short getShort(char c, char c2, char c3, short s, short s2, int i)
   return (c + c2 + c3 + s + s2) + (short) i;
 }
 
-int getUnknown(char c, ...)
+int getUnknown(schar c, ...)
 {
-  char c2, c3;
+  schar c2, c3;
   short s, s2, s3;
   int i;
   va_list ap;
 
   va_start(ap, c);
-  c2 = (char)  va_arg(ap, int);
-  c3 = (char)  va_arg(ap, int);
+  c2 = (schar) va_arg(ap, int);
+  c3 = (schar) va_arg(ap, int);
   s  = (short) va_arg(ap, int);
   s2 = (short) va_arg(ap, int);
   s3 = (short) va_arg(ap, int);
