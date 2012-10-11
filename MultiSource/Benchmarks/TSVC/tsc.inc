@@ -4421,7 +4421,7 @@ int s1421()
 	clock_dif_sec = (double) (clock_dif/1000000.0);
 	printf("S1421\t %.2f \t\t", clock_dif_sec);;
 	temp = 0;
-	for (int i = 0; i < LEN; i++){
+	for (int i = 0; i < LEN/2; i++){
 		temp += xx[i];
 	}
 	check(-1);
