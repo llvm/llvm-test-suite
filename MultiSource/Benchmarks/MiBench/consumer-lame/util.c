@@ -184,15 +184,16 @@ void  *mem_alloc(unsigned long block, char *item)
 
 enum byte_order DetermineByteOrder(void)
 {
-    char s[ sizeof(long) + 1 ];
+    char s[ sizeof(int) + 1 ];
     union
     {
-        long longval;
-        char charval[ sizeof(long) ];
+        int longval;
+        char charval[ sizeof(int) ];
     } probe;
     probe.longval = 0x41424344L;  /* ABCD in ASCII */
-    strncpy( s, probe.charval, sizeof(long) );
-    s[ sizeof(long) ] = '\0';
+    strncpy( s, probe.charval, sizeof(int) );
+    s[ sizeof(int) ] = '\0';
+    assert (sizeof(int) == 4);
     /* fprintf( stderr, "byte order is %s\n", s ); */
     if ( strcmp(s, "ABCD") == 0 )
         return order_bigEndian;
