@@ -249,6 +249,26 @@ void cfft2(unsigned int n,float x[][2],float y[][2],float w[][2], float sign)
       vec_st(V7,0,(vector float *) (d+k4));     /* store d */
    }
 }
+
+// LLVM LOCAL begin
+// Implementations of sin() and cos() may vary slightly in the accuracy of
+// their results, typically only in the least significant bit.  Round to make
+// the results consistent across platforms.
+typedef union { double d; unsigned long long ll; } dbl_ll_union;
+static double LLVMsin(double d) {
+  dbl_ll_union u;
+  u.d = sin(d);
+  u.ll = (u.ll + 1) & ~1ULL;
+  return u.d;
+}
+static double LLVMcos(double d) {
+  dbl_ll_union u;
+  u.d = cos(d);
+  u.ll = (u.ll + 1) & ~1ULL;
+  return u.d;
+}
+// LLVM LOCAL end
+
 void cffti(int n, float w[][2])
 {
 
@@ -263,8 +283,8 @@ void cffti(int n, float w[][2])
    aw = 2.0*pi/((float)n);
    for(i=0;i<n2;i++){
       arg   = aw*((float)i);
-      w[i][0] = cos(arg);
-      w[i][1] = sin(arg);
+      w[i][0] = LLVMcos(arg);
+      w[i][1] = LLVMsin(arg);
    }
 }
 #include <math.h>
