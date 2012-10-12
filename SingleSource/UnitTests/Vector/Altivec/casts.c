@@ -27,4 +27,5 @@ int main() {
   test(12.34, &X.v);
 
   printf("%f %f %f %f\n", X.f[0], X.f[1], X.f[2], X.f[3]);
+  return 0;
 }
