@@ -5,17 +5,26 @@
 #include <altivec.h>
 #define N 128
 #define N2 N/2
-main()
+
+void cfft2(int n, float x[][2], float y[][2], float w[][2], float sign);
+void cffti(int n, float w[][2]);
+float ggl(float *ds);
+void ccopy(int n, float x[][2], float y[][2]);
+void step(unsigned int n,unsigned int mj, 
+          __complex__ float *a, __complex__ float *b, 
+          __complex__ float *c, __complex__ float *d, 
+          __complex__ float *w, float sign);
+
+int main(void)
 {
 /* SSE version of cfft2 - uses Apple intrinsics
    W. Petersen, SAM. Math. ETHZ 2 May, 2002 */
    int first,i,icase,it,n;
    int nits=1000;              /* number of iterations for timing test */
-   float error,fnm1,sign,z0,z1,ggl();
+   float error,fnm1,sign,z0,z1;
    static float seed = 331.0;
    float *x,*y,*z,*w;
    float t1,ln2,mflops;
-   void cffti(),cfft2();
 /* allocate storage for x,y,z,w on 4-word bndr. */
    x = (float *)malloc(8*N);
    y = (float *)malloc(8*N);
@@ -72,9 +81,7 @@ main()
    }
   return 0;
 }
-void cfft2(n,x,y,w,sign)
-int n;
-float x[][2],y[][2],w[][2],sign;
+void cfft2(int n, float x[][2], float y[][2], float w[][2], float sign)
 {
    int jb, m, j, mj, tgle;
    m    = (int) (log((float) n)/log(1.99));
