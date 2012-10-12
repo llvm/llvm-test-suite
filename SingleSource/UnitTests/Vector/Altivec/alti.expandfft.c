@@ -107,10 +107,10 @@ void cfft2(unsigned int n,float x[][2],float y[][2],float w[][2], float sign)
    float rp,up,wr[4] __attribute((aligned(16)));
    float wu[4] __attribute((aligned(16)));
    float *a,*b,*c,*d;
-   const vector float vminus = (vector float)(-0.,0.,-0.,0.);
-   const vector float vzero  = (vector float)(0.,0.,0.,0.);
+   const vector float vminus = (vector float){-0.,0.,-0.,0.};
+   const vector float vzero  = (vector float){0.,0.,0.,0.};
    const vector unsigned char pv3201 =
-   (vector unsigned char)(4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11);
+   (vector unsigned char){4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11};
    vector float V0,V1,V2,V3,V4,V5,V6,V7;
    vector float V8,V9,V10,V11,V12,V13,V14,V15;
 

@@ -6,5 +6,5 @@ LEVEL = ../../../..
 FP_TOLERANCE := 0.002
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
-TARGET_FLAGS += -maltivec -faltivec
-LCCFLAGS += -maltivec -faltivec
+TARGET_FLAGS += -maltivec
+LCCFLAGS += -maltivec

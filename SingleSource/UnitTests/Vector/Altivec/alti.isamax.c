@@ -52,10 +52,10 @@ int isamax(int n, float *x)
   int i,ii,nres,nsegs,ibig,irbig;
   vector float V0,V1,V6;
   vector bool int V3;
-  vector float V2 = (vector float) (0.0,1.0,2.0,3.0);
-  vector float V7 = (vector float) (0.0,1.0,2.0,3.0);
-  const vector float incr_4 = (vector float) (4.0,4.0,4.0,4.0);
-  const vector float minus0 = (vector float) (-0.0,-0.0,-0.0,-0.0);
+  vector float V2 = (vector float) {0.0,1.0,2.0,3.0};
+  vector float V7 = (vector float) {0.0,1.0,2.0,3.0};
+  const vector float incr_4 = (vector float) {4.0,4.0,4.0,4.0};
+  const vector float minus0 = (vector float) {-0.0,-0.0,-0.0,-0.0};
   float big;
   float xbig[4]  __attribute__((aligned(16)));
   float indx[4]  __attribute__((aligned(16)));

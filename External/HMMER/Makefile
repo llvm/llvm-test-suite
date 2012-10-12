@@ -10,8 +10,8 @@ LIBS +=    -lpthread
 LDFLAGS += -lpthread
 
 ifeq ($(ARCH),PowerPC)
-TARGET_FLAGS += -maltivec -faltivec
-LCCFLAGS += -maltivec -faltivec
+TARGET_FLAGS += -maltivec
+LCCFLAGS += -maltivec
 endif
 
 # Make sure HMMER temporary file is removed, it will break the test.

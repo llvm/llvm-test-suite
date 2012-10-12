@@ -14,10 +14,10 @@ void test(float F, vector float *R) {
 }
 
 void test2(float F, vector float *R) {
-   *R = (vector float)(F);
+   *R = (vector float){F,F,F,F};
 }
 void test2a(float F, vector float *X, vector float *R) {
-   *R = (vector float)(F) + *X;
+   *R = (vector float){F,F,F,F} + *X;
 }
 
 

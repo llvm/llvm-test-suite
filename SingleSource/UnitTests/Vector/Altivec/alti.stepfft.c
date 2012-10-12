@@ -131,10 +131,10 @@ cplx float *w, float sign)
    int j,k,jc,jw,l,lj,mj2;
    float rp,up;
    float wr[4] __attribute((aligned(16))), wu[4] __attribute((aligned(16)));
-   const vector float vminus = (vector float)(-0.,0.,-0.,0.);
-   const vector float vzero  = (vector float)(0.,0.,0.,0.);
+   const vector float vminus = (vector float){-0.,0.,-0.,0.};
+   const vector float vzero  = (vector float){0.,0.,0.,0.};
    const vector unsigned char pv3201 = 
-   (vector unsigned char)(4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11);
+   (vector unsigned char){4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11};
    vector float v0,v1,v2,v3,v4,v5,v6,v7;
 
    mj2 = 2*mj;
