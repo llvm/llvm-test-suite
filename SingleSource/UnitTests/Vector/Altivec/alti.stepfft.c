@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
 #include <float.h>
@@ -10,10 +11,10 @@ void cfft2(int n, float x[][2], float y[][2], float w[][2], float sign);
 void cffti(int n, float w[][2]);
 float ggl(float *ds);
 void ccopy(int n, float x[][2], float y[][2]);
-void step(unsigned int n,unsigned int mj, 
-          __complex__ float *a, __complex__ float *b, 
-          __complex__ float *c, __complex__ float *d, 
-          __complex__ float *w, float sign);
+void step (unsigned int n,unsigned int mj, 
+           float a[][2], float b[][2], 
+           float c[][2], float d[][2], 
+           float w[][2], float sign);
 
 int main(void)
 {
@@ -87,14 +88,14 @@ void cfft2(int n, float x[][2], float y[][2], float w[][2], float sign)
    m    = (int) (log((float) n)/log(1.99));
    mj   = 1;
    tgle = 1;  /* toggling switch for work array */
-   step(n,mj,&x[0][0],&x[n/2][0],&y[0][0],&y[mj][0],w,sign);
+   step(n,mj,&x[0],&x[n/2],&y[0],&y[mj],w,sign);
    for(j=0;j<m-2;j++){
       mj *= 2;
       if(tgle){
-         step(n,mj,&y[0][0],&y[n/2][0],&x[0][0],&x[mj][0],w,sign);
+         step(n,mj,&y[0],&y[n/2],&x[0],&x[mj],w,sign);
          tgle = 0;
       } else {
-         step(n,mj,&x[0][0],&x[n/2][0],&y[0][0],&y[mj][0],w,sign);
+         step(n,mj,&x[0],&x[n/2],&y[0],&y[mj],w,sign);
          tgle = 1;
       }
    }
@@ -103,7 +104,7 @@ void cfft2(int n, float x[][2], float y[][2], float w[][2], float sign)
       ccopy(n,y,x);
    }
    mj   = n/2;
-   step(n,mj,&x[0][0],&x[n/2][0],&y[0][0],&y[mj][0],w,sign);
+   step(n,mj,&x[0],&x[n/2],&y[0],&y[mj],w,sign);
 }
 
 // LLVM LOCAL begin
@@ -146,14 +147,10 @@ void ccopy(int n, float x[][2], float y[][2])
       y[i][1] = x[i][1];
    }
 }
-#define cplx __complex__ 
-#define Re __real__ 
-#define Im __imag__
-void step
-(unsigned int n,unsigned int mj, 
-cplx float *a, __complex__ float *b, 
-cplx float *c, __complex__ float *d, 
-cplx float *w, float sign)
+void step (unsigned int n,unsigned int mj, 
+           float a[][2], float b[][2], 
+           float c[][2], float d[][2], 
+           float w[][2], float sign)
 {
    int j,k,jc,jw,l,lj,mj2;
    float rp,up;
@@ -169,17 +166,15 @@ cplx float *w, float sign)
 
    for(j=0; j<lj; j++){
       jw  = j*mj; jc  = j*mj2;
-      rp = Re w[jw];
-      up = Im w[jw];
+      rp = w[jw][0];
+      up = w[jw][1];
       if(sign<0.0) up = -up;
       if(mj<2){
 /* special case mj=1 */ 
-         Re d[jc] = rp*(Re a[jw] - Re b[jw]) - 
-                          up*(Im a[jw] - Im b[jw]);
-         Im d[jc] = up*(Re a[jw] - Re b[jw]) 
-                        + rp*(Im a[jw] - Im b[jw]);
-         Re c[jc] = Re a[jw] + Re b[jw];
-         Im c[jc] = Im a[jw] + Im b[jw];
+         d[jc][0] = rp*(a[jw][0] - b[jw][0]) - up*(a[jw][1] - b[jw][1]);
+         d[jc][1] = up*(a[jw][0] - b[jw][0]) + rp*(a[jw][1] - b[jw][1]);
+         c[jc][0] = a[jw][0] + b[jw][0];
+         c[jc][1] = a[jw][1] + b[jw][1];
       } else {
 /* mj>=2 case */ 
          wr[0] = rp; wr[1] = rp; wr[2] = rp; wr[3] = rp; 
@@ -202,10 +197,6 @@ cplx float *w, float sign)
       }
    }
 }
-#undef cplx 
-#undef Re 
-#undef Im
-#include <math.h>
 float ggl(float *ds)
 {
 
