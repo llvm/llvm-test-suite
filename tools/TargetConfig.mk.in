@@ -7,7 +7,7 @@
 ARCH_LP64 := YES
 #endif
 
-#ifdef __LITTLE_ENDIAN
+#ifdef __LITTLE_ENDIAN__
 ENDIAN := little
 #else
 ENDIAN := big
