@@ -11,20 +11,7 @@ include ../../Makefile.spec95
 # $(STDOUT_FILENAME). We need both.
 LOCAL_OUTPUTS := vortex.out $(STDOUT_FILENAME)
 
-ifeq ($(ARCH),Sparc)
-  ## SPEC portability note for vortex says to use this flag on 64-bit machines
-  CPPFLAGS += -D__RISC_64__
-endif
-ifeq ($(ARCH),Alpha)
-  ## SPEC portability note for vortex says to use this flag on 64-bit machines
-  CPPFLAGS += -D__RISC_64__
-endif
-ifeq ($(ARCH),IA64)
-  ## SPEC portability note for vortex says to use this flag on 64-bit machines
-  CPPFLAGS += -D__RISC_64__
-endif
-ifeq ($(ARCH),x86_64)
-  ## SPEC portability note for vortex says to use this flag on 64-bit machines
+ifdef ARCH_LP64
   CPPFLAGS += -D__RISC_64__
 endif
 

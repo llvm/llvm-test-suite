@@ -24,8 +24,3 @@ endif
 ifeq ($(TARGET_OS),Darwin)
   LDFLAGS += -Xlinker -stack_size -Xlinker 0x800000
 endif
-
-ifeq ($(ARCH),Sparc)
-  ## SPEC portability note for GCC says to use these flags and cross fingers:
-  CPPFLAGS += -DSPEC_CPU2000_LP64
-endif

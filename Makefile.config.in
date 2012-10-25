@@ -61,6 +61,9 @@ TARGET_OS := @TARGET_OS@
 ARCH := @ARCH@
 ENDIAN := @ENDIAN@
 
+# Include the target config specific flags.
+-include $(PROJ_OBJ_ROOT)/tools/TargetConfig.mk
+
 endif
 
 # Define TCLSH here if LLVM's configuration Makefile is unavailable

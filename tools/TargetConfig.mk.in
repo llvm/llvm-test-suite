@@ -1,0 +1,14 @@
+/* This file is preprocessed to generate the TargetConfig makefile fragment. We
+ * use this in order to support using the compiler's built-in defines to
+ * generate the appropriate configuration parameters.
+ */
+
+#ifdef __LP64__
+ARCH_LP64 := YES
+#endif
+
+#ifdef __LITTLE_ENDIAN
+ENDIAN := little
+#else
+ENDIAN := big
+#endif

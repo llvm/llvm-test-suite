@@ -1,7 +1,7 @@
 LEVEL=..
 include $(LEVEL)/Makefile.programs
 
-all:: timeit timeit-target fpcmp
+all:: timeit timeit-target fpcmp TargetConfig.mk
 
 timeit: timeit.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
@@ -12,5 +12,8 @@ timeit-target: timeit.c
 fpcmp: fpcmp.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
 
+TargetConfig.mk: TargetConfig.mk.in
+	$(LCC) -E -o $@ -x c $<
+
 clean::
-	rm -f timeit timeit-target fpcmp
+	rm -f timeit timeit-target fpcmp TargetConfig.mk
