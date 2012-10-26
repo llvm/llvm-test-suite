@@ -13,26 +13,21 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
 
 include $(LEVEL)/Makefile.config
 
+ifdef ARCH_HAS_LONGLONG
+  CPPFLAGS += -DHAS_LONGLONG
+endif
+
 ifeq ($(ARCH),Alpha)
   CPPFLAGS += -DALPHA -DLINUX
 endif
-ifeq ($(ARCH),x86)
-  CPPFLAGS += -DHAS_LONGLONG
-endif
 ifeq ($(ARCH),x86_64)
-  CPPFLAGS += -DLONG_HAS_64BITS -DHAS_LONGLONG
+  CPPFLAGS += -DLONG_HAS_64BITS
 endif
 ifeq ($(ARCH),PowerPC)
    CPPFLAGS += -DLINUX_PPC32
 endif
 ifeq ($(ARCH),Sparc)
    CPPFLAGS += -DSUN_BSD
-endif
-ifeq ($(ARCH),ARM)
-  CPPFLAGS += -DHAS_LONGLONG
-endif
-ifeq ($(ARCH),THUMB)
-  CPPFLAGS += -DHAS_LONGLONG
 endif
 ifeq ($(TARGET_OS),Darwin)
   CPPFLAGS += -DUNIX -DLINUX

@@ -5,6 +5,7 @@
 
 #ifdef __LP64__
 ARCH_LP64 := YES
+ARCH_HAS_LONGLONG := YES
 #endif
 
 #ifdef __LITTLE_ENDIAN__
