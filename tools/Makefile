@@ -13,7 +13,7 @@ fpcmp: fpcmp.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
 
 TargetConfig.mk: TargetConfig.mk.in
-	$(LCC) -E -o $@ -x c $<
+	$(LCC) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS) -E -o $@ -x c $<
 
 clean::
 	rm -f timeit timeit-target fpcmp TargetConfig.mk
