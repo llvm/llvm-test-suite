@@ -129,7 +129,7 @@ RUNSAFELY := $(RUNSAFELY) -u $(RUNUNDER)
 endif
 
 RUNSAFELY := $(RUNSAFELY) -t "$(TIMEIT_TARGET)"
-RUNSAFELYLOCAL := $(RUNSAFELYLOCAL) -t "$(TIMEIT)"
+RUNSAFELYLOCAL := $(RUNSAFELYLOCAL) --show-errors -t "$(TIMEIT)"
 
 ifdef NO_WATCHDOG
 $(warning "NO_WATCHDOG make variable is no longer needed, please remove!")

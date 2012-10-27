@@ -25,7 +25,7 @@
 # Syntax:
 #
 #   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
-#                [-u <under>] -t <timeit>
+#                [-u <under>] [--show-errors] -t <timeit>
 #                <timeout> <exitok> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -42,6 +42,9 @@
 #     <program> is the path to the program to run
 #     <args...> are the arguments to pass to the program.
 #
+# If --show-errors is given, then the output file will be printed if the command
+# fails.
+
 if [ $# -lt 4 ]; then
   echo "./RunSafely.sh [-t <PATH>] <timeout> <exitok> <infile> <outfile>" \
        "<program> <args...>"
@@ -60,6 +63,7 @@ RCLIENT=rsh
 RPORT=
 RUN_UNDER=
 TIMEIT=
+SHOW_ERRORS=0
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -79,6 +83,10 @@ fi
 if [ $1 = "-u" ]; then
   RUN_UNDER=$2
   shift 2
+fi
+if [ $1 = "--show-errors" ]; then
+  SHOW_ERRORS=1
+  shift 1
 fi
 if [ $1 = "-t" ]; then
   TIMEIT=$2
@@ -185,6 +193,12 @@ echo "exit $exitval" >> $OUTFILE
 if [ "${fail}" != "no" ]; then
   echo "RunSafely.sh detected a failure with these command-line arguments: " \
        "$ORIG_ARGS" >> $OUTFILE
+  if [ "$SHOW_ERRORS" = "1" ]; then
+      echo "error: command failed while generating $OUTFILE"
+      echo "---"
+      cat $OUTFILE
+      echo "---"
+  fi
 fi
 
 # Always return "successful" so that tests will continue to be run.
