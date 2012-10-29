@@ -34,7 +34,7 @@
 #     <args...> are the arguments to pass to the program.
 #
 # If --show-errors is given, then the output file will be printed if the command
-# fails.
+# fails (returns a non-zero exit code).
 
 if [ $# -lt 4 ]; then
   echo "./RunSafely.sh [-t <PATH>] <timeout> <infile> <outfile>" \
@@ -163,6 +163,8 @@ elif test "$exitval" -eq 128 ; then
   echo "TEST $PROGRAM FAILED: exit status 128!"
 elif test "$exitval" -gt 128 ; then
   echo "TEST $PROGRAM FAILED: process terminated by signal (exit status $exitval)!"
+elif [ "$SHOW_ERRORS" -eq 1 -a "$exitval" -ne 0 ] ; then
+  echo "TEST $PROGRAM FAILED: EXIT != 0"
 else
   fail=no
 fi
