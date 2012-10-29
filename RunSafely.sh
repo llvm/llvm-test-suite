@@ -94,34 +94,28 @@ INFILE=$2
 OUTFILE=$3
 PROGRAM=$4
 shift 4
-SYSTEM=`uname -s`
 
 PROG=${PROGRAM}
 if [ `basename ${PROGRAM}` = "lli" ]; then
   PROG=`basename ${PROGRAM}`
 fi
 
+# Disable core file emission.
 LIMITARGS=""
-case $SYSTEM in
-  CYGWIN*)
-    ;;
-  *)
-    # Disable core file emission.
-    LIMITARGS="$LIMITARGS --limit-core 0"
+LIMITARGS="$LIMITARGS --limit-core 0"
 
-    # Set the CPU limit. We watchdog the process, so this is mostly just for
-    # paranoia.
-    LIMITARGS="$LIMITARGS --limit-cpu $TIMELIMIT"
+# Set the CPU limit. We watchdog the process, so this is mostly just for
+# paranoia.
+LIMITARGS="$LIMITARGS --limit-cpu $TIMELIMIT"
 
-    # To prevent infinite loops which fill up the disk, specify a limit on size
-    # of files being output by the tests.
-    #
-    # We set the limit at 100MB.
-    LIMITARGS="$LIMITARGS --limit-file-size 104857600"
+# To prevent infinite loops which fill up the disk, specify a limit on size
+# of files being output by the tests.
+#
+# We set the limit at 100MB.
+LIMITARGS="$LIMITARGS --limit-file-size 104857600"
 
-    # Set the virtual memory limit at 800MB.
-    LIMITARGS="$LIMITARGS --limit-rss-size 838860800"
-esac
+# Set the virtual memory limit at 800MB.
+LIMITARGS="$LIMITARGS --limit-rss-size 838860800"
 
 # Run the command, timing its execution and logging the status summary to
 # $OUTFILE.time.
