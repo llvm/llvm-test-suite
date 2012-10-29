@@ -11,14 +11,6 @@
 #           fourth argument specified, and outputs a <outfile>.time file which
 #           contains a timing of the program and the program's exit code.
 #
-#           The <exitok> parameter specifies how the program's exit status
-#           is interpreted.  If the <exitok> parameter is non-zero, any
-#           non-zero exit status from the program is considered to indicate
-#           a test failure.  If the <exitok> parameter is zero, only exit
-#           statuses that indicates that the program could not be executed
-#           normally or that the program was terminated as a signal are
-#           considered to indicate a test failure.
-#
 #           If optional parameters -r <remote host> -l <remote user> are
 #           specified, it execute the program remotely using rsh.
 #
@@ -26,7 +18,7 @@
 #
 #   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
 #                [-u <under>] [--show-errors] -t <timeit>
-#                <timeout> <exitok> <infile> <outfile> <program> <args...>
+#                <timeout> <infile> <outfile> <program> <args...>
 #
 #   where:
 #     <rhost>   is the remote host to execute the program
@@ -36,7 +28,6 @@
 #     <under>   is a wrapper that the program is run under
 #     <timeit>  is a wrapper that is used to collect timing data
 #     <timeout> is the maximum number of seconds to let the <program> run
-#     <exitok>  is 1 if the program must exit with 0 return code
 #     <infile>  is a file from which standard input is directed
 #     <outfile> is a file to which standard output and error are directed
 #     <program> is the path to the program to run
@@ -46,7 +37,7 @@
 # fails.
 
 if [ $# -lt 4 ]; then
-  echo "./RunSafely.sh [-t <PATH>] <timeout> <exitok> <infile> <outfile>" \
+  echo "./RunSafely.sh [-t <PATH>] <timeout> <infile> <outfile>" \
        "<program> <args...>"
   exit 1
 fi
@@ -99,11 +90,10 @@ if [ "$TIMEIT" = "" ]; then
 fi
 
 TIMELIMIT=$1
-EXITOK=$2
-INFILE=$3
-OUTFILE=$4
-PROGRAM=$5
-shift 5
+INFILE=$2
+OUTFILE=$3
+PROGRAM=$4
+shift 4
 SYSTEM=`uname -s`
 
 PROG=${PROGRAM}
@@ -179,8 +169,6 @@ elif test "$exitval" -eq 128 ; then
   echo "TEST $PROGRAM FAILED: exit status 128!"
 elif test "$exitval" -gt 128 ; then
   echo "TEST $PROGRAM FAILED: process terminated by signal (exit status $exitval)!"
-elif [ "$EXITOK" -ne 0 -a "$exitval" -ne 0 ] ; then
-  echo "TEST $PROGRAM FAILED: EXIT != 0"
 else
   fail=no
 fi

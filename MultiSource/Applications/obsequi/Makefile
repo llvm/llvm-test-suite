@@ -12,5 +12,4 @@ endif
 LDFLAGS = -lsupc++
 LIBS += -lsupc++
 STDIN_FILENAME=$(PROJ_SRC_DIR)/input
-PROGRAM_REQUIRED_TO_EXIT_OK := 1
 include ../../Makefile.multisrc
