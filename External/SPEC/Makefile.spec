@@ -240,7 +240,35 @@ Output/%.bugpoint-cbe: Output/%.llvm.bc $(LBUGPOINT) Output/%.out-nat
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
 
-LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
+LIBPROFILESO = $(LLVMLIBCURRENTSOURCE)/libprofile_rt.so
+
+# rules for PGO
+$(PROGRAMS_TO_TEST_PROFGEN:%=Output/%.out-pgo): \
+Output/%.out-pgo: Output/%
+	$(VERB) $(RM) -f Output/$*.prof-data.tmp
+	LLVMPROF_OUTPUT="../$*.prof-data.tmp" \
+	$(SPEC_SANDBOX) profile-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	     $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../$* $(RUN_OPTIONS)
+	-(cd Output/profile-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+          $(SPEC_OUTPUT_FILE_FILTER) > $@
+	-cp Output/profile-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
+
+$(PROGRAMS_TO_TEST_ALLUSE:%=Output/%.out-pgo): \
+Output/%.out-pgo: Output/%
+	$(VERB) $(RM) -f Output/$*.prof-data.tmp
+	$(SPEC_SANDBOX) pgo-$(RUN_TYPE) $@ $(REF_IN_DIR) \
+	     $(RUNSAFELY) $(STDIN_FILENAME) $(STDOUT_FILENAME) \
+                  ../$* $(RUN_OPTIONS)
+	-(cd Output/pgo-$(RUN_TYPE); cat $(LOCAL_OUTPUTS)) | \
+          $(SPEC_OUTPUT_FILE_FILTER) > $@
+	-cp Output/pgo-$(RUN_TYPE)/$(STDOUT_FILENAME).time $@.time
+ifdef PROGRAM_OUTPUT_FILTER
+	$(PROGRAM_OUTPUT_FILTER) $@
+endif
 
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)

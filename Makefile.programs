@@ -663,7 +663,7 @@ clean::
 	rm -f bugpoint.*
 	rm -rf Output/misopt-*
 
-LIBPROFILESO = $(LLVM_OBJ_ROOT)/Debug/lib/libprofile_rt.so
+LIBPROFILESO = $(LLVMLIBCURRENTSOURCE)/libprofile_rt.so
 
 $(PROGRAMS_TO_TEST:%=Output/%.prof): \
 Output/%.prof: Output/%.llvm-prof.bc Output/%.out-nat $(LIBPROFILESO)
