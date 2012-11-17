@@ -1,0 +1,68 @@
+This benchmark has been extensively modified to cope with LNT's infrastructure.
+
+It no longer checks for CPU frequency, nor produces comparable outputs to
+previous versions. The main reason to have this benchmark is to check both
+performance and correctness of floating point loop reductions during
+vectorization, so the heuristics provided is nothing more than just
+a floating point hash generated from some of the data to compare for
+floating point accuracy.
+
+Also, the timings are being taken on the whole executable (by LNT), so
+they're not as accurate as taking the inner loop, since there is considerable
+code to prepare the data and to calculate the heuristics.
+
+However, both prepare and heuristics are fp-loop based, so will also
+benefit from optimizations in that area, which will affect the final
+timing.
+
+File downloaded from http://www.roylongbottom.org.uk/classic.htm
+
+Extracted from original code at http://www.netlib.org/benchmark/livermorec
+
+/* Livermore Loops coded in C        Latest File Modification  20 Oct 92,
+ *  by Tim Peters, Kendall Square Res. Corp. tim@ksr.com, ksr!tim@uunet.uu.net
+ *     SUBROUTINE KERNEL( TK)  replaces the Fortran routine in LFK Test program.
+ ************************************************************************
+ *                                                                      *
+ *            KERNEL     executes 24 samples of "C" computation         *
+ *                                                                      *
+ *                TK(1) - total cpu time to execute only the 24 kernels.*
+ *                TK(2) - total Flops executed by the 24 Kernels        *
+ *                                                                      *
+ ************************************************************************
+ *                                                                      *
+ *     L. L. N. L.   " C "   K E R N E L S:   M F L O P S               *
+ *                                                                      *
+ *     These kernels measure   " C "   numerical computation            *
+ *     rates for  a  spectrum  of  cpu-limited computational            *
+ *     structures or benchmarks.   Mathematical  through-put            *
+ *     is measured  in  units  of millions of floating-point            *
+ *     operations executed per second, called Megaflops/sec.            *
+ *                                                                      *
+ *     Fonzi's Law: There is not now and there never will be a language *
+ *                  in which it is the least bit difficult to write     *
+ *                  bad programs.                                       *
+ *                                                    F.H.MCMAHON  1972 *
+ ************************************************************************
+ *Originally from  Greg Astfalk, AT&T, P.O.Box 900, Princeton, NJ. 08540*
+ *               by way of Frank McMahon (LLNL).                        *
+ *                                                                      *
+ *                               REFERENCE                              *
+ *                                                                      *
+ *              F.H.McMahon,   The Livermore Fortran Kernels:           *
+ *              A Computer Test Of The Numerical Performance Range,     *
+ *              Lawrence Livermore National Laboratory,                 *
+ *              Livermore, California, UCRL-53745, December 1986.       *
+ *                                                                      *
+ *       from:  National Technical Information Service                  *
+ *              U.S. Department of Commerce                             *
+ *              5285 Port Royal Road                                    *
+ *              Springfield, VA.  22161                                 *
+ *                                                                      *
+ *    Changes made to correct many array subscripting problems,         *
+ *      make more readable (added #define's), include the original      *
+ *      FORTRAN versions of the runs as comments, and make more         *
+ *      portable by Kelly O'Hair (LLNL) and Chuck Rasbold (LLNL).       *
+ *                                                                      *
+ ************************************************************************
+ */
