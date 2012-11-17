@@ -16,8 +16,15 @@
 #
 ##===----------------------------------------------------------------------===##
 
-# Force lazy substitution.
-ALL_PROGRAMS_TO_SKIP = $(PROGRAMS_TO_SKIP)
+# Force lazy substitution. Additionally note that
+# EXTRA_PROGRAMS_TO_SKIP is a variable that has been added so at the
+# command line, a user can add an extra unittest to skip without
+# affecting any of the current functionality in the test suite with
+# respect to PROGRAMS_TO_SKIP. Since this functionality only occurs in
+# the SingleSource part of the test suite I did not create an EXTRA
+# PROGRAMS_TO_SKIP variable for the MultiSource/External directories
+# of the test suite.
+ALL_PROGRAMS_TO_SKIP = $(PROGRAMS_TO_SKIP) $(EXTRA_PROGRAMS_TO_SKIP)
 
 # If DISABLE_CXX is given, add any C++ programs to the list to skip.
 ifdef DISABLE_CXX
