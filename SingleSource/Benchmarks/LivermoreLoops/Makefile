@@ -1,6 +1,6 @@
 LEVEL = ../../..
 
-LDFLAGS += -m64 -lrt -lc -lm 
+LDFLAGS += -lm
 
 FP_TOLERANCE := 0.0001
 

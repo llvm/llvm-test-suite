@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#if 0
 /* Timer */
 #include <time.h>
 struct timespec tp1;
@@ -43,6 +44,7 @@ void end_time()
     secs = theseSecs - startSecs;
     millisecs = (int)(1000.0 * secs);
 }    
+#endif
 
 /* Test Variables */
 struct Arrays

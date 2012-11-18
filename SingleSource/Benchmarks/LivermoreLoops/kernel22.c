@@ -15,7 +15,7 @@ double kernel22()
   unsigned iter = 0;
 
   parameters (22);
-  start_time();
+  /*start_time();*/
 
   expmax = 20.0;
   u[n-1] = 0.99*expmax*v[n-1];
