@@ -17,35 +17,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#if 0
-/* Timer */
-#include <time.h>
-struct timespec tp1;
-unsigned int millisecs  = 0;
-double  theseSecs = 0.0;
-double  startSecs = 0.0;
-double  secs;
-
-void getSecs()
-{
-   clock_gettime(CLOCK_REALTIME, &tp1);
-   theseSecs =  tp1.tv_sec + tp1.tv_nsec / 1e9;           
-}
-
-void start_time()
-{
-    getSecs();
-    startSecs = theseSecs;
-}
-
-void end_time()
-{
-    getSecs();
-    secs = theseSecs - startSecs;
-    millisecs = (int)(1000.0 * secs);
-}    
-#endif
-
 /* Test Variables */
 struct Arrays
 {
