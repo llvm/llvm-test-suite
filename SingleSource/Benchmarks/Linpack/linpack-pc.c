@@ -198,7 +198,7 @@
 #define SP
 #define ROLL
 #define UNIX
-#define PASSES -5
+#define PASSES -3
 /**********************/
 
 #ifdef SP
