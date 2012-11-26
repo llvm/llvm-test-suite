@@ -10,6 +10,7 @@
 #include "SparseCompRow.h"
 #include "array.h"
 
+#define CYCLES (1<<12)
 
     double kernel_measureFFT(int N, double mintime, Random R)
     {
@@ -31,7 +32,7 @@
                 FFT_inverse(twoN, x);       /* backward transform */
             }
             Stopwatch_stop(Q);
-            if (Stopwatch_read(Q) >= mintime)
+            if (cycles > CYCLES /*Stopwatch_read(Q) >= mintime*/)
                 break;
 
             cycles *= 2;
@@ -58,7 +59,8 @@
             SOR_execute(N, N, 1.25, G, cycles);
             Stopwatch_stop(Q);
 
-            if (Stopwatch_read(Q) >= min_time) break;
+            if (cycles > CYCLES /*Stopwatch_read(Q) >= mintime*/)
+              break;
 
             cycles *= 2;
         }
@@ -84,7 +86,7 @@
             Stopwatch_start(Q);
             MonteCarlo_integrate(cycles);
             Stopwatch_stop(Q);
-            if (Stopwatch_read(Q) >= min_time) break;
+            if (cycles > CYCLES/*Stopwatch_read(Q) >= min_time*/) break;
 
             cycles *= 2;
         }
@@ -165,7 +167,7 @@
             Stopwatch_start(Q);
             SparseCompRow_matmult(N, y, val, row, col, x, cycles);
             Stopwatch_stop(Q);
-            if (Stopwatch_read(Q) >= min_time) break;
+            if (cycles > CYCLES/*Stopwatch_read(Q) >= min_time*/) break;
 
             cycles *= 2;
         }
@@ -212,7 +214,7 @@
                 LU_factor(N, N, lu, pivot);
             }
             Stopwatch_stop(Q);
-            if (Stopwatch_read(Q) >= min_time) break;
+            if (cycles > CYCLES/*Stopwatch_read(Q) >= min_time*/) break;
 
             cycles *= 2;
         }
