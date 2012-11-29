@@ -10,7 +10,11 @@
 #include "SparseCompRow.h"
 #include "array.h"
 
+#ifdef SMALL_PROBLEM_SIZE
+#define CYCLES (1<<7)
+#else
 #define CYCLES (1<<12)
+#endif
 
     double kernel_measureFFT(int N, double mintime, Random R)
     {
@@ -26,7 +30,7 @@
         while(1)
         {
             Stopwatch_start(Q);
-            for (i=0; i<cycles; i++)
+            for (i=0; i<cycles * 8; i++)
             {
                 FFT_transform(twoN, x);     /* forward transform */
                 FFT_inverse(twoN, x);       /* backward transform */
@@ -56,7 +60,7 @@
         while(1)
         {
             Stopwatch_start(Q);
-            SOR_execute(N, N, 1.25, G, cycles);
+            SOR_execute(N, N, 1.25, G, cycles * 16);
             Stopwatch_stop(Q);
 
             if (cycles > CYCLES /*Stopwatch_read(Q) >= mintime*/)
@@ -84,7 +88,7 @@
         while(1)
         {
             Stopwatch_start(Q);
-            MonteCarlo_integrate(cycles);
+            MonteCarlo_integrate(cycles * 65536);
             Stopwatch_stop(Q);
             if (cycles > CYCLES/*Stopwatch_read(Q) >= min_time*/) break;
 
@@ -165,7 +169,7 @@
         while(1)
         {
             Stopwatch_start(Q);
-            SparseCompRow_matmult(N, y, val, row, col, x, cycles);
+            SparseCompRow_matmult(N, y, val, row, col, x, cycles * 64);
             Stopwatch_stop(Q);
             if (cycles > CYCLES/*Stopwatch_read(Q) >= min_time*/) break;
 
