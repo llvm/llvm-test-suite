@@ -8,6 +8,7 @@ DIRS := SetjmpLongjmp
 DIRS :=
 
 DIRS += Vector 
+DIRS += Vectorizer
 
 DIRS += SignlessTypes Threads
 
