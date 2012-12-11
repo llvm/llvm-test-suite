@@ -67,6 +67,7 @@ stepanov@mti.sgi.com
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
+#include <float.h>
 
 template <class T>
 inline int operator!=(const T& x, const T& y) {
@@ -243,7 +244,10 @@ inline void start_timer() { start_time = clock(); }
 
 inline double timer() {
   end_time = clock();
-  return (end_time - start_time)/double(CLOCKS_PER_SEC);
+
+  /* The FLT_EPSILON addition is an llvm hack to ensure timer() never returns
+   * 0.0 (we divide by it later). */
+  return FLT_EPSILON + (end_time - start_time)/double(CLOCKS_PER_SEC);
 }
 
 const double init_value = 3.;
