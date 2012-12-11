@@ -161,9 +161,9 @@ int32_t main (int32_t argc, char * argv[])
         }
       else
         {
-          // decoding
-          GetOutputFileType(outputFileName, &outputFileType);
-            
+          // decoding          
+          outputFileType = inputFileType == kFileTypeWAV? kFileTypeCAFF : kFileTypeWAV;
+          
           if (outputFileType == kFileTypeWAV && outputFormat.mChannelsPerFrame > 2)
             {
               // we don't support WAVE because we don't want to reinterleave on output 
@@ -707,24 +707,6 @@ int32_t DecodeALAC(FILE * inputFile, FILE * outputFile, AudioFormatDescription t
   free(theWriteBuffer);
 
   return 0;
-}
-
-void GetOutputFileType(char * outputFileName, uint32_t * outputFileType)
-{
-  char * typeStr = strrchr(outputFileName, '.');
-    
-  *outputFileType = kFileTypeCAFF;
-
-  if (typeStr != NULL)
-    {
-      if (strlen(typeStr) == 4)
-        {
-          if (strcmp(typeStr, ".wav") == 0)
-            {
-              *outputFileType = kFileTypeWAV;
-            }
-        }
-    }
 }
 
 ALACChannelLayoutTag GetALACChannelLayoutTag(uint32_t inChannelsPerFrame)
