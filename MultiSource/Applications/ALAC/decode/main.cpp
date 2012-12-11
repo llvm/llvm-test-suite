@@ -40,6 +40,10 @@
 
 #define VERBOSE 0
 
+#define kFileTypeUnknown (-1)
+#define kFileTypeWAV (1463899717)
+#define kFileTypeCAFF (1667327590)
+
 // Helper functions
 int32_t GetInputFormat(FILE * inputFile, AudioFormatDescription * theInputFormat, uint32_t * theFileType);
 int32_t SetOutputFormat(AudioFormatDescription theInputFormat, AudioFormatDescription * theOutputFormat);
@@ -117,8 +121,8 @@ int32_t main (int32_t argc, char * argv[])
       AudioFormatDescription inputFormat;
       AudioFormatDescription outputFormat;
       int32_t inputDataPos = 0, inputDataSize = 0;
-      uint32_t inputFileType = 0; // 'caff' or 'WAVE'
-      uint32_t outputFileType = 0; // 'caff' or 'WAVE'
+      uint32_t inputFileType = 0; // kFileTypeCAFF or kFileTypeWAV
+      uint32_t outputFileType = 0; // kFileTypeCAFF or kFileTypeWAV
         
       theError = GetInputFormat(inputFile, &inputFormat, &inputFileType);
       if (theError)
@@ -127,7 +131,7 @@ int32_t main (int32_t argc, char * argv[])
           exit (1);            
         }
         
-      if (inputFileType != 'WAVE' && inputFileType != 'caff')
+      if (inputFileType != kFileTypeWAV && inputFileType != kFileTypeCAFF)
         {
           fprintf(stderr," File \"%s\" is of an unsupported type\n", outputFileName);
           exit (1);                        
@@ -160,7 +164,7 @@ int32_t main (int32_t argc, char * argv[])
           // decoding
           GetOutputFileType(outputFileName, &outputFileType);
             
-          if (outputFileType == 'WAVE' && outputFormat.mChannelsPerFrame > 2)
+          if (outputFileType == kFileTypeWAV && outputFormat.mChannelsPerFrame > 2)
             {
               // we don't support WAVE because we don't want to reinterleave on output 
               fprintf(stderr," Cannot decode more than two channels to WAVE\n");
@@ -199,7 +203,7 @@ int32_t GetInputFormat(FILE * inputFile, AudioFormatDescription * theInputFormat
   if (theReadBuffer[0] == 'c' && theReadBuffer[1] == 'a' && theReadBuffer[2] == 'f'  & theReadBuffer[3] == 'f')
     {
       // It's a caff file!
-      *theFileType = 'caff';
+      *theFileType = kFileTypeCAFF;
       // We support pcm data for encode and alac data for decode
       done = GetCAFFdescFormat(inputFile, theInputFormat);
     }
@@ -209,7 +213,7 @@ int32_t GetInputFormat(FILE * inputFile, AudioFormatDescription * theInputFormat
       if (theReadBuffer[4] == 'W' && theReadBuffer[5] == 'A' && theReadBuffer[6] == 'V'  & theReadBuffer[7] == 'E')
         {
           // It's a WAVE file!
-          *theFileType = 'WAVE';
+          *theFileType = kFileTypeWAV;
           // We only support pcm data             
           while (!done)
             {
@@ -342,7 +346,7 @@ int32_t FindDataStart(FILE * inputFile, uint32_t inputFileType, int32_t * dataPo
     
   switch (inputFileType)
     {
-    case 'WAVE':
+    case kFileTypeWAV:
       fseek(inputFile, 0, SEEK_SET); // start at 0
       fread(theReadBuffer, 1, 8, inputFile);
       fileSize = ((int32_t)(theReadBuffer[7]) << 24) + ((int32_t)(theReadBuffer[6]) << 16) + ((int32_t)(theReadBuffer[5]) << 8) + theReadBuffer[4];
@@ -366,7 +370,7 @@ int32_t FindDataStart(FILE * inputFile, uint32_t inputFileType, int32_t * dataPo
             }
         }
       break;
-    case 'caff':
+    case kFileTypeCAFF:
       done = FindCAFFDataStart(inputFile, dataPos, dataSize);
       break;
     }
@@ -611,7 +615,7 @@ int32_t DecodeALAC(FILE * inputFile, FILE * outputFile, AudioFormatDescription t
   BitBufferInit(&theInputBuffer, theReadBuffer, theInputPacketBytes);
   inputDataPos = ftell(inputFile);
     
-  if (outputFileType != 'WAVE')
+  if (outputFileType != kFileTypeWAV)
     {
       // we only write out the caff header, the 'desc' chunk and the 'data' chunk
       // write out the caff header
@@ -677,7 +681,7 @@ int32_t DecodeALAC(FILE * inputFile, FILE * outputFile, AudioFormatDescription t
       inputDataPos += theInputPacketBytes;
       BitBufferReset(&theInputBuffer);
     }
-  if (outputFileType != 'WAVE')
+  if (outputFileType != kFileTypeWAV)
     {
       // cleanup -- write out the data size
       fseek(outputFile, outputDataSizePos, SEEK_SET);
@@ -694,7 +698,7 @@ int32_t DecodeALAC(FILE * inputFile, FILE * outputFile, AudioFormatDescription t
       WriteWAVEChunkSize(outputFile, (uint32_t)numDataBytes);
       // write out the file size
       fseek(outputFile, 4, SEEK_SET);
-      WriteWAVEChunkSize(outputFile, numDataBytes + sizeof(outputFileType) + kWAVEdataChunkHeaderSize + kWAVEfmtChunkSize); // add in the size for 'WAVE', size of the data' chunk header and the 'fmt ' chunk
+      WriteWAVEChunkSize(outputFile, numDataBytes + sizeof(outputFileType) + kWAVEdataChunkHeaderSize + kWAVEfmtChunkSize); // add in the size for kFileTypeWAV, size of the data' chunk header and the 'fmt ' chunk
     }
 
   delete theDecoder;
@@ -709,7 +713,7 @@ void GetOutputFileType(char * outputFileName, uint32_t * outputFileType)
 {
   char * typeStr = strrchr(outputFileName, '.');
     
-  *outputFileType = 'caff';
+  *outputFileType = kFileTypeCAFF;
 
   if (typeStr != NULL)
     {
@@ -717,7 +721,7 @@ void GetOutputFileType(char * outputFileName, uint32_t * outputFileType)
         {
           if (strcmp(typeStr, ".wav") == 0)
             {
-              *outputFileType = 'WAVE';
+              *outputFileType = kFileTypeWAV;
             }
         }
     }
