@@ -24,9 +24,9 @@ dp_enc.c \
 matrix_dec.c \
 matrix_enc.c \
 main.cpp \
-CAFFileALAC.cpp \
+CAFFileALAC.cpp
 
 STDIN_FILENAME = $(PROJ_SRC_DIR)/tune.wav
 RUN_OPTIONS=- -
 
-include $(LEVEL)/Multisource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
