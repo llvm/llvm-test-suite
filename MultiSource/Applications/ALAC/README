@@ -1,0 +1,8 @@
+This directory contains two separate instances of ALAC (Apple Lossless
+Audio Codec). The decode folder tests decoding a CAF file into a WAVE
+file and the encode folder tests encoding a WAV file into a CAF file.
+
+The license for ALAC is in each subfolder and has been copied into
+this top level folder to make sure that it is clear what the license
+is upon a quick glance (no point in not being more verbose than needed).
+
