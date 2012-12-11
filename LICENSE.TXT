@@ -77,6 +77,7 @@ Hexxagon:           llvm-test/MultiSource/Applications/hexxagon
 SPASS:              llvm-test/MultiSource/Applications/SPASS
 oggenc:             llvm-test/MultiSource/Applications/oggenc
 JM:                 llvm-test/MultiSource/Applications/JM
+ALAC:               llvm-test/MultiSource/Applications/ALAC
 ASC Sequoia:        llvm-test/MultiSource/Benchmarks/ASC_Sequoia/AMGmk
                     llvm-test/MultiSource/Benchmarks/ASC_Sequoia/IRSmk
                     llvm-test/MultiSource/Benchmarks/ASC_Sequoia/sphot
@@ -102,7 +103,6 @@ gsm:                llvm-test/MultiSource/Benchmarks/mediabench/gsm
 jpeg:               llvm-test/MultiSource/Benchmarks/mediabench/jpeg
 mpeg2:              llvm-test/MultiSource/Benchmarks/mediabench/mpeg2
 TSVC:               llvm-test/MultiSource/Benchmarks/TSVC
-ALAC:               llvm-test/MultiSource/Benchmarks/ALAC
 Dhrystone:          llvm-test/SingleSource/Benchmarks/Dhrystone
 SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
