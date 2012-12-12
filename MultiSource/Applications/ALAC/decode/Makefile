@@ -9,6 +9,7 @@ else
 CFLAGS += -DTARGET_RT_BIG_ENDIAN=1
 CXXFLAGS += -DTARGET_RT_BIG_ENDIAN=1
 endif
+LDFLAGS = -lstdc++
 
 PROG = alacconvert-decode
 
