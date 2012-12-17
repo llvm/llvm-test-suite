@@ -15,6 +15,8 @@ CXXFLAGS += -DBREAK_HANDLER -DUNICODE -D_UNICODE -I$(PROJ_SRC_DIR)/C \
           -I$(PROJ_SRC_DIR)/CPP -I. -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
 					-DNDEBUG -D_REENTRANT -DENV_UNIX -D_7ZIP_LARGE_PAGES
 
+LDFLAGS = -lstdc++
+
 Source = \
 CPP/myWindows/myGetTickCount.cpp \
 CPP/myWindows/wine_date_and_time.cpp \
