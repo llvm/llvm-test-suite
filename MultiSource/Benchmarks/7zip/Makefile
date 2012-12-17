@@ -270,5 +270,5 @@ $(foreach dir,$(SUBDIRS),$(eval $(call SUBDIR_template,$(PROJ_SRC_DIR)/$(dir))))
 # will be different everytime since the output includes timing information.
 PROGRAM_IS_NONDETERMINISTIC=1
 
-include $(LEVEL)/Multisource/Makefile.multisrc
+include $(LEVEL)/MultiSource/Makefile.multisrc
 
