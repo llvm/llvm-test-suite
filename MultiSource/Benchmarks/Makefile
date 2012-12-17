@@ -19,7 +19,7 @@ endif
 endif
 
 ifndef DISABLE_CXX
-PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet
+PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet 7zip
 endif
 
 ifndef SMALL_PROBLEM_SIZE

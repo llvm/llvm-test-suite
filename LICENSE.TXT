@@ -103,6 +103,7 @@ gsm:                llvm-test/MultiSource/Benchmarks/mediabench/gsm
 jpeg:               llvm-test/MultiSource/Benchmarks/mediabench/jpeg
 mpeg2:              llvm-test/MultiSource/Benchmarks/mediabench/mpeg2
 TSVC:               llvm-test/MultiSource/Benchmarks/TSVC
+7zip (Benchmark):   llvm-test/MultiSource/Benchmarks/7zip
 Dhrystone:          llvm-test/SingleSource/Benchmarks/Dhrystone
 SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
