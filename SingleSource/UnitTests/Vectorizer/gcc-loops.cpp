@@ -90,7 +90,6 @@ void example4a (int n, aint * __restrict__ p, aint * __restrict__ q) {
 __attribute__((noinline))
 void example4b (int n, aint * __restrict__ p, aint * __restrict__ q) {
    int i;
-    const int MAX = 4;
 
    /* feature: support for read accesses with a compile time known misalignment  */
    for (i=0; i<n; i++){
