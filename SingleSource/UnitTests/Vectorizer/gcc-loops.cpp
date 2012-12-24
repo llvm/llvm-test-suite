@@ -78,8 +78,6 @@ void example3 (int n, aint * __restrict__ p, aint * __restrict q) {
 
 __attribute__((noinline))
 void example4a (int n, aint * __restrict__ p, aint * __restrict__ q) {
-   int i;
-    const int MAX = 4;
    /* feature: support for (aligned) pointer accesses  */
    /* feature: support for constants  */
    while (n--){
@@ -385,7 +383,7 @@ int main(int argc,char* argv[]){
 
   std::cout<<std::hex;
   std::cout<<"Results: ("<<std::accumulate(results.begin(), results.end(), 0)<<"):";
-  for (int i=0; i < results.size(); ++i) {
+  for (unsigned i=0; i < results.size(); ++i) {
     std::cout<<" "<<results[i];
   }
   std::cout<<"\n";
