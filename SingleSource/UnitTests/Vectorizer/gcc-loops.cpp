@@ -226,14 +226,13 @@ void example14(int **in, int **coeff, int *out) {
 
 
 __attribute__((noinline))
-int example21(int *b, int n)
-{
+void example21(int *b, int n) {
   int i, a = 0;
 
   for (i = n-1; i >= 0; i--)
     a += b[i];
 
-  return a;
+  b[0] = a;
 }
 
 __attribute__((noinline))
@@ -378,6 +377,7 @@ int main(int argc,char* argv[]){
   BENCH("Example11",  example11(), Mi*2, digest_memory(&d[0], &d[N]));
   BENCH("Example12",  example12(), Mi*2, digest_memory(&a[0], &a[N]));
   BENCH("Example23",  example23(usa,ua), Mi*2, digest_memory(&usa[0], &usa[256]));
+  BENCH("Example21",  example21(ia, N), Mi, digest_memory(&ia[0], &ia[N]));
   BENCH("Example24",  example24(2,4), Mi*2, 0);
   BENCH("Example25",  example25(), Mi*2, digest_memory(&dj[0], &dj[N]));
 
