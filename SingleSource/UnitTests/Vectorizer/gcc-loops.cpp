@@ -376,8 +376,8 @@ int main(int argc,char* argv[]){
   BENCH("Example10b", example10b(sa,sb,sc,ia,ib,ic), Mi*2, digest_memory(&ia[0], &ia[N]));
   BENCH("Example11",  example11(), Mi*2, digest_memory(&d[0], &d[N]));
   BENCH("Example12",  example12(), Mi*2, digest_memory(&a[0], &a[N]));
-  BENCH("Example23",  example23(usa,ua), Mi*2, digest_memory(&usa[0], &usa[256]));
   BENCH("Example21",  example21(ia, N), Mi, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example23",  example23(usa,ua), Mi*2, digest_memory(&usa[0], &usa[256]));
   BENCH("Example24",  example24(2,4), Mi*2, 0);
   BENCH("Example25",  example25(), Mi*2, digest_memory(&dj[0], &dj[N]));
 
