@@ -14,15 +14,16 @@
 #define N 1024
 #define M 32
 #define K 4
+#define ALIGNED16 __attribute__((aligned(16)))
 
 unsigned short usa[N];
 short sa[N];
 short sb[N];
 short sc[N];
 unsigned int   ua[N];
-int   ia[N];
-int   ib[N];
-int   ic[N];
+int   ia[N] ALIGNED16;
+int   ib[N] ALIGNED16;
+int   ic[N] ALIGNED16;
 unsigned int ub[N];
 unsigned int uc[N];
 float fa[N], fb[N];
@@ -33,7 +34,10 @@ struct A {
   int ca[N];
 } s;
 
-int a[N*2], b[N*2], c[N*2], d[N*2];
+int a[N*2] ALIGNED16;
+int b[N*2] ALIGNED16;
+int c[N*2] ALIGNED16;
+int d[N*2] ALIGNED16;
 
 __attribute__((noinline))
 void example1 () {
@@ -226,14 +230,13 @@ void example14(int **in, int **coeff, int *out) {
 
 
 __attribute__((noinline))
-int example21(int *b, int n)
-{
+void example21(int *b, int n) {
   int i, a = 0;
 
   for (i = n-1; i >= 0; i--)
     a += b[i];
 
-  return a;
+  b[0] = a;
 }
 
 __attribute__((noinline))
@@ -364,20 +367,21 @@ int main(int argc,char* argv[]){
   init_memory_float(&dd[0], &dd[N]);
 
   BENCH("Example1",   example1(), Mi*10, digest_memory(&a[0], &a[256]));
-  BENCH("Example2a",  example2a(N, 2), Mi, digest_memory(&b[0], &b[N]));
-  BENCH("Example2b",  example2b(N, 2), Mi, digest_memory(&a[0], &a[N]));
-  BENCH("Example3",   example3(N, ia, ib), Mi, digest_memory(&ia[0], &ia[N]));
-  BENCH("Example4a",  example4a(N, ia, ib), Mi, digest_memory(&ia[0], &ia[N]));
-  BENCH("Example4b",  example4b(N-10, ia, ib), Mi, digest_memory(&ia[0], &ia[N]));
-  BENCH("Example4c",  example4c(N, ia, ib), Mi, digest_memory(&ib[0], &ib[N]));
-  BENCH("Example7",   example7(4), Mi, digest_memory(&a[0], &a[N]));
+  BENCH("Example2a",  example2a(N, 2), Mi*4, digest_memory(&b[0], &b[N]));
+  BENCH("Example2b",  example2b(N, 2), Mi*2, digest_memory(&a[0], &a[N]));
+  BENCH("Example3",   example3(N, ia, ib), Mi*2, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example4a",  example4a(N, ia, ib), Mi*2, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example4b",  example4b(N-10, ia, ib), Mi*2, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example4c",  example4c(N, ia, ib), Mi*2, digest_memory(&ib[0], &ib[N]));
+  BENCH("Example7",   example7(4), Mi*4, digest_memory(&a[0], &a[N]));
   BENCH("Example8",   example8(8), Mi/4, digest_memory(&G[0][0], &G[0][N]));
-  BENCH("Example9",   example9(&dummy), Mi, dummy);
-  BENCH("Example10a", example10a(sa,sb,sc,ia,ib,ic), Mi, digest_memory(&ia[0], &ia[N]) + digest_memory(&sa[0], &sa[N]));
-  BENCH("Example10b", example10b(sa,sb,sc,ia,ib,ic), Mi*2, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example9",   example9(&dummy), Mi*2, dummy);
+  BENCH("Example10a", example10a(sa,sb,sc,ia,ib,ic), Mi*2, digest_memory(&ia[0], &ia[N]) + digest_memory(&sa[0], &sa[N]));
+  BENCH("Example10b", example10b(sa,sb,sc,ia,ib,ic), Mi*4, digest_memory(&ia[0], &ia[N]));
   BENCH("Example11",  example11(), Mi*2, digest_memory(&d[0], &d[N]));
-  BENCH("Example12",  example12(), Mi*2, digest_memory(&a[0], &a[N]));
-  BENCH("Example23",  example23(usa,ua), Mi*2, digest_memory(&usa[0], &usa[256]));
+  BENCH("Example12",  example12(), Mi*4, digest_memory(&a[0], &a[N]));
+  //BENCH("Example21",  example21(ia, N), Mi*4, digest_memory(&ia[0], &ia[N]));
+  BENCH("Example23",  example23(usa,ua), Mi*8, digest_memory(&usa[0], &usa[256]));
   BENCH("Example24",  example24(2,4), Mi*2, 0);
   BENCH("Example25",  example25(), Mi*2, digest_memory(&dj[0], &dj[N]));
 
