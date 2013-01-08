@@ -1,7 +1,6 @@
 LEVEL = ../..
 PARALLEL_DIRS := Dhrystone CoyoteBench Shootout Shootout-C++ Stanford McGill \
-              Misc Misc-C++ Misc-C++-EH BenchmarkGame Adobe-C++ Polybench Linpack LivermoreLoops \
-              SmallPT
+              Misc Misc-C++ Misc-C++-EH BenchmarkGame Adobe-C++ Polybench Linpack SmallPT
 LDFLAGS += -lm
 
 # Disable Polybench tests on ARM for the time being, they are very long running.
