@@ -76,7 +76,7 @@ int main(int argc, char *argv[]){
   int w=1024, h=768, samps = argc==2 ? atoi(argv[1])/4 : 1; // # samples
   Ray cam(Vec(50,52,295.6), Vec(0,-0.042612,-1).norm()); // cam pos, dir
   Vec cx=Vec(w*.5135/h), cy=(cx%cam.d).norm()*.5135, r, *c=new Vec[w*h];
-  //#pragma omp parallel for schedule(dynamic, 1) private(r)       // OpenMP
+  #pragma omp parallel for schedule(dynamic, 1) private(r)       // OpenMP
   fprintf(stderr,"Rendering (%d spp)\n",samps*4);
   for (int y=0; y<h; y++){                       // Loop over image rows
     //fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samps*4,100.*y/(h-1));
