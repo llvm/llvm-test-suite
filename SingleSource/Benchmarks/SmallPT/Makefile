@@ -1,5 +1,5 @@
 LEVEL = ../../..
-LDFLAGS += -lm 
+LDFLAGS += -lm -lstdc++
 FP_TOLERANCE := 0.001
 
 include $(LEVEL)/Makefile.config
