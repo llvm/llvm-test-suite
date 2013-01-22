@@ -1,7 +1,10 @@
 # SingleSource/UnitTests/Vector/Altivec/Makefile
+LEVEL = ../../../..
+
+include $(LEVEL)/Makefile.config
 
 DIRS = 
-LEVEL = ../../../..
+
 # Needed because of MADDs in stepfft.
 FP_TOLERANCE := 0.002
 
