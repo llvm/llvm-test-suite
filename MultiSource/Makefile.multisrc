@@ -31,35 +31,35 @@ NLObjects := $(addprefix Output/,$(NLObjs))
 .PRECIOUS: $(LObjects) $(NObjects) $(NLObjects)
 
 Output/%.o: %.c Output/.dir
-	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.C Output/.dir
-	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cpp Output/.dir
-	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 
 Output/%.o: %.cc Output/.dir
-	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 
 Output/%.llvm.o: %.c Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.m Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.C Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.cpp Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.cc Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.mm Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 
 bugpoint-opt: Output/$(PROG).bugpoint-opt
 bugpoint-gccas: Output/$(PROG).bugpoint-opt
@@ -89,10 +89,10 @@ BEGIN   { real = 0.0; user = 0.0; sys = 0.0; }\
 /^user/ { user += $$2; }\
 /^sys/ { sys += $$2; }\
 END { printf("real %f\nuser %f\nsys %f\n", real, user, sys); }' > $@.compile.time
-	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $(NLObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $(NLObjects) $(LDFLAGS) $(CFLAGS) $(X_TARGET_FLAGS)
 
 Output/%.native: $(NObjects) $(GeneratedTestInputs)
-	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(CXX) -o $@ $(NObjects) $(LDFLAGS) $(CFLAGS) $(X_TARGET_FLAGS)
 
 # A simple target to run findmisopt when bugpoint isn't helping
 findmisopt:

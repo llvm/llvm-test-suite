@@ -9,6 +9,8 @@ DIRS =
 FP_TOLERANCE := 0.002
 
 TARGET_FLAGS += -maltivec
+# setting TEST_TARGET_FLAGS is needed within the LNT environment.
+TEST_TARGET_FLAGS += -maltivec
 LCCFLAGS += -maltivec
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc

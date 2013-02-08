@@ -57,88 +57,88 @@ endif
 
 Output/%.llvm.o: %.c Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.m Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.C Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.cpp Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.cc Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 Output/%.llvm.o: %.mm Output/.dir
 	$(RUNSAFELYLOCAL) /dev/null $@.compile \
-	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) -c $< -o $@
+	  $(LCXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) -c $< -o $@
 .PRECIOUS: Output/%.llvm.o
 
 Output/%.simple: Output/%.llvm.o Output/.dir
 	-$(CP) $<.compile.time $@.compile.time
-	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS)
+	-$(LD_ENV_OVERRIDES) $(LCXX) -o $@ $< $(LDFLAGS) $(CFLAGS) $(X_TARGET_FLAGS)
 
 # FIXME: LIBS should be specified, not hardcoded to -lm
 Output/%.native: $(SourceDir)/%.c Output/.dir
-	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native: $(SourceDir)/%.cpp Output/.dir
-	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native: $(SourceDir)/%.m Output/.dir
-	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native: $(SourceDir)/%.mm Output/.dir
-	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg: $(SourceDir)/%.c Output/.dir
-	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg: $(SourceDir)/%.cpp Output/.dir
-	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg: $(SourceDir)/%.m Output/.dir
-	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg: $(SourceDir)/%.mm Output/.dir
-	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg.opt: $(SourceDir)/%.c Output/.dir
-	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg.opt: $(SourceDir)/%.cpp Output/.dir
-	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg.opt: $(SourceDir)/%.m Output/.dir
-	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.native.dbg.opt: $(SourceDir)/%.mm Output/.dir
-	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(CXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg: $(SourceDir)/%.c Output/.dir
-	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg: $(SourceDir)/%.cpp Output/.dir
-	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg: $(SourceDir)/%.m Output/.dir
-	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg: $(SourceDir)/%.mm Output/.dir
-	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg.opt: $(SourceDir)/%.c Output/.dir
-	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg.opt: $(SourceDir)/%.cpp Output/.dir
-	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg.opt: $(SourceDir)/%.m Output/.dir
-	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCC) -g $(CPPFLAGS) $(CFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 Output/%.dbg.opt: $(SourceDir)/%.mm Output/.dir
-	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
+	-$(LCXX) -g $(CPPFLAGS) $(CXXFLAGS) $(OPTFLAGS) $(X_TARGET_FLAGS) $< -lm -o $@ $(LDFLAGS)
 
 bugpoint-gccas bugpoint-opt bugpoint-jit bugpoint-llc bugpoint-llc-beta:
 	@echo "The $@ target doesn't work in SingleSource.  Try:"
