@@ -8,9 +8,7 @@ ifdef SMALL_PROBLEM_SIZE
 CFLAGS        += -DSMALL_DATASET
 endif
 
-ifndef SMALL_PROBLEM_SIZE
 HASH_PROGRAM_OUTPUT = 1
-endif
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 

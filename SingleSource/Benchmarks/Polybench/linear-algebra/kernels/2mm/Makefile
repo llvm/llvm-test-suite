@@ -4,6 +4,10 @@ POLYBENCH_UTILS = SingleSource/Benchmarks/Polybench/utilities
 PROG          = 2mm
 CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS
 
+ifdef SMALL_PROBLEM_SIZE
+CFLAGS        += -DSMALL_DATASET
+endif
+
 ifeq ($(ARCH),Mips)
 RUNTIMELIMIT := 2000
 else
