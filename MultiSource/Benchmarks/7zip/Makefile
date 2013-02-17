@@ -262,12 +262,12 @@ Output/%.llvm.o: $(1)/%.c Output/.dir
 Output/%.llvm.o: $(1)/%.cpp Output/.dir
 	$$(RUNSAFELYLOCAL) /dev/null $$@.compile \
 	  $$(LCXX) $$(CPPFLAGS) $$(CXXFLAGS) $$(OPTFLAGS) $$(TARGET_FLAGS) -c $$< -o $$@
-Output/%.bc: $(1)/%.c Output/.dir
+Output/%.ll: $(1)/%.c Output/.dir
 	$$(RUNSAFELYLOCAL) /dev/null $$@.compile \
-	  $$(LCC) $$(CPPFLAGS) $$(CFLAGS) $$(OPTFLAGS) $$(TARGET_FLAGS) -emit-llvm -c $$< -o $$@
-Output/%.bc: $(1)/%.cpp Output/.dir
+	  $$(LCC) $$(CPPFLAGS) $$(CFLAGS) $$(OPTFLAGS) $$(TARGET_FLAGS) -S $$< -o $$@ $$(LLVMCC_EMITIR_FLAG)
+Output/%.ll: $(1)/%.cpp Output/.dir
 	$$(RUNSAFELYLOCAL) /dev/null $$@.compile \
-	  $$(LCXX) $$(CPPFLAGS) $$(CXXFLAGS) $$(OPTFLAGS) $$(TARGET_FLAGS) -emit-llvm -c $$< -o $$@
+	  $$(LCXX) $$(CPPFLAGS) $$(CXXFLAGS) $$(OPTFLAGS) $$(TARGET_FLAGS) -S $$< -o $$@ $$(LLVMCC_EMITIR_FLAG)
 endef
 
 $(foreach dir,$(SUBDIRS),$(eval $(call SUBDIR_template,$(PROJ_SRC_DIR)/$(dir))))
