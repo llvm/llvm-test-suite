@@ -60,7 +60,7 @@ inline void check_sum(double result) {
 
 template <typename Iterator>
 void verify_sorted(Iterator first, Iterator last) {
-	if (!is_sorted(first,last))
+	if (!::is_sorted(first,last))
 		printf("sort test %i failed\n", current_test);
 }
 

@@ -50,8 +50,8 @@ int main()
 	sprintf(buff, "L%d", i);
 	r4 = new roadlet(buff);
 
-        connect(r1, N, r2, S, &is_empty);
-        connect(r3, N, r4, S, &is_empty);
+        connect(r1, N, r2, S, &::is_empty);
+        connect(r3, N, r4, S, &::is_empty);
         connect(r1, NW, r4, SE, &lane_switch_ok);
         connect(r3, NE, r2, SW, &lane_switch_ok);
         connect(r2, W, r4, E, return_null); // can't more sideways

@@ -25,7 +25,7 @@ main(int argc, char *argv[]) {
 #endif
     int n = ((argc == 2) ? atoi(argv[1]) : LENGTH);
     char buf[16];
-    typedef hash_map<const char*, int, hash<const char*>, eqstr> HM;
+    typedef __gnu_cxx::hash_map<const char*, int, hash<const char*>, eqstr> HM;
     HM hash1, hash2;
 
     for (int i=0; i<10000; i++) {

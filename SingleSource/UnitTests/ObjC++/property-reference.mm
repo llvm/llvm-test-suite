@@ -1,5 +1,10 @@
 #import <Foundation/Foundation.h>
+#include <ciso646>
+#ifdef _LIBCPP_VERSION
+#import <memory>
+#else
 #import <tr1/memory>
+#endif
 // rdar: //7501812
 
 class Value
@@ -13,7 +18,11 @@ private:
     int m_amount;
 };
 
+#ifdef _LIBCPP_VERSION
+typedef std::shared_ptr<Value> ValuePtr;
+#else
 typedef std::tr1::shared_ptr<Value> ValuePtr;
+#endif
 
 @interface ValueUser : NSObject
 {

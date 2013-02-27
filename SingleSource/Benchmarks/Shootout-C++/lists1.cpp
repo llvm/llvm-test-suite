@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
     // create list (A) of integers from 1 through N
     list<int> A(N);
-    iota(A.begin(), A.end(), 1);
+    ::iota(A.begin(), A.end(), 1);
 
     // move each individual item from A to B, in a loop, reversing order
     while (! A.empty()) {

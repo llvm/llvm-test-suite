@@ -27,7 +27,7 @@ iota(_ForwardIterator __first, _ForwardIterator __last, _Tp __value)
 size_t test_lists() {
     std::list<size_t> li1(SIZE);
 
-    iota(li1.begin(), li1.end(), 1);
+    ::iota(li1.begin(), li1.end(), 1);
 
     std::list<size_t> li2(li1);
 
