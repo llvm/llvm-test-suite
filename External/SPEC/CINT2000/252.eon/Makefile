@@ -59,7 +59,7 @@ Source = $(addprefix $(SPEC_BENCH_DIR)/src/,  \
 # Yes, we know this is an old crufty C++ benchmark.  Don't tell us about it GCC!
 CXXFLAGS += -fno-exceptions -Wno-deprecated -Wno-non-template-friend -fpermissive -stdlib=libstdc++
 
-LDFLAGS = -lstdc++ -lm
+LDFLAGS = -stdlib=libstdc++ -lm
 LIBS    = -lm
 
 include ../../Makefile.spec2000

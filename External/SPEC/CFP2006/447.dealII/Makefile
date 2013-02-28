@@ -20,7 +20,7 @@ CXXFLAGS += -stdlib=libstdc++
 
 STDOUT_FILENAME := log
 
-LDFLAGS = -lstdc++ -lm
+LDFLAGS = -stdlib=libstdc++ -lm
 LIBS    = -lm
 
 include ../../Makefile.spec2006
