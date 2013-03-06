@@ -29,7 +29,7 @@ void initA(struct global_result *res)
 
 void stepA(struct global_result *res)
 {
-  register char t;
+  register char_t t;
   unsigned long i;
   t=array(getac());
   res->min=min(res->min,t);

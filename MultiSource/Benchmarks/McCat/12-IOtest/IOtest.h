@@ -1,28 +1,31 @@
 
+/* Some archs (ARM) default to unsigned char
+   and test results assumes signed */
+typedef signed char char_t;
 
 struct global_result
 {
-  char min;
-  char max;
-  char add;
-  char mult;
+  char_t min;
+  char_t max;
+  char_t add;
+  char_t mult;
 };
 
 void initarray(void);
 
-char array(unsigned long i);
+char_t array(unsigned long i);
 
 unsigned long getac(void);
 
 void setac(unsigned long i);
 
-char min(char a, char b);
+char_t min(char_t a, char_t b);
 
-char max(char a, char b);
+char_t max(char_t a, char_t b);
 
-char add(char a, char b);
+char_t add(char_t a, char_t b);
 
-char mult(char a, char b);
+char_t mult(char_t a, char_t b);
 
 void loop(void (*init)(void *) , void (*step)(void *) ,void *result);
 

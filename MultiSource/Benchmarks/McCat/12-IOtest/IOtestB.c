@@ -18,36 +18,36 @@
 
 /* slow version */
 
-void initminB(char *res)
+void initminB(char_t *res)
 {
   setac(0);
   *res=255;
 }
 
-void initmaxB(char *res)
+void initmaxB(char_t *res)
 {
   setac(0);
   *res=0;
 }
 
-void initaddB(char *res)
+void initaddB(char_t *res)
 {
   setac(0);
   *res=0;
 }
 
-void initmultB(char *res)
+void initmultB(char_t *res)
 {
   setac(0);
   *res=1;
 }
 
 
-void stepminB(char *res)
+void stepminB(char_t *res)
 /* {{{  */
 
 {
-  register char t;
+  register char_t t;
   unsigned long i;
   t=array(getac());
   *res=min(*res,t);
@@ -57,10 +57,10 @@ void stepminB(char *res)
 
 /* }}} */
 
-void stepmaxB(char *res)
+void stepmaxB(char_t *res)
 /* {{{  */
 {
-  register char t;
+  register char_t t;
   unsigned long i;
   t=array(getac());
   *res=max(*res,t);
@@ -69,10 +69,10 @@ void stepmaxB(char *res)
 }
 /* }}} */
 
-void stepaddB(char *res)
+void stepaddB(char_t *res)
 /* {{{  */
 {
-  register char t;
+  register char_t t;
   unsigned long i;
   t=array(getac());
   *res=add(*res,t);
@@ -81,11 +81,11 @@ void stepaddB(char *res)
 }
 /* }}} */
 
-void stepmultB(char *res)
+void stepmultB(char_t *res)
 /* {{{  */
 
 {
-  register char t;
+  register char_t t;
   unsigned long i;
   t=array(getac());
   *res=mult(*res,t);

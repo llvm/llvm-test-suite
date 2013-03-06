@@ -18,7 +18,7 @@
 
 #define IOTEST_SIZE (53681*50) /* prime number */ /* 53681 19170419 67108933 */
 
-char *testarray;
+char_t *testarray;
 unsigned long array_count;
 
 unsigned long getac(void)
@@ -46,27 +46,27 @@ void initarray(void)
     }
 }
 
-char array(unsigned long i)
+char_t array(unsigned long i)
 {
   return testarray[i];
 }
 
-char min(char a, char b)
+char_t min(char_t a, char_t b)
 {
   return (a>b)? a : b ;
 }
 
-char max(char a, char b)
+char_t max(char_t a, char_t b)
 {
   return (a>b) ? b : a ;
 }
 
-char add(char a, char b)
+char_t add(char_t a, char_t b)
 {
   return a+b;
 }
 
-char mult(char a, char b)
+char_t mult(char_t a, char_t b)
 {
   return a*b;
 }
@@ -86,7 +86,7 @@ void loop( void (*init)(void *) , void (*step)(void *) ,void *result)
 
 extern void testA(void), testB(void), testC(void);
 int main() {
-	testarray = (char*)malloc(IOTEST_SIZE);
+	testarray = (char_t*)malloc(IOTEST_SIZE);
 	testA(); testB(); testC();
 	return 0;
 }
