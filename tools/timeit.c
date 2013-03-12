@@ -327,7 +327,7 @@ int execute(char * const argv[]) {
   double start_time;
   pid_t pid;
 
-  /* Set up signal handlers so we can terminal the monitored process(es) on
+  /* Set up signal handlers so we can terminate the monitored process(es) on
    * SIGINT or SIGTERM. */
   signal(SIGINT, terminate_handler);
   signal(SIGTERM, terminate_handler);
