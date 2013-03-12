@@ -5,8 +5,8 @@ int foo(volatile *mem, int val, int c) {
   return oldval + c;
 }
 
+volatile int x = 0;
 int main() {
-  volatile int x = 0;
   int y = foo(&x, 1, 2);
   printf("%d, %d\n", y, x);
   y = __sync_val_compare_and_swap(&x, 1, 2);
