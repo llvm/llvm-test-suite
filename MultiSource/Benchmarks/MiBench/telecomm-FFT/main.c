@@ -2,6 +2,23 @@
 #include <stdlib.h>
 #include <math.h>
 
+// RNG implemented localy to avoid library incongruences
+#ifdef RAND_MAX
+#undef RAND_MAX
+#endif
+#define RAND_MAX 32767
+static unsigned long long int next = 1;
+
+int rand( void ) {
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next / 65536) % RAND_MAX+1;
+}
+
+void srand( unsigned int seed ) {
+    next = seed;
+}
+// End of RNG implementation
+
 int main(int argc, char *argv[]) {
 	unsigned MAXSIZE;
 	unsigned MAXWAVES;
@@ -26,6 +43,7 @@ int main(int argc, char *argv[]) {
 		invfft = !strncmp(argv[3],"-i",2);
 	MAXSIZE=atoi(argv[2]);
 	MAXWAVES=atoi(argv[1]);
+  srand(1);
 		
  RealIn=(float*)malloc(sizeof(float)*MAXSIZE);
  ImagIn=(float*)malloc(sizeof(float)*MAXSIZE);
