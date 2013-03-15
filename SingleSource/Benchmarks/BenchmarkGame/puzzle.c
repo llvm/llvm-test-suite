@@ -5,6 +5,23 @@
 #define NLOOPS1 5
 #define NLOOPS2 200
 
+// RNG implemented localy to avoid library incongruences
+#ifdef RAND_MAX
+#undef RAND_MAX
+#endif
+#define RAND_MAX 32767
+static unsigned long long int next = 1;
+ 
+int rand( void ) {
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next / 65536) % RAND_MAX+1;
+}
+ 
+void srand( unsigned int seed ) {
+    next = seed;
+}
+// End of RNG implementation
+
 int randInt(int min, int max) {
     int k, n;
     n = (max - min) + 1;
