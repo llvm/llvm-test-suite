@@ -5,6 +5,12 @@
 # files. After that, the files are assembled and executed by the LLVM backends.
 #
 LEVEL = ../../..
-DIRS=EH
+
+# Exception Handling support in ARM still flaky
+# Re-enable this when support gets better
+ifneq ($(ARCH), ARM)
+  DIRS=EH
+endif
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc
