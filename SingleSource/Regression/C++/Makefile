@@ -8,7 +8,13 @@ LEVEL = ../../..
 
 # Exception Handling support in ARM still flaky
 # Re-enable this when support gets better
-ifneq ($(ARCH), ARM)
+ifeq ($(ARCH), ARM)
+  # Darwin uses SjLj, others are either nothing or EHABI
+  # See ARMMCAsmInfo.cpp
+  ifeq ($(TARGET_OS), Darwin)
+    DIRS=EH
+  endif
+else
   DIRS=EH
 endif
 
