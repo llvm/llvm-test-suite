@@ -377,7 +377,9 @@ Output/%.opt-beta.s: Output/%.llvm.optbeta.bc $(LLC)
 
 # On darwin, pass -force_cpusubtype_ALL to allow all ppc instructions.
 ifeq ($(ARCH),PowerPC)
+ifneq ($TARGET_OS),Linux)
 LLCASSEMBLERFLAGS = -force_cpusubtype_ALL
+endif
 endif
 # On sparc, pass -mcpu=v9 to allow all V9 instructions, even in 32-bit mode.
 ifeq ($(ARCH),Sparc)
