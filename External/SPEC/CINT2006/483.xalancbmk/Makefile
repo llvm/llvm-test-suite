@@ -58,3 +58,7 @@ else
   RUN_OPTIONS      = -v allbooks.xml xalanc.xsl
   STDOUT_FILENAME := train.out
 endif
+
+ifeq ($(TARGET_OS),Darwin)
+  LDFLAGS += -Xlinker -stack_size -Xlinker 0x800000
+endif
