@@ -1,0 +1,21 @@
+ for n=2, fwd/bck error=1.317089e-09
+ for n=4, fwd/bck error=2.356080e-08
+ for n=8, fwd/bck error=4.960112e-08
+ for n=16, fwd/bck error=8.356642e-08
+ for n=32, fwd/bck error=9.093579e-08
+ for n=64, fwd/bck error=6.196937e-08
+ for n=128, fwd/bck error=7.755460e-08
+ for n=256, fwd/bck error=1.135078e-07
+ for n=512, fwd/bck error=1.018042e-07
+ for n=1024, fwd/bck error=1.234883e-07
+ for n=2048, fwd/bck error=1.252528e-07
+ for n=4096, fwd/bck error=1.359726e-07
+ for n=8192, fwd/bck error=1.382913e-07
+ for n=16384, fwd/bck error=1.431757e-07
+ for n=32768, fwd/bck error=1.528301e-07
+ for n=65536, fwd/bck error=1.608078e-07
+ for n=131072, fwd/bck error=1.670249e-07
+ for n=262144, fwd/bck error=1.726504e-07
+ for n=524288, fwd/bck error=1.694169e-07
+ for n=1048576, fwd/bck error=1.772182e-07
+exit 0
