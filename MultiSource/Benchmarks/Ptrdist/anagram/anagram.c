@@ -605,10 +605,10 @@ void SortCandidates(void) {
 
 int fInteractive;
 
-char * GetPhrase(char * pch) {
+char * GetPhrase(char * pch, int size) {
     if (fInteractive) printf(">");
     fflush(stdout);
-    if (gets(pch) == NULL) {
+    if (fgets(pch, size, stdin) == NULL) {
 #ifdef PLUS_STATS
 	PrintDerefStats(stderr);
         PrintHeapSize(stderr);
@@ -632,7 +632,7 @@ int Cdecl main(int cpchArgc, char **ppchArgv) {
 
     ReadDict(ppchArgv[1]);
 
-    while (GetPhrase(&achPhrase[0]) != NULL) {
+    while (GetPhrase(&achPhrase[0], sizeof(achPhrase)) != NULL) {
         if (isdigit(achPhrase[0])) {
             cchMinLength = atoi(achPhrase);
             printf("New length: %d\n", cchMinLength);
