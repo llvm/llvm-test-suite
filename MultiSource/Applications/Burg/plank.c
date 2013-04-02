@@ -186,13 +186,25 @@ assignRules(ast) RuleAST ast;
 static int
 stateCompare(s, t) Item_Set *s; Item_Set *t;
 {
-	return strcmp((*s)->op->name, (*t)->op->name);
+	int res = 0;
+	if ((res = strcmp((*s)->op->name, (*t)->op->name)) != 0)
+		return res;
+	if ((*s)->num < (*t)->num) return -1;
+	if ((*s)->num > (*t)->num) return 1;
+	if ((*s)->newNum < (*t)->newNum) return -1;
+	if ((*s)->newNum > (*t)->newNum) return 1;
+	return 0;
 }
 
 static int
 ruleCompare(s, t) RuleAST *s; RuleAST *t;
 {
-	return strcmp((*s)->lhs, (*t)->lhs);
+	int res = 0;
+	if ((res = strcmp((*s)->lhs, (*t)->lhs)) != 0)
+		return res;
+	if ((*s)->erulenum < (*t)->erulenum) return -1;
+	if ((*s)->erulenum > (*t)->erulenum) return 1;
+	return 0;
 }
 
 void
