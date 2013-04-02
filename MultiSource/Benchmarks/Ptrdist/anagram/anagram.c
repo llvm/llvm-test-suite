@@ -578,10 +578,15 @@ FindAnagram(Quad * pqMask, PPWord ppwStart, int iLetter)
 }
 
 int Cdecl CompareFrequency(char *pch1, char *pch2) {
-    return auGlobalFrequency[*pch1] < auGlobalFrequency[*pch2]
-        ?  -1 :
-           auGlobalFrequency[*pch1] == auGlobalFrequency[*pch2]
-        ?   0 : 1;
+    if (auGlobalFrequency[*pch1] < auGlobalFrequency[*pch2])
+        return -1;
+	if (auGlobalFrequency[*pch1] > auGlobalFrequency[*pch2])
+        return 1;
+    if (*pch1 < *pch2)
+        return -1;
+	if (*pch1 > *pch2)
+        return 1;
+    return 0;
 }
 
 void SortCandidates(void) {
