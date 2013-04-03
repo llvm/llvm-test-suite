@@ -23,10 +23,27 @@ Source = $(addprefix libclamav_, \
 #	 $(addprefix libclamav_lzma_, \
 #	 LzmaStateDecode.c) \
 
+INPUT = $(PROJ_SRC_DIR)/inputs/clam.cab \
+        $(PROJ_SRC_DIR)/inputs/clamdoc.tar.gz \
+        $(PROJ_SRC_DIR)/inputs/clam.exe \
+        $(PROJ_SRC_DIR)/inputs/clam.exe.bz2 \
+        $(PROJ_SRC_DIR)/inputs/clam-v2.rar \
+        $(PROJ_SRC_DIR)/inputs/clam-v3.rar \
+        $(PROJ_SRC_DIR)/inputs/clam.zip \
+        $(PROJ_SRC_DIR)/inputs/README \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/Doc11.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/Doc1.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/Doc22.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/Doc2.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/doc3.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/docCLAMexe.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/rtf1.rtf \
+        $(PROJ_SRC_DIR)/inputs/rtf-test/rtf-novirus.rtf
+
 PROG = clamscan
 CPPFLAGS += -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS
 LDFLAGS = -lz
-RUN_OPTIONS = --debug --exclude-dir .svn --verbose -d$(PROJ_SRC_DIR)/dbdir -r $(PROJ_SRC_DIR)/inputs/*
+RUN_OPTIONS = --debug --exclude-dir .svn --verbose -d$(PROJ_SRC_DIR)/dbdir -r $(INPUT)
 
 include $(LEVEL)/Makefile.config
 

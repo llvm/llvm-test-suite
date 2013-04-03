@@ -1065,10 +1065,25 @@ int cl_loaddb(const char *filename, struct cl_engine **engine, unsigned int *sig
 	cli_strbcasestr(ext, ".cvd")		\
     )
 
+static int dirent_compare(const struct dirent *a, const struct dirent *b) {
+	int ret = strcmp(a->d_name, b->d_name);
+	if (ret != 0)
+		return ret;
+	if (a->d_type < b->d_type) return -1;
+	if (a->d_type > b->d_type) return 1;
+	if (a->d_reclen < b->d_reclen) return -1;
+	if (a->d_reclen > b->d_reclen) return 1;
+	return 0;
+}
+
 static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsigned int *signo, unsigned int options)
 {
 	DIR *dd;
 	struct dirent *dent;
+	/* To sort the files in the temp dir to get repeatable results */
+	const unsigned MAX_DIRENTS = 20;
+	struct dirent dents[MAX_DIRENTS];
+	unsigned ndents;
 #if defined(HAVE_READDIR_R_3) || defined(HAVE_READDIR_R_2)
 	union {
 	    struct dirent d;
@@ -1100,6 +1115,8 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
         return CL_EOPEN;
     }
 
+    ndents=0;
+    memset(&dents, 0, sizeof(dents));
 #ifdef HAVE_READDIR_R_3
     while(!readdir_r(dd, &result.d, &dent) && dent) {
 #elif defined(HAVE_READDIR_R_2)
@@ -1107,10 +1124,21 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
 #else
     while((dent = readdir(dd))) {
 #endif
+    	memcpy(&dents[ndents], dent, sizeof(struct dirent));
+    	ndents++;
+    	if (ndents == MAX_DIRENTS) {
+            cli_errmsg("cli_loaddbdir(): Too many files, increase MAX_DIRENTS\n");
+            return CL_EOPEN;
+    	}
+    }
+
+    qsort(dents, ndents, sizeof(struct dirent), dirent_compare);
+
+    for (unsigned i=0; i<ndents; i++) {
+    	dent = &dents[i];
 #if	(!defined(C_INTERIX)) && (!defined(C_WINDOWS)) && (!defined(C_CYGWIN))
-	if(dent->d_ino)
+	if(dent->d_ino) {
 #endif
-	{
 	    if(strcmp(dent->d_name, ".") && strcmp(dent->d_name, "..") && CLI_DBEXT(dent->d_name)) {
 
 		dbfile = (char *) cli_malloc(strlen(dent->d_name) + strlen(dirname) + 2);
@@ -1135,7 +1163,9 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
 		}
 		free(dbfile);
 	    }
+#if	(!defined(C_INTERIX)) && (!defined(C_WINDOWS)) && (!defined(C_CYGWIN))
 	}
+#endif
     }
 
     closedir(dd);
