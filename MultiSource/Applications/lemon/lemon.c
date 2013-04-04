@@ -3491,7 +3491,13 @@ struct axset {
 static int axset_compare(const void *a, const void *b){
   struct axset *p1 = (struct axset*)a;
   struct axset *p2 = (struct axset*)b;
-  return p2->nAction - p1->nAction;
+  if (p1->nAction < p2->nAction) return -1;
+  if (p1->nAction > p2->nAction) return 1;
+  if (p1->isTkn < p2->isTkn) return -1;
+  if (p1->isTkn > p2->isTkn) return 1;
+  if (p1->stp->statenum < p2->stp->statenum) return -1;
+  if (p1->stp->statenum > p2->stp->statenum) return 1;
+  return 0;
 }
 
 /*
@@ -4040,13 +4046,13 @@ struct lemon *lemp;
 static int stateResortCompare(const void *a, const void *b){
   const struct state *pA = *(const struct state**)a;
   const struct state *pB = *(const struct state**)b;
-  int n;
-
-  n = pB->nNtAct - pA->nNtAct;
-  if( n==0 ){
-    n = pB->nTknAct - pA->nTknAct;
-  }
-  return n;
+  if (pA->nNtAct < pB->nNtAct) return -1;
+  if (pA->nNtAct > pB->nNtAct) return 1;
+  if (pA->nTknAct < pB->nTknAct) return -1;
+  if (pA->nTknAct > pB->nTknAct) return 1;
+  if (pA->statenum < pB->statenum) return -1;
+  if (pA->statenum > pB->statenum) return 1;
+  return 0;
 }
 
 
@@ -4346,9 +4352,15 @@ char *x;
 ** smallest parser tables in SQLite.
 */
 int Symbolcmpp(struct symbol **a, struct symbol **b){
-  int i1 = (**a).index + 10000000*((**a).name[0]>'Z');
-  int i2 = (**b).index + 10000000*((**b).name[0]>'Z');
-  return i1-i2;
+  int indexA = (**a).index;
+  int indexB = (**b).index;
+  int i1 = indexA + 10000000*((**a).name[0]>'Z');
+  int i2 = indexB + 10000000*((**b).name[0]>'Z');
+  if (i1 < i2) return -1;
+  if (i1 > i2) return 1;
+  if (indexA < indexB) return -1;
+  if (indexA > indexB) return 1;
+  return 0;
 }
 
 /* There is one instance of the following structure for each
