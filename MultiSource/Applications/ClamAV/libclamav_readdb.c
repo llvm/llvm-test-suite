@@ -1092,6 +1092,7 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
 #endif
 	struct stat sb;
 	char *dbfile;
+	unsigned i;
 	int ret = CL_ESUPPORT;
 
 
@@ -1134,7 +1135,7 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
 
     qsort(dents, ndents, sizeof(struct dirent), dirent_compare);
 
-    for (unsigned i=0; i<ndents; i++) {
+    for (i=0; i<ndents; i++) {
     	dent = &dents[i];
 #if	(!defined(C_INTERIX)) && (!defined(C_WINDOWS)) && (!defined(C_CYGWIN))
 	if(dent->d_ino) {
