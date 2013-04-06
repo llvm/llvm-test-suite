@@ -49,7 +49,11 @@ static bool isNumberChar(char C) {
 
 static const char *BackupNumber(const char *Pos, const char *FirstChar) {
   // If we didn't stop in the middle of a number, don't backup.
-  if (!isNumberChar(*Pos)) return Pos;
+  if (!isNumberChar(*Pos) && !isNumberChar(Pos[-1])) return Pos;
+  // If we're one past the number, the two numbers can have different number
+  // of digits. Even if we're wrong, and we get the previous number, the
+  // comparison should have failed anyway.
+  if (!isNumberChar(*Pos)) Pos--;
 
   // Otherwise, return to the start of the number.
   bool HasPeriod = false;
