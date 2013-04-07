@@ -66,10 +66,46 @@ TYPE x[LEN] __attribute__((aligned(ALIGNMENT)));
 TYPE temp;
 int temp_int;
 
+// We place all of the data into one single global structure so that we can
+// control its exact layout. Otherwise, the performance of the code can become
+// very dependent on the exact addresses assigned to arrays at compile time, and
+// probing that behavior is not the purpose of this set of benchmarks.
+//
+// We insert prime-multiple padding in between each array to help ensure that
+// the relative offsets of the arrays are unlikely to trigger unmodelled
+// architecture specific problems w.r.t. cache behavior or other CPU
+// features. For example, this ensures that no two of the arrays will be
+// 4K-aliased with each other, which can be important for some Intel processors.
+struct GlobalData {
+  __attribute__((aligned(ALIGNMENT))) TYPE a[LEN];
+  int pad1[3];
+  __attribute__((aligned(ALIGNMENT))) TYPE b[LEN];
+  int pad2[5];
+  __attribute__((aligned(ALIGNMENT))) TYPE c[LEN];
+  int pad3[7];
+  __attribute__((aligned(ALIGNMENT))) TYPE d[LEN];
+  int pad4[11];
+  __attribute__((aligned(ALIGNMENT))) TYPE e[LEN];
 
-__attribute__((aligned(ALIGNMENT))) TYPE a[LEN],b[LEN],c[LEN],d[LEN],e[LEN],
-                                   aa[LEN2][LEN2],bb[LEN2][LEN2],cc[LEN2][LEN2],tt[LEN2][LEN2];
+  int pad5[13];
+  __attribute__((aligned(ALIGNMENT))) TYPE aa[LEN2][LEN2];
+  int pad6[17];
+  __attribute__((aligned(ALIGNMENT))) TYPE bb[LEN2][LEN2];
+  int pad7[19];
+  __attribute__((aligned(ALIGNMENT))) TYPE cc[LEN2][LEN2];
+  int pad8[23];
+  __attribute__((aligned(ALIGNMENT))) TYPE tt[LEN2][LEN2];
+} global_data;
 
+__attribute__((aligned(ALIGNMENT))) TYPE * const a = global_data.a;
+__attribute__((aligned(ALIGNMENT))) TYPE * const b = global_data.b;
+__attribute__((aligned(ALIGNMENT))) TYPE * const c = global_data.c;
+__attribute__((aligned(ALIGNMENT))) TYPE * const d = global_data.d;
+__attribute__((aligned(ALIGNMENT))) TYPE * const e = global_data.e;
+__attribute__((aligned(ALIGNMENT))) TYPE (* const aa)[LEN2] = global_data.aa;
+__attribute__((aligned(ALIGNMENT))) TYPE (* const bb)[LEN2] = global_data.bb;
+__attribute__((aligned(ALIGNMENT))) TYPE (* const cc)[LEN2] = global_data.cc;
+__attribute__((aligned(ALIGNMENT))) TYPE (* const tt)[LEN2] = global_data.tt;
 
 int indx[LEN] __attribute__((aligned(ALIGNMENT)));
 
@@ -5757,4 +5793,3 @@ int main(int argc, char *argv[]){
 #endif
 	return 0;
 }
-
