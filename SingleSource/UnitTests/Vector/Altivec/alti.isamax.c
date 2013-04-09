@@ -72,8 +72,8 @@ int isamax(int n, float *x)
      return(ibig);
   }
 // n >= NS case done with altivec 
-  nsegs = (n >> 2) - 1;
-  nres  = n - ((nsegs+1) << 2);    // nres = n mod 4
+  nsegs = (n >> 2) - 2;
+  nres = n & 3;                    // nres = n mod 4
   V2 = vec_add(V2,incr_4);         // increment next index
   xp = x;
   V0 = vec_ld(0,xp); xp += 4;      // first four 
@@ -87,7 +87,7 @@ int isamax(int n, float *x)
      V1 = vec_ld(0,xp); xp += 4;   // bottom load next 4
      V2 = vec_add(V2,incr_4);
   }
-  V1 = vec_ld(0,xp); xp += 4;  // bottom load next four
+  V1 = vec_abs(V1);
   V3 = vec_cmpgt(V1,V0);      // compare accumulated to last 4
   V0 = vec_sel(V0,V1,V3);     // select accumulation to last 4
   V7 = vec_sel(V7,V2,V3);     // select index of accum. to last 4
