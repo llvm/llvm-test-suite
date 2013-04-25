@@ -4,7 +4,7 @@ PROG     = pcompress2
 CPPFLAGS = -DVERSION='"1.00"' -DCOMPDATE="\"today\"" -DCFLAGS='""' -DHOSTNAME="\"thishost\"" 
 #LDFLAGS  = -lm
 ifdef LARGE_PROBLEM_SIZE
-INPUT_FILE := run.in
+INPUT_FILE := ref.in
 else
 INPUT_FILE := test.in
 endif
