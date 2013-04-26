@@ -60,13 +60,14 @@ int CDECL ntbl_bitcount(long int x)
 
 int CDECL BW_btbl_bitcount(long int x)
 {
+      int xi = (int) x;
       union 
       { 
             unsigned char ch[4]; 
-            long y; 
+            int y; 
       } U; 
  
-      U.y = x; 
+      U.y = xi; 
  
       return bits[ U.ch[0] ] + bits[ U.ch[1] ] + 
              bits[ U.ch[3] ] + bits[ U.ch[2] ]; 
@@ -80,7 +81,8 @@ int CDECL BW_btbl_bitcount(long int x)
 
 int CDECL AR_btbl_bitcount(long int x)
 {
-      unsigned char * Ptr = (unsigned char *) &x ;
+      int xi = (int) x;
+      unsigned char * Ptr = (unsigned char *) &xi ;
       int Accu ;
 
       Accu  = bits[ *Ptr++ ];
