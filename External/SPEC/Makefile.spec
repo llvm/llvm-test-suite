@@ -61,8 +61,12 @@ else
 #
 # Note that this rule needs to be in both Makefile.programs and Makefile.spec.
 Output/%.out-nat: Output/.dir
-	-if [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY)" ]; then \
+	-if [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(ENDIAN)-endian.$(REFERENCE_OUTPUT_KEY)" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(ENDIAN)-endian.$(REFERENCE_OUTPUT_KEY) $@; \
+	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY)" ]; then \
 	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(REFERENCE_OUTPUT_KEY) $@; \
+	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output.$(ENDIAN)-endian" ]; then \
+	  cp $(PROJ_SRC_DIR)/$*.reference_output.$(ENDIAN)-endian $@; \
 	elif [ -f "$(PROJ_SRC_DIR)/$*.reference_output" ]; then \
 	  cp $(PROJ_SRC_DIR)/$*.reference_output $@; \
 	else \
