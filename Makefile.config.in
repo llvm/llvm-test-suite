@@ -139,6 +139,15 @@ ifeq ($(ARCH),THUMB)
 TEST_TARGET_FLAGS += -mthumb
 endif
 
+# PowerPC/Linux needs -ffp-contract=off so that:
+#     The outputs can be compared to gcc.
+#     The outputs match the reference outputs.
+ifeq ($(ARCH),PowerPC)
+ifeq ($(TARGET_OS),Linux)
+TEST_TARGET_FLAGS += -ffp-contract=off
+endif
+endif
+
 #
 # Provide variables specific to llvm-test
 #
