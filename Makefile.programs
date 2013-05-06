@@ -474,6 +474,12 @@ ifdef REQUIRES_EH_SUPPORT
 JIT_OPTS += -enable-correct-eh-support
 endif
 
+# Some of the reference outputs assume that ENABLE_HASHED_PROGRAM_OUTPUT
+# is defined. Make sure it is defined if USE_REFERENCE_OUTPUT is defined.
+ifdef USE_REFERENCE_OUTPUT
+ENABLE_HASHED_PROGRAM_OUTPUT := 1
+endif
+
 # If the program wants its output hashed, add an output filter.
 ifdef ENABLE_HASHED_PROGRAM_OUTPUT
 ifdef HASH_PROGRAM_OUTPUT
