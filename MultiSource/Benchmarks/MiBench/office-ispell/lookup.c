@@ -84,6 +84,7 @@ int linit ()
     int			nextchar;
     int			viazero;
     register ichar_t *	cp;
+    char *errhashname;
 
     if (inited)
 	return 0;
@@ -94,30 +95,36 @@ int linit ()
 	return (-1);
 	}
 
+    errhashname = strrchr(hashname, '/');
+    if (errhashname == NULL)
+      errhashname = hashname;
+    else
+      ++errhashname;
+
     hashsize = read (hashfd, (char *) &hashheader, sizeof hashheader);
     if (hashsize < sizeof hashheader)
 	{
 	if (hashsize < 0)
-	    (void) fprintf (stderr, LOOKUP_C_CANT_READ, hashname);
+	    (void) fprintf (stderr, LOOKUP_C_CANT_READ, errhashname);
 	else if (hashsize == 0)
-	    (void) fprintf (stderr, LOOKUP_C_NULL_HASH, hashname);
+	    (void) fprintf (stderr, LOOKUP_C_NULL_HASH, errhashname);
 	else
 	    (void) fprintf (stderr,
-	      LOOKUP_C_SHORT_HASH (hashname, hashsize,
+	      LOOKUP_C_SHORT_HASH (errhashname, hashsize,
 	        (int) sizeof hashheader));
 	return (-1);
 	}
     else if (hashheader.magic != MAGIC)
 	{
 	(void) fprintf (stderr,
-	  LOOKUP_C_BAD_MAGIC (hashname, (unsigned int) MAGIC,
+	  LOOKUP_C_BAD_MAGIC (errhashname, (unsigned int) MAGIC,
 	    (unsigned int) hashheader.magic));
 	return (-1);
 	}
     else if (hashheader.magic2 != MAGIC)
 	{
 	(void) fprintf (stderr,
-	  LOOKUP_C_BAD_MAGIC2 (hashname, (unsigned int) MAGIC,
+	  LOOKUP_C_BAD_MAGIC2 (errhashname, (unsigned int) MAGIC,
 	    (unsigned int) hashheader.magic2));
 	return (-1);
 	}
