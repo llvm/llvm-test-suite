@@ -33,5 +33,10 @@ ifneq ($(ARCH),x86_64)
 PROGRAMS_TO_SKIP += ms_struct-bitfield-init-1 ms_struct-bitfield-init ms_struct-bitfield ms_struct_pack_layout-1 ms_struct_pack_layout ms_struct-bitfield-1
 endif
 
+# Add special tests for Mips
+ifeq ($(ARCH),Mips)
+DIRS += Mips
+endif
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc

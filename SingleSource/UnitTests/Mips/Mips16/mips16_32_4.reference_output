@@ -1,0 +1,4 @@
+in foo: mips16
+in foo: mips32
+in main: mips16
+exit 0
