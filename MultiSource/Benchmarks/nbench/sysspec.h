@@ -33,7 +33,7 @@
 
 #include "nmglobal.h"
 
-#if !defined(__APPLE__)
+#if 0 /*!defined(__APPLE__)*/
 #include <malloc.h>
 #endif
 
