@@ -121,7 +121,13 @@ RUNSAFELY := $(RUNSAFELY) -u 'env $(EXECUTION_ENVIRONMENT_OVERRIDES)'
 endif
 endif
 
+# USER_MODE_EMULATION should be defined if tests are being run via user-mode
+# emulation (eq QEMU) and thus the host version of timeit should be used.
+ifdef USER_MODE_EMULATION
+RUNSAFELY := $(RUNSAFELY) -t "$(TIMEIT)"
+else
 RUNSAFELY := $(RUNSAFELY) -t "$(TIMEIT_TARGET)"
+endif
 RUNSAFELYLOCAL := $(RUNSAFELYLOCAL) --show-errors -t "$(TIMEIT)"
 
 ifdef NO_WATCHDOG
