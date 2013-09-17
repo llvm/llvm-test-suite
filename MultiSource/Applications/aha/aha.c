@@ -248,9 +248,10 @@ more unused computed values; it hasn't been tried. */
          pgm[i].opnd[0] = rs;
       }
       rt = rs - 1;              // Third from last reg.
-      if (pgm[i-1].opnd[0] != rt && pgm[i-1].opnd[1] != rt &&
+      if (rt >= RI0 &&
+         pgm[i-1].opnd[0] != rt && pgm[i-1].opnd[1] != rt &&
          pgm[i-1].opnd[2] != rt && pgm[i].opnd[1] != rt &&
-         pgm[i].opnd[2] != rt && rt >= RI0) {
+         pgm[i].opnd[2] != rt) {
 
          // The last instruction needs to reference rt.
 
