@@ -19,6 +19,7 @@ copies.  */
 
 /* zfile.c */
 /* File operators for GhostScript */
+#include <limits.h>
 #include "memory_.h"
 #include "string_.h"
 #include "ghost.h"
@@ -679,8 +680,7 @@ int
 lib_file_open(byte *fname, uint len, ref *pfile)
 {	int code;
 	char **ppath;
-#define max_len 200
-	char cname[max_len];
+	char cname[PATH_MAX];
 	code = file_open(fname, len, "r", pfile);
 	if ( code >= 0 ) return code;
 	if ( gp_file_name_is_absolute((char *)fname, len) )
@@ -701,7 +701,7 @@ lib_file_open(byte *fname, uint len, ref *pfile)
 							  (char *)fname, len);
 			/* Concatenate the prefix, combiner, and file name. */
 			clen = plen + strlen(cstr) + len;
-			if ( clen <= max_len )	/* otherwise punt */
+			if ( clen <= PATH_MAX )	/* otherwise punt */
 			   {	memcpy(cname, path, plen);
 				strcpy(cname + plen, cstr);
 				memcpy(cname + clen - len, fname, len);
