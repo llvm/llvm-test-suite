@@ -25,7 +25,7 @@ static int test_stdarg_builtin_va(void* p1, ...)
     unsigned long l;
     int i1, i2;
     void* p2;
-    __builtin_stdarg_start(ap, p1);
+    __builtin_va_start(ap, p1);
     i1 = __builtin_va_arg(ap, int);
     l = __builtin_va_arg(ap, unsigned long);
     i2 = __builtin_va_arg(ap, int);
