@@ -427,8 +427,12 @@ int main ()
             }
         }
         while (pass < 0);
-        
-        ntimes =  5.0 * (double)ntimes / time2;
+
+#ifdef SMALL_PROBLEM_SIZE
+        ntimes = 100;
+#else
+        ntimes =  1000;
+#endif
         if (ntimes == 0) ntimes = 1;
 
         fprintf (stderr,"Passes used %10d \n\n", 0);
