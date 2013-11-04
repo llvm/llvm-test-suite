@@ -74,7 +74,7 @@ func_21 (unsigned char p_, unsigned p_2, int *p_24)
   return **l_29;
 }
 
-int mn (void)
+int main (void)
 {
   func_1 ();
   return 0;
