@@ -634,7 +634,8 @@ int cli_ac_scanbuff(const unsigned char *buffer, uint32_t length, const char **v
 				if(pt->type) {
 				    if(otfrec) {
 					if(pt->type > type || pt->type >= CL_TYPE_SFX || pt->type == CL_TYPE_MSEXE) {
-					    cli_dbgmsg("Matched signature for file type %s\n", pt->virname);
+					    /* This debug message was causing trouble on the test-suite for being non-deterministic */
+ 					    /*cli_dbgmsg("Matched signature for file type %s\n", pt->virname);*/
 					    type = pt->type;
 					    if(ftoffset && (!*ftoffset || (*ftoffset)->cnt < MAX_EMBEDDED_OBJ) && ((ftype == CL_TYPE_MSEXE && type >= CL_TYPE_SFX) || ((ftype == CL_TYPE_MSEXE || ftype == CL_TYPE_ZIP) && type == CL_TYPE_MSEXE)))  {
 						/* FIXME: we don't know which offset of the first part is the correct one */

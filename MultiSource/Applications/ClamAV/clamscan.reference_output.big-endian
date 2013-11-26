@@ -281,8 +281,6 @@ CAB: Extracting file %s to %s, size %u
 
 Recognized %s file
 
-Matched signature for file type %s
-
 e_lfanew == %d
 
 Machine type: 80386
@@ -940,8 +938,6 @@ clamdoc.tar.gz: OK
 Scanning clam.exe
 Recognized %s file
 
-Matched signature for file type %s
-
 e_lfanew == %d
 
 Machine type: 80386
@@ -1032,8 +1028,6 @@ Zip: %s, crc32: 0x%x, offset: %u, encrypted: %u, compressed: %u, normal: %u, met
 Zip: File decompressed to %s
 
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -1301,11 +1295,7 @@ Open PowerPoint Document failed
 
 Open WordDocument failed
 
-Matched signature for file type %s
-
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -1401,8 +1391,6 @@ RTF:Scanning embedded object:%s
 Decoding ole object
 
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -1690,11 +1678,7 @@ Open PowerPoint Document failed
 
 Open WordDocument failed
 
-Matched signature for file type %s
-
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -1962,11 +1946,7 @@ Open PowerPoint Document failed
 
 Open WordDocument failed
 
-Matched signature for file type %s
-
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -2318,11 +2298,7 @@ Open PowerPoint Document failed
 
 Open WordDocument failed
 
-Matched signature for file type %s
-
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -2418,8 +2394,6 @@ RTF:Scanning embedded object:%s
 Decoding ole object
 
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
@@ -2579,8 +2553,6 @@ RTF:Scanning embedded object:%s
 Decoding ole object
 
 Recognized %s file
-
-Matched signature for file type %s
 
 e_lfanew == %d
 
