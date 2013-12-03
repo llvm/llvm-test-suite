@@ -33,8 +33,30 @@ void plot_vedge(p1, p2)
      struct VEC2 p1, p2;
 {
   /* plots a Voronoi-diagram edge on your favorite device. */
-  printf("Vedge %g %g %g %g \n",(float) p1.x, (float) p1.y, (float) p2.x,
-	 (float) p2.y);
+
+  /* Some of the values that are printed can become negative nans
+   * and may, depending on the operating system and libc version,
+   * either be printed as '-nan' or 'nan'.
+   *
+   * The following code ensures we always get positive nans, which
+   * means the hash of the output does not unnecessarily differ
+   * between OS X and linux.
+   */
+  float p1x = p1.x;
+  float p1y = p1.y;
+  float p2x = p2.x;
+  float p2y = p2.y;
+
+  if (isnan(p1x))
+    p1x = copysign(p1x, 1.0);
+  if (isnan(p1y))
+    p1y = copysign(p1y, 1.0);
+  if (isnan(p2x))
+    p2x = copysign(p2x, 1.0);
+  if (isnan(p2y))
+    p2y = copysign(p2y, 1.0);
+
+  printf("Vedge %g %g %g %g \n", p1x, p1y, p2x, p2y);
 }
 
 struct VEC2 circle_center(struct VEC2 a, struct VEC2 b, struct VEC2 c)
