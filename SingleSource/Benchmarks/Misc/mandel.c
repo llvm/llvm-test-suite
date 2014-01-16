@@ -1,10 +1,3 @@
-/* Sparc is not C99-compliant */
-#if defined(sparc) || defined(__sparc__) || defined(__sparcv9)
-
-int main() { return 0; }
-
-#else /* sparc */
-
 #define ESCAPE 2
 #ifdef SMALL_PROBLEM_SIZE
 #define IMAGE_SIZE 500
@@ -55,5 +48,3 @@ int main() {
   printf("%d\n", (int)accum);
   return 0;
 }
-
-#endif /* sparc */
