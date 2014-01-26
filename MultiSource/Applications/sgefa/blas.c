@@ -273,7 +273,7 @@ int	n, incx;
   i     = 0;
 
   /* Zero Sum. */
-  while( *sx == 0.0 && i<n ) {
+  while( i < n && *sx == 0.0 ) {
     i++;
     sx += incx;
   }
