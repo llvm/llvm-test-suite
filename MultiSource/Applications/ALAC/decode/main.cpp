@@ -69,7 +69,7 @@ enum
   };
 
 
-int32_t main (int32_t argc, char * argv[]) 
+int main (int argc, char * argv[])
 {
   char * inputFileName = argv[1];
   char * outputFileName = argv[2];
