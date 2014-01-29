@@ -6,17 +6,7 @@
 #
 LEVEL = ../../..
 
-# Exception Handling support in ARM still flaky
-# Re-enable this when support gets better
-ifeq ($(ARCH), ARM)
-  # Darwin uses SjLj, others are either nothing or EHABI
-  # See ARMMCAsmInfo.cpp
-  ifeq ($(TARGET_OS), Darwin)
-    DIRS=EH
-  endif
-else
-  DIRS=EH
-endif
+DIRS=EH
 
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc
