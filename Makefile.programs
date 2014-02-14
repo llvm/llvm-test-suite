@@ -251,6 +251,9 @@ endif
 ifeq ($(ARCH),ARM)
 LLCBETAOPTION :=
 endif
+ifeq ($(ARCH),AArch64)
+LLCBETAOPTION :=
+endif
 ifeq ($(ARCH),THUMB)
 LLCBETAOPTION :=
 endif

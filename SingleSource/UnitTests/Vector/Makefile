@@ -21,6 +21,10 @@ ifneq ($(CC_UNDER_TEST_TARGET_IS_THUMBV7),)
 DIRS += NEON
 endif
 
+ifeq ($(ARCH),AArch64)
+DIRS += NEON
+endif
+
 ifndef CC_UNDER_TEST_IS_CLANG
 # constpool uses clang-only syntax.
 PROGRAMS_TO_SKIP := constpool
