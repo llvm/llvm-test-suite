@@ -302,7 +302,7 @@ char *compiler, *type1, *type2;
 	    "Warning: Unsupported in%s C%s -- '%s' with '%s'\n",
 	    compiler, CplusplusFlag ? "++" : "", type1, type2);
     else
-	(void) fprintf(stderr,
+	(void) fprintf(stdout,
 	    "Warning: Unsupported in%s C%s -- '%s'\n",
 	    compiler, CplusplusFlag ? "++" : "", type1);
 }
