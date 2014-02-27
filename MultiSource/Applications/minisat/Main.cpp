@@ -27,7 +27,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "Solver.h"
 
 /*************************************************************************************/
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__XS1B__)
 #include <ctime>
 
 static inline double cpuTime(void) {
@@ -44,6 +44,9 @@ static inline double cpuTime(void) {
     return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; }
 #endif
 
+#if defined(__XS1B__)
+#include <unistd.h>
+#endif
 
 #if defined(__linux__)
 static inline int memReadStat(int field)
