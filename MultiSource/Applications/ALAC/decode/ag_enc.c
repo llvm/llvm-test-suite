@@ -54,6 +54,9 @@
 #define ALWAYS_INLINE
 #endif
 
+#ifdef __XS1B__
+#define UNALIGNED_MEM_ACCESS_NOT_SUPPORTED
+#endif
 
 /*	And on the subject of the CodeWarrior x86 compiler and inlining, I reworked a lot of this
 	to help the compiler out.   In many cases this required manual inlining or a macro.  Sorry
@@ -98,7 +101,8 @@ static inline int32_t ALWAYS_INLINE abs_func( int32_t a )
 	return result;	
 }
 
-static inline uint32_t ALWAYS_INLINE read32bit( uint8_t * buffer )
+#ifdef UNALIGNED_MEM_ACCESS_NOT_SUPPORTED
+static inline uint32_t ALWAYS_INLINE readBE32bit( uint8_t * buffer )
 {
 	// embedded CPUs typically can't read unaligned 32-bit words so just read the bytes
 	uint32_t		value;
@@ -107,6 +111,26 @@ static inline uint32_t ALWAYS_INLINE read32bit( uint8_t * buffer )
 			 ((uint32_t)buffer[2] << 8) | (uint32_t)buffer[3];
 	return value;
 }
+static inline void ALWAYS_INLINE writeBE32bit( uint8_t * buffer, uint32_t value )
+{
+        // embedded CPUs typically can't write unaligned 32-bit words so just write the bytes
+        buffer[0] = (value >> 24) & 0xff;
+        buffer[1] = (value >> 16) & 0xff;
+        buffer[2] = (value >> 8) & 0xff;
+        buffer[3] = value & 0xff;
+}
+#else
+static inline uint32_t ALWAYS_INLINE readBE32bit( uint8_t * buffer )
+{
+        uint32_t *i = (uint32_t *)buffer;
+        return Swap32NtoB( *i );
+}
+static inline void ALWAYS_INLINE writeBE32bit( uint8_t * buffer, uint32_t value )
+{
+        uint32_t *i = (uint32_t *)buffer;
+        *i = Swap32BtoN( value );
+}
+#endif
 
 #if PRAGMA_MARK
 #pragma mark -
@@ -193,8 +217,7 @@ static inline void ALWAYS_INLINE dyn_jam_noDeref(unsigned char *out, uint32_t bi
 
 	//Assert( numBits <= 32 );
 
-	curr = *i;
-	curr = Swap32NtoB( curr );
+	curr = readBE32bit((uint8_t*) i);
 
 	shift = 32 - (bitPos & 7) - numBits;
 
@@ -204,7 +227,7 @@ static inline void ALWAYS_INLINE dyn_jam_noDeref(unsigned char *out, uint32_t bi
 	value  = (value << shift) & mask;
 	value |= curr & ~mask;
 	
-	*i = Swap32BtoN( value );
+	writeBE32bit((uint8_t*) i, value);
 }
 
 
@@ -218,8 +241,7 @@ static inline void ALWAYS_INLINE dyn_jam_noDeref_large(unsigned char *out, uint3
 	
 	//Assert(numBits <= 32);
 
-	curr = *i;
-	curr = Swap32NtoB( curr );
+	curr = readBE32bit((uint8_t*) i);
 
 	if (shiftvalue < 0)
 	{
@@ -243,7 +265,7 @@ static inline void ALWAYS_INLINE dyn_jam_noDeref_large(unsigned char *out, uint3
 		w |= curr & ~mask;
 	}
 	
-	*i = Swap32BtoN( w );
+	writeBE32bit((uint8_t*) i, w);
 }
 
 
