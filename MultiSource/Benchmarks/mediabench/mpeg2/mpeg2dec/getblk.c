@@ -129,7 +129,7 @@ int dc_dct_pred[];
     if (i>=64)
     {
       if (!Quiet_Flag)
-        fprintf(stderr,"DCT coeff index (i) out of bounds (intra)\n");
+        fprintf(stdout,"DCT coeff index (i) out of bounds (intra)\n");
       Fault_Flag = 1;
       return;
     }
@@ -225,7 +225,7 @@ int comp;
     if (i>=64)
     {
       if (!Quiet_Flag)
-        fprintf(stderr,"DCT coeff index (i) out of bounds (inter)\n");
+        fprintf(stdout,"DCT coeff index (i) out of bounds (inter)\n");
       Fault_Flag = 1;
       return;
     }
@@ -397,7 +397,7 @@ int dc_dct_pred[];
     if (i>=64)
     {
       if (!Quiet_Flag)
-        fprintf(stderr,"DCT coeff index (i) out of bounds (intra2)\n");
+        fprintf(stdout,"DCT coeff index (i) out of bounds (intra2)\n");
       Fault_Flag = 1;
       return;
     }
@@ -549,7 +549,7 @@ int comp;
     if (i>=64)
     {
       if (!Quiet_Flag)
-        fprintf(stderr,"DCT coeff index (i) out of bounds (inter2)\n");
+        fprintf(stdout,"DCT coeff index (i) out of bounds (inter2)\n");
       Fault_Flag = 1;
       return;
     }
