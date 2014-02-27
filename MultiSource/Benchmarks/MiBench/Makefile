@@ -29,4 +29,10 @@ ifeq ($(ARCH),ARM)
   PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
 endif
 
+ifeq ($(ARCH),XCore)
+  # xcore does not support sockets or sgtty
+  PARALLEL_DIRS := $(filter-out consumer-lame, $(PARALLEL_DIRS))
+  PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs

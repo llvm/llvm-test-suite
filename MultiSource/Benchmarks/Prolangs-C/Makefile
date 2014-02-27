@@ -16,5 +16,10 @@ ifeq ($(ARCH), Alpha)
 PARALLEL_DIRS := $(filter-out bison, $(PARALLEL_DIRS))
 endif
 
+ifeq ($(ARCH),XCore)
+# xcore does not support sockets or forking (popen)
+PARALLEL_DIRS := $(filter-out archie-client, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out unix-smail, $(PARALLEL_DIRS))
+endif
 
 include $(LEVEL)/Makefile.programs

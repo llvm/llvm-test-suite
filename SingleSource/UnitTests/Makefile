@@ -38,5 +38,12 @@ ifeq ($(ARCH),Mips)
 DIRS += Mips
 endif
 
+ifeq ($(ARCH),XCore)
+# XCore does not support atomic read/write
+PROGRAMS_TO_SKIP += AtomicOps
+# XCore does not support init_priority attribute
+PROGRAMS_TO_SKIP += initp1
+endif
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc

@@ -27,4 +27,9 @@ PARALLEL_DIRS += \
 		mafft
 endif
 
+ifeq ($(ARCH),XCore)
+# XCore does not support pthreads
+PARALLEL_DIRS := $(filter-out 7zip, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
