@@ -1,3 +1,11 @@
+Rolled Single Precision Linpack Benchmark - PC Version in 'C/C++'
+
+Compiler     INSERT COMPILER NAME HERE
+Optimisation INSERT OPTIMISATION OPTIONS HERE
+
+norm resid      resid           machep         x[0]-1          x[n-1]-1
+   1.6    3.80277634e-05   1.19209290e-07  -1.38282776e-05  -7.51018524e-06
+
 Times are reported for matrices of order          100
 1 pass times for array with leading dimension of  201
 
@@ -27,12 +35,4 @@ Times for array with leading dimension of 200
 
       dgefa      dgesl      total     Mflops       unit      ratio
 Average                                 0.00
-Rolled Single Precision Linpack Benchmark - PC Version in 'C/C++'
-
-Compiler     INSERT COMPILER NAME HERE
-Optimisation INSERT OPTIMISATION OPTIONS HERE
-
-norm resid      resid           machep         x[0]-1          x[n-1]-1
-   1.6    3.80277634e-05   1.19209290e-07  -1.38282776e-05  -7.51018524e-06
-
 exit 0

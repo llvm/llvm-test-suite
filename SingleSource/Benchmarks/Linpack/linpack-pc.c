@@ -286,10 +286,10 @@ int main ()
         cray = .056; 
         n = 100;
 
-        fprintf(stdout,ROLLING);fprintf(stdout,PREC);
-        fprintf(stdout,"Precision Linpack Benchmark - PC Version in 'C/C++'\n\n");
-        fprintf(stdout,"Compiler     %s\n",compiler);
-        fprintf(stdout,"Optimisation %s\n\n",options);
+        fprintf(stderr,ROLLING);fprintf(stderr,PREC);
+        fprintf(stderr,"Precision Linpack Benchmark - PC Version in 'C/C++'\n\n");
+        fprintf(stderr,"Compiler     %s\n",compiler);
+        fprintf(stderr,"Optimisation %s\n\n",options);
 
         ops = (2.0e0*(n*n*n))/3.0 + 2.0*(n*n);
 
@@ -326,9 +326,9 @@ int main ()
         x1 = x[0] - 1;
         x2 = x[n-1] - 1;
         
-        printf("norm resid      resid           machep");
-        printf("         x[0]-1          x[n-1]-1\n");
-        printf("%6.1f %17.8e%17.8e%17.8e%17.8e\n\n",
+        fprintf(stderr,"norm resid      resid           machep");
+        fprintf(stderr,"         x[0]-1          x[n-1]-1\n");
+        fprintf(stderr,"%6.1f %17.8e%17.8e%17.8e%17.8e\n\n",
                (double)residn, (double)resid, (double)epsn, 
                (double)x1, (double)x2);
 
