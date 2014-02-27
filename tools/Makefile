@@ -1,7 +1,12 @@
 LEVEL=..
 include $(LEVEL)/Makefile.programs
 
-all:: timeit timeit-target fpcmp TargetConfig.mk
+all:: timeit fpcmp TargetConfig.mk
+
+# Avoid depending on timeit-target if it is not needed, some targets that use emulation cannot build it.
+ifndef USER_MODE_EMULATION
+all:: timeit-target
+endif
 
 timeit: timeit.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
