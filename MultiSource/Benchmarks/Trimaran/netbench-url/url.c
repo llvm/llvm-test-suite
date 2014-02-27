@@ -142,6 +142,6 @@ int main (int argc, char **argv)
       free(packet);
     }
   
-  fprintf (stderr, "URL finished for %d packets \n", num_packets);
+  fprintf (stdout, "URL finished for %d packets\n", num_packets);
   return 0;
 }
