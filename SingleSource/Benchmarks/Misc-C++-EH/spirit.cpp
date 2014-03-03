@@ -5246,6 +5246,16 @@ namespace boost
 {
 namespace detail
 {
+#ifdef __XS1B__
+class lightweight_mutex {
+public:
+    class scoped_lock {
+    public:
+        scoped_lock(lightweight_mutex & m){}
+    };
+    friend class scoped_lock;
+};
+#else
 class lightweight_mutex
 {
 private:
@@ -5280,6 +5290,7 @@ public:
         }
     };
 };
+#endif
 }
 }
 namespace boost
