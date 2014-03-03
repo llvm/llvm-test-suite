@@ -7,6 +7,10 @@
 #include "stream.h"
 #include <cstdlib>
 
+#if defined(__XS1B__)
+#include "xcoretestsuite.h"
+#endif
+
 #define BROKEN_LIGHT_ID 1
 
 class broken_light : public light

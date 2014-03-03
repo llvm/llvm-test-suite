@@ -9,6 +9,9 @@
 #include "intersection.h"
 #include <cstdlib>
 
+#if defined(__XS1B__)
+#include "xcoretestsuite.h"
+#endif
 
 // connect r1->d1 to r2->d2
 void connect(roadlet *r1, direction d1, 
