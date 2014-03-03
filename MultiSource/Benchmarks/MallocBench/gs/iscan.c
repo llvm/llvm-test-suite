@@ -32,6 +32,10 @@ copies.  */
 #include "scanchar.h"
 #include <stdint.h>
 
+#ifdef __XS1B__
+#define UINTPTR_MAX   UINT32_MAX
+#endif
+
 /* Array packing flag */
 int array_packing;
 

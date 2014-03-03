@@ -32,6 +32,10 @@ copies.  */
 #include "gxdevice.h"
 #include "gxdevmem.h"
 
+#ifdef __XS1B__
+#define PATH_MAX 4096
+#endif
+
 /* Forward references */
 int zreadline_from(P4(byte *, uint, uint *, stream *));
 int lib_file_open(P3(byte *, uint, ref *));
