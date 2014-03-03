@@ -3,6 +3,9 @@
  * http://www.hackersdelight.org/HDcode/ntz.cc
  */
 #include <stdio.h>
+#if defined(__XS1B__)
+#include "xcoretestsuite.h"
+#endif
 
 #define u 99
 
