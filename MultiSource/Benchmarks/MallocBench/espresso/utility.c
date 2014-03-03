@@ -40,6 +40,10 @@
 #define IBMPC
 #endif
 
+#ifdef __XS1B__
+#define IBMPC
+#endif
+
 /* default */
 #if !defined(BSD) && !defined(UNIX10) && !defined(UNIX60) && !defined(UNIX100) && !defined(UNIX50) && !defined(IBMPC)
 #define BSD
