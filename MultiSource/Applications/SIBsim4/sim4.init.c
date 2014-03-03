@@ -116,12 +116,14 @@ main(int argc, char *argv[])
   mtrace();
 #endif
   argv0 = argv[0];
+#ifndef __XS1B__
   if (setlocale(LC_ALL, "POSIX") == NULL)
     fprintf(stderr, "%s: Warning: could not set locale to POSIX\n", argv[0]);
   signal(SIGSEGV, bug_handler);
 #ifndef __MINGW32__  
   signal(SIGBUS, bug_handler);
 #endif  
+#endif
   /* Default options.  */
   options.C = DEFAULT_C;
   options.cutoff = DIST_CUTOFF;
