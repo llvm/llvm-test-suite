@@ -92,6 +92,12 @@ programs.
 #undef UNIX
 #endif
 
+#ifdef __XS1B__
+#include <unistd.h>
+#define CTimer
+#undef UNIX
+#endif
+
 static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;
