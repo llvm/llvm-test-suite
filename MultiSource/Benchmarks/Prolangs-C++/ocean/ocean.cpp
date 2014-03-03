@@ -9,6 +9,10 @@
 
 #include <cstdlib>
 
+#if defined(__XS1B__)
+#include "xcoretestsuite.h"
+#endif
+
 //cell.cc
 Cell *Cell::getCellAt(Coordinate aCoord) {
   return cells[aCoord.getY()][aCoord.getX()];
