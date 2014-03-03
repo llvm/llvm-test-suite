@@ -58,6 +58,10 @@ main(int argc, char** argv)
 			printf( "%s\n", cwd);
 		}
 	}
+	#elif defined(__XS1B__)
+	{
+		 printf( "lambda-0.1.3\n");
+	}
 	#else
 	{
 		char buf[MAXPATHLEN+1];
