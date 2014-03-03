@@ -11,6 +11,10 @@
 #include <string.h>
 #include "sha.h"
 
+#if !defined(LITTLE_ENDIAN) && defined(__ORDER_LITTLE_ENDIAN__)
+#define LITTLE_ENDIAN
+#endif
+
 /* SHA f()-functions */
 
 #define f1(x,y,z)	((x & y) | (~x & z))
