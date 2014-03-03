@@ -6,7 +6,9 @@ Source = lapi.c lcode.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c\
 	 loslib.c ltablib.c lstrlib.c loadlib.c linit.c lua.c
 
 LDFLAGS += -lm
+ifneq ($(ARCH),XCore)
 CPPFLAGS += -DLUA_USE_POSIX
+endif
 
 PROG = lua
 RUN_OPTIONS = alltests.lua "\<in"
