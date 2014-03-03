@@ -32,6 +32,10 @@
 #endif
 #include <string.h>
 
+#ifdef __XS1B__
+#include "xcoretestsuite.h"
+#endif
+
 using namespace std;
 
 void HexxagonMoveList::addMove(HexxagonMove &move)
