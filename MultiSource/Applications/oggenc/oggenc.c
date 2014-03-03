@@ -23,6 +23,10 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+#ifdef __XS1B__
+#include <stdint.h>
+#include "xcoretestsuite.h"
+#endif
 
 struct option
 {
