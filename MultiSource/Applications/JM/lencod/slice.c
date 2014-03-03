@@ -1206,7 +1206,7 @@ void poc_ref_pic_reorder(StorablePicture **list, unsigned num_ref_idx_lX_active,
   }
 }
 
-extern int QP2QUANT[40];
+extern const int QP2QUANT[40];
 
 void SetLagrangianMultipliers()
 {
