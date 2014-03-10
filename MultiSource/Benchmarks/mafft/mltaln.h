@@ -19,7 +19,7 @@
 
 #define VERSION "6.624b"
 #ifdef LLVM
-#define SHOWVERSION fprintf( stderr, "%s (%s) Version " VERSION " alg=%c, model=%s\n", "<progname>", (dorp=='d')?"nuc":"aa", alg, modelname )
+#define SHOWVERSION fprintf( stdout, "%s (%s) Version " VERSION " alg=%c, model=%s\n", "<progname>", (dorp=='d')?"nuc":"aa", alg, modelname )
 #else
 #define SHOWVERSION fprintf( stderr, "%s (%s) Version " VERSION " alg=%c, model=%s\n", progName( argv[0] ), (dorp=='d')?"nuc":"aa", alg, modelname )
 #endif

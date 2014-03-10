@@ -3297,7 +3297,7 @@ void FreeLocalHomTable( LocalHom **localhomtable, int n )
 {
 	int i, j;
 	LocalHom *ppp, *tmpptr;
-	fprintf( stderr, "freeing localhom\n" );
+	fprintf( stdout, "freeing localhom\n" );
 	for( i=0; i<n; i++ ) 
 	{
 		for( j=0; j<n; j++ )
