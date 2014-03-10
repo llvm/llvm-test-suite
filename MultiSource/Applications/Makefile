@@ -37,6 +37,9 @@ PARALLEL_DIRS := $(filter-out siod, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out ClamAV, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out sqlite3, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out obsequi, $(PARALLEL_DIRS))
+# XCore does not support fork().
+# lemon removed pending general method for running tests multiple times.
+PARALLEL_DIRS := $(filter-out lemon, $(PARALLEL_DIRS))
 endif
 
 include $(LEVEL)/Makefile.programs

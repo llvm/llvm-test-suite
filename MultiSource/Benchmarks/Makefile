@@ -30,6 +30,9 @@ endif
 ifeq ($(ARCH),XCore)
 # XCore does not support pthreads
 PARALLEL_DIRS := $(filter-out 7zip, $(PARALLEL_DIRS))
+# XCore does not support fork().
+# PAQ8p removed pending general method for running tests multiple times.
+PARALLEL_DIRS := $(filter-out PAQ8p, $(PARALLEL_DIRS))
 endif
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
