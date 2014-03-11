@@ -3,7 +3,9 @@
 
 double seconds()
 {
-        return ((double) clock()) / (double) CLOCKS_PER_SEC; 
+    // Disable timing.
+    static double t = 0.0;
+    return ++t;
 }
 
 void Stopwtach_reset(Stopwatch Q)
