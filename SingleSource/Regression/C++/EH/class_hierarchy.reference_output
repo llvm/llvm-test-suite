@@ -1,0 +1,26 @@
+Caught exception: 0: base class
+Caught exception: 1: base class
+Caught exception: 2: base class
+Caught exception: 3: base class
+Caught exception: 4: base class
+Caught exception: 5: base class
+Caught exception: 6: base class
+Caught exception: 7: base class
+Caught exception: 8: base class
+Caught exception: 9: base class
+Caught exception: 0: derived class
+Caught exception: 1: derived class
+Caught exception: 2: derived class
+Caught exception: 3: derived class
+Caught exception: 4: derived class
+Caught exception: 5: derived class
+Caught exception: 6: derived class
+Caught exception: 7: derived class
+Caught exception: 8: derived class
+Caught exception: 9: derived class
+Caught exception: 0: base class
+Caught exception: std::exception
+Caught exception: std::exception
+Caught unknown exception
+Caught unknown exception
+exit 0

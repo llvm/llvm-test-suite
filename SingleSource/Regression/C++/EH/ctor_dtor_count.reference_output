@@ -1,2 +1,11 @@
-All ok!
+Deriv ok!
+Deriv pointer ok!
+Base ok!
+Base pointer ok!
+Copy ok!
+Copy pointer ok!
+Member positive ok!
+Member zero ok!
+caught negative T
+Member negative ok!
 exit 0
