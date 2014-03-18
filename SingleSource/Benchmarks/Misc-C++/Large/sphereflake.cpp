@@ -147,18 +147,55 @@ struct basis_t{ /* bogus and compact, exactly what we need */
 // Implementations of sin() and cos() may vary slightly in the accuracy of
 // their results, typically only in the least significant bit.  Round to make
 // the results consistent across platforms.
-typedef union { double d; unsigned long long ll; } dbl_ll_union;
-static double LLVMsin(double d) {
-  dbl_ll_union u;
-  u.d = sin(d);
-  u.ll = (u.ll + 1) & ~1ULL;
-  return u.d;
+#define FACT3 6
+#define FACT5 120
+#define PI    3.141592656
+#define PI2   6.283185307
+#define PI_2  1.570796327
+#define PI3_2 4.712388984
+
+static double LLVMpow(double d, int n) {
+  int i;
+  double res = d;
+  if (n == 0)
+    return 1;
+  for (i=1; i<n; i++)
+    res *= d;
+  return res;
 }
+
+static double LLVMsin(double d) {
+  double sign = 1.0;
+
+  /* move into 2PI area */
+  while (d < 0)
+    d += PI2;
+  while (d > PI2)
+    d -= PI2;
+  /* move into PI/2 area */
+  if (d > PI3_2) {
+    d = PI2 - d;
+    sign = -1.0;
+  } else if (d > PI) {
+    d -= PI;
+    sign = -1.0;
+  } else if (d > PI_2) {
+    d = PI - d;
+  }
+  /* series terms */
+  double f3 = LLVMpow(d, 3)/FACT3;
+  double f5 = LLVMpow(d, 5)/FACT5;
+  d = sign * (d - f3 + f5);
+  /* saturate */
+  if (d > 1.0)
+    d = 1.0;
+  if (d < -1.0)
+    d = -1.0;
+  return d;
+}
+
 static double LLVMcos(double d) {
-  dbl_ll_union u;
-  u.d = cos(d);
-  u.ll = (u.ll + 1) & ~1ULL;
-  return u.d;
+  return LLVMsin(d + PI_2);
 }
 // LLVM LOCAL end
 
