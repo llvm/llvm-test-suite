@@ -6482,9 +6482,6 @@ struct ElementProperties<float> : public BasicTypeProperties<float>
 template <>
 struct ElementProperties<double> : public BasicTypeProperties<double>
 { };
-namespace std {
-  template <class Float> class complex;
-}
 template <class FloatType>
 struct ElementProperties<std::complex<FloatType> >
   : public TrivialElementProperties<std::complex<FloatType> >
@@ -21006,9 +21003,6 @@ template<class T1, class T2 >
 struct BinaryReturn<T1, T2, FnOrAssign > {
   typedef bool Type_t;
 };
-namespace std {
-template<class T> class complex;
-}
 using std::complex;
 template<class T>
 struct UnaryReturn< complex<T>, FnConj >
