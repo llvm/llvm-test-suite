@@ -8,6 +8,91 @@
 enum { childs = 9, ss= 2, ss_sqr = ss*ss }; /* not really tweakable anymore */
 static const double infinity = 1./0, epsilon = 1e-12;
 
+// LLVM LOCAL begin
+// Implementations of mathematical functions may vary slightly in the accuracy of
+// their results, typically only in the least significant bit.  Round to make
+// the results consistent across platforms.
+//
+// We don't care much about precision, and we do *really*
+// want this *NOT* to the the costliest part of any benchmark
+#define FACT3 6
+#define FACT5 120
+#define PI    3.141592656
+#define PI2   6.283185307
+#define PI_2  1.570796327
+#define PI3_2 4.712388984
+
+static int LLVMdiff(double a, double b) {
+  double d = a - b;
+  return (d > epsilon || d < -epsilon);
+}
+
+// Simple iterative multiplication
+static double LLVMpow(double d, int n) {
+  int i;
+  double res = d;
+  if (n == 0)
+    return 1;
+  for (i=1; i<n; i++)
+    res *= d;
+  return res;
+}
+
+// Simplified Taylor series
+static double LLVMsin(double d) {
+  double sign = 1.0;
+
+  /* move into 2PI area */
+  while (d < 0)
+    d += PI2;
+  while (d > PI2)
+    d -= PI2;
+  /* move into PI/2 area */
+  if (d > PI3_2) {
+    d = PI2 - d;
+    sign = -1.0;
+  } else if (d > PI) {
+    d -= PI;
+    sign = -1.0;
+  } else if (d > PI_2) {
+    d = PI - d;
+  }
+  /* series terms */
+  double f3 = LLVMpow(d, 3)/FACT3;
+  double f5 = LLVMpow(d, 5)/FACT5;
+  d = sign * (d - f3 + f5);
+  /* saturate */
+  if (d > 1.0)
+    d = 1.0;
+  if (d < -1.0)
+    d = -1.0;
+  return d;
+}
+
+// Sine displacement
+static double LLVMcos(double d) {
+  return LLVMsin(d + PI_2);
+}
+
+// Simple Newton iteration (for values < 10^10)
+static double LLVMsqrt(double x) {
+  double xn=0, xk=1;
+  /* special case where we'd return nan */
+  if (x == infinity)
+    return infinity;
+  int it=100;
+  while (it--) {
+    xn = (xk + x/xk)/2;
+    if (!LLVMdiff(xn, xk))
+      return xn;
+    xk = xn;
+  }
+  /* Return our best approximation */
+  return xn;
+}
+
+// LLVM LOCAL end
+
 struct v_t{ double x,y,z;v_t(){}
 	v_t(const double a,const double b,const double c):x(a),y(b),z(c){}
 	v_t operator+(const v_t&v)const{return v_t(x+v.x,y+v.y,z+v.z);}
@@ -15,7 +100,7 @@ struct v_t{ double x,y,z;v_t(){}
 	v_t operator-()const{return v_t(-x,-y,-z);}
 	v_t operator*(const double d)const{return v_t(x*d,y*d,z*d);}
 	v_t cross(const v_t&v)const{return v_t(y*v.z-z*v.y,z*v.x-x*v.z,x*v.y-y*v.x);}
-	v_t norm()const{return*this*(1./sqrt(magsqr()));}
+	v_t norm()const{return*this*(1./LLVMsqrt(magsqr()));}
 	double dot(const v_t&v)const{return x*v.x+y*v.y+z*v.z;}
 	double magsqr()const{return dot(*this);}
 };
@@ -44,7 +129,7 @@ struct sphere_t{
 		const v_t v(o-ray.o); const double b=ray.d.dot(v),disc=b*b-v.magsqr()+r*r;
 		if(disc < 0.)
 			return infinity; /*branch away from the square root*/
-		const double d=sqrt(disc), t2=b+d, t1=b-d; /*cond. move*/
+		const double d=LLVMsqrt(disc), t2=b+d, t1=b-d; /*cond. move*/
 		if(t2 < 0.)
 			return infinity;
 		else
@@ -142,62 +227,6 @@ struct basis_t{ /* bogus and compact, exactly what we need */
 		b1=up.cross(b2);
 	}
 };
-
-// LLVM LOCAL begin
-// Implementations of sin() and cos() may vary slightly in the accuracy of
-// their results, typically only in the least significant bit.  Round to make
-// the results consistent across platforms.
-#define FACT3 6
-#define FACT5 120
-#define PI    3.141592656
-#define PI2   6.283185307
-#define PI_2  1.570796327
-#define PI3_2 4.712388984
-
-static double LLVMpow(double d, int n) {
-  int i;
-  double res = d;
-  if (n == 0)
-    return 1;
-  for (i=1; i<n; i++)
-    res *= d;
-  return res;
-}
-
-static double LLVMsin(double d) {
-  double sign = 1.0;
-
-  /* move into 2PI area */
-  while (d < 0)
-    d += PI2;
-  while (d > PI2)
-    d -= PI2;
-  /* move into PI/2 area */
-  if (d > PI3_2) {
-    d = PI2 - d;
-    sign = -1.0;
-  } else if (d > PI) {
-    d -= PI;
-    sign = -1.0;
-  } else if (d > PI_2) {
-    d = PI - d;
-  }
-  /* series terms */
-  double f3 = LLVMpow(d, 3)/FACT3;
-  double f5 = LLVMpow(d, 5)/FACT5;
-  d = sign * (d - f3 + f5);
-  /* saturate */
-  if (d > 1.0)
-    d = 1.0;
-  if (d < -1.0)
-    d = -1.0;
-  return d;
-}
-
-static double LLVMcos(double d) {
-  return LLVMsin(d + PI_2);
-}
-// LLVM LOCAL end
 
 static node_t *create(node_t*n,const int lvl,int dist,v_t c,v_t d,double r) {
 	n = 1 + new (n) node_t(sphere_t(c,2.*r),sphere_t(c,r), lvl > 1 ? dist : 1);
