@@ -6,7 +6,10 @@ Source = lapi.c lcode.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c\
 	 loslib.c ltablib.c lstrlib.c loadlib.c linit.c lua.c
 
 LDFLAGS += -lm
-ifneq ($(ARCH),XCore)
+
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 128
+else
 CPPFLAGS += -DLUA_USE_POSIX
 endif
 

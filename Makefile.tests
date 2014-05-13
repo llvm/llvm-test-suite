@@ -23,6 +23,10 @@ include ${LEVEL}/Makefile.common
 # TARGET_FLAGS in the TEST.* makefiles doesn't work out.
 X_TARGET_FLAGS = $(TARGET_FLAGS) $(TEST_TARGET_FLAGS)
 
+ifeq ($(ARCH),XCore)
+X_TARGET_FLAGS += $(XCORE_TARGET_FLAGS)
+endif
+
 STATS = -stats -time-passes
 
 .PHONY: clean default

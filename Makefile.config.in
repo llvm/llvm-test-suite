@@ -139,6 +139,17 @@ ifeq ($(ARCH),THUMB)
 TEST_TARGET_FLAGS += -mthumb
 endif
 
+ifeq ($(ARCH),XCore)
+ifndef XCORE_TARGET_NEEDS_MEMORY
+# The default memory for all tests is 32MB (rather than the usual default of 64K).
+# (32MB target memory requires ~300MB of host memory)
+XCORE_TARGET_NEEDS_MEMORY := 32
+endif
+XCORE_TARGET_FLAGS := --target=xcore -fcommon -fexceptions -mcmodel=large
+XCORE_TARGET_FLAGS += -Wl,-target=XS1-L1,-Xmapper,--defsymbol,-Xmapper,CmdLineWords=400
+XCORE_TARGET_FLAGS += -Wl,-Xmapper,--image-size,-Xmapper,$$(($(XCORE_TARGET_NEEDS_MEMORY) * 0x100000)),-Xmapper,--image-base,-Xmapper,$$(($(XCORE_TARGET_NEEDS_MEMORY) * 0x100000))
+endif
+
 # PowerPC/Linux needs -ffp-contract=off so that:
 #     The outputs can be compared to gcc.
 #     The outputs match the reference outputs.

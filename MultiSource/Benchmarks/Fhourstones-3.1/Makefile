@@ -11,4 +11,8 @@ else
 STDIN_FILENAME = $(PROJ_SRC_DIR)/inputs
 endif
 
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 64
+endif
+
 include	../../Makefile.multisrc

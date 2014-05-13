@@ -6,5 +6,9 @@ CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS
 
 HASH_PROGRAM_OUTPUT = 1
 
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 256
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 

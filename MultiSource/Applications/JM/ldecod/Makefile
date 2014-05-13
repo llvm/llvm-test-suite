@@ -5,6 +5,10 @@ LDFLAGS  = -lm $(TOOLLINKOPTS)
 
 RUN_OPTIONS = -i $(PROJ_SRC_DIR)/data/test.264 -o Output/test_dec.yuv -r $(PROJ_SRC_DIR)/data/test_rec.yuv
 
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 64
+endif
+
 include ../../../Makefile.multisrc
 
 clean::

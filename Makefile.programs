@@ -67,7 +67,12 @@ DIFFPROG := $(PROGDIR)/DiffOutput.sh "$(FPCMP) $(TOLERANCEOPT)"
 # timeout.  This is overridable on the commandline or in tests makefiles.
 #
 ifndef RUNTIMELIMIT
+ifeq ($(ARCH),XCore)
+  # 1 hours
+  RUNTIMELIMIT := 3600
+else
   RUNTIMELIMIT := 500
+endif
 endif
 
 # If the program specified a REFERENCE_OUTPUT_FILE, they obviously want to

@@ -43,6 +43,9 @@ ifeq ($(ARCH),XCore)
 PROGRAMS_TO_SKIP += AtomicOps
 # XCore does not support init_priority attribute
 PROGRAMS_TO_SKIP += initp1
+# 2007-04-25-weak contains a branch to zero.
+# XCore BLR instruction can only branch 21bits, hence restrict memory to 20bits viz: 0x100000->0x1fffff
+XCORE_TARGET_NEEDS_MEMORY := 1
 endif
 
 LDFLAGS += -lstdc++

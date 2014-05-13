@@ -13,6 +13,9 @@ ifdef SMALL_PROBLEM_SIZE
 RUN_OPTIONS = 8 15 1
 else
 RUN_OPTIONS = 9 20 1
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 64
+endif
 endif
 endif
 

@@ -6,10 +6,16 @@ CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS
 
 ifdef SMALL_PROBLEM_SIZE
 CFLAGS        += -DSMALL_DATASET
+else
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 64
+endif
 endif
 
 ifeq ($(ARCH),Mips)
 RUNTIMELIMIT := 2000
+else ifeq ($(ARCH),XCore)
+# Use default RUNTIMELIMIT for the XCore.
 else
 RUNTIMELIMIT := 1000
 endif

@@ -30,6 +30,13 @@ ifndef CC_UNDER_TEST_IS_CLANG
 PROGRAMS_TO_SKIP := constpool
 endif
 
+ifeq ($(ARCH),XCore)
+ifndef SMALL_PROBLEM_SIZE
+# XCore takes ~1 hour.
+RUNTIMELIMIT:=7200
+endif
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 

@@ -12,6 +12,13 @@ STDIN_FILENAME = $(PROJ_SRC_DIR)/pyruvate_decarboxylase.fasta
 LDFLAGS = -lm
 FP_TOLERANCE = 0.00001
 HASH_PROGRAM_OUTPUT = 1
+
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 256
+# XCore takes ~2 hours.
+RUNTIMELIMIT:=10800
+endif
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
 clean::

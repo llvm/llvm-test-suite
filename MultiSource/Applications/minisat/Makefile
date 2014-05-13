@@ -9,6 +9,9 @@ RUN_OPTIONS = -verbosity=0 $(PROJ_SRC_DIR)/small.cnf
 else
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = -verbosity=0 $(PROJ_SRC_DIR)/long.cnf
+ifeq ($(ARCH),XCore)
+XCORE_TARGET_NEEDS_MEMORY := 64
+endif
 else
 RUN_OPTIONS = -verbosity=0 $(PROJ_SRC_DIR)/short.cnf
 endif
