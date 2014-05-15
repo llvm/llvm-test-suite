@@ -9,5 +9,10 @@ RUNTIMELIMIT:=7200
 endif
 endif
 
+ifeq ($(ARCH),Mips)
+# Mips takes ~20 minutes.
+RUNTIMELIMIT:=1200
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 

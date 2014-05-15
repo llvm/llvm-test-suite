@@ -19,6 +19,11 @@ XCORE_TARGET_NEEDS_MEMORY := 256
 RUNTIMELIMIT:=10800
 endif
 
+ifeq ($(ARCH),Mips)
+# Mips takes ~25 minutes.
+RUNTIMELIMIT:=1500
+endif
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
 
 clean::
