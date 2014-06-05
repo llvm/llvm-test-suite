@@ -22,4 +22,18 @@ PARALLEL_DIRS := $(filter-out archie-client, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out unix-smail, $(PARALLEL_DIRS))
 endif
 
+ifdef BENCHMARKING_ONLY
+PARALLEL_DIRS := $(filter-out allroots, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out archie-client, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out assembler, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out compiler, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out fixoutput, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out football, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out plot2fig, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out simulator, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out TimberWolfMC, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out unix-smail, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out unix-tbl, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs

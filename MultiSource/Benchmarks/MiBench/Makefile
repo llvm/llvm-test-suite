@@ -35,4 +35,9 @@ ifeq ($(ARCH),XCore)
   PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
 endif
 
+ifdef BENCHMARKING_ONLY
+PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out security-blowfish, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs

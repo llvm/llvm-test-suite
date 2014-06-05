@@ -13,4 +13,10 @@ TARGET_FLAGS += -maltivec
 TEST_TARGET_FLAGS += -maltivec
 LCCFLAGS += -maltivec
 
+ifdef BENCHMARKING_ONLY
+PROGRAMS_TO_SKIP += \
+	2007-01-07-lvsl-lvsr-Regression alti.sdot \
+	casts test1
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc

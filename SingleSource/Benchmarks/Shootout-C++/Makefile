@@ -13,5 +13,9 @@ RUNTIMELIMIT:=10800
 endif
 endif
 
+ifdef BENCHMARKING_ONLY
+PROGRAMS_TO_SKIP += hello reversefile spellcheck sumcol wc wordfreq
+endif
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc

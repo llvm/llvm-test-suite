@@ -11,5 +11,9 @@ SEED := $(shell date +%j)
 # the same results regardless of whether you make clean or not.
 RUN_OPTIONS := 31415926
 
+ifdef BENCHMARKING_ONLY
+PROGRAMS_TO_SKIP += cast2 cast-bug ccc div factor shr
+endif
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc

@@ -9,4 +9,8 @@ EXEC_XFAILS = cast
 endif
 endif
 
+ifdef BENCHMARKING_ONLY
+PROGRAMS_TO_SKIP += cast
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc

@@ -42,4 +42,9 @@ PARALLEL_DIRS := $(filter-out obsequi, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out lemon, $(PARALLEL_DIRS))
 endif
 
+ifdef BENCHMARKING_ONLY
+PARALLEL_DIRS := $(filter-out Burg, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out treecc, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.programs

@@ -37,6 +37,10 @@ RUNTIMELIMIT:=7200
 endif
 endif
 
+ifdef BENCHMARKING_ONLY
+PROGRAMS_TO_SKIP += build divides sumarray sumarray-dbl
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
 
 
