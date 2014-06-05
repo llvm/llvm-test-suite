@@ -10,6 +10,10 @@ RUNTIMELIMIT := 50000
 # Ignore 'LARGE_PROBLEM_SIZE' requests
 endif
 else
+ifeq ($(ARCH),Mips)
+# Mips takes ~50 minutes.
+RUNTIMELIMIT := 3000
+endif
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = -large
 endif
