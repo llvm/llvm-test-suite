@@ -36,6 +36,10 @@ endif
 # Add special tests for Mips
 ifeq ($(ARCH),Mips)
 DIRS += Mips
+# MIPS 32-bit does not support 8 bytes atomic operations.
+ifeq (,$(findstring mips64,$(MIPSARCH)))
+PROGRAMS_TO_SKIP += AtomicOps
+endif
 endif
 
 ifeq ($(ARCH),XCore)
