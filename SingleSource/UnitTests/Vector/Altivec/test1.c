@@ -11,7 +11,12 @@ void func(vector float *arg){
     vector float vres;
     vector int vmask;
 
+#ifdef __LITTLE_ENDIAN__
+    vmask = vec_slo(vec_splat_s32(-1),
+                    vec_splat_u8(12) * vec_splat_u8(8));
+#else
     vmask = vec_sld(vec_splat_s32(0), vec_splat_s32(-1), 4);
+#endif
     vi    = vec_sel(vi, vzero, (vector unsigned int)vmask);      /* (x, y, z, 0) */
     vres  = vec_madd(vi, vi, vzero);        /* (x^2, y^2, z^2, 0) */
     if(vec_all_eq(vres, vzero)) /* Is squared vec equal to the zero vec? */
@@ -21,7 +26,12 @@ void func(vector float *arg){
     else
     {
         vector float vtmp;
+#ifdef __LITTLE_ENDIAN__
+        vtmp = vec_sld(vres, vres, 12); /* (y^2, z^2, 0, x^2) */
+        vtmp[3] = 0.0f;                 /* (y^2, z^2, 0, 0) */
+#else
         vtmp = vec_sld(vres, vres, 4);
+#endif
         vtmp = vec_add(vtmp, vres);     /* (x^2 + y^2, y^2 + z^2, z^2, x^2) */
         vtmp = vec_sld(vtmp, vtmp, 8);  /* (z^2, x^2, x^2 + y^2, y^2 + z^2) */
         vtmp = vec_add(vtmp, vres);     /* (x^2 + z^2, x^2 + y^2, x^2 + y^2 + z^2, y^2 + z^2) */
