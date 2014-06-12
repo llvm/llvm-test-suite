@@ -9,7 +9,10 @@ else
 CPPFLAGS += -DHASHCODEBITS=23
 endif
 
+ifneq ($(ARCH),PowerPC)
 LDFLAGS = -lsupc++
 LIBS += -lsupc++
+endif
+
 STDIN_FILENAME=$(PROJ_SRC_DIR)/input
 include ../../Makefile.multisrc
