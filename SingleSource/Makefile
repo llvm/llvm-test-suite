@@ -1,10 +1,6 @@
 LEVEL = ..
 
-PARALLEL_DIRS :=
-ifndef BENCHMARK_ONLY
-PARALLEL_DIRS += UnitTests Regression
-endif
-PARALLEL_DIRS += Benchmarks
+PARALLEL_DIRS := UnitTests Regression Benchmarks
 
 LDFLAGS += -lm
 
