@@ -29,3 +29,7 @@ else
   RUN_OPTIONS      = integrate.i -o -
   STDOUT_FILENAME := integrate.s
 endif
+
+ifeq ($(TARGET_OS),Darwin)
+  LDFLAGS += -Xlinker -stack_size -Xlinker 0x800000
+endif
