@@ -1,7 +1,7 @@
 #! /bin/bash
 # A wrapper over perf to provide similar functionality to timeit.c
 
-DEPENDS="perf schedtool"
+DEPENDS="perf"
 
 # Fallback to ctimeit if dependencies are not met
 for cmd in ${DEPENDS} ; do
@@ -26,7 +26,7 @@ while [[ $1 = -* ]]; do
 	shift 2
 done
 
-perf stat -o stats schedtool -a 0x1 -e $@ < $INPUT > $OUTPUT
+perf stat -o stats $@ < $INPUT > $OUTPUT
 
 EXITCODE=$?
 
