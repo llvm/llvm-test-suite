@@ -39,38 +39,37 @@ Output/%.bp: %.mm Output/.dir
 $(PROGRAMS_TO_TEST:%=test.$(TEST).%): \
 test.$(TEST).%: Output/%.bp Output/%.dbg Output/%.dbg.opt Output/%.native.dbg Output/%.native.dbg.opt
 	@-is_skip=0; \
-	if test "$*" == "reversefile"; then \
+	if test "$*" = "reversefile"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "spellcheck"; then \
+	if test "$*" = "spellcheck"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "sumcol"; then \
+	if test "$*" = "sumcol"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "wc"; then \
+	if test "$*" = "wc"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "wordfreq"; then \
+	if test "$*" = "wordfreq"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "exptree"; then \
+	if test "$*" = "exptree"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "ray"; then \
+	if test "$*" = "ray"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "oscar"; then \
+	if test "$*" = "oscar"; then \
 	  is_skip=1; \
 	fi; \
-	if test "$*" == "spirit"; then \
+	if test "$*" = "spirit"; then \
 	  is_skip=1; \
 	fi; \
-	if test $$is_skip == 0; then \
+	if test $$is_skip -eq 0; then \
 	  $(COLLECTOR) Output/$*.dbg Output/$*.bp Output/$*.dbg.out; \
 	  $(COLLECTOR) Output/$*.dbg.opt Output/$*.bp Output/$*.dbg.opt.out; \
 	  $(COLLECTOR) Output/$*.native.dbg Output/$*.bp Output/$*.native.dbg.out; \
 	  $(COLLECTOR) Output/$*.native.dbg.opt Output/$*.bp Output/$*.native.dbg.opt.out; \
 	  $(PROJ_SRC_ROOT)/CompareDebugInfo.py $*; \
 	fi
-
