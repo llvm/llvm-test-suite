@@ -9,7 +9,7 @@ CPPFLAGS =
 LDFLAGS = -lstdc++
 LIBS += -lstdc++
 
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),$(filter $(ARCH),x86_64 x86_64h))
   CPPFLAGS += -DDWORD_IS_ULL
 endif
 

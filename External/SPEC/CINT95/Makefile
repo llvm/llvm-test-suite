@@ -17,7 +17,7 @@ endif
 # Get the $(ARCH) setting
 include $(LEVEL)/Makefile.config
 
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),$(filter $(ARCH),x86_64 x86_64h))
 PARALLEL_DIRS := $(filter-out 126.gcc, $(PARALLEL_DIRS))
 endif
 

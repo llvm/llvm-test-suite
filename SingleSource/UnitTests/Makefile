@@ -28,8 +28,8 @@ PROGRAMS_TO_SKIP += AtomicOps
 endif
 endif
 
-# The ms_struct tests only make sense on x86_64.
-ifneq ($(ARCH),x86_64)
+# The ms_struct tests only make sense on x86_64 and x86_64h.
+ifeq (,$(filter $(ARCH),x86_64 x86_64h))
 PROGRAMS_TO_SKIP += ms_struct-bitfield-init-1 ms_struct-bitfield-init ms_struct-bitfield ms_struct_pack_layout-1 ms_struct_pack_layout ms_struct-bitfield-1
 endif
 

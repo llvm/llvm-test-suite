@@ -12,7 +12,7 @@ endif
 ifeq ($(ARCH),x86)
 DIRS += SSE
 endif
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),$(filter $(ARCH),x86_64 x86_64h))
 DIRS += SSE
 endif
 

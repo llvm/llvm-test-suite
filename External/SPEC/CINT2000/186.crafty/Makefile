@@ -20,7 +20,7 @@ endif
 ifeq ($(ARCH),Alpha)
   CPPFLAGS += -DALPHA -DLINUX
 endif
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),$(filter $(ARCH),x86_64 x86_64h))
   CPPFLAGS += -DLONG_HAS_64BITS
 endif
 ifeq ($(ARCH),PowerPC)

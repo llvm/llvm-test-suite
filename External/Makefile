@@ -11,7 +11,7 @@ include $(LEVEL)/Makefile.config
 PARALLEL_DIRS := SPEC Povray Namd FPGrowth BoxedSim skidmarks10
 
 ifneq (,$(findstring x86,$(ARCH)))
-# Nurbs uses SSE and only works on x86 and x86_64.
+# Nurbs uses SSE and only works on x86, x86_64, and x86_64h.
 PARALLEL_DIRS += Nurbs
 endif
 
