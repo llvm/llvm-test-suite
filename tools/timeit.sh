@@ -1,6 +1,14 @@
 #! /bin/bash
 # A wrapper over perf to provide similar functionality to timeit.c
 
+# Fall back to ctimeit for PowerPC
+TARGET=`uname -m`
+
+if [ \( $TARGET = "ppc64" \) -o \( $TARGET = "ppc64le" \) ]; then
+    $(dirname $0)/ctimeit $@
+    exit $?
+fi
+
 DEPENDS="perf"
 
 # Fallback to ctimeit if dependencies are not met
