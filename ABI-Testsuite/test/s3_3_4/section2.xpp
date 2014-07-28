@@ -1,0 +1,44 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.out | FileCheck %s
+
+// CHECK:A()
+// CHECK:D()
+// CHECK:B()
+// CHECK:C()
+// CHECK:main()
+// CHECK:Test Passed
+
+#include <stdio.h>
+
+static int counter = 0;
+
+#define INCREMENT_COUNTER counter++;
+#define DECREMENT_COUNTER counter--;
+
+struct A { A() { printf("%s()\n", __FUNCTION__); INCREMENT_COUNTER; } };
+struct B { B() { printf("%s()\n", __FUNCTION__); INCREMENT_COUNTER; } };
+struct C { C() { printf("%s()\n", __FUNCTION__); INCREMENT_COUNTER; } };
+struct D { D() { printf("%s()\n", __FUNCTION__); INCREMENT_COUNTER; } };
+
+A v01 __attribute__((init_priority(200)));
+B v02 __attribute__((init_priority(505)));
+C v03;
+D v04 __attribute__((init_priority(325)));
+
+int main()
+{
+  printf("%s()\n", __FUNCTION__);
+  DECREMENT_COUNTER;
+  DECREMENT_COUNTER;
+  DECREMENT_COUNTER;
+  DECREMENT_COUNTER;
+  if(counter == 0) {
+    printf("Test Passed\n");
+  } else {
+    printf("Test Failed\n");
+  }
+  return 0;
+}

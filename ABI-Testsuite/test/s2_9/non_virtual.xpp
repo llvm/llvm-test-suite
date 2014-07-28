@@ -1,0 +1,18 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c cxx_rtti cxx_exceptions %s -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: bindump %t.o| FileCheck %s
+
+struct foo { };
+
+// Section 2.9.2
+// Check that the type-info was generated and no v-table was generated
+
+// CHECK-NOT: _ZTV3foo
+// CHECK-DAG: _ZTI3foo
+// CHECK-NOT: _ZTV3foo
+
+int main(int argc, char *argv[]) {
+  throw foo();
+}

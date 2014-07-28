@@ -1,0 +1,52 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// Test default arguments apperaing in class definitions
+// CHECK-DAG: _ZZN1S1fEiiEd0_NKUlvE0_clEv
+// CHECK-DAG: _ZZN1S1fEiiEd0_NKUlvE_clEv
+// CHECK-DAG: _ZZN1S1fEiiEd_NKUlvE_clEv
+struct S {
+   void f(int a = [] {return 1;}() + [] {return 2;}(), int b = []{return 3;}());
+};
+void foo() {
+   S s;
+   s.f();
+}
+
+// inclass initializers of class members
+// CHECK-DAG: _ZNK2S21yMUlvE_clEv
+struct S2 {
+    int y = []{ return 5;}();
+};
+void foo2() {
+    S2 s3;
+}
+
+// the bodies of inline functions
+// CHECK-DAG: _ZZ4foo3vENKUlvE_clEv
+inline int foo3() {
+    int t = []{ return 7;}();
+    return t;
+}
+void bar() {
+    foo3();
+}
+
+// the bodies of non-exported nonspecialized template functions
+// CHECK-DAG:   _ZZ4foo4IfEvvENKUlvE_clEv
+template <typename C> void foo4() {
+    int u = [] { return 8;}();
+}
+void call_foo4() {
+    foo4<float>();
+}
+
+// initializers of nonspecialized static members of template classes
+// CHECK-DAG: _ZNK2S1IiE1xMUlvE_clEv
+template<typename T> struct S1 {
+   static int x;
+};
+template<typename T> int S1<T>::x = []{ return 1;}();
+template int S1<int>::x;

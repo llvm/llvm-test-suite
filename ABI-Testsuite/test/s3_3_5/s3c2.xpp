@@ -1,0 +1,18 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler %s -c -o %t.o
+// RUN: bindump %t.o | tee %t.tmp | FileCheck %s
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Check that atexit is not defined in the module (it should be provided by the library)
+
+// CHECK: {{(U|SHN_UNDEF) atexit}}
+
+void fn01() { printf("%s()\n", __FUNCTION__); }
+
+int main(int argc, char *argv[]) {
+  atexit(fn01);
+  return 0;
+}

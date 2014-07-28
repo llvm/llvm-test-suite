@@ -1,0 +1,74 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler  -S %s -o %t.s
+// RUN: cat %t.s | FileCheck prefixes %s
+
+// CHECK-DAG: _ZN4pqrsD1Ev
+// CHECK-DAG: _ZN4abcdC1ERKS_
+// CHECK-NOT: _ZN4efghC1ERKS_
+
+// CHECK-DAG: _ZN5pqrsRD1Ev
+// CHECK-NOT: _ZN5abcdRC1ERKS_
+// CHECK-NOT: _ZN5efghRC1ERKS_
+
+// CHECK-DAG: _ZN5abcdSC1ERKS_
+// CHECK-NOT: _ZN5efghSC1ERKS_
+// CHECK-NOT: _ZN5pqrsSC1ERKS_
+
+struct pqrs { int a; int b; ~pqrs();};  // has non trivial dtor
+struct abcd { int a; int b; abcd(const abcd&); };  // has non trivial copy ctor
+struct efgh { int a; int b; }; 
+void foo(abcd x);
+void foo(efgh x);
+void foo(pqrs x);
+extern abcd v_abcd;
+extern efgh v_efgh;
+extern pqrs v_pqrs;
+
+void bar()
+{
+  // class with no copy ctor or non trivial dtor: 3.1.1: no copy ctor call
+  foo(v_abcd);
+
+  // class with non-trivial copy-ctor. call it
+  foo(v_efgh);
+
+  // class with non-trivial dtor
+  foo(v_pqrs);
+}
+
+struct pqrsR { int a; int b; ~pqrsR();};  // has non trivial dtor
+struct abcdR { int a; int b; abcdR(const abcdR&); };  // has non trivial copy ctor
+struct efghR { int a; int b; }; 
+abcdR foo_abcd();
+efghR foo_efgh();
+pqrsR foo_pqrs();
+extern abcdR r_abcd;
+extern efghR r_efgh;
+extern pqrsR r_pqrs;
+
+// check the caller action at return
+void barx()
+{
+  // class with no copy ctor or non trivial dtor: 3.1.1: no copy ctor call
+  r_abcd = foo_abcd();
+
+  // class with non-trivial copy-ctor. call it
+  r_efgh = foo_efgh();
+
+  // class with non-trivial dtor
+  r_pqrs = foo_pqrs();
+}
+
+
+// check the callee action for return
+struct pqrsS { int a; int b; ~pqrsS();};  // has non trivial dtor
+struct abcdS { int a; int b; abcdS(const abcdS&); };  // has non trivial copy ctor
+struct efghS { int a; int b; }; 
+extern abcdS s_abcd;
+extern efghS s_efgh;
+extern pqrsS s_pqrs;
+abcdS bar_abcd(){ return s_abcd;}
+efghS bar_efgh(){ return s_efgh;}
+pqrsS bar_pqrs(){ return s_pqrs;}
+

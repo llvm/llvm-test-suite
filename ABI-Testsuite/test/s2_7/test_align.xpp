@@ -1,0 +1,156 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=1 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=2 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=4 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=8 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=16 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=32 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=64 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=128 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=256 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=512 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=1024 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=2048 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=4096 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 -c -o %t.o %s -DALIGN=8192 
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <new>
+
+// non-trivial struct with forced alignment test
+
+#define ARRAY_LENGTH 5
+#define BUFF_SIZE ALIGN * ARRAY_LENGTH * 2
+
+// Globals
+static unsigned char alloc_buff[BUFF_SIZE];
+int new_calls = 0;
+int delete_calls = 0;
+
+static void *array_new_return_value;
+
+void *operator new[](size_t size) { 
+    new_calls++; return array_new_return_value = malloc(size); 
+}
+
+
+#ifdef SKIP_STRONGLY_ALIGNED
+// continue to use inline version because we need over-aligned result
+inline void *operator new[](size_t size, size_t size2) { 
+    new_calls++; 
+    return array_new_return_value = alloc_buff; 
+}
+#endif // SKIP_STRONGLY_ALIGNED
+
+void operator delete[](void *p) { delete_calls++; }
+
+static int verbose;
+
+struct non_trivial {
+  ~non_trivial() { }
+} __attribute__((aligned(ALIGN)));
+
+struct array_cookie {
+  size_t element_count;
+};
+
+static int calculate_padding() {
+  int size = (int) sizeof(size_t);
+  int alignment = alignof(non_trivial);
+  int retval = size > alignment ? size : alignment;
+  
+  retval -= sizeof(array_cookie);
+  
+  return (retval > 0 ? retval : 0);
+}
+
+static int new_test() {
+  int errors = 0;
+  non_trivial *ptr = new non_trivial[ARRAY_LENGTH];
+  
+  if((void *)ptr == array_new_return_value) {
+    errors++;
+    printf("ERROR: new_test() pointers are equal!\n");
+  }
+
+  // Validate the cookie size
+  int padding = calculate_padding();
+  if(((unsigned char *)array_new_return_value + padding + sizeof(array_cookie)) != (unsigned char *)ptr) {
+    errors++;
+    printf("Cookie size incorrect (array_new_return_value = 0x%p, ptr = 0x%p, padding = %d, sizeof(array_cookie) = %d)\n", array_new_return_value, ptr, padding, (int) sizeof(array_cookie));
+  } else if (verbose)
+    printf("array_new_return_value = 0x%p, ptr = 0x%p, padding = %d, sizeof(array_cookie) = %d\n", array_new_return_value, ptr, padding, (int) sizeof(array_cookie));
+  
+  // Validate the cookie contents
+  array_cookie *cookie = (array_cookie *)((unsigned char *)array_new_return_value + padding);
+  if(cookie->element_count != (size_t)ARRAY_LENGTH) {
+    errors++;
+    printf("Cookie value element_count incorrect, expected (%ld), got (%ld)\n", (size_t)ARRAY_LENGTH, cookie->element_count);
+  }
+  
+  delete [] ptr;
+  
+  return errors;
+}
+
+static int placement_new_test() {
+  int errors = 0;
+#ifndef SKIP_STRONGLY_ALIGNED
+  non_trivial *ptr = new ((void*)alloc_buff) non_trivial[ARRAY_LENGTH];
+
+  if((void *)ptr != (void *)alloc_buff) {
+    errors++;
+    printf("ERROR: placement_new_test() pointers differ! %p != %p\n", ptr, array_new_return_value);
+  }
+#endif // SKIP_STRONGLY_ALIGNED
+
+  return errors;
+}
+
+int main(int argc, char *argv[]) {
+  int retval = 0;
+  if (argc > 1) verbose = 1;
+  
+  retval += new_test();
+  retval += placement_new_test();
+  
+  if(retval) {
+    printf("TEST FAILED align=%d\n", ALIGN);
+    retval = 1;
+  } else {
+    printf("TEST PASSED align=%d\n", ALIGN);
+    retval = 0;
+  }
+
+  return retval;
+}

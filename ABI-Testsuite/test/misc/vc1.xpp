@@ -1,0 +1,72 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s cxx_rtti -o %t1.o
+// RUN: linker -o %t%exeext %t1.o
+// RUN: runtool %t%exeext | grep "PASSED"
+
+#include "../common/select2.h"
+
+// test case from ABI testsuite
+/*
+Test case for sharing virtual bases.
+In Derived_too,
+the primary base class is NewShareme,
+The bases Base and Shareme share vptr's
+with Derived and are allocated at the
+same offset as Derived.
+Should get:
+60% a.out
+(long)(NewShareme *)dd - (long)dd = 0
+(long)(Derived *)dd - (long)dd = 8
+(long)(Base *)dd - (long)dd = 8
+(long)(Shareme *)dd - (long)dd = 8
+*/
+
+struct Shareme {
+    virtual void foo();
+};
+struct Base : virtual Shareme {
+        virtual void bar();
+};
+struct Derived : virtual Base {
+        virtual void baz();
+};
+
+struct NewShareme {
+        virtual void foo();
+};
+
+struct Derived_too : virtual NewShareme, virtual Derived {
+        virtual void bar();
+};
+
+void Shareme::foo() { }
+void Base::bar() { }
+void Derived::baz() { }
+void NewShareme::foo() { }
+void Derived_too::bar() { }
+
+
+extern "C" int printf(const char *,...);
+//#define EVAL(EXPR) printf( #EXPR " = %d\n", (int) (EXPR) );
+static int nerr;
+static void evalf(int expected, const char *str, int val)
+{
+  expected /= LPSELECT(1,2); //representing the size difference of pointers
+  if (expected != val) {
+    printf("ERROR: expected %d. ", expected);
+    nerr++;
+  }
+  printf(str, val);
+}
+#define EVAL(v,EXPR) evalf(v,  #EXPR " = %d\n", (int) (EXPR) );
+int main()
+{
+  Derived_too *dd = new Derived_too;
+  EVAL(0, (long)(NewShareme *)dd - (long)dd);
+  EVAL(8, (long)(Derived *)dd - (long)dd);
+  EVAL(8, (long)(Base *)dd - (long)dd);
+  EVAL(8, (long)(Shareme *)dd - (long)dd);
+  printf("%s\n", nerr ? "FAILED" : "PASSED");
+}
+

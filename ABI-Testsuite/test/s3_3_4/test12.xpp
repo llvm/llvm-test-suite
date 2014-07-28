@@ -1,0 +1,49 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+/*
+ *
+ * test12.c:
+ *   - C++ source code
+ *   - Static destructor
+ *   - GCC destructor
+ *   - GCC init_priority attribute
+ *
+ * Expected output and order:
+ *   In BBBB()
+ *   In AAAA()
+ *   In main()
+ *   In foo()
+ *   In ~AAAA()
+ *   In ~BBBB()
+ *
+ *   :BBBB():AAAA():main():foo():~AAAA():~BBBB()
+ */
+
+// RUN: cxx_compiler %s -c -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.out | FileCheck %s
+
+// CHECK: :BBBB():AAAA():foo():main():~AAAA():~BBBB()
+
+#include <stdio.h>
+
+struct AAAA {
+  AAAA() { printf(":AAAA()"); }
+  ~AAAA() { printf(":~AAAA()"); }
+};
+
+struct BBBB {
+  BBBB() { printf(":BBBB()"); }
+  ~BBBB() { printf(":~BBBB()"); }
+};
+
+AAAA one __attribute__ ((init_priority(3000)));
+BBBB two __attribute__ ((init_priority(2000)));
+
+__attribute__((constructor)) void foo() { printf(":foo()"); }
+
+int main()
+{
+  printf(":main()");
+  return 0;
+}

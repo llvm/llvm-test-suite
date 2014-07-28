@@ -1,0 +1,340 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <cstddef>
+
+// CHECK-DAG: _Z8functionv
+void function() {}
+
+// CHECK-DAG: _Z3fooi
+void foo(int) {}
+
+extern "C" {
+// CHECK-DAG: foo
+void foo() {}
+}
+
+// tests
+// CHECK-DAG: _ZN16jksnurvbvlhvfkux26ltqskcbxhbqavdtthaorlirkvrER23evpowqhtpqlwphewbccruiwR23ruxsdsnmueaxeuyqizhdsel
+struct evpowqhtpqlwphewbccruiw {};
+struct ruxsdsnmueaxeuyqizhdsel {};
+struct jksnurvbvlhvfkux {
+  void ltqskcbxhbqavdtthaorlirkvr(evpowqhtpqlwphewbccruiw &,
+                                  ruxsdsnmueaxeuyqizhdsel &);
+};
+void jksnurvbvlhvfkux::ltqskcbxhbqavdtthaorlirkvr(evpowqhtpqlwphewbccruiw &,
+                                                  ruxsdsnmueaxeuyqizhdsel &) {}
+
+// CHECK-DAG: _ZN8okldbcpoI7ubkozqz14smagsiclrkkqwcLj0E20alhmzoeengpqmwjfmjwgE8whnstwiy9bxllucksuERKNS3_16swsniwznpdhlkivsE
+struct ubkozqz {};
+struct smagsiclrkkqwc {};
+struct alhmzoeengpqmwjfmjwg {};
+template <class T, class U, unsigned a, class W> struct okldbcpo {
+  struct swsniwznpdhlkivs {};
+  struct whnstwiy {
+    void bxllucksu(okldbcpo<T, U, a, W>::swsniwznpdhlkivs const &);
+  };
+};
+
+template <>
+void okldbcpo<ubkozqz, smagsiclrkkqwc, 0u, alhmzoeengpqmwjfmjwg>::whnstwiy::
+    bxllucksu(okldbcpo<ubkozqz, smagsiclrkkqwc, 0u,
+                       alhmzoeengpqmwjfmjwg>::swsniwznpdhlkivs const &) {}
+
+// CHECK-DAG: _ZN5gznwyD1Ev
+struct gznwy {
+  ~gznwy();
+};
+gznwy::~gznwy() {}
+
+// CHECK-DAG: _ZN15tuscbncxpqrqspjC1ERK8xsflodyeS2_b
+struct xsflodye {};
+struct tuscbncxpqrqspj {
+  tuscbncxpqrqspj(xsflodye const &, xsflodye const &, bool);
+};
+tuscbncxpqrqspj::tuscbncxpqrqspj(xsflodye const &, xsflodye const &, bool) {}
+
+// CHECK-DAG: _ZN5hyljqIPFvN10mnukufmczi19htmuvhnsicconebhkdhERK8xsflodyeS4_E18wmfnwhhdgcxowslpokE20lqklfjefhpcslvrofnutC1EiRKS7_
+struct mnukufmczi {
+  struct htmuvhnsicconebhkdh {};
+};
+struct wmfnwhhdgcxowslpok {};
+template <typename T, class C> struct hyljq {
+  struct lqklfjefhpcslvrofnut {
+    lqklfjefhpcslvrofnut(int, wmfnwhhdgcxowslpok const &);
+  };
+};
+
+template <>
+hyljq<void (*)(mnukufmczi::htmuvhnsicconebhkdh, xsflodye const &,
+               xsflodye const &),
+      wmfnwhhdgcxowslpok>::lqklfjefhpcslvrofnut::
+    lqklfjefhpcslvrofnut(int, wmfnwhhdgcxowslpok const &) {}
+
+// CHECK-DAG: _Z9kqerssezlIN3gvu6zrjfkc14oqxicyfkugyisiE18mjwzznszyjtfpvksthEPT0_PT_
+struct loml {};
+struct mjwzznszyjtfpvksth {};
+struct gvu {
+  struct zrjfkc {
+    struct oqxicyfkugyisi {};
+  };
+};
+template <class C, class D> D *kqerssezl(C *) {};
+template <>
+mjwzznszyjtfpvksth *kqerssezl<gvu::zrjfkc::oqxicyfkugyisi, mjwzznszyjtfpvksth>(
+    gvu::zrjfkc::oqxicyfkugyisi *c) {
+  return 0;
+}
+
+// CHECK-DAG: _ZNK10augyuwbszmI8cfhlachhEixEi
+class cfhlachh {};
+template <class C> struct augyuwbszm {
+  void operator[](int) const;
+};
+template <> void augyuwbszm<cfhlachh>::operator[](int) const {}
+
+// CHECK-DAG: _ZNK5tupbkIiEneERKS0_
+template <typename T> struct tupbk {
+  void operator!=(tupbk<T> const &) const;
+};
+template <> void tupbk<int>::operator!=(tupbk<int> const &) const {}
+
+// CHECK-DAG: _ZN4iamy12saxordnzvdreE
+namespace iamy {
+int saxordnzvdre;
+};
+
+// CHECK-DAG: _Z1WiiiRK24frrjwvjhttlhsfrgvkqbnuuw
+struct frrjwvjhttlhsfrgvkqbnuuw {};
+void W(int, int, int, frrjwvjhttlhsfrgvkqbnuuw const &) {}
+
+// CHECK-DAG: _ZN7wuytgnapLEt
+struct wuytgna {
+  void operator+=(unsigned short);
+};
+void wuytgna::operator+=(unsigned short) {}
+
+// CHECK-DAG: _ZlsR6byeldgRK11gdopbemiyor
+struct byeldg {};
+struct gdopbemiyor {};
+void operator<<(byeldg &, gdopbemiyor const &) {}
+
+// CHECK-DAG: _ZrsR6byeldgRi
+void operator>>(byeldg &, int &) {}
+
+// CHECK-DAG: _ZN5inssc6assertIbEEvT_
+struct inssc {
+  template <typename T> void assert(T);
+};
+template <> void inssc::assert<bool>(bool) {}
+
+// CHECK-DAG: _Z9kqerssezlIP22grogpuwiutiwyiztgugzjkPvEPT0_PT_
+class grogpuwiutiwyiztgugzjk {};
+template <>
+void **kqerssezl<grogpuwiutiwyiztgugzjk *, void *>(grogpuwiutiwyiztgugzjk **) {
+  return 0;
+}
+
+// anonymous_namespaces
+// skip as not specified by the ABI (and not important for linking)
+
+// special names
+// CHECK-DAG: _ZTV4foo1
+class foo1 {
+  virtual void f();
+  virtual ~foo1();
+};
+void foo1::f() {}
+
+// substitutions_work_in_base_36
+// CHECK-DAG: _Z3foo2s1S_2s2S0_2s3S1_2s4S2_2s5S3_2s6S4_2s7S5_2s8S6_2s9S7_3s10S8_3s11S9_3s12SA_3s13SB_3s14SC_3s15SD_3s16SE_3s17SF_3s18SG_3s19SH_3s20SI_3s21SJ_3s22SK_3s23SL_3s24SM_3s25SN_3s26SO_3s27SP_3s28SQ_3s29SR_3s30SS_3s31ST_3s32SU_3s33SV_3s34SW_3s35SX_3s36SY_3s37SZ_3s38S10_
+class s1 {};
+class s2 {};
+class s3 {};
+class s4 {};
+class s5 {};
+class s6 {};
+class s7 {};
+class s8 {};
+class s9 {};
+class s10 {};
+class s11 {};
+class s12 {};
+class s13 {};
+class s14 {};
+class s15 {};
+class s16 {};
+class s17 {};
+class s18 {};
+class s19 {};
+class s20 {};
+class s21 {};
+class s22 {};
+class s23 {};
+class s24 {};
+class s25 {};
+class s26 {};
+class s27 {};
+class s28 {};
+class s29 {};
+class s30 {};
+class s31 {};
+class s32 {};
+class s33 {};
+class s34 {};
+class s35 {};
+class s36 {};
+class s37 {};
+class s38 {};
+
+void foo(s1, s1, s2, s2, s3, s3, s4, s4, s5, s5, s6, s6, s7, s7, s8, s8, s9, s9,
+         s10, s10, s11, s11, s12, s12, s13, s13, s14, s14, s15, s15, s16, s16,
+         s17, s17, s18, s18, s19, s19, s20, s20, s21, s21, s22, s22, s23, s23,
+         s24, s24, s25, s25, s26, s26, s27, s27, s28, s28, s29, s29, s30, s30,
+         s31, s31, s32, s32, s33, s33, s34, s34, s35, s35, s36, s36, s37, s37,
+         s38, s38) {}
+
+// substitutions
+// CHECK-DAG: _ZSt3foov
+namespace std {
+void foo() {}
+};
+
+// CHECK-DAG: _Z3fooSaIcE
+#include <string>
+void foo(std::allocator<char>) {}
+
+// CHECK-DAG: _Z3fooSs
+void
+foo(std::basic_string<char, std::char_traits<char>, std::allocator<char> >) {}
+
+#include <iostream>
+// CHECK-DAG: _Z3fooSi
+void foo(std::basic_istream<char, std::char_traits<char> >) {}
+
+// CHECK-DAG: _Z3fooSo
+void foo(std::basic_ostream<char, std::char_traits<char> >) {}
+
+// CHECK-DAG: _Z3fooSd
+void foo(std::basic_iostream<char, std::char_traits<char> >) {}
+
+// CHECK-DAG: _Z1fa
+void f(signed char) {}
+
+// CHECK-DAG: _Z1gai
+void g(signed char, int) {}
+
+// CHECK-DAG: _Z1haa
+void h(signed char, signed char) {}
+
+// CHECK-DAG: _Z1fs
+void f(short) {}
+
+// CHECK-DAG: _Z1gsi
+void g(short, int) {}
+
+// CHECK-DAG: _Z1hss
+void h(short, short) {}
+
+class bar {};
+// CHECK-DAG: _ZN4foof3bazEMNS_3barEKFbvE
+class foof {
+  class bar {};
+  void baz(bool (foof::bar::*)() const);
+};
+void foof::baz(bool (foof::bar::*)() const) {}
+
+// CHECK-DAG: _Z3fooPvPA4_A4_h
+void foo(void *, unsigned char (*)[4][4]) {}
+
+// CHECK-DAG: _ZN4foogIXadL_Z4buraEEE3barEv
+int bura;
+template <int *C> class foog {
+  void bar();
+};
+template <> void foog<(&bura)>::bar() {}
+
+// CHECK-DAG: _ZN4foohILi3ELi7EE3qrdIcEEvRAplstPT_L_ZN4qkla10ydyxkgmnvsIiLi3EE5ckepsEE_i
+namespace qkla {
+template <typename, int n> struct ydyxkgmnvs {
+  static const int ckeps = n;
+};
+};
+template <int, int> struct fooh {
+  template <typename T>
+  void qrd(int (&)[((sizeof(T *)) + qkla::ydyxkgmnvs<int, 3>::ckeps)]) {}
+};
+template <>
+template <>
+void fooh<3, 7>::qrd<char>(
+    int (&)[((sizeof(char *)) + qkla::ydyxkgmnvs<int, 3>::ckeps)]) {}
+
+// CHECK-DAG: _ZN5snlqx11agvhrfxatlcILj32ELj79764919ELj4294967295ELj4294967295ELb1ELb1EE13bmfngddnzstfeEPKvS3_
+namespace snlqx {
+template <unsigned, unsigned, unsigned, unsigned, bool, bool>
+struct agvhrfxatlc {
+  void bmfngddnzstfe(void const *, void const *);
+};
+};
+template <>
+void snlqx::agvhrfxatlc<32u, 79764919u, 4294967295u, 4294967295u, true,
+                        true>::bmfngddnzstfe(void const *, void const *) {}
+
+// CHECK-DAG: _Z4foojM3barb
+void fooj(bool bar::*) {}
+
+// CHECK-DAG: _Z4fookIFvPK3barEEvv
+template <typename T> void fook();
+template <> void fook<void(bar const *)>() {}
+
+// CHECK-DAG: _ZN4foolILi3ELi7EE4qrd2EPN5snlqx4cqiv4nerxINS2_8lctrvokgIiLl3ELl7ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647ELl2147483647EEEN4qkla4qjgcILi0EEENS2_4ecnwINS2_4kuezINS6_3uraILi1EEEEESC_NS6_4ngslESE_SE_EEEE
+namespace qkla {
+template <int I> struct ura {};
+template <int I> struct qjgc {};
+struct ngsl {};
+};
+namespace snlqx {
+namespace cqiv {
+template <typename T1, typename T2, typename T3> struct nerx {};
+template <typename, long, long, long, long, long, long, long, long, long, long,
+          long, long, long, long, long, long, long, long, long, long>
+struct lctrvokg {};
+template <class C, class, class, class, class> struct ecnw {};
+template <class C> struct kuez {};
+};
+};
+template <int, int> struct fool {
+  void qrd2(snlqx::cqiv::nerx<
+      snlqx::cqiv::lctrvokg<int, 3l, 7l, 2147483647l, 2147483647l, 2147483647l,
+                           2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                           2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                           2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                           2147483647l, 2147483647l, 2147483647l>,
+      qkla::qjgc<0>,
+      snlqx::cqiv::ecnw<snlqx::cqiv::kuez<qkla::ura<1> >, qkla::ura<1>, qkla::ngsl,
+                       qkla::ngsl, qkla::ngsl> > *);
+};
+template <>
+void fool<3, 7>::qrd2(snlqx::cqiv::nerx<
+    snlqx::cqiv::lctrvokg<int, 3l, 7l, 2147483647l, 2147483647l, 2147483647l,
+                         2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                         2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                         2147483647l, 2147483647l, 2147483647l, 2147483647l,
+                         2147483647l, 2147483647l, 2147483647l>,
+    qkla::qjgc<0>,
+    snlqx::cqiv::ecnw<snlqx::cqiv::kuez<qkla::ura<1> >, qkla::ura<1>, qkla::ngsl,
+                     qkla::ngsl, qkla::ngsl> > *) {}
+
+// CHECK-DAG: _Z4foomiPFicE
+void foom(int, int(char)) {}
+
+// CHECK-DAG: _Z4fooniPFicE
+void foon(int, int (*)(char)) {}
+
+// CHECK-DAG: _Z4foooiRFicE
+void fooo(int, int (&)(char)) {}
+
+// CHECK-DAG: _Z4foopiOFicE
+void foop(int, int (&&)(char)) {}

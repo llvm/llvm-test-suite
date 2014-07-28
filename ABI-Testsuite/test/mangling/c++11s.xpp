@@ -1,0 +1,34 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+
+// References to declared entities
+// CHECK-DAG: _Z3fooc
+void foo(char) {}
+template <void (&)(char)> struct CB {};
+// CHECK-DAG: _Z3bar2CBILZ3foocEE
+void bar(CB<foo> cb) {}
+
+// CHECK-DAG: _Z4test3CB2ILZ7IsEmptyEE
+extern "C" bool IsEmpty(char *);
+template<bool (&)(char *)> struct CB2 {};
+void test(CB2<IsEmpty> cb) {}
+
+// CHECK-DAG: _Z3hhhI1QEDTpldtfp_1xdtL_Z1qE1xET_
+struct Q {int x; } q;
+template<class T> auto hhh(T p)->decltype(p.x + q.x);
+template <> auto hhh(Q p)->decltype(p.x + q.x) { return 0; }
+
+// CHECK-DAG: _Z3iiiI2Q1EDTpldtfp_1xL_ZN1Q1xEEET_
+struct Q1 {int x; } q1;
+template<class T> auto iii(T p)->decltype(p.x + Q::x);
+template<> auto iii(Q1 p)->decltype(p.x + Q::x) { return 0; }
+
+// CHECK-DAG: _Z3kkkI2S4EDTadsrT_miES1_
+struct S4 {
+    S4 operator-(S4 rhs) { return rhs; }
+};
+template<class T> auto kkk(T p)->decltype(&T::operator-);
+template<> auto kkk(S4 p)->decltype(&S4::operator-) { return 0; }

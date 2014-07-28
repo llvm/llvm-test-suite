@@ -1,0 +1,45 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+
+
+// long double (difference in format)
+// CHECK-DAG: _Z2g4IeEvRAszplcvT__ELe4001a000000000000000E_c
+template <class T> void g4(char (&buffer)[sizeof(T() + 5.0L)]) {}
+void call_g4() {
+  char buffer[sizeof(long double)];
+  g4<long double>(buffer);
+}
+
+
+// Literals in templates
+#include <cstddef>
+template <typename T, T I> T returnit() {return I;};
+enum colour { RED = -3, GREEN, BLUE};
+// use long type for enumeration
+enum bigcolour { YELLOW = (1l << 32), CYAN, MAGENTA};
+void callreturnit() {
+    // CHECK-DAG: _Z8returnitIiLi4EET_v
+    auto a = returnit<int, 4>();
+    // CHECK-DAG: _Z8returnitIjLj4EET_v
+    auto b = returnit<unsigned int, 4>();
+    // CHECK-DAG: _Z8returnitIlLl4EET_v
+    auto c = returnit<long, 4>();
+    // CHECK-DAG: _Z8returnitImLm4EET_v
+    auto d = returnit<unsigned long, 4>();
+    // CHECK-DAG: _Z8returnitIxLxn456789EET_v
+    auto e = returnit<long long, -456789>();
+    // CHECK-DAG: _Z8returnitIbLb1EET_v
+    auto f = returnit<bool, true>();
+    // CHECK-DAG: _Z8returnitIbLb0EET_v
+    auto g = returnit<bool, false>();
+    // CHECK-DAG: _Z8returnitIDnLDn0EET_v
+    auto n = returnit<std::nullptr_t, nullptr>();
+    // CHECK-DAG: _Z8returnitI6colourLS0_n2EET_v
+    auto cg = returnit<colour, GREEN>();
+    // LP64-DAG: _Z8returnitI9bigcolourLS0_4294967296EET_v
+    // ILP32-DAG: _Z8returnitI9bigcolourLS0_n2147483648EET_v
+    auto cy = returnit<bigcolour, YELLOW>();
+}

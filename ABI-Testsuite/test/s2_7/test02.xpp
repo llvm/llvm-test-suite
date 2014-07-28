@@ -1,0 +1,97 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 %s -c -o %t.o
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 %s -c -o %t.o -DEXTRAF=char
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 %s -c -o %t.o -DEXTRAF=short
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+// RUN: cxx_compiler cxx_11 %s -c -o %t.o -DEXTRAF=int
+// RUN: linker cxx_11 %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "TEST PASSED"
+
+#include <stdio.h>
+#include <new>
+
+// No cookie required for placement new
+
+#define BUFF_SIZE 1024
+#define ARRAY_LENGTH 5
+
+// Globals
+unsigned char alloc_buff[BUFF_SIZE];
+int new_calls = 0;
+int delete_calls = 0;
+
+void *operator new[](size_t size) { new_calls++; return alloc_buff; }
+void operator delete[](void *p) { delete_calls++; }
+
+struct non_trivial {
+#ifdef EXTRAF
+  EXTRAF m1;
+#endif
+  ~non_trivial() { }
+};
+
+struct array_cookie {
+  size_t element_count;
+};
+
+int new_test() {
+  int errors = 0;
+  non_trivial *ptr = new non_trivial[ARRAY_LENGTH];
+  
+  if((void *)ptr == (void *)alloc_buff) {
+    errors++;
+    printf("ERROR: new_test() pointers are equal!\n");
+  }
+
+  // Validate the cookie size
+  if(((unsigned char *)alloc_buff + sizeof(array_cookie)) != (unsigned char *)ptr) {
+    errors++;
+    printf("Cookie size incorrect (alloc_buff = 0x%p, ptr = 0x%p)\n", alloc_buff, ptr);
+  }
+  
+  // Validate the cookie contents
+  array_cookie *cookie = (array_cookie *)alloc_buff;
+  if(cookie->element_count != (size_t)ARRAY_LENGTH) {
+    errors++;
+    printf("Cookie value element_count incorrect, expected (%ld), got (%ld)\n", (size_t)ARRAY_LENGTH, cookie->element_count);
+  }
+  
+  delete [] ptr;
+  
+  return errors;
+}
+
+int placement_new_test() {
+  int errors = 0;
+  non_trivial *ptr = new (alloc_buff) non_trivial[ARRAY_LENGTH];
+
+  if((void *)ptr != (void *)alloc_buff) {
+    errors++;
+    printf("ERROR: new_test() pointers differ!\n");
+  }
+  
+  return errors;
+}
+
+int main(int argc, char *argv[]) {
+  int retval = 0;
+  
+  retval += new_test();
+  retval += placement_new_test();
+  
+  if(retval) {
+    printf("TEST FAILED\n");
+    retval = 1;
+  } else {
+    printf("TEST PASSED\n");
+    retval = 0;
+  }
+
+  return retval;
+}

@@ -1,0 +1,91 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// cv_qualifier_ordering
+// CHECK-DAG: _Z8functionRKi
+void function(int const &) {}
+
+// CHECK-DAG: _Z8functiooRVi
+void functioo(int volatile &) {}
+
+// Test that restrict is not generated as part of mangling
+// CHECK-DAG: _Z9function2Pi
+void function2(int * __restrict) {}
+
+// CHECK-DAG: _Z9function3Ri
+void function3(int & __restrict) {}
+
+// CHECK-DAG: _Z8functiopRK5param
+struct param {};
+void functiop(param const &) {}
+
+// CHECK-DAG: _Z8functioqRV5param
+void functioq(param volatile &) {}
+
+// CHECK-DAG: _ZNK5clash8functiotEv
+// CHECK-DAG: _ZNV5clash8functiouEv
+class clash {
+    void functiot() const;
+    void functiou() volatile;
+};
+void clash::functiot() const {}
+void clash::functiou() volatile {}
+
+// CHECK-DAG: _Z8functiowRVKi
+void functiow(int const volatile &){}
+
+// CHECK-DAG: _Z8functiox5paramRKS_
+void functiox(param, param const &) {}
+
+// CHECK-DAG: _Z8functioy5paramRVS_
+void functioy(param, param volatile &) {}
+
+// CHECK-DAG: _Z8functioa5paramS_6param2RKS0_
+class param2 {};
+void functioa(param, param, param2, param2 const &) {}
+
+// CHECK-DAG: _Z8functiob5paramS_6param2RVS0_
+void functiob(param, param, param2, param2 volatile &) {}
+
+// Restrict not part of mangling.
+// CHECK-DAG: _Z8functioz5paramRS_
+void functioz(param, param & __restrict) {}
+
+// CHECK-DAG: _Z8functioc5paramS_6param2RS0_
+void functioc(param, param, param2, param2 & __restrict) {}
+
+// type_qualifier_spacing
+// CHECK-DAG: _Z8functiodPi
+void functiod(int *) {};
+
+// CHECK-DAG: _Z8functioeRi
+void functioe(int &) {};
+
+// CHECK-DAG: _Z8functiofOi
+void functiof(int &&) {};
+
+// mixing_types_with_cv_qualifiers
+// CHECK-DAG: _Z8functiogPKi
+void functiog(int const *) {}
+
+// CHECK-DAG: _Z8functiohPi
+void functioh(int* const) {}
+
+// CHECK-DAG: _Z8functioiPKi
+void functioi(int const* const) {}
+
+// miscellaneous_qualifier_positioning
+// CHECK-DAG: _Z8functiojCf
+void functioj(float _Complex) {}
+
+// rvalue references
+// CHECK-DAG: _Z4foorOi
+void foor(int&&) {}
+
+// CHECK-DAG: _Z4foosOKi
+void foos(int const &&) {}
+
+// CHECK-DAG: _Z4footOVKi
+void foot(int volatile const &&) {}

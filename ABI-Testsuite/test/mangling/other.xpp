@@ -1,0 +1,91 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// Test for types as parameters
+// CHECK-DAG: _Z2f1w
+void f1(wchar_t) {}
+
+// CHECK-DAG: _Z2f2b
+void f2(bool) {}
+
+// CHECK-DAG: _Z2f3c
+void f3(char) {}
+
+// CHECK-DAG: _Z2f4a
+void f4(signed char) {}
+
+// CHECK-DAG: _Z2f5h
+void f5(unsigned char) {}
+
+// CHECK-DAG: _Z2f6s
+void f6(short) {}
+
+// CHECK-DAG: _Z2f7t
+void f7(unsigned short) {}
+
+// CHECK-DAG: _Z2f8i
+void f8(int) {}
+
+// CHECK-DAG: _Z2f9j
+void f9(unsigned int) {}
+
+// CHECK-DAG: _Z3f10l
+void f10(long) {}
+
+// CHECK-DAG: _Z3f11m
+void f11(unsigned long) {}
+
+// CHECK-DAG: _Z3f12x
+void f12(long long) {}
+
+// CHECK-DAG: _Z3f13y
+void f13(unsigned long long) {}
+
+// CHECK-DAG: _Z3f16f
+void f16(float) {}
+
+// CHECK-DAG: _Z3f17d
+void f17(double) {}
+
+// CHECK-DAG: _Z3f18e
+void f18(long double) {}
+
+// CHICK: _Z3f19g
+//void f19(__float128) {}
+
+// CHECK-DAG: _Z3f20z
+void f20(...) {}
+
+// decimal floating point types unsupported
+
+
+// CHECK-DAG: _Z3fooILi2EEvRAplT_Li1E_i
+template<int I> void foo (int (&)[I + 1]) { }
+template <> void foo<2> (int (&)[3]) {}
+
+// Template parameters
+// CHECK-DAG: _Z1fIiEvT_
+template<class T> void f(T) {}
+template <> void f(int) {};
+
+// "template parameter reference is a substitution candidate, distinct from the type (or other subsstitutible entity) that is the actual parameter."
+// CHECK-DAG: _Z3fooI3barET_S1_S0_S1_S0_
+class bar {};
+template <typename T> T foo(T, bar, T, bar);
+template <> bar foo<bar>(bar, bar, bar, bar) { bar b; return b; }
+
+// compression
+// CHECK-DAG: _Z1fPFvvEM1SFvvE
+typedef void T();
+struct S {};
+void f(T*, T (S::*)) {}
+
+// CHECK-DAG: _ZN1N1TIiiE2mfENS0_IddEE
+namespace N {
+    template <typename A, typename B> struct T {
+        void mf(N::T<double, double>);
+    };
+};
+template <> void N::T<int, int>::mf(N::T<double, double>) {}

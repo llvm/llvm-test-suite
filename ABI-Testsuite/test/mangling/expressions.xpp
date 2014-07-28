@@ -1,0 +1,246 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 cxx_rtti cxx_exceptions -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <typeinfo>
+
+template<class T, int N> struct S1 {};
+template<class T, T N> struct S2 {};
+
+// LP64-DAG: _Z1fIiEv2S1IT_Li16EE
+// ILP32-DAG: _Z1fIiEv2S1IT_Li12EE
+template<class T> void f(S1<T, sizeof(long double)>);
+ // The sizeof(...) is not instantiation-dependent, and converted to int:
+ // the result is encoded as "Li16E" for 16-byte long double types.
+template <> void f<int>(S1<int, sizeof(long double)>) {}
+
+// LP64-DAG: _Z1fIiEv2S2IT_XLm16EEE
+// ILP32-DAG: _Z1fIiEv2S2IT_XLj12EEE
+template<class T> void f(S2<T, sizeof(long double)>);
+ // The sizeof(...) is not instantiaion-dependent, and converted to an
+ // unknown type: the result is encoded as "Lm16E" for 16-byte long double
+ // types and std::size_t a synonom for "unsigned long".
+template <> void f<int>(S2<int, sizeof(long double)>) {}
+
+// CHECK-DAG: _Z1fIiEv2S2IT_XstPS1_EE
+template<class T> void f(S2<T, sizeof(T*)>);
+ // The sizeof(...) is instantiation-dependent (even though its value may
+ // be known if all pointers have the same size): It is encoded as "stPT_".
+template <> void f<int>(S2<int, sizeof(int*)>) {}
+
+// unary operator
+// CHECK-DAG: _Z2fhIiEvT_DTcofL0p_E
+template <typename T> void fh(T a, decltype(~a) p);
+template <> void fh<int>(int a, decltype(~a) p) {}
+
+// binary operator
+// CHECK-DAG: _Z2fgIiEvT_DTrmfL0p_Li4EE
+template <typename T> void fg(T a, decltype(a % 4) p);
+template <> void fg<int>(int a, decltype(a % 4) p) {}
+
+// ternary operator
+// CHECK-DAG: _Z2ffIiEvT_DTqufL0p_LA4_KcELA3_S1_EE
+template <typename T> void ff(T a, decltype(a ? "yes" : "no") p);
+template <> void ff<int>(int a, decltype(a ? "yes" : "no") p) {}
+
+// call
+// CHECK-DAG: _Z3fooIiEDTcl3barfp_LA4_KcEEET_
+auto bar(int x, const char *s)->decltype(s) { return s;}
+template<class T>  auto foo(T x) ->  decltype(bar(x, "abc"));
+template <> auto foo<int>(int x) -> decltype(bar(x, "abc")) { return 0; }
+
+// conversion with one argument
+// CHECK-DAG: _Z2ggIlLi3EEvPAcvT_T0__i
+template<class T, int N> void gg(int (*)[T(N)]) {}
+template <> void gg<long, 3>(int (*)[3l]) {} 
+
+// conversion with a different number of arguments
+// CHECK-DAG: _Z1hIiEvDTcmcvT__Ecvi_EE
+template <class T> void h(decltype(T(), int())) {}
+template <> void h<int>(int) {}
+
+// another conversion
+// CHECK-DAG: _Z2jjI1XEvDTcvT_Li1EE
+struct X {
+    X();
+    X(int);
+    int member;
+};
+template <typename T> void jj(decltype(T(1)) p) {}
+template <> void jj<X>(X) {}
+
+// new expression without initializer
+// CHECK-DAG: _Z2iiIiEvDTnw_T_EE
+template <typename T> void ii(decltype(new T) p) {}
+template <> void ii<int>(int*) {}
+
+// new expression with initializer
+// CHECK-DAG: _Z1jI1XEvDTnw_T_piLi1EEE
+template <typename T> void j(decltype(new T(1)) p) {}
+template <> void j<X>(X*) {}
+
+// CHECK-DAG: _Z1kI1XEvDTnw_T_ilLi1EEE
+template <typename T> void k(decltype(new T{1}) p) {}
+template <> void k<X>(X*) {}
+
+// array new expression without initializer
+// CHECK-DAG: _Z5iiiiiIiEvDTna_T_EE
+template <typename T> void iiiii(decltype(new T[5]) p) {}
+template <> void iiiii<int>(int*) {}
+
+// CHECK-DAG: _Z1lI1XEvDTna_T_EE
+template <typename T> void l(decltype(new T[6]) p);
+template <> void l<X>(X*) {}
+
+// array new expression with initializer
+// CHECK-DAG: _Z2llI1XEvDTna_T_piEE
+template <typename T> void ll(decltype(new T[7]()) p);
+template <> void ll<X>(X*) {}
+
+// CHECK-DAG: _Z1mI1XEvDTna_T_ilLi1ELi1EEE
+template <typename T> void m(decltype(new T[6]{1, 1}) p) {}
+template <> void m<X>(X*) {}
+
+// delete
+// CHECK-DAG: _Z1nIiEvPT_PDTdlfL0p_E
+template <typename T> void n(T* p, decltype(delete p)* p1) {}
+template <> void n<int>(int* p, void* p1) {}
+
+// array delete
+// CHECK-DAG: _Z1oIiEvPT_PDTdafL0p_E
+template <typename T> void o(T* p, decltype(delete[] p)* p1) {}
+template <> void o<int>(int* p, void* p1) {}
+
+// typeid(type)
+// CHECK-DAG: _Z1pIiEvDTtiT_E
+template <typename T> void p(decltype(typeid(T)));
+template <> void p<int>(decltype(typeid(int))) {}
+
+// typeid(expression)
+// CHECK-DAG: _Z1qIiEvDTtestT_E
+template <typename T> void q(decltype(typeid(sizeof(T))));
+template <> void q<int>(decltype(typeid(sizeof(int)))) {}
+
+// dynamic cast
+// CHECK-DAG: _Z2dyI1BEvDTcvPT_nw_1ApiEE
+class A { 
+    virtual void foo();
+    virtual ~A();
+};
+class B : public A {
+    virtual ~B();
+};
+template<class T> void dy(decltype(dynamic_cast<T*>(new A())));
+template <> void dy<B>(decltype(dynamic_cast<B*>(new A()))) {} 
+
+// static cast
+// CHECK-DAG: _Z2stIlLi3EEvPAcvT_T0__i
+template<class T, int N> void st(int (*)[static_cast<T>(N)]) {}
+template <> void st<long, 3>(int (*)[3l]) {} 
+
+// const cast
+// CHECK-DAG: _Z10intfactoryv
+// CHECK-DAG: _Z2coIRiEvDTcvT_clL_Z10intfactoryvEEE
+const int& cref_i = 5;
+const int& intfactory() { return cref_i; }
+template<class T> void co(decltype(const_cast<T>(intfactory())));
+template <> void co<int&>(decltype(const_cast<int&>(intfactory()))) {} 
+
+// reinterpret cast
+// CHECK-DAG: _Z2reIjLi3EEvDTcvPT_T0_E
+template<class T, int N> void re(decltype(reinterpret_cast<T*>(N)));
+template <> void re<unsigned , 3>(decltype(reinterpret_cast<unsigned*>(3))) {} 
+
+// sizeof type
+// sizeof expression
+// CHECK-DAG: _Z1fIiEv2S2IT_XplszstS1_Li1EEE
+template<class T> void f(S2<T, sizeof(sizeof(T)) + 1>);
+template <> void f<int>(S2<int, sizeof(sizeof(int)) + 1>) {}
+
+// alignof type
+// alignof expression
+// CHECK-DAG: _Z1fIiEv2S2IT_XplazatS1_Li2EEE
+template<class T> void f(S2<T, alignof(alignof(T)) + 2>);
+template <> void f<int>(S2<int, alignof(alignof(int)) + 2>) {}
+
+// noexcept expression
+// CHECK-DAG: _Z1fIiEvDTnxcvT__EE
+template<class T> void f(decltype(noexcept(T())));
+template <> void f<int>(decltype(noexcept(int()))) {}
+
+// dot
+// CHECK-DAG: _Z3dotI2S3EvT_DtdtfL0p_1aE
+struct S3 {
+    int a;
+};
+template <class T> void dot(T p, decltype(p.a));
+template <> void dot<S3>(S3, int) {}
+
+// arrow
+// CHECK-DAG: _Z5arrowI2S3EvPT_DtptfL0p_1aE
+template <class T> void arrow(T* p, decltype(p->a));
+template <> void arrow<S3>(S3*, int) {}
+
+// dotstar
+// CHECK-DAG: _Z1aI2X1MS0_iEvT_T0_DTdsfL0p_fL0p0_E
+template <class T, class U> void a(T x, U y, decltype(x.*y) );
+struct X1 {
+    int *m;
+};
+typedef int X1::*ptm;
+template <> void a<X1, ptm>(X1 x, ptm y, decltype(x.*y)) {}
+
+// size of a parameter pack
+// CHECK-DAG: _Z4soppIJEEv2S5IXsZT_EJDpRT_EE
+template<unsigned I, class... Types> struct S5 { };
+template<typename ...Types>
+void sopp(S5<sizeof...(Types), Types&...>) { }
+template <> void sopp(S5<0>) {}
+
+// CHECK-DAG: _Z4soppIJidEEv2S5IXsZT_EJDpRT_EE
+template <> void sopp<int, double>(S5<2, int&, double&>) {}
+
+// size of a function parameter pack
+// CHECK-DAG: _Z5sofppIJEEvDTsZT_EDpT_
+template<class... Types> void sofpp(decltype(sizeof...(Types)) count, Types...) {}
+template <> void sofpp<>(std::size_t count) {}
+// CHECK-DAG: _Z5sofppIJcifEEvDTsZT_EDpT_
+template <> void sofpp<char, int, float>(std::size_t count, char c, int i, float f) {}
+
+// pack expansion 
+// CHECK-DAG: _Z2peIJLi1ELi2ELi3EEEP9int_tupleIJXspT_EEEv
+template<int ...Values> struct int_tuple { };
+template<int ...Values> int_tuple<Values...>* pe() {}
+template <> int_tuple<1, 2, 3>* pe() { return new int_tuple<1, 2, 3>; }
+
+// throw expression
+// CHECK-DAG: _Z1tIiEvPT_PDTtwfL0p_E
+template <typename T> void t(T* p, decltype(throw p)* p1) {}
+template <> void t<int>(int* p, void* p1) {}
+
+// throw with no operand (rethrow)
+// CHECK-DAG: _Z2rtIiEvPT_PDTqufL0p_twfL0p_trE
+template <typename T> void rt(T* p, decltype(p ? throw p : throw)* p1) {}
+template <> void rt<int>(int* p, void* p1) {}
+
+// unresolved operator-function-id
+// The operator can be encoded using the "on" operator function-id mangling e.g. "DTclonplfp_fp_EE".
+// CHECK-DAG: _Z1gI2S4EDTclplfp_fp_EET_
+struct S4 {
+    S4(int a) {}
+};
+S4 operator+(S4 lhs, S4 rhs) { return rhs; }
+template <class T> auto g(T p1) -> decltype(operator+(p1,p1));
+template <> auto g<S4>(S4 p1) -> decltype(operator+(p1,p1)) { return 0; }
+
+// this expression
+// CHECK-DAG: _ZN1O1gIiEEDTcldtptfpT1m1fIT_EEEv
+struct M {
+    template <class T> T f();
+};
+struct O {
+    M m;
+    template <class T> auto g() -> decltype (this->m.f<T>());
+};
+template <> int O::g<int>() { return 0; }

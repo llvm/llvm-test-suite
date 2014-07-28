@@ -1,0 +1,43 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+class bar {};
+// return types
+// CHECK-DAG: _Z3fooI3barEPvv
+template <typename T> void* foo();
+template<> void* foo<bar>() { return 0; }
+
+// CHECK-DAG: _Z3fooI3barEKiv
+template <typename T> int const foo();
+template<> int const foo<bar>() { return 0; }
+
+// CHECK-DAG: _Z4foo2IiEPFivET_
+template <typename T> int (* foo2(T))();
+template <> int (* foo2<int>(int))() { return 0; }
+
+// CHECK-DAG: _Z4foo3IiEPFT_vES0_
+template <typename T> T (* foo3(T))();
+template <> int (* foo3<int>(int))() { return 0; }
+
+// CHECK-DAG: _Z4foo4IPFcvEET_S2_
+template <typename T> T foo4(T);
+template <> char (* foo4<char (*)()>(char (*)()))() { return 0; }
+
+// CHECK-DAG: _Z4foo5IPFcvEET_RKS2_
+template <typename T> T foo5(const T &);
+template <> char (* foo5<char (*)()>(char (* const&)()))() { return 0; }
+
+// CHECK-DAG: _Z4foo6IPFcvEEPT_RKS2_
+template <typename T> T* foo6(const T &);
+template <> char (** foo6<char (*)()>(char (* const&)()))() { return 0; }
+
+// CHECK-DAG: _Z4foo6IM3bazFvvEEPT_RKS3_
+class baz {};
+template <> void (baz::** foo6<void (baz::*)()>(void (baz::* const&)()))() { return 0; }
+
+// CHECK-DAG: _Z4foo6IM3bazcEPT_RKS2_
+template <> char baz::** foo6<char baz::*>(char baz::* const&) { return 0; }
+
+

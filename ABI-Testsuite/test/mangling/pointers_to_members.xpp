@@ -1,0 +1,37 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// member_function_pointers
+// CHECK-DAG: _Z1fM1AFvvE
+class A {};
+void f(void (A::*)()) {}
+
+// CHECK-DAG: _Z1fM1AKFvvE
+void f(void (A::*)() const) {}
+
+// CHECK-DAG: _Z3fooRKM3barFvvE
+class bar {};
+void foo(void (bar::* const&)()) {}
+
+// CHECK-DAG: _Z3fooRKM3barFvvES3_
+void foo(void (bar::* const&)(), void (bar::* const&)()) {}
+
+// CHECK-DAG: _Z3fooM3barFvvERKS1_
+void foo(void (bar::*)(), void (bar::* const&)()) {}
+
+// CHECK-DAG: _Z3fooIM3barFvvEEvRKT_
+template <typename T> void foo(T const&);
+template <> void foo<void (bar::*)()>(void (bar::* const&)()) {}
+
+// member_variable_pointers
+// CHECK-DAG: _Z3fooM3barb
+void foo(bool bar::*) {}
+
+// CHECK-DAG: _Z3fooIb3fopEvMT0_T_
+class fop {};
+template <typename T, class C> void foo(T C::*);
+template <> void foo<bool, fop>(bool fop::*) {}
+
+

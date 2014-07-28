@@ -1,0 +1,14 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <climits>
+
+template <unsigned long I> void foo4();
+
+// 64bit unsigned long
+// LP64-DAG: _Z4foo4ILm18446744073709551615EEvv
+// ILP32-DAG: _Z4foo4ILm4294967295EEvv
+template <> void foo4<ULONG_MAX>() {}
+

@@ -1,0 +1,118 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// CHECK-DAG: _ZdlPv
+void operator delete(void *) {}
+
+// CHECK-DAG: _ZdaPv
+void operator delete[](void *) {}
+
+// General structures for operands.
+struct operand {};
+struct operations {
+    void operator= (operand);
+    void operator->* (operand);
+    void operator-> ();
+    void operator() (operand);
+    void operator[] (operand);
+};
+// CHECK-DAG: _Zps7operand
+void operator+ (operand) {}
+// CHECK-DAG: _Zng7operand
+void operator- (operand) {}
+// CHECK-DAG: _Zad7operand
+void operator& (operand) {}
+// CHECK-DAG: _Zde7operand
+void operator* (operand) {}
+// CHECK-DAG: _Zco7operand
+void operator~ (operand) {}
+// CHECK-DAG: _Zpl7operandS_
+void operator+ (operand, operand) {}
+// CHECK-DAG: _Zmi7operandS_
+void operator- (operand, operand) {}
+// CHECK-DAG: _Zml7operandS_
+void operator* (operand, operand) {}
+// CHECK-DAG: _Zdv7operandS_
+void operator/ (operand, operand) {}
+// CHECK-DAG: _Zrm7operandS_
+void operator% (operand, operand) {}
+// CHECK-DAG: _Zan7operandS_
+void operator& (operand, operand) {}
+// CHECK-DAG: _Zor7operandS_
+void operator| (operand, operand) {}
+// CHECK-DAG: _Zeo7operandS_
+void operator^ (operand, operand) {}
+// CHECK-DAG: _ZN10operationsaSE7operand
+void operations::operator= (operand) {}
+// CHECK-DAG: _ZpL7operandS_
+void operator+= (operand, operand) {}
+// CHECK-DAG: _ZmI7operandS_
+void operator-= (operand, operand) {}
+// CHECK-DAG: _ZmL7operandS_
+void operator*= (operand, operand) {}
+// CHECK-DAG: _ZdV7operandS_
+void operator/= (operand, operand) {}
+// CHECK-DAG: _ZrM7operandS_
+void operator%= (operand, operand) {}
+// CHECK-DAG: _ZaN7operandS_
+void operator&= (operand, operand) {}
+// CHECK-DAG: _ZoR7operandS_
+void operator|= (operand, operand) {}
+// CHECK-DAG: _ZeO7operandS_
+void operator^= (operand, operand) {}
+// CHECK-DAG: _Zls7operandS_
+void operator<< (operand, operand) {}
+// CHECK-DAG: _Zrs7operandS_
+void operator>> (operand, operand) {}
+// CHECK-DAG: _ZlS7operandS_
+void operator<<= (operand, operand) {}
+// CHECK-DAG: _ZrS7operandS_
+void operator>>= (operand, operand) {}
+// CHECK-DAG: _Zeq7operandS_
+void operator== (operand, operand) {}
+// CHECK-DAG: _Zne7operandS_
+void operator!= (operand, operand) {}
+// CHECK-DAG: _Zlt7operandS_
+void operator< (operand, operand) {}
+// CHECK-DAG: _Zgt7operandS_
+void operator> (operand, operand) {}
+// CHECK-DAG: _Zle7operandS_
+void operator<= (operand, operand) {}
+// CHECK-DAG: _Zge7operandS_
+void operator>= (operand, operand) {}
+// CHECK-DAG: _Znt7operand
+void operator! (operand) {}
+// CHECK-DAG: _Zaa7operandS_
+void operator&& (operand, operand) {}
+// CHECK-DAG: _Zoo7operandS_
+void operator|| (operand, operand) {}
+// CHECK-DAG: _Zpp7operand
+void operator++ (operand) {}
+// CHECK-DAG: _Zmm7operand
+void operator-- (operand) {}
+// CHECK-DAG: _Zcm7operandS_
+void operator, (operand, operand) {}
+// CHECK-DAG: _ZN10operationspmE7operand
+void operations::operator->* (operand) {}
+// CHECK-DAG: _ZN10operationsptE
+void operations::operator-> () {}
+// CHECK-DAG: _ZN10operationsclE7operand
+void operations::operator() (operand) {}
+// CHECK-DAG: _ZN10operationsixE7operand
+void operations::operator[] (operand) {}
+
+struct Type {};
+struct castable {
+    operator float();
+    operator char const *();
+    operator Type();
+};
+// CHECK-DAG: _ZN8castablecvfEv
+castable::operator float() { return 1.0f; }
+// CHECK-DAG: _ZN8castablecvPKcEv
+castable::operator char const*() { return "this"; }
+// CHECK-DAG: _ZN8castablecv4TypeEv
+castable::operator Type() { return Type(); }
+

@@ -1,0 +1,58 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+/*
+ *
+ * test14.c:
+ *   - C++ source code
+ *   - Static destructor
+ *   - GCC destructor
+ *   - GCC destructors using priority
+ *
+ * Expected output and order:
+ *   In BBBB()
+ *   In AAAA()
+ *   In main()
+ *   In foobarbaz()
+ *   In bar()
+ *   In ~AAAA()
+ *   In baz()
+ *   In ~BBBB()
+ *   In foo()
+ *
+ *   :BBBB():AAAA():main():foobarbaz():bar():~AAAA():baz():~BBBB():foo()
+ */
+
+// RUN: cxx_compiler %s -c -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.out | FileCheck %s
+
+// CHECK: :foo():BBBB():baz():AAAA():bar():foobarbaz():main():~AAAA():~BBBB()
+
+#include <stdio.h>
+
+struct AAAA {
+  AAAA() { printf(":AAAA()"); }
+  ~AAAA() { printf(":~AAAA()"); }
+};
+
+struct BBBB {
+  BBBB() { printf(":BBBB()"); }
+  ~BBBB() { printf(":~BBBB()"); }
+};
+
+AAAA one __attribute__ ((init_priority(3000)));
+BBBB two __attribute__ ((init_priority(2000)));
+
+__attribute__((constructor(1500))) void foo() { printf(":foo()"); }
+
+__attribute__((constructor(3500))) void bar() { printf(":bar()"); }
+
+__attribute__((constructor(2500))) void baz() { printf(":baz()"); }
+
+__attribute__((constructor)) void foobarbaz() { printf(":foobarbaz()"); }
+
+int main()
+{
+  printf(":main()");
+  return 0;
+}

@@ -1,0 +1,18 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// CHECK: _ZN3FooUt_3barEv
+
+struct Foo {
+    struct {
+        int x;
+        void bar() {}
+    } name;
+};
+
+int main() {
+    Foo f;
+    f.name.bar();
+}

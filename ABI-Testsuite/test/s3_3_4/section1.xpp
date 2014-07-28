@@ -1,0 +1,38 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c cxx_rtti cxx_exceptions %s -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.out | FileCheck %s
+
+#include <stdio.h>
+
+// 3.3.4.1 - File scope objects in a single object file are constructed in declaration order
+
+struct A { A() { printf("In %s()\n", __FUNCTION__); } };
+struct B { B() { printf("In %s()\n", __FUNCTION__); } };
+struct C { C() { printf("In %s()\n", __FUNCTION__); } };
+struct D { D() { printf("In %s()\n", __FUNCTION__); } };
+struct E { E() { printf("In %s()\n", __FUNCTION__); } };
+typedef A F;
+
+// CHECK: In A()
+// CHECK: In B()
+// CHECK: In D()
+// CHECK: In C()
+// CHECK: In B()
+// CHECK: In A()
+// CHECK: In E()
+// CHECK: In main()
+
+A v01;
+B v02;
+D v03;
+C v04;
+static B v05;
+F v06;
+E v07;
+
+int main(int argc, char *argv[]) {
+  printf("In %s()\n", __FUNCTION__);
+  return 0;
+}

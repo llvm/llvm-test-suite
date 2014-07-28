@@ -1,0 +1,9 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// CHECK-DAG: _Z4funcILi4EE4struIXT_EERKS1_
+template <int I> struct stru {};
+template <int I> stru<I> func(stru<I> const&);
+template <> stru<4> func<4>(stru<4> const&) { stru<4> w; return w; }

@@ -1,0 +1,72 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s cxx_rtti -o %t1.o
+// RUN: linker -o %t%exeext %t1.o
+// RUN: runtool %t%exeext | grep "PASSED"
+
+// test case from ABI testsuite
+#include "../common/select2.h"
+/*
+Test case for sharing virtual bases.
+In Most_Derived,
+the primary base class is Nonvirt1,
+Nonvirt2 and Nonvirt3 share vptrs with
+virtual base Shared_Virt.  Shared_Virt
+should be at the same offset as Nonvirt2.
+Should get:
+67% a.out
+(long)(Nonvirt1 *)dd - (long)dd = 0
+(long)(Nonvirt2 *)dd - (long)dd = 8
+(long)(Nonvirt3 *)dd - (long)dd = 16
+(long)(Shared_Virt *)dd - (long)dd = 8
+*/
+
+struct Shared_Virt {
+    virtual void foo();
+};
+struct Nonvirt2 : virtual Shared_Virt {
+        virtual void bar();
+};
+struct Nonvirt3 : virtual Shared_Virt {
+        virtual void baz();
+};
+struct Nonvirt1 {
+        virtual void foo();
+};
+
+struct Most_Derived : Nonvirt1, Nonvirt2, Nonvirt3 {
+        virtual void bar();
+};
+
+void Shared_Virt::foo() { }
+void Nonvirt2::bar() { }
+void Nonvirt3::baz() { }
+void Nonvirt1::foo() { }
+void Most_Derived::bar() { }
+
+extern "C" int printf(const char *,...);
+//#define EVAL(EXPR) printf( #EXPR " = %d\n", (EXPR) );
+
+static int nerr;
+static void evalf(int expected, const char *str, int val)
+{
+  expected /= LPSELECT(1,2); //representing the size difference of pointers
+  if (expected != val) {
+    printf("ERROR: expected %d. ", expected);
+    nerr++;
+  }
+  printf(str, val);
+}
+#define EVAL(v,EXPR) evalf(v,  #EXPR " = %d\n", (int) (EXPR) );
+
+int main()
+{
+  Most_Derived *dd = new Most_Derived;
+  EVAL(0, (long)(Nonvirt1 *)dd - (long)dd);
+  EVAL(8, (long)(Nonvirt2 *)dd - (long)dd);
+  EVAL(16, (long)(Nonvirt3 *)dd - (long)dd);
+  EVAL(8, (long)(Shared_Virt *)dd - (long)dd);
+  printf("%s\n", nerr ? "FAILED" : "PASSED");
+  
+}
+

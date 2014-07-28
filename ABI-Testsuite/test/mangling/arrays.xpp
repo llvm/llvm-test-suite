@@ -1,0 +1,40 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// arrays
+// CHECK-DAG: _Z3bazRA6_i
+void baz(int (&) [6]) {}
+
+// CHECK-DAG: _Z4barcILi6EEvRAT__i
+template <int n> void barc(int (&) [n]);
+template <> void barc<6>(int (&) [6]) {}
+
+// CHECK-DAG: _Z3razRA6_A3_i
+void raz(int (&) [6] [3]) {}
+
+// CHECK-DAG: _Z3razRA3_iRA3_S_
+void raz(int (&) [3], int (&) [3] [3]) {}
+
+// CHECK-DAG: _Z3fooIfEvRAplstT_Li1E_i
+template <typename T> void foo(int (&) [((sizeof (T))+1)]);
+template <> void foo<float>(int (&) [((sizeof (float))+1)]) {}
+
+// CHECK-DAG: _Z3fooIA5_iEvv
+template <typename T> void foo();
+template <> void foo<int [5]>() {}
+
+// CHECK-DAG: _Z3fooIA5_iEvPT_
+template <typename T> void foo(T*);
+template <> void foo<int [5]>(int (*) [5]) {}
+
+// CHECK-DAG: _Z3fooIA5_iEvT_PS1_
+template <typename T> void foo(T, T*);
+template <> void foo<int [5]>(int [5], int (*) [5]) {}
+
+// CHECK-DAG: _Z3fooIA5_iEPT_v
+template <typename T> T* foo();
+template <> int (* foo<int [5]>()) [5] { return 0;}
+
+

@@ -1,0 +1,41 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <climits>
+
+// CHECK: _Z3fooILi6EEvv
+template <int I> void foo();
+template <> void foo<6>() {}
+
+// CHECK: _Z3fooILin6EEvv
+template <> void foo<-6>() {}
+
+// CHECK: _Z4foo2ILj6EEvv
+template <unsigned int I> void foo2();
+template <> void foo2<6u>() {}
+
+// CHECK: _Z4foo3ILl6EEvv
+template <long I> void foo3();
+template <> void foo3<6l>() {}
+
+// CHECK: _Z4foo4ILm6EEvv
+template <unsigned long I> void foo4();
+template <> void foo4<6ul>() {}
+
+
+// CHECK: _Z4foo5ILx6EEvv
+template <long long I> void foo5();
+template <> void foo5<6ll>() {}
+
+// CHECK: _Z4foo6ILy6EEvv
+template <unsigned long long I> void foo6();
+template <> void foo6<6ull>() {}
+
+// CHECK: _Z4foo7ILb0EEvv
+template <bool I> void foo7();
+template <> void foo7<0>() {}
+
+// CHECK: _Z4foo7ILb1EEvv
+template <> void foo7<1>() {}

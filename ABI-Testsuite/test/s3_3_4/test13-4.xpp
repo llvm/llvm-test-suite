@@ -1,0 +1,55 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+/*
+ *
+ * test13-4.c:
+ *   - C++ source code
+ *   - Static destructor
+ *   - GCC destructors using priority
+ *   - GCC init_priority attributes
+ *
+ * Expected output and order:
+ *   In AAAA()
+ *   In BBBB()
+ *   In main()
+ *   In ~BBBB()
+ *   In ~AAAA()
+ *   In bar()
+ *   In baz()
+ *   In foo()
+ *
+ *   :AAAA():BBBB():main():~BBBB():~AAAA():bar():baz():foo()
+ */
+
+// RUN: cxx_compiler %s -c -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.out | FileCheck %s
+
+// CHECK: :foo():baz():bar():AAAA():BBBB():main():~BBBB():~AAAA()
+
+#include <stdio.h>
+
+struct AAAA {
+  AAAA() { printf(":AAAA()"); }
+  ~AAAA() { printf(":~AAAA()"); }
+};
+
+struct BBBB {
+  BBBB() { printf(":BBBB()"); }
+  ~BBBB() { printf(":~BBBB()"); }
+};
+
+AAAA one __attribute__ ((init_priority(4000)));
+BBBB two;
+
+__attribute__((constructor(1500))) void foo() { printf(":foo()"); }
+
+__attribute__((constructor(3500))) void bar() { printf(":bar()"); }
+
+__attribute__((constructor(2500))) void baz() { printf(":baz()"); }
+
+int main()
+{
+  printf(":main()");
+  return 0;
+}

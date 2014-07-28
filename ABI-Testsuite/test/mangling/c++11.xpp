@@ -1,0 +1,144 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <cstddef>
+// CHECK-DAG: _Z3f24Dn
+void f24(std::nullptr_t) {}
+
+// decltype
+// CHECK-DAG: _Z3f25ILi3EEvDtT_E
+template <int I> void f25(decltype(I));
+template<> void f25<3>(int) {}
+
+// CHECK-DAG: _Z1FIiEDTcl1gfp_EET_
+void g(int);
+template <class T> auto F(T p)->decltype(g(p));
+// return type in the mangling of the template signature is encoded as DTcl1gfp_E
+template <> auto F(int p)->decltype(g(p)) {}
+
+// CHECK-DAG: _Z1fN1SUt_E
+struct S { static struct {} x; };
+typedef decltype(S::x) TX;
+void f(TX) {}
+
+// CHECK-DAG: _ZN1S1xE
+TX S::x;
+
+// Function parameter references
+// CHECK-DAG: _Z1fIiEvT_DtfL0p_E
+template <class T> void f(T p, decltype(p));
+template <> void f(int p, decltype(p)) {}
+
+// CHECK-DAG: _Z1gIiEvT_PFDtfL0p_EvE
+template <class T> void g(T p, decltype(p) (*)());
+template <> void g(int p, decltype(p) (*)()) {}
+
+// CHECK-DAG: _Z1hIiEvT_PFDtfL0p_EvE
+template <class T> void h(T p, auto (*)()->decltype(p));
+template <> void h(int p, auto (*)()->decltype(p)) {}
+
+// CHECK-DAG: _Z1iIiEvT_PFDtfp_ES0_E
+template <class T> void i(T p, auto (*)(T q)->decltype(q));
+template <> void i(int p, auto (*)(int q)->decltype(q)) {}
+
+// CHECK-DAG: _Z1jIiEvT_PFS0_DtfL1p_EE
+template <class T> void j(T p, auto (*)(decltype(p))->T);
+template <> void j(int p, auto (*)(decltype(p))->int) {}
+
+// CHECK-DAG: _Z1kIiEvT_PFPAszfL0p__iS0_E
+template <class T> void k(T p, int (*(*)(T p))[sizeof(p)]);
+template <> void k(int p, int (*(*)(int p))[sizeof(p)]) {}
+
+// CHECK-DAG: _Z1lIiEvT_PDtfL0pK_E
+template<typename T> void l(T const p, decltype(p)*);
+template <> void l(int p, int const *) {}
+
+// Multiple function parameter references
+// CHECK-DAG: _Z1mIiEvT_DtfL0p_ES0_DtfL0p1_E
+template <class T> void m(T p, decltype(p), T q, decltype(q));
+template <> void m(int p, decltype(p), int q, decltype(q)) {}
+
+// CHECK-DAG: _Z1nIiEvT_PFDtfp0_ES0_S0_E
+template <class T> void n(T p, auto (*)(T q, T r)->decltype(r));
+template <> void n(int p, auto (*)(int q, int r)->decltype(r)) {}
+
+// CHECK-DAG: _Z1oIiEvfT_PFDtfp0_EcS0_EPFDtfL0p0_ES0_E
+template <class T> void o(float f, T p, auto (*)(char c, T q)->decltype(q), auto (*)(T q)->decltype(p));
+template <> void o(float f, int p, auto (*)(char c, int q)->decltype(q), auto (*)(int q)->decltype(p)) {}
+
+
+// CHECK-DAG: _Z3fffIP2S2EDtptfp_1xET_
+struct S2 { long double x; };
+template<class T> auto fff(T p)->decltype(p->x);
+template <> auto fff(S2 *p)->decltype(p->x) { return 0; }
+
+// CHECK-DAG: _Z3gggIN1N1XEEDtsrNT_1XE1yES2_
+namespace N {
+    struct X {
+        long y;
+    };
+}
+template<class T> auto ggg(T p)->decltype(T::X::y);
+template<> auto ggg(N::X p)->decltype(N::X::y) { return 0; }
+
+// CHECK-DAG: _ZN1A1fIPNS_1DEEEDtptfp_gssr1A1BE1xET_
+namespace A {
+    struct B { int x; };
+    struct D : public B {};
+    template<class T> auto f(T p)->decltype(p->::A::B::x);
+    template <> auto f<D*>(D* p)->decltype(p->::A::B::x) { return 0; }
+}
+
+// CHECK-DAG: _Z3hhhI1QEDTpldtfp_1xdtL_Z1qE1xET_
+struct Q {int x; } q;
+template<class T> auto hhh(T p)->decltype(p.x + q.x);
+template <> auto hhh(Q p)->decltype(p.x + q.x) { return 0; }
+
+// CHECK-DAG: _Z3jjjIiEDTplfp_dtL_Z1dEsr1B1XIT_EE1xES0_
+template<class T> struct X { static T x; };
+struct B: X<int> {};
+struct D: B {} d;
+template<class T> auto jjj(T p)->decltype(p+d.B::X<T>::x);
+template<> auto jjj(int p)->decltype(p+d.B::X<int>::x) { return 0; }
+
+// new auto
+// CHECK-DAG: _Z2kkIN1N1XEEvDTnw_DapicvT__EEE
+template <typename T> void kk(decltype(new auto(T())) p) {}
+template <> void kk<N::X>(N::X*) {}
+
+// CHECK-DAG: _Z4foouDs
+void foou(char16_t) {}
+
+// CHECK-DAG: _Z4foouDi
+void foou(char32_t) {}
+
+namespace C {
+    struct XX {
+        struct Y {
+        };
+    };
+    struct Z {
+        XX x;
+    };
+    // CHECK-DAG: _ZN1C1fIPNS_1ZEEENDtptfp_1xE1YET_
+    template<class T> auto f(T p)->typename decltype(p->x)::Y;
+    template <> auto f<Z*>(Z* p)->decltype(p->x)::Y {}
+    // CHECK-DAG: _ZN1C1fIPNS_1ZEEEvT_NDtptfL0p_1xE1YE
+    template<class T> void f(T p, typename decltype(p->x)::Y);
+    template <> void f<Z*>(Z* p, decltype(p->x)::Y) {}
+};
+
+// CHECK-DAG: _Zli8_literaly
+unsigned long long operator"" _literal(unsigned long long i) { return i; }
+
+// compiles on clang but not on g++
+// is an example in the ABI document.
+// ref-qualifier from n2439
+// CHECK-DAG: _Z1fM2A2KFvvRE
+struct A2 {};
+void f(void (A2::*)() const &) {}
+
+// CHECK-DAG: _Z1fM2A2KFvvOE
+void f(void (A2::*)() const &&) {}

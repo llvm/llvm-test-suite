@@ -1,0 +1,21 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c cxx_rtti cxx_exceptions %s -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: bindump %t.o| FileCheck %s
+
+// Test run-time library includes support for builtin type "bool"
+
+bool global_var = true;
+bool const *global_ptr;
+
+// CHECK-DAG: _ZTIb
+void foo1() { throw global_var; }
+// CHECK-DAG: _ZTIPb
+void foo2() { throw &global_var; }
+// CHECK-DAG: _ZTIPKb
+void foo3() { throw global_ptr; }
+
+int main(int argc, char *argv[]) {
+  return 0;
+}

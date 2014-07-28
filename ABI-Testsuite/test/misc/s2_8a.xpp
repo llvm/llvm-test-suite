@@ -1,0 +1,50 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -S %s -o %t.s
+// RUN: cat %t.s | FileCheck prefixes %s
+// init guard of plain global static var
+// init guard of function local statis var
+// init guard of template instance
+// check that guard var gets reset by exception
+
+
+
+// CHECK-DAG: .size	_ZGVZ4addxIfET_S0_S0_E1p, 8
+// CHECK-DAG: .size	_ZGVZ3fooiiE1r, 8
+// CHECK-DAG: call{{.*}}	__cxa_guard_acquire
+// CHECK-DAG: call{{.*}}	__cxa_guard_release
+//
+// the static variables themselves
+// CHECK-DAG: .size	_ZZ4addxIfET_S0_S0_E1p,{{ *}}4
+// CHECK-DAG: .size	_ZZ3fooiiE1r,{{ *}}4
+// CHECK-DAG: _ZGVN4pairIiE5countE
+// 
+inline int foo(int p, int q)
+{
+  static int r = q;
+  return p + r;
+}
+
+int bar(int x)
+{
+  return foo(x, x);
+}
+
+template <class T> T addx(T x, T y) {
+  static T p = y;
+  return x + p;
+}
+
+float bar(float x)
+{
+  return addx(x, x);
+}
+template <class T > struct pair {
+    T l, r;
+    static int count;
+};
+int q=123;
+template <class T> int pair<T>::count = q++;
+int w1 = pair<int>::count;
+int x1 = pair<int>::count;
+

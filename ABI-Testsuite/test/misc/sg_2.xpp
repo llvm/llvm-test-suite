@@ -1,0 +1,91 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s cxx_rtti -o %t1.o
+// RUN: linker -o %t%exeext %t1.o
+// RUN: runtool %t%exeext | grep "PASSED"
+
+
+
+
+// check that __cxa_guard_acuire, __cxa_gaurd_release and __cxa_guard_abort are doing 
+// their jobs
+//
+//
+
+extern "C" {
+  int printf(const char *, ...);
+  int __cxa_guard_acquire(long long *);
+  void __cxa_guard_release(long long *);
+  void __cxa_guard_abort(long long *);
+}
+
+#if 0
+
+extern "C" int __cxa_guard_acquire ( __int64_t *guard_object );
+
+    Returns 1 if the initialization is not yet complete; 0 otherwise. This function is called before initialization takes place. If this function returns 1, either __cxa_guard_release or __cxa_guard_abort must be called with the same argument. The first byte of the guard_object is not modified by this function.
+
+    A thread-safe implementation will probably guard access to the first byte of the guard_object with a mutex. If this function returns 1, the mutex will have been acquired by the calling thread.
+
+extern "C" void __cxa_guard_release ( __int64_t *guard_object );
+
+    Sets the first byte of the guard object to a non-zero value. This function is called after initialization is complete.
+
+    A thread-safe implementation will release the mutex acquired by __cxa_guard_acquire after setting the first byte of the guard object.
+
+extern "C" void __cxa_guard_abort ( __int64_t *guard_object );
+
+    This function is called if the initialization terminates by throwing an exception.
+
+    A thread-safe implementation will release the mutex acquired by __cxa_guard_acquire.
+
+<b>NOTE</b>:
+
+#endif
+
+static int nerr;
+#define ERR(a) {printf("@%d %s\n", __LINE__, a); nerr++;}
+
+int main()
+{
+   long long gv = 0, gv2 = 0;
+   unsigned char *gp = (unsigned char *) &gv;
+   // simple case aquire should succeed and return 1. 
+
+   if (!__cxa_guard_acquire(&gv)) ERR("FAILED TO ACQUIRE");
+
+   if (gp[0]) ERR("Lowest byte of the Guard var set prematurely");
+   // other buytes could be set at this point
+
+   // now release
+   __cxa_guard_release(&gv);
+   if (!gv) ERR("Guard var not set"); 
+   if (!gp[0]) ERR("first byte 0");
+   if (gp[1]||gp[2]||gp[3]||gp[4]||gp[5]||gp[6]||gp[7]) ERR("Other bytes set");
+
+   long long gs = gv;
+
+   // A second call should fail
+   if (__cxa_guard_acquire(&gv)) ERR("Acquired again")
+   
+   // should not change gv
+   if (gs != gv) ERR("gv changed by a failing call");
+
+   // now test abort
+   gp = (unsigned char *)&gv2;
+   if (!__cxa_guard_acquire(&gv2)) ERR("FAILED TO ACQUIRE gv2");
+   if (gp[0]) ERR("Lowest byte of the Guard var set prematurely");
+
+   __cxa_guard_abort(&gv2);
+   if (gv2) ERR("Guard var set by abort ");
+   if (!__cxa_guard_acquire(&gv2)) ERR("FAILED TO ACQUIRE gv2");
+   if (gp[0]) ERR("Lowest byte of the Guard var set prematurely");
+
+   // now release
+   __cxa_guard_release(&gv2);
+   if (!gv2) ERR("Guard var not set"); 
+   if (!gp[0]) ERR("first byte 0");
+   if (gp[1]||gp[2]||gp[3]||gp[4]||gp[5]||gp[6]||gp[7]) ERR("Other bytes set");
+   printf("%s\n", nerr ? "FAILED" : "PASSED");
+   return nerr;
+}

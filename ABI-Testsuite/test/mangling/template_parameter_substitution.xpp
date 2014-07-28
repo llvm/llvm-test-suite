@@ -1,0 +1,93 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// template_parameter_substitution
+
+struct bar {};
+
+// CHECK-DAG: _Z3fooI3barEvT_
+template <typename T> void foo(T);
+template <> void foo<bar>(bar) {}
+
+// CHECK-DAG: _Z3fooI3barET_S1_
+template <typename T> T foo(T);
+template <> bar foo<bar>(bar) { bar b; return b; }
+
+// CHECK-DAG: _Z3fooIh3barET_T0_
+template <typename T, typename U> T foo(U);
+template <> unsigned char foo<unsigned char, bar>(bar) { return 0; }
+
+// CHECK-DAG: _ZN4testIcE3bazIiEEcT_
+template <typename T> struct test {
+    template <typename U> T baz(U);
+};
+template <> template <> char test<char>::baz<int>(int) { return 0; }
+
+// CHECK-DAG: _Z3fooI3basIiEjEvT_T0_
+template <typename T> struct bas {};
+template <class C, typename U> void foo(C, U);
+template <> void foo<bas<int>, unsigned int>(bas<int>, unsigned int) {}
+
+// CHECK-DAG: _Z4foo1I3barEPvv
+template <typename T> void * foo1();
+template <> void* foo1<bar>() { return 0; }
+
+// CHECK-DAG: _Z4foo2I3barEKcv
+template <typename T> char const foo2();
+template <> char const foo2<bar>() { return 0; }
+
+// CHECK-DAG: _Z4foo3ILi2EEv3batIXT_EE
+template <int I> struct bat {};
+template <int I> void foo3(bat<I>);
+template <> void foo3<2>(bat<2>) {}
+
+// CHECK-DAG: _Z4foo4Ih1SEPT_RT0_PKcS6_
+struct S {};
+template <typename T, class C> T* foo4(C&, char const*, char const*);
+template <> unsigned char* foo4<unsigned char, S>(S&, char const*, char const*) { return 0; }
+
+// CHECK-DAG: _Z4foo5IfcEvT_PFiT0_E
+template <typename T, typename U> void foo5(T, int (*)(U));
+template <> void foo5<float, char>(float, int (*)(char)) {}
+
+// CHECK-DAG: _Z3fudIcLi1EEvT_PAT0__PFiS0_E
+template <typename T, int I> void fud(T, int (* (*) [I])(T));
+template <> void fud<char, 1>(char, int (* (*) [1])(char)) {}
+
+// CHECK-DAG: _Z5OuterI5InnerIfEEiT_
+template <typename T> struct Inner {};
+template <typename U> int Outer(U);
+template <> int Outer<Inner<float> >(Inner<float>) { return 0; }
+
+// parameter packs
+// CHECK-DAG: _Z4foo6IJEEvi
+template<class... Types> void foo6(int);
+template <> void foo6<>(int) {}
+
+// CHECK-DAG: _Z4foo7IiJEEvf
+template<typename, class... Types> void foo7(float);
+template <> void foo7<int>(float) {}
+
+// CHECK-DAG: _Z4foo8IJjlEEvi
+template<class... Types> void foo8(int);
+template <> void foo8<unsigned int, long>(int) {}
+
+// CHECK-DAG: _Z4foo9IfJjlEEvi
+template<typename, class... Types> void foo9(int);
+template <> void foo9<float, unsigned int, long>(int) {}
+
+// CHECK-DAG: _Z5foo10IjJlEERT_PS0_
+template <typename T, class... Types> T& foo10(T*);
+template <> unsigned int& foo10<unsigned int, long>(unsigned int* a) { return (unsigned int&)a; }
+
+// CHECK-DAG: _Z5foo11IJifPcEEvDpT_
+template <typename... Types> void foo11(Types...);
+template <> void foo11<int, float, char*>(int, float, char*) {}
+
+// CHECK-DAG: _Z5foo12IiJf3bauIcJlEEEEvRT_
+template <typename T, typename ...Types> struct bau {};
+template <typename T, typename ...Types> void foo12(T&);
+template <> void foo12<int, float, bau<char, long> >(int&) {}
+

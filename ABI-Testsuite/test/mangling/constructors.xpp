@@ -1,0 +1,39 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+// CHECK-DAG: _ZN3fooC1Ev
+// CHECK-DAG: _ZN3fooC2Ev
+// CHECK-DAG: _ZN3fooD0Ev
+// CHECK-DAG: _ZN3fooD1Ev
+// CHECK-DAG: _ZN3fooD2Ev
+struct foo {
+    foo();
+    virtual ~foo();
+};
+
+foo::foo(){}
+foo::~foo(){}
+
+// CHECK-DAG: _ZN4baseC1Ev
+// CHECK-DAG: _ZN4baseC2Ev
+// CHECK-DAG: _ZN4baseD0Ev
+// CHECK-DAG: _ZN4baseD1Ev
+// CHECK-DAG: _ZN4baseD2Ev
+struct base {
+    base() ;
+    virtual ~base() ;
+};
+
+base::base(){}
+base::~base(){}
+
+struct derived : base {};
+
+int main() {
+    foo f = foo();
+    base b = base();
+    derived d = derived();
+    return 0;
+}

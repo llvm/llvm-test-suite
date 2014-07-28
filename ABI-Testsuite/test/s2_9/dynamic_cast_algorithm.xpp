@@ -1,0 +1,140 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler -c cxx_rtti %s -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | grep "Test passed"
+
+#include <stdio.h>
+
+// Direct inheritance
+struct A1 { virtual ~A1() {} };
+struct B1 : A1 { };
+
+A1 A1_obj;
+B1 B1_obj;
+
+struct A2 { virtual ~A2() {} };
+struct B2 : A2 { };
+struct C2 : A2 { };
+
+A2 A2_obj;
+B2 B2_obj;
+C2 C2_obj;
+
+// Virtual inheritance
+struct A3 { virtual ~A3() {} };
+struct B3 : virtual A3 { };
+
+A3 A3_obj;
+B3 B3_obj;
+
+struct A4 { virtual ~A4() {} };
+struct B4 : virtual A4 { };
+struct C4 : A4 { };
+
+A4 A4_obj;
+B4 B4_obj;
+C4 C4_obj;
+
+struct A5 { virtual ~A5() {} };
+struct B5 : A5 { };
+struct C5 : virtual A5 { };
+
+A5 A5_obj;
+B5 B5_obj;
+C5 C5_obj;
+
+struct A6 { virtual ~A6() {} };
+struct B6 : virtual A6 { };
+struct C6 : virtual A6 { };
+
+A6 A6_obj;
+B6 B6_obj;
+C6 C6_obj;
+
+struct A7 { virtual ~A7() {} };
+struct B7_1 : A7 { };
+struct B7_2 : A7 { };
+struct C7 : B7_1, B7_2 { };
+
+A7 A7_obj;
+B7_1 B7_1_obj;
+B7_2 B7_2_obj;
+C7 C7_obj;
+
+int failed_tests = 0;
+
+void base_to_derived_cast() {
+  A1 *A1_ptr = &B1_obj;
+  B1 *B1_ptr = dynamic_cast<B1 *>(A1_ptr);
+  if(!B1_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  
+  A2 *A2_ptr1 = &B2_obj, *A2_ptr2 = &C2_obj;
+  B2 *B2_ptr = dynamic_cast<B2 *>(A2_ptr1);
+  C2 *C2_ptr = dynamic_cast<C2 *>(A2_ptr2);
+  if(!B2_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!C2_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+
+  A3 *A3_ptr = &B3_obj;
+  B3 *B3_ptr = dynamic_cast<B3 *>(A3_ptr);
+  if(!B3_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+
+  A4 *A4_ptr1 = &B4_obj, *A4_ptr2 = &C4_obj;
+  B4 *B4_ptr = dynamic_cast<B4 *>(A4_ptr1);
+  C4 *C4_ptr = dynamic_cast<C4 *>(A4_ptr2);
+  if(!B4_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!C4_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+
+  A5 *A5_ptr1 = &B5_obj, *A5_ptr2 = &C5_obj;
+  B5 *B5_ptr = dynamic_cast<B5 *>(A5_ptr1);
+  C5 *C5_ptr = dynamic_cast<C5 *>(A5_ptr2);
+  if(!B5_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!C5_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+
+  A6 *A6_ptr1 = &B6_obj, *A6_ptr2 = &C6_obj;
+  B6 *B6_ptr = dynamic_cast<B6 *>(A6_ptr1);
+  C6 *C6_ptr = dynamic_cast<C6 *>(A6_ptr2);
+  if(!B6_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!C6_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+}
+
+void cross_cast() {
+  C7* C7_ptr = &C7_obj;
+  B7_1 *B7_1_ptr = dynamic_cast<B7_1 *>(C7_ptr);
+  B7_2 *B7_2_ptr = dynamic_cast<B7_2 *>(C7_ptr);
+
+  if(!B7_1_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!B7_2_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  
+  B7_1 *cc1 = dynamic_cast<B7_1 *>(B7_2_ptr);
+  B7_2 *cc2 = dynamic_cast<B7_2 *>(B7_1_ptr);
+
+  if(!cc1) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!cc2) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+}
+
+void void_ptr_cast() {
+  C7* C7_ptr = &C7_obj;
+  B7_1 *B7_1_ptr = dynamic_cast<B7_1 *>(C7_ptr);
+  B7_2 *B7_2_ptr = dynamic_cast<B7_2 *>(C7_ptr);
+  
+  if(!B7_1_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!B7_2_ptr) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+  if(!(dynamic_cast<void *>(B7_1_ptr) == dynamic_cast<void *>(B7_2_ptr))) { printf("Test failed %s:%d\n", __FILE__, __LINE__); failed_tests++; }
+}
+
+int main(int argc, char *argv[]) {
+  base_to_derived_cast();
+  cross_cast();
+  void_ptr_cast();
+  
+  if(failed_tests > 0) {
+    printf("Test failed\n");
+  } else {
+    printf("Test passed\n");
+  }
+  
+  printf("\x1a");
+  
+  return 0;
+}

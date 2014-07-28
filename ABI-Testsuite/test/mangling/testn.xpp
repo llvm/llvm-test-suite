@@ -1,0 +1,20 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes %s
+
+#include <cstddef>
+
+
+// LP64-DAG: _ZnwmjjPv
+// ILP32-DAG: _ZnwjjjPv
+void * operator new(std::size_t, unsigned int, unsigned int, void* a) { return 0; }
+
+// operators
+// LP64-DAG: _Znwm
+// ILP32-DAG: _Znwj
+void *operator new(std::size_t) { return 0; }
+
+// LP64-DAG: _Znam
+// ILP32-DAG: _Znaj
+void *operator new[](std::size_t) { return 0; }

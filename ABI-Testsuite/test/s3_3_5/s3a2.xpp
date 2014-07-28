@@ -1,0 +1,35 @@
+// This file is distributed under the University of Illinois Open Source License.
+// See LICENSE.TXT for details.
+// RUN: cxx_compiler %s -c -o %t.o
+// RUN: linker %t.o -o %t%exeext
+// RUN: runtool %t%exeext | tee %t.tmp | FileCheck %s
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// CHECK: main()
+// CHECK: fn03()
+// CHECK: ~non_trivial(), v1 = 2
+// CHECK: fn02()
+// CHECK: ~non_trivial(), v1 = 1
+// CHECK: fn01()
+
+void fn01() { printf("%s()\n", __FUNCTION__); }
+void fn02() { printf("%s()\n", __FUNCTION__); }
+void fn03() { printf("%s()\n", __FUNCTION__); }
+
+struct non_trivial {
+  non_trivial(void (*fp)(), int val) { atexit(fp); v1 = val; }
+  ~non_trivial() { printf("%s(), v1 = %d\n", __FUNCTION__, v1); }
+  int v1;
+};
+
+non_trivial v1(fn01, 1);
+non_trivial v2(fn02, 2);
+
+int main(int argc, char *argv[]) {
+  atexit(fn03);
+  printf("%s()\n", __FUNCTION__);
+  
+  return 0;
+}
