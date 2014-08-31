@@ -5,6 +5,11 @@ LEVEL = ../../../../..
 PARALLEL_DIRS = 2mm 3mm atax bicg cholesky doitgen gemm gemver gesummv mvt \
  		symm syr2k syrk trisolv trmm
 		
+ifdef BENCHMARKING_ONLY
+PARALLEL_DIRS := $(filter-out 2mm, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out 3mm, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out gemm, $(PARALLEL_DIRS))
+endif
 
 include $(LEVEL)/Makefile.config
 include $(LEVEL)/Makefile.programs
