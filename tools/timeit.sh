@@ -1,24 +1,6 @@
 #! /bin/bash
 # A wrapper over perf to provide similar functionality to timeit.c
 
-# Fall back to ctimeit for PowerPC
-TARGET=`uname -m`
-
-if [ \( $TARGET = "ppc64" \) -o \( $TARGET = "ppc64le" \) ]; then
-    $(dirname $0)/ctimeit $@
-    exit $?
-fi
-
-DEPENDS="perf"
-
-# Fallback to ctimeit if dependencies are not met
-for cmd in ${DEPENDS} ; do
-	if ! command -v ${cmd} &> /dev/null ; then
-		$(dirname $0)/ctimeit $@
-		exit $?
-	fi
-done
-
 REPORT=/dev/stderr
 INPUT=/dev/stdin
 OUTPUT=/dev/stdout
@@ -36,7 +18,7 @@ while [[ $1 = -* ]]; do
 	shift 2
 done
 
-perf stat -o $PERFSTAT $@ < $INPUT > $OUTPUT
+perf stat -o $PERFSTAT $@ < $INPUT &> $OUTPUT
 
 EXITCODE=$?
 

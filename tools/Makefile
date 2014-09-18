@@ -8,20 +8,21 @@ ifndef USER_MODE_EMULATION
 all:: timeit-target
 endif
 
-ifeq ($(TARGET_OS),Linux)
-all:: ctimeit
-timeit: timeit.sh
-	cp -f $< $@
-	chmod u+x $@
-ctimeit: timeit.c
-	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
-else
+ifndef USE_PERF
 timeit: timeit.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
-endif
 
 timeit-target: timeit.c
 	$(LD_ENV_OVERRIDES) $(LCC) -o $@ $< $(LDFLAGS) $(CFLAGS) $(TARGET_FLAGS) -O3
+else
+timeit: timeit.sh
+	cp -f $< $@
+	chmod u+x $@
+
+timeit-target: timeit.sh
+	cp -f $< $@
+	chmod u+x $@
+endif
 
 fpcmp: fpcmp.c
 	$(ORIGINAL_CC) $(CFLAGS) -O3 -o $@ $<
