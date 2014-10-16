@@ -273,7 +273,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.linked.bc): \
 Output/%.linked.bc: Output/%.linked.rbc $(LOPT)
 	$(VERB) $(RM) -f $(CURDIR)/$@.info
 	$(RUNSAFELYLOCAL) /dev/null $@.opt \
-	  $(LOPT) -std-compile-opts -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@
+	  $(LOPT) -O3 -info-output-file=$(CURDIR)/$@.info $(STATS) $(EXTRA_LOPT_OPTIONS) $< -o $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.llvm.stripped.bc): \
 Output/%.llvm.stripped.bc: Output/%.llvm.bc $(LOPT)
@@ -650,7 +650,7 @@ BUGPOINT_ARGS += --args -- $(RUN_OPTIONS)
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/%.out-nat
-	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -std-compile-opts \
+	PWD=$(CURDIR) $(LBUGPOINT) -llc-safe $< -O3 \
           $(BUGPOINT_OPTIONS) $(BUGPOINT_TOOL_OPTIONS) $(BUGPOINT_ARGS)
 
 $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-llc): \

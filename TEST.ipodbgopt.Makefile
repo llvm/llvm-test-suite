@@ -26,7 +26,7 @@ Output/%.t1b.bc: Output/%.t1a.bc Output/.dir $(LOPT)
 	$(LOPT) -strip-debug $< -f -o $@
 
 Output/%.t1c.bc: Output/%.t1b.bc Output/.dir $(LOPT)
-	$(LOPT) -std-compile-opts $< -f -o $@
+	$(LOPT) -O3 $< -f -o $@
 
 Output/%.t1d.bc: Output/%.t1c.bc Output/.dir $(LOPT)
 	$(LOPT) -strip $< -f -o $@
@@ -36,7 +36,7 @@ Output/%.first.ll: Output/%.t1d.bc $(LDIS)
 	$(LDIS) Output/$*.t.bc -f -o $@
 
 Output/%.t2b.bc: Output/%.t1a.bc Output/.dir $(LOPT)
-	$(LOPT) -std-compile-opts $< -f -o $@
+	$(LOPT) -O3 $< -f -o $@
 
 Output/%.t2c.bc: Output/%.t2b.bc Output/.dir $(LOPT)
 	$(LOPT) -strip-debug $< -f -o $@

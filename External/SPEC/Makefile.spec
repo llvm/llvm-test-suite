@@ -206,7 +206,7 @@ $(PROGRAMS_TO_TEST:%=Output/%.bugpoint-opt): \
 Output/%.bugpoint-opt: Output/%.noopt-llvm.bc $(LBUGPOINT) \
                          Output/%.out-nat
 	$(SPEC_SANDBOX) bugpoint-$(RUN_TYPE) $@ $(REF_IN_DIR) \
-	    env PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc -std-compile-opts $(OPTPASSES) \
+	    env PWD=$(CURDIR) $(LBUGPOINT) -llc-safe ../$*.noopt-llvm.bc -O3 $(OPTPASSES) \
 	    $(BUGPOINT_OPTIONS) $(BUGPOINT_ARGS)
 	@echo "===> Leaving Output/bugpoint-$(RUN_TYPE)"
 
