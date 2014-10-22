@@ -11,6 +11,12 @@ RUNTIMELIMIT:=850
 
 include ../../Makefile.spec2006
 
+ifeq ($(ARCH),PowerPC)
+ifeq ($(TARGET_OS),Linux)
+TEST_TARGET_FLAGS += -fsigned-char
+endif
+endif
+
 ifeq ($(RUN_TYPE),test)
   RUN_OPTIONS     := -d foreman_test_encoder_baseline.cfg
   STDOUT_FILENAME := foreman_test_baseline_encodelog.out
