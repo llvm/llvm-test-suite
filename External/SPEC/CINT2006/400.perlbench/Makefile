@@ -34,6 +34,10 @@ else
   CPPFLAGS += -D__BIG_ENDIAN__
 endif
 
+ifeq ($(TARGET_OS),Linux)
+  TEST_TARGET_FLAGS += -fgnu89-inline
+endif
+
 Source = av.c deb.c doio.c doop.c dump.c globals.c gv.c hv.c locale.c mg.c     \
          numeric.c op.c pad.c perl.c perlapi.c perlio.c perlmain.c perly.c     \
          pp.c pp_ctl.c pp_hot.c pp_pack.c pp_sort.c pp_sys.c regcomp.c         \
