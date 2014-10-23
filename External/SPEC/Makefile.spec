@@ -25,6 +25,10 @@ SPEC_OUTPUT_FILE_FILTER = cat
 # the program in a sandbox (a special directory we create), then we cat all of
 # the outputs together.
 
+ifeq ($(REFERENCE_OUTPUT_KEY),)
+REFERENCE_OUTPUT_KEY := v$(SPEC_VERSION)
+endif
+
 ifndef USE_REFERENCE_OUTPUT
 
 $(PROGRAMS_TO_TEST:%=Output/%.out-nat): \

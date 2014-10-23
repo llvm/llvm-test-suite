@@ -23,10 +23,18 @@ HASH_PROGRAM_OUTPUT = 1
 include ../../Makefile.spec2006
 
 ifeq ($(RUN_TYPE),test)
+ifeq ($(SPEC_VERSION),1.2)
+  RUN_OPTIONS      = cccp.in -o -
+else
   RUN_OPTIONS      = cccp.i -o -
+endif
   STDOUT_FILENAME := cccp.s
 else
+ifeq ($(SPEC_VERSION),1.2)
+  RUN_OPTIONS      = integrate.in -o -
+else
   RUN_OPTIONS      = integrate.i -o -
+endif
   STDOUT_FILENAME := integrate.s
 endif
 
