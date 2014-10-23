@@ -123,7 +123,7 @@ template <typename T> void q(decltype(typeid(sizeof(T))));
 template <> void q<int>(decltype(typeid(sizeof(int)))) {}
 
 // dynamic cast
-// CHECK-DAG: _Z2dyI1BEvDTcvPT_nw_1ApiEE
+// CHECK-DAG: _Z2dyI1BEvDTdcPT_nw_1ApiEE
 class A { 
     virtual void foo();
     virtual ~A();
@@ -135,20 +135,20 @@ template<class T> void dy(decltype(dynamic_cast<T*>(new A())));
 template <> void dy<B>(decltype(dynamic_cast<B*>(new A()))) {} 
 
 // static cast
-// CHECK-DAG: _Z2stIlLi3EEvPAcvT_T0__i
+// CHECK-DAG: _Z2stIlLi3EEvPAscT_T0__i
 template<class T, int N> void st(int (*)[static_cast<T>(N)]) {}
 template <> void st<long, 3>(int (*)[3l]) {} 
 
 // const cast
 // CHECK-DAG: _Z10intfactoryv
-// CHECK-DAG: _Z2coIRiEvDTcvT_clL_Z10intfactoryvEEE
+// CHECK-DAG: _Z2coIRiEvDTccT_clL_Z10intfactoryvEEE
 const int& cref_i = 5;
 const int& intfactory() { return cref_i; }
 template<class T> void co(decltype(const_cast<T>(intfactory())));
 template <> void co<int&>(decltype(const_cast<int&>(intfactory()))) {} 
 
 // reinterpret cast
-// CHECK-DAG: _Z2reIjLi3EEvDTcvPT_T0_E
+// CHECK-DAG: _Z2reIjLi3EEvDTrcPT_T0_E
 template<class T, int N> void re(decltype(reinterpret_cast<T*>(N)));
 template <> void re<unsigned , 3>(decltype(reinterpret_cast<unsigned*>(3))) {} 
 
@@ -244,3 +244,7 @@ struct O {
     template <class T> auto g() -> decltype (this->m.f<T>());
 };
 template <> int O::g<int>() { return 0; }
+//
+//
+//
+//
