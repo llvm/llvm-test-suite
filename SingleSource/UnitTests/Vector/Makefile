@@ -22,7 +22,7 @@ DIRS += NEON
 endif
 
 ifeq ($(ARCH),AArch64)
-DIRS += NEON
+DIRS += NEON AArch64
 endif
 
 ifndef CC_UNDER_TEST_IS_CLANG
