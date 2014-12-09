@@ -16,10 +16,10 @@ void print_vector(__vector unsigned char v) {
 }
 
 int main(int argc, const char * argv[]) {
-  C_uchar1[0] = (__vector unsigned char)__builtin_altivec_lvsl(1,
-                                                             (void *)&C_uchar1); 
-  C_uchar2[0] = (__vector unsigned char)__builtin_altivec_lvsr(1,
-                                                             (void *)&C_uchar2); 
+  C_uchar1[0] = (__vector unsigned char)
+                  vec_lvsl(1, (const unsigned char *)&C_uchar1); 
+  C_uchar2[0] = (__vector unsigned char)
+                  vec_lvsr(1, (const unsigned char *)&C_uchar2); 
   print_vector(C_uchar1[0]);
   print_vector(C_uchar1[1]);
   print_vector(C_uchar2[0]);
