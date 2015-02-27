@@ -8,10 +8,10 @@
 // CHECK-DAG: _Z3fooc
 void foo(char) {}
 template <void (&)(char)> struct CB {};
-// CHECK-DAG: _Z3bar2CBILZ3foocEE
+// CHECK-DAG: _Z3bar2CBIL_Z3foocEE
 void bar(CB<foo> cb) {}
 
-// CHECK-DAG: _Z4test3CB2ILZ7IsEmptyEE
+// CHECK-DAG: _Z4test3CB2IL_Z7IsEmptyEE
 extern "C" bool IsEmpty(char *);
 template<bool (&)(char *)> struct CB2 {};
 void test(CB2<IsEmpty> cb) {}
@@ -26,7 +26,7 @@ struct Q1 {int x; } q1;
 template<class T> auto iii(T p)->decltype(p.x + Q::x);
 template<> auto iii(Q1 p)->decltype(p.x + Q::x) { return 0; }
 
-// CHECK-DAG: _Z3kkkI2S4EDTadsrT_miES1_
+// CHECK-DAG: _Z3kkkI2S4EDTadsrT_onmiES1_
 struct S4 {
     S4 operator-(S4 rhs) { return rhs; }
 };

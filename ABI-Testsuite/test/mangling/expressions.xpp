@@ -226,7 +226,7 @@ template <> void rt<int>(int* p, void* p1) {}
 
 // unresolved operator-function-id
 // The operator can be encoded using the "on" operator function-id mangling e.g. "DTclonplfp_fp_EE".
-// CHECK-DAG: _Z1gI2S4EDTclplfp_fp_EET_
+// CHECK-DAG: _Z1gI2S4EDTclonplfp_fp_EET_
 struct S4 {
     S4(int a) {}
 };
