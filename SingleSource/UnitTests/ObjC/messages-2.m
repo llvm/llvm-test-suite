@@ -1,25 +1,28 @@
 #include <Foundation/NSObject.h>
-#include <Foundation/NSGeometry.h>
 #include <stdio.h>
 
 typedef struct {
   int x, y, z[10];
 } MyPoint;
 
+typedef struct {
+  float width, height;
+} MySize;
+
 @interface A : NSObject
 +(void) printThisInt: (int) arg0 andThatFloat: (float) arg1 andADouble: (double) arg2 andAPoint: (MyPoint) arg3;
 +(float) returnAFloat;
 +(double) returnADouble;
 +(MyPoint) returnAPoint;
-+(void) printThisSize: (NSSize) arg0;
-+(NSSize) returnASize;
++(void) printThisSize: (MySize) arg0;
++(MySize) returnASize;
 
 -(void) printThisInt: (int) arg0 andThatFloat: (float) arg1 andADouble: (double) arg2 andAPoint: (MyPoint) arg3;
 -(float) returnAFloat;
 -(double) returnADouble;
 -(MyPoint) returnAPoint;
--(void) printThisSize: (NSSize) arg0;
--(NSSize) returnASize;
+-(void) printThisSize: (MySize) arg0;
+-(MySize) returnASize;
 @end
 @interface B : A
 @end
@@ -39,12 +42,12 @@ typedef struct {
   MyPoint x = { 35, 45 };
   return x;
 }
-+(void) printThisSize: (NSSize) arg0 {
++(void) printThisSize: (MySize) arg0 {
   printf("(CLASS) theSize: { %f, %f }\n",
          arg0.width, arg0.height);
 }
-+(NSSize) returnASize {
-  NSSize x = { 32, 44 };
++(MySize) returnASize {
+  MySize x = { 32, 44 };
   return x;
 }
 
@@ -62,12 +65,12 @@ typedef struct {
   MyPoint x = { 30, 40 };
   return x;
 }
--(void) printThisSize: (NSSize) arg0 {
+-(void) printThisSize: (MySize) arg0 {
   printf("theSize: { %f, %f }\n",
          arg0.width, arg0.height);
 }
--(NSSize) returnASize {
-  NSSize x = { 22, 34 };
+-(MySize) returnASize {
+  MySize x = { 22, 34 };
   return x;
 }
 @end
@@ -78,7 +81,7 @@ typedef struct {
   arg3.y *= 2;
   [ super printThisInt: arg0*2 andThatFloat: arg1*2 andADouble: arg2*2 andAPoint: arg3 ];
 }
-+(void) printThisSize: (NSSize) arg0 {
++(void) printThisSize: (MySize) arg0 {
   arg0.width *= 2;
   arg0.height *= 2;
   [ super printThisSize: arg0 ];
@@ -95,8 +98,8 @@ typedef struct {
   x.y *= 2;
   return x;
 }
-+(NSSize) returnASize {
-  NSSize x = [ super returnASize ];
++(MySize) returnASize {
+  MySize x = [ super returnASize ];
   x.width *= 2;
   x.height *= 2;
   return x;
@@ -107,7 +110,7 @@ typedef struct {
   arg3.y *= 2;
   [ super printThisInt: arg0*2 andThatFloat: arg1*2 andADouble: arg2*2 andAPoint: arg3 ];
 }
--(void) printThisSize: (NSSize) arg0 {
+-(void) printThisSize: (MySize) arg0 {
   arg0.width *= 2;
   arg0.height *= 2;
   [ super printThisSize: arg0 ];
@@ -124,8 +127,8 @@ typedef struct {
   x.y *= 2;
   return x;
 }
--(NSSize) returnASize {
-  NSSize x = [ super returnASize ];
+-(MySize) returnASize {
+  MySize x = [ super returnASize ];
   x.width *= 2;
   x.height *= 2;
   return x;
@@ -134,7 +137,7 @@ typedef struct {
 
 void test(A *a) {
   MyPoint pt = { 33, 52 };
-  NSSize size = { 44, 55 };
+  MySize size = { 44, 55 };
 
   [ a printThisInt: 1 andThatFloat: 2.0 andADouble: 3.0 andAPoint: pt ];
   [ a printThisSize: size ] ;
@@ -148,13 +151,13 @@ void test(A *a) {
 
   printf("A returned struct (%d)\n", [ a returnAPoint ].x);  
 
-  NSSize y = [ a returnASize ];
+  MySize y = [ a returnASize ];
   printf("A returned size: { %f, %f }\n", y.width, y.height);  
 }
 
 void test2() {
   MyPoint pt = { 33, 52 };
-  NSSize size = { 44, 55 };
+  MySize size = { 44, 55 };
   
   [ A printThisInt: 1 andThatFloat: 2.0 andADouble: 3.0 andAPoint: pt ];
   [ A printThisSize: size ] ;
@@ -168,13 +171,13 @@ void test2() {
 
   printf("A returned struct (%d)\n", [ A returnAPoint].x);  
 
-  NSSize y = [ A returnASize ];
+  MySize y = [ A returnASize ];
   printf("A returned size: { %f, %f }\n", y.width, y.height);  
 }
 
 void test3() {
   MyPoint pt = { 33, 52 };
-  NSSize size = { 44, 55 };
+  MySize size = { 44, 55 };
   
   [ B printThisInt: 1 andThatFloat: 2.0 andADouble: 3.0 andAPoint: pt ];
   [ B printThisSize: size ] ;
@@ -188,7 +191,7 @@ void test3() {
 
   printf("B returned struct (%d)\n", [ B returnAPoint ].x);  
 
-  NSSize y = [ B returnASize ];
+  MySize y = [ B returnASize ];
   printf("B returned size: { %f, %f }\n", y.width, y.height);  
 }
 
