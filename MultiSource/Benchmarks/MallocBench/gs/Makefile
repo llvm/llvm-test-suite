@@ -5,6 +5,8 @@ LDFLAGS += -lm
 CPPFLAGS += -DNOMEMOPT \
             -DGS_LIB_DEFAULT=\"$(PROJ_SRC_DIR):$(PROJ_SRC_DIR)/fonts\"
 
+CFLAGS += -Wno-implicit-function-declaration
+
 #
 # This is to work around a bug where having a function prototype that is
 # static and a function defintion that is not static get generated into 2
