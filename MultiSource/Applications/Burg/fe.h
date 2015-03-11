@@ -127,3 +127,6 @@ extern char	*prefix;
 extern int 	trimflag;
 extern int 	speedflag;
 extern int 	grammarflag;
+
+extern void doGrammarNts();
+extern void doGram();

@@ -61,6 +61,7 @@ static char Rcs_Id[] =
  *
  */
 
+#include <fcntl.h>
 #include "config.h"
 #include "ispell.h"
 #include "proto.h"

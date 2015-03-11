@@ -14,6 +14,7 @@ static char 	*sccsid="@(#)deliver.c	2.5 (smail) 9/15/87";
 # include	<sys/stat.h>
 # include	<ctype.h>
 # include	<signal.h>
+# include       <unistd.h>
 # include	"defs.h"
 
 extern int  exitstat;		/* set if a forked mailer fails */
@@ -35,6 +36,9 @@ char stderrfile[20];		/* error file for stderr traping*/
 extern char *postmaster(char *user);
 
 void return_mail(char *from,char *fcommand);
+
+int islocal();
+int strcmpic();
 
 /*
 **

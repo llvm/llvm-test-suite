@@ -3,6 +3,8 @@
  * http://www.hackersdelight.org/HDcode/ntz.cc
  */
 #include <stdio.h>
+#include <string.h>
+#include <strings.h>
 #if defined(__XS1B__)
 #include "xcoretestsuite.h"
 #endif

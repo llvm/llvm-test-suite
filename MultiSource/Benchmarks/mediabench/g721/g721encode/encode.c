@@ -6,6 +6,7 @@
  * Usage : encode [-3|4|5] [-a|u|l] < infile > outfile
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include "g72x.h"
 
 

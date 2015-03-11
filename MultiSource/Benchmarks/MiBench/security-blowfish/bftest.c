@@ -64,6 +64,8 @@
 #include <stdlib.h>
 #include "blowfish.h"
 
+int test();
+
 char *bf_key[2]={
 	"abcdefghijklmnopqrstuvwxyz",
 	"Who is John Galt?"

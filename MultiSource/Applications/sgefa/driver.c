@@ -15,6 +15,11 @@
 #ifndef SCALE
 #define SCALE	 1		/* System sizes are scaled by this amount. */
 #endif
+
+int matgen();
+int matvec();
+int get_space();
+
 main()
 {
   register int i, j, k;

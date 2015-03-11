@@ -12,6 +12,7 @@ static char 	*sccsid="@(#)headers.c	2.5 (smail) 9/15/87";
 # include	<time.h>
 # include	<ctype.h>
 # include	<pwd.h>
+# include       <unistd.h>
 # include	"defs.h"
 
 extern enum edebug debug;	/* how verbose we are 		*/ 
@@ -53,6 +54,11 @@ void def_date(void);
 void def_mid(void);
 void def_from(char *from);
 void def_to(int argc,char **argv);
+
+int isheader();
+int setdates();
+int strcmpic();
+int strncmpic();
 
 /*
 **

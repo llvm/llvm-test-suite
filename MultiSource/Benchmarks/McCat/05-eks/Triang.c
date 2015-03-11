@@ -35,6 +35,7 @@
 #include "Triang.h"
 #include "MM.h"
 #include "print.h"
+#include "QRfact.h"
 
 
 double norm(Matrix A,int col,int rs,int re)

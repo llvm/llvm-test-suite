@@ -36,6 +36,8 @@
 #include "QRfact.h"
 #include "Triang.h"
 #include "Divsol.h"
+#include "Jacobi.h"
+#include "print.h"
 
 
 void HouseMatrix(Matrix H,Vector v, int start, int end)

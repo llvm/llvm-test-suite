@@ -16,6 +16,9 @@ typedef struct linked_list_lli {
   void* cdr;
 } linked_list_lli;
 
+int pad_size();
+int calc_sum1();
+
 linked_list_int* cons1(int hd, linked_list_int* tl) {
   linked_list_int *res;
   res = (linked_list_int*) malloc(sizeof(linked_list_int));

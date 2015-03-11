@@ -42,6 +42,18 @@ extern int columns[], height[];
 
 extern int64 posed;
 
+extern int trans_init();
+extern int wins();
+extern int makemove();
+extern int backmove();
+extern int transpose();
+extern int transrestore();
+extern int transtore();
+extern int printMoves();
+extern int reset();
+extern int emptyTT();
+extern int htstat();
+
 void c4_init()
 {
   trans_init();

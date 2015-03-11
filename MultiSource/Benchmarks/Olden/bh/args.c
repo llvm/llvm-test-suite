@@ -1,4 +1,5 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
+#include <stdlib.h>
 
 extern int NumNodes;
 extern int nbody;

@@ -134,6 +134,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <setjmp.h>
+#include <strings.h>
+#include <unistd.h>
 
 /* Before compiling, make sure Quad and MASK_BITS are set properly.  For best
  * results, make Quad the largest integer size supported on your machine.

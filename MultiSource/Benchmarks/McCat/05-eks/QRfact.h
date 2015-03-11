@@ -27,3 +27,4 @@
 Matrix QRiterate(Matrix A, Matrix U);
 void Givens(double x,double y, double *s, double *c);
 void ApplyRGivens(Matrix U,double s, double c,int i,int j);
+int sign(double a);

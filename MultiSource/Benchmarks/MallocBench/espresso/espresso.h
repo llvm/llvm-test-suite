@@ -766,3 +766,4 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* verify.c */	extern bool PLA_verify();
 /* verify.c */	extern bool check_consistency();
 /* verify.c */	extern bool verify();
+/* hack.c */    extern int disassemble_fsm();

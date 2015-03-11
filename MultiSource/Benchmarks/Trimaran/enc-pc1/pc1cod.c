@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 unsigned short  ax, bx, cx, dx, si, tmp, x1a2, x1a0[16], res, i,
 inter, cfc, cfd, compte;
 
@@ -30,6 +31,7 @@ short           d, e;
 
 FILE * in;
 
+int code();
 
 assemble() 
 {

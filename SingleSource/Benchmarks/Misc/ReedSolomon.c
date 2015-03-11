@@ -48,6 +48,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #define mm  8           /* RS code over GF(2**4) - change to suit */
 #define nn  255         /* nn=2**mm -1   length of codeword */
 #define tt  8           /* number of errors that can be corrected */

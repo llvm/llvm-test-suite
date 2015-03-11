@@ -3,6 +3,7 @@ static char *sccsid = "@(#)alias.c	2.5 (smail) 9/15/87";
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
@@ -69,6 +70,10 @@ node	*pop();
 node	*v_search(), *h_search();
 char	*tilde();
 #endif	/* not SENDMAIL */
+
+int strncmpic();
+int strcmpic();
+int islocal();
 
 /* our horizontal linked list looks like a stack */
 #define push		add_horz

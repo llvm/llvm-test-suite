@@ -14,6 +14,8 @@ int64 posed, hits;		/* counts transtore calls */
 
 extern int columns[];
 
+extern int play_init();
+
 void trans_init()
 {
   play_init();

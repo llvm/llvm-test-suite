@@ -40,3 +40,7 @@ struct FULL {		/* Struct definition for the FULL matrix structure. */
 /* The following macro will get a(r,c) from a pointer to a matrix 
    in the FULL structure. */
 #define pelem(a,r,c)	(*(a->pd[(c)]+(r)))
+
+extern int sgefa();
+extern int sgesl();
+extern int vexopy();

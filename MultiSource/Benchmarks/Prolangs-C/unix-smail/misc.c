@@ -41,6 +41,8 @@ time_t now;			/* current system time		*/
 char nows[50];			/* time in ctime format		*/
 char arpanows[50];		/* time in arpa format		*/
 
+int strcmpic();
+
 # ifdef LOG
 void log(char *command,char *from,long size)
 {

@@ -28,6 +28,9 @@ extern void *realloc(void *, size_t);
 extern char *getenv(char *);
 #endif
 
+void qsort(void *base, size_t nel, size_t width,
+           int (*compar)(const void *, const void *));
+
 /* should be in stdio.h */
 extern void perror(const char *);
 

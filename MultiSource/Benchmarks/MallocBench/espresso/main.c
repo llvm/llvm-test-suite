@@ -10,6 +10,14 @@
 static FILE *last_fp;
 static int input_type = FD_type;
 
+int backward_compatibility_hack();
+int check_arg();
+int delete_arg();
+int getPLA();
+int init_runtime();
+int runtime();
+int usage();
+
 static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;

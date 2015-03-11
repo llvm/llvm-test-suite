@@ -1,3 +1,4 @@
+#include <time.h>
 #include "custom.h"
 double spot_control ;
 int spotPenalty ;

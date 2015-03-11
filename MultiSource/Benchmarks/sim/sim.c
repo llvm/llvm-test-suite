@@ -98,6 +98,14 @@ programs.
 #undef UNIX
 #endif
 
+int SIM();
+int big_pass();
+int fatal();
+int fatalf();
+int locate();
+int no_cross();
+int small_pass();
+
 static const char *mybasename(const char *str) {
   const char *base = strrchr(str, '/');
   return base ? base+1 : str;

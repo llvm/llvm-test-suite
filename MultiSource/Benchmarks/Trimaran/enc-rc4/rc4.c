@@ -18,6 +18,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdlib.h>
 #include "rc4.h"
 
 void rc4_setup( struct rc4_state *s, unsigned char *key,  int length )

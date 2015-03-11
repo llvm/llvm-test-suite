@@ -311,3 +311,7 @@ extern void exit ARGS((int));
 extern int fatal ARGS((char *, int));
 extern void yyerror ARGS((char *));
 extern void yyerror1 ARGS((char *));
+
+extern void makeRuleDescArray();
+extern void makeDeltaCostArray();
+extern void makeStateStringArray();

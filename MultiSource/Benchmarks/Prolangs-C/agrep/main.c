@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include "agrep.h"
 #include "checkfile.h"
 #define CHARTYPE        unsigned char

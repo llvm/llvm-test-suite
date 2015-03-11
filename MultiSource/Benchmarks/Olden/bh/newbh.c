@@ -44,6 +44,10 @@ bodyptr ubody_alloc(int p);
 bodyptr movebodies(bodyptr list, int proc);
 void freetree(nodeptr n);
 void freetree1(nodeptr n);
+int old_subindex(icstruct ic, int l);
+
+int dealwithargs();
+int error();
 
 int arg1;
 
@@ -770,7 +774,6 @@ icstruct intcoord1(double rp0, double rp1, double rp2,  treeptr t);
 icstruct intcoord(bodyptr p,  treeptr t);
 int ic_test(bodyptr p, treeptr t);
 int subindex(bodyptr p, treeptr t, int l);
-int old_subindex(icstruct ic, int l);
 real hackcofm(nodeptr q);
 
 

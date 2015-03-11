@@ -3,6 +3,7 @@
 /* The output of this file is included */
 /* into the C file cdecl.c. */
 char cdgramsccsid[] = "@(#)cdgram.y	2.2 3/30/88";
+int yylex();
 
 extern char prev;
 

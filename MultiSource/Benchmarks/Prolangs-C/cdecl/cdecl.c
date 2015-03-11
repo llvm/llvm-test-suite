@@ -78,6 +78,7 @@ void free(), exit(), perror();
 # endif /* NOVOID */
 #endif /* __STDC__ || DOS */
 
+#include <unistd.h>
 #include <errno.h>
 
 #define	MB_SHORT	0001
@@ -100,7 +101,7 @@ void free(), exit(), perror();
 #if __STDC__
   char *ds(char *), *cat(char *, ...), *visible(int);
 #ifndef __sun__
-  int getopt(int,char **,char *);
+  int getopt(int,char *const*, const char *);
 #endif
   int main(int, char **);
   int yywrap_nasko(void);

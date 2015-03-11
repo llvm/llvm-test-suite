@@ -24,6 +24,13 @@ extern int getcost;		/* get path cost even if not routing    */
 
 char *sform();
 
+int ssplit();
+int route();
+int build();
+int strcmpic();
+int isuucp();
+int getpath();
+
 /*
 **
 **  rsvp(): how to resolve addresses.

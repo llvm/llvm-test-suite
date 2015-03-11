@@ -118,6 +118,7 @@
 #undef USG		/* Define this in local.h for System V machines */
 #endif /* USG */
 
+#include <unistd.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #ifndef USG

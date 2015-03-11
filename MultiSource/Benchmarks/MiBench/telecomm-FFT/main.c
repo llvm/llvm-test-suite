@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "fourier.h"
 
 // RNG implemented localy to avoid library incongruences
 #ifdef RAND_MAX

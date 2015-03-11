@@ -20,3 +20,4 @@
 #include "main.h"
 
 Matrix Jacobi(Matrix A,int i);
+void ApplyGivens(Matrix A,double s,double c, int i, int j,int start,int end);

@@ -259,6 +259,7 @@ extern int	wait P ((int * statusp));
 #else /* NO_STDLIB_H */
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #endif /* NO_STDLIB_H */
 
 #ifndef USG

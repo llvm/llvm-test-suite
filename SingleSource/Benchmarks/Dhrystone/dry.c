@@ -81,6 +81,7 @@
 /*#include "defns.h"*/
 
 #include <stdlib.h>
+#include <time.h>
 
 /* Define if should use homemade str* functions. */
 
@@ -169,6 +170,16 @@ extern boolean		Func2();
 #endif
 
 #include <string.h>
+
+int Proc0();
+int Proc1();
+int Proc2();
+int Proc3();
+int Proc4();
+int Proc5();
+int Proc6();
+int Proc7();
+int Proc8();
 
 main()
 {

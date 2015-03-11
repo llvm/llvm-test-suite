@@ -172,6 +172,17 @@ extern boolean		Func2();
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+int Proc0();
+int Proc1();
+int Proc2();
+int Proc3();
+int Proc4();
+int Proc5();
+int Proc6();
+int Proc7();
+int Proc8();
 
 int main( argc, argv)
 int argc;

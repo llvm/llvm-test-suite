@@ -128,6 +128,7 @@ static char Rcs_Id[] =
  */
 
 #include <ctype.h>
+#include <fcntl.h>
 #include "config.h"
 #include "ispell.h"
 #include "proto.h"

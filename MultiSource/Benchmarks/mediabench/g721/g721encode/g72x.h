@@ -74,7 +74,7 @@ struct g72x_state {
 
 /* External function definitions. */
 
-extern void g72x_init_stat(struct g72x_state *);
+extern void g72x_init_state(struct g72x_state *);
 extern int g721_encoder(
 		int sample,
 		int in_coding,
@@ -99,5 +99,18 @@ extern int g723_40_decoder(
 		int code,
 		int out_coding,
 		struct g72x_state *state_ptr);
+
+int alaw2linear();
+int linear2alaw();
+int linear2ulaw();
+int predictor_pole();
+int predictor_zero();
+int quantize();
+int reconstruct();
+int step_size();
+int tandem_adjust_alaw();
+int tandem_adjust_ulaw();
+int ulaw2linear();
+void update();
 
 #endif /* !_G72X_H */

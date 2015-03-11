@@ -1,5 +1,6 @@
 #include "mincov_int.h"
 
+int visit_col();
 
 static void
 copy_row(A, prow)
