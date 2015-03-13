@@ -37,9 +37,10 @@ static char 	*sccsid="@(#)main.c	2.5 (smail) 9/15/87";
 
 #include	<stdio.h>
 #include	<ctype.h>
-#include        <unistd.h>
 #include        <stdlib.h>
 #include	"defs.h"
+
+int getopt();
 
 int exitstat = 0;		/* exit status, set by resolve, deliver	*/
 
