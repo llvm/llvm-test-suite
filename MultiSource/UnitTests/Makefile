@@ -2,7 +2,7 @@
 
 LEVEL = ../..
 
-PARALLEL_DIRS =
+PARALLEL_DIRS = C++11
 
 # Add special tests for Mips
 ifeq ($(ARCH),Mips)
