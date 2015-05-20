@@ -102,8 +102,10 @@ PROGRAMS_TO_SKIP += \
 	2005-05-11-Popcount-ffs-fls \
 	2005-05-12-Int64ToFP \
 	2005-05-13-SDivTwo \
+	2005-07-15-Bitfield-ABI \
 	2005-07-17-INT-To-FP \
 	2005-11-29-LongSwitch \
+	2006-01-23-UnionInit \
 	2006-01-29-SimpleIndirectCall \
 	2006-02-04-DivRem \
 	2006-12-01-float_varg \
@@ -112,6 +114,7 @@ PROGRAMS_TO_SKIP += \
 	2006-12-11-LoadConstants \
 	2007-01-04-KNR-Args \
 	2007-03-02-VaCopy \
+	2007-04-10-BitfieldTest \
 	2007-04-25-weak \
 	2008-04-18-LoopBug \
 	2008-04-20-LoopBug2 \

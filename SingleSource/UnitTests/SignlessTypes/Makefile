@@ -12,7 +12,7 @@ SEED := $(shell date +%j)
 RUN_OPTIONS := 31415926
 
 ifdef BENCHMARKING_ONLY
-PROGRAMS_TO_SKIP += cast2 cast-bug ccc div factor shr
+PROGRAMS_TO_SKIP += cast2 cast-bug ccc div factor shr rem
 endif
 
 LDFLAGS += -lstdc++

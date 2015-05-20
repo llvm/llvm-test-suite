@@ -36,8 +36,10 @@ ifeq ($(ARCH),XCore)
 endif
 
 ifdef BENCHMARKING_ONLY
+PARALLEL_DIRS := $(filter-out office-stringsearch, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out office-ispell, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out security-blowfish, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out telecom-adpcm, $(PARALLEL_DIRS))
 endif
 
 include $(LEVEL)/Makefile.programs

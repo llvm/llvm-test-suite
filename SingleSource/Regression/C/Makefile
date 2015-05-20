@@ -30,13 +30,16 @@ PROGRAMS_TO_SKIP += \
 	ConstructorDestructorAttributes \
 	DuffsDevice \
 	globalrefs \
+	matrixTranspose \
 	pointer_arithmetic \
 	PR10189 \
 	PR1386 \
 	PR491 \
 	PR640 \
 	sumarray \
+	sumarray2d \
 	sumarraymalloc \
+	test_indvars \
 	testtrace
 endif
 

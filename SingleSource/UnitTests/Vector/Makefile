@@ -38,7 +38,7 @@ endif
 endif
 
 ifdef BENCHMARKING_ONLY
-PROGRAMS_TO_SKIP += build divides sumarray sumarray-dbl
+PROGRAMS_TO_SKIP += build constpool divides simple sumarray sumarray-dbl
 endif
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
