@@ -7,10 +7,10 @@ DIRS := SetjmpLongjmp
 # FIXME: Disable SJLJ tests for now, until EH edges are represented.
 DIRS :=
 
-DIRS += Vector 
+DIRS += Vector
 DIRS += Vectorizer
 
-DIRS += SignlessTypes Threads
+DIRS += SignlessTypes Threads C++11
 
 # Only test Obj-C on Darwin.
 ifeq ($(TARGET_OS),Darwin)
