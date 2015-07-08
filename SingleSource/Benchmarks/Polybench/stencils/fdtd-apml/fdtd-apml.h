@@ -6,7 +6,7 @@
  * Web address: http://polybench.sourceforge.net
  */
 #ifndef FDTD_APML_H
-# define FDTD_AMPL_H
+# define FDTD_APML_H
 
 /*
   LLVM:  We are using SMALL_DATASET here because the size of the output file
