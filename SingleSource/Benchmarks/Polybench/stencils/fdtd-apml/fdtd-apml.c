@@ -73,6 +73,9 @@ void init_array (int cz,
 
 /* DCE code. Must scan the entire live-out data.
    Can be used also to check the correctness of the output. */
+/* FIXME: This print_array method wasn't converted to use the
+   faster print_element method like the others because it's
+   not bit identical across platforms. It should be. */
 static
 void print_array(int cz,
 		 int cxm,
@@ -83,15 +86,14 @@ void print_array(int cz,
 		 DATA_TYPE POLYBENCH_3D(Hz,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1))
 {
   int i, j, k;
-
   for (i = 0; i <= cz; i++)
     for (j = 0; j <= cym; j++)
       for (k = 0; k <= cxm; k++) {
-	fprintf(stderr, DATA_PRINTF_MODIFIER, Bza[i][j][k]);
-	fprintf(stderr, DATA_PRINTF_MODIFIER, Ex[i][j][k]);
-	fprintf(stderr, DATA_PRINTF_MODIFIER, Ey[i][j][k]);
-	fprintf(stderr, DATA_PRINTF_MODIFIER, Hz[i][j][k]);
-	if ((i * cxm + j) % 20 == 0) fprintf(stderr, "\n");
+       fprintf(stderr, DATA_PRINTF_MODIFIER, Bza[i][j][k]);
+       fprintf(stderr, DATA_PRINTF_MODIFIER, Ex[i][j][k]);
+       fprintf(stderr, DATA_PRINTF_MODIFIER, Ey[i][j][k]);
+       fprintf(stderr, DATA_PRINTF_MODIFIER, Hz[i][j][k]);
+       if ((i * cxm + j) % 20 == 0) fprintf(stderr, "\n");
       }
   fprintf(stderr, "\n");
 }

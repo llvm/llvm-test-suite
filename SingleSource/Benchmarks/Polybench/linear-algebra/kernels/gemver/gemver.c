@@ -61,7 +61,6 @@ void print_array(int n,
 		 DATA_TYPE POLYBENCH_1D(w,N,n))
 {
   int i;
-
   for (i = 0; i < n; i++) {
     fprintf (stderr, DATA_PRINTF_MODIFIER, w[i]);
     if (i % 20 == 0) fprintf (stderr, "\n");

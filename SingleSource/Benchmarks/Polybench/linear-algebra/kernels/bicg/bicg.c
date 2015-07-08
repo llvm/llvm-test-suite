@@ -46,16 +46,18 @@ void print_array(int nx, int ny,
 
 {
   int i;
+  int n = nx > ny ? nx : ny;
+  char *printmat = malloc(n*8);
 
-  for (i = 0; i < ny; i++) {
-    fprintf (stderr, DATA_PRINTF_MODIFIER, s[i]);
-    if (i % 20 == 0) fprintf (stderr, "\n");
-  }
-  for (i = 0; i < nx; i++) {
-    fprintf (stderr, DATA_PRINTF_MODIFIER, q[i]);
-    if (i % 20 == 0) fprintf (stderr, "\n");
-  }
-  fprintf (stderr, "\n");
+  for (i = 0; i < ny; i++)
+    print_element(s[i], i*8, printmat);
+  *(printmat+i) = 0;
+  fputs(printmat, stderr);
+  for (i = 0; i < nx; i++)
+    print_element(q[i], i*8, printmat);
+  *(printmat+i) = 0;
+  fputs(printmat, stderr);
+  free(printmat);
 }
 
 

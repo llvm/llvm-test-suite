@@ -52,15 +52,20 @@ void print_array(int nx,
 		 DATA_TYPE POLYBENCH_2D(hz,NX,NY,nx,ny))
 {
   int i, j;
+  char *printmat = malloc(ny*8);
 
-  for (i = 0; i < nx; i++)
-    for (j = 0; j < ny; j++) {
-      fprintf(stderr, DATA_PRINTF_MODIFIER, ex[i][j]);
-      fprintf(stderr, DATA_PRINTF_MODIFIER, ey[i][j]);
-      fprintf(stderr, DATA_PRINTF_MODIFIER, hz[i][j]);
-      if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-    }
-  fprintf(stderr, "\n");
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++)
+      print_element(ex[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+    for (j = 0; j < ny; j++)
+      print_element(ey[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+    for (j = 0; j < ny; j++)
+      print_element(hz[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

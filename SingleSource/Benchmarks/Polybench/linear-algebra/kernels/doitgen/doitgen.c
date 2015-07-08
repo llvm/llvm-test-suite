@@ -43,14 +43,15 @@ void print_array(int nr, int nq, int np,
 		 DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np))
 {
   int i, j, k;
+  char *printmat = malloc(np*8);
 
-  for (i = 0; i < nr; i++)
+  for (i = 0; i < nr; i++) {
     for (j = 0; j < nq; j++)
-      for (k = 0; k < np; k++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, A[i][j][k]);
-	if (i % 20 == 0) fprintf (stderr, "\n");
-      }
-  fprintf (stderr, "\n");
+      for (k = 0; k < np; k++)
+      print_element(A[i][j][k], k*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

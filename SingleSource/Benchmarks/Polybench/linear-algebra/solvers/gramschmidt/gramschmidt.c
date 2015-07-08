@@ -60,25 +60,20 @@ void print_array(int ni, int nj,
 		 DATA_TYPE POLYBENCH_2D(Q,NI,NJ,ni,nj))
 {
   int i, j;
+  char *printmat = malloc(nj*8);
 
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < nj; j++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, A[i][j]);
-	if (i % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
-  for (i = 0; i < nj; i++)
-    for (j = 0; j < nj; j++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, R[i][j]);
-	if (i % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < nj; j++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, Q[i][j]);
-	if (i % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
+  for (i = 0; i < ni; i++) {
+    for (j = 0; j < nj; j++)
+      print_element(A[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+    for (j = 0; j < nj; j++)
+      print_element(R[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+    for (j = 0; j < nj; j++)
+      print_element(Q[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

@@ -43,13 +43,14 @@ void print_array(int ni,
 		 DATA_TYPE POLYBENCH_2D(B,NI,NI,ni,ni))
 {
   int i, j;
+  char *printmat = malloc(ni*8);
 
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < ni; j++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, B[i][j]);
-	if ((i * ni + j) % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
+  for (i = 0; i < ni; i++) {
+    for (j = 0; j < ni; j++)
+      print_element(B[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

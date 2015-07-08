@@ -42,12 +42,12 @@ void print_array(int nx,
 
 {
   int i;
+  char *printmat = malloc(nx*8);
 
-  for (i = 0; i < nx; i++) {
-    fprintf (stderr, DATA_PRINTF_MODIFIER, y[i]);
-    if (i % 20 == 0) fprintf (stderr, "\n");
-  }
-  fprintf (stderr, "\n");
+  for (i = 0; i < nx; i++)
+    print_element(y[i], i*8, printmat);
+  fputs(printmat, stderr);
+  free(printmat);
 }
 
 

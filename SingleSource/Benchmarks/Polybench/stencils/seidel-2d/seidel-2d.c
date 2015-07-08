@@ -39,13 +39,14 @@ void print_array(int n,
 
 {
   int i, j;
+  char *printmat = malloc(n*8);
 
-  for (i = 0; i < n; i++)
-    for (j = 0; j < n; j++) {
-      fprintf(stderr, DATA_PRINTF_MODIFIER, A[i][j]);
-      if ((i * n + j) % 20 == 0) fprintf(stderr, "\n");
-    }
-  fprintf(stderr, "\n");
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++)
+      print_element(A[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

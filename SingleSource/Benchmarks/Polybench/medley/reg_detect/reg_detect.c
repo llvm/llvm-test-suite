@@ -43,13 +43,14 @@ void print_array(int maxgrid,
 		 DATA_TYPE POLYBENCH_2D(path,MAXGRID,MAXGRID,maxgrid,maxgrid))
 {
   int i, j;
+  char *printmat = malloc(maxgrid*8);
 
-  for (i = 0; i < maxgrid; i++)
-    for (j = 0; j < maxgrid; j++) {
-      fprintf (stderr, DATA_PRINTF_MODIFIER, path[i][j]);
-      if ((i * maxgrid + j) % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
+  for (i = 0; i < maxgrid; i++) {
+    for (j = 0; j < maxgrid; j++)
+      print_element(path[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

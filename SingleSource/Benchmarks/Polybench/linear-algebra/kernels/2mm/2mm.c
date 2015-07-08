@@ -54,13 +54,14 @@ void print_array(int ni, int nl,
 		 DATA_TYPE POLYBENCH_2D(D,NI,NL,ni,nl))
 {
   int i, j;
+  char *printmat = malloc(nl*8);
 
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < nl; j++) {
-	fprintf (stderr, DATA_PRINTF_MODIFIER, D[i][j]);
-	if ((i * ni + j) % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
+  for (i = 0; i < ni; i++) {
+    for (j = 0; j < nl; j++)
+      print_element(D[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

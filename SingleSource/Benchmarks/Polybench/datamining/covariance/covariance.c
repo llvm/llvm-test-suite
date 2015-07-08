@@ -42,13 +42,14 @@ void print_array(int m,
 
 {
   int i, j;
+  char *printmat = malloc(m*8);
 
-  for (i = 0; i < m; i++)
-    for (j = 0; j < m; j++) {
-      fprintf (stderr, DATA_PRINTF_MODIFIER, symmat[i][j]);
-      if ((i * m + j) % 20 == 0) fprintf (stderr, "\n");
-    }
-  fprintf (stderr, "\n");
+  for (i = 0; i < m; i++) {
+    for (j = 0; j < m; j++)
+      print_element(symmat[i][j], j*8, printmat);
+    fputs(printmat, stderr);
+  }
+  free(printmat);
 }
 
 

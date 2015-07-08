@@ -55,11 +55,12 @@ void print_array(int n,
 
 {
   int i;
+  char *printmat = malloc(n*8);
 
-  for (i = 0; i < n; i++) {
-    fprintf (stderr, DATA_PRINTF_MODIFIER, x[i]);
-    if (i % 20 == 0) fprintf (stderr, "\n");
-  }
+  for (i = 0; i < n; i++)
+    print_element(x[i], i*8, printmat);
+  fputs(printmat, stderr);
+  free(printmat);
 }
 
 
