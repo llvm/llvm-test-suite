@@ -619,6 +619,16 @@ void print_element(float el, int pos, char *out)
 
   block.datum = el;
   /* each nibble as a char, within the printable range */
+#ifdef __BIG_ENDIAN__
+  *(out+pos+7) = (block.bytes[0]&0xF0>>4)+'0';
+  *(out+pos+6) = (block.bytes[0]&0x0F)   +'0';
+  *(out+pos+5) = (block.bytes[1]&0xF0>>4)+'0';
+  *(out+pos+4) = (block.bytes[1]&0x0F)   +'0';
+  *(out+pos+3) = (block.bytes[2]&0xF0>>4)+'0';
+  *(out+pos+2) = (block.bytes[2]&0x0F)   +'0';
+  *(out+pos+1) = (block.bytes[3]&0xF0>>4)+'0';
+  *(out+pos) =   (block.bytes[3]&0x0F)   +'0';
+#else
   *(out+pos)   = (block.bytes[0]&0xF0>>4)+'0';
   *(out+pos+1) = (block.bytes[0]&0x0F)   +'0';
   *(out+pos+2) = (block.bytes[1]&0xF0>>4)+'0';
@@ -627,6 +637,7 @@ void print_element(float el, int pos, char *out)
   *(out+pos+5) = (block.bytes[2]&0x0F)   +'0';
   *(out+pos+6) = (block.bytes[3]&0xF0>>4)+'0';
   *(out+pos+7) = (block.bytes[3]&0x0F)   +'0';
+#endif
 }
 
 #endif /* !POLYBENCH_H */
