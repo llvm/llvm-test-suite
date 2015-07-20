@@ -9,5 +9,9 @@ ifdef BENCHMARKING_ONLY
 PARALLEL_DIRS := $(filter-out frame_layout, $(PARALLEL_DIRS))
 endif
 
+ifneq (,$(findstring mips16,$(MIPSARCH)))
+  PARALLEL_DIRS := $(filter-out frame_layout, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/Makefile.config
 include $(LEVEL)/Makefile.programs
