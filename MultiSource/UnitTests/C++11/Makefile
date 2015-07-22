@@ -5,10 +5,6 @@ LEVEL = ../../..
 PARALLEL_DIRS := frame_layout
 CPPFLAGS += -std=c++11
 
-ifdef BENCHMARKING_ONLY
-PARALLEL_DIRS := $(filter-out frame_layout, $(PARALLEL_DIRS))
-endif
-
 ifneq (,$(findstring mips16,$(MIPSARCH)))
   PARALLEL_DIRS := $(filter-out frame_layout, $(PARALLEL_DIRS))
 endif
