@@ -19,12 +19,11 @@ REPORTS_SUFFIX := $(addsuffix .report.txt, $(REPORTS_TO_GEN))
 #	-grep "^program" Output/$*.simple.compile.time >> $@
 
 $(PROGRAMS_TO_TEST:%=Output/%.simple.compile.report.txt): \
-Output/%.simple.compile.report.txt: Output/%.out-simple Output/%.simple-hash
+Output/%.simple.compile.report.txt: Output/%.out-simple
 	@echo > $@
 	@-if test -f Output/$*.simple; then \
 	  echo "TEST-PASS: compile $(RELDIR)/$*" >> $@; \
 	  echo "TEST-RESULT-compile-success: pass" >> $@;\
-	  echo "TEST-RESULT-compile-hash: `cat Output/$*.simple-hash`" >> $@;\
 	else \
 	  echo "TEST-FAIL: compile $(RELDIR)/$*" >> $@; \
 	fi

@@ -545,12 +545,6 @@ ifdef PROGRAM_OUTPUT_FILTER
 	$(PROGRAM_OUTPUT_FILTER) $@
 endif
 
-$(PROGRAMS_TO_TEST:%=Output/%.simple-hash): \
-Output/%.simple-hash: Output/%.simple
-	cp $< $@; \
-	strip --remove-section=.comment --remove-section='.note*' $@; \
-	$(PROGDIR)/HashProgramOutput.sh $@
-
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(RUNSAFELY) $(STDIN_FILENAME) $@ $(LLI) -info-output-file=$(CURDIR)/$@.info $(STATS) $(LLI_OPTS) $< $(RUN_OPTIONS)
