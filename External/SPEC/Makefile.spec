@@ -93,6 +93,18 @@ ifdef PROGRAM_OUTPUT_FILTER
 	$(PROGRAM_OUTPUT_FILTER) $@
 endif
 
+ifeq ($(TARGET_OS),Darwin)
+    STRIP_BINARY_FOR_HASH_CMD=echo
+else
+    STRIP_BINARY_FOR_HASH_CMD=strip --remove-section=.comment --remove-section='.note*'
+endif
+
+$(PROGRAMS_TO_TEST:%=Output/%.simple-hash): \
+	Output/%.simple-hash: Output/%.simple
+		cp $< $@; \
+		$(STRIP_BINARY_FOR_HASH_CMD) $@; \
+		$(PROGDIR)/HashProgramOutput.sh $@
+
 $(PROGRAMS_TO_TEST:%=Output/%.out-lli): \
 Output/%.out-lli: Output/%.llvm.bc $(LLI)
 	$(SPEC_SANDBOX) lli-$(RUN_TYPE) $@ $(REF_IN_DIR) \
