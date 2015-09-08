@@ -34,7 +34,7 @@ void id3_inittag(ID3TAGDATA *tag) {
 	strcpy( tag->album, "");
 	strcpy( tag->year, "");    
 	strcpy( tag->comment, "");
-	strcpy( tag->genre, "ÿ");	/* unset genre */
+	tag->genre[0] = 'ÿ';	/* unset genre */
 	tag->track = 0;
 
 	tag->valid = 0;		/* not ready for writing*/
