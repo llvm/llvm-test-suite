@@ -500,6 +500,11 @@ endif
 # If the program wants its output hashed, add an output filter.
 ifdef ENABLE_HASHED_PROGRAM_OUTPUT
 ifdef HASH_PROGRAM_OUTPUT
+# If the program also wants a floating-point comparison, give
+# and error.
+ifdef FP_TOLERANCE
+$(error Cannot use both FP_TOLERNANCE and HASH_PROGRAM_OUTPUT)
+endif
 PROGRAM_OUTPUT_FILTER := $(PROGDIR)/HashProgramOutput.sh
 endif
 endif
