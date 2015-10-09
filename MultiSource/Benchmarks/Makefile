@@ -22,6 +22,10 @@ ifndef DISABLE_CXX
 PARALLEL_DIRS += Prolangs-C++ PAQ8p tramp3d-v4 Bullet 7zip
 endif
 
+ifeq ($(ARCH),PowerPC)
+PARALLEL_DIRS := $(filter-out tramp3d-v4, $(PARALLEL_DIRS))
+endif
+
 ifndef SMALL_PROBLEM_SIZE
 PARALLEL_DIRS += \
 		mafft

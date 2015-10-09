@@ -42,6 +42,10 @@ PARALLEL_DIRS := $(filter-out obsequi, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out lemon, $(PARALLEL_DIRS))
 endif
 
+ifeq ($(ARCH),PowerPC)
+PARALLEL_DIRS := $(filter-out sqlite3, $(PARALLEL_DIRS))
+endif
+
 ifdef BENCHMARKING_ONLY
 PARALLEL_DIRS := $(filter-out Burg, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out treecc, $(PARALLEL_DIRS))
