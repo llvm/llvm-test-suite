@@ -1,0 +1,6 @@
+import sys
+
+config.test_source_root = "@CMAKE_BINARY_DIR@"
+config.test_suite_root = "@CMAKE_SOURCE_DIR@"
+
+lit_config.load_config(config, "@CMAKE_SOURCE_DIR@/lit.cfg")

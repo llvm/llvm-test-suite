@@ -63,3 +63,6 @@ set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT
 
 add_subdirectory(SingleSource)
 add_subdirectory(MultiSource)
+
+# Produce lit.site.cfg
+configure_file("${CMAKE_SOURCE_DIR}/lit.site.cfg.in" "${CMAKE_BINARY_DIR}/lit.site.cfg")
