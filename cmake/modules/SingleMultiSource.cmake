@@ -92,25 +92,25 @@ function(llvm_add_test name exename)
     set(KEY)
   endif()
 
-  # Pick the best reference output based on "programname.reference_output".
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-  elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-  elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-  elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-  else()
-    # Just compare to its own output. This will always succeed, but here's hoping the
-    # test in question uses its exit value to determine status, so it'll be caught by
-    # the previous RUN line.
-    set(REFERENCE_OUTPUT "%o")
-    message("-- No reference output found for test ${name}")
-  endif()
-
   # If the program is nondeterministic, don't bother diffing and use "touch" again as an identity.
   if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
+    # Pick the best reference output based on "programname.reference_output".
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+    else()
+      # Just compare to its own output. This will always succeed, but here's hoping the
+      # test in question uses its exit value to determine status, so it'll be caught by
+      # the previous RUN line.
+      set(REFERENCE_OUTPUT "%o")
+      message("-- No reference output found for test ${name}")
+    endif()
+
     set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
     if(DEFINED FP_TOLERANCE)
       set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
