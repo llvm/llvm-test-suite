@@ -131,10 +131,6 @@ function(llvm_add_test name exename)
     string(REPLACE ";" " " RUN_OPTIONS "${RUN_OPTIONS}")
   endif()
 
-  # FIXME: Sort out how to call timeit, or timeit.sh.
-  set(TIMEIT ${CMAKE_BINARY_DIR}/tools/timeit)
-  # FIXME: Add runtimelimit support.
-  
   # Now do the actual configuration.
   configure_file(${CMAKE_SOURCE_DIR}/cmake/lit-test-template.in
     ${CMAKE_CURRENT_BINARY_DIR}/${exename}.test)
