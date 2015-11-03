@@ -76,15 +76,11 @@ endmacro()
 #
 # The test template lives in cmake/lit-test-template.in and is configured by this function.
 function(llvm_add_test name exename)
-  if(NOT DEFINED STDIN_FILENAME)
-    set(STDIN_FILENAME /dev/null)
-  endif()
+  set(VERIFYSCRIPT "")
 
   # Hash if we've been asked to, otherwise just use "touch" as an identity function.
   if(HASH_PROGRAM_OUTPUT)
-    set(PROGRAM_OUTPUT_FILTER ${CMAKE_SOURCE_DIR}/HashProgramOutput.sh)
-  else()
-    set(PROGRAM_OUTPUT_FILTER touch)
+	set(VERIFYSCRIPT "${VERIFYSCRIPT}\nVERIFY: ${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
   endif()
 
   # Find the reference output file key name.
@@ -114,9 +110,7 @@ function(llvm_add_test name exename)
   endif()
 
   # If the program is nondeterministic, don't bother diffing and use "touch" again as an identity.
-  if(DEFINED PROGRAM_IS_NONDETERMINISTIC)
-    set(DIFFPROG touch)
-  else()
+  if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
     set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
     if(DEFINED FP_TOLERANCE)
       set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
@@ -124,16 +118,23 @@ function(llvm_add_test name exename)
     if(DEFINED FP_ABSTOLERANCE)
       set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
     endif()
+	set(VERIFYSCRIPT "${VERIFYSCRIPT}\nVERIFY: ${DIFFPROG} %o ${REFERENCE_OUTPUT}")
   endif()
 
+  set(RUNSCRIPT "RUN: ${CMAKE_CURRENT_BINARY_DIR}/${exename}")
   if(DEFINED RUN_OPTIONS)
     # RUN_OPTIONS is a semicolon-separated list. Change it into a whitespace-separated string.
     string(REPLACE ";" " " RUN_OPTIONS "${RUN_OPTIONS}")
+	set(RUNSCRIPT "${RUNSCRIPT} ${RUN_OPTIONS}")
   endif()
 
-  # Now do the actual configuration.
-  configure_file(${CMAKE_SOURCE_DIR}/cmake/lit-test-template.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${exename}.test)
+  if(DEFINED STDIN_FILENAME)
+	set(RUNSCRIPT "${RUNSCRIPT} < ${STDIN_FILENAME}")
+  endif()
+
+  # Produce .test file
+  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${exename}.test
+    CONTENT "${RUNSCRIPT}${VERIFYSCRIPT}\n")
 endfunction()
 
 # llvm_singlesource - configure the current directory as a SingleSource subdirectory -
