@@ -109,7 +109,7 @@ function(llvm_add_test name exename)
     # Just compare to its own output. This will always succeed, but here's hoping the
     # test in question uses its exit value to determine status, so it'll be caught by
     # the previous RUN line.
-    set(REFERENCE_OUTPUT "%t")
+    set(REFERENCE_OUTPUT "%o")
     message("-- No reference output found for test ${name}")
   endif()
 
