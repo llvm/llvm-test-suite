@@ -910,6 +910,8 @@ static TRIE TrieRead(LANGUAGE_NUM lnum, BOOLEAN *success)
     fclose(unpacked_fp);
     CompressTrie(T);
 
+    /* Avoid writing and re-reading a cache file in benchmarking mode */
+#if 0
     /* write the compressed trie out to the packed file */
     /* cannot use FileName(packed_fnum) because path won't be right */
     StringCopy(buff, FileName(unpacked_fnum));
@@ -941,8 +943,10 @@ static TRIE TrieRead(LANGUAGE_NUM lnum, BOOLEAN *success)
     if( packed_fp == NULL )
       Error(36, 15, "cannot open hyphenation file %s",
 	FATAL, no_fpos, FileName(packed_fnum));
+#endif
   } /* end if( packed_fp == NULL ) */
 
+#if 0
   /* now packed hyphenation file is open, read it in */
   fseek(packed_fp, 0L, SEEK_END);
   len = (unsigned) ftell(packed_fp); rewind(packed_fp);
@@ -971,6 +975,7 @@ static TRIE TrieRead(LANGUAGE_NUM lnum, BOOLEAN *success)
   for( i = 0; i < T->node_free; i++ )  BeGetShort(packed_fp, &T->node_mem[i]);
   for( i = 0; i < T->string_lim; i++ ) BeGetChar(packed_fp, &T->string_mem[i]);
   fclose(packed_fp);
+#endif
 
   /* debug and exit */
   debug0(DHY, DD, "TrieRead returning, T =");
