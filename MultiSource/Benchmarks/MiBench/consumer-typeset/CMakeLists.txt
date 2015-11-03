@@ -10,12 +10,23 @@ set(LDFLAGS -lm)
 set(RUN_OPTIONS -x -I ${CMAKE_CURRENT_SOURCE_DIR}/data/include -D ${CMAKE_CURRENT_SOURCE_DIR}/data/data -F ${CMAKE_CURRENT_SOURCE_DIR}/data/font -C ${CMAKE_CURRENT_SOURCE_DIR}/data/maps -H ${CMAKE_CURRENT_BINARY_DIR}/data/hyph ${CMAKE_CURRENT_SOURCE_DIR}/large.lout)
 set(GeneratedTestInputs copy-hyph-files)
 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/data/hyph
-    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/data/hyph
-    COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/data/hyph/* ${CMAKE_CURRENT_BINARY_DIR}/data/hyph
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Copying consumer-typeset test inputs")
-add_custom_target(consumer-typeset_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/data/hyph)
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/data/hyph/${file}
+      COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/data/hyph
+      COMMENT "Making directory for consumer-typeset test inputs")
+
+file(GLOB test_data "${CMAKE_CURRENT_SOURCE_DIR}/data/hyph/*")
+foreach(file ${test_data})
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/data/hyph/${file}
+      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/data/hyph
+      COMMAND cp -r ${file} ${CMAKE_CURRENT_BINARY_DIR}/data/hyph/
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      COMMENT "Copying consumer-typeset test inputs")
+  list(APPEND test_files ${file})
+endforeach()
+
+add_custom_target(consumer-typeset_input SOURCES ${test_files})
     llvm_multisource()
+
+#set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${test_files})
 add_dependencies(consumer-typeset consumer-typeset_input)
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
