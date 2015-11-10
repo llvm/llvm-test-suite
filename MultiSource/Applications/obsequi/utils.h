@@ -10,16 +10,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 
 //#################################################################
 // Define a couple of types which I like to use.
 //#################################################################
 
-typedef  u_int8_t   u8bit;
-typedef  u_int16_t  u16bit;
-typedef  u_int32_t  u32bit;
-typedef  u_int64_t  u64bit;
+typedef  uint8_t    u8bit;
+typedef  uint16_t   u16bit;
+typedef  uint32_t   u32bit;
+typedef  uint64_t   u64bit;
 
 typedef  int16_t    s16bit;
 typedef  int32_t    s32bit;
