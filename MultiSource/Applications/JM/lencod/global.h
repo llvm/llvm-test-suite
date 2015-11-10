@@ -29,6 +29,7 @@
 #define _GLOBAL_H_
 
 #include <stdio.h>
+#include <time.h>
 
 #include "win32.h"
 #include "defines.h"
