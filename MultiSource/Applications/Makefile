@@ -42,8 +42,9 @@ PARALLEL_DIRS := $(filter-out obsequi, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out lemon, $(PARALLEL_DIRS))
 endif
 
+# FIXME: re-activate hexxagon when opt/codegen problem for it is fixed
 ifeq ($(ARCH),PowerPC)
-PARALLEL_DIRS := $(filter-out sqlite3, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out hexxagon, $(PARALLEL_DIRS))
 endif
 
 ifdef BENCHMARKING_ONLY
