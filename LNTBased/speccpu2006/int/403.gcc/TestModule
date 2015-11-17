@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+# -*- Python -*-
+
+import spec
+
+class SPEC2006_403_gcc(spec.TestModule):
+    year = '2006'
+    category = 'int'
+    benchmark = '403.gcc'
+
+    train_input_set = ['train/input/integrate.i']
+    train_output_set = []
+    train_args = 'integrate.i -o - > 403.gcc.integrate.out 2> 403.gcc.integrate.err'
+    train_cmp_cmd = ''
+    ref_input_set = ['ref/input/166.i', 'ref/input/200.i', 'ref/input/c-typeck.i', 'ref/input/cp-decl.i', 'ref/input/expr.i', 'ref/input/expr2.i', 'ref/input/scilab.i']
+    ref_output_set = []
+    ref_args = ['166.i -o - > 403.gcc.166.out 2> 403.gcc.166.err', '200.i -o - > 403.gcc.200.out 2> 403.gcc.200.err', 'c-typeck.i -o - > 403.gcc.c-typeck.out 2> 403.gcc.c-typeck.err', 'cp-decl.i -o - > 403.gcc.cp-decl.out 2> 403.gcc.cp-decl.err', 'expr.i -o - > 403.gcc.expr.out 2> 403.gcc.expr.err', 'expr2.i -o - > 403.gcc.expr2.out 2> 403.gcc.expr2.err', 'scilab.i -o - > 403.gcc.scilab.out 2> 403.gcc.scilab.err']
+    ref_cmp_cmds = []
+
+# This is the only required entry point to the module.
+test_class = SPEC2006_403_gcc
+
+# This is not required, but allows users with LNT in the environment (required
+# for initial imports to work) to execute this test directly.
+if __name__ == '__main__':
+    test_class().main()

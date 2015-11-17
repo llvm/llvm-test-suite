@@ -50,6 +50,11 @@ endif   # End USE_F95
 #   465.tonto     - infinite loop, works at -O0, not at -O2
 #   482.sphinx3   - generates control file at run time
 
+# In the SPEC test module we can handle these too.
+ifdef USE_SPEC_TEST_MODULE
+PARALLEL_DIRS += 453.povray 482.sphinx3
+endif
+
 ifdef DISABLE_CXX
 PARALLEL_DIRS := $(filter-out 444.namd, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out 447.dealII, $(PARALLEL_DIRS))
