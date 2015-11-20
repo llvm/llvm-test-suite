@@ -33,18 +33,18 @@ class TestModule(nt.TestModule):
         # Executable name, e.g. 456.hmmer.simple
         self.exe = self.benchmark + '.simple'
 
-    def configure_test_suite(self, config, working_dir):
-        args = [os.path.realpath(os.path.join(config.test_suite_root,
+    def configure_test_suite(self, working_dir):
+        args = [os.path.realpath(os.path.join(self.config.test_suite_root,
                                               'configure'))]
-        if config.without_llvm:
+        if self.config.without_llvm:
             args.extend(['--without-llvmsrc', '--without-llvmobj'])
         else:
-            args.extend(['--with-llvmsrc=%s' % config.llvm_src_root,
-                         '--with-llvmobj=%s' % config.llvm_obj_root])
+            args.extend(['--with-llvmsrc=%s' % self.config.llvm_src_root,
+                         '--with-llvmobj=%s' % self.config.llvm_obj_root])
 
-        if config.test_suite_externals:
+        if self.config.test_suite_externals:
             args.append('--with-externals=%s' %
-                        os.path.realpath(config.test_suite_externals))
+                        os.path.realpath(self.config.test_suite_externals))
 
         res = self.call(args, cwd=working_dir)
         if res != 0:
@@ -78,7 +78,8 @@ class TestModule(nt.TestModule):
     def execute_test(self, options, make_variables, config):
         MODULENAME = options['MODULENAME']
         self.SRCROOT = options['SRCROOT']
-        OBJROOT = options['OBJROOT']
+        self.config = config
+        self.OBJROOT = options['OBJROOT']
         CC = options['CC']
         CFLAGS = options['CFLAGS']
         TEST_SUITE_EXTERNALS = config.test_suite_externals
@@ -98,7 +99,7 @@ class TestModule(nt.TestModule):
             print >>self.log, "skipping, no source under externals"
             return []
 
-        res = self.configure_test_suite(config, OBJROOT)
+        res = self.configure_test_suite(self.OBJROOT)
         if res != 0:
             return fail()
 
@@ -107,7 +108,7 @@ class TestModule(nt.TestModule):
         make_cmd.append('USE_SPEC_TEST_MODULE=1')
 
         # Run make clean to create the benchmark directories.
-        external_obj = os.path.join(OBJROOT, 'External', 'SPEC', self.suite, self.benchmark)
+        external_obj = os.path.join(self.OBJROOT, 'External', 'SPEC', self.suite, self.benchmark)
         clean_cmd = make_cmd
         external_spec_obj = os.path.split(external_obj)[0]
         result = self.call(make_cmd + ['-C', external_spec_obj, 'clean'])
@@ -119,7 +120,7 @@ class TestModule(nt.TestModule):
         exe_file = os.path.join('Output', self.exe)
 
         if config.spec_with_pgo:
-            pgo_dir = os.path.join(OBJROOT, 'pgo')
+            pgo_dir = os.path.join(self.OBJROOT, 'pgo')
             os.mkdir(pgo_dir)
 
             target_flags = make_variables['TARGET_FLAGS'] + ' -fprofile-instr-generate'
@@ -140,11 +141,11 @@ class TestModule(nt.TestModule):
                 return self.fail()
 
             llvm_profdata = os.path.join(os.path.dirname(CC), 'llvm-profdata')
-            result = self.call(llvm_profdata + ' merge -output=code.profdata pgo/default.profraw', shell=True, cwd=OBJROOT)
+            result = self.call(llvm_profdata + ' merge -output=code.profdata pgo/default.profraw', shell=True, cwd=self.OBJROOT)
             if result != 0:
                 return self.fail()
 
-            target_flags = make_variables['TARGET_FLAGS'] + ' -fprofile-instr-use=' + os.path.join(OBJROOT, 'code.profdata')
+            target_flags = make_variables['TARGET_FLAGS'] + ' -fprofile-instr-use=' + os.path.join(self.OBJROOT, 'code.profdata')
             make_cmd.append("TARGET_FLAGS=%s" % target_flags)
 
             result = self.call(make_cmd + ['-C', external_spec_obj, 'clean'])
@@ -159,24 +160,24 @@ class TestModule(nt.TestModule):
         if result != 0 or not os.path.exists(exe):
             return self.fail()
 
-        shutil.copy(exe, OBJROOT)
+        shutil.copy(exe, self.OBJROOT)
 
-        self.copy_input_set(OBJROOT, 'ref')
-        self.copy_output_set(OBJROOT, 'ref')
+        self.copy_input_set(self.OBJROOT, 'ref')
+        self.copy_output_set(self.OBJROOT, 'ref')
 
         run_cmds = ['./%s %s' % (self.exe, args) for args in self.ref_args]
         status = PASS
 
         start_time = self.get_time()
         for cmd in run_cmds:
-            result = self.call(cmd, cwd=OBJROOT, shell=True)
+            result = self.call(cmd, cwd=self.OBJROOT, shell=True)
             if result != 0:
                 status = FAIL
         exec_time = self.get_time() - start_time
 
-        os.environ['PATH'] += ':' + os.path.join(OBJROOT, 'tools')
+        os.environ['PATH'] += ':' + os.path.join(self.OBJROOT, 'tools')
         for cmd in self.ref_cmp_cmds:
-            if self.call(cmd, cwd=OBJROOT, shell=True, env=os.environ) != 0:
+            if self.call(cmd, cwd=self.OBJROOT, shell=True, env=os.environ) != 0:
                 status = FAIL
 
         return [
