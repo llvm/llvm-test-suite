@@ -3,6 +3,7 @@
 
 import os
 import shutil
+import stat
 
 # We import test functionity from LNT.
 from lnt.tests import nt
@@ -23,6 +24,9 @@ def cp_rf(src, dst):
 
 # Test module classes are currently required to subclass 'nt.TestModule'.
 class TestModule(nt.TestModule):
+
+    timeout = 5000
+
     def __init__(self):
         # The subdirectory name under externals E.g. CINT2006
         self.suite = 'C' + self.category.upper() + str(self.year)
@@ -46,11 +50,7 @@ class TestModule(nt.TestModule):
             args.append('--with-externals=%s' %
                         os.path.realpath(self.config.test_suite_externals))
 
-        res = self.call(args, cwd=working_dir)
-        if res != 0:
-            return res
-        # RunSafely requires timeit, build it.
-        return self.call(['make', 'tools'], cwd=working_dir)
+        return self.call(args, cwd=working_dir)
 
     def fail(self):
         return [TestSamples(self.testname + '.compile.status', [FAIL])]
@@ -74,6 +74,66 @@ class TestModule(nt.TestModule):
 
         for f in output_set:
             cp_rf(os.path.join(self.datadir, f), dest_dir)
+
+    def run_safely(self, args, **kwargs):
+        if kwargs.get('shell', False):
+            argstr = args
+        else:
+            argstr = ' '.join(args)
+            kwargs['shell'] = True
+
+        if 'file_index' in kwargs:
+            file_index = kwargs['file_index']
+            # Remove so that it can be forwarded to self.call.
+            del kwargs['file_index']
+        else:
+            file_index = 0
+
+        timeit = [os.path.join(self.OBJROOT, 'tools', 'timeit-target')]
+
+        cwd = kwargs.get('cwd',  os.getcwd())
+        summary_file = os.path.join(cwd, 'summary_%d.time' % file_index)
+        timeit.extend(['--limit-core', '0',
+                       '--limit-cpu', str(self.timeout),
+                       '--timeout', str(self.timeout),
+                       '--limit-file-size', '104857600',
+                       '--limit-rss-size', '838860800',
+                       '--summary', summary_file])
+        timeit.append(argstr)
+        cmdstr = ' '.join(timeit)
+
+        if self.config.remote:
+            command_file = os.path.join(cwd, 'command_%d' % file_index)
+            with open(command_file, 'w') as f:
+                # Chdir here so that the redirects are put into CWD as well.
+                remote_command = 'cd %s\n%s\n' % (cwd, cmdstr)
+                print >>self.log, "command:", remote_command,
+                f.write(remote_command)
+
+            st = os.stat(command_file)
+            os.chmod(command_file, st.st_mode | stat.S_IEXEC)
+
+            res = self.call([self.config.remote_client,
+                             '-l', self.config.remote_user,
+                             self.config.remote_host,
+                             '-p', str(self.config.remote_port),
+                             command_file])
+
+        else:
+            kwargs['shell'] = True
+            res = self.call(cmdstr, **kwargs)
+
+        if res != 0:
+            return (res, 0)
+
+        summary = open(summary_file, 'r').readlines()
+        status = [line.split()[1] for line in summary if line.startswith('exit')]
+        assert len(status) == 1, 'incorrect exit status'
+        time = [line.split()[1] for line in summary
+                if line.startswith(self.config.test_time_stat)]
+        assert len(time) == 1, 'incorrect ellapsed time'
+
+        return (int(status[0]), float(time[0]))
 
     def execute_test(self, options, make_variables, config):
         MODULENAME = options['MODULENAME']
@@ -101,10 +161,16 @@ class TestModule(nt.TestModule):
 
         res = self.configure_test_suite(self.OBJROOT)
         if res != 0:
-            return fail()
+            return self.fail()
 
         make_cmd = ['make', '-k']
         make_cmd.extend('%s=%s' % (k,v) for k,v in make_variables.items())
+
+        # RunSafely.sh requires timeit, build it.
+        res = self.call(make_cmd + ['tools'], cwd=self.OBJROOT)
+        if res != 0:
+            return self.fail()
+
         make_cmd.append('USE_SPEC_TEST_MODULE=1')
 
         # Run make clean to create the benchmark directories.
@@ -136,7 +202,7 @@ class TestModule(nt.TestModule):
             self.copy_input_set(pgo_dir, 'train')
 
             pgo_cmd = './%s %s' % (self.exe, self.train_args)
-            result = self.call(pgo_cmd, cwd=pgo_dir, shell=True)
+            (result, time) = self.run_safely(pgo_cmd, cwd=pgo_dir, shell=True)
             if result != 0:
                 return self.fail()
 
@@ -168,12 +234,14 @@ class TestModule(nt.TestModule):
         run_cmds = ['./%s %s' % (self.exe, args) for args in self.ref_args]
         status = PASS
 
-        start_time = self.get_time()
+        exec_time = 0
+        file_index = 0
         for cmd in run_cmds:
-            result = self.call(cmd, cwd=self.OBJROOT, shell=True)
+            (result, time) = self.run_safely(cmd, cwd=self.OBJROOT, shell=True, file_index=file_index)
             if result != 0:
                 status = FAIL
-        exec_time = self.get_time() - start_time
+            exec_time += time
+            file_index += 1
 
         os.environ['PATH'] += ':' + os.path.join(self.OBJROOT, 'tools')
         for cmd in self.ref_cmp_cmds:
