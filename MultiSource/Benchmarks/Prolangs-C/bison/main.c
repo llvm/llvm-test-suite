@@ -19,6 +19,7 @@ notice and this notice must be preserved on all copies.
  what you give them.   Help stamp out software-hoarding!  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "machine.h"	/* JF for MAXSHORT */
 
 extern	int lineno;

@@ -2,6 +2,7 @@
 /* multipattern matcher */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <ctype.h>
 #define MAXPAT  256
@@ -37,8 +38,6 @@ unsigned char buf[MAXPATFILE+BLOCKSIZE];
 unsigned char pat_spool[MAXPATFILE+2*max_num+MAXPAT];
 unsigned char *patt[max_num];
 unsigned char pat_len[max_num];
-
-extern char *strncpy(char *, const char *, size_t);
 
 void countline(unsigned char *text, int len)
 {

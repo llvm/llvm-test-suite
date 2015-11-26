@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 /*
  * Test routines for testing the tracing code.

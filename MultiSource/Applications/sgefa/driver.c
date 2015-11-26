@@ -19,6 +19,7 @@
 int matgen();
 int matvec();
 int get_space();
+void exit();
 
 main()
 {

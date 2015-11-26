@@ -10,6 +10,7 @@
 /* else go to re1()                                                     */
 /* input parameters: old_D_pat: delimiter pattern.                      */
 /* fd, input file descriptor, M: size of pattern, D: # of errors.       */
+#include <stdlib.h>
 #include <unistd.h>
 #include "agrep.h"
 

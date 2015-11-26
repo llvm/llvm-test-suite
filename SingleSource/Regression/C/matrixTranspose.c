@@ -21,6 +21,8 @@ void complex_transpose(fftw_real *rA, fftw_real *iA, int n, int is, int js)
      }
 }
 
+extern int printf(const char *str, ...);
+
 fftw_real A[2048];
 int main(int argc, char **argv)
 {

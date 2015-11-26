@@ -97,6 +97,7 @@ YYNTBASE = ntokens.
 */
 
 #include <stdio.h>
+#include <string.h>
 #include "machine.h"
 #include "new.h"
 #include "files.h"

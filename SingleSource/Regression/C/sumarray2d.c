@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 int SumArray(int Array[][100], unsigned int NumI, unsigned int NumJ) {

@@ -34,6 +34,7 @@ e-mail address: manli@cs.uh.edu         (Internet)
 */
 
 #include <stdio.h>
+#include <string.h>
 
 #define EMPTY 0
 

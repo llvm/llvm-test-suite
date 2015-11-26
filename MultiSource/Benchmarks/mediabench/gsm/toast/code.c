@@ -11,6 +11,7 @@
 
 #ifdef	HAS_STDLIB_H
 #include	<stdlib.h>
+#include        <string.h>
 #else
 #	include "proto.h"
 	extern char	* memcpy P((char *, char *, int));

@@ -21,6 +21,7 @@
 // same rights and restrictions.
 */
 
+#include <stdlib.h>
 #include "types.h"
 #include "c4.h"
 

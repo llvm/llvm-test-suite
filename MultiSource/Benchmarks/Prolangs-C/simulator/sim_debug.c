@@ -11,6 +11,7 @@
 /*              interupt.c instruct2.c -g -lm                                */
 
 #include <stdio.h>
+#include <string.h>
 #include "constants.h"
 #include "boolean.h"
 #include "memory.h"

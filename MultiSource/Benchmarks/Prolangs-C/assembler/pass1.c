@@ -5,6 +5,7 @@
 /* Drives pass1 of the assembler, but lets other routines do the real work   */
 
 #include <stdio.h>
+#include <string.h>
 #include "assem.h"
 #include "scan_line.h"
 #include "sym_tab.h"

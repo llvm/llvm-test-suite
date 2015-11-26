@@ -26,6 +26,7 @@ notice and this notice must be preserved on all copies.
 The entry point is reader().  */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "files.h"
 #include "new.h"

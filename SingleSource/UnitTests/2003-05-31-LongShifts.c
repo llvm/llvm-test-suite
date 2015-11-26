@@ -1,3 +1,4 @@
+extern int printf(const char *str, ...);
 
 void Test(long long Val, int Amt) {
   printf("0x%llx op %d:\n", Val, Amt);

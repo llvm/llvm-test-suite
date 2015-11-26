@@ -3,6 +3,8 @@
 /* t..c : external declarations */
 
 # include "stdio.h"
+# include "stdlib.h"
+# include "string.h"
 # include "ctype.h"
 
 #ifdef MY_MACROS

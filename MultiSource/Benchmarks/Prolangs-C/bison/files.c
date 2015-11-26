@@ -30,6 +30,7 @@ notice and this notice must be preserved on all copies.
 */
 
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include "files.h"
 #include "new.h"

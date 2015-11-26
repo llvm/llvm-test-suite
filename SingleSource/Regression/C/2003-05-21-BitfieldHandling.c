@@ -53,6 +53,8 @@ struct test {
   long long x : 4;
 } M;   int Msize = sizeof(M);  // Size = 8
 
+extern int printf(const char *str, ...);
+
 int main() {
   printf("N: %d %d %d %d\n", N.code, N.mode, N.x, N.y);
   printf("F1: %d\n", F1.x);

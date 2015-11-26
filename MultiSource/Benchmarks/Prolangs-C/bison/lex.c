@@ -26,6 +26,7 @@ notice and this notice must be preserved on all copies.
    symval is set to a pointer to the entry found.  */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "files.h"
 #include "symtab.h"

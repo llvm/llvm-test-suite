@@ -1,5 +1,6 @@
 /* test the conflicts between options */
 #include <stdio.h>
+#include <stdlib.h>
 
 extern int FILENAMEONLY, APPROX, PAT_FILE, COUNT, INVERSE, BESTMATCH;
 extern FILEOUT;

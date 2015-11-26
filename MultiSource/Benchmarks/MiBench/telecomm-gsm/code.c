@@ -8,9 +8,11 @@
 
 #include	"config.h"
 
-
 #ifdef	HAS_STDLIB_H
-#include	<stdlib.h>
+# include	<stdlib.h>
+# ifdef  HAS_STRING_H
+# include <string.h>
+# endif
 #else
 #	include "proto.h"
 	extern char	* memcpy P((char *, char *, int));

@@ -2,6 +2,7 @@
 /* Permission to use this code is granted as long as the copyright */
 /* notice remains in place. */
 #include <stdio.h>
+#include <stdlib.h>
 #include "definitions.h"
 #include "stats.h"
 

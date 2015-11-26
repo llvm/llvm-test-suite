@@ -16,6 +16,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "packet_lengths.h"
 #include "headers.h"
 #include "packet.h"

@@ -17,6 +17,7 @@
 /* Author:  Peter Riishoej Brinkler (riishigh@daimi.aau.dk)                  */
 /*****************************************************************************/
 
+#include <string.h>
 #include "header.h"
 
 ObjPtr 

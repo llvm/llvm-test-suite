@@ -46,6 +46,7 @@
 
 #include <assert.h>         /* for assert()                        */
 #include <stdio.h>          /* for FILE definitions and fopen()    */
+#include <string.h>
 #include "dataManagement.h" /* for primitive type definitions      */
 #include "errorMessage.h"   /* for errorMessage() definition       */
 #include "openFiles.h"      /* for openFiles return codes          */

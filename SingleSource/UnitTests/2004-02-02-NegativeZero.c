@@ -1,3 +1,4 @@
+extern int printf(const char *str, ...);
 void test(double X) {
   printf("%f %f\n", -0.0 - X, -X);
 }

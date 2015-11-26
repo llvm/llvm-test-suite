@@ -4,6 +4,7 @@
 /* ============================== op_tab =================================== */
 /* Defines and allows for loop up in the OPERATOR TABLE                      */
 #include <stdio.h>
+#include <string.h>
 #include "pseudo.h"
 
 /* ---------------- Possible formats for instructions.                       */

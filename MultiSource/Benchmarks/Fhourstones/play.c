@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "types.h"
 #define TRUE 	1
 

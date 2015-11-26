@@ -1,3 +1,4 @@
+extern int printf(const char *str, ...);
 
 int main() {
   char title[] = "foo and stuff\n";

@@ -2,6 +2,7 @@
 
 #include "scanner.h"                /* Useful Macro Definitions */
 #include <stdio.h>
+#include <stdlib.h>
 
 /* File I/O Variables and Functions in file stringIO.c */
 extern char CH;            /* current input character */

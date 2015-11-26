@@ -9,6 +9,7 @@ typedef struct {
   S1Ty A, B;
 } S2Ty;
 
+extern int printf(const char *str, ...);
 void printS1(S1Ty *V) {
   printf("%d, %f, %f, %lld\n", V->w, V->x, V->y, V->z);
 }

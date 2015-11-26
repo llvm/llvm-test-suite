@@ -25,6 +25,7 @@ AUTHOR     : Fady Habra, 8715030, fady@cs.mcgill.ca
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pgm.h"
 #include "textloc.h"
 #ifdef DEBUG

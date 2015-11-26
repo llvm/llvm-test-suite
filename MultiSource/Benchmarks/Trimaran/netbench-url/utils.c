@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef __GNUC__
 void _fatal(char *file, char *func, int line, char *fmt, ...)

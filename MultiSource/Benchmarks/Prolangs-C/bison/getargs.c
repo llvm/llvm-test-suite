@@ -19,6 +19,7 @@ notice and this notice must be preserved on all copies.
  what you give them.   Help stamp out software-hoarding!  */
 
 #include <stdio.h>
+#include <string.h>
 #include "files.h"
 
 int verboseflag;

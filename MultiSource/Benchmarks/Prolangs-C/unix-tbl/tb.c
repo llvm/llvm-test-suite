@@ -44,7 +44,6 @@ return(1);
 }
 
 int spcount = 0;
-extern char * calloc();
 # define MAXVEC 20
 char *spvecs[MAXVEC];
 

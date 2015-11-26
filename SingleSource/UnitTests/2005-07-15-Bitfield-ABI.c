@@ -10,6 +10,8 @@ void test(struct X *P, int A) {
    P->A = A;
 }
 
+extern int printf(const char *str, ...);
+
 int main() {
   union {
     int Y;

@@ -2,6 +2,7 @@
 /****** global.h ********************************************************/
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 /*
 extern char *strcpy();
