@@ -49,9 +49,8 @@ ORIG_ARGS="$*"
 DIR=${0%%`basename $0`}
 
 RHOST=
-RUSER=`id -un`
+RFLAGS=""
 RCLIENT=rsh
-RPORT=
 RUN_UNDER=
 TIMEIT=
 SHOW_ERRORS=0
@@ -60,7 +59,7 @@ if [ $1 = "-r" ]; then
   shift 2
 fi
 if [ $1 = "-l" ]; then
-  RUSER=$2
+  RFLAGS="$RFLAGS -l $2"
   shift 2
 fi
 if [ $1 = "-rc" ]; then
@@ -68,7 +67,7 @@ if [ $1 = "-rc" ]; then
   shift 2
 fi
 if [ $1 = "-rp" ]; then
-  RPORT="-p $2"
+  RFLAGS="$RFLAGS -p $2"
   shift 2
 fi
 if [ $1 = "-u" ]; then
@@ -139,8 +138,8 @@ else
   echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $ABSINFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
   chmod +x "$PWD/${PROG}.command"
 
-  ( $RCLIENT -l $RUSER $RHOST $RPORT "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
-  ( $RCLIENT -l $RUSER $RHOST $RPORT "$PWD/${PROG}.command" )
+  ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
+  ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG}.command" )
   cp $PWD/${OUTFILE}.remote.time $OUTFILE.time
   sleep 1
   cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
