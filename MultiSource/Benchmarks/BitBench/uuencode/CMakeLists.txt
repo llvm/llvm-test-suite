@@ -6,7 +6,7 @@ set(PARALLEL_DIRS)
 set(LEVEL ../../../..)
 set(PROG uuencode)
 set(LDFLAGS )
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/uuencode.c)
+set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.txt)
 llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
