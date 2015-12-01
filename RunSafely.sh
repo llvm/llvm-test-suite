@@ -133,19 +133,23 @@ else
   # Get the absolute path to INFILE.
   ABSINFILE=$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)
   PROG_BASENAME="$(basename ${PROG})"
+  case "$OUTFILE" in
+  /*) OUTFILE_ABS="$OUTFILE";;
+  *) OUTFILE_ABS="$PWD/$OUTFILE";;
+  esac
   rm -f "$PWD/${PROG_BASENAME}.command"
   rm -f "$PWD/${PROG_BASENAME}.remote"
-  rm -f "$PWD/${OUTFILE}.remote.time"
-  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $ABSINFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG_BASENAME}.command"
+  rm -f "${OUTFILE_ABS}.remote.time"
+  echo "$TIMEITCMD --summary ${OUTFILE_ABS}.remote.time --redirect-input $ABSINFILE --redirect-output ${OUTFILE_ABS}.remote $COMMAND" > "$PWD/${PROG_BASENAME}.command"
   chmod +x "$PWD/${PROG_BASENAME}.command"
 
   ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG_BASENAME}.command" ) > /dev/null 2>&1
   ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG_BASENAME}.command" )
-  cp $PWD/${OUTFILE}.remote.time $OUTFILE.time
+  cp ${OUTFILE_ABS}.remote.time $OUTFILE.time
   sleep 1
-  cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
-  rm -f $PWD/${OUTFILE}.remote
-  rm -f $PWD/${OUTFILE}.remote.time
+  cp -f ${OUTFILE_ABS}.remote ${OUTFILE}
+  rm -f ${OUTFILE_ABS}.remote
+  rm -f ${OUTFILE_ABS}.remote.time
 fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
