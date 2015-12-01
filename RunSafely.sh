@@ -132,14 +132,15 @@ if [ "x$RHOST" = x ] ; then
 else
   # Get the absolute path to INFILE.
   ABSINFILE=$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)
-  rm -f "$PWD/${PROG}.command"
-  rm -f "$PWD/${PROG}.remote"
+  PROG_BASENAME="$(basename ${PROG})"
+  rm -f "$PWD/${PROG_BASENAME}.command"
+  rm -f "$PWD/${PROG_BASENAME}.remote"
   rm -f "$PWD/${OUTFILE}.remote.time"
-  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $ABSINFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG}.command"
-  chmod +x "$PWD/${PROG}.command"
+  echo "$TIMEITCMD --summary $PWD/$OUTFILE.remote.time --redirect-input $ABSINFILE --redirect-output $PWD/${OUTFILE}.remote $COMMAND" > "$PWD/${PROG_BASENAME}.command"
+  chmod +x "$PWD/${PROG_BASENAME}.command"
 
-  ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG}.command" ) > /dev/null 2>&1
-  ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG}.command" )
+  ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG_BASENAME}.command" ) > /dev/null 2>&1
+  ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG_BASENAME}.command" )
   cp $PWD/${OUTFILE}.remote.time $OUTFILE.time
   sleep 1
   cp -f $PWD/${OUTFILE}.remote ${OUTFILE}
