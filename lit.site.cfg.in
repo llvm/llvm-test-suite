@@ -2,5 +2,9 @@ import sys
 
 config.test_source_root = "@CMAKE_BINARY_DIR@"
 config.test_suite_root = "@CMAKE_SOURCE_DIR@"
+config.remote_client = "@TEST_SUITE_REMOTE_CLIENT@"
+config.remote_host = "@TEST_SUITE_REMOTE_HOST@"
+config.remote_user = "@TEST_SUITE_REMOTE_USER@"
+config.remote_port = "@TEST_SUITE_REMOTE_PORT@"
 
 lit_config.load_config(config, "@CMAKE_SOURCE_DIR@/lit.cfg")

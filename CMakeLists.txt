@@ -32,6 +32,13 @@ This process created the file `CMakeCache.txt' and the directory `CMakeFiles'.
 Please delete them.")
 endif()
 
+# Remote configuration (will be set in lit.site.cfg)
+set(TEST_SUITE_REMOTE_CLIENT "ssh" CACHE STRING "Remote execution client")
+set(TEST_SUITE_REMOTE_HOST "" CACHE STRING "Remote execution host")
+set(TEST_SUITE_REMOTE_USER "" CACHE STRING "Remote execution user")
+set(TEST_SUITE_REMOTE_PORT "" CACHE STRING "Remote execution port")
+mark_as_advanced(TEST_SUITE_REMOTE_USER TEST_SUITE_REMOTE_PORT)
+
 include(MakefileFunctions)
 include(SingleMultiSource)
 find_package(YACC)
