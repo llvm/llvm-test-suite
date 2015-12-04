@@ -10,8 +10,8 @@ class SPEC2006_470_lbm(spec.TestModule):
 
     train_input_set = ['train/input/100_100_130_cf_b.of']
     train_output_set = ['train/output/lbm.out']
-    train_args = '300 reference.dat 0 1 100_100_130_cf_b.of > 470.lbm.train.out 2> 470.lbm.train.err'
-    train_cmp_cmd = 'diff 470.lbm.train.out lbm.out --strip-trailing-cr > 470.lbm.train.cmp'
+    train_args = ['300 reference.dat 0 1 100_100_130_cf_b.of > 470.lbm.train.out 2> 470.lbm.train.err']
+    train_cmp_cmds = ['diff 470.lbm.train.out lbm.out --strip-trailing-cr > 470.lbm.train.cmp']
     ref_input_set = ['ref/input/100_100_130_ldc.of']
     ref_output_set = ['ref/output/lbm.out']
     ref_args = ['3000 reference.dat 0 0 100_100_130_ldc.of > 470.lbm.ref.out 2> 470.lbm.ref.err']

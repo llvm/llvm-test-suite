@@ -10,8 +10,8 @@ class SPEC2000_197_parser(spec.TestModule):
 
     train_input_set = ['all/input/2.1.dict', 'all/input/words', 'train/input/train.in']
     train_output_set = ['train/output/train.out']
-    train_args = '< train.in 2.1.dict -batch > 197.parser.train.out 2> 197.parser.train.err'
-    train_cmp_cmd = 'diff 197.parser.train.out train.out --strip-trailing-cr > 197.parser.train.cmp'
+    train_args = ['< train.in 2.1.dict -batch > 197.parser.train.out 2> 197.parser.train.err']
+    train_cmp_cmds = ['diff 197.parser.train.out train.out --strip-trailing-cr > 197.parser.train.cmp']
     ref_input_set = ['all/input/2.1.dict', 'all/input/words', 'ref/input/ref.in']
     ref_output_set = ['ref/output/ref.out']
     ref_args = ['< ref.in 2.1.dict -batch > 197.parser.ref.out 2> 197.parser.ref.err']

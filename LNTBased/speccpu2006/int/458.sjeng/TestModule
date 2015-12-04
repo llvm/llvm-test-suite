@@ -10,8 +10,8 @@ class SPEC2006_458_sjeng(spec.TestModule):
 
     train_input_set = ['train/input/train.txt']
     train_output_set = ['train/output/train.out']
-    train_args = 'train.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err'
-    train_cmp_cmd = 'diff 458.sjeng.input1.out train.out --strip-trailing-cr > 458.sjeng.input1.cmp'
+    train_args = ['train.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err']
+    train_cmp_cmds = ['diff 458.sjeng.input1.out train.out --strip-trailing-cr > 458.sjeng.input1.cmp']
     ref_input_set = ['ref/input/ref.txt']
     ref_output_set = ['ref/output/ref.out']
     ref_args = ['ref.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err']

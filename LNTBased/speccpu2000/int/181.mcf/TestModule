@@ -10,8 +10,8 @@ class SPEC2000_181_mcf(spec.TestModule):
 
     train_input_set = ['train/input/inp.in']
     train_output_set = ['train/output/inp.out']
-    train_args = 'inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err'
-    train_cmp_cmd = 'diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp'
+    train_args = ['inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err']
+    train_cmp_cmds = ['diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp']
     ref_input_set = ['ref/input/inp.in']
     ref_output_set = ['ref/output/inp.out']
     ref_args = ['inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err']

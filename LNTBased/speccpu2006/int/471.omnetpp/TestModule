@@ -10,8 +10,8 @@ class SPEC2006_471_omnetpp(spec.TestModule):
 
     train_input_set = ['train/input/omnetpp.ini']
     train_output_set = []
-    train_args = 'omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err'
-    train_cmp_cmd = ''
+    train_args = ['omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err']
+    train_cmp_cmds = ['']
     ref_input_set = ['ref/input/omnetpp.ini']
     ref_output_set = []
     ref_args = ['omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err']

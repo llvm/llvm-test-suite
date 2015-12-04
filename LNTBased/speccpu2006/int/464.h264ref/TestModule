@@ -10,8 +10,8 @@ class SPEC2006_464_h264ref(spec.TestModule):
 
     train_input_set = ['all/input/foreman_qcif.yuv', 'train/input/foreman_train_encoder_baseline.cfg', 'all/input/leakybucketrate.cfg']
     train_output_set = ['train/output/foreman_train_baseline_encodelog.out']
-    train_args = '-d foreman_train_encoder_baseline.cfg > 464.h264ref.foreman_train_encoder_baseline.out 2> 464.h264ref.foreman_train_encoder_baseline.err'
-    train_cmp_cmd = 'diff 464.h264ref.foreman_train_encoder_baseline.out foreman_train_baseline_encodelog.out --strip-trailing-cr > 464.h264ref.foreman_train_encoder_baseline.cmp'
+    train_args = ['-d foreman_train_encoder_baseline.cfg > 464.h264ref.foreman_train_encoder_baseline.out 2> 464.h264ref.foreman_train_encoder_baseline.err']
+    train_cmp_cmds = ['diff 464.h264ref.foreman_train_encoder_baseline.out foreman_train_baseline_encodelog.out --strip-trailing-cr > 464.h264ref.foreman_train_encoder_baseline.cmp']
     ref_input_set = ['all/input/foreman_qcif.yuv', 'ref/input/sss.yuv', 'all/input/leakybucketrate.cfg', 'ref/input/foreman_ref_encoder_main.cfg', 'ref/input/foreman_ref_encoder_baseline.cfg', 'ref/input/sss_encoder_main.cfg']
     ref_output_set = ['ref/output/foreman_ref_baseline_encodelog.out', 'ref/output/foreman_ref_main_encodelog.out', 'ref/output/sss_main_encodelog.out']
     ref_args = ['-d foreman_ref_encoder_baseline.cfg > 464.h264ref.foreman_ref_encoder_baseline.out 2> 464.h264ref.foreman_ref_encoder_baseline.err', '-d foreman_ref_encoder_main.cfg > 464.h264ref.foreman_ref_encoder_main.out 2> 464.h264ref.foreman_ref_encoder_main.err', '-d sss_encoder_main.cfg > 464.h264ref.sss_encoder_main.out 2> 464.h264ref.sss_encoder_main.err']

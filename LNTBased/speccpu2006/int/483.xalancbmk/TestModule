@@ -10,8 +10,8 @@ class SPEC2006_483_xalancbmk(spec.TestModule):
 
     train_input_set = ['train/input/train.xsd', 'train/input/train.lst', 'train/input/allbooks.xml', 'train/input/xalanc.xsl']
     train_output_set = ['train/output/train.out']
-    train_args = '-v allbooks.xml xalanc.xsl > 483.xalancbmk.allbooks.out 2> 483.xalancbmk.allbooks.err'
-    train_cmp_cmd = 'diff 483.xalancbmk.allbooks.out train.out --strip-trailing-cr > 483.xalancbmk.allbooks.cmp'
+    train_args = ['-v allbooks.xml xalanc.xsl > 483.xalancbmk.allbooks.out 2> 483.xalancbmk.allbooks.err']
+    train_cmp_cmds = ['diff 483.xalancbmk.allbooks.out train.out --strip-trailing-cr > 483.xalancbmk.allbooks.cmp']
     ref_input_set = ['ref/input/t5.xml', 'ref/input/xalanc.xsl']
     ref_output_set = ['ref/output/ref.out']
     ref_args = ['-v t5.xml xalanc.xsl > 483.xalancbmk.t5.out 2> 483.xalancbmk.t5.err']

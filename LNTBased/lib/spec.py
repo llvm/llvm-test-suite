@@ -89,7 +89,9 @@ class TestModule(nt.TestModule):
         else:
             file_index = 0
 
-        timeit = [os.path.join(self.OBJROOT, 'tools', 'timeit-target')]
+        # Generate a unique file for each training run (if requested)
+        timeit = ['LLVM_PROFILE_FILE=run_%d.profraw' % file_index,
+                  os.path.join(self.OBJROOT, 'tools', 'timeit-target')]
 
         cwd = kwargs.get('cwd',  os.getcwd())
         summary_file = os.path.join(cwd, 'summary_%d.time' % file_index)
@@ -201,13 +203,17 @@ class TestModule(nt.TestModule):
 
             self.copy_input_set(pgo_dir, 'train')
 
-            pgo_cmd = './%s %s' % (self.exe, self.train_args)
-            (result, time) = self.run_safely(pgo_cmd, cwd=pgo_dir, shell=True)
-            if result != 0:
-                return self.fail()
+            for (i, args) in enumerate(self.train_args):
+                pgo_cmd = './%s %s' % (self.exe, args)
+                (result, time) = self.run_safely(pgo_cmd, cwd=pgo_dir, shell=True, env=os.environ, file_index=i)
+                if result != 0:
+                    return self.fail()
+                if not os.path.exists(os.path.join(pgo_dir, 'run_%d.profraw' % i)):
+                    print >>self.log, 'Failed to create PGO output'
+                    return self.fail()
 
             llvm_profdata = os.path.join(os.path.dirname(CC), 'llvm-profdata')
-            result = self.call(llvm_profdata + ' merge -output=code.profdata pgo/default.profraw', shell=True, cwd=self.OBJROOT)
+            result = self.call(llvm_profdata + ' merge -output=code.profdata pgo/run_*.profraw', shell=True, cwd=self.OBJROOT)
             if result != 0:
                 return self.fail()
 

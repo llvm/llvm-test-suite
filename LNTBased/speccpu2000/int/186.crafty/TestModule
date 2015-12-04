@@ -10,8 +10,8 @@ class SPEC2000_186_crafty(spec.TestModule):
 
     train_input_set = ['train/input/crafty.in']
     train_output_set = ['train/output/crafty.out']
-    train_args = '< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err'
-    train_cmp_cmd = 'diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp'
+    train_args = ['< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err']
+    train_cmp_cmds = ['diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp']
     ref_input_set = ['ref/input/crafty.in']
     ref_output_set = ['ref/output/crafty.out']
     ref_args = ['< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err']

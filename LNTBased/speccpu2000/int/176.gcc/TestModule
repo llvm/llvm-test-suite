@@ -10,8 +10,8 @@ class SPEC2000_176_gcc(spec.TestModule):
 
     train_input_set = ['train/input/cp-decl.i']
     train_output_set = ['train/output/cp-decl.s']
-    train_args = 'cp-decl.i -o - > 176.gcc.cp-decl.out 2> 176.gcc.cp-decl.err'
-    train_cmp_cmd = 'diff 176.gcc.cp-decl.out cp-decl.s --strip-trailing-cr > 176.gcc.cp-decl.cmp'
+    train_args = ['cp-decl.i -o - > 176.gcc.cp-decl.out 2> 176.gcc.cp-decl.err']
+    train_cmp_cmds = ['diff 176.gcc.cp-decl.out cp-decl.s --strip-trailing-cr > 176.gcc.cp-decl.cmp']
     ref_input_set = ['ref/input/166.i', 'ref/input/200.i', 'ref/input/expr.i', 'ref/input/integrate.i', 'ref/input/scilab.i']
     ref_output_set = ['ref/output/166.s', 'ref/output/200.s', 'ref/output/expr.s', 'ref/output/integrate.s', 'ref/output/scilab.s']
     ref_args = ['166.i -o - > 176.gcc.166.out 2> 176.gcc.166.err', '200.i -o - > 176.gcc.200.out 2> 176.gcc.200.err', 'expr.i -o - > 176.gcc.expr.out 2> 176.gcc.expr.err', 'integrate.i -o - > 176.gcc.integrate.out 2> 176.gcc.integrate.err', 'scilab.i -o - > 176.gcc.scilab.out 2> 176.gcc.scilab.err']

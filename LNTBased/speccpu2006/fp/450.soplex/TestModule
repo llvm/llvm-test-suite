@@ -10,8 +10,8 @@ class SPEC2006_450_soplex(spec.TestModule):
 
     train_input_set = ['train/input/train.mps', 'train/input/pds-20.mps']
     train_output_set = ['train/output/pds-20.mps.out', 'train/output/train.out']
-    train_args = '-s1 -e -m5000 pds-20.mps > 450.soplex.pds-20.out 2> 450.soplex.pds-20.err', '-m1200 train.mps > 450.soplex.train.out 2> 450.soplex.train.err'
-    train_cmp_cmd = 'diff 450.soplex.pds-20.out pds-20.mps.out --strip-trailing-cr > 450.soplex.pds-20.cmp', 'diff 450.soplex.train.out train.out --strip-trailing-cr > 450.soplex.train.cmp'
+    train_args = ['-s1 -e -m5000 pds-20.mps > 450.soplex.pds-20.out 2> 450.soplex.pds-20.err', '-m1200 train.mps > 450.soplex.train.out 2> 450.soplex.train.err']
+    train_cmp_cmds = ['diff 450.soplex.pds-20.out pds-20.mps.out --strip-trailing-cr > 450.soplex.pds-20.cmp', 'diff 450.soplex.train.out train.out --strip-trailing-cr > 450.soplex.train.cmp']
     ref_input_set = ['ref/input/ref.mps', 'ref/input/pds-50.mps']
     ref_output_set = ['ref/output/pds-50.mps.out', 'ref/output/ref.out']
     ref_args = ['-s1 -e -m45000 pds-50.mps > 450.soplex.pds-50.out 2> 450.soplex.pds-50.err', '-m3500 ref.mps > 450.soplex.ref.out 2> 450.soplex.ref.err']
