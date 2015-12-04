@@ -235,13 +235,11 @@ class TestModule(nt.TestModule):
         status = PASS
 
         exec_time = 0
-        file_index = 0
-        for cmd in run_cmds:
+        for (file_index, cmd) in enumerate(run_cmds):
             (result, time) = self.run_safely(cmd, cwd=self.OBJROOT, shell=True, file_index=file_index)
             if result != 0:
                 status = FAIL
             exec_time += time
-            file_index += 1
 
         os.environ['PATH'] += ':' + os.path.join(self.OBJROOT, 'tools')
         for cmd in self.ref_cmp_cmds:
