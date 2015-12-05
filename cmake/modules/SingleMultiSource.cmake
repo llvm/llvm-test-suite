@@ -76,65 +76,61 @@ endmacro()
 #
 # The test template lives in cmake/lit-test-template.in and is configured by this function.
 function(llvm_add_test name exename)
-  set(VERIFYSCRIPT "")
+  # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
+  # llvm_test_run() was not called yet.
+  if(NOT TESTSCRIPT)
+    if(DEFINED STDIN_FILENAME)
+      list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
+    endif()
+    llvm_test_run(${RUN_OPTIONS})
 
-  # Hash if we've been asked to, otherwise just use "touch" as an identity function.
-  if(HASH_PROGRAM_OUTPUT)
-	set(VERIFYSCRIPT "${VERIFYSCRIPT}\nVERIFY: ${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
-  endif()
-
-  # Find the reference output file key name.
-  if(SMALL_PROBLEM_SIZE)
-    set(KEY small)
-  elseif(LARGE_PROBLEM_SIZE)
-    set(KEY large)
-  else()
-    set(KEY)
-  endif()
-
-  # If the program is nondeterministic, don't bother diffing and use "touch" again as an identity.
-  if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
-    # Pick the best reference output based on "programname.reference_output".
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-    else()
-      # Just compare to its own output. This will always succeed, but here's hoping the
-      # test in question uses its exit value to determine status, so it'll be caught by
-      # the previous RUN line.
-      set(REFERENCE_OUTPUT "%o")
-      message("-- No reference output found for test ${name}")
+    # Hash if we've been asked to.
+    if(HASH_PROGRAM_OUTPUT)
+      llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
     endif()
 
-    set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
-    if(DEFINED FP_TOLERANCE)
-      set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
+    if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
+      # Find the reference output file key name.
+      if(SMALL_PROBLEM_SIZE)
+        set(KEY small)
+      elseif(LARGE_PROBLEM_SIZE)
+        set(KEY large)
+      else()
+        set(KEY)
+      endif()
+
+      # Pick the best reference output based on "programname.reference_output".
+      if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+      else()
+        message("-- No reference output found for test ${name}")
+      endif()
+
+      set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
+      if(DEFINED FP_TOLERANCE)
+        set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
+      endif()
+      if(DEFINED FP_ABSTOLERANCE)
+        set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
+      endif()
+      if(REFERENCE_OUTPUT)
+        llvm_test_verify("${DIFFPROG} %o ${REFERENCE_OUTPUT}")
+      endif()
     endif()
-    if(DEFINED FP_ABSTOLERANCE)
-      set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
-    endif()
-	set(VERIFYSCRIPT "${VERIFYSCRIPT}\nVERIFY: ${DIFFPROG} %o ${REFERENCE_OUTPUT}")
   endif()
 
-  set(RUNSCRIPT "RUN: ${CMAKE_CURRENT_BINARY_DIR}/${exename}")
-  if(DEFINED RUN_OPTIONS)
-    # RUN_OPTIONS is a semicolon-separated list. Change it into a whitespace-separated string.
-    string(REPLACE ";" " " RUN_OPTIONS "${RUN_OPTIONS}")
-	set(RUNSCRIPT "${RUNSCRIPT} ${RUN_OPTIONS}")
-  endif()
-
-  if(DEFINED STDIN_FILENAME)
-	set(RUNSCRIPT "${RUNSCRIPT} < ${STDIN_FILENAME}")
-  endif()
+  # Replace $EXECUTABLE$ placeholder.
+  string(REPLACE "$EXECUTABLE$" "${CMAKE_CURRENT_BINARY_DIR}/${exename}" TESTSCRIPT "${TESTSCRIPT}")
 
   # Produce .test file
   file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${exename}.test
-    CONTENT "${RUNSCRIPT}${VERIFYSCRIPT}\n")
+    CONTENT "${TESTSCRIPT}")
 endfunction()
 
 # llvm_singlesource - configure the current directory as a SingleSource subdirectory -
@@ -187,5 +183,36 @@ macro(llvm_multisource)
     llvm_add_test(${PROG} ${source_exename})
     add_dependencies(${source_exename} timeit fpcmp)
   endif()
-endif()
+  endif()
+endmacro()
+
+macro(llvm_test_run)
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE" "" ${ARGN})
+  # If no executable is specified use $EXECUTABLE$ placeholder which will be
+  # replaced later.
+  if(NOT DEFINED ARGS_EXECUTABLE)
+    set(ARGS_EXECUTABLE "$EXECUTABLE$")
+  endif()
+  if(NOT DEFINED TESTSCRIPT)
+    set(TESTSCRIPT "" PARENT_SCOPE)
+  endif()
+  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
+  # whitespace-separated string.
+  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${RUN_TYPE}")
+    set(TESTSCRIPT "${TESTSCRIPT}RUN: ${ARGS_EXECUTABLE} ${JOINED_ARGUMENTS}\n")
+  endif()
+endmacro()
+
+macro(llvm_test_verify)
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
+  if(NOT DEFINED TESTSCRIPT)
+    set(TESTSCRIPT "" PARENT_SCOPE)
+  endif()
+  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
+  # whitespace-separated string.
+  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${RUN_TYPE}")
+    set(TESTSCRIPT "${TESTSCRIPT}VERIFY: ${JOINED_ARGUMENTS}\n")
+  endif()
 endmacro()
