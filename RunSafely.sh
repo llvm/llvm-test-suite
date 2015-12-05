@@ -17,7 +17,7 @@
 # Syntax:
 #
 #   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
-#                [-u <under>] [--show-errors] -t <timeit>
+#                [-u <under>] [--show-errors] [--omit-exitval] -t <timeit>
 #                <timeout> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -35,6 +35,8 @@
 #
 # If --show-errors is given, then the output file will be printed if the command
 # fails (returns a non-zero exit code).
+# Unless --omit-exitval is given the last line of the outfile has the form
+# "exit NN" with NN being the exit status number of the program.
 
 if [ $# -lt 4 ]; then
   echo "./RunSafely.sh [-t <PATH>] <timeout> <infile> <outfile>" \
@@ -54,6 +56,11 @@ RCLIENT=rsh
 RUN_UNDER=
 TIMEIT=
 SHOW_ERRORS=0
+OMIT_EXITVAL=0
+if [ $1 = "--omit-exitval" ]; then
+	OMIT_EXITVAL=1
+	shift 1
+fi
 if [ $1 = "-r" ]; then
   RHOST=$2
   shift 2
@@ -172,7 +179,9 @@ elif [ "$SHOW_ERRORS" -eq 1 -a "$exitval" -ne 0 ] ; then
 else
   fail=no
 fi
-echo "exit $exitval" >> $OUTFILE
+if [ "$OMIT_EXITVAL" -ne 1 ]; then
+  echo "exit $exitval" >> $OUTFILE
+fi
 
 # If we detected a failure, print the name of the test executable to the
 # output file. This will cause it to compare as different with other runs
