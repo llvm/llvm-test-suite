@@ -16,11 +16,12 @@
 #
 # Syntax:
 #
-#   RunSafely.sh [-r <rhost>] [-l <ruser>] [-rc <client>] [-rp <port>]
-#                [-u <under>] [--show-errors] [--omit-exitval] -t <timeit>
-#                <timeout> <infile> <outfile> <program> <args...>
+#   RunSafely.sh [--omit-exitval] [-d <workdir>] [-r <rhost>] [-l <ruser>]
+#                [-rc <client>] [-rp <port>] [-u <under>] [--show-errors]
+#                -t <timeit> <timeout> <infile> <outfile> <program> <args...>
 #
 #   where:
+#     <workdir> is the directory where the program is executed
 #     <rhost>   is the remote host to execute the program
 #     <ruser>   is the username on the remote host
 #     <client>  is the remote client used to execute the program
@@ -57,9 +58,14 @@ RUN_UNDER=
 TIMEIT=
 SHOW_ERRORS=0
 OMIT_EXITVAL=0
+PWD=`pwd`
 if [ $1 = "--omit-exitval" ]; then
-	OMIT_EXITVAL=1
-	shift 1
+  OMIT_EXITVAL=1
+  shift 1
+fi
+if [ $1 = "-d" ]; then
+  PWD="$2"
+  shift 2
 fi
 if [ $1 = "-r" ]; then
   RHOST=$2
@@ -125,7 +131,6 @@ LIMITARGS="$LIMITARGS --limit-rss-size 838860800"
 
 # Run the command, timing its execution and logging the status summary to
 # $OUTFILE.time.
-PWD=`pwd`
 COMMAND="$RUN_UNDER $PROGRAM $*"
 
 TIMEITCMD="$TIMEIT $LIMITARGS --timeout $TIMELIMIT --chdir $PWD"

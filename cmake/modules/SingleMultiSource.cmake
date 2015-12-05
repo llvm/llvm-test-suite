@@ -187,7 +187,7 @@ macro(llvm_multisource)
 endmacro()
 
 macro(llvm_test_run)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE" "" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE;WORKDIR" "" ${ARGN})
   # If no executable is specified use $EXECUTABLE$ placeholder which will be
   # replaced later.
   if(NOT DEFINED ARGS_EXECUTABLE)
@@ -195,6 +195,9 @@ macro(llvm_test_run)
   endif()
   if(NOT DEFINED TESTSCRIPT)
     set(TESTSCRIPT "" PARENT_SCOPE)
+  endif()
+  if(DEFINED ARGS_WORKDIR)
+    set(ARGS_EXECUTABLE "cd ${ARGS_WORKDIR} ; ${ARGS_EXECUTABLE}")
   endif()
   # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
   # whitespace-separated string.
