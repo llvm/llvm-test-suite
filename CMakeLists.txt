@@ -7,9 +7,13 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-add_definitions(-DNDEBUG)
-
 project(test-suite C CXX)
+
+add_definitions(-DNDEBUG)
+option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
+if(${TEST_SUITE_SUPPRESS_WARNINGS})
+  add_definitions(-w)
+endif()
 
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
