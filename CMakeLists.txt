@@ -80,4 +80,4 @@ add_subdirectory(MultiSource)
 add_subdirectory(External)
 
 # Produce lit.site.cfg
-configure_file("${CMAKE_SOURCE_DIR}/lit.site.cfg.in" "${CMAKE_BINARY_DIR}/lit.site.cfg")
+configure_file("${PROJECT_SOURCE_DIR}/lit.site.cfg.in" "${CMAKE_BINARY_DIR}/lit.site.cfg")
