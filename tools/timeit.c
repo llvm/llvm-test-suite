@@ -126,6 +126,7 @@ static void terminate_handler(int signal) {
 }
 
 static void timeout_handler(int signal) {
+  (void)signal;
   fprintf(stderr, "%s: TIMING OUT PROCESS: %s\n", g_program_name,
           g_target_program);
   /* We should always be monitoring a process when we receive an alarm. Kill its
@@ -134,7 +135,7 @@ static void timeout_handler(int signal) {
   kill(-g_monitored_pid, SIGKILL);
 }
 
-int monitor_child_process(pid_t pid, double start_time) {
+static int monitor_child_process(pid_t pid, double start_time) {
   double real_time, user_time, sys_time;
   struct rusage usage;
   int res, status;
@@ -302,7 +303,7 @@ static int execute_target_process(char * const argv[]) {
   if (g_target_subprocess_count_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_NPROC, g_target_subprocess_count_limit);
   }
-  
+
   /* Honor the desired target execute directory. */
   if (g_target_exec_directory) {
     if (chdir(g_target_exec_directory) < 0) {
@@ -323,7 +324,7 @@ static int execute_target_process(char * const argv[]) {
   return EXITCODE_EXEC_FAILURE;
 }
 
-int execute(char * const argv[]) {
+static int execute(char * const argv[]) {
   double start_time;
   pid_t pid;
 
