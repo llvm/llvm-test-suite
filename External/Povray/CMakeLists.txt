@@ -26,7 +26,7 @@ if(TEST_SUITE_POVRAY_ROOT)
   llvm_test_run(
     -I${TEST_SUITE_POVRAY_ROOT}/scenes/advanced/chess2.pov
     -L${TEST_SUITE_POVRAY_ROOT}/include
-    -GA$<.junk -O-
+    -GAoutput.junk -O-
   )
   llvm_test_verify(${CMAKE_BINARY_DIR}/tools/fpcmp
     %o
