@@ -65,9 +65,11 @@ static const char *g_summary_file = 0;
 /* \brief If non-zero, the path to redirect the target standard input to. */
 static const char *g_target_redirect_input = 0;
 
-/* \brief If non-zero, the path to redirect the target standard output and
- * standard error to. */
-static const char *g_target_redirect_output = 0;
+/* \brief If non-zero, the path to redirect the target stdout to. */
+static const char *g_target_redirect_stdout = 0;
+
+/* \brief If non-zero, the path to redirect the target stderr to. */
+static const char *g_target_redirect_stderr = 0;
 
 /* @name Resource Limit Variables */
 /* @{ */
@@ -237,6 +239,10 @@ static void set_resource_limit_actual(const char *resource_name, int resource,
   }
 }
 
+static int streq(const char *a, const char *b) {
+  return strcmp(a, b) == 0;
+}
+
 static int execute_target_process(char * const argv[]) {
   /* Create a new process group for pid, and the process tree it may spawn. We
    * do this, because later on we might want to kill pid _and_ all processes
@@ -262,21 +268,45 @@ static int execute_target_process(char * const argv[]) {
   }
 
   /* Redirect the standard output, if requested. */
-  if (g_target_redirect_output) {
-    FILE *fp = fopen(g_target_redirect_output, "w");
-    if (!fp) {
+  FILE *fp_stdout = NULL;
+  if (g_target_redirect_stdout) {
+    fp_stdout = fopen(g_target_redirect_stdout, "w");
+    if (!fp_stdout) {
       perror("fopen");
       return EXITCODE_MONITORING_FAILURE;
     }
 
-    int fd = fileno(fp);
-    if (dup2(fd, 1) < 0 || dup2(fd, 2) < 0) {
+    int fd = fileno(fp_stdout);
+    if (dup2(fd, STDOUT_FILENO) < 0) {
       perror("dup2");
       return EXITCODE_MONITORING_FAILURE;
     }
-
-    fclose(fp);
   }
+
+  if (g_target_redirect_stderr) {
+    FILE *fp_stderr = NULL;
+    int fd;
+    if (streq(g_target_redirect_stdout, g_target_redirect_stderr))
+      fd = fileno(fp_stdout);
+    else {
+      fp_stderr = fopen(g_target_redirect_stderr, "w");
+      if (!fp_stderr) {
+        perror("fopen");
+        return EXITCODE_MONITORING_FAILURE;
+      }
+      fd = fileno(fp_stderr);
+    }
+
+    if (dup2(fd, STDERR_FILENO) < 0) {
+      perror("dup2");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+    if (fp_stderr != NULL)
+      fclose(fp_stderr);
+  }
+
+  if (fp_stdout != NULL)
+    fclose(fp_stdout);
 
   /* Honor any requested resource limits. */
   if (g_target_cpu_limit != ~(rlim_t) 0) {
@@ -356,10 +386,6 @@ static int execute(char * const argv[]) {
   return monitor_child_process(pid, start_time);
 }
 
-static int streq(const char *a, const char *b) {
-  return strcmp(a, b) == 0;
-}
-
 static void usage(int is_error) {
 #define WRAPPED "\n                       "
   fprintf(stderr, "usage: %s [options] command ... arguments ...\n",
@@ -377,6 +403,10 @@ static void usage(int is_error) {
           "Write monitored process summary (exit code and time) to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--redirect-output <PATH>",
           WRAPPED "Redirect stdout and stderr for the target to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "--redirect-stdout <PATH>",
+          WRAPPED "Redirect stdout for the target to PATH.\n");
+  fprintf(stderr, "  %-20s %s", "--redirect-stderr <PATH>",
+          WRAPPED "Redirect stderr for the target to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--redirect-input <PATH>",
           WRAPPED "Redirect stdin for the target to PATH.\n");
   fprintf(stderr, "  %-20s %s", "--limit-cpu <N>",
@@ -452,7 +482,26 @@ int main(int argc, char * const argv[]) {
         fprintf(stderr, "error: %s argument requires an option\n", arg);
         usage(/*is_error=*/1);
       }
-      g_target_redirect_output = argv[++i];
+      g_target_redirect_stdout = argv[++i];
+      g_target_redirect_stderr = g_target_redirect_stdout;
+      continue;
+    }
+
+    if (streq(arg, "--redirect-stdout")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_target_redirect_stdout = argv[++i];
+      continue;
+    }
+
+    if (streq(arg, "--redirect-stderr")) {
+      if (i + 1 == argc) {
+        fprintf(stderr, "error: %s argument requires an option\n", arg);
+        usage(/*is_error=*/1);
+      }
+      g_target_redirect_stderr = argv[++i];
       continue;
     }
 
