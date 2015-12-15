@@ -16,8 +16,9 @@
 #
 # Syntax:
 #
-#   RunSafely.sh [--omit-exitval] [-d <workdir>] [-r <rhost>] [-l <ruser>]
-#                [-rc <client>] [-rp <port>] [-u <under>] [--show-errors]
+#   RunSafely.sh [-d <workdir>] [-r <rhost>] [-l <ruser>] [-rc <client>]
+#                [-rp <port>] [-u <under>] [--show-errors]
+#                [-n [-o <stdoutfile>] [-e <stderrfile>]]
 #                -t <timeit> <timeout> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -27,10 +28,13 @@
 #     <client>  is the remote client used to execute the program
 #     <port>    is the port used by the remote client
 #     <under>   is a wrapper that the program is run under
+#     <stdoutfile> file where standard output is written to
+#     <stderrfile> file where standard error output is written to
 #     <timeit>  is a wrapper that is used to collect timing data
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <infile>  is a file from which standard input is directed
-#     <outfile> is a file to which standard output and error are directed
+#     <outfile> is a file to which standard output and error are directed.
+#               This argument is not parsed if -n was specified.
 #     <program> is the path to the program to run
 #     <args...> are the arguments to pass to the program.
 #
@@ -57,12 +61,10 @@ RCLIENT=rsh
 RUN_UNDER=
 TIMEIT=
 SHOW_ERRORS=0
-OMIT_EXITVAL=0
+NEW_MODE=0
+STDOUT_FILE=""
+STDERR_FILE=""
 PWD=`pwd`
-if [ $1 = "--omit-exitval" ]; then
-  OMIT_EXITVAL=1
-  shift 1
-fi
 if [ $1 = "-d" ]; then
   PWD="$2"
   shift 2
@@ -90,6 +92,18 @@ fi
 if [ $1 = "--show-errors" ]; then
   SHOW_ERRORS=1
   shift 1
+fi
+if [ $1 = "-n" ]; then
+  NEW_MODE=1
+  shift 1
+  if [ $1 = "-o" ]; then
+    STDOUT_FILE="$2"
+    shift 2
+  fi
+  if [ $1 = "-e" ]; then
+    STDERR_FILE="$2"
+    shift 2
+  fi
 fi
 if [ $1 = "-t" ]; then
   TIMEIT=$2
@@ -136,19 +150,45 @@ COMMAND="$RUN_UNDER $PROGRAM $*"
 TIMEITCMD="$TIMEIT $LIMITARGS --timeout $TIMELIMIT --chdir $PWD"
 if [ "x$RHOST" = x ] ; then
   rm -f "$OUTFILE.time"
+  if [ "$STDOUT_FILE" != "" ]; then
+    TIMEITCMD="$TIMEITCMD --redirect-stdout $STDOUT_FILE"
+  fi
+  if [ "$STDERR_FILE" != "" ]; then
+    TIMEITCMD="$TIMEITCMD --redirect-stderr $STDERR_FILE"
+  fi
+  if [ "$NEW_MODE" = "0" ]; then
+    TIMEITCMD="$TIMEITCMD --redirect-output $OUTFILE"
+  fi
   $TIMEITCMD \
       --summary $OUTFILE.time \
       --redirect-input $INFILE \
-      --redirect-output $OUTFILE \
       $COMMAND
 else
   # Get the absolute path to INFILE.
   ABSINFILE=$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)
   PROG_BASENAME="$(basename ${PROG})"
+  if [ "$STDOUT_FILE" != "" ]; then
+    case "$STDOUT_FILE" in
+    /*) STDOUT_FILE_ABS="$STDOUT_FILE";;
+    *) STDOUT_FILE_ABS="$PWD/$STDOUT_FILE";;
+    esac
+    TIMEITCMD="$TIMEITCMD --redirect-stdout ${STDOUT_FILE_ABS}"
+  fi
+  if [ "$STDERR_FILE" != "" ]; then
+    case "$STDERR_FILE" in
+    /*) STDERR_FILE_ABS="$STDERR_FILE";;
+    *) STDERR_FILE_ABS="$PWD/$STDERR_FILE";;
+    esac
+    TIMEITCMD="$TIMEITCMD --redirect-stderr ${STDERR_FILE_ABS}"
+  fi
   case "$OUTFILE" in
   /*) OUTFILE_ABS="$OUTFILE";;
   *) OUTFILE_ABS="$PWD/$OUTFILE";;
   esac
+  if [ "$NEW_MODE" = "0" ]; then
+    TIMEITCMD="$TIMEITCMD --redirect-output ${OUTFILE_ABS}.remote"
+  fi
+
   rm -f "$PWD/${PROG_BASENAME}.command"
   rm -f "$PWD/${PROG_BASENAME}.remote"
   rm -f "${OUTFILE_ABS}.remote.time"
@@ -184,7 +224,7 @@ elif [ "$SHOW_ERRORS" -eq 1 -a "$exitval" -ne 0 ] ; then
 else
   fail=no
 fi
-if [ "$OMIT_EXITVAL" -ne 1 ]; then
+if [ "$NEW_MODE" = "0" ]; then
   echo "exit $exitval" >> $OUTFILE
 fi
 
