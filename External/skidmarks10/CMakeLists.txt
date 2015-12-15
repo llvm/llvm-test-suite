@@ -9,7 +9,7 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
   endif()
 
   llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden)
-  llvm_test_verify(${CMAKE_BINARY_DIR}/tools/fpcmp
+  llvm_test_verify(${FPCMP}
     %o
     ${CMAKE_CURRENT_SOURCE_DIR}/skidmarks.reference_output
   )

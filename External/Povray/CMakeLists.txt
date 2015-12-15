@@ -28,7 +28,7 @@ if(TEST_SUITE_POVRAY_ROOT)
     -L${TEST_SUITE_POVRAY_ROOT}/include
     -GAoutput.junk -O-
   )
-  llvm_test_verify(${CMAKE_BINARY_DIR}/tools/fpcmp
+  llvm_test_verify(${FPCMP}
     %o
     ${CMAKE_CURRENT_SOURCE_DIR}/povray.reference_output
   )

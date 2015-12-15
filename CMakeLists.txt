@@ -70,6 +70,8 @@ if(NOT DEFINED ENDIAN)
 endif()
 
 add_subdirectory(tools)
+# Shortcut for the path to the fpcmp executable
+set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
 # Now that the tools have been created, use tools/timeit to time all other compilations.
 set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")

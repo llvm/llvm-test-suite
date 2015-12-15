@@ -12,7 +12,7 @@ if(ARCH STREQUAL "x86")
     endif()
 
     llvm_test_run(/k all timed /t 500 /vsteps 192 /usteps 192 /vcp 20 /ucp 20)
-    llvm_test_verify(${CMAKE_BINARY_DIR}/tools/fpcmp
+    llvm_test_verify(${FPCMP}
       %o
       ${CMAKE_CURRENT_SOURCE_DIR}/nurbs.reference_output
     )
