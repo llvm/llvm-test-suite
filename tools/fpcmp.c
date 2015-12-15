@@ -264,6 +264,12 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
       return 1;
   }
 
+  // Avoid reading before byte 0 in the loop below.
+  if (A_size == 0 || B_size == 0) {
+    fprintf(stderr, "%s File sizes differ\n", g_program);
+    return 1;
+  }
+
   // Okay, we reached the end of file.  If both files are at the end, we
   // succeeded.
   bool F1AtEnd = F1P >= File1End;
