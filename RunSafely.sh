@@ -112,56 +112,66 @@ if [ `basename ${PROGRAM}` = "lli" ]; then
   PROG=`basename ${PROGRAM}`
 fi
 
+# Run the command, timing its execution and logging the status summary to
+# $OUTFILE.time.
+COMMAND="$RUN_UNDER $PROGRAM $*"
+
+# Determine absolute paths of infiles/outfiles
+INFILE="$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)"
+case "$OUTFILE" in
+  /*) OUTFILE="$OUTFILE";;
+  *) OUTFILE="$PWD/$OUTFILE";;
+esac
+
+# Use suffix for remotely created files.
+REMOTE_SUFFIX=""
+if [ "x$RHOST" != x ]; then
+  REMOTE_SUFFIX=".remote"
+fi
+
 # Disable core file emission.
-LIMITARGS=""
-LIMITARGS="$LIMITARGS --limit-core 0"
+TIMEITFLAGS=""
+TIMEITFLAGS="$TIMEITFLAGS --limit-core 0"
 
 # Set the CPU limit. We watchdog the process, so this is mostly just for
 # paranoia.
-LIMITARGS="$LIMITARGS --limit-cpu $TIMELIMIT"
+TIMEITFLAGS="$TIMEITFLAGS --limit-cpu $TIMELIMIT"
 
 # To prevent infinite loops which fill up the disk, specify a limit on size
 # of files being output by the tests.
 #
 # We set the limit at 100MB.
-LIMITARGS="$LIMITARGS --limit-file-size 104857600"
+TIMEITFLAGS="$TIMEITFLAGS --limit-file-size 104857600"
 
 # Set the virtual memory limit at 800MB.
-LIMITARGS="$LIMITARGS --limit-rss-size 838860800"
+TIMEITFLAGS="$TIMEITFLAGS --limit-rss-size 838860800"
 
-# Run the command, timing its execution and logging the status summary to
-# $OUTFILE.time.
-COMMAND="$RUN_UNDER $PROGRAM $*"
+TIMEITFLAGS="$TIMEITFLAGS --timeout $TIMELIMIT --chdir $PWD"
+TIMEITFLAGS="$TIMEITFLAGS --redirect-input ${INFILE}"
+TIMEITFLAGS="$TIMEITFLAGS --summary ${OUTFILE}.time${REMOTE_SUFFIX}"
+TIMEITFLAGS="$TIMEITFLAGS --redirect-output ${OUTFILE}${REMOTE_SUFFIX}"
 
-TIMEITCMD="$TIMEIT $LIMITARGS --timeout $TIMELIMIT --chdir $PWD"
+# Run the command
+rm -f "${OUTFILE}.time" "${OUTFILE}" "${STDOUT_FILE}" "${STDERR_FILE}"
 if [ "x$RHOST" = x ] ; then
-  rm -f "$OUTFILE.time"
-  $TIMEITCMD \
-      --summary $OUTFILE.time \
-      --redirect-input $INFILE \
-      --redirect-output $OUTFILE \
-      $COMMAND
+  $TIMEIT $TIMEITFLAGS $COMMAND
 else
-  # Get the absolute path to INFILE.
-  ABSINFILE=$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)
+  rm -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}${REMOTE_SUFFIX}"
+
+  # Create .command script
   PROG_BASENAME="$(basename ${PROG})"
-  case "$OUTFILE" in
-  /*) OUTFILE_ABS="$OUTFILE";;
-  *) OUTFILE_ABS="$PWD/$OUTFILE";;
-  esac
   rm -f "$PWD/${PROG_BASENAME}.command"
-  rm -f "$PWD/${PROG_BASENAME}.remote"
-  rm -f "${OUTFILE_ABS}.remote.time"
-  echo "$TIMEITCMD --summary ${OUTFILE_ABS}.remote.time --redirect-input $ABSINFILE --redirect-output ${OUTFILE_ABS}.remote $COMMAND" > "$PWD/${PROG_BASENAME}.command"
+  echo "$TIMEIT $TIMEITFLAGS $COMMAND" > "$PWD/${PROG_BASENAME}.command"
   chmod +x "$PWD/${PROG_BASENAME}.command"
 
   ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG_BASENAME}.command" ) > /dev/null 2>&1
   ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG_BASENAME}.command" )
-  cp ${OUTFILE_ABS}.remote.time $OUTFILE.time
   sleep 1
-  cp -f ${OUTFILE_ABS}.remote ${OUTFILE}
-  rm -f ${OUTFILE_ABS}.remote
-  rm -f ${OUTFILE_ABS}.remote.time
+
+  # Copy remote files back
+  cp -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}.time"
+  cp -f "${OUTFILE}${REMOTE_SUFFIX}" "${OUTFILE}"
+  rm -f "${OUTFILE}${REMOTE_SUFFIX}"
 fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
