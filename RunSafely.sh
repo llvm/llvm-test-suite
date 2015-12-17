@@ -16,8 +16,9 @@
 #
 # Syntax:
 #
-#   RunSafely.sh [--omit-exitval] [-d <workdir>] [-r <rhost>] [-l <ruser>]
-#                [-rc <client>] [-rp <port>] [-u <under>] [--show-errors]
+#   RunSafely.sh [-d <workdir>] [-r <rhost>] [-l <ruser>] [-rc <client>]
+#                [-rp <port>] [-u <under>] [--show-errors]
+#                [-n [-o <stdoutfile>] [-e <stderrfile>]]
 #                -t <timeit> <timeout> <infile> <outfile> <program> <args...>
 #
 #   where:
@@ -27,16 +28,23 @@
 #     <client>  is the remote client used to execute the program
 #     <port>    is the port used by the remote client
 #     <under>   is a wrapper that the program is run under
+#     <stdoutfile> file where standard output is written to
+#     <stderrfile> file where standard error output is written to
 #     <timeit>  is a wrapper that is used to collect timing data
 #     <timeout> is the maximum number of seconds to let the <program> run
 #     <infile>  is a file from which standard input is directed
-#     <outfile> is a file to which standard output and error are directed
+#     <outfile> is a file to which standard output and error are directed.
+#               If -n was specified this is just used as the basename for the
+#               .time file.
 #     <program> is the path to the program to run
 #     <args...> are the arguments to pass to the program.
 #
 # If --show-errors is given, then the output file will be printed if the command
 # fails (returns a non-zero exit code).
-# Unless --omit-exitval is given the last line of the outfile has the form
+# The -n switch will enable "new-style" output. This means the exit status is
+# not appended to the output anymore and stdout and stderr may be redirected
+# separately.
+# Without -n stdout and stderr will both be written to the <outfile> followed by
 # "exit NN" with NN being the exit status number of the program.
 
 if [ $# -lt 4 ]; then
@@ -57,12 +65,10 @@ RCLIENT=rsh
 RUN_UNDER=
 TIMEIT=
 SHOW_ERRORS=0
-OMIT_EXITVAL=0
+NEW_MODE=0
+STDOUT_FILE=""
+STDERR_FILE=""
 PWD=`pwd`
-if [ $1 = "--omit-exitval" ]; then
-  OMIT_EXITVAL=1
-  shift 1
-fi
 if [ $1 = "-d" ]; then
   PWD="$2"
   shift 2
@@ -91,6 +97,18 @@ if [ $1 = "--show-errors" ]; then
   SHOW_ERRORS=1
   shift 1
 fi
+if [ $1 = "-n" ]; then
+  NEW_MODE=1
+  shift 1
+  if [ $1 = "-o" ]; then
+    STDOUT_FILE="$2"
+    shift 2
+  fi
+  if [ $1 = "-e" ]; then
+    STDERR_FILE="$2"
+    shift 2
+  fi
+fi
 if [ $1 = "-t" ]; then
   TIMEIT=$2
   shift 2
@@ -118,6 +136,18 @@ COMMAND="$RUN_UNDER $PROGRAM $*"
 
 # Determine absolute paths of infiles/outfiles
 INFILE="$(cd $(dirname $INFILE); pwd)/$(basename $INFILE)"
+if [ "$STDOUT_FILE" != "" ]; then
+  case "$STDOUT_FILE" in
+    /*) STDOUT_FILE="$STDOUT_FILE";;
+	*) STDOUT_FILE="$PWD/$STDOUT_FILE";;
+  esac
+fi
+if [ "$STDERR_FILE" != "" ]; then
+  case "$STDERR_FILE" in
+    /*) STDERR_FILE="$STDERR_FILE";;
+    *) STDERR_FILE="$PWD/$STDERR_FILE";;
+  esac
+fi
 case "$OUTFILE" in
   /*) OUTFILE="$OUTFILE";;
   *) OUTFILE="$PWD/$OUTFILE";;
@@ -149,7 +179,16 @@ TIMEITFLAGS="$TIMEITFLAGS --limit-rss-size 838860800"
 TIMEITFLAGS="$TIMEITFLAGS --timeout $TIMELIMIT --chdir $PWD"
 TIMEITFLAGS="$TIMEITFLAGS --redirect-input ${INFILE}"
 TIMEITFLAGS="$TIMEITFLAGS --summary ${OUTFILE}.time${REMOTE_SUFFIX}"
-TIMEITFLAGS="$TIMEITFLAGS --redirect-output ${OUTFILE}${REMOTE_SUFFIX}"
+if [ "$NEW_MODE" = "0" ]; then
+  TIMEITFLAGS="$TIMEITFLAGS --redirect-output ${OUTFILE}${REMOTE_SUFFIX}"
+else
+  if [ "$STDERR_FILE" != "" ]; then
+    TIMEITFLAGS="$TIMEITFLAGS --redirect-stderr ${STDERR_FILE}${REMOTE_SUFFIX}"
+  fi
+  if [ "$STDOUT_FILE" != "" ]; then
+    TIMEITFLAGS="$TIMEITFLAGS --redirect-stdout ${STDOUT_FILE}${REMOTE_SUFFIX}"
+  fi
+fi
 
 # Run the command
 rm -f "${OUTFILE}.time" "${OUTFILE}" "${STDOUT_FILE}" "${STDERR_FILE}"
@@ -157,6 +196,7 @@ if [ "x$RHOST" = x ] ; then
   $TIMEIT $TIMEITFLAGS $COMMAND
 else
   rm -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}${REMOTE_SUFFIX}"
+  rm -f "${STDOUT_FILE}${REMOTE_SUFFIX}" "${STDERR_FILE}${REMOTE_SUFFIX}"
 
   # Create .command script
   PROG_BASENAME="$(basename ${PROG})"
@@ -170,8 +210,19 @@ else
 
   # Copy remote files back
   cp -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}.time"
-  cp -f "${OUTFILE}${REMOTE_SUFFIX}" "${OUTFILE}"
-  rm -f "${OUTFILE}${REMOTE_SUFFIX}"
+  if [ "$NEW_MODE" = "0" ]; then
+    cp -f "${OUTFILE}${REMOTE_SUFFIX}" "${OUTFILE}"
+    rm -f "${OUTFILE}${REMOTE_SUFFIX}"
+  else
+    if [ "$STDERR_FILE" != "" ]; then
+      cp -f "${STDERR_FILE}${REMOTE_SUFFIX}" "${STDERR_FILE}"
+      rm -f "${STDERR_FILE}${REMOTE_SUFFIX}"
+    fi
+    if [ "$STDOUT_FILE" != "" ]; then
+      cp -f "${STDOUT_FILE}${REMOTE_SUFFIX}" "${STDOUT_FILE}"
+      rm -f "${STDOUT_FILE}${REMOTE_SUFFIX}"
+    fi
+  fi
 fi
 
 exitval=`grep '^exit ' $OUTFILE.time | sed -e 's/^exit //'`
@@ -194,7 +245,7 @@ elif [ "$SHOW_ERRORS" -eq 1 -a "$exitval" -ne 0 ] ; then
 else
   fail=no
 fi
-if [ "$OMIT_EXITVAL" -ne 1 ]; then
+if [ "$NEW_MODE" = "0" ]; then
   echo "exit $exitval" >> $OUTFILE
 fi
 

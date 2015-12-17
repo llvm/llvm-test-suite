@@ -11,5 +11,3 @@ endif()
 llvm_singlesource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
-
-file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
