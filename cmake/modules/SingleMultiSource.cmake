@@ -202,7 +202,7 @@ macro(llvm_test_run)
   # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
   # whitespace-separated string.
   string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
-  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${RUN_TYPE}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
     set(TESTSCRIPT "${TESTSCRIPT}RUN: ${ARGS_EXECUTABLE} ${JOINED_ARGUMENTS}\n")
   endif()
 endmacro()
@@ -215,7 +215,7 @@ macro(llvm_test_verify)
   # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
   # whitespace-separated string.
   string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
-  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${RUN_TYPE}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
     set(TESTSCRIPT "${TESTSCRIPT}VERIFY: ${JOINED_ARGUMENTS}\n")
   endif()
 endmacro()

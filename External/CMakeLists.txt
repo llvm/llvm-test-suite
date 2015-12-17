@@ -26,5 +26,6 @@ llvm_add_subdirectories(
   HMMER
   Nurbs
   Povray
+  SPEC
   skidmarks10
 )

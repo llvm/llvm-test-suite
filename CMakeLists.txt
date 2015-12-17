@@ -46,6 +46,10 @@ mark_as_advanced(TEST_SUITE_REMOTE_USER TEST_SUITE_REMOTE_PORT)
 # Run Under configuration for RunSafely.sh (will be set in lit.site.cfg)
 set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter")
 
+# run type/benchmark size configuration (mostly for SPEC at the moment)
+set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
+    "Type of benchmark inputs (may be test,train or ref)")
+
 include(MakefileFunctions)
 include(SingleMultiSource)
 find_package(YACC)
