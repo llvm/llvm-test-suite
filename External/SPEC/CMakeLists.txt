@@ -3,8 +3,13 @@ if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
 endif()
 
-llvm_externals_find(TEST_SUITE_SPEC2000_ROOT "speccpu2000" "SPEC CPU2000")
+llvm_externals_find(TEST_SUITE_SPEC95_ROOT "spec95" "SPEC CPU95")
+if(TEST_SUITE_SPEC95_ROOT)
+  llvm_add_subdirectories(CINT95)
+  # Note that CFP95 tests are all fortran so not supported by cmake/lit yet
+endif()
 
+llvm_externals_find(TEST_SUITE_SPEC2000_ROOT "speccpu2000" "SPEC CPU2000")
 if(TEST_SUITE_SPEC2000_ROOT)
   llvm_add_subdirectories(CFP2000 CINT2000)
 endif()
