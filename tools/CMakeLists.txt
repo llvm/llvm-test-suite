@@ -1,6 +1,12 @@
 add_executable(timeit-target timeit.c)
 
 # FIXME: Replicate Makefile.tools's logic for determining whether to use fpcmp/fpcmp.sh
+
+# Note that we have to compile fpcmp and timeit for the host machine even when
+# cross compiling to a different target. We use custom rules doing "cc file.c"
+# as an ad-hoc solution for now. A proper solution would probably be based on
+# ExternalProject_Add(); See also http://reviews.llvm.org/D15004
+
 set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
 mark_as_advanced(TEST_SUITE_HOST_CC)
 add_custom_target(fpcmp
