@@ -14,4 +14,9 @@ if(TEST_SUITE_SPEC2000_ROOT)
   llvm_add_subdirectories(CFP2000 CINT2000)
 endif()
 
+llvm_externals_find(TEST_SUITE_SPEC2006_ROOT "speccpu2006" "SPEC CPU2006")
+if(TEST_SUITE_SPEC2006_ROOT)
+  llvm_add_subdirectories(CINT2006)
+endif()
+
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
