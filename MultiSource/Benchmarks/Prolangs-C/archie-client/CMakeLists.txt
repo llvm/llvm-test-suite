@@ -4,14 +4,16 @@ set(DIRS)
 set(PARALLEL_DIRS)
 
 set(LEVEL ../../../..)
+
 include(CheckFunctionExists)
 check_function_exists(re_comp HAVE_RE_COMP)
-if(DEFINED HAVE_RE_COMP)
+
+if(HAVE_RE_COMP)
   set(PROG archie)
+  if("${TARGET_OS}" STREQUAL "SunOS")
+    list(APPEND LDFLAGS -lsocket -lnsl)
+  endif()
+  llvm_multisource()
 endif()
-if("${TARGET_OS}" STREQUAL "SunOS")
-  list(APPEND LDFLAGS -lsocket -lnsl)
-endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
