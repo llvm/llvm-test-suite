@@ -1,4 +1,7 @@
-llvm_add_subdirectories(SetjmpLongjmp Vector Vectorizer SignlessTypes Threads C++11)
+llvm_add_subdirectories(Vector Vectorizer SignlessTypes Threads C++11)
+
+# FIXME: Disable SJLJ tests for now, until EH edges are represented.
+# llvm_add_subdirectories(SetjmpLongjmp)
 
 if("${TARGET_OS}" STREQUAL "Darwin")
   llvm_add_subdirectories(ObjC ObjC++)
