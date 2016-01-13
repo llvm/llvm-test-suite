@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS frame_layout)
 list(APPEND CPPFLAGS -std=c++11)
 string(FIND "${MIPSARCH}" "mips16" TMP1)

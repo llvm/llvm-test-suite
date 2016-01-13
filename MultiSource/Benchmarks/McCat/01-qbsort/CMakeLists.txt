@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG qbsort)
 set(RUN_OPTIONS 1000)
 set(LDFLAGS -lm)

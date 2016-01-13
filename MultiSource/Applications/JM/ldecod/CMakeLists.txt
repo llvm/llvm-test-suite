@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG ldecod)
 set(CPPFLAGS -D __USE_LARGEFILE64 -D _FILE_OFFSET_BITS=64)
 set(LDFLAGS -lm ${TOOLLINKOPTS})

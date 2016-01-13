@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG nbench)
 set(CPPFLAGS -DBASE_ITERATIONS=25)
 set(LDFLAGS -lm)

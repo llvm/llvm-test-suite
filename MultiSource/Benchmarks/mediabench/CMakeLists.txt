@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS adpcm g721 gsm jpeg mpeg2)
 llvm_multisource()
 

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS five11 drop3 uudecode uuencode)
 llvm_multisource()
 

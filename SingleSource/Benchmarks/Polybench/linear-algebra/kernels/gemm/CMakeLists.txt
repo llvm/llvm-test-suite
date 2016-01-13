@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../../..)
 set(POLYBENCH_UTILS SingleSource/Benchmarks/Polybench/utilities )
 set(PROG gemm)
 list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/${POLYBENCH_UTILS} -DPOLYBENCH_DUMP_ARRAYS)

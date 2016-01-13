@@ -2,7 +2,6 @@ set(DIRS)
 set(PARALLEL_DIRS)
 
 set(DIRS )
-set(LEVEL ../../../..)
 if(DEFINED BENCHMARKING_ONLY)
   list(APPEND PROGRAMS_TO_SKIP simple)
 endif()

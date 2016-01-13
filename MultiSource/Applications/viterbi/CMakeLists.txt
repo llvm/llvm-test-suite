@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG viterbi)
 set(CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR} -DPROJ_SRC_DIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\")
 set(LDFLAGS )

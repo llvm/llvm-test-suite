@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG voronoi)
 set(INCLUDES defines.h)
 set(CPPFLAGS -DTORONTO)

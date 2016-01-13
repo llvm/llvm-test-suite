@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG office-ispell)
 set(CPPFLAGS -Dconst=)
 set(LDFLAGS -lm)

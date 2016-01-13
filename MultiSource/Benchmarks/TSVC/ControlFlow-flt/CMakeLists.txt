@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG ControlFlow-flt)
 set(LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)

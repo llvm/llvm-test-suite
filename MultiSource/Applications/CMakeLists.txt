@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../..)
 set(PARALLEL_DIRS Burg aha sgefa siod d spiff treecc SPASS oggenc JM viterbi SIBsim4 ClamAV sqlite3 lemon)
 if(NOT DEFINED DISABLE_CXX)
   list(APPEND PARALLEL_DIRS lambda-0.1.3 hbd hexxagon minisat ALAC)

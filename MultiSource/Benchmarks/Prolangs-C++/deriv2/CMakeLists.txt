@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG deriv2)
 set(LDFLAGS -lstdc++)
 llvm_multisource()

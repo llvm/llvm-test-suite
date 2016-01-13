@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND CPPFLAGS -std=c++11 -pthread)
 if(DEFINED BENCHMARKING_ONLY)
   list(APPEND PROGRAMS_TO_SKIP stdthreadbug)

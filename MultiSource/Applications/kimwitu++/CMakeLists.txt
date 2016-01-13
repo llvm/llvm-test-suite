@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG kc)
 set(CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR} -DYYDEBUG=1)
 set(LDFLAGS -lstdc++)

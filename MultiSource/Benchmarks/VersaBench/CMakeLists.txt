@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 if("${ENDIAN}" STREQUAL "big")
   set(PARALLEL_DIRS beamformer bmm dbms ecbdes)
 else()

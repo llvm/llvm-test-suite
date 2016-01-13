@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG telecomm-adpcm)
 set(LDFLAGS -lm)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/large.adpcm)

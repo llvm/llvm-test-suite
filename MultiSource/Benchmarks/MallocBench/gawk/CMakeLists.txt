@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(RUN_OPTIONS -f ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/adj.awk type=l linelen=70 indent=5 ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/words-large.awk)
 set(PROG gawk)
 list(APPEND LIBS -lm)

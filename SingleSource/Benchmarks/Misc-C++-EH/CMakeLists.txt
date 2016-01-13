@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND LDFLAGS -lm -lstdc++)
 set(LIBS -lstdc++)
 set(REQUIRES_EH_SUPPORT 1)

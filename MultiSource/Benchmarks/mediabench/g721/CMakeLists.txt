@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PARALLEL_DIRS g721encode )
 llvm_multisource()
 

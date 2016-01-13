@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG lambda)
 list(APPEND LDFLAGS -lstdc++)
 list(APPEND LIBS -lstdc++)

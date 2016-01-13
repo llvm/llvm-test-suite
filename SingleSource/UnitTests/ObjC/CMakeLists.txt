@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(DISABLE_JIT 1)
 set(DIRS )
 list(APPEND LDFLAGS -lobjc -framework Foundation)

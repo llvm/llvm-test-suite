@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG dc)
 set(LDFLAGS )
 set(Source adc.c dc.c jobcntl.c c_print_results.c extbuild.c rbt.c)

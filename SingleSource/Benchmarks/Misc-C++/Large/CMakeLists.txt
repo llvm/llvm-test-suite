@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 list(APPEND LDFLAGS -lm -lstdc++)
 set(LIBS -lstdc++)
 set(FP_ABSTOLERANCE 0.01)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS TimberWolfMC agrep allroots archie-client assembler bison cdecl compiler fixoutput football gnugo loader plot2fig simulator unix-smail unix-tbl)
 if("${ARCH}" STREQUAL "Sparc")
   llvm_filter_out(TMP1 bison  ${PARALLEL_DIRS})

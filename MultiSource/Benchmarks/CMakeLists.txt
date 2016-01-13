@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../..)
 set(PARALLEL_DIRS Fhourstones Fhourstones-3.1 McCat Olden Ptrdist llubenchmark sim FreeBench MallocBench Prolangs-C SciMark2-C mediabench nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial BitBench ASC_Sequoia TSVC)
 if("${TARGET_OS}" STREQUAL "Darwin")
   if("${ARCH}" STREQUAL "ARM")

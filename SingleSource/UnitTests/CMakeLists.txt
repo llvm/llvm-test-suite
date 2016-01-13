@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../..)
 set(DIRS SetjmpLongjmp)
 set(DIRS )
 list(APPEND DIRS Vector)

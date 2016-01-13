@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG bh)
 set(CPPFLAGS -DTORONTO)
 set(LDFLAGS -lm)

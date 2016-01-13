@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG dbms)
 list(APPEND LDFLAGS -lm)
 if(DEFINED SMALL_PROBLEM_SIZE)

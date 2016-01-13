@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND LDFLAGS -lstdc++)
 llvm_singlesource()
 

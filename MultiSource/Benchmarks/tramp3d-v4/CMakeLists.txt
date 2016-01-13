@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG tramp3d-v4)
 set(CPPFLAGS -fno-exceptions)
 set(LDFLAGS -lstdc++)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(DIRS )
 if("${ARCH}" STREQUAL "PowerPC")
   list(APPEND DIRS Altivec)

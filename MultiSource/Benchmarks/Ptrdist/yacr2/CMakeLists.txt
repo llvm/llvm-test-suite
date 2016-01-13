@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG yacr2)
 set(CPPFLAGS -DTODD)
 list(APPEND RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input2.in)

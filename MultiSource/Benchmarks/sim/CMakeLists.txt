@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG sim)
 set(CPPFLAGS -DUNIX)
 set(LDFLAGS )

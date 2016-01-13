@@ -2,7 +2,6 @@ set(DIRS)
 set(PARALLEL_DIRS)
 
 set(DIRS Large)
-set(LEVEL ../../..)
 execute_process(COMMAND date +%j OUTPUT_VARIABLE TMP1)
 set(SEED TMP1)
 set(RUN_OPTIONS 31415926)

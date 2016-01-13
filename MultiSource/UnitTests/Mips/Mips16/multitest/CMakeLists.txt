@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../..)
 set(PROG multitest)
 set(CPPFLAGS )
 set(LDFLAGS )

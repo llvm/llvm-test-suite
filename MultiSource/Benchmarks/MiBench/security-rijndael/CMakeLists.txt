@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG security-rijndael)
 set(LDFLAGS -lm)
 set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/output_large.enc Output/output_large.dec d 1234567890abcdeffedcba09876543211234567890abcdeffedcba0987654321)

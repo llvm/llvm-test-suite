@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG fhourstones3.1)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/inputs_large)

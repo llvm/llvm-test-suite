@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG sgefa)
 set(LDFLAGS -lm)
 set(FP_TOLERANCE 0.0001)

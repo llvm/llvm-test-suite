@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 list(APPEND LDFLAGS -lm)
 set(PROG beamformer)
 if(DEFINED LARGE_PROBLEM_SIZE)

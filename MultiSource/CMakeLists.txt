@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ..)
 set(PARALLEL_DIRS Applications Benchmarks)
 if(NOT DEFINED BENCHMARKING_ONLY)
   list(APPEND PARALLEL_DIRS UnitTests)

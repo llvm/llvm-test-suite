@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG employ)
 set(LDFLAGS -lstdc++)
 set(RUN_OPTIONS 400)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG netbench-url)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/medium_inputs 1400)

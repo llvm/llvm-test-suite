@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG automotive-basicmath)
 set(LDFLAGS -lm)
 set(HASH_PROGRAM_OUTPUT 1)

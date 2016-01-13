@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG allroots)
 set(LDFLAGS -lm)
 llvm_multisource()

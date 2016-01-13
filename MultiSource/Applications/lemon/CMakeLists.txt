@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../)
 set(Source lemon.c)
 set(PROG lemon)
 set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/parse.y ${CMAKE_CURRENT_SOURCE_DIR}/example1.y ${CMAKE_CURRENT_SOURCE_DIR}/example2.y ${CMAKE_CURRENT_SOURCE_DIR}/example3.y ${CMAKE_CURRENT_SOURCE_DIR}/example4.y ${CMAKE_CURRENT_SOURCE_DIR}/example5.y ${CMAKE_CURRENT_SOURCE_DIR}/lighttpd_configparser.y ${CMAKE_CURRENT_SOURCE_DIR}/lighttpd_mod_ssi_exprparser.y ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_dtd_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_mate_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/xapian_queryparser.lemony ${CMAKE_CURRENT_SOURCE_DIR}/ecmascript.y)

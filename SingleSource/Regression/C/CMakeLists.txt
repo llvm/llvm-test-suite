@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 if("${ARCH}" STREQUAL "x86")
   if(DEFINED USE_REFERENCE_OUTPUT)
     set(EXEC_XFAILS casts)

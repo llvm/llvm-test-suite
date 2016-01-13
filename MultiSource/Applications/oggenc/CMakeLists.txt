@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG oggenc)
 set(CPPFLAGS -fno-strict-aliasing)
 set(LDFLAGS -lm)

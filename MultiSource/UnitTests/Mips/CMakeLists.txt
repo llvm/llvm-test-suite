@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS )
 string(FIND "${MIPSARCH}" "mips16" TMP1)
 if(NOT "" STREQUAL "${TMP1}")

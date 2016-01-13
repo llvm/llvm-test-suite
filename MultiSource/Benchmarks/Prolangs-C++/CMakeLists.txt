@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS NP city deriv1 deriv2 employ family fsm garage life objects ocean office primes shapes simul trees vcirc)
 if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP1 deriv1  ${PARALLEL_DIRS})

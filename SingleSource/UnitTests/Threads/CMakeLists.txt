@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 if(NOT "${ARCH}" STREQUAL "XCore")
   list(APPEND LDFLAGS -lpthread)
 else()

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../..)
 set(PARALLEL_DIRS 2mm 3mm atax bicg cholesky doitgen gemm gemver gesummv mvt symm syr2k syrk trisolv trmm)
 if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP1 2mm  ${PARALLEL_DIRS})

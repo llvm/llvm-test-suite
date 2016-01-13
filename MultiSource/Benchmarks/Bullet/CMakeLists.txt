@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../)
 set(PROG bullet)
 list(APPEND CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR}/include -DNO_TIME)
 set(LDFLAGS -lstdc++ -lm)

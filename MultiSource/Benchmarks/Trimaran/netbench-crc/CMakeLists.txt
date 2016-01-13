@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG netbench-crc)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS 40000)

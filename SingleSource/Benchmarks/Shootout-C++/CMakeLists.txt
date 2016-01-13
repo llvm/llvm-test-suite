@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND CXXFLAGS -Wno-deprecated)
 list(APPEND CPPFLAGS -Wno-deprecated)
 set(FP_TOLERANCE 0.00000001)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../..)
 set(RUN_OPTIONS -4 -l)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.pcm)
 set(PROG encode)

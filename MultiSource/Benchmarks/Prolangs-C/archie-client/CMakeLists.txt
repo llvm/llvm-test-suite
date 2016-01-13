@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 
 include(CheckFunctionExists)
 check_function_exists(re_comp HAVE_RE_COMP)

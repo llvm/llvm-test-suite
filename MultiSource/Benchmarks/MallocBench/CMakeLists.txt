@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PARALLEL_DIRS cfrac espresso gs)
 if("${ARCH}" STREQUAL "Alpha")
   llvm_filter_out(TMP1 cfrac  ${PARALLEL_DIRS})

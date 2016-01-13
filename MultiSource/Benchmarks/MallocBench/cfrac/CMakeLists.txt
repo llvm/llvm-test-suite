@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG cfrac)
 list(APPEND CPPFLAGS -DNOMEMOPT)
 list(APPEND LIBS -lm)

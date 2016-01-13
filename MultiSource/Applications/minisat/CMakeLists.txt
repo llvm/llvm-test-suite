@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG minisat)
 set(CPPFLAGS -D NDEBUG)
 set(LDFLAGS -lstdc++ -lm)

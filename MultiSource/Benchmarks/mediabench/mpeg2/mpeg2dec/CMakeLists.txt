@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../..)
 set(RUN_OPTIONS -b ${CMAKE_CURRENT_SOURCE_DIR}/../data/mei16v2.m2v -r -f -o0 ${CMAKE_CURRENT_BINARY_DIR}/tmp%d)
 set(PROG mpeg2decode)
 list(APPEND LIBS -lm)

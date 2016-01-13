@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG burg)
 set(CPPFLAGS -DDEBUG)
 list(APPEND CFLAGS -std=gnu89)

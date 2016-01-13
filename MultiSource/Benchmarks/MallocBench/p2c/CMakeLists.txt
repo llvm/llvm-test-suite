@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG p2c)
 list(APPEND CPPFLAGS -DNOMEMOPT)
 set(RUN_OPTIONS -v)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG telecomm-gsm)
 set(CPPFLAGS -DSTUPID_COMPILER -DNeedFunctionPrototypes=1 -DSASR)
 set(LDFLAGS -lm)

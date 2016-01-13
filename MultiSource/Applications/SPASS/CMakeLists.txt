@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG SPASS)
 set(CPPFLAGS -DCLOCK_NO_TIMING -fno-strict-aliasing -w)
 set(LDFLAGS -lm)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG scimark2)
 set(CPPFLAGS )
 set(LDFLAGS -lm)

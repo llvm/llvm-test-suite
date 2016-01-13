@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../../..)
 set(RUN_OPTIONS -cpl ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.pcm)
 set(PROG toast)
 list(APPEND CPPFLAGS -DNeedFunctionPrototypes=1 -DSASR)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG make_dparser)
 set(Source make_dparser.c write_ctables.c gram.c lex.c lr.c arg.c parse.c scan.c symtab.c util.c version.c grammar.g.c)
 set(CPPFLAGS -DD_BUILD_VERSION=5725)

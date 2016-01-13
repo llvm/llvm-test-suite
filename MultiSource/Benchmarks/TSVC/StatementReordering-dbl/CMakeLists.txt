@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG StatementReordering-dbl)
 set(LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)

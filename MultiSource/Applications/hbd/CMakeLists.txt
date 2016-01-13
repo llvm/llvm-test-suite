@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 set(PROG hbd)
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H)
 list(APPEND LDFLAGS -lstdc++)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PARALLEL_DIRS kernels solvers)
 llvm_singlesource()
 

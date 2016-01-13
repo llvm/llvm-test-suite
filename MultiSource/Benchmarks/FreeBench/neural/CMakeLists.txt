@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG neural)
 set(CPPFLAGS -DVERSION='"1.00"' -DCOMPDATE="\\"today\\"" -DCFLAGS='""' -DHOSTNAME="\\"thishost\\"" )
 set(LDFLAGS -lm)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG drop3)
 set(LDFLAGS )
 set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input-file)

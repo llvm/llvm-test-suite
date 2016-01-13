@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../)
 set(PROG paq8p)
 list(APPEND CPPFLAGS -DNOASM -DLLVM)
 set(LDFLAGS -lstdc++ -lm)

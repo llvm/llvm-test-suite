@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG 8b10b)
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.txt 2000)

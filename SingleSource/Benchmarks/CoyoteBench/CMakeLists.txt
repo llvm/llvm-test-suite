@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND LDFLAGS -lm -lstdc++)
 if("${ARCH}" STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)

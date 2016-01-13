@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG telecomm-fft)
 set(LDFLAGS -lm)
 set(RUN_OPTIONS 8 32768 -i)

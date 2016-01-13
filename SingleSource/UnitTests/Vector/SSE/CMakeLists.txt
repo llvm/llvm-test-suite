@@ -2,7 +2,6 @@ set(DIRS)
 set(PARALLEL_DIRS)
 
 set(DIRS )
-set(LEVEL ../../../..)
 set(FP_TOLERANCE 0.016)
 list(APPEND LDFLAGS -lm)
 list(APPEND TARGET_FLAGS -msse2)

@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 list(APPEND PARALLEL_DIRS multitest fp16_32_1)
 llvm_multisource()
 

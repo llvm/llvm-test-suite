@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../../..)
 set(PROG ft)
 if(DEFINED LARGE_PROBLEM_SIZE)
   list(APPEND RUN_OPTIONS 6000 100000)

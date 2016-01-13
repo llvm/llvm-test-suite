@@ -1,7 +1,6 @@
 set(DIRS)
 set(PARALLEL_DIRS)
 
-set(LEVEL ../../..)
 list(APPEND LDFLAGS -lm)
 if("${ARCH}" STREQUAL "XCore")
   set(XCORE_TARGET_NEEDS_MEMORY 256)
