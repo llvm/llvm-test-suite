@@ -1,8 +1,4 @@
-set(PARALLEL_DIRS)
-
-set(PARALLEL_DIRS Applications Benchmarks)
+llvm_add_subdirectories(Applications Benchmarks)
 if(NOT DEFINED BENCHMARKING_ONLY)
-  list(APPEND PARALLEL_DIRS UnitTests)
+  llvm_add_subdirectories(UnitTests)
 endif()
-
-llvm_add_subdirectories(${PARALLEL_DIRS})

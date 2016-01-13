@@ -1,5 +1,1 @@
-set(DIRS)
-
-set(DIRS C C++)
-
-llvm_add_subdirectories(${DIRS})
+llvm_add_subdirectories(C C++)

@@ -1,5 +1,1 @@
-set(PARALLEL_DIRS)
-
-set(PARALLEL_DIRS datamining linear-algebra medley stencils)
-
-llvm_add_subdirectories(${PARALLEL_DIRS})
+llvm_add_subdirectories(datamining linear-algebra medley stencils)

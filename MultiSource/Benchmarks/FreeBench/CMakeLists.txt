@@ -1,9 +1,4 @@
-set(PARALLEL_DIRS)
-
-set(PARALLEL_DIRS distray mason pcompress2 analyzer fourinarow neural pifft)
-if("${ARCH}" STREQUAL "Sparc")
-  llvm_filter_out(TMP1 analyzer  ${PARALLEL_DIRS})
-  set(PARALLEL_DIRS ${TMP1})
+llvm_add_subdirectories(distray mason pcompress2 fourinarow neural pifft)
+if(NOT "${ARCH}" STREQUAL "Sparc")
+  llvm_add_subdirectories(analyzer)
 endif()
-
-llvm_add_subdirectories(${PARALLEL_DIRS})

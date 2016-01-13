@@ -1,10 +1,7 @@
-set(DIRS)
-
-set(DIRS Large)
 execute_process(COMMAND date +%j OUTPUT_VARIABLE TMP1)
 set(SEED TMP1)
 set(RUN_OPTIONS 31415926)
 list(APPEND LDFLAGS -lstdc++)
 llvm_singlesource()
 
-llvm_add_subdirectories(${DIRS})
+llvm_add_subdirectories(Large)

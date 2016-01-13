@@ -1,9 +1,6 @@
-set(DIRS)
-
 list(APPEND CXXFLAGS -Wno-deprecated)
 list(APPEND CPPFLAGS -Wno-deprecated)
 set(FP_TOLERANCE 0.00000001)
-set(DIRS EH)
 if("${ARCH}" STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)
     set(XCORE_TARGET_NEEDS_MEMORY 256)
@@ -16,4 +13,4 @@ endif()
 list(APPEND LDFLAGS -lstdc++)
 llvm_singlesource()
 
-llvm_add_subdirectories(${DIRS})
+llvm_add_subdirectories(EH)

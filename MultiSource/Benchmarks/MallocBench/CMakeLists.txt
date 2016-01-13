@@ -1,9 +1,4 @@
-set(PARALLEL_DIRS)
-
-set(PARALLEL_DIRS cfrac espresso gs)
-if("${ARCH}" STREQUAL "Alpha")
-  llvm_filter_out(TMP1 cfrac  ${PARALLEL_DIRS})
-  set(PARALLEL_DIRS ${TMP1})
+llvm_add_subdirectories(espresso gs)
+if(NOT "${ARCH}" STREQUAL "Alpha")
+  llvm_add_subdirectories(cfrac)
 endif()
-
-llvm_add_subdirectories(${PARALLEL_DIRS})

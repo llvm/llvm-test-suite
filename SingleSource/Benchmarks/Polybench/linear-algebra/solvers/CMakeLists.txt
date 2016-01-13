@@ -1,5 +1,1 @@
-set(PARALLEL_DIRS)
-
-set(PARALLEL_DIRS durbin dynprog gramschmidt lu)
-
-llvm_add_subdirectories(${PARALLEL_DIRS})
+llvm_add_subdirectories(durbin dynprog gramschmidt lu)
