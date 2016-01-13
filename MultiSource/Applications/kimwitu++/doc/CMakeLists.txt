@@ -28,6 +28,5 @@ set(PDFs ${TMP8})
 set(TMP9 ${PNGs})
 llvm_prepend(TMP9 ${IMGDIR}/ ${TMP9})
 set(PNGs ${TMP9})
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

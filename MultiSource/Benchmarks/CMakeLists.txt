@@ -24,6 +24,5 @@ if("${ARCH}" STREQUAL "XCore")
   llvm_filter_out(TMP4 PAQ8p  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP4})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

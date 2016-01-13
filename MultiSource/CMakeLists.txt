@@ -5,6 +5,5 @@ set(PARALLEL_DIRS Applications Benchmarks)
 if(NOT DEFINED BENCHMARKING_ONLY)
   list(APPEND PARALLEL_DIRS UnitTests)
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

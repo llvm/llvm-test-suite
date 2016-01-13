@@ -8,6 +8,5 @@ if(NOT "" STREQUAL "${TMP1}")
   llvm_filter_out(TMP2 frame_layout  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP2})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

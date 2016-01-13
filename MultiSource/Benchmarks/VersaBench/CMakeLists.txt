@@ -6,6 +6,5 @@ if("${ENDIAN}" STREQUAL "big")
 else()
   set(PARALLEL_DIRS 8b10b beamformer bmm dbms ecbdes)
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

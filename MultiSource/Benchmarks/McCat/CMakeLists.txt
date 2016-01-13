@@ -6,6 +6,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP1 15-trie  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP1})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

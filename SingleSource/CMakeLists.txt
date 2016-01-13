@@ -5,6 +5,5 @@ set(PARALLEL_DIRS Regression Benchmarks)
 if(NOT DEFINED BENCHMARKING_ONLY)
   list(APPEND PARALLEL_DIRS UnitTests)
 endif()
-llvm_singlesource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

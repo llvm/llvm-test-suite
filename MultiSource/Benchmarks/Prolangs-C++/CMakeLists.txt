@@ -26,6 +26,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP11 vcirc  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP11})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

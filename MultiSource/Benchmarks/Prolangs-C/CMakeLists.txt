@@ -44,6 +44,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP17 unix-tbl  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP17})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

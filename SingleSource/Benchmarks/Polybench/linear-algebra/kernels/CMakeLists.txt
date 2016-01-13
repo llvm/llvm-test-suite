@@ -10,6 +10,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP3 gemm  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP3})
 endif()
-llvm_singlesource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

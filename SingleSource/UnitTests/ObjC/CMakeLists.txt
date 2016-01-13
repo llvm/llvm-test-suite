@@ -7,6 +7,5 @@ list(APPEND LDFLAGS -lobjc -framework Foundation)
 if(DEFINED CC_UNDER_TEST_IS_LLVM_GCC)
   set(EXEC_XFAILS dot-syntax-2)
 endif()
-llvm_singlesource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

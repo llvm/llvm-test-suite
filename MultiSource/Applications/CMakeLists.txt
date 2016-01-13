@@ -44,6 +44,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP10 treecc  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP10})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

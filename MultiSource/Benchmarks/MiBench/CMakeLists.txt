@@ -22,6 +22,5 @@ if(DEFINED BENCHMARKING_ONLY)
   llvm_filter_out(TMP7 telecom-adpcm  ${PARALLEL_DIRS})
   set(PARALLEL_DIRS ${TMP7})
 endif()
-llvm_multisource()
 
 llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
