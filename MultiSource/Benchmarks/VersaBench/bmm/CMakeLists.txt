@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG bmm)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS 1024 1024)
@@ -12,5 +9,3 @@ else()
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

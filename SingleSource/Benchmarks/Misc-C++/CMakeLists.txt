@@ -1,5 +1,4 @@
 set(DIRS)
-set(PARALLEL_DIRS)
 
 set(DIRS Large)
 list(APPEND LDFLAGS -lm -lstdc++)
@@ -12,4 +11,4 @@ if("${ARCH}" STREQUAL "XCore")
 endif()
 llvm_singlesource()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${DIRS})

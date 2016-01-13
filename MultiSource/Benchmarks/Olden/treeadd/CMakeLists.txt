@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG treeadd)
 set(CPPFLAGS -DTORONTO)
 set(LDFLAGS )
@@ -13,5 +10,3 @@ else()
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

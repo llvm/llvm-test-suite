@@ -1,11 +1,6 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG telecomm-fft)
 set(LDFLAGS -lm)
 set(RUN_OPTIONS 8 32768 -i)
 set(FP_ABSTOLERANCE 0.00001)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 execute_process(COMMAND date +%j OUTPUT_VARIABLE TMP1)
 set(SEED TMP1)
 set(RUN_OPTIONS 31415926)
@@ -14,5 +11,3 @@ if("1" STREQUAL "${ENABLE_LARGE_INTEGERS}")
   list(APPEND CPPFLAGS -DENABLE_LARGE_INTEGERS)
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 if("${ARCH}" STREQUAL "x86")
   if(DEFINED USE_REFERENCE_OUTPUT)
     set(EXEC_XFAILS casts)
@@ -11,5 +8,3 @@ if(DEFINED BENCHMARKING_ONLY)
 endif()
 list(APPEND LDFLAGS -lm)
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

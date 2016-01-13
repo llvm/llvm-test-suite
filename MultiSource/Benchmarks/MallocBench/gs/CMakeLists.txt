@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG gs)
 list(APPEND LIBS -lm)
 list(APPEND LDFLAGS -lm)
@@ -12,5 +9,3 @@ list(APPEND Source ialloc.c idebug.c idict.c iinit.c iname.c interp.c iscan.c iu
 list(APPEND Source gschar.c gscolor.c gscoord.c gsdevice.c gsfile.c gsfont.c gsimage.c gsim2out.c gsline.c gsmatrix.c gsmisc.c gspaint.c gspath.c gspath2.c gsstate.c gstype1.c gxcache.c gxcolor.c gxdither.c gxdraw.c gxfill.c gxht.c gxpath.c gxpath2.c gxstroke.c gdevmem.c gdevs.c)
 set(RUN_OPTIONS -DNODISPLAY ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/large.ps)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

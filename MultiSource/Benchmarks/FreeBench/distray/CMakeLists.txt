@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG distray)
 set(CPPFLAGS -DVERSION='"1.00"' -DCOMPDATE="\\"today\\"" -DCFLAGS='""' -DHOSTNAME="\\"thishost\\"" )
 set(LDFLAGS -lm)
@@ -11,5 +8,3 @@ else()
 endif()
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

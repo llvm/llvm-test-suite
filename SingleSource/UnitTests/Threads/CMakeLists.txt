@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 if(NOT "${ARCH}" STREQUAL "XCore")
   list(APPEND LDFLAGS -lpthread)
 else()
@@ -10,5 +7,3 @@ if("${TARGET_OS}" STREQUAL "Darwin")
   set(PROGRAMS_TO_SKIP tls 2010-12-08-tls)
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

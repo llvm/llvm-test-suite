@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG bisort)
 set(CPPFLAGS -DTORONTO)
 set(LDFLAGS -lm)
@@ -10,5 +7,3 @@ else()
   set(RUN_OPTIONS 700000)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

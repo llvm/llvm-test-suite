@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG spiff)
 set(CPPFLAGS )
 set(LDFLAGS )
@@ -11,5 +8,3 @@ if("${ARCH}" STREQUAL "XCore")
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

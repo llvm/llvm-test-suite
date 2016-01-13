@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS 2mm 3mm atax bicg cholesky doitgen gemm gemver gesummv mvt symm syr2k syrk trisolv trmm)
@@ -11,4 +10,4 @@ if(DEFINED BENCHMARKING_ONLY)
   set(PARALLEL_DIRS ${TMP3})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 list(APPEND LDFLAGS -lm -lstdc++)
 if("${ARCH}" STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)
@@ -12,5 +9,3 @@ if("${ARCH}" STREQUAL "Mips")
   set(RUNTIMELIMIT 1200)
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(XMLs kpp-main.xml kpp-intro.xml kpp-manual.xml kpp-cook.xml kpp-rpn.xml)
 set(FIGs syntaxtreex.fig simplify.fig fprintdot.fig)
 set(FIGDIR figures)
@@ -28,5 +25,3 @@ set(PDFs ${TMP8})
 set(TMP9 ${PNGs})
 llvm_prepend(TMP9 ${IMGDIR}/ ${TMP9})
 set(PNGs ${TMP9})
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

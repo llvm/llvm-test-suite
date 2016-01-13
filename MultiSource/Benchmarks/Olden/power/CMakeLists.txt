@@ -1,10 +1,5 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG power)
 set(CPPFLAGS -DTORONTO)
 set(LDFLAGS -lm)
 set(FP_TOLERANCE 0.00001)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

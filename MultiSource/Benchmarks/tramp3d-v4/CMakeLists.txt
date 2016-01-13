@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG tramp3d-v4)
 set(CPPFLAGS -fno-exceptions)
 set(LDFLAGS -lstdc++)
@@ -14,5 +11,3 @@ if("${ARCH}" STREQUAL "Mips")
   set(RUNTIMELIMIT 700)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

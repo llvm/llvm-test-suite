@@ -1,10 +1,5 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG yacr2)
 set(CPPFLAGS -DTODD)
 list(APPEND RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input2.in)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

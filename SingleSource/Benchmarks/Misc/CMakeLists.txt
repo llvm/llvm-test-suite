@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 list(APPEND LDFLAGS -lm )
 set(FP_TOLERANCE 0.001)
 if("${ARCH}" STREQUAL "PowerPC")
@@ -17,5 +14,3 @@ if("${ARCH}" STREQUAL "XCore")
   endif()
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

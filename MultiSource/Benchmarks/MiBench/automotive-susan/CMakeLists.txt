@@ -1,10 +1,5 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG automotive-susan)
 set(LDFLAGS -lm)
 set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input_large.pgm Output/output_large.smoothing.pgm -s)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

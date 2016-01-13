@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(RUN_OPTIONS -f ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/adj.awk type=l linelen=70 indent=5 ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/words-large.awk)
 set(PROG gawk)
 list(APPEND LIBS -lm)
@@ -11,5 +8,3 @@ list(APPEND CPPFLAGS -DBCOPY_MISSING -DSPRINTF_INT -DDOPRNT_MISSING  -DGCVT_MISS
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_yacc_parser(gawk_parser awk.y ${CMAKE_CURRENT_BINARY_DIR}/awk.tab.c ${CMAKE_CURRENT_BINARY_DIR}/awk.tab.h)
     llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

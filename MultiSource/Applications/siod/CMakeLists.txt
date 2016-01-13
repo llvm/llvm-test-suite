@@ -1,11 +1,6 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG siod)
 set(CPPFLAGS -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN -Dunix)
 set(LDFLAGS -lm ${TOOLLINKOPTS})
 set(RUN_OPTIONS -v1 ${CMAKE_CURRENT_SOURCE_DIR}/test.scm)
 set(USE_REFERENCE_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

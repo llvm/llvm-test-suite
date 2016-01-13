@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG dbms)
 list(APPEND LDFLAGS -lm)
 if(DEFINED SMALL_PROBLEM_SIZE)
@@ -9,5 +6,3 @@ else()
   set(RUN_OPTIONS -i ${CMAKE_CURRENT_SOURCE_DIR}/dbms.ref.in)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(RUN_OPTIONS 31415926)
 list(APPEND LDFLAGS -lstdc++)
 set(HASH_PROGRAM_OUTPUT 1)
@@ -10,5 +7,3 @@ if("${ARCH}" STREQUAL "x86")
   endif()
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

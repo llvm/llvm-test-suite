@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG dc)
 set(LDFLAGS )
 set(Source adc.c dc.c jobcntl.c c_print_results.c extbuild.c rbt.c)
@@ -9,5 +6,3 @@ if(DEFINED SMALL_PROBLEM_SIZE)
   set(CPPFLAGS -DSMALL_PROBLEM_SIZE)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS )
@@ -7,4 +6,4 @@ if(NOT "" STREQUAL "${TMP1}")
   list(APPEND PARALLEL_DIRS Mips16)
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

@@ -1,10 +1,5 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.adpcm )
 set(PROG rawdaudio)
 set(HASH_PROGRAM_OUTPUT 1)
 set(Source rawdaudio.c adpcm.c)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

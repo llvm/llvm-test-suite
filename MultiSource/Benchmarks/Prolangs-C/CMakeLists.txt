@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS TimberWolfMC agrep allroots archie-client assembler bison cdecl compiler fixoutput football gnugo loader plot2fig simulator unix-smail unix-tbl)
@@ -45,4 +44,4 @@ if(DEFINED BENCHMARKING_ONLY)
   set(PARALLEL_DIRS ${TMP17})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

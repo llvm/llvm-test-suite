@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG hbd)
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H)
 list(APPEND LDFLAGS -lstdc++)
@@ -8,5 +5,3 @@ list(APPEND LIBS -lstdc++)
 set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/Sort.class)
 set(REQUIRES_EH_SUPPORT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

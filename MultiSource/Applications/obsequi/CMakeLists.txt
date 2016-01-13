@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG Obsequi)
 list(APPEND CPPFLAGS -DCOUNTBITS16 -DLASTBIT16 -DCOUNTMOVES_TABLE)
 list(APPEND CPPFLAGS -DTWO_STAGE_GENERATION)
@@ -15,5 +12,3 @@ if(NOT "${ARCH}" STREQUAL "PowerPC")
 endif()
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/input)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

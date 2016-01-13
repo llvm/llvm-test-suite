@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG nbench)
 set(CPPFLAGS -DBASE_ITERATIONS=25)
 set(LDFLAGS -lm)
@@ -17,4 +14,3 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/NNET.DAT
 add_custom_target(nbench_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/NNET.DAT)
     llvm_multisource()
 add_dependencies(nbench nbench_input)
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

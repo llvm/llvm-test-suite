@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG smg2000)
 list(APPEND CPPFLAGS -D_POSIX_SOURCE -DHYPRE_TIMING -DHYPRE_SEQUENTIAL )
 list(APPEND CPPFLAGS -I. )
@@ -15,5 +12,3 @@ else()
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

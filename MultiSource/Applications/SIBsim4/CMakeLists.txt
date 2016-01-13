@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG SIBsim4)
 set(CPPFLAGS )
 set(LDFLAGS )
@@ -10,5 +7,3 @@ else()
   set(RUN_OPTIONS -A4 ${CMAKE_CURRENT_SOURCE_DIR}/x.fa ${CMAKE_CURRENT_SOURCE_DIR}/y.fa)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

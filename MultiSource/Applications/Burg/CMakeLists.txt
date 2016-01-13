@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG burg)
 set(CPPFLAGS -DDEBUG)
 list(APPEND CFLAGS -std=gnu89)
@@ -13,5 +10,3 @@ set(Source ${ExtraSource} ${TMP1})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_yacc_parser(burg_parser gram.y ${CMAKE_CURRENT_BINARY_DIR}/y.tab.c ${CMAKE_CURRENT_BINARY_DIR}/y.tab.h)
     llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

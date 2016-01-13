@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG fhourstones3.1)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/inputs_large)
@@ -11,5 +8,3 @@ if("${ARCH}" STREQUAL "XCore")
   set(XCORE_TARGET_NEEDS_MEMORY 64)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

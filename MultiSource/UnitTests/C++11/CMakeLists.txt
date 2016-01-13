@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS frame_layout)
@@ -9,4 +8,4 @@ if(NOT "" STREQUAL "${TMP1}")
   set(PARALLEL_DIRS ${TMP2})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

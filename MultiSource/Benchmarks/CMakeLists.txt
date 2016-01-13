@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS Fhourstones Fhourstones-3.1 McCat Olden Ptrdist llubenchmark sim FreeBench MallocBench Prolangs-C SciMark2-C mediabench nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial BitBench ASC_Sequoia TSVC)
@@ -25,4 +24,4 @@ if("${ARCH}" STREQUAL "XCore")
   set(PARALLEL_DIRS ${TMP4})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

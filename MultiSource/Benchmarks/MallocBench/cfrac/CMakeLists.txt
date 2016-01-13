@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG cfrac)
 list(APPEND CPPFLAGS -DNOMEMOPT)
 list(APPEND LIBS -lm)
@@ -12,5 +9,3 @@ else()
   set(RUN_OPTIONS 41757646344123832613190542166099121)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

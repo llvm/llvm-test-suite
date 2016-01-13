@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS NP city deriv1 deriv2 employ family fsm garage life objects ocean office primes shapes simul trees vcirc)
@@ -27,4 +26,4 @@ if(DEFINED BENCHMARKING_ONLY)
   set(PARALLEL_DIRS ${TMP11})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

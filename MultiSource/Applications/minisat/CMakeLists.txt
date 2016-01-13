@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG minisat)
 set(CPPFLAGS -D NDEBUG)
 set(LDFLAGS -lstdc++ -lm)
@@ -22,5 +19,3 @@ if("${TARGET_OS}" STREQUAL "Darwin")
 endif()
 list(APPEND JIT_OPTS -load libz${SHLIBEXT})
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 list(APPEND LDFLAGS -lm)
 set(PROG beamformer)
 if(DEFINED LARGE_PROBLEM_SIZE)
@@ -14,5 +11,3 @@ else()
 endif()
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

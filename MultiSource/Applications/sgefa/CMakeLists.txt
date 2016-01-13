@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG sgefa)
 set(LDFLAGS -lm)
 set(FP_TOLERANCE 0.0001)
@@ -10,5 +7,3 @@ else()
   set(CPPFLAGS -DSCALE=40)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

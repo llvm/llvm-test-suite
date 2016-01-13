@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 list(APPEND LDFLAGS -lm -lstdc++)
 set(FP_TOLERANCE 0.001)
 if("${ARCH}" STREQUAL "XCore")
@@ -9,5 +6,3 @@ else()
   set(RUNTIMELIMIT 1200)
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

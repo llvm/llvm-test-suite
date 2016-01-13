@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(TMP1  aspack.c autoit.c binhex.c blob.c cab.c chmunpack.c cvd.c dconf.c dsig.c elf.c entconv.c filetypes.c fsg.c hashtab.c htmlnorm.c is_tar.c jscript.c line.c lockdb.c matcher-ac.c matcher-bm.c matcher.c mbox.c md5.c message.c mew.c msexpand.c mspack.c ole2_extract.c others.c packlibs.c pdf.c pe.c petite.c phishcheck.c phish_domaincheck_db.c phish_whitelist.c pst.c readdb.c rebuildpe.c regex_list.c rtf.c scanners.c sis.c snprintf.c special.c spin.c str.c suecrypt.c table.c text.c tnef.c unarj.c unsp.c untar.c unzip.c upack.c upx.c uuencode.c vba_extract.c wwunpack.c yc.c)
 llvm_prepend(TMP1 libclamav_ ${TMP1})
 set(TMP2  clamscan.c manager.c others.c treewalk.c)
@@ -78,5 +75,3 @@ else()
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG ft)
 if(DEFINED LARGE_PROBLEM_SIZE)
   list(APPEND RUN_OPTIONS 6000 100000)
@@ -9,5 +6,3 @@ else()
 endif()
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

@@ -1,5 +1,4 @@
 set(DIRS)
-set(PARALLEL_DIRS)
 
 set(DIRS SetjmpLongjmp)
 set(DIRS )
@@ -37,4 +36,4 @@ endif()
 list(APPEND LDFLAGS -lstdc++)
 llvm_singlesource()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${DIRS})

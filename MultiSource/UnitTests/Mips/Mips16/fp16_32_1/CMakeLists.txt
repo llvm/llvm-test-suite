@@ -1,9 +1,4 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG fp16_32_1)
 set(CPPFLAGS )
 set(LDFLAGS )
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

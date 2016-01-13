@@ -1,9 +1,4 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG fhourstones)
 set(CPPFLAGS -DUNIX -DTRANSIZE=1050011 -DPROBES=8 -DREPORTPLY=8)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/input)
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

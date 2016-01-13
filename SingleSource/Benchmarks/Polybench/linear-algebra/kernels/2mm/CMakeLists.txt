@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(POLYBENCH_UTILS SingleSource/Benchmarks/Polybench/utilities )
 set(PROG 2mm)
 list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/${POLYBENCH_UTILS} -DPOLYBENCH_DUMP_ARRAYS)
@@ -19,5 +16,3 @@ else()
 endif()
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

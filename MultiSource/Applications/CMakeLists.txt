@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS Burg aha sgefa siod d spiff treecc SPASS oggenc JM viterbi SIBsim4 ClamAV sqlite3 lemon)
@@ -45,4 +44,4 @@ if(DEFINED BENCHMARKING_ONLY)
   set(PARALLEL_DIRS ${TMP10})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

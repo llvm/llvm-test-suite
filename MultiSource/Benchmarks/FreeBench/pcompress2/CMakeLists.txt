@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG pcompress2)
 set(CPPFLAGS -DVERSION='"1.00"' -DCOMPDATE="\\"today\\"" -DCFLAGS='""' -DHOSTNAME="\\"thishost\\"" )
 if(DEFINED LARGE_PROBLEM_SIZE)
@@ -18,4 +15,3 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_FILE}
 add_custom_target(pcompress2_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_FILE})
     llvm_multisource()
 add_dependencies(pcompress2 pcompress2_input)
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

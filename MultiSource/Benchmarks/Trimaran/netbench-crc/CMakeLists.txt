@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG netbench-crc)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS 40000)
@@ -15,5 +12,3 @@ else()
   endif()
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

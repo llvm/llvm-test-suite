@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG em3d)
 set(CPPFLAGS -DTORONTO)
 set(LDFLAGS )
@@ -10,5 +7,3 @@ else()
   set(RUN_OPTIONS 1024 1000 125)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

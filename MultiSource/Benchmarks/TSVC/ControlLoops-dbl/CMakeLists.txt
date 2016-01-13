@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG ControlLoops-dbl)
 set(LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
@@ -9,5 +6,3 @@ if("${ARCH}" STREQUAL "XCore")
   set(RUNTIMELIMIT 7200)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

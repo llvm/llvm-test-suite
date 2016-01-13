@@ -1,4 +1,3 @@
-set(DIRS)
 set(PARALLEL_DIRS)
 
 set(PARALLEL_DIRS automotive-basicmath automotive-bitcount automotive-susan consumer-jpeg consumer-lame consumer-typeset network-dijkstra network-patricia office-ispell office-stringsearch security-blowfish security-rijndael security-sha telecomm-CRC32 telecomm-FFT telecomm-adpcm telecomm-gsm)
@@ -23,4 +22,4 @@ if(DEFINED BENCHMARKING_ONLY)
   set(PARALLEL_DIRS ${TMP7})
 endif()
 
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
+llvm_add_subdirectories(${PARALLEL_DIRS})

@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(POLYBENCH_UTILS SingleSource/Benchmarks/Polybench/utilities )
 set(PROG durbin)
 list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/${POLYBENCH_UTILS} -DPOLYBENCH_DUMP_ARRAYS)
@@ -9,5 +6,3 @@ if("${ARCH}" STREQUAL "XCore")
   set(XCORE_TARGET_NEEDS_MEMORY 256)
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})

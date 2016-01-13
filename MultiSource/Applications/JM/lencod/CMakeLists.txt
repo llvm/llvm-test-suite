@@ -1,6 +1,3 @@
-set(DIRS)
-set(PARALLEL_DIRS)
-
 set(PROG lencod)
 set(CPPFLAGS -D __USE_LARGEFILE64 -D _FILE_OFFSET_BITS=64)
 set(LDFLAGS -lm ${TOOLLINKOPTS})
@@ -11,5 +8,3 @@ else()
   set(RUN_OPTIONS -d ${CMAKE_CURRENT_SOURCE_DIR}/data/encoder.cfg -p InputFile=${CMAKE_CURRENT_SOURCE_DIR}/data/foreman_part_qcif_444.yuv -p LeakyBucketRateFile=${CMAKE_CURRENT_SOURCE_DIR}/data/leakybucketrate.cfg -p QmatrixFile=${CMAKE_CURRENT_SOURCE_DIR}/data/q_matrix.cfg)
 endif()
 llvm_multisource()
-
-llvm_add_subdirectories(${DIRS} ${PARALLEL_DIRS})
