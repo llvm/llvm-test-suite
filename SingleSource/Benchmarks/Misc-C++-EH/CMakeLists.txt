@@ -1,4 +1,5 @@
-list(APPEND LDFLAGS -lm -lstdc++)
+list(APPEND CPPFLAGS -pthread)
+list(APPEND LDFLAGS -lm -lstdc++ -pthread)
 set(LIBS -lstdc++)
 set(REQUIRES_EH_SUPPORT 1)
 llvm_singlesource()
