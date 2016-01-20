@@ -9,15 +9,14 @@ add_executable(timeit-target ${CMAKE_CURRENT_SOURCE_DIR}/timeit.c)
 
 set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
 mark_as_advanced(TEST_SUITE_HOST_CC)
-add_custom_target(fpcmp-host
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/fpcmp)
-add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/fpcmp
-  COMMAND ${TEST_SUITE_HOST_CC} ${CMAKE_CURRENT_SOURCE_DIR}/fpcmp.c -o ${CMAKE_CURRENT_BINARY_DIR}/fpcmp
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/fpcmp.c
-)
-add_custom_target(timeit-host
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/timeit)
-add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/timeit
-  COMMAND ${TEST_SUITE_HOST_CC} ${CMAKE_CURRENT_SOURCE_DIR}/timeit.c -o ${CMAKE_CURRENT_BINARY_DIR}/timeit
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/timeit.c
-)
+macro(llvm_add_host_executable targetname exename sourcefile)
+  add_custom_command(OUTPUT ${exename}
+    COMMAND ${TEST_SUITE_HOST_CC} ${CMAKE_CURRENT_SOURCE_DIR}/${sourcefile} -o ${CMAKE_CURRENT_BINARY_DIR}/${exename}
+    COMMENT "[TEST_SUITE_HOST_CC] Building host executable ${exename}"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${sourcefile}
+  )
+  add_custom_target(${targetname} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${exename})
+endmacro()
+
+llvm_add_host_executable(fpcmp-host fpcmp fpcmp.c)
+llvm_add_host_executable(timeit-host timeit timeit.c)
