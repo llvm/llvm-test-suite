@@ -42,10 +42,10 @@ void print_array(int nx,
 
 {
   int i;
-  char *printmat = malloc(nx*8);
+  char *printmat = malloc(nx*16 + 1); printmat[nx*16] = 0;
 
   for (i = 0; i < nx; i++)
-    print_element(y[i], i*8, printmat);
+    print_element(y[i], i*16, printmat);
   fputs(printmat, stderr);
   free(printmat);
 }

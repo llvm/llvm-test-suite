@@ -610,24 +610,32 @@ void* polybench_alloc_data(unsigned long long int n, int elt_size)
    for a long time), we split the output into an encoded string,
    and print it as a simple char pointer, M times. */
 static inline
-void print_element(float el, int pos, char *out)
+void print_element(double el, int pos, char *out)
 {
   union {
-    float datum;
-    char bytes[4];
+    double datum;
+    char bytes[8];
   } block;
 
   block.datum = el;
   /* each nibble as a char, within the printable range */
 #ifdef __BIG_ENDIAN__
-  *(out+pos+7) = (block.bytes[0]&0xF0>>4)+'0';
-  *(out+pos+6) = (block.bytes[0]&0x0F)   +'0';
-  *(out+pos+5) = (block.bytes[1]&0xF0>>4)+'0';
-  *(out+pos+4) = (block.bytes[1]&0x0F)   +'0';
-  *(out+pos+3) = (block.bytes[2]&0xF0>>4)+'0';
-  *(out+pos+2) = (block.bytes[2]&0x0F)   +'0';
-  *(out+pos+1) = (block.bytes[3]&0xF0>>4)+'0';
-  *(out+pos) =   (block.bytes[3]&0x0F)   +'0';
+  *(out+pos+15) = (block.bytes[0]&0xF0>>4)+'0';
+  *(out+pos+14) = (block.bytes[0]&0x0F)   +'0';
+  *(out+pos+13) = (block.bytes[1]&0xF0>>4)+'0';
+  *(out+pos+12) = (block.bytes[1]&0x0F)   +'0';
+  *(out+pos+11) = (block.bytes[2]&0xF0>>4)+'0';
+  *(out+pos+10) = (block.bytes[2]&0x0F)   +'0';
+  *(out+pos+9) = (block.bytes[3]&0xF0>>4)+'0';
+  *(out+pos+8) =   (block.bytes[3]&0x0F)   +'0';
+  *(out+pos+7) = (block.bytes[4]&0xF0>>4)+'0';
+  *(out+pos+6) = (block.bytes[4]&0x0F)   +'0';
+  *(out+pos+5) = (block.bytes[5]&0xF0>>4)+'0';
+  *(out+pos+4) = (block.bytes[5]&0x0F)   +'0';
+  *(out+pos+3) = (block.bytes[6]&0xF0>>4)+'0';
+  *(out+pos+2) = (block.bytes[6]&0x0F)   +'0';
+  *(out+pos+1) = (block.bytes[7]&0xF0>>4)+'0';
+  *(out+pos) =   (block.bytes[7]&0x0F)   +'0';
 #else
   *(out+pos)   = (block.bytes[0]&0xF0>>4)+'0';
   *(out+pos+1) = (block.bytes[0]&0x0F)   +'0';
@@ -637,6 +645,14 @@ void print_element(float el, int pos, char *out)
   *(out+pos+5) = (block.bytes[2]&0x0F)   +'0';
   *(out+pos+6) = (block.bytes[3]&0xF0>>4)+'0';
   *(out+pos+7) = (block.bytes[3]&0x0F)   +'0';
+  *(out+pos+8) = (block.bytes[4]&0xF0>>4)+'0';
+  *(out+pos+9) = (block.bytes[4]&0x0F)   +'0';
+  *(out+pos+10) = (block.bytes[5]&0xF0>>4)+'0';
+  *(out+pos+11) = (block.bytes[5]&0x0F)   +'0';
+  *(out+pos+12) = (block.bytes[6]&0xF0>>4)+'0';
+  *(out+pos+13) = (block.bytes[6]&0x0F)   +'0';
+  *(out+pos+14) = (block.bytes[7]&0xF0>>4)+'0';
+  *(out+pos+15) = (block.bytes[7]&0x0F)   +'0';
 #endif
 }
 

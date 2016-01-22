@@ -42,11 +42,11 @@ void print_array(int m,
 
 {
   int i, j;
-  char *printmat = malloc(m*8);
+  char *printmat = malloc(m*16 + 1); printmat[m*16] = 0;
 
   for (i = 0; i < m; i++) {
     for (j = 0; j < m; j++)
-      print_element(symmat[i][j], j*8, printmat);
+      print_element(symmat[i][j], j*16, printmat);
     fputs(printmat, stderr);
   }
   free(printmat);

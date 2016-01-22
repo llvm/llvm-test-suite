@@ -50,10 +50,10 @@ void print_array(int n,
 
 {
   int i;
-  char *printmat = malloc(n*8);
+  char *printmat = malloc(n*16 + 1); printmat[n*16] = 0;
 
   for (i = 0; i < n; i++)
-    print_element(y[i], i*8, printmat);
+    print_element(y[i], i*16, printmat);
   fputs(printmat, stderr);
   free(printmat);
 }

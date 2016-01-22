@@ -47,14 +47,14 @@ void print_array(int nx, int ny,
 {
   int i;
   int n = nx > ny ? nx : ny;
-  char *printmat = malloc(n*8);
+  char *printmat = malloc(n*16 + 1); printmat[n*16] = 0;
 
   for (i = 0; i < ny; i++)
-    print_element(s[i], i*8, printmat);
+    print_element(s[i], i*16, printmat);
   *(printmat+i) = 0;
   fputs(printmat, stderr);
   for (i = 0; i < nx; i++)
-    print_element(q[i], i*8, printmat);
+    print_element(q[i], i*16, printmat);
   *(printmat+i) = 0;
   fputs(printmat, stderr);
   free(printmat);

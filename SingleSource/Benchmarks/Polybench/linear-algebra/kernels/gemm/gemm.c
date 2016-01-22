@@ -50,11 +50,11 @@ void print_array(int ni, int nj,
 		 DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj))
 {
   int i, j;
-  char *printmat = malloc(nj*8);
+  char *printmat = malloc(nj*16 + 1); printmat[nj*16] = 0;
 
   for (i = 0; i < ni; i++) {
     for (j = 0; j < nj; j++)
-      print_element(C[i][j], j*8, printmat);
+      print_element(C[i][j], j*16, printmat);
     fputs(printmat, stderr);
   }
   free(printmat);
