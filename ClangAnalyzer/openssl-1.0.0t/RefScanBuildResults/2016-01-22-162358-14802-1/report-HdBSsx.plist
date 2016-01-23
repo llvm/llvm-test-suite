@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>clang_version</key>
+	<string>clang version 3.9.0 (trunk 258573)</string>
+	<key>diagnostics</key>
+	<array>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-29fde6.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'tin0' is never read</string>
+			<key>issue_context</key>
+			<string>DES_xcbc_encrypt</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>9da3ace63419f4311729b81b40a80b46</string>
+			<key>issue_hash_function_offset</key>
+			<string>82</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>5</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>213</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'tin0' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>5</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>213</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'tin0' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>12</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>213</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>49</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>213</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead assignment</string>
+		</dict>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-3e8948.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'inW0' is never read</string>
+			<key>issue_context</key>
+			<string>DES_xcbc_encrypt</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>32e428bfce4f240d241b406cf76bc7a8</string>
+			<key>issue_hash_function_offset</key>
+			<string>83</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>5</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>214</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'inW0' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>5</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>214</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'inW0' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>12</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>214</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>35</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>214</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead assignment</string>
+		</dict>
+	</array>
+	<key>files</key>
+	<array>
+		<string>xcbc_enc.c</string>
+	</array>
+</dict>
+</plist>

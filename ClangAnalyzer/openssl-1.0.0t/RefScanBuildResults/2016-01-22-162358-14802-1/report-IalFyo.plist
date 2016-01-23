@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>clang_version</key>
+	<string>clang version 3.9.0 (trunk 258573)</string>
+	<key>diagnostics</key>
+	<array>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-21d094.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'bp' is never read</string>
+			<key>issue_context</key>
+			<string>BN_uadd</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>a94db5d0f2d46550a871c31d36c2e4f6</string>
+			<key>issue_hash_function_offset</key>
+			<string>29</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>5</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'bp' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>5</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>137</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'bp' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>11</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>137</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>13</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>137</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead increment</string>
+		</dict>
+	</array>
+	<key>files</key>
+	<array>
+		<string>bn_add.c</string>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>clang_version</key>
+	<string>clang version 3.9.0 (trunk 258573)</string>
+	<key>diagnostics</key>
+	<array>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-7c3f69.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'v0' is never read</string>
+			<key>issue_context</key>
+			<string>RC2_cfb64_encrypt</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>080d43c8859542878bfe59e36825719a</string>
+			<key>issue_hash_function_offset</key>
+			<string>50</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>5</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>121</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'v0' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>5</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>121</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'v0' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>10</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>121</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>44</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>121</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead assignment</string>
+		</dict>
+	</array>
+	<key>files</key>
+	<array>
+		<string>rc2cfb64.c</string>
+	</array>
+</dict>
+</plist>

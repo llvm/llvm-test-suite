@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>clang_version</key>
+	<string>clang version 3.9.0 (trunk 258573)</string>
+	<key>diagnostics</key>
+	<array>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-d38681.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'i' is never read</string>
+			<key>issue_context</key>
+			<string>sv_body</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>5bfe214a76b6b468fc964bee8022e18d</string>
+			<key>issue_hash_function_offset</key>
+			<string>239</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>21</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>1976</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'i' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>21</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>1976</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'i' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>25</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>1976</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>25</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>1976</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead assignment</string>
+		</dict>
+		<dict>
+			<key>HTMLDiagnostics_files</key>
+			<array>
+				<string>report-fdf9b4.html</string>
+			</array>
+			<key>category</key>
+			<string>Dead store</string>
+			<key>check_name</key>
+			<string>deadcode.DeadStores</string>
+			<key>description</key>
+			<string>Value stored to 'i' is never read</string>
+			<key>issue_context</key>
+			<string>sv_body</string>
+			<key>issue_context_kind</key>
+			<string>function</string>
+			<key>issue_hash_content_of_line_in_context</key>
+			<string>5bfe214a76b6b468fc964bee8022e18d</string>
+			<key>issue_hash_function_offset</key>
+			<string>252</string>
+			<key>location</key>
+			<dict>
+				<key>col</key>
+				<integer>21</integer>
+				<key>file</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>1989</integer>
+			</dict>
+			<key>path</key>
+			<array>
+				<dict>
+					<key>depth</key>
+					<integer>0</integer>
+					<key>extended_message</key>
+					<string>Value stored to 'i' is never read</string>
+					<key>kind</key>
+					<string>event</string>
+					<key>location</key>
+					<dict>
+						<key>col</key>
+						<integer>21</integer>
+						<key>file</key>
+						<integer>0</integer>
+						<key>line</key>
+						<integer>1989</integer>
+					</dict>
+					<key>message</key>
+					<string>Value stored to 'i' is never read</string>
+					<key>ranges</key>
+					<array>
+						<array>
+							<dict>
+								<key>col</key>
+								<integer>25</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>1989</integer>
+							</dict>
+							<dict>
+								<key>col</key>
+								<integer>25</integer>
+								<key>file</key>
+								<integer>0</integer>
+								<key>line</key>
+								<integer>1989</integer>
+							</dict>
+						</array>
+					</array>
+				</dict>
+			</array>
+			<key>type</key>
+			<string>Dead assignment</string>
+		</dict>
+	</array>
+	<key>files</key>
+	<array>
+		<string>s_server.c</string>
+	</array>
+</dict>
+</plist>
