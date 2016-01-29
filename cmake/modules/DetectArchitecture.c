@@ -8,6 +8,8 @@ const char *str = "ARCHITECTURE IS Alpha";
 const char *str = "ARCHITECTURE IS Mips";
 #elif defined(__powerpc__) || defined(__ppc__) || defined(__power__)
 const char *str = "ARCHITECTURE IS PowerPC";
+#elif defined(__s390__)
+const char *str = "ARCHITECTURE IS SystemZ";
 #elif defined(__sparc__)
 const char *str = "ARCHITECTURE IS Sparc";
 #elif defined(__xcore__)
