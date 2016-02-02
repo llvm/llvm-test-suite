@@ -20,7 +20,6 @@ if(TEST_SUITE_POVRAY_ROOT)
     -DPREFIX='"${CMAKE_CURRENT_BINARY_DIR}"'
     -DSYSCONFDIR='"${CMAKE_CURRENT_BINARY_DIR}"'
   )
-  list(APPEND LIBS -lz -lm)
   list(APPEND LDFLAGS -lz -lm)
 
   llvm_test_run(

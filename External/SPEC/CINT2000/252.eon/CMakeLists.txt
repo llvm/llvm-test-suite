@@ -4,7 +4,6 @@ if(ARCH STREQUAL "PowerPC")
 endif()
 list(APPEND CXXFLAGS -fno-exceptions -Wno-deprecated -fpermissive -stdlib=libstdc++)
 list(APPEND LDFLAGS -stdlib=libstdc++ -lm)
-list(APPEND LIBS -lm)
 include_directories(${BENCHMARK_DIR}/src)
 
 # There's more sourcefiles in the directory than necessary so enumerate the ones

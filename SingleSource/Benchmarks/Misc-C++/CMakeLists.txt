@@ -1,5 +1,4 @@
 list(APPEND LDFLAGS -lm -lstdc++)
-set(LIBS -lstdc++)
 set(FP_ABSTOLERANCE 0.01)
 if("${ARCH}" STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)

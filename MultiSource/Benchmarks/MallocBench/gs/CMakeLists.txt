@@ -1,5 +1,4 @@
 set(PROG gs)
-list(APPEND LIBS -lm)
 list(APPEND LDFLAGS -lm)
 list(APPEND CPPFLAGS -DNOMEMOPT -DGS_LIB_DEFAULT=\\"${CMAKE_CURRENT_SOURCE_DIR}:${CMAKE_CURRENT_SOURCE_DIR}/fonts\\")
 list(APPEND CFLAGS -Wno-implicit-function-declaration)

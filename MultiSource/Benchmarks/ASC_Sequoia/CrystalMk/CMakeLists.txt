@@ -1,5 +1,4 @@
 set(PROG CrystalMk)
-list(APPEND LIBS -lm)
 list(APPEND LDFLAGS -lm)
 if("${ARCH}" STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)

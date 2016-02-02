@@ -1,5 +1,4 @@
 list(APPEND LDFLAGS -lm -lstdc++)
-set(LIBS -lstdc++)
 set(FP_ABSTOLERANCE 0.01)
 set(HASH_PROGRAM_OUTPUT 1)
 if("${ARCH}" STREQUAL "XCore")
