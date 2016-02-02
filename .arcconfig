@@ -1,3 +1,4 @@
 {
+  "project_id" : "test-suite",
   "conduit_uri" : "http://reviews.llvm.org/"
 }
