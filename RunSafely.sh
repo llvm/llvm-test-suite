@@ -210,6 +210,7 @@ else
 
   # Copy remote files back
   cp -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}.time"
+  rm -f "${OUTFILE}.time${REMOTE_SUFFIX}"
   if [ "$NEW_MODE" = "0" ]; then
     cp -f "${OUTFILE}${REMOTE_SUFFIX}" "${OUTFILE}"
     rm -f "${OUTFILE}${REMOTE_SUFFIX}"
