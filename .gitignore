@@ -1,3 +1,4 @@
 # This is the default location to checkout sourcecode for the benchmarks in
 # External/*
 /test-suite-externals
+*.pyc
