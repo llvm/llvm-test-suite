@@ -30,7 +30,7 @@ class TestSuiteTest(FileBasedTest):
     def execute(self, test, litConfig):
         config = test.config
         if config.unsupported:
-            return (Test.UNSUPPORTED, 'Test is unsupported')
+            return lit.Test.Result(Test.UNSUPPORTED, 'Test is unsupported')
 
         # Parse benchmark script
         res = testscript.parse(test.getSourcePath())
