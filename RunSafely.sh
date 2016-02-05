@@ -200,13 +200,13 @@ else
   rm -f "${STDOUT_FILE}${REMOTE_SUFFIX}" "${STDERR_FILE}${REMOTE_SUFFIX}"
 
   # Create .command script
-  PROG_BASENAME="$(basename ${PROG})"
-  rm -f "$PWD/${PROG_BASENAME}.command"
-  echo "$TIMEIT $TIMEITFLAGS $COMMAND" > "$PWD/${PROG_BASENAME}.command"
-  chmod +x "$PWD/${PROG_BASENAME}.command"
+  COMMANDFILE="${OUTFILE}.command"
+  rm -f "${COMMANDFILE}"
+  echo "$TIMEIT $TIMEITFLAGS $COMMAND" > "${COMMANDFILE}"
+  chmod +x "${COMMANDFILE}"
 
-  ( $RCLIENT $RFLAGS $RHOST "ls $PWD/${PROG_BASENAME}.command" ) > /dev/null 2>&1
-  ( $RCLIENT $RFLAGS $RHOST "$PWD/${PROG_BASENAME}.command" )
+  ( $RCLIENT $RFLAGS $RHOST "ls ${COMMANDFILE}" ) > /dev/null 2>&1
+  ( $RCLIENT $RFLAGS $RHOST "${COMMANDFILE}" )
   sleep 1
 
   # Copy remote files back
