@@ -69,8 +69,9 @@ NEW_MODE=0
 STDOUT_FILE=""
 STDERR_FILE=""
 PWD=`pwd`
+WORKDIR="$PWD"
 if [ $1 = "-d" ]; then
-  PWD="$2"
+  WORKDIR="$2"
   shift 2
 fi
 if [ $1 = "-r" ]; then
@@ -176,7 +177,7 @@ TIMEITFLAGS="$TIMEITFLAGS --limit-file-size 104857600"
 # Set the virtual memory limit at 800MB.
 TIMEITFLAGS="$TIMEITFLAGS --limit-rss-size 838860800"
 
-TIMEITFLAGS="$TIMEITFLAGS --timeout $TIMELIMIT --chdir $PWD"
+TIMEITFLAGS="$TIMEITFLAGS --timeout $TIMELIMIT --chdir $WORKDIR"
 TIMEITFLAGS="$TIMEITFLAGS --redirect-input ${INFILE}"
 TIMEITFLAGS="$TIMEITFLAGS --summary ${OUTFILE}.time${REMOTE_SUFFIX}"
 if [ "$NEW_MODE" = "0" ]; then
