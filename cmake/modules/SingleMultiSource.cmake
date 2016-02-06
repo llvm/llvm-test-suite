@@ -55,8 +55,13 @@ macro(append_cflags target)
     if(${old_cflags} STREQUAL "old_cflags-NOTFOUND")
       set(old_cflags)
     endif()
-    string(REPLACE ";" " " s "${old_cflags};${ARGN}")
-    set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${s})
+    # Transform ${ARGN} which is a cmake list into a series of commandline
+    # arguments. This requires some shell quoting (the approach here isn't
+    # perfect)
+    string(REPLACE " " "\\ " quoted "${ARGN}")
+    string(REPLACE "\"" "\\\"" quoted "${quoted}")
+    string(REPLACE ";" " " quoted "${quoted}")
+    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "${old_cflags} ${quoted}")
   endif()
 endmacro()
 
