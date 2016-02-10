@@ -1,5 +1,6 @@
 import shlex
 import timeit
+import shellcommand
 try:
     from shlex import quote  # python 3.3 and above
 except:
@@ -8,42 +9,12 @@ except:
 
 def prepareRunSafely(context, commandline, outfile):
     config = context.config
-
-    stdin = None
-    stdout = None
-    stderr = None
-    workdir = None
-    tokens = shlex.split(commandline)
-    # Parse "< INPUTFILE", "> OUTFILE", "2> OUTFILE" patterns
-    i = 0
-    while i < len(tokens):
-        if tokens[i] == "<" and i+1 < len(tokens):
-            stdin = tokens[i+1]
-            del tokens[i+1]
-            del tokens[i]
-            continue
-        elif tokens[i] == ">" and i+1 < len(tokens):
-            stdout = tokens[i+1]
-            del tokens[i+1]
-            del tokens[i]
-            continue
-        elif tokens[i] == "2>" and i+1 < len(tokens):
-            stderr = tokens[i+1]
-            del tokens[i+1]
-            del tokens[i]
-            continue
-        if i+2 < len(tokens) and tokens[i] == "cd" and tokens[i+2] == ";":
-            workdir = tokens[i+1]
-            del tokens[i+2]
-            del tokens[i+1]
-            del tokens[i]
-            continue
-        i += 1
+    cmd = shellcommand.parse(commandline)
 
     runsafely = "%s/RunSafely.sh" % config.test_suite_root
     runsafely_prefix = [runsafely]
-    if workdir is not None:
-        runsafely_prefix += ["-d", workdir]
+    if cmd.workdir is not None:
+        runsafely_prefix += ["-d", cmd.workdir]
     timeit = "%s/tools/timeit" % config.test_source_root
     if config.remote_host:
         timeit = "%s/tools/timeit-target" % config.test_source_root
@@ -58,19 +29,22 @@ def prepareRunSafely(context, commandline, outfile):
         runsafely_prefix += ["-u", config.run_under]
     if not config.traditional_output:
         runsafely_prefix += ["-n"]
-        if stdout is not None:
-            runsafely_prefix += ["-o", stdout]
-        if stderr is not None:
-            runsafely_prefix += ["-e", stderr]
+        if cmd.stdout is not None:
+            runsafely_prefix += ["-o", cmd.stdout]
+        if cmd.stderr is not None:
+            runsafely_prefix += ["-e", cmd.stderr]
     else:
-        if stdout is not None or stderr is not None:
+        if cmd.stdout is not None or cmd.stderr is not None:
             raise Exception("separate stdout/stderr redirection not possible with traditional output")
     timeout = "7200"
-    if stdin is None:
+    if cmd.stdin is not None:
+        stdin = cmd.stdin
+    else:
         stdin = "/dev/null"
     runsafely_prefix += ["-t", timeit, timeout, stdin, outfile]
 
-    new_commandline = " ".join(map(quote, runsafely_prefix + tokens))
+    complete_command = runsafely_prefix + [cmd.executable] + cmd.arguments
+    new_commandline = " ".join(map(quote, complete_command))
     return new_commandline
 
 
