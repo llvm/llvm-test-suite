@@ -60,9 +60,15 @@ mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
   set(TEST_SUITE_PROFILE_GENERATE "True")
+  list(APPEND CFLAGS -fprofile-instr-generate)
+  list(APPEND CXXFLAGS -fprofile-instr-generate)
+  list(APPEND LDFLAGS -fprofile-instr-generate)
 else()
   set(TEST_SUITE_PROFILE_GENERATE "False")
 endif()
+
+set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
+    "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
 
 include(MakefileFunctions)
 include(SingleMultiSource)

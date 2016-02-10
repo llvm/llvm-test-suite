@@ -1,4 +1,8 @@
 import shellcommand
+try:
+    from shlex import quote  # python 3.3 and above
+except:
+    from pipes import quote  # python 3.2 and earlier
 
 
 def wrapScript(context, script):
@@ -23,7 +27,8 @@ def getMergeProfilesScript(context):
     executable = shellcommand.getMainExecutable(context)
     if not executable:
         return None
-    profdatafile = executable + ".profdata"
-    mergecmd = [config.llvm_profdata, 'merge', '-output=%s' % profdatafile]
+    datafile = executable + ".profdata"
+    mergecmd = [context.config.llvm_profdata, 'merge', '-output=%s' % datafile]
     mergecmd += context.profilefiles
-    return [mergecmd]
+    cmdline = " ".join(map(quote, mergecmd))
+    return [cmdline]
