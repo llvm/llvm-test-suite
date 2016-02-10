@@ -199,10 +199,16 @@ else
   rm -f "${OUTFILE}.time${REMOTE_SUFFIX}" "${OUTFILE}${REMOTE_SUFFIX}"
   rm -f "${STDOUT_FILE}${REMOTE_SUFFIX}" "${STDERR_FILE}${REMOTE_SUFFIX}"
 
+  # Pass LLVM_PROFILE_FILE environment variable along
+  PREFIX=""
+  if [ "${LLVM_PROFILE_FILE}" != "" ]; then
+     PREFIX="LLVM_PROFILE_FILE=\"$LLVM_PROFILE_FILE\" "
+  fi
+
   # Create .command script
   COMMANDFILE="${OUTFILE}.command"
   rm -f "${COMMANDFILE}"
-  echo "$TIMEIT $TIMEITFLAGS $COMMAND" > "${COMMANDFILE}"
+  echo "${PREFIX}${TIMEIT} $TIMEITFLAGS $COMMAND" > "${COMMANDFILE}"
   chmod +x "${COMMANDFILE}"
 
   ( $RCLIENT $RFLAGS $RHOST "ls ${COMMANDFILE}" ) > /dev/null 2>&1

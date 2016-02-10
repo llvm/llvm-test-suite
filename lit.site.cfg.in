@@ -7,5 +7,7 @@ config.remote_host = "@TEST_SUITE_REMOTE_HOST@"
 config.remote_user = "@TEST_SUITE_REMOTE_USER@"
 config.remote_port = "@TEST_SUITE_REMOTE_PORT@"
 config.run_under = "@TEST_SUITE_RUN_UNDER@"
+config.profile_generate = @TEST_SUITE_PROFILE_GENERATE@
+config.llvm_profdata = "@TEST_SUITE_LLVM_PROFDATA@"
 
 lit_config.load_config(config, "@CMAKE_SOURCE_DIR@/lit.cfg")

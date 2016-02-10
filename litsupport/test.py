@@ -7,10 +7,12 @@ from lit.TestRunner import executeScript, executeScriptInternal, \
     applySubstitutions, getTempPaths
 from lit import Test
 from lit.util import to_bytes, to_string
-import testscript
-import runsafely
-import perf
+
 import compiletime
+import perf
+import profilegen
+import runsafely
+import testscript
 import timeit
 
 
@@ -68,6 +70,9 @@ class TestSuiteTest(FileBasedTest):
 
         runscript = runsafely.wrapScript(context, runscript, suffix=".out")
 
+        if config.profile_generate:
+            runscript = profilegen.wrapScript(context, runscript)
+
         # Create the output directory if it does not already exist.
         lit.util.mkdir_p(os.path.dirname(tmpBase))
 
@@ -100,6 +105,11 @@ class TestSuiteTest(FileBasedTest):
             profilescript = runsafely.wrapScript(context, profilescript,
                                                  suffix=".perf.out")
             runScript(context, context.profilescript) # ignore result
+
+        # Merge llvm profile data
+        if config.profile_generate:
+            mergescript = profilegen.getMergeProfilesScript(context)
+            runScript(context, mergescript) # ignore result
 
         # Run verification script (the "VERIFY:" part)
         if len(verifyscript) > 0:
