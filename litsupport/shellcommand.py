@@ -1,4 +1,5 @@
 import shlex
+import logging
 
 # Loosely modeled after posix specification for sh
 reserved_words = [ '!', '{', '}', 'case', 'do', 'done', 'elif', 'else', 'esac',
@@ -60,3 +61,30 @@ def parse(commandline):
                                 token)
             result.arguments.append(token)
     return result
+
+
+# Some executables are just used to cleanup/prepare for a test run, ignore them
+# here.
+_ignore_executables = set(['cd', 'rm'])
+
+
+def getMainExecutable(context):
+    """Collect md5sum of tested executable"""
+    if hasattr(context, 'executable'):
+        return context.executable
+
+    executable = None
+    for line in context.original_runscript:
+        cmd = parse(line)
+        if cmd.executable in _ignore_executables:
+            continue
+        # We only support one executable yet for collecting md5sums
+        if cmd.executable != executable and executable is not None:
+            logging.warning("More than one executable used in test %s",
+                            context.test.getFullName())
+        executable = cmd.executable
+    if executable is None:
+        logging.warning("No executable found for test %s",
+                        context.test.getFullName())
+    context.executable = executable
+    return executable
