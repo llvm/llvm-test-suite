@@ -14,12 +14,30 @@ import compiletime
 import timeit
 
 
-def runScript(test, litConfig, script, tmpBase, useExternalSh=True):
-    execdir = os.path.dirname(test.getExecPath())
+class TestContext:
+    """This class is used to hold data used while constructing a testrun.
+    For example this can be used by modules modifying the commandline with extra
+    instrumentation/measurement wrappers to pass the filenames of the results
+    to a final data collection step."""
+    def __init__(self, test, litConfig, original_runscript,
+                 original_verifyscript, tmpDir, tmpBase):
+        self.test = test
+        self.config = test.config
+        self.litConfig = litConfig
+        self.original_runscript = original_runscript
+        self.original_verifyscript = original_verifyscript
+        self.tmpDir = tmpDir
+        self.tmpBase = tmpBase
+
+
+def runScript(context, script, useExternalSh=True):
+    execdir = os.path.dirname(context.test.getExecPath())
     if useExternalSh:
-        res = executeScript(test, litConfig, tmpBase, script, execdir)
+        res = executeScript(context.test, context.litConfig, context.tmpBase,
+                            script, execdir)
     else:
-        res = executeScriptInternal(test, litConfig, tmpBase, script, execdir)
+        res = executeScriptInternal(context.test, context.litConfig,
+                                    context.tmpBase, script, execdir)
     return res
 
 
@@ -45,14 +63,10 @@ class TestSuiteTest(FileBasedTest):
         substitutions += [('%o', outfile)]
         runscript = applySubstitutions(runscript, substitutions)
         verifyscript = applySubstitutions(verifyscript, substitutions)
+        context = TestContext(test, litConfig, runscript, verifyscript, tmpDir,
+                              tmpBase)
 
-        profilescript = None
-        if litConfig.params.get('profile') == 'perf':
-            profilescript = perf.wrapScript(config, runscript, tmpBase)
-            profilescript = runsafely.wrapScript(config, profilescript,
-                                                 outfile=tmpBase+".perf.out")
-
-        runscript = runsafely.wrapScript(config, runscript, outfile)
+        runscript = runsafely.wrapScript(context, runscript, suffix=".out")
 
         # Create the output directory if it does not already exist.
         lit.util.mkdir_p(os.path.dirname(tmpBase))
@@ -62,7 +76,7 @@ class TestSuiteTest(FileBasedTest):
         n_runs = 1
         runtimes = []
         for n in range(n_runs):
-            res = runScript(test, litConfig, runscript, tmpBase)
+            res = runScript(context, runscript)
             if isinstance(res, lit.Test.Result):
                 return res
 
@@ -75,20 +89,21 @@ class TestSuiteTest(FileBasedTest):
                 output += "\n" + err
                 return lit.Test.Result(Test.FAIL, output)
 
-            timefile = "%s.time" % (outfile,)
             try:
-                runtime = timeit.getUserTime(timefile)
+                runtime = runsafely.getTime(context)
                 runtimes.append(runtime)
             except IOError:
                 pass
 
-        if profilescript:
-            res = runScript(test, litConfig, profilescript, tmpBase)
-            out, err, exitCode, timeoutInfo = res
+        if litConfig.params.get('profile') == 'perf':
+            profilescript = perf.wrapScript(context, context.original_runscript)
+            profilescript = runsafely.wrapScript(context, profilescript,
+                                                 suffix=".perf.out")
+            runScript(context, context.profilescript) # ignore result
 
         # Run verification script (the "VERIFY:" part)
         if len(verifyscript) > 0:
-            res = runScript(test, litConfig, verifyscript, tmpBase)
+            res = runScript(context, verifyscript)
             if isinstance(res, lit.Test.Result):
                 return res
             out, err, exitCode, timeoutInfo = res
@@ -103,6 +118,6 @@ class TestSuiteTest(FileBasedTest):
         result = lit.Test.Result(Test.PASS, output)
         if len(runtimes) > 0:
             result.addMetric('exec_time', lit.Test.toMetricValue(runtimes[0]))
-        compiletime.collect(test, result)
+        compiletime.collect(context, result)
 
         return result

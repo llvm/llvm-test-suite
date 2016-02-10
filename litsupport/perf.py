@@ -1,5 +1,5 @@
-def wrapScript(config, runscript, tmpBase):
-    profilefile = tmpBase + ".perf_data"
+def wrapScript(context, runscript):
+    profilefile = context.tmpBase + ".perf_data"
     profilescript = []
     for line in runscript:
         profilescript.append(

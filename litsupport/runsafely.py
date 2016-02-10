@@ -1,11 +1,14 @@
 import shlex
+import timeit
 try:
     from shlex import quote  # python 3.3 and above
 except:
     from pipes import quote  # python 3.2 and earlier
 
 
-def prepareRunSafely(config, commandline, outfile):
+def prepareRunSafely(context, commandline, outfile):
+    config = context.config
+
     stdin = None
     stdout = None
     stderr = None
@@ -71,9 +74,16 @@ def prepareRunSafely(config, commandline, outfile):
     return new_commandline
 
 
-def wrapScript(config, script, outfile):
+def wrapScript(context, script, suffix):
     adjusted_script = []
+    outfile = context.tmpBase + suffix
+    # Set name of timefile so getTime() can use it
+    context.timefile = outfile + ".time"
     for line in script:
-        line = prepareRunSafely(config, line, outfile)
+        line = prepareRunSafely(context, line, outfile)
         adjusted_script.append(line)
     return adjusted_script
+
+
+def getTime(context):
+    return timeit.getUserTime(context.timefile)
