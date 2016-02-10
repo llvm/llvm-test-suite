@@ -52,12 +52,23 @@ def wrapScript(context, script, suffix):
     adjusted_script = []
     outfile = context.tmpBase + suffix
     # Set name of timefile so getTime() can use it
-    context.timefile = outfile + ".time"
+    context.timefiles = []
+    i = 0
     for line in script:
+        number = ""
+        if len(script) > 1:
+            number = "-%s" % (i,)
+            i += 1
+        outfile = context.tmpBase + number + suffix
+        context.timefiles.append(outfile + ".time")
+
         line = prepareRunSafely(context, line, outfile)
         adjusted_script.append(line)
     return adjusted_script
 
 
 def getTime(context):
-    return timeit.getUserTime(context.timefile)
+    time = 0.0
+    for timefile in context.timefiles:
+        time += timeit.getUserTime(timefile)
+    return time
