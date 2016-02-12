@@ -12,7 +12,12 @@ set(Source ${TMP1} ${TMP2} ${TMP3} ${TMP4} ${TMP5})
 set(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clamdoc.tar.gz ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe.bz2 ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v2.rar ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v3.rar ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.zip ${CMAKE_CURRENT_SOURCE_DIR}/inputs/README ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc11.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc1.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc22.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc2.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/doc3.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/docCLAMexe.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf1.rtf ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf-novirus.rtf)
 set(PROG clamscan)
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS)
-set(LDFLAGS -lz)
+
+# Find zLib library required for building ClamAV
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
+set(LDFLAGS ${ZLIB_LIBRARIES})
+
 set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_SOURCE_DIR}/dbdir -r ${INPUT})
 if("${TARGET_OS}" STREQUAL "Darwin")
   list(APPEND CPPFLAGS -DC_DARWIN)
