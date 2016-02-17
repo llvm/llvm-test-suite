@@ -4,6 +4,7 @@ list(APPEND CPPFLAGS -include unistd.h -DSYS_HAS_CALLOC_PROTO -DSYS_HAS_IOCTL_PR
 
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -DSYS_IS_BSD)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/stubs)
 else()
   list(APPEND CPPFLAGS -DSYS_IS_USG)
 endif()
