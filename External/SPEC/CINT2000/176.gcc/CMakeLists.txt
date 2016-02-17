@@ -4,6 +4,7 @@ endif()
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
 endif()
+list(APPEND CFLAGS -std=gnu89)
 # We want reproducible builds
 list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
 

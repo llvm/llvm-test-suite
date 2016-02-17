@@ -4,7 +4,7 @@ if(ARCH STREQUAL "PowerPC")
 endif()
 list(APPEND CXXFLAGS -fno-exceptions -Wno-deprecated -fpermissive)
 list(APPEND LDFLAGS -lm)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${BENCHMARK_DIR}/src)
+include_directories(${BENCHMARK_DIR}/src)
 
 # There's more sourcefiles in the directory than necessary so enumerate the ones
 # we want.
