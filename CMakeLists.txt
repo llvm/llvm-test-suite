@@ -14,6 +14,8 @@ option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
 if(${TEST_SUITE_SUPPRESS_WARNINGS})
   add_definitions(-w)
 endif()
+# We want reproducible builds, so using __DATE__ and __TIME__ is bad
+add_definitions(-Werror=date-time)
 
 # Add path for custom modules
 set(CMAKE_MODULE_PATH

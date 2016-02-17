@@ -57,6 +57,9 @@ else()
   endif()
 endif()
 
+# We want reproducible builds
+list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
+
 set(Source "")
 foreach(FILENAME ${SourceNames})
   list(APPEND Source ${BENCHMARK_DIR}/src/${FILENAME})

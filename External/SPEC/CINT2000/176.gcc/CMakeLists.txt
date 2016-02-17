@@ -4,6 +4,8 @@ endif()
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
 endif()
+# We want reproducible builds
+list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
 
 macro(test_input run_type ifile sfile)
   llvm_test_run(RUN_TYPE ${run_type}
