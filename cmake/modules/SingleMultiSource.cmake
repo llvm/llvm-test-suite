@@ -48,12 +48,12 @@ function(get_unique_exe_name new_name main_src)
   message(FATAL_ERROR "Failed to uniquify executable name!")
 endfunction()
 
-# append_cflags - add flags to the CFLAGS for target.
-macro(append_cflags target)
+# Add flags to a cmake target property.
+macro(append_target_flags propertyname target)
   if(NOT "${ARGN}" STREQUAL "")
-    get_target_property(old_cflags ${target} COMPILE_FLAGS)
-    if(${old_cflags} STREQUAL "old_cflags-NOTFOUND")
-      set(old_cflags)
+    get_target_property(old_flags ${target} ${propertyname})
+    if(${old_flags} STREQUAL "old_flags-NOTFOUND")
+      set(old_flags)
     endif()
     # Transform ${ARGN} which is a cmake list into a series of commandline
     # arguments. This requires some shell quoting (the approach here isn't
@@ -61,8 +61,16 @@ macro(append_cflags target)
     string(REPLACE " " "\\ " quoted "${ARGN}")
     string(REPLACE "\"" "\\\"" quoted "${quoted}")
     string(REPLACE ";" " " quoted "${quoted}")
-    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "${old_cflags} ${quoted}")
+    set_target_properties(${target} PROPERTIES ${propertyname} "${old_flags} ${quoted}")
   endif()
+endmacro()
+
+macro(append_compile_flags target)
+  append_target_flags(COMPILE_FLAGS ${target} ${ARGN})
+endmacro()
+
+macro(append_link_flags target)
+  append_target_flags(LINK_FLAGS ${target} ${ARGN})
 endmacro()
 
 # llvm_add_test - Create a .test driver file suitable for LIT.
@@ -132,13 +140,15 @@ macro(test_suite_add_executable name mainsource)
   if(${name_idx} EQUAL -1)
     get_unique_exe_name(source_exename ${mainsource})
     add_executable(${source_exename} ${ARGN})
-    append_cflags(${source_exename} ${CFLAGS})
-    append_cflags(${source_exename} ${CPPFLAGS})
-    append_cflags(${source_exename} ${CXXFLAGS})
-    target_link_libraries(${source_exename} ${LDFLAGS})
+    append_compile_flags(${source_exename} ${CFLAGS})
+    append_compile_flags(${source_exename} ${CPPFLAGS})
+    append_compile_flags(${source_exename} ${CXXFLAGS})
+    # Note that we cannot use target_link_libraries() here because that one
+    # only interprets inputs starting with '-' as flags.
+    append_link_flags(${source_exename} ${LDFLAGS})
     if (TEST_SUITE_PROFILE_USE)
-      append_cflags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
-      target_link_libraries(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
+      append_compile_flags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
+      append_link_flags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
     endif()
 
     llvm_add_test(${name} ${source_exename})
