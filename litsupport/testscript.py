@@ -35,12 +35,12 @@ def parse(filename):
 
     # Verify the script contains a run line.
     if runscript == []:
-        return ValueError("Test has no RUN: line!")
+        raise ValueError("Test has no RUN: line!")
 
     # Check for unterminated run lines.
     for script in runscript, verifyscript:
         if script and script[-1][-1] == '\\':
-            return ValueError("Test has unterminated RUN/VERIFY lines " +
-                              "(ending with '\\')")
+            raise ValueError("Test has unterminated RUN/VERIFY lines " +
+                             "(ending with '\\')")
 
     return runscript, verifyscript
