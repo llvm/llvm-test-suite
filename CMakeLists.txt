@@ -14,8 +14,21 @@ option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
 if(${TEST_SUITE_SUPPRESS_WARNINGS})
   add_definitions(-w)
 endif()
+
 # We want reproducible builds, so using __DATE__ and __TIME__ is bad
 add_definitions(-Werror=date-time)
+
+# Disabling address space randomization makes the performance of memory/cache
+# intensive benchmarks more deterministic.
+set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
+    "Disable position independent executables and ASLR")
+mark_as_advanced(TEST_SUITE_DISABLE_PIE)
+if(TEST_SUITE_DISABLE_PIE)
+  if(APPLE)
+    list(APPEND LDFLAGS -Wl,-no_pie)
+  endif()
+  # TODO: Add apropriate flags to disable PIE/ASLR on linux, bsd, ...
+endif()
 
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
