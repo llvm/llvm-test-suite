@@ -4,6 +4,11 @@ include(TestBigEndian)
 if(IS_BIGENDIAN)
   list(APPEND CPPFLAGS -DHOST_WORDS_BIG_ENDIAN)
 endif()
+if(TARGET_OS STREQUAL "Darwin")
+  # Necessary for iOS
+  list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x8000000)
+endif()
+list(APPEND CPPFLAGS -DPOSIX -DSPEC_CPU_HAVE_BOOL)
 
 macro(test_input run_type ifile sfile)
   llvm_test_run(RUN_TYPE ${run_type}

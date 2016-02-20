@@ -22,6 +22,10 @@ include_directories(
   ${BENCHMARK_DIR}/src/xercesc/util/Transcoders/Iconv
   ${BENCHMARK_DIR}/src/xalanc/include
 )
+if(TARGET_OS STREQUAL "Darwin")
+  # Necessary for iOS
+  list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x8000000)
+endif()
 
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}

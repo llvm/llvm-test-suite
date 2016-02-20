@@ -2,6 +2,7 @@ if(ENDIAN STREQUAL "big")
   list(APPEND CPPFLAGS -DHOST_WORDS_BIG_ENDIAN)
 endif()
 if(TARGET_OS STREQUAL "Darwin")
+  # Necessary for iOS
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
 endif()
 list(APPEND CFLAGS -std=gnu89)
