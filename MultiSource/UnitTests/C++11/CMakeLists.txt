@@ -1,5 +1,5 @@
 list(APPEND CPPFLAGS -std=c++11)
-string(FIND "${MIPSARCH}" "mips16" TMP1)
-if("" STREQUAL "${TMP1}")
+
+if(NOT MIPS_IS_MIPS16_ENABLED)
   llvm_add_subdirectories(frame_layout)
 endif()

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
+include(CheckSymbolExists)
+
 # The test-suite is designed to be built in release mode anyway and
 # falls over unless -DNDEBUG is set.
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -106,6 +108,11 @@ if(NOT DEFINED ENDIAN)
   else()
     set(ENDIAN "little")
   endif()
+endif()
+
+if("${ARCH}" STREQUAL "Mips")
+  check_symbol_exists(__mips16 "" MIPS_IS_MIPS16_ENABLED)
+  check_symbol_exists(__mips64 "" MIPS_IS_MIPS64_ENABLED)
 endif()
 
 add_subdirectory(tools)
