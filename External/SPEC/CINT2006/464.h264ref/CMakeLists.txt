@@ -1,6 +1,5 @@
-if(ARCH STREQUAL "PowerPC" AND TARGET_OS STREQUAL "Linux")
-  list(APPEND CFLAGS -fsigned-char)
-endif()
+list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -fsigned-char)
 
 macro(test_input run_type leading level)
   llvm_test_run(RUN_TYPE ${run_type}

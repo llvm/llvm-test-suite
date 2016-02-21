@@ -1,9 +1,10 @@
-list(APPEND CPPFLAGS -include errno.h -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP)
+list(APPEND CPPFLAGS -include errno.h -include string.h -DHAS_ERRLIST -DUSE_STRERROR -DSPEC_STDCPP)
 if(ARCH STREQUAL "PowerPC")
   list(APPEND CPPFLAGS -DFMAX_IS_DOUBLE)
 endif()
 list(APPEND CXXFLAGS -fno-exceptions -Wno-deprecated -fpermissive)
 list(APPEND LDFLAGS -lm)
+
 include_directories(${BENCHMARK_DIR}/src)
 
 # There's more sourcefiles in the directory than necessary so enumerate the ones

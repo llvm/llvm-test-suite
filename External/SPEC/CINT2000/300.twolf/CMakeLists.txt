@@ -1,3 +1,4 @@
+list(APPEND CPPFLAGS -DHAVE_SIGNED_CHAR)
 list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -Wno-return-type)
 

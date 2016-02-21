@@ -31,6 +31,10 @@ set(SourceNames
   MD5.c
   md5c.c
 )
+
+list(APPEND CPPFLAGS -DSPEC_CPU2000_NEED_BOOL)
+list(APPEND LDFLAGS -lm)
+
 if(TARGET_OS STREQUAL "Win32")
   list(APPEND SourceNames nt_perlmain.c win32.c win32sck.c perllib.c)
   list(APPEND CPPFLAGS -DSPEC_CPU2000_NTOS -DWIN32 -D_CONSOLE)
@@ -40,6 +44,7 @@ else()
   list(APPEND SourceNames unix_perlmain.c)
   list(APPEND CPPFLAGS -DSPEC_CPU2000_LINUX)
 endif()
+list(APPEND CPPFLAGS -std=gnu89)
 
 include(TestBigEndian)
 test_big_endian(IS_BIGENDIAN)

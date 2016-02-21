@@ -1,3 +1,5 @@
+list(APPEND LDFLAGS -lm)
+
 macro(test_input run_type input outfile)
   llvm_test_run(RUN_TYPE ${run_type}
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input

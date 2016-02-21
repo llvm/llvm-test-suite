@@ -1,4 +1,5 @@
 list(APPEND CPPFLAS -DWANT_STDC_PROTO)
+list(APPEND LDFLAGS -lm)
 
 set(Source "")
 foreach(dir IN ITEMS

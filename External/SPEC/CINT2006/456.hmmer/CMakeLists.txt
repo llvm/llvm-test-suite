@@ -1,3 +1,5 @@
+list(APPEND LDFLAGS -lm)
+
 macro(test_input run_type input output)
   # The benchmark modifies the data file, need to copy a fresh one
   llvm_test_run(RUN_TYPE ${run_type} EXECUTABLE cp -f

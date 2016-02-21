@@ -2,6 +2,7 @@ list(APPEND CPPFLAGS -DPERL_CORE -DI_TIME)
 list(APPEND CFLAGS -std=gnu89)
 # We want reproducible builds
 list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
+list(APPEND LDFLAGS -lm)
 
 include_directories(${BENCHMARK_DIR}/src)
 
