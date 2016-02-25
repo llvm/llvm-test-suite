@@ -152,7 +152,10 @@ macro(test_suite_add_executable name mainsource)
     endif()
 
     llvm_add_test(${name} ${source_exename})
-    add_dependencies(${source_exename} timeit-host timeit-target fpcmp-host)
+    if (NOT TEST_SUITE_USE_PERF)
+      add_dependencies(${source_exename} timeit-target)
+    endif()
+    add_dependencies(${source_exename} timeit-host fpcmp-host)
   endif()
 endmacro()
 

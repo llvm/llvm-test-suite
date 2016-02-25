@@ -128,6 +128,14 @@ set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
 set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
 
+set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
+  "Only run the benchmarking only subset")
+if(TEST_SUITE_BENCHMARKING_ONLY)
+  set(BENCHMARKING_ONLY "ON")
+else()
+  set(BENCHMARKING_ONLY)
+endif()
+
 add_subdirectory(SingleSource)
 add_subdirectory(MultiSource)
 add_subdirectory(External)
