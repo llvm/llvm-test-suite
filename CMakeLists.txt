@@ -8,6 +8,11 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "No build type selected, defaulting to Release")
   set(CMAKE_BUILD_TYPE "Release")
 endif()
+# Selecting installation directories or build types is untypical.
+mark_as_advanced(CMAKE_INSTALL_PREFIX CMAKE_BUILD_TYPE)
+# On the other hand we often want to switch compiler or cflags
+mark_as_advanced(CLEAR CMAKE_C_COMPILER CMAKE_CXX_COMPILER CMAKE_LINKER
+                 CMAKE_C_FLAGS CMAKE_CXX_FLAGS CMAKE_EXE_LINKER_FLAGS)
 
 project(test-suite C CXX)
 
@@ -58,7 +63,7 @@ set(TEST_SUITE_REMOTE_CLIENT "ssh" CACHE STRING "Remote execution client")
 set(TEST_SUITE_REMOTE_HOST "" CACHE STRING "Remote execution host")
 set(TEST_SUITE_REMOTE_USER "" CACHE STRING "Remote execution user")
 set(TEST_SUITE_REMOTE_PORT "" CACHE STRING "Remote execution port")
-mark_as_advanced(TEST_SUITE_REMOTE_USER TEST_SUITE_REMOTE_PORT)
+mark_as_advanced(TEST_SUITE_REMOTE_CLIENT TEST_SUITE_REMOTE_USER TEST_SUITE_REMOTE_PORT)
 
 # Run Under configuration for RunSafely.sh (will be set in lit.site.cfg)
 set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter")
