@@ -8,3 +8,10 @@ macro(llvm_copy_dir target to) # args: dir0 dir1 ...
     ${COPY_COMMAND}
   )
 endmacro()
+
+macro(llvm_copy target to from)
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${from} ${to}
+  )
+endmacro()
