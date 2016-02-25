@@ -56,7 +56,7 @@ class TestSuiteTest(FileBasedTest):
         res = testscript.parse(test.getSourcePath())
         if litConfig.noExecute:
             return lit.Test.Result(Test.PASS)
-        runscript, verifyscript = res
+        runscript, verifyscript, metricscripts = res
 
         # Apply the usual lit substitutions (%s, %S, %p, %T, ...)
         tmpDir, tmpBase = getTempPaths(test)
@@ -65,6 +65,8 @@ class TestSuiteTest(FileBasedTest):
         substitutions += [('%o', outfile)]
         runscript = applySubstitutions(runscript, substitutions)
         verifyscript = applySubstitutions(verifyscript, substitutions)
+        metricscripts = {k: applySubstitutions(v, substitutions)
+                         for k,v in metricscripts.items()}
         context = TestContext(test, litConfig, runscript, verifyscript, tmpDir,
                               tmpBase)
 
@@ -80,6 +82,7 @@ class TestSuiteTest(FileBasedTest):
         output = ""
         n_runs = 1
         runtimes = []
+        metrics = {}
         for n in range(n_runs):
             res = runScript(context, runscript)
             if isinstance(res, lit.Test.Result):
@@ -94,6 +97,15 @@ class TestSuiteTest(FileBasedTest):
                 output += "\n" + err
                 return lit.Test.Result(Test.FAIL, output)
 
+            # Execute metric extraction scripts.
+            for metric, script in metricscripts.items():
+                res = runScript(context, script)
+                if isinstance(res, lit.Test.Result):
+                    return res
+
+                out, err, exitCode, timeoutInfo = res
+                metrics.setdefault(metric, list()).append(float(out))
+            
             try:
                 runtime = runsafely.getTime(context)
                 runtimes.append(runtime)
@@ -128,6 +140,8 @@ class TestSuiteTest(FileBasedTest):
         result = lit.Test.Result(Test.PASS, output)
         if len(runtimes) > 0:
             result.addMetric('exec_time', lit.Test.toMetricValue(runtimes[0]))
+        for metric, values in metrics.items():
+            result.addMetric(metric, lit.Test.toMetricValue(values[0]))
         compiletime.collect(context, result)
 
         return result

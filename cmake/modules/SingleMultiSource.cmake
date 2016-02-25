@@ -223,3 +223,17 @@ macro(llvm_test_verify)
     set(TESTSCRIPT "${TESTSCRIPT}VERIFY: ${JOINED_ARGUMENTS}\n")
   endif()
 endmacro()
+
+macro(llvm_test_metric)
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;METRIC" "" ${ARGN})
+  if(NOT DEFINED TESTSCRIPT)
+    set(TESTSCRIPT "" PARENT_SCOPE)
+  endif()
+  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
+  # whitespace-separated string.
+  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
+    set(TESTSCRIPT "${TESTSCRIPT}METRIC: ${ARGS_METRIC}: ${JOINED_ARGUMENTS}\n")
+  endif()
+endmacro()
+  

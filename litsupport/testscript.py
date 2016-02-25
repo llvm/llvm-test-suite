@@ -22,13 +22,18 @@ def parse(filename):
     # Collect the test lines from the script.
     runscript = []
     verifyscript = []
-    keywords = ['RUN:', 'VERIFY:']
+    metricscripts = {}
+    keywords = ['RUN:', 'VERIFY:', 'METRIC:']
     for line_number, command_type, ln in \
             parseIntegratedTestScriptCommands(filename, keywords):
         if command_type == 'RUN':
             _parseShellCommand(runscript, ln)
         elif command_type == 'VERIFY':
             _parseShellCommand(verifyscript, ln)
+        elif command_type == 'METRIC':
+            metric, ln = ln.split(':', 1)
+            metricscript = metricscripts.setdefault(metric.strip(), list())
+            _parseShellCommand(metricscript, ln)
         else:
             raise ValueError("unknown script command type: %r" % (
                              command_type,))
@@ -43,4 +48,4 @@ def parse(filename):
             raise ValueError("Test has unterminated RUN/VERIFY lines " +
                              "(ending with '\\')")
 
-    return runscript, verifyscript
+    return runscript, verifyscript, metricscripts
