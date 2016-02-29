@@ -4,22 +4,24 @@ import logging
 import subprocess
 import shutil
 import platform
+import shellcommand
 
 def collect(context, result):
     try:
-        exename = context.test.getFilePath().rsplit('.test', 1)[0]
-        backup_exename = exename + '.stripped'
-        shutil.copyfile(exename, backup_exename)
+        exename = shellcommand.getMainExecutable(context)
         
         # Darwin's "strip" doesn't support these arguments.
         if platform.system() != 'Darwin':
+            stripped_exename = exename + '.stripped'
+            shutil.copyfile(exename, stripped_exename)
             subprocess.check_call(['strip',
                                    '--remove-section=.comment',
                                    '--remove-section=.note',
-                                   backup_exename])
+                                   stripped_exename])
+            exename = stripped_exename
 
         h = hashlib.md5()
-        h.update(open(backup_exename).read())
+        h.update(open(exename, 'rb').read())
         digest = h.hexdigest()
 
         result.addMetric('hash', lit.Test.toMetricValue(digest))
