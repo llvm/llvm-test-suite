@@ -9,6 +9,7 @@ from lit import Test
 from lit.util import to_bytes, to_string
 
 import compiletime
+import hash
 import perf
 import profilegen
 import runsafely
@@ -143,5 +144,6 @@ class TestSuiteTest(FileBasedTest):
         for metric, values in metrics.items():
             result.addMetric(metric, lit.Test.toMetricValue(values[0]))
         compiletime.collect(context, result)
+        hash.collect(context, result)
 
         return result
