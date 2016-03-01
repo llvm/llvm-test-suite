@@ -19,6 +19,9 @@ import testscript
 import timeit
 
 
+SKIPPED = lit.Test.ResultCode('SKIPPED', False)
+
+
 class TestContext:
     """This class is used to hold data used while constructing a testrun.
     For example this can be used by modules modifying the commandline with
@@ -76,6 +79,10 @@ class TestSuiteTest(FileBasedTest):
         if context.executable is None:
             return lit.Test.Result(Test.UNSUPPORTED,
                                    'Could not determine executable name')
+        hash.compute(context)
+        if hash.same_as_previous(context):
+            return lit.Test.Result(SKIPPED,
+                                   'Executable identical to previous run')
 
         runscript = runsafely.wrapScript(context, runscript, suffix=".out")
 
