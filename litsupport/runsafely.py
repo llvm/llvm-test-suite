@@ -35,7 +35,8 @@ def prepareRunSafely(context, commandline, outfile):
             runsafely_prefix += ["-e", cmd.stderr]
     else:
         if cmd.stdout is not None or cmd.stderr is not None:
-            raise Exception("separate stdout/stderr redirection not possible with traditional output")
+            raise Exception("Separate stdout/stderr redirection not " +
+                            "possible with traditional output")
     timeout = "7200"
     if cmd.stdin is not None:
         stdin = cmd.stdin

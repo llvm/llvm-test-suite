@@ -19,9 +19,9 @@ import timeit
 
 class TestContext:
     """This class is used to hold data used while constructing a testrun.
-    For example this can be used by modules modifying the commandline with extra
-    instrumentation/measurement wrappers to pass the filenames of the results
-    to a final data collection step."""
+    For example this can be used by modules modifying the commandline with
+    extra instrumentation/measurement wrappers to pass the filenames of the
+    results to a final data collection step."""
     def __init__(self, test, litConfig, original_runscript,
                  original_verifyscript, tmpDir, tmpBase):
         self.test = test
@@ -67,7 +67,7 @@ class TestSuiteTest(FileBasedTest):
         runscript = applySubstitutions(runscript, substitutions)
         verifyscript = applySubstitutions(verifyscript, substitutions)
         metricscripts = {k: applySubstitutions(v, substitutions)
-                         for k,v in metricscripts.items()}
+                         for k, v in metricscripts.items()}
         context = TestContext(test, litConfig, runscript, verifyscript, tmpDir,
                               tmpBase)
 
@@ -106,7 +106,7 @@ class TestSuiteTest(FileBasedTest):
 
                 out, err, exitCode, timeoutInfo = res
                 metrics.setdefault(metric, list()).append(float(out))
-            
+
             try:
                 runtime = runsafely.getTime(context)
                 runtimes.append(runtime)
@@ -114,15 +114,16 @@ class TestSuiteTest(FileBasedTest):
                 pass
 
         if litConfig.params.get('profile') == 'perf':
-            profilescript = perf.wrapScript(context, context.original_runscript)
+            profilescript = perf.wrapScript(context,
+                                            context.original_runscript)
             profilescript = runsafely.wrapScript(context, profilescript,
                                                  suffix=".perf.out")
-            runScript(context, context.profilescript) # ignore result
+            runScript(context, context.profilescript)  # ignore result
 
         # Merge llvm profile data
         if config.profile_generate:
             mergescript = profilegen.getMergeProfilesScript(context)
-            runScript(context, mergescript) # ignore result
+            runScript(context, mergescript)  # ignore result
 
         # Run verification script (the "VERIFY:" part)
         if len(verifyscript) > 0:

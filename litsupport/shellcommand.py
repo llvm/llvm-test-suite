@@ -2,12 +2,13 @@ import shlex
 import logging
 
 # Loosely modeled after posix specification for sh
-reserved_words = [ '!', '{', '}', 'case', 'do', 'done', 'elif', 'else', 'esac',
-                   'fi', 'for', 'if', 'in', 'then', 'until', 'while' ]
+reserved_words = ['!', '{', '}', 'case', 'do', 'done', 'elif', 'else', 'esac',
+                  'fi', 'for', 'if', 'in', 'then', 'until', 'while']
 
 chaining_tokens = set([';', '&&', '||', '|', '&'])
 unhandled_tokens = set([';;', '<<', '>>', '<&', '>&', '<>', '<<-', '>|', '(',
                         ')'])
+
 
 class ShellCommand:
     def __init__(self):
@@ -18,6 +19,7 @@ class ShellCommand:
         self.arguments = []
         self.modifiers = None
         self.workdir = None
+
 
 def parse(commandline):
     previous_commands = []
@@ -30,15 +32,15 @@ def parse(commandline):
         i += 1
         if token == '<' and i < len(tokens):
             result.stdin = tokens[i]
-            i+=1
+            i += 1
             continue
         if token == '>' and i < len(tokens):
             result.stdout = tokens[i]
-            i+=1
+            i += 1
             continue
         if token == '2>' and i < len(tokens):
             result.stderr = tokens[i]
-            i+=1
+            i += 1
             continue
         if first_word:
             if token in reserved_words or token in unhandled_tokens:
