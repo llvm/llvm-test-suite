@@ -13,6 +13,7 @@ import hash
 import perf
 import profilegen
 import runsafely
+import shellcommand
 import testscript
 import timeit
 
@@ -70,6 +71,10 @@ class TestSuiteTest(FileBasedTest):
                          for k, v in metricscripts.items()}
         context = TestContext(test, litConfig, runscript, verifyscript, tmpDir,
                               tmpBase)
+        context.executable = shellcommand.getMainExecutable(context)
+        if context.executable is None:
+            return lit.Test.Result(Test.UNSUPPORTED,
+                                   'Could not determine executable name')
 
         runscript = runsafely.wrapScript(context, runscript, suffix=".out")
 

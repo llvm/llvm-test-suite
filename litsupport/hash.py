@@ -6,26 +6,25 @@ import shutil
 import platform
 import shellcommand
 
+
 def collect(context, result):
+    executable = context.executable
     try:
-        exename = shellcommand.getMainExecutable(context)
-        
         # Darwin's "strip" doesn't support these arguments.
         if platform.system() != 'Darwin':
-            stripped_exename = exename + '.stripped'
-            shutil.copyfile(exename, stripped_exename)
+            stripped_executable = executable + '.stripped'
+            shutil.copyfile(executable, stripped_executable)
             subprocess.check_call(['strip',
                                    '--remove-section=.comment',
                                    '--remove-section=.note',
-                                   stripped_exename])
-            exename = stripped_exename
+                                   stripped_executable])
+            executable = stripped_executable
 
         h = hashlib.md5()
-        h.update(open(exename, 'rb').read())
+        h.update(open(executable, 'rb').read())
         digest = h.hexdigest()
 
         result.addMetric('hash', lit.Test.toMetricValue(digest))
 
     except:
-        logging.info('Could not calculate hash for %s' %
-                     context.test.getFullName())
+        logging.info('Could not calculate hash for %s' % executable)

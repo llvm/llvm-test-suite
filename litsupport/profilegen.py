@@ -24,10 +24,7 @@ def wrapScript(context, script):
 
 
 def getMergeProfilesScript(context):
-    executable = shellcommand.getMainExecutable(context)
-    if not executable:
-        return None
-    datafile = executable + ".profdata"
+    datafile = context.executable + ".profdata"
     mergecmd = [context.config.llvm_profdata, 'merge', '-output=%s' % datafile]
     mergecmd += context.profilefiles
     cmdline = " ".join(map(quote, mergecmd))
