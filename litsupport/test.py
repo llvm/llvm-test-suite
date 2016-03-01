@@ -8,6 +8,7 @@ from lit.TestRunner import executeScript, executeScriptInternal, \
 from lit import Test
 from lit.util import to_bytes, to_string
 
+import codesize
 import compiletime
 import hash
 import perf
@@ -151,5 +152,6 @@ class TestSuiteTest(FileBasedTest):
             result.addMetric(metric, lit.Test.toMetricValue(values[0]))
         compiletime.collect(context, result)
         hash.collect(context, result)
+        codesize.collect(context, result)
 
         return result
