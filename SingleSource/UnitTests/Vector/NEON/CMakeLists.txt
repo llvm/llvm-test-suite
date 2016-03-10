@@ -1,5 +1,2 @@
-if(TEST_SUITE_BENCHMARKING_ONLY)
-  list(APPEND PROGRAMS_TO_SKIP simple)
-endif()
 list(APPEND CFLAGS -std=c99)
 llvm_singlesource()

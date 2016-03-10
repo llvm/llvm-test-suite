@@ -1,5 +1,4 @@
-llvm_add_subdirectories(Regression Benchmarks)
+llvm_add_subdirectories(Benchmarks)
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
-  llvm_add_subdirectories(UnitTests)
+  llvm_add_subdirectories(UnitTests Regression)
 endif()
-
