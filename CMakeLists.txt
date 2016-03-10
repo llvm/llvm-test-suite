@@ -130,11 +130,6 @@ set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT
 
 set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
   "Only run the benchmarking only subset")
-if(TEST_SUITE_BENCHMARKING_ONLY)
-  set(BENCHMARKING_ONLY "ON")
-else()
-  set(BENCHMARKING_ONLY)
-endif()
 
 add_subdirectory(SingleSource)
 add_subdirectory(MultiSource)

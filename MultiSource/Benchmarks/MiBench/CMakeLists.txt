@@ -2,7 +2,7 @@ llvm_add_subdirectories(automotive-basicmath automotive-bitcount automotive-susa
 if(NOT "${ARCH}" STREQUAL "XCore")
   llvm_add_subdirectories(consumer-lame)
 endif()
-if(NOT DEFINED BENCHMARKING_ONLY)
+if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   llvm_add_subdirectories(office-stringsearch security-blowfish telecomm-adpcm)
   if((NOT "${ARCH}" STREQUAL "XCore") AND (NOT "${ARCH}" STREQUAL "ARM"))
     llvm_add_subdirectories(office-ispell)

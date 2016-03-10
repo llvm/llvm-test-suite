@@ -1,4 +1,4 @@
-if(DEFINED BENCHMARKING_ONLY)
+if(TEST_SUITE_BENCHMARKING_ONLY)
   list(APPEND PROGRAMS_TO_SKIP aarch64_neon_intrinsics)
 endif()
 list(APPEND CFLAGS -std=c99)

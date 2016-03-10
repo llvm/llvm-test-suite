@@ -1,5 +1,5 @@
 list(APPEND CPPFLAGS -std=c++11 -pthread)
-if(DEFINED BENCHMARKING_ONLY)
+if(TEST_SUITE_BENCHMARKING_ONLY)
   list(APPEND PROGRAMS_TO_SKIP stdthreadbug)
 endif()
 list(APPEND LDFLAGS -lstdc++ -pthread)
