@@ -5,7 +5,7 @@ macro(test_input run_type costs_tolerance)
   set(COSTS_OUT ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/costs.out)
   # The benchmark keeps appending to costs.out, so we have to make sure there
   # is none from previous runs
-  llvm_test_run(RUN_TYPE ${run_type} EXECUTABLE rm ${COSTS_OUT})
+  llvm_test_run(RUN_TYPE ${run_type} EXECUTABLE rm -f ${COSTS_OUT})
   llvm_test_run(RUN_TYPE ${run_type}
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     net.in arch.in place.out dum.out
