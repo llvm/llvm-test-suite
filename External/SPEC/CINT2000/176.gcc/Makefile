@@ -17,6 +17,7 @@ RUN_OPTIONS     = 200.i -o - -quiet
 STDOUT_FILENAME = 200.s
 endif
 
+CPPFLAGS += -std=gnu89
 ifeq ($(ENDIAN),big)
   CPPFLAGS += -DHOST_WORDS_BIG_ENDIAN
 endif
