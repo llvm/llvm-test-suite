@@ -105,7 +105,7 @@ class TestSuiteTest(FileBasedTest):
             output += "\n" + "\n".join(runscript)
 
             out, err, exitCode, timeoutInfo = res
-            if exitCode == Test.FAIL:
+            if exitCode != 0:
                 # Only show command output in case of errors
                 output += "\n" + out
                 output += "\n" + err
