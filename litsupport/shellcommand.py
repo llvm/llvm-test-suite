@@ -67,7 +67,7 @@ def parse(commandline):
 
 # Some executables are just used to cleanup/prepare for a test run, ignore them
 # here.
-_ignore_executables = set(['cd', 'rm'])
+_ignore_executables = set(['cd', 'rm', 'cp'])
 
 
 def getMainExecutable(context):
