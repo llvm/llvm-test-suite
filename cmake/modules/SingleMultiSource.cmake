@@ -61,7 +61,11 @@ macro(append_target_flags propertyname target)
     string(REPLACE " " "\\ " quoted "${ARGN}")
     string(REPLACE "\"" "\\\"" quoted "${quoted}")
     string(REPLACE ";" " " quoted "${quoted}")
-    set_target_properties(${target} PROPERTIES ${propertyname} "${old_flags} ${quoted}")
+    # Ensure that there is no leading or trailing whitespace
+    # This is especially important if old_flags is empty and the property
+    # is LINK_LIBRARIES, as extra whitespace violates CMP0004
+    string(STRIP "${old_flags} ${quoted}" new_flags)
+    set_target_properties(${target} PROPERTIES ${propertyname} "${new_flags}")
   endif()
 endmacro()
 
@@ -70,7 +74,7 @@ macro(append_compile_flags target)
 endmacro()
 
 macro(append_link_flags target)
-  append_target_flags(LINK_FLAGS ${target} ${ARGN})
+  append_target_flags(LINK_LIBRARIES ${target} ${ARGN})
 endmacro()
 
 # llvm_add_test - Create a .test driver file suitable for LIT.
