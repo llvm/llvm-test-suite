@@ -1,7 +1,7 @@
-equake: Reading nodes.
-equake: Reading elements.
-equake: Reading sparse matrix structure.
-equake: Beginning simulation.
+ Reading nodes.
+ Reading elements.
+ Reading sparse matrix structure.
+ Beginning simulation.
 
 CASE SUMMARY
 Fault information
@@ -288,7 +288,7 @@ Time step 2670
 Time step 2700
 978: 1.31e-01 -1.16e+00 1.38e+00
 3394: -6.85e-02 8.73e-02 -6.01e-01
-equake: 7294 nodes 35025 elems 2709 timesteps
+ 7294 nodes 35025 elems 2709 timesteps
 
-equake: Done. Terminating the simulation.
+ Done. Terminating the simulation.
 exit 0

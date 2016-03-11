@@ -1,7 +1,7 @@
-equake: Reading nodes.
-equake: Reading elements.
-equake: Reading sparse matrix structure.
-equake: Beginning simulation.
+ Reading nodes.
+ Reading elements.
+ Reading sparse matrix structure.
+ Beginning simulation.
 
 CASE SUMMARY
 Fault information
@@ -21,7 +21,7 @@ The epicenter is node 3394 at (32.250000  23.687500  0.000000)
 Time step 30
 978: 8.01e-03 7.19e-03 8.41e-03
 3394: -3.69e-21 1.57e-20 -5.20e-20
-equake: 7294 nodes 35025 elems 34 timesteps
+ 7294 nodes 35025 elems 34 timesteps
 
-equake: Done. Terminating the simulation.
+ Done. Terminating the simulation.
 exit 0
