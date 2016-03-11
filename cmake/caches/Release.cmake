@@ -1,0 +1,2 @@
+set(CMAKE_C_FLAGS "-O3 -flto" CACHE STRING "")
+set(CMAKE_CXX_FLAGS "-O3 -flto" CACHE STRING "")
