@@ -1,11 +1,3 @@
-Scan file: c756hel.in
-trainfile1: a10.img
-stride: 2
-startx: 134
-starty: 220
-endx: 154
-endy: 230
-objects: 3
 F2 neuron 1 passes vigilance with a value of 1.0000
 
 
