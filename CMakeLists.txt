@@ -124,9 +124,13 @@ add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
-# Now that the tools have been created, use tools/timeit to time all other compilations.
-set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
-set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
+set(TEST_SUITE_TAKE_COMPILE_TIME "TRUE" CACHE BOOL
+    "Measure compile time by wrapping compiler invocations in timeit")
+mark_as_advanced(TEST_SUITE_TAKE_COMPILE_TIME)
+if(TEST_SUITE_TAKE_COMPILE_TIME)
+  set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
+  set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
+endif()
 
 set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
   "Only run the benchmarking only subset")
