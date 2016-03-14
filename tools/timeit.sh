@@ -4,6 +4,7 @@
 REPORT=/dev/stderr
 INPUT=/dev/stdin
 OUTPUT=/dev/stdout
+ERRPUT=/dev/stderr
 PERFSTAT=perfstats
 
 while [[ $1 = -* ]]; do
@@ -13,12 +14,22 @@ while [[ $1 = -* ]]; do
 	elif [ $1 = "--redirect-input" ]; then
 		INPUT=$2
 	elif [ $1 = "--redirect-output" ]; then
-		OUTPUT=$2
+     	    OUTPUT=$2
+	    ERRPUT=$2
+	elif [ $1 = "--redirect-stdout" ]; then
+            OUTPUT=$2
+	elif [ $1 = "--chdir" ]; then
+            cd $2
 	fi
 	shift 2
 done
 
-perf stat -o $PERFSTAT $@ < $INPUT &> $OUTPUT
+if [ "$OUTPUT" = "$ERRPUT" ]; then
+    # Use >& to ensure the streams are properly interleaved.
+    perf stat -o $PERFSTAT $@ < $INPUT >& $OUTPUT
+else
+    perf stat -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT
+fi
 
 EXITCODE=$?
 
