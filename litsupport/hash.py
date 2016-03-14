@@ -16,7 +16,7 @@ def compute(context):
             shutil.copyfile(executable, stripped_executable)
             subprocess.check_call(['strip',
                                    '--remove-section=.comment',
-                                   '--remove-section=.note',
+                                   "--remove-section='.note*'",
                                    stripped_executable])
             executable = stripped_executable
 
