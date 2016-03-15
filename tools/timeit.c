@@ -71,6 +71,9 @@ static const char *g_target_redirect_stdout = 0;
 /* \brief If non-zero, the path to redirect the target stderr to. */
 static const char *g_target_redirect_stderr = 0;
 
+/* \brief If non-zero, append exit status at end of output file. */
+static int g_append_exitstats = 0;
+
 /* @name Resource Limit Variables */
 /* @{ */
 
@@ -215,6 +218,18 @@ static int monitor_child_process(pid_t pid, double start_time) {
     fprintf(fp, "%-10s %.4f\n", "user", user_time);
     fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
     fclose(fp);
+  }
+
+  if (g_append_exitstats && g_target_program) {
+    FILE *fp_stdout = fopen(g_target_redirect_stdout, "a");
+    if (!fp_stdout) {
+      perror("fopen");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+    fprintf(fp_stdout, "exit %d\n", exit_status);
+    fclose(fp_stdout);
+    /* let timeit itself report success */
+    exit_status = 0;
   }
 
   return exit_status;
@@ -502,6 +517,11 @@ int main(int argc, char * const argv[]) {
         usage(/*is_error=*/1);
       }
       g_target_redirect_stderr = argv[++i];
+      continue;
+    }
+
+    if (streq(arg, "--append-exitstatus")) {
+      g_append_exitstats = 1;
       continue;
     }
 
