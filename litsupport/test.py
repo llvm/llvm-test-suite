@@ -13,9 +13,11 @@ import compiletime
 import hash
 import perf
 import profilegen
-import runsafely
+import remote
+import run_under
 import shellcommand
 import testplan
+import timeit
 
 
 SKIPPED = lit.Test.ResultCode('SKIPPED', False)
@@ -76,12 +78,15 @@ class TestSuiteTest(FileBasedTest):
         lit.util.mkdir_p(os.path.dirname(tmpBase))
 
         # Prepare test plan
-        runsafely.mutatePlan(context, plan)
+        run_under.mutatePlan(context, plan)
+        timeit.mutatePlan(context, plan)
         compiletime.mutatePlan(context, plan)
         codesize.mutatePlan(context, plan)
         hash.mutatePlan(context, plan)
         if config.profile_generate:
             profilegen.mutatePlan(context, plan)
+        if config.remote_host:
+            remote.mutatePlan(context, plan)
         if litConfig.params.get('profile') == 'perf':
             perf.mutatePlan(context, plan)
 
