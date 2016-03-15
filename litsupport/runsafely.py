@@ -1,20 +1,20 @@
-import shlex
-import timeit
+import lit.Test
 import shellcommand
-try:
-    from shlex import quote  # python 3.3 and above
-except:
-    from pipes import quote  # python 3.2 and earlier
+import testplan
+import timeit
 
 
-def prepareRunSafely(context, commandline, outfile):
+def mutateCommandline(context, commandline):
+    outfile = context.tmpBase + ".out"
+    timefile = outfile + ".time"
     config = context.config
     cmd = shellcommand.parse(commandline)
 
     runsafely = "%s/RunSafely.sh" % config.test_suite_root
-    runsafely_prefix = [runsafely]
+    runsafely_prefix = []
     if cmd.workdir is not None:
         runsafely_prefix += ["-d", cmd.workdir]
+        cmd.workdir = None
     timeit = "%s/tools/timeit" % config.test_source_root
     if config.remote_host:
         timeit = "%s/tools/timeit-target" % config.test_source_root
@@ -31,8 +31,10 @@ def prepareRunSafely(context, commandline, outfile):
         runsafely_prefix += ["-n"]
         if cmd.stdout is not None:
             runsafely_prefix += ["-o", cmd.stdout]
+            cmd.stdout = None
         if cmd.stderr is not None:
             runsafely_prefix += ["-e", cmd.stderr]
+            cmd.stderr = None
     else:
         if cmd.stdout is not None or cmd.stderr is not None:
             raise Exception("Separate stdout/stderr redirection not " +
@@ -40,36 +42,31 @@ def prepareRunSafely(context, commandline, outfile):
     timeout = "7200"
     if cmd.stdin is not None:
         stdin = cmd.stdin
+        cmd.stdin = None
     else:
         stdin = "/dev/null"
     runsafely_prefix += ["-t", timeit, timeout, stdin, outfile]
 
-    complete_command = runsafely_prefix + [cmd.executable] + cmd.arguments
-    new_commandline = " ".join(map(quote, complete_command))
-    return new_commandline
+    context.timefiles.append(outfile + ".time")
+
+    cmd.wrap(runsafely, runsafely_prefix)
+    return cmd.toCommandline()
 
 
-def wrapScript(context, script, suffix):
-    adjusted_script = []
-    outfile = context.tmpBase + suffix
-    # Set name of timefile so getTime() can use it
-    context.timefiles = []
-    i = 0
-    for line in script:
-        number = ""
-        if len(script) > 1:
-            number = "-%s" % (i,)
-            i += 1
-        outfile = context.tmpBase + number + suffix
-        context.timefiles.append(outfile + ".time")
-
-        line = prepareRunSafely(context, line, outfile)
-        adjusted_script.append(line)
-    return adjusted_script
+def mutateScript(context, script):
+    return testplan.mutateScript(context, script, mutateCommandline)
 
 
-def getTime(context):
+def _getTime(context, timefiles, metric_name='exec_time'):
     time = 0.0
-    for timefile in context.timefiles:
+    for timefile in timefiles:
         time += timeit.getUserTime(timefile)
-    return time
+    return {metric_name: lit.Test.toMetricValue(time)}
+
+
+def mutatePlan(context, plan):
+    context.timefiles = []
+    plan.runscript = mutateScript(context, plan.runscript)
+    plan.metric_collectors.append(
+        lambda context: _getTime(context, context.timefiles)
+    )

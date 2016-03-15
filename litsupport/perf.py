@@ -1,9 +1,19 @@
-def wrapScript(context, runscript):
+import shellcommand
+import testplan
+
+
+def mutateCommandLine(context, commandline):
     profilefile = context.tmpBase + ".perf_data"
-    profilescript = []
-    for line in runscript:
-        profilescript.append(
-            ' '.join(
-                ['perf record -e cycles,cache-misses,branch-misses -o',
-                 profilefile, line]))
-    return profilescript
+    cmd = shellcommand.parse(commandline)
+    cmd.wrap('perf', [
+        'record',
+        '-e', 'cycles,cache-misses,branch-misses',
+        '-o', profilefile
+    ])
+    return cmd.toCommandline()
+
+
+def mutatePlan(context, plan):
+    script = testplan.mutateScript(context, context.original_runscript,
+                                   mutateCommandLine)
+    plan.profilescript += script

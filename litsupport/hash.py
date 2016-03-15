@@ -1,4 +1,5 @@
 from lit.Test import toMetricValue
+import lit.Test
 import hashlib
 import logging
 import subprocess
@@ -45,6 +46,10 @@ def same_as_previous(context):
     return False
 
 
-def collect(context, result):
+def _getHash(context):
+    return {'hash': lit.Test.toMetricValue(context.executable_hash)}
+
+
+def mutatePlan(context, plan):
     if context.executable_hash is not None:
-        result.addMetric('hash', toMetricValue(context.executable_hash))
+        plan.metric_collectors.append(_getHash)

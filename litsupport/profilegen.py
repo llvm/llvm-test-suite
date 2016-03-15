@@ -1,31 +1,26 @@
 import shellcommand
-try:
-    from shlex import quote  # python 3.3 and above
-except:
-    from pipes import quote  # python 3.2 and earlier
+import testplan
 
 
-def wrapScript(context, script):
+def mutateCommandline(context, commandline):
     """Adjust runscript to set a different value to the LLVM_PROFILE_FILE
     environment variable for each execution."""
-    i = 0
-    adjusted_script = []
+    profilefile = context.tmpBase + ".profraw"
+    prefix = "env LLVM_PROFILE_FILE=%s " % profilefile
+    context.profilefiles.append(profilefile)
+    return prefix + commandline
+
+
+def mutateScript(context, script):
+    return testplan.mutateScript(context, script, mutateCommandline)
+
+
+def mutatePlan(context, plan):
     context.profilefiles = []
-    for line in script:
-        number = ""
-        if len(script) > 1:
-            number = "-%s" % (i,)
-            i += 1
-        profilefile = "%s%s.profraw" % (context.tmpBase, number)
-        prefix = "LLVM_PROFILE_FILE=%s " % quote(profilefile)
-        context.profilefiles.append(profilefile)
-        adjusted_script.append(prefix + line)
-    return adjusted_script
-
-
-def getMergeProfilesScript(context):
-    datafile = context.executable + ".profdata"
-    mergecmd = [context.config.llvm_profdata, 'merge', '-output=%s' % datafile]
-    mergecmd += context.profilefiles
-    cmdline = " ".join(map(quote, mergecmd))
-    return [cmdline]
+    # Adjust run steps to set LLVM_PROFILE_FILE
+    plan.runscript = mutateScript(context, plan.runscript)
+    # Run profdata merge at the end
+    profdatafile = context.executable + ".profdata"
+    args = ['merge', '-output=%s' % profdatafile] + context.profilefiles
+    mergecmd = shellcommand.ShellCommand(context.config.llvm_profdata, args)
+    plan.profilescript += [mergecmd.toCommandline()]
