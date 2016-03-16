@@ -1,7 +1,7 @@
 set(PROG nbench)
 set(CPPFLAGS -DBASE_ITERATIONS=25)
 set(LDFLAGS -lm)
-if("${ARCH}" STREQUAL "XCore")
+if(ARCH STREQUAL "XCore")
   set(RUNTIMELIMIT 7200)
 else()
   set(RUNTIMELIMIT 750)

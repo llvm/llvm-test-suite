@@ -120,7 +120,7 @@ if(NOT DEFINED ENDIAN)
   endif()
 endif()
 
-if("${ARCH}" STREQUAL "Mips")
+if(ARCH STREQUAL "Mips")
   check_symbol_exists(__mips16 "" MIPS_IS_MIPS16_ENABLED)
   check_symbol_exists(__mips64 "" MIPS_IS_MIPS64_ENABLED)
 endif()

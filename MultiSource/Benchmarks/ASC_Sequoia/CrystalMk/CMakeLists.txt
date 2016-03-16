@@ -1,6 +1,6 @@
 set(PROG CrystalMk)
 list(APPEND LDFLAGS -lm)
-if("${ARCH}" STREQUAL "XCore")
+if(ARCH STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)
     set(RUNTIMELIMIT 7200)
   endif()

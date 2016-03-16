@@ -1,7 +1,7 @@
 set(POLYBENCH_UTILS SingleSource/Benchmarks/Polybench/utilities )
 set(PROG symm)
 list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/${POLYBENCH_UTILS} -DPOLYBENCH_DUMP_ARRAYS)
-if("${ARCH}" STREQUAL "Mips")
+if(ARCH STREQUAL "Mips")
   set(RUNTIMELIMIT 2000)
 endif()
 if(DEFINED SMALL_PROBLEM_SIZE)

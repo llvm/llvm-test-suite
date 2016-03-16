@@ -3,7 +3,7 @@ check_function_exists(re_comp HAVE_RE_COMP)
 
 if(HAVE_RE_COMP)
   set(PROG archie)
-  if("${TARGET_OS}" STREQUAL "SunOS")
+  if(TARGET_OS STREQUAL "SunOS")
     list(APPEND LDFLAGS -lsocket -lnsl)
   endif()
   llvm_multisource()

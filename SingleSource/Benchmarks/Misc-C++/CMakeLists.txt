@@ -1,6 +1,6 @@
 list(APPEND LDFLAGS -lm -lstdc++)
 set(FP_ABSTOLERANCE 0.01)
-if("${ARCH}" STREQUAL "XCore")
+if(ARCH STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)
     set(XCORE_TARGET_NEEDS_MEMORY 128)
   endif()
