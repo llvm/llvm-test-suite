@@ -6,7 +6,7 @@ include(CheckSymbolExists)
 # falls over unless -DNDEBUG is set.
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "No build type selected, defaulting to Release")
-  set(CMAKE_BUILD_TYPE "Release")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
 endif()
 # Selecting installation directories or build types is untypical.
 mark_as_advanced(CMAKE_INSTALL_PREFIX)
