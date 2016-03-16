@@ -3,8 +3,6 @@ set(CPPFLAGS -DDEBUG)
 list(APPEND CFLAGS -std=gnu89)
 set(LDFLAGS -lstdc++)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/sample.gr)
-file(GLOB TMP1 ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
-set(Source ${ExtraSource} ${TMP1})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 llvm_multisource()

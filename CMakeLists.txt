@@ -100,7 +100,6 @@ set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
 
 include(MakefileFunctions)
 include(SingleMultiSource)
-find_package(YACC)
 find_package(TCL)
 
 if(NOT DEFINED TARGET_OS)
