@@ -80,12 +80,14 @@ def parse(commandline):
             result.stderr = tokens[i]
             i += 1
             continue
-        assignment=re.match('([A-Za-z_][A-Za-z_0-9]*)=(.*)', token)
-        if assignment:
-            result.envvars[m.group(1)] = m.group(2)
-            continue
 
         if first_word:
+            # Is it an environment variable assignment?
+            assignment=re.match('([A-Za-z_][A-Za-z_0-9]*)=(.*)', token)
+            if assignment:
+                result.envvars[assignment.group(1)] = assignment.group(2)
+                continue
+            # A reserved word?
             if token in reserved_words or token in unhandled_tokens:
                 raise Exception("Reserved word '%s' not supported" % token)
             result.executable = token
