@@ -252,7 +252,10 @@ class TestModule(nt.TestModule):
             if self.call(cmd, cwd=self.OBJROOT, shell=True, env=os.environ) != 0:
                 status = FAIL
 
-        return [
+        result =  [
             TestSamples(self.testname + '.compile', [compile_time]),
-            TestSamples(self.testname + '.exec', [exec_time]),
-            TestSamples(self.testname + '.exec.status', [status])]
+            TestSamples(self.testname + '.exec', [exec_time])]
+        if status == FAIL:
+            result.append(TestSamples(self.testname + '.exec.status', [status]))
+
+        return result
