@@ -3,7 +3,7 @@ import testplan
 
 
 def mutateCommandLine(context, commandline):
-    return context.config.run_under + commandline
+    return context.config.run_under + " " + commandline
 
 
 def mutatePlan(context, plan):
