@@ -15,7 +15,7 @@ def compute(context):
         if platform.system() != 'Darwin':
             stripped_executable = executable + '.stripped'
             shutil.copyfile(executable, stripped_executable)
-            subprocess.check_call(['strip',
+            subprocess.check_call([context.config.strip_tool,
                                    '--remove-section=.comment',
                                    "--remove-section='.note*'",
                                    stripped_executable])
