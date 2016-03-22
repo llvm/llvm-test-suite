@@ -2,6 +2,7 @@ set(Source Calignm1.c constants.c defs.c Falign.c fft.c fftFunctions.c Galign11.
 set(PROG pairlocalalign)
 set(CPPFLAGS -DLLVM)
 set(RUN_OPTIONS -b 62 -g 0.100 -f 2.00 -h 0.100 -L)
+set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/pyruvate_decarboxylase.fasta)
 set(LDFLAGS -lm)
 set(HASH_PROGRAM_OUTPUT 1)

@@ -87,6 +87,9 @@ function(llvm_add_test name exename)
     if(DEFINED STDIN_FILENAME)
       list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
     endif()
+    if(WORKDIR)
+      list(APPEND RUN_OPTIONS WORKDIR ${WORKDIR})
+    endif()
     llvm_test_run(${RUN_OPTIONS})
 
     # Hash if we've been asked to.
@@ -240,4 +243,3 @@ macro(llvm_test_metric)
     set(TESTSCRIPT "${TESTSCRIPT}METRIC: ${ARGS_METRIC}: ${JOINED_ARGUMENTS}\n")
   endif()
 endmacro()
-  

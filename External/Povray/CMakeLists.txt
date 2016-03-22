@@ -25,7 +25,7 @@ if(TEST_SUITE_POVRAY_ROOT)
   llvm_test_run(
     -I${TEST_SUITE_POVRAY_ROOT}/scenes/advanced/chess2.pov
     -L${TEST_SUITE_POVRAY_ROOT}/include
-    -GAoutput.junk -O-
+    -GA/dev/null -O-
   )
   llvm_test_verify(${FPCMP}
     %o

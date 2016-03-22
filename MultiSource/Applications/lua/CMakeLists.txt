@@ -7,6 +7,7 @@ else()
 endif()
 set(PROG lua)
 set(RUN_OPTIONS alltests.lua "")
+set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 set(HASH_PROGRAM_OUTPUT 1)
 set(DIFFPROG ${PROGDIR}/DiffOutput.sh "diff ")
 

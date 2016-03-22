@@ -1,4 +1,5 @@
 set(PROG lambda)
 list(APPEND LDFLAGS -lstdc++)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/input)
+set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 llvm_multisource()

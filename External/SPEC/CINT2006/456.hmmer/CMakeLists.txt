@@ -2,13 +2,15 @@ list(APPEND LDFLAGS -lm)
 
 macro(test_input run_type input output)
   # The benchmark modifies the data file, need to copy a fresh one
-  llvm_test_run(RUN_TYPE ${run_type} EXECUTABLE cp -f
+  llvm_test_run(RUN_TYPE ${run_type}
+    EXECUTABLE cp -f
     ${BENCHMARK_DIR}/data/${run_type}/input/${input}
     ${CMAKE_CURRENT_BINARY_DIR}/${input}
   )
   llvm_test_run(RUN_TYPE ${run_type}
     ${ARGN} ${input}
     > ${CMAKE_CURRENT_BINARY_DIR}/${output}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
   )
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
     -r 0.002 -a 0.00001

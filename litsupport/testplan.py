@@ -86,10 +86,12 @@ def executeScript(context, script, useExternalSh=True):
     if len(script) == 0:
         return "", "", 0, None
 
-    execdir = os.path.dirname(context.test.getExecPath())
-    executeFunc = lit.TestRunner.executeScriptInternal
     if useExternalSh:
+        execdir = None
         executeFunc = lit.TestRunner.executeScript
+    else:
+        execdir = os.getcwd()
+        executeFunc = lit.TestRunner.executeScriptInternal
 
     res = executeFunc(context.test, context.litConfig, context.tmpBase, script,
                       execdir)

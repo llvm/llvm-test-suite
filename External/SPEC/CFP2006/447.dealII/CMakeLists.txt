@@ -20,6 +20,7 @@ macro(test_input run_type size)
   llvm_test_run(RUN_TYPE ${run_type}
     ${size}
     > ${CMAKE_CURRENT_BINARY_DIR}/log
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
   )
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
     ${BENCHMARK_DIR}/data/${run_type}/output/log

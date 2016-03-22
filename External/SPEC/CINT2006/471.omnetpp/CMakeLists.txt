@@ -99,6 +99,7 @@ macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
     -f ${BENCHMARK_DIR}/data/${run_type}/input/omnetpp.ini
     > ${CMAKE_CURRENT_BINARY_DIR}/omnetpp.log
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
   )
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
     -r 0.00001 -a 0.000001

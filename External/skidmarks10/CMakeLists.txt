@@ -8,7 +8,8 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
     list(APPEND CPPFLAGS -msse3)
   endif()
 
-  llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden)
+  llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
   llvm_test_verify(${FPCMP}
     %o
     ${CMAKE_CURRENT_SOURCE_DIR}/skidmarks.reference_output
