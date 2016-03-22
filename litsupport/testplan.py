@@ -146,7 +146,7 @@ def executePlan(context, plan):
             logging.warning("Metric script for '%s' failed", metric)
             continue
         try:
-            value = float(out)
+            value = lit.Test.toMetricValue(float(out))
             context.result_metrics[metric] = value
         except ValueError:
             logging.warning("Metric reported for '%s' is not a float: '%s'",
