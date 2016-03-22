@@ -22,9 +22,9 @@ while [[ $1 = -* ]]; do
   elif [ $1 = "--chdir" ]; then
     cd $2
   elif [ $1 = "--append-exitstatus" ]; then
-      APPEND_STATUS=1
-      shift 1
-      continue
+    APPEND_STATUS=1
+    shift 1
+    continue
   fi
   shift 2
 done

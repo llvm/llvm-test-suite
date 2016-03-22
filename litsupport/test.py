@@ -39,7 +39,6 @@ class TestContext:
         self.tmpBase = tmpBase
 
 
-
 class TestSuiteTest(FileBasedTest):
     def __init__(self):
         super(TestSuiteTest, self).__init__()
@@ -60,9 +59,10 @@ class TestSuiteTest(FileBasedTest):
         substitutions = getDefaultSubstitutions(test, tmpDir, tmpBase)
         substitutions += [('%o', outfile)]
         plan.runscript = applySubstitutions(plan.runscript, substitutions)
-        plan.verifyscript = applySubstitutions(plan.verifyscript, substitutions)
+        plan.verifyscript = applySubstitutions(plan.verifyscript,
+                                               substitutions)
         plan.metricscripts = {k: applySubstitutions(v, substitutions)
-                         for k, v in plan.metricscripts.items()}
+                              for k, v in plan.metricscripts.items()}
         context = TestContext(test, litConfig, plan.runscript,
                               plan.verifyscript, tmpDir, tmpBase)
         context.executable = shellcommand.getMainExecutable(context)

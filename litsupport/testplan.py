@@ -153,7 +153,7 @@ def executePlan(context, plan):
                             metric, out)
 
     # Execute additional profile gathering actions setup by testing modules.
-    _, _, exitCode, _ = executeScript(context, plan.profilescript) 
+    _, _, exitCode, _ = executeScript(context, plan.profilescript)
     if exitCode != 0:
         logging.warning("Profile script '%s' failed", plan.profilescript)
 

@@ -83,7 +83,7 @@ def parse(commandline):
 
         if first_word:
             # Is it an environment variable assignment?
-            assignment=re.match('([A-Za-z_][A-Za-z_0-9]*)=(.*)', token)
+            assignment = re.match('([A-Za-z_][A-Za-z_0-9]*)=(.*)', token)
             if assignment:
                 result.envvars[assignment.group(1)] = assignment.group(2)
                 continue
