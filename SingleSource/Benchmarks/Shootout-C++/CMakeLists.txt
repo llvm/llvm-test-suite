@@ -10,7 +10,7 @@ endif()
 if(TEST_SUITE_BENCHMARKING_ONLY)
   list(APPEND PROGRAMS_TO_SKIP hello reversefile spellcheck sumcol wc wordfreq)
 endif()
-list(APPEND LDFLAGS -lstdc++)
+list(APPEND LDFLAGS -lstdc++ -lm)
 if(TARGET_OS STREQUAL "Darwin")
   # Necessary for ackermann on iOS
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
