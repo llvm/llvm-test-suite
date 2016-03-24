@@ -78,13 +78,14 @@ set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter"
 set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
     "Type of benchmark inputs (may be test,train or ref)")
 
+find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size")
+find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata")
+mark_as_advanced(TEST_SUITE_LLVM_SIZE TEST_SUITE_LLVM_PROFDATA)
+
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
 set(TEST_SUITE_PROFILE_GENERATE "FALSE" CACHE BOOL
     "Enable lit profile generate mode")
-set(TEST_SUITE_LLVM_PROFDATA "llvm-profdata" CACHE STRING
-    "llvm-profdata executable")
-mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
   set(TEST_SUITE_PROFILE_GENERATE "True")
