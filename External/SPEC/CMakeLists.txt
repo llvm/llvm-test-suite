@@ -3,6 +3,14 @@ if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
 endif()
 
+# SPEC supports three "run types": ref, train and test
+if(NOT TEST_SUITE_RUN_TYPE STREQUAL "train" AND
+   NOT TEST_SUITE_RUN_TYPE STREQUAL "test" AND
+   NOT TEST_SUITE_RUN_TYPE STREQUAL "ref")
+  message(FATAL_ERROR
+          "TEST_SUITE_RUN_TYPE must be 'train', 'test' or 'ref' for SPEC")
+endif()
+
 llvm_externals_find(TEST_SUITE_SPEC95_ROOT "spec95" "SPEC CPU95")
 if(TEST_SUITE_SPEC95_ROOT)
   llvm_add_subdirectories(CINT95)
