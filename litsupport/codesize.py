@@ -24,9 +24,14 @@ def _getCodeSize(context):
                             context.executable)
         else:
             for l in lines[2:]:
+                l = l.strip()
+                if l == "":
+                    continue
                 values = l.split()
-                if len(values) < 2 or values[0] == 'Total':
+                if len(values) < 2:
                     logging.info("Ignoring malformed output line: %s", l)
+                    continue
+                if values[0] == 'Total':
                     continue
                 try:
                     name = values[0]
