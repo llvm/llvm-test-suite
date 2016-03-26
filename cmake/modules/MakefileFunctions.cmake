@@ -7,15 +7,14 @@
 #
 ##===----------------------------------------------------------------------===##
 
-# llvm_add_subdirectories - wrapper around add_subdirectory that can take
-# multiple items.
+# wrapper around add_subdirectory that can take multiple items.
 macro(llvm_add_subdirectories)
   foreach(V ${ARGV})
     add_subdirectory(${V})
   endforeach(V)
 endmacro()
 
-# llvm_prepend - equivalent to $(addprefix var,prefix). Modifies var in place.
+# equivalent to $(addprefix var,prefix). Modifies var in place.
 function(llvm_prepend var prefix)
   set(listVar "")
   foreach(f ${ARGN})
@@ -24,8 +23,8 @@ function(llvm_prepend var prefix)
   set(${var} "${listVar}" PARENT_SCOPE)
 endfunction()
 
-# llvm_filter - equivalent to $(filter needle,haystack). Returns a list containing
-# all of the items in ${ARGN} (after needle) that match needle.
+# equivalent to $(filter needle,haystack). Returns a list containing all of the
+# items in ${ARGN} (after needle) that match needle.
 macro(llvm_filter output needle)
   set(${output})
   foreach(haystack_item ${ARGN})
@@ -37,8 +36,7 @@ macro(llvm_filter output needle)
   endforeach()
 endmacro()
 
-# llvm_filter_out - equivalent to $(filter-out needle,haystack). Inverse of
-# llvm_filter.
+# equivalent to $(filter-out needle,haystack). Inverse of llvm_filter.
 macro(llvm_filter_out output needle)
   set(${output} "${ARGN}")
   llvm_filter(tmp_output ${needle} ${ARGN})

@@ -13,11 +13,10 @@
 
 include(TestFile)
 
-# get_unique_exe_name - Given a source file name after which a test should be
-# named, create a unique name for the test. Usually this is just the source file
-# with the suffix stripped, but in some cases this ends up causing duplicates
-# so attempt to make each unique (by adding pathname segments until they become
-# unique).
+# Given a source file name after which a test should be named, create a unique
+# name for the test. Usually this is just the source file with the suffix
+# stripped, but in some cases this ends up causing duplicates so attempt to
+# make each unique (by adding pathname segments until they become unique).
 #
 # FIXME: Swap this with a simpler procedure to just append a numeral
 set_property(GLOBAL PROPERTY registered_executables)
@@ -167,8 +166,8 @@ macro(test_suite_add_executable name mainsource)
   endif()
 endmacro()
 
-# llvm_singlesource - configure the current directory as a SingleSource subdirectory -
-# i.e. every file in *.{c,cpp,cc} is treated as its own test.
+# Configure the current directory as a SingleSource subdirectory - i.e. every
+# file in *.{c,cpp,cc} is treated as its own test.
 macro(llvm_singlesource)
   file(GLOB sources *.c *.cpp *.cc)
   foreach(source ${sources})
@@ -180,9 +179,9 @@ macro(llvm_singlesource)
   endforeach()
 endmacro()
 
-# llvm_multisource - configure the current directory as a MultiSource subdirectory -
-# i.e. there is one test and it consists of all sources in the directory (or a curated
-# list, if Source is defined).
+# Configure the current directory as a MultiSource subdirectory - i.e. there is
+# one test and it consists of all sources in the directory (or a curated list,
+# if Source is defined).
 macro(llvm_multisource)
   if(DEFINED Source)
     set(sources ${Source})
