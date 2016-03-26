@@ -11,6 +11,8 @@
 #
 ##===----------------------------------------------------------------------===##
 
+include(TestFile)
+
 # get_unique_exe_name - Given a source file name after which a test should be
 # named, create a unique name for the test. Usually this is just the source file
 # with the suffix stripped, but in some cases this ends up causing duplicates
@@ -77,68 +79,58 @@ macro(append_link_flags target)
   append_target_flags(LINK_LIBRARIES ${target} ${ARGN})
 endmacro()
 
-# llvm_add_test - Create a .test driver file suitable for LIT.
-#
-# The test template lives in cmake/lit-test-template.in and is configured by this function.
-function(llvm_add_test name exename)
-  # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
-  # llvm_test_run() was not called yet.
-  if(NOT TESTSCRIPT)
-    if(DEFINED STDIN_FILENAME)
-      list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
-    endif()
-    if(WORKDIR)
-      list(APPEND RUN_OPTIONS WORKDIR ${WORKDIR})
-    endif()
-    llvm_test_run(${RUN_OPTIONS})
+# Traditionally CMakeLists.txt files would set RUN_OPTIONS, STDIN_FILENAME,
+# SMALL_PROBLEM_SIZE, HASH_PROGRAM_OUTPUT, etc.
+# Create llvm_test_run() and llvm_test_verify() invocation for that.
+function(llvm_test_traditional testfile executable name)
+  if(DEFINED STDIN_FILENAME)
+    list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
+  endif()
+  if(WORKDIR)
+    list(APPEND RUN_OPTIONS WORKDIR ${WORKDIR})
+  endif()
+  llvm_test_run(${RUN_OPTIONS})
 
-    # Hash if we've been asked to.
-    if(HASH_PROGRAM_OUTPUT)
-      llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
-    endif()
-
-    if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
-      # Find the reference output file key name.
-      if(SMALL_PROBLEM_SIZE)
-        set(KEY small)
-      elseif(LARGE_PROBLEM_SIZE)
-        set(KEY large)
-      else()
-        set(KEY)
-      endif()
-
-      # Pick the best reference output based on "programname.reference_output".
-      if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
-      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
-      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-      elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-        set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-      else()
-        message("-- No reference output found for test ${name}")
-      endif()
-
-      set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
-      if(DEFINED FP_TOLERANCE)
-        set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
-      endif()
-      if(DEFINED FP_ABSTOLERANCE)
-        set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
-      endif()
-      if(REFERENCE_OUTPUT)
-        llvm_test_verify("${DIFFPROG} %o ${REFERENCE_OUTPUT}")
-      endif()
-    endif()
+  # Hash if we've been asked to.
+  if(HASH_PROGRAM_OUTPUT)
+    llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
   endif()
 
-  # Replace $EXECUTABLE$ placeholder.
-  string(REPLACE "$EXECUTABLE$" "${CMAKE_CURRENT_BINARY_DIR}/${exename}" TESTSCRIPT "${TESTSCRIPT}")
+  if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
+    # Find the reference output file key name.
+    if(SMALL_PROBLEM_SIZE)
+      set(KEY small)
+    elseif(LARGE_PROBLEM_SIZE)
+      set(KEY large)
+    else()
+      set(KEY)
+    endif()
 
-  # Produce .test file
-  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${exename}.test
-    CONTENT "${TESTSCRIPT}")
+    # Pick the best reference output based on "programname.reference_output".
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+    elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+    else()
+      message("-- No reference output found for test ${name}")
+    endif()
+
+    set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
+    if(DEFINED FP_TOLERANCE)
+      set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
+    endif()
+    if(DEFINED FP_ABSTOLERANCE)
+      set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
+    endif()
+    if(REFERENCE_OUTPUT)
+      llvm_test_verify("${DIFFPROG} %o ${REFERENCE_OUTPUT}")
+    endif()
+  endif()
+  llvm_add_test(${testfile} ${executable})
 endfunction()
 
 macro(test_suite_add_executable name mainsource)
@@ -158,7 +150,16 @@ macro(test_suite_add_executable name mainsource)
       append_link_flags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
     endif()
 
-    llvm_add_test(${name} ${source_exename})
+    # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
+    # llvm_test_run() was not called yet.
+    if(NOT TESTSCRIPT)
+      llvm_test_traditional(${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.test
+                            ${CMAKE_CURRENT_BINARY_DIR}/${source_exename}
+                            ${name})
+    else()
+      llvm_add_test(${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.test
+                    ${CMAKE_CURRENT_BINARY_DIR}/${source_exename})
+    endif()
     if (NOT TEST_SUITE_USE_PERF)
       add_dependencies(${source_exename} timeit-target)
     endif()
@@ -194,52 +195,5 @@ macro(llvm_multisource)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR})
     include_directories(${CMAKE_CURRENT_BINARY_DIR})
     test_suite_add_executable(${PROG} "${PROG}.c" ${sources})
-  endif()
-endmacro()
-
-macro(llvm_test_run)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE;WORKDIR" "" ${ARGN})
-  # If no executable is specified use $EXECUTABLE$ placeholder which will be
-  # replaced later.
-  if(NOT DEFINED ARGS_EXECUTABLE)
-    set(ARGS_EXECUTABLE "$EXECUTABLE$")
-  endif()
-  if(NOT DEFINED TESTSCRIPT)
-    set(TESTSCRIPT "" PARENT_SCOPE)
-  endif()
-  if(DEFINED ARGS_WORKDIR)
-    set(ARGS_EXECUTABLE "cd ${ARGS_WORKDIR} ; ${ARGS_EXECUTABLE}")
-  endif()
-  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
-  # whitespace-separated string.
-  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
-  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
-    set(TESTSCRIPT "${TESTSCRIPT}RUN: ${ARGS_EXECUTABLE} ${JOINED_ARGUMENTS}\n")
-  endif()
-endmacro()
-
-macro(llvm_test_verify)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
-  if(NOT DEFINED TESTSCRIPT)
-    set(TESTSCRIPT "" PARENT_SCOPE)
-  endif()
-  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
-  # whitespace-separated string.
-  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
-  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
-    set(TESTSCRIPT "${TESTSCRIPT}VERIFY: ${JOINED_ARGUMENTS}\n")
-  endif()
-endmacro()
-
-macro(llvm_test_metric)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;METRIC" "" ${ARGN})
-  if(NOT DEFINED TESTSCRIPT)
-    set(TESTSCRIPT "" PARENT_SCOPE)
-  endif()
-  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
-  # whitespace-separated string.
-  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
-  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
-    set(TESTSCRIPT "${TESTSCRIPT}METRIC: ${ARGS_METRIC}: ${JOINED_ARGUMENTS}\n")
   endif()
 endmacro()
