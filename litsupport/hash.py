@@ -2,8 +2,7 @@ from lit.Test import toMetricValue
 import lit.Test
 import hashlib
 import logging
-import subprocess
-import shutil
+import testplan
 import platform
 import shellcommand
 
@@ -14,11 +13,11 @@ def compute(context):
         # Darwin's "strip" doesn't support these arguments.
         if platform.system() != 'Darwin':
             stripped_executable = executable + '.stripped'
-            shutil.copyfile(executable, stripped_executable)
-            subprocess.check_call([context.config.strip_tool,
-                                   '--remove-section=.comment',
-                                   "--remove-section='.note*'",
-                                   stripped_executable])
+            testplan.check_call([context.config.strip_tool,
+                                 '--remove-section=.comment',
+                                 "--remove-section='.note*'",
+                                 '-o', stripped_executable,
+                                 executable])
             executable = stripped_executable
 
         h = hashlib.md5()

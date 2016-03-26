@@ -1,7 +1,7 @@
 import lit.Test
 import logging
 import os.path
-import subprocess
+import testplan
 
 
 def _getCodeSize(context):
@@ -15,7 +15,7 @@ def _getCodeSize(context):
     if llvm_size:
         # -format=sysv is easier to parse than darwin/berkeley.
         cmdline = [llvm_size, '-format=sysv', context.executable]
-        out = subprocess.check_output(cmdline)
+        out = testplan.check_output(cmdline)
         lines = out.splitlines()
         # First line contains executable name, second line should be a
         # "section   size    addr" header, numbers start after that.

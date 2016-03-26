@@ -7,6 +7,7 @@ import lit.TestRunner
 import logging
 import os
 import shellcommand
+import subprocess
 
 
 class TestPlan(object):
@@ -93,6 +94,7 @@ def executeScript(context, script, useExternalSh=True):
         execdir = os.getcwd()
         executeFunc = lit.TestRunner.executeScriptInternal
 
+    logging.info("\n".join(script))
     res = executeFunc(context.test, context.litConfig, context.tmpBase, script,
                       execdir)
     # The executeScript() functions return lit.Test.Result in some error
@@ -113,7 +115,23 @@ def executeScript(context, script, useExternalSh=True):
         context.result_output += "\n" + out
         context.result_output += "\n" + err
 
+    logging.info(out)
+    logging.info(err)
+    if exitCode != 0:
+        logging.info("ExitCode: %s" % exitCode)
     return (out, err, exitCode, timeoutInfo)
+
+
+def check_output(commandline, *aargs, **dargs):
+    """Wrapper around subprocess.check_output that logs the command."""
+    logging.info(" ".join(commandline))
+    return subprocess.check_output(commandline, *aargs, **dargs)
+
+
+def check_call(commandline, *aargs, **dargs):
+    """Wrapper around subprocess.check_call that logs the command."""
+    logging.info(" ".join(commandline))
+    return subprocess.check_call(commandline, *aargs, **dargs)
 
 
 def executePlan(context, plan):
