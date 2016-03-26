@@ -22,23 +22,3 @@ function(llvm_prepend var prefix)
   endforeach(f)
   set(${var} "${listVar}" PARENT_SCOPE)
 endfunction()
-
-# equivalent to $(filter needle,haystack). Returns a list containing all of the
-# items in ${ARGN} (after needle) that match needle.
-macro(llvm_filter output needle)
-  set(${output})
-  foreach(haystack_item ${ARGN})
-    foreach(needle_item ${needle})
-      if("${haystack_item}" STREQUAL "${needle_item}")
-        list(APPEND ${output} ${haystack_item})
-      endif()
-    endforeach()
-  endforeach()
-endmacro()
-
-# equivalent to $(filter-out needle,haystack). Inverse of llvm_filter.
-macro(llvm_filter_out output needle)
-  set(${output} "${ARGN}")
-  llvm_filter(tmp_output ${needle} ${ARGN})
-  list(REMOVE_ITEM ${output} ${tmp_output})
-endmacro()
