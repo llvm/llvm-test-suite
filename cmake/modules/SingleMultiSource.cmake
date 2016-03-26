@@ -136,33 +136,35 @@ macro(test_suite_add_executable name mainsource)
   list(FIND PROGRAMS_TO_SKIP ${name} name_idx)
   # Should we skip this?
   if(${name_idx} EQUAL -1)
-    get_unique_exe_name(source_exename ${mainsource})
-    add_executable(${source_exename} ${ARGN})
-    append_compile_flags(${source_exename} ${CFLAGS})
-    append_compile_flags(${source_exename} ${CPPFLAGS})
-    append_compile_flags(${source_exename} ${CXXFLAGS})
+    get_unique_exe_name(executable ${mainsource})
+    add_executable(${executable} ${ARGN})
+    append_compile_flags(${executable} ${CFLAGS})
+    append_compile_flags(${executable} ${CPPFLAGS})
+    append_compile_flags(${executable} ${CXXFLAGS})
     # Note that we cannot use target_link_libraries() here because that one
     # only interprets inputs starting with '-' as flags.
-    append_link_flags(${source_exename} ${LDFLAGS})
+    append_link_flags(${executable} ${LDFLAGS})
+    set(executable_path ${CMAKE_CURRENT_BINARY_DIR})
+    if(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+      set(executable_path ${executable_path}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    endif()
+    set(executable_path ${executable_path}/${executable})
     if (TEST_SUITE_PROFILE_USE)
-      append_compile_flags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
-      append_link_flags(${source_exename} -fprofile-instr-use=${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.profdata)
+      append_compile_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
+      append_link_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
     endif()
 
     # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
     # llvm_test_run() was not called yet.
     if(NOT TESTSCRIPT)
-      llvm_test_traditional(${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.test
-                            ${CMAKE_CURRENT_BINARY_DIR}/${source_exename}
-                            ${name})
+      llvm_test_traditional(${executable_path}.test ${executable_path} ${name})
     else()
-      llvm_add_test(${CMAKE_CURRENT_BINARY_DIR}/${source_exename}.test
-                    ${CMAKE_CURRENT_BINARY_DIR}/${source_exename})
+      llvm_add_test(${executable_path}.test ${executable_path})
     endif()
     if (NOT TEST_SUITE_USE_PERF)
-      add_dependencies(${source_exename} timeit-target)
+      add_dependencies(${executable} timeit-target)
     endif()
-    add_dependencies(${source_exename} timeit-host fpcmp-host)
+    add_dependencies(${executable} timeit-host fpcmp-host)
   endif()
 endmacro()
 
@@ -175,8 +177,14 @@ macro(llvm_singlesource)
     string(REGEX REPLACE ".[cp]+$" "" path ${source})
     string(REGEX REPLACE ".*/" "" name ${path})
 
+    # Setting CMAKE_RUNTIME_OUTPUT_DIRECTORY lets cmake put the files into a
+    # different subdirectory for each benchmark. This is usefull for
+    # differentiating which statistics like *.o.time files belongs to which
+    # benchmark.
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${name})
     test_suite_add_executable(${name} ${source} ${source})
   endforeach()
+  unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 endmacro()
 
 # Configure the current directory as a MultiSource subdirectory - i.e. there is
