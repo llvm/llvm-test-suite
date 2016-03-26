@@ -13,12 +13,3 @@ macro(llvm_add_subdirectories)
     add_subdirectory(${V})
   endforeach(V)
 endmacro()
-
-# equivalent to $(addprefix var,prefix). Modifies var in place.
-function(llvm_prepend var prefix)
-  set(listVar "")
-  foreach(f ${ARGN})
-    list(APPEND listVar "${prefix}${f}")
-  endforeach(f)
-  set(${var} "${listVar}" PARENT_SCOPE)
-endfunction()
