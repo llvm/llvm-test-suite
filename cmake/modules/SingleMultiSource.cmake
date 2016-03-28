@@ -144,11 +144,7 @@ macro(test_suite_add_executable name mainsource)
     # Note that we cannot use target_link_libraries() here because that one
     # only interprets inputs starting with '-' as flags.
     append_link_flags(${executable} ${LDFLAGS})
-    set(executable_path ${CMAKE_CURRENT_BINARY_DIR})
-    if(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-      set(executable_path ${executable_path}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    endif()
-    set(executable_path ${executable_path}/${executable})
+    set(executable_path ${CMAKE_CURRENT_BINARY_DIR}/${executable})
     if (TEST_SUITE_PROFILE_USE)
       append_compile_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
       append_link_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
@@ -177,14 +173,8 @@ macro(llvm_singlesource)
     string(REGEX REPLACE ".[cp]+$" "" path ${source})
     string(REGEX REPLACE ".*/" "" name ${path})
 
-    # Setting CMAKE_RUNTIME_OUTPUT_DIRECTORY lets cmake put the files into a
-    # different subdirectory for each benchmark. This is usefull for
-    # differentiating which statistics like *.o.time files belongs to which
-    # benchmark.
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${name})
     test_suite_add_executable(${name} ${source} ${source})
   endforeach()
-  unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 endmacro()
 
 # Configure the current directory as a MultiSource subdirectory - i.e. there is
