@@ -28,7 +28,6 @@ if(ARCH STREQUAL "XCore")
   set(XCORE_TARGET_NEEDS_MEMORY 1)
 endif()
 list(APPEND LDFLAGS -lstdc++)
-llvm_singlesource()
 if(NOT ARCH STREQUAL "x86")
   list(APPEND PROGRAMS_TO_SKIP
     ms_struct-bitfield
@@ -39,3 +38,4 @@ if(NOT ARCH STREQUAL "x86")
     ms_struct_pack_layout-1
   )
 endif()
+llvm_singlesource()
