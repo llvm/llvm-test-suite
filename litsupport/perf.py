@@ -1,6 +1,6 @@
-import shellcommand
-import testplan
-import run_under
+from litsupport import shellcommand
+from litsupport import testplan
+from litsupport import run_under
 
 
 def mutateCommandLine(context, commandline):

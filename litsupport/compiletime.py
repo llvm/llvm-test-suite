@@ -1,6 +1,6 @@
 import lit.Test
+from litsupport import timeit
 import os
-import timeit
 
 
 def _getCompileTime(context):

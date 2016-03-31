@@ -1,10 +1,10 @@
 from lit.Test import toMetricValue
-import lit.Test
+from litsupport import shellcommand
+from litsupport import testplan
 import hashlib
+import lit.Test
 import logging
-import testplan
 import platform
-import shellcommand
 
 
 def compute(context):

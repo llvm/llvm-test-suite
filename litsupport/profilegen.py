@@ -1,5 +1,5 @@
-import shellcommand
-import testplan
+from litsupport import shellcommand
+from litsupport import testplan
 
 
 def mutateCommandline(context, commandline):

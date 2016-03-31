@@ -1,5 +1,5 @@
+from litsupport import testplan
 import logging
-import testplan
 
 
 def mutateCommandline(context, commandline):

@@ -8,16 +8,16 @@ from lit.TestRunner import getDefaultSubstitutions, applySubstitutions, \
 from lit import Test
 from lit.util import to_bytes, to_string
 
-import codesize
-import compiletime
-import hash
-import perf
-import profilegen
-import remote
-import run_under
-import shellcommand
-import testplan
-import timeit
+from litsupport import codesize
+from litsupport import compiletime
+from litsupport import hash
+from litsupport import perf
+from litsupport import profilegen
+from litsupport import remote
+from litsupport import run_under
+from litsupport import shellcommand
+from litsupport import testplan
+from litsupport import timeit
 
 
 SKIPPED = lit.Test.ResultCode('SKIPPED', False)

@@ -2,11 +2,11 @@
 Datastructures for test plans; Parsing of .test files; Executing test plans.
 """
 from lit.TestRunner import parseIntegratedTestScriptCommands
+from litsupport import shellcommand
 import lit.Test
 import lit.TestRunner
 import logging
 import os
-import shellcommand
 import subprocess
 
 
