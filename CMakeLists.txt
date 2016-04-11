@@ -99,6 +99,13 @@ endif()
 set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
     "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
 
+# When running the test-suite in diagnosis mode, use these flags passed by
+# LNT to gather data, for examples -ftime-report, or -llvm -stats.
+if(TEST_SUITE_DIAGNOSE)
+  list(APPEND CFLAGS ${TEST_SUITE_DIAGNOSE_FLAGS})
+  list(APPEND CXXFLAGS ${TEST_SUITE_DIAGNOSE_FLAGS})
+endif()
+
 include(MakefileFunctions)
 include(SingleMultiSource)
 find_package(TCL)
