@@ -100,10 +100,10 @@ set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
     "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
 
 # When running the test-suite in diagnosis mode, use these flags passed by
-# LNT to gather data, for examples -ftime-report, or -llvm -stats.
+# LNT to gather data, for examples -ftime-report, or -mllvm -stats.
 if(TEST_SUITE_DIAGNOSE)
-  list(APPEND CFLAGS ${TEST_SUITE_DIAGNOSE_FLAGS})
-  list(APPEND CXXFLAGS ${TEST_SUITE_DIAGNOSE_FLAGS})
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 endif()
 
 include(MakefileFunctions)
