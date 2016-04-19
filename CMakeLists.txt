@@ -101,10 +101,12 @@ set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
 
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats.
-if(TEST_SUITE_DIAGNOSE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
-endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
+  "Extra CFLAGS for external tools like LNT.")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
+  "Extra CXXFLAGS for external tools like LNT.")
+set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
+  "Extra LDFLAGS for external tools like LNT.")
 
 include(MakefileFunctions)
 include(SingleMultiSource)
