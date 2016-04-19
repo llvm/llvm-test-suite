@@ -11,5 +11,6 @@ config.strip_tool = "@CMAKE_STRIP@"
 config.profile_generate = @TEST_SUITE_PROFILE_GENERATE@
 config.llvm_profdata = "@TEST_SUITE_LLVM_PROFDATA@"
 config.llvm_size = "@TEST_SUITE_LLVM_SIZE@"
+config.test_modules = "@LIT_MODULES@".split(';')
 
 lit_config.load_config(config, "@CMAKE_SOURCE_DIR@/lit.cfg")

@@ -1,7 +1,8 @@
-import os
+import importlib
 import lit
 import lit.util
 import logging
+import os
 from lit.formats import FileBasedTest
 from lit.TestRunner import getTempPaths
 from lit import Test
@@ -21,6 +22,7 @@ from litsupport import timeit
 
 
 SKIPPED = lit.Test.ResultCode('SKIPPED', False)
+modules = []
 
 
 class TestContext:
@@ -34,6 +36,22 @@ class TestContext:
         self.litConfig = litConfig
         self.tmpDir = tmpDir
         self.tmpBase = tmpBase
+
+
+def load_modules(test_modules):
+    for name in test_modules:
+        modulename = 'litsupport.%s' % name
+        try:
+            module = importlib.import_module(modulename)
+        except ImportError as e:
+            logging.error("Could not import module '%s'" % modulename)
+            sys.exit(1)
+        if not hasattr(module, 'mutatePlan'):
+            logging.error("Invalid test module '%s': No mutatePlan() function."
+                          % modulename)
+            sys.exit(1)
+        logging.info("Loaded test module %s" % module.__file__)
+        modules.append(module)
 
 
 class TestSuiteTest(FileBasedTest):
@@ -64,19 +82,9 @@ class TestSuiteTest(FileBasedTest):
                 result.addMetric('hash', val)
                 return result
 
-        # Prepare test plan
-        run.mutatePlan(context, plan)
-        run_under.mutatePlan(context, plan)
-        timeit.mutatePlan(context, plan)
-        compiletime.mutatePlan(context, plan)
-        codesize.mutatePlan(context, plan)
-        hash.mutatePlan(context, plan)
-        if config.profile_generate:
-            profilegen.mutatePlan(context, plan)
-        if config.remote_host:
-            remote.mutatePlan(context, plan)
-        if litConfig.params.get('profile') == 'perf':
-            perf.mutatePlan(context, plan)
+        # Let test modules modify the test plan.
+        for module in modules:
+            module.mutatePlan(context, plan)
 
         # Execute Test plan
         result = testplan.executePlanTestResult(context, plan)
