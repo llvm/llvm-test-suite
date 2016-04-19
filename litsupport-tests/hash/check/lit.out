@@ -1,0 +1,3 @@
+CHECK-DAG: SKIPPED: test-suite :: tests/skip.test
+CHECK-DAG: PASS: test-suite :: tests/normal.test
+CHECK: Expected Passes

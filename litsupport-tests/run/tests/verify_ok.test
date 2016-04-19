@@ -1,0 +1,2 @@
+RUN: tests/a.sh
+VERIFY: tests/a.sh
