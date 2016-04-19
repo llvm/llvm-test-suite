@@ -150,6 +150,8 @@ macro(test_suite_add_executable name mainsource)
       append_link_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
     endif()
 
+    set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${executable})
+
     # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
     # llvm_test_run() was not called yet.
     if(NOT TESTSCRIPT)

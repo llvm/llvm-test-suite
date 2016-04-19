@@ -165,3 +165,15 @@ add_subdirectory(External)
 
 # Produce lit.site.cfg
 configure_file("${PROJECT_SOURCE_DIR}/lit.site.cfg.in" "${CMAKE_BINARY_DIR}/lit.site.cfg")
+
+find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
+set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
+mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
+mark_as_advanced(TEST_SUITE_LIT)
+get_property(TEST_SUITE_TARGETS GLOBAL PROPERTY TEST_SUITE_TARGETS)
+add_custom_target(check
+  COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} .
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  DEPENDS ${TEST_SUITE_TARGETS}
+  USES_TERMINAL
+  )
