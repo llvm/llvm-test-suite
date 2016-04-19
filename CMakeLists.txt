@@ -100,13 +100,17 @@ set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
     "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
 
 # When running the test-suite in diagnosis mode, use these flags passed by
-# LNT to gather data, for examples -ftime-report, or -mllvm -stats.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
-  "Extra CFLAGS for external tools like LNT.")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
-  "Extra CXXFLAGS for external tools like LNT.")
-set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}" CACHE STRING 
-  "Extra LDFLAGS for external tools like LNT.")
+# LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
+# the user specified CMAKE_C_FLAGS etc. need not be changed.
+set(TEST_SUITE_DIAGNOSE_FLAGS CACHE STRING
+   "Extra flags appended to CMAKE_C_FLAGS + CMAKE_CXX_FLAGS")
+set(TEST_SUITE_DIAGNOSE_LINKER_FLAGS CACHE STRING
+    "Extra flags appended to CMAKE_EXE_LINKER_FLAGS")
+mark_as_advanced(TEST_SUITE_DIAGNOSE_FLAGS TEST_SUITE_DIAGNOSE_LINKER_FLAGS)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS
+    "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
 
 include(MakefileFunctions)
 include(SingleMultiSource)
