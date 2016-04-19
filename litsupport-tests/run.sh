@@ -1,23 +1,33 @@
 #!/bin/bash
+set -u
 TOP_OUTPUT="/tmp/litoutput"
 rm -rf "$TOP_OUTPUT"
 mkdir -p "$TOP_OUTPUT"
 
+if [ -z "${1:-}" ]; then
+	echo "Usage: $0 /path/to/lit"
+	exit 1
+fi
+LIT="$1"
+
 function run_tests {
 	OUTPUT="$TOP_OUTPUT/$DIR"
+	LIT_EXE="$1"
 	rm -rf "$OUTPUT"
 	mkdir -p "$OUTPUT"
 
-	echo "Running lit"
 	LITFLAGS=""
 	if [ -e litflags.txt ]; then
 		LITFLAGS="$(cat litflags.txt)"
 	fi
-	$LIT . -j 1 $LITFLAGS -o "$OUTPUT/result.json" >& "$OUTPUT/lit.out"
+	CMD="$LIT_EXE . -j 1 $LITFLAGS -o \"$OUTPUT/result.json\" >& \"$OUTPUT/lit.out\""
+	echo "  $CMD"
+	eval $CMD
 	for f in check/*; do
 		BASE="$(basename "$f")"
-		echo "Checking litoutput/$BASE ($f)"
-		cat $OUTPUT/$BASE | FileCheck "$f"
+		CMD="cat $OUTPUT/$BASE | FileCheck \"$f\""
+		echo "  $CMD"
+		eval $CMD
 	done
 }
 
@@ -26,12 +36,10 @@ for i in */lit.site.cfg; do
 	pushd "$DIR" > /dev/null
 
 	echo "===> $DIR/python2.7"
-	LIT="python2.7 $(which pullvm-lit)"
-	run_tests
+	run_tests "python2.7 $LIT"
 
 	echo "===> $DIR/python3"
-	LIT="python3 $(which pullvm-lit)"
-	run_tests
+	run_tests "python3 $LIT"
 
 	popd > /dev/null
 done
