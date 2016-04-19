@@ -8,6 +8,8 @@ import platform
 
 
 def compute(context):
+    if hasattr(context, 'executable_hash'):
+        return
     executable = context.executable
     try:
         # Darwin's "strip" doesn't support these arguments.
@@ -25,7 +27,7 @@ def compute(context):
         context.executable_hash = h.hexdigest()
     except:
         logging.info('Could not calculate hash for %s' % executable)
-        context.executable_hash = None
+        context.executable_hash = ''
 
 
 def same_as_previous(context):
@@ -46,9 +48,9 @@ def same_as_previous(context):
 
 
 def _getHash(context):
+    compute(context)
     return {'hash': lit.Test.toMetricValue(context.executable_hash)}
 
 
 def mutatePlan(context, plan):
-    if context.executable_hash is not None:
-        plan.metric_collectors.append(_getHash)
+    plan.metric_collectors.append(_getHash)
