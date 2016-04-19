@@ -122,7 +122,7 @@ def getMainExecutable(context):
         return context.executable
 
     executable = None
-    for line in context.original_runscript:
+    for line in context.parsed_runscript:
         cmd = parse(line)
         if cmd.executable in _ignore_executables:
             continue

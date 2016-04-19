@@ -15,10 +15,9 @@ def mutateCommandLine(context, commandline):
 
 
 def mutatePlan(context, plan):
+    script = context.parsed_runscript
     if context.config.run_under:
-        script = testplan.mutateScript(context, context.original_runscript,
+        script = testplan.mutateScript(context, script,
                                        run_under.mutateCommandLine)
-    else:
-        script = context.original_runscript
     script = testplan.mutateScript(context, script, mutateCommandLine)
     plan.profilescript += script
