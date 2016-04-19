@@ -78,8 +78,11 @@ set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter"
 set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
     "Type of benchmark inputs (may be test,train or ref)")
 
-find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size")
-find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata")
+get_filename_component(CMAKE_C_COMPILER_DIRECTORY ${CMAKE_C_COMPILER} DIRECTORY)
+find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
+             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
+find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
+             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
 mark_as_advanced(TEST_SUITE_LLVM_SIZE TEST_SUITE_LLVM_PROFDATA)
 
 # Enable profile generate mode in lit. Note that this does not automatically
