@@ -1,26 +1,25 @@
+macro(xcrun_find VARIABLE NAME)
+  execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f ${NAME}
+                  OUTPUT_STRIP_TRAILING_WHITESPACE
+                  OUTPUT_VARIABLE ${VARIABLE})
+endmacro()
+macro(xcrun_find_update_cache VARIABLE NAME)
+  xcrun_find(${VARIABLE} ${NAME})
+  set(${VARIABLE} "${${VARIABLE}}" CACHE STRING "")
+endmacro()
+
 execute_process(COMMAND xcrun ${XCRUN_FLAGS} --show-sdk-path
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 OUTPUT_VARIABLE SDK_PATH)
-execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f ld
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE LINKER_PATH)
+xcrun_find(LINKER_PATH ld)
 get_filename_component(LINKER_DIR ${LINKER_PATH} DIRECTORY)
-execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f ranlib
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE CMAKE_RANLIB)
-set(CMAKE_RANLIB "${CMAKE_RANLIB}" CACHE STRING "")
-execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f ar
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE CMAKE_AR)
-set(CMAKE_AR "${CMAKE_AR}" CACHE STRING "")
-execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f strip
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE CMAKE_STRIP)
-set(CMAKE_STRIP "${CMAKE_STRIP}" CACHE STRING "")
-execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f nm
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE CMAKE_NM)
-set(CMAKE_NM "${CMAKE_NM}" CACHE STRING "")
+xcrun_find_update_cache(CMAKE_C_COMPILER clang)
+xcrun_find_update_cache(CMAKE_CXX_COMPILER clang++)
+xcrun_find_update_cache(CMAKE_RANLIB ranlib)
+xcrun_find_update_cache(CMAKE_AR ar)
+xcrun_find_update_cache(CMAKE_STRIP strip)
+xcrun_find_update_cache(CMAKE_NM nm)
+
 # I couldn't find a way to stop cmake from adding a -isysroot, at least make it
 # add the correct path
 set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE STRING "")
