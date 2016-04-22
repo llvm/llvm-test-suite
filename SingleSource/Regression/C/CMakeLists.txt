@@ -1,3 +1,4 @@
+llvm_target_prefix("regression-c")
 if(ARCH STREQUAL "x86")
   if(DEFINED USE_REFERENCE_OUTPUT)
     set(EXEC_XFAILS casts)

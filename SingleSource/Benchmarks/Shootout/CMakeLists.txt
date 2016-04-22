@@ -1,3 +1,4 @@
+llvm_target_prefix("shootout")
 list(APPEND LDFLAGS -lm)
 if(ARCH STREQUAL "XCore")
   set(XCORE_TARGET_NEEDS_MEMORY 256)

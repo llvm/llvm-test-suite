@@ -13,18 +13,27 @@
 
 include(TestFile)
 
+
+# Set unique target prefix within caller's scope.
+function(llvm_target_prefix prefix)
+  if(prefix)
+    set(TARGET_PREFIX "${prefix}-" PARENT_SCOPE)
+  else()
+    set(TARGET_PREFIX "" PARENT_SCOPE)
+  endif()
+endfunction()
+
 # Given a source file name after which a test should be named, create a unique
 # name for the test. Usually this is just the source file with the suffix
-# stripped, but in some cases this ends up causing duplicates so attempt to
-# make each unique (by adding pathname segments until they become unique).
-#
-# FIXME: Swap this with a simpler procedure to just append a numeral
+# stripped, and ${TARGET_PREFIX} prepended.
 set_property(GLOBAL PROPERTY registered_executables)
 function(get_unique_exe_name new_name main_src)
   get_property(registered_executables GLOBAL PROPERTY registered_executables)
 
   string(REGEX REPLACE ".[cp]+$" "" path ${main_src})
-  string(REGEX REPLACE ".*/" "" name ${path})
+  get_filename_component(name ${path} NAME )
+  set(name "${TARGET_PREFIX}${name}")
+
   list(FIND registered_executables ${name} name_idx)
 
   if(${name_idx} EQUAL -1)
@@ -33,20 +42,8 @@ function(get_unique_exe_name new_name main_src)
     return()
   endif()
 
-  # There is a clash. Rename the target. Each time around the loop pull in
-  # a new path component.
-  foreach(n RANGE 1 4)
-    string(REGEX REPLACE ".*/([^/]+/${name})" "\\1" name ${path})
-    string(REGEX REPLACE "/" "-" safe_name ${name})
-
-    list(FIND registered_executables ${safe_name} name_idx)
-    if(${name_idx} EQUAL -1)
-      set(${new_name} ${safe_name} PARENT_SCOPE)
-      set_property(GLOBAL APPEND PROPERTY registered_executables ${safe_name})
-      return()
-    endif()
-  endforeach()
-  message(FATAL_ERROR "Failed to uniquify executable name!")
+  message(FATAL_ERROR "Duplicate executable name!"
+    "Please set unique prefix with llvm_target_prefix().")
 endfunction()
 
 # Add flags to a cmake target property.
