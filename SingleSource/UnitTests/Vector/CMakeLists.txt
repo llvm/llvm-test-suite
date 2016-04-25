@@ -1,3 +1,4 @@
+llvm_target_prefix("Vector")
 if(ARCH STREQUAL "PowerPC")
   llvm_add_subdirectories(Altivec)
 endif()
