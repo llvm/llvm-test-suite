@@ -26,24 +26,11 @@ endfunction()
 # Given a source file name after which a test should be named, create a unique
 # name for the test. Usually this is just the source file with the suffix
 # stripped, and ${TARGET_PREFIX} prepended.
-set_property(GLOBAL PROPERTY registered_executables)
 function(get_unique_exe_name new_name main_src)
-  get_property(registered_executables GLOBAL PROPERTY registered_executables)
-
   string(REGEX REPLACE ".[cp]+$" "" path ${main_src})
   get_filename_component(name ${path} NAME )
-  set(name "${TARGET_PREFIX}${name}")
 
-  list(FIND registered_executables ${name} name_idx)
-
-  if(${name_idx} EQUAL -1)
-    set(${new_name} ${name} PARENT_SCOPE)
-    set_property(GLOBAL APPEND PROPERTY registered_executables ${name})
-    return()
-  endif()
-
-  message(FATAL_ERROR "Duplicate executable name!"
-    "Please set unique prefix with llvm_target_prefix().")
+  set(${new_name} "${TARGET_PREFIX}${name}" PARENT_SCOPE)
 endfunction()
 
 # Add flags to a cmake target property.
