@@ -1,1 +1,0 @@
-llvm_add_subdirectories(MultipleResults)

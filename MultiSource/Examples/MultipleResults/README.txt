@@ -14,3 +14,7 @@ result, and NNN.NNN is the value for the result.
 
 There is currently no support for assocating a pass/fail indicator with subtest
 results.
+
+There is no support for this mode in the cmake/lit based test-suite.  You should
+rather specify the verification steps necessary by manually using
+llvm_test_run()/llvm_test_verify().
