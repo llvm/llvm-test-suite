@@ -1,3 +1,3 @@
 set(PROG office-stringsearch)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 llvm_multisource()

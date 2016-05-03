@@ -1,6 +1,6 @@
 set(PROG distray)
-set(CPPFLAGS -DVERSION="1.00" -DCOMPDATE="today" -DCFLAGS="" -DHOSTNAME="thishost")
-set(LDFLAGS -lm)
+list(APPEND CPPFLAGS -DVERSION="1.00" -DCOMPDATE="today" -DCFLAGS="" -DHOSTNAME="thishost")
+list(APPEND LDFLAGS -lm)
 if(DEFINED LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/ref.in)
 else()

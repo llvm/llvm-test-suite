@@ -1,5 +1,5 @@
 set(PROG ControlLoops-dbl)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 1640 14)
 if(ARCH STREQUAL "XCore")

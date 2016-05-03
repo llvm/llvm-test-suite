@@ -1,5 +1,5 @@
 set(PROG power)
-set(CPPFLAGS -DTORONTO)
-set(LDFLAGS -lm)
+list(APPEND CPPFLAGS -DTORONTO)
+list(APPEND LDFLAGS -lm)
 set(FP_TOLERANCE 0.00001)
 llvm_multisource()

@@ -1,3 +1,3 @@
 set(PROG deriv2)
-set(LDFLAGS -lstdc++)
+list(APPEND LDFLAGS -lstdc++)
 llvm_multisource()

@@ -1,5 +1,5 @@
 set(PROG GlobalDataFlow-dbl)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 3450 14)
 if(ARCH STREQUAL "XCore")

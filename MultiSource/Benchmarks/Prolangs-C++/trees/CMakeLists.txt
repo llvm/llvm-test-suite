@@ -1,3 +1,3 @@
 set(PROG trees)
-set(LDFLAGS -lstdc++)
+list(APPEND LDFLAGS -lstdc++)
 llvm_multisource()

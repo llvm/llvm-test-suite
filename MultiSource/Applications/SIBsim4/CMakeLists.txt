@@ -1,6 +1,4 @@
 set(PROG SIBsim4)
-set(CPPFLAGS )
-set(LDFLAGS )
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS -A4 ${CMAKE_CURRENT_SOURCE_DIR}/x-small.fa ${CMAKE_CURRENT_SOURCE_DIR}/y-small.fa)
 else()

@@ -1,6 +1,6 @@
 set(PROG qbsort)
 set(RUN_OPTIONS 1000)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/benchmark.in3)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource()

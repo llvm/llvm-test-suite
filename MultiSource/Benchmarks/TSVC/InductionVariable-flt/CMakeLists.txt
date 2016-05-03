@@ -1,5 +1,5 @@
 set(PROG InductionVariable-flt)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 9100 5)
 llvm_multisource()

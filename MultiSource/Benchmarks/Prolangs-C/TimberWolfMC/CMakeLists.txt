@@ -1,3 +1,3 @@
 set(PROG timberwolfmc)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 llvm_multisource()

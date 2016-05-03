@@ -1,6 +1,6 @@
 set(PROG tramp3d-v4)
-set(CPPFLAGS -fno-exceptions)
-set(LDFLAGS -lstdc++)
+list(APPEND CPPFLAGS -fno-exceptions)
+list(APPEND LDFLAGS -lstdc++)
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS --cartvis 1.0 0.0 --rhomin 1e-8 -n 4 --domain 32 32 32)
 else()

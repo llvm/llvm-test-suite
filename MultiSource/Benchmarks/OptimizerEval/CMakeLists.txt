@@ -1,5 +1,4 @@
 set(PROG optimizer-eval)
-set(CPPFLAGS )
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 set(PROGRAM_IS_NONDETERMINISTIC 1)
 llvm_multisource()

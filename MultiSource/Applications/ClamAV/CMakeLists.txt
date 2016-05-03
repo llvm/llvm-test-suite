@@ -89,7 +89,7 @@ list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS)
 # Find zLib library required for building ClamAV
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
-set(LDFLAGS ${ZLIB_LIBRARIES})
+list(APPEND LDFLAGS ${ZLIB_LIBRARIES})
 
 set(INPUT
   ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab

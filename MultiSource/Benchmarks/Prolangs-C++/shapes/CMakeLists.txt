@@ -1,3 +1,3 @@
 set(PROG shapes)
-set(LDFLAGS -lstdc++)
+list(APPEND LDFLAGS -lstdc++)
 llvm_multisource()

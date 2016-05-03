@@ -1,6 +1,6 @@
 set(PROG lencod)
-set(CPPFLAGS -D __USE_LARGEFILE64 -D _FILE_OFFSET_BITS=64)
-set(LDFLAGS -lm ${TOOLLINKOPTS})
+list(APPEND CPPFLAGS -D __USE_LARGEFILE64 -D _FILE_OFFSET_BITS=64)
+list(APPEND LDFLAGS -lm)
 set(FP_TOLERANCE 0.025)
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS -d ${CMAKE_CURRENT_SOURCE_DIR}/data/encoder_small.cfg -p InputFile=${CMAKE_CURRENT_SOURCE_DIR}/data/foreman_part_qcif_444.yuv -p LeakyBucketRateFile=${CMAKE_CURRENT_SOURCE_DIR}/data/leakybucketrate.cfg -p QmatrixFile=${CMAKE_CURRENT_SOURCE_DIR}/data/q_matrix.cfg)

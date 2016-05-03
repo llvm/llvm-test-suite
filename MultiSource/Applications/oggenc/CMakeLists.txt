@@ -1,6 +1,6 @@
 set(PROG oggenc)
-set(CPPFLAGS -fno-strict-aliasing)
-set(LDFLAGS -lm)
+list(APPEND CPPFLAGS -fno-strict-aliasing)
+list(APPEND LDFLAGS -lm)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/tune)
 set(RUN_OPTIONS "-Q -s 901820 -")
 llvm_multisource()

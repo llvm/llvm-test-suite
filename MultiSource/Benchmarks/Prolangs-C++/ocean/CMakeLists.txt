@@ -1,3 +1,3 @@
 set(PROG ocean)
-set(LDFLAGS -lstdc++)
+list(APPEND LDFLAGS -lstdc++)
 llvm_multisource()

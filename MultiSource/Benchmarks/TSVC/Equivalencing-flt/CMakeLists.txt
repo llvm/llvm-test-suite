@@ -1,5 +1,5 @@
 set(PROG Equivalencing-flt)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 3125 5)
 llvm_multisource()

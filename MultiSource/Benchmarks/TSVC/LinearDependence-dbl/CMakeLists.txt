@@ -1,5 +1,5 @@
 set(PROG LinearDependence-dbl)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 3570 14)
 if(ARCH STREQUAL "XCore")

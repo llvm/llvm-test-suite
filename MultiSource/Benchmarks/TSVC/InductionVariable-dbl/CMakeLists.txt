@@ -1,5 +1,5 @@
 set(PROG InductionVariable-dbl)
-set(LDFLAGS -lm)
+list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 9100 14)
 if(ARCH STREQUAL "XCore")

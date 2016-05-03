@@ -1,6 +1,5 @@
 set(PROG minisat)
-set(CPPFLAGS -D NDEBUG)
-set(LDFLAGS -lstdc++ -lm)
+list(APPEND LDFLAGS -lstdc++ -lm)
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS -verbosity=0 ${CMAKE_CURRENT_SOURCE_DIR}/small.cnf)
 else()
