@@ -1,2 +1,1 @@
-set(ARCH_FLAGS "-march=haswell")
-include(${CMAKE_CURRENT_LIST_DIR}/util/arch_flags.cmake)
+set(TEST_SUITE_ARCH_FLAGS "-march=haswell" CACHE STRING "")

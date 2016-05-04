@@ -21,10 +21,8 @@ xcrun_find_update_cache(CMAKE_AR ar)
 xcrun_find_update_cache(CMAKE_STRIP strip)
 xcrun_find_update_cache(CMAKE_NM nm)
 
-# I couldn't find a way to stop cmake from adding a -isysroot, at least make it
-# add the correct path
 set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE STRING "")
 
-set(ARCH_FLAGS "${ARCH_FLAGS} --sysroot ${SDK_PATH}")
-set(ARCH_FLAGS "${ARCH_FLAGS} -B ${LINKER_DIR}")
-include(${CMAKE_CURRENT_LIST_DIR}/arch_flags.cmake)
+# Append -B so clang picks up the linker coming with the SDK instead of the
+# one in $PATH.
+set(TEST_SUITE_ARCH_FLAGS "-B ${LINKER_DIR}" CACHE STRING "")
