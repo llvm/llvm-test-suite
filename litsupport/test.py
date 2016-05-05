@@ -22,6 +22,7 @@ from litsupport import timeit
 
 
 SKIPPED = lit.Test.ResultCode('SKIPPED', False)
+NOEXE = lit.Test.ResultCode('NOEXE', True)
 modules = []
 
 
@@ -71,6 +72,11 @@ class TestSuiteTest(FileBasedTest):
         context = TestContext(test, litConfig, tmpDir, tmpBase)
         testfile.parse(context, test.getSourcePath())
         plan = testplan.TestPlan()
+
+        # Report missing test executables.
+        if not os.path.exists(context.executable):
+            return lit.Test.Result(NOEXE, "Executable '%s' is missing" %
+                                   context.executable)
 
         # Skip unchanged tests
         if config.previous_results:
