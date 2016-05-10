@@ -1,6 +1,0 @@
-if(NOT TEST_SUITE_BENCHMARKING_ONLY)
-  add_subdirectory(Regression)
-  if(ARCH STREQUAL "x86")
-    add_subdirectory(simd_ops)
-  endif()
-endif()
