@@ -165,6 +165,7 @@ set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
 add_subdirectory(SingleSource)
 add_subdirectory(MultiSource)
 add_subdirectory(External)
+add_subdirectory(Bitcode)
 
 set(LIT_MODULES "")
 list(APPEND LIT_MODULES run)
