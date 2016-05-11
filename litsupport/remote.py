@@ -27,4 +27,5 @@ def mutateScript(context, script):
 
 
 def mutatePlan(context, plan):
+    plan.preparescript = mutateScript(context, plan.preparescript)
     plan.runscript = mutateScript(context, plan.runscript)

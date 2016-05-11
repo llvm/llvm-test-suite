@@ -87,12 +87,17 @@ def check_call(commandline, *aargs, **dargs):
 
 def executePlan(context, plan):
     """This is the main driver for executing a benchmark."""
-    # Execute RUN: part of the test file.
+    # Execute PREPARE: part of the test.
+    _, _, exitCode, _ = executeScript(context, plan.preparescript)
+    if exitCode != 0:
+        return lit.Test.FAIL
+
+    # Execute RUN: part of the test.
     _, _, exitCode, _ = executeScript(context, plan.runscript)
     if exitCode != 0:
         return lit.Test.FAIL
 
-    # Execute VERIFY: part of the test file.
+    # Execute VERIFY: part of the test.
     _, _, exitCode, _ = executeScript(context, plan.verifyscript)
     if exitCode != 0:
         # The question here is whether to still collects metrics if the
@@ -110,7 +115,7 @@ def executePlan(context, plan):
             logging.error("Could not collect metric with %s", metric_collector,
                           exc_info=e)
 
-    # Execute the METRIC: part of the test file.
+    # Execute the METRIC: part of the test.
     for metric, metricscript in plan.metricscripts.items():
         out, err, exitCode, timeoutInfo = executeScript(context, metricscript)
         if exitCode != 0:

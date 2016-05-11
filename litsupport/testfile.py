@@ -23,13 +23,16 @@ def parse(context, filename):
     specifying shell commands to run the benchmark and verifying the result.
     Returns a tuple with two arrays for the run and verify commands."""
     # Collect the test lines from the script.
+    preparescript = []
     runscript = []
     verifyscript = []
     metricscripts = {}
-    keywords = ['RUN:', 'VERIFY:', 'METRIC:']
+    keywords = ['PREPARE:', 'RUN:', 'VERIFY:', 'METRIC:']
     for line_number, command_type, ln in \
             parseIntegratedTestScriptCommands(filename, keywords):
-        if command_type == 'RUN':
+        if command_type == 'PREPARE':
+            _parseShellCommand(preparescript, ln)
+        elif command_type == 'RUN':
             _parseShellCommand(runscript, ln)
         elif command_type == 'VERIFY':
             _parseShellCommand(verifyscript, ln)
@@ -46,7 +49,7 @@ def parse(context, filename):
         raise ValueError("Test has no RUN: line!")
 
     # Check for unterminated run lines.
-    for script in runscript, verifyscript:
+    for script in preparescript, runscript, verifyscript:
         if script and script[-1][-1] == '\\':
             raise ValueError("Test has unterminated RUN/VERIFY lines " +
                              "(ending with '\\')")
@@ -56,12 +59,14 @@ def parse(context, filename):
     substitutions = getDefaultSubstitutions(context.test, context.tmpDir,
                                             context.tmpBase)
     substitutions += [('%o', outfile)]
+    preparescript = applySubstitutions(preparescript, substitutions)
     runscript = applySubstitutions(runscript, substitutions)
     verifyscript = applySubstitutions(verifyscript, substitutions)
     metricscripts = {k: applySubstitutions(v, substitutions)
                      for k, v in metricscripts.items()}
 
     # Put things into the context
+    context.parsed_preparescript = preparescript
     context.parsed_runscript = runscript
     context.parsed_verifyscript = verifyscript
     context.parsed_metricscripts = metricscripts
