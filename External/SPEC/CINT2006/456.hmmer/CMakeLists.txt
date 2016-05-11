@@ -2,8 +2,8 @@ list(APPEND LDFLAGS -lm)
 
 macro(test_input run_type input output)
   # The benchmark modifies the data file, need to copy a fresh one
-  llvm_test_run(RUN_TYPE ${run_type}
-    EXECUTABLE cp -f
+  llvm_test_prepare(RUN_TYPE ${run_type}
+    cp -f
     ${BENCHMARK_DIR}/data/${run_type}/input/${input}
     ${CMAKE_CURRENT_BINARY_DIR}/${input}
   )
@@ -26,7 +26,8 @@ test_input(train leng100.hmm leng100.out
   --fixed 0 --mean 425 --num 85000 --sd 300 --seed 0
 )
 # Copy nph3.hmm as well
-llvm_test_run(RUN_TYPE ref EXECUTABLE cp -f
+llvm_test_prepare(RUN_TYPE ref
+  cp -f
   ${BENCHMARK_DIR}/data/ref/input/nph3.hmm
   ${CMAKE_CURRENT_BINARY_DIR}/nph3.hmm
 )

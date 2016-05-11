@@ -1,5 +1,4 @@
-# Specify a "RUN: " line to be put in a .test file.
-# The .test file is written in the next llvm_add_test() call.
+# Specify a "RUN: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_run)
   CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE;WORKDIR" "" ${ARGN})
   # If no executable is specified use $EXECUTABLE$ placeholder which will be
@@ -21,8 +20,7 @@ macro(llvm_test_run)
   endif()
 endmacro()
 
-# Specify a "VERIFY: " line to be put in a .test file.
-# The .test file is written in the next llvm_add_test() call.
+# Specify a "VERIFY: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_verify)
   CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
   if(NOT DEFINED TESTSCRIPT)
@@ -36,8 +34,22 @@ macro(llvm_test_verify)
   endif()
 endmacro()
 
-# Specify a "METRIC: " line to be put in a .test file.
-# The .test file is written in the next llvm_add_test() call.
+# Specify a "PREPARE: " line to be put in a .test file. See also
+# llvm_add_test().
+macro(llvm_test_prepare)
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
+  if(NOT DEFINED TESTSCRIPT)
+    set(TESTSCRIPT "" PARENT_SCOPE)
+  endif()
+  # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
+  # whitespace-separated string.
+  string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
+    set(TESTSCRIPT "${TESTSCRIPT}PREPARE: ${JOINED_ARGUMENTS}\n")
+  endif()
+endmacro()
+
+# Specify a "METRIC: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_metric)
   CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;METRIC" "" ${ARGN})
   if(NOT DEFINED TESTSCRIPT)
