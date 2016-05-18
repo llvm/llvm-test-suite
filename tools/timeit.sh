@@ -39,6 +39,10 @@ fi
 EXITCODE=$?
 if [ "$APPEND_STATUS" = "1" ]; then
   echo "exit $EXITCODE" >> $OUTPUT
+  # When --append-exitstatus is used, timeit will append the
+  # exit status to the output file and return 0. Model this
+  # behaviour here.
+  EXITCODE=0
 fi
 
 echo exit $EXITCODE > $REPORT
