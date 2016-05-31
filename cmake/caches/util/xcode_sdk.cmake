@@ -1,7 +1,3 @@
-# We had problems with cmake not propagating CMAKE_OSX_SYSROOT and
-# CMAKE_OSX_ARCHITECTURES to try_compile() in earlier cmakes.
-cmake_minimum_required(VERSION 3.4)
-
 macro(xcrun_find VARIABLE NAME)
   execute_process(COMMAND xcrun ${XCRUN_FLAGS} -f ${NAME}
                   OUTPUT_STRIP_TRAILING_WHITESPACE
