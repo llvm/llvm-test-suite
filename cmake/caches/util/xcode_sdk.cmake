@@ -25,4 +25,4 @@ set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE STRING "")
 
 # Append -B so clang picks up the linker coming with the SDK instead of the
 # one in $PATH.
-set(TEST_SUITE_ARCH_FLAGS "-B ${LINKER_DIR}" CACHE STRING "")
+set(TEST_SUITE_ARCH_FLAGS "${TEST_SUITE_ARCH_FLAGS} -B ${LINKER_DIR}" CACHE STRING "")
