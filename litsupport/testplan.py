@@ -15,6 +15,7 @@ class TestPlan(object):
         self.verifyscript = []
         self.metricscripts = {}
         self.metric_collectors = []
+        self.preparescript = []
         self.profilescript = []
 
 
