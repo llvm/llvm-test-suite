@@ -781,25 +781,8 @@ exit(1);
 */
 unsigned long StartStopwatch()
 {
-#ifdef MACTIMEMGR
-/*
-** For Mac code warrior, use timer. In this case, what we return is really
-** a dummy value.
-*/
-InsTime((QElemPtr)&myTMTask);
-PrimeTime((QElemPtr)&myTMTask,-MacHSTdelay);
-return((unsigned long)1);
-#else
-#ifdef WIN31TIMER
-/*
-** Win 3.x timer returns a DWORD, which we coax into a long.
-*/
-_Call16(lpfn,"p",&win31tinfo);
-return((unsigned long)win31tinfo.dwmsSinceStart);
-#else
-return((unsigned long)clock());
-#endif
-#endif
+  /* no timing code in this version. */
+  return 0;
 }
 
 /****************************
@@ -809,21 +792,8 @@ return((unsigned long)clock());
 */
 unsigned long StopStopwatch(unsigned long startticks)
 {
-	
-#ifdef MACTIMEMGR
-/*
-** For Mac code warrior...ignore startticks.  Return val. in microseconds
-*/
-RmvTime((QElemPtr)&myTMTask);
-return((unsigned long)(MacHSTdelay+myTMTask.tmCount-MacHSTohead));
-#else
-#ifdef WIN31TIMER
-_Call16(lpfn,"p",&win31tinfo);
-return((unsigned long)win31tinfo.dwmsSinceStart-startticks);
-#else
-return((unsigned long)clock()-startticks);
-#endif
-#endif
+  /* no timing code in this version. */
+  return 1000;
 }
 
 /****************************
@@ -833,25 +803,8 @@ return((unsigned long)clock()-startticks);
 */
 unsigned long TicksToSecs(unsigned long tickamount)
 {
-#ifdef CLOCKWCT
-return((unsigned long)(tickamount/CLK_TCK));
-#endif
-
-#ifdef MACTIMEMGR
-/* +++ MAC time manager version (using timer in microseconds) +++ */
-return((unsigned long)(tickamount/1000000));
-#endif
-
-#ifdef CLOCKWCPS
-/* Everybody else */
-return((unsigned long)(tickamount/CLOCKS_PER_SEC));
-#endif
-
-#ifdef WIN31TIMER
-/* Each tick is 840 nanoseconds */
-return((unsigned long)(tickamount/1000L));
-#endif
-
+  /* no timing code in this version. */
+  return 0;
 }
 
 /****************************
@@ -862,23 +815,7 @@ return((unsigned long)(tickamount/1000L));
 */
 double TicksToFracSecs(unsigned long tickamount)
 {
-#ifdef CLOCKWCT
-return((double)tickamount/(double)CLK_TCK);
-#endif
-
-#ifdef MACTIMEMGR
-/* +++ MAC time manager version +++ */
-return((double)tickamount/(double)1000000);
-#endif
-
-#ifdef CLOCKWCPS
-/* Everybody else */
-return((double)tickamount/(double)CLOCKS_PER_SEC);
-#endif
-
-#ifdef WIN31TIMER
-/* Using 840 nanosecond ticks */
-return((double)tickamount/(double)1000);
-#endif
+  /* no timing code in this version. */
+  return 0;
 }
 

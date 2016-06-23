@@ -55,6 +55,10 @@
 #include "nbench0.h"
 #include "hardware.h"
 
+#ifndef N_ITERATIONS
+#define N_ITERATIONS 1
+#endif
+
 /*************
 **** main ****
 *************/
@@ -65,6 +69,7 @@ int main(int argc, char *argv[])
 #endif
 {
 int i;                  /* Index */
+int iter;
 time_t time_and_date;   /* Self-explanatory */
 struct tm *loctime;
 double bmean;           /* Benchmark mean */
@@ -243,16 +248,19 @@ for(i=0;i<NUMTESTS;i++)
         if(tests_to_do[i])
         {       sprintf(buffer,"%s    :",ftestnames[i]);
                                 output_string(buffer);
+#if 0
                 if (0!=bench_with_confidence(i,
                         &bmean,
                         &bstdev,
                         &bnumrun)){
-#if 0
 		  output_string("\n** WARNING: The current test result is NOT 95 % statistically certain.\n");
 		  output_string("** WARNING: The variation among the individual results is too large.\n");
 		  output_string("                    :");
-#endif
 		}
+#endif
+                for (iter = 0; iter < N_ITERATIONS; ++iter) {
+                  (*funcpointer[i])();
+                }
 #ifdef LINUX
                 sprintf(buffer," %15.5g  :  %9.2f  :  %9.2f\n",
                         bmean,bmean/bindex[i],bmean/lx_bindex[i]);
