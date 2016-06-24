@@ -162,9 +162,31 @@ endif()
 set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
   "Only run the benchmarking only subset")
 
-add_subdirectory(SingleSource)
-add_subdirectory(MultiSource)
-add_subdirectory(External)
+
+# Detect and include subdirectories
+# This allows to: Place additional test-suites into the toplevel test-suite
+# directory where they will be picked up automatically. Alternatively you may
+# manually specify directories to include test-suites at external locations
+# and to leave out some of the default ones.
+if(NOT TEST_SUITE_SUBDIRS)
+  file(GLOB sub_cmakelists */CMakeLists.txt)
+  set(TEST_SUITE_SUBDIRS "")
+  foreach(entry ${sub_cmakelists})
+    get_filename_component(subdir ${entry} DIRECTORY)
+    if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+      list(APPEND TEST_SUITE_SUBDIRS ${subdir})
+    endif()
+  endforeach()
+  set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
+      "Semicolon separated list of directories with CMakeLists.txt to include")
+endif()
+mark_as_advanced(TEST_SUITE_SUBDIRS)
+
+foreach(subdir ${TEST_SUITE_SUBDIRS})
+  message(STATUS "Adding directory ${subdir}")
+  add_subdirectory(${subdir})
+endforeach()
+
 
 set(LIT_MODULES "")
 list(APPEND LIT_MODULES run)
