@@ -2,8 +2,8 @@ from litsupport import testplan
 import logging
 
 
-def mutateCommandline(context, commandline):
-    shfilename = context.tmpBase + ".sh"
+def mutateCommandline(context, commandline, suffix=""):
+    shfilename = context.tmpBase + suffix + ".sh"
     shfile = open(shfilename, "w")
     shfile.write(commandline + "\n")
     logging.info("Created shfile '%s'", shfilename)
@@ -22,10 +22,11 @@ def mutateCommandline(context, commandline):
     return remote_commandline
 
 
-def mutateScript(context, script):
-    return testplan.mutateScript(context, script, mutateCommandline)
+def mutateScript(context, script, suffix=""):
+    mutate = lambda c, cmd: mutateCommandline(c, cmd, suffix)
+    return testplan.mutateScript(context, script, mutate)
 
 
 def mutatePlan(context, plan):
-    plan.preparescript = mutateScript(context, plan.preparescript)
+    plan.preparescript = mutateScript(context, plan.preparescript, "-prepare")
     plan.runscript = mutateScript(context, plan.runscript)
