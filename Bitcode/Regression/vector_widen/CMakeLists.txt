@@ -1,0 +1,10 @@
+SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/halide_runtime.bc PROPERTIES LANGUAGE CXX)
+SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/vector_widen.bc PROPERTIES LANGUAGE CXX)
+
+list(APPEND LDFLAGS -lpthread -ldl)
+
+set(Source ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp ${CMAKE_CURRENT_SOURCE_DIR}/halide_runtime.bc ${CMAKE_CURRENT_SOURCE_DIR}/vector_widen.bc)
+set(PROG widen_bug)
+llvm_multisource()
+
+
