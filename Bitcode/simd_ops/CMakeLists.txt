@@ -1,3 +1,4 @@
+set(NO_REFERENCE_OUTPUT true)
 file(GLOB uosources ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_tests/*.bc)
 SET_SOURCE_FILES_PROPERTIES(${uosources} PROPERTIES LANGUAGE CXX)
 file(GLOB scalar_sources ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_scalar_tests/*.bc)
