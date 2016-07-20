@@ -187,9 +187,13 @@ foreach(subdir ${TEST_SUITE_SUBDIRS})
   add_subdirectory(${subdir})
 endforeach()
 
+set(TEST_SUITE_RUN_BENCHMARKS "ON" CACHE BOOL
+    "Actually run the benchmarks in lit")
 
 set(LIT_MODULES "")
-list(APPEND LIT_MODULES run)
+if(TEST_SUITE_RUN_BENCHMARKS)
+  list(APPEND LIT_MODULES run)
+endif()
 list(APPEND LIT_MODULES codesize)
 list(APPEND LIT_MODULES hash)
 if(TEST_SUITE_TAKE_COMPILE_TIME)
