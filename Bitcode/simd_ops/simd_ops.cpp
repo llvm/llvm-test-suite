@@ -16,6 +16,12 @@ int allocate_aligned(void **mem, size_t alignment, size_t size) {
 #endif
 }
 
+#if defined(__aarch64__)
+#define FACTOR 5
+#else
+#define FACTOR 1
+#endif
+
 template<typename T>
 T rand_value() {
     return (T)(rand() * 0.125) - 100;
@@ -65,7 +71,7 @@ int main(int argc, char **argv) {
         seed = time(NULL);
         srand (seed);
     }
-    int W = 256, H = 100;
+    int W = 256*FACTOR, H = 100;
     // Make some input buffers
     buffer_t bufs[] = {
         make_buffer<float>(W, H),
@@ -79,6 +85,7 @@ int main(int argc, char **argv) {
         make_buffer<int64_t>(W, H),
         make_buffer<uint64_t>(W, H)
     };
+    W/=FACTOR;
 
     int NO = 2;
     buffer_t out[] = {
