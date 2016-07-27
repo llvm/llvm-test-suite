@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.4.3)
 
 include(CheckSymbolExists)
 
+project(test-suite C CXX)
+
 # The test-suite is designed to be built in release mode anyway and
 # falls over unless -DNDEBUG is set.
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -22,8 +24,6 @@ set(TEST_SUITE_ARCH_FLAGS CACHE STRING
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
-
-project(test-suite C CXX)
 
 add_definitions(-DNDEBUG)
 option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
