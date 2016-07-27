@@ -1,5 +1,21 @@
 #include "filter_test_op.h"
 
+#ifdef _MSC_VER
+#include <errno.h>
+#include <malloc.h>
+#endif
+
+// Allocate aligned memory, per recent requirement by the
+// Halide tests updated upstream.
+int allocate_aligned(void **mem, size_t alignment, size_t size) {
+#ifdef _MSC_VER
+  *p = _aligned_malloc(size, alignment);
+  return (*p) ? 0 : errno;
+#else
+  return posix_memalign(mem, alignment, size);
+#endif
+}
+
 template<typename T>
 T rand_value() {
     return (T)(rand() * 0.125) - 100;
@@ -12,7 +28,9 @@ extern "C" void halide_print(void *, const char *msg) {
 
 template<typename T>
 buffer_t make_buffer(int w, int h) {
-    T *mem = new T[w*h];
+    T *mem;
+    int err = allocate_aligned((void **)&mem, 128, w * h * sizeof(T));
+
     buffer_t buf = {0};
     buf.host = (uint8_t *)mem;
     buf.extent[0] = w;
