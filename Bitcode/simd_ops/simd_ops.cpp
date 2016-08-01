@@ -16,7 +16,7 @@ int allocate_aligned(void **mem, size_t alignment, size_t size) {
 #endif
 }
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__arm__)
 #define FACTOR 5
 #else
 #define FACTOR 1

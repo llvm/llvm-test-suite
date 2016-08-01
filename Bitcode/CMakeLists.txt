@@ -10,7 +10,7 @@ set(TEST_SUITE_ENABLE_BITCODE_TESTS ${ENABLE_BITCODE_DEFAULT} CACHE BOOL "Enable
 if(TEST_SUITE_ENABLE_BITCODE_TESTS)
   if(NOT TEST_SUITE_BENCHMARKING_ONLY)
     llvm_add_subdirectories(Regression)
-    if(ARCH STREQUAL "x86" OR ARCH STREQUAL "AArch64")
+    if(ARCH STREQUAL "x86" OR ARCH STREQUAL "AArch64" OR ARCH STREQUAL "ARM")
       llvm_add_subdirectories(simd_ops)
     endif()
   endif()
