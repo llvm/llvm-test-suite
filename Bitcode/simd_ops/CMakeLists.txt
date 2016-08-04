@@ -6,14 +6,19 @@ SET_SOURCE_FILES_PROPERTIES(${scalar_sources} PROPERTIES LANGUAGE CXX)
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/simd_op_check_runtime.bc PROPERTIES LANGUAGE CXX)
 
 list(APPEND LDFLAGS -lpthread -ldl)
+add_library(simd_ops STATIC simd_ops.cpp ${ARCH}_halide_runtime.bc)
+target_link_libraries(simd_ops)
+test_suite_add_build_dependencies(simd_ops)
+set_target_properties(simd_ops PROPERTIES LINKER_LANGUAGE CXX)
 
 foreach(sourcebc ${uosources})
   string(REGEX REPLACE ".[cp]+$" "" pathbc ${sourcebc})
   string(REGEX REPLACE ".*/" "" namebc ${pathbc})
   string(REPLACE "." "" namebc ${namebc})
-  set(Source ${CMAKE_CURRENT_SOURCE_DIR}/simd_ops.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_halide_runtime.bc ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_tests/${namebc}.bc ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_scalar_tests/scalar_${namebc}.bc)
+  set(Source ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_halide_runtime.bc ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_tests/${namebc}.bc ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_scalar_tests/scalar_${namebc}.bc)
   set(PROG simd_ops_${namebc})
   llvm_multisource()
+  target_link_libraries(${PROG} simd_ops)
 endforeach()
 
 
