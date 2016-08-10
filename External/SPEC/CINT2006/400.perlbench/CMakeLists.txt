@@ -3,6 +3,10 @@ list(APPEND CFLAGS -std=gnu89)
 # We want reproducible builds
 list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
 list(APPEND LDFLAGS -lm)
+if(TARGET_OS STREQUAL "Darwin")
+  # Necessary for iOS
+  list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x8000000)
+endif()
 
 include_directories(${BENCHMARK_DIR}/src)
 
