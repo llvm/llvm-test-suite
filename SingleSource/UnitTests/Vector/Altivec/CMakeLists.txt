@@ -1,6 +1,4 @@
 set(FP_TOLERANCE 0.002)
 list(APPEND LDFLAGS -lm)
-list(APPEND TARGET_FLAGS -maltivec)
-list(APPEND TEST_TARGET_FLAGS -maltivec)
-list(APPEND LCCFLAGS -maltivec)
+list(APPEND CFLAGS -faltivec)
 llvm_singlesource()
