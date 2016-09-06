@@ -71,4 +71,6 @@ function(llvm_add_test testfile executable)
 
   # Produce .test file
   file(GENERATE OUTPUT ${testfile} CONTENT "${TESTSCRIPT}")
+  # flush the test script
+  set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()

@@ -23,6 +23,7 @@ macro(llvm_externals_find PATHVAR NAME DESCRIPTION)
 endmacro()
 
 llvm_add_subdirectories(
+  CUDA
   HMMER
   Nurbs
   Povray
