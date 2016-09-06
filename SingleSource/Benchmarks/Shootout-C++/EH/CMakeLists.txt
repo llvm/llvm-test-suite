@@ -1,3 +1,3 @@
 set(REQUIRES_EH_SUPPORT 1)
 list(APPEND LDFLAGS -lstdc++)
-llvm_singlesource()
+llvm_singlesource(PREFIX "shootout-cxx")

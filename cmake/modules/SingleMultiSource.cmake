@@ -2,36 +2,47 @@
 #
 # Defines helpers to add executables and tests. The entry points to this
 # file are:
-#   `llvm_singlesource()` and
+#   `llvm_test_executable(executable [PREFIX p] [TARGET_VAR VarName] sources...)`,
+#   `llvm_singlesource([PREFIX p] [TARGETS VarName])`, and
 #   `llvm_multisource()`
 #
-# Each is a macro that uses the environment it was called in to determine
-# what to build and how, and generates a test file that can be given to LIT.
-# The test file is generated at configure time.
+# llvm_test_executable(name [PREFIX p] [TARGET_VAR Var] sources...)
+#   Main macro for test creation.
+#   name -- base name for the test target to create
+#   PREFIX p - executable name prefix
+#   TARGET_VAR VarName - set ${VarName} = new target name
+#   source.. -- list of files to compile.
+#
+# Following convenience macros provide shortcuts for common test cases:
+#
+# llvm_singlesource([PREFIX p] [TARGET_VAR Var] [sources...])
+#
+#   Invokes llvm_test_executable() for each c/c++ source file.  If
+#   'sources is emptyno sources are specified, creates test executables
+#   for all C/C++ files in current directory, except for those
+#   listed in PROGRAMS_TO_SKIP.
+#   Passes optional PREFIX parameter to llvm_test_executable().
+#   If optional TARGET_VAR is specified, the variable is set to
+#   list of all created targets.
+#
+# llvm_multisource(executable)
+#   Invokes llvm_test_executable(executable [sources...])
+#
+# Variables that control target generation:
+#   PROGRAMS_TO_SKIP - list of base names of executalbes to skip.
 #
 ##===----------------------------------------------------------------------===##
 
 include(TestFile)
 
 
-# Set unique target prefix within caller's scope.
-function(llvm_target_prefix prefix)
-  if(prefix)
-    set(TARGET_PREFIX "${prefix}-" PARENT_SCOPE)
-  else()
-    set(TARGET_PREFIX "" PARENT_SCOPE)
-  endif()
-endfunction()
-
-# Given a source file name after which a test should be named, create a unique
-# name for the test. Usually this is just the source file with the suffix
-# stripped, and ${TARGET_PREFIX} prepended.
-function(get_unique_exe_name new_name main_src)
-  string(REGEX REPLACE ".[cp]+$" "" path ${main_src})
-  get_filename_component(name ${path} NAME )
-
-  set(${new_name} "${TARGET_PREFIX}${name}" PARENT_SCOPE)
-endfunction()
+# Sets Var to ${name} with directory and shortest extension removed.
+macro(basename Var name)
+  # strip directory name
+  get_filename_component(_filename ${name} NAME)
+  # remove shortest extension.
+  string(REGEX REPLACE "\\.[^.]*$" "" ${Var} ${_filename})
+endmacro()
 
 # Add flags to a cmake target property.
 macro(append_target_flags propertyname target)
@@ -125,12 +136,22 @@ macro (test_suite_add_build_dependencies executable)
   add_dependencies(${executable} timeit-host fpcmp-host)
 endmacro()
 
-macro(test_suite_add_executable name mainsource)
+macro(llvm_test_executable name)
+  cmake_parse_arguments(_LTARG "" "PREFIX;TARGET_VAR" "" ${ARGN})
+  if (_LTARG_PREFIX)
+    set(executable "${_LTARG_PREFIX}-${name}")
+  else()
+    set(executable ${name})
+  endif()
+  unset("${_LTARG_TARGET_VAR}")
+  list(FIND PROGRAMS_TO_SKIP ${executable} exe_idx)
   list(FIND PROGRAMS_TO_SKIP ${name} name_idx)
   # Should we skip this?
-  if(${name_idx} EQUAL -1)
-    get_unique_exe_name(executable ${mainsource})
-    add_executable(${executable} ${ARGN})
+  if(${name_idx} EQUAL -1 AND ${exe_idx} EQUAL -1)
+    add_executable(${executable} ${_LTARG_UNPARSED_ARGUMENTS})
+    if (_LTARG_TARGET_VAR)
+      set(${_LTARG_TARGET_VAR} ${executable})
+    endif()
     append_compile_flags(${executable} ${CFLAGS})
     append_compile_flags(${executable} ${CPPFLAGS})
     append_compile_flags(${executable} ${CXXFLAGS})
@@ -159,13 +180,19 @@ endmacro()
 # Configure the current directory as a SingleSource subdirectory - i.e. every
 # file in *.{c,cpp,cc} is treated as its own test.
 macro(llvm_singlesource)
+  cmake_parse_arguments(_LSARG "" "PREFIX;TARGET_VAR" "" ${ARGN})
+  unset(_llvm_singlesource_extra_args)
+  if (_LSARG_PREFIX)
+    list(APPEND _llvm_singlesource_extra_args PREFIX ${_LSARG_PREFIX})
+  endif()
   file(GLOB sources *.c *.cpp *.cc)
   foreach(source ${sources})
-    # Find the pure name of the test
-    string(REGEX REPLACE ".[cp]+$" "" path ${source})
-    string(REGEX REPLACE ".*/" "" name ${path})
-
-    test_suite_add_executable(${name} ${source} ${source})
+    basename(name ${source})
+    llvm_test_executable(${name} TARGET_VAR _llvm_single_source_target
+      ${_llvm_singlesource_extra_args} ${source})
+    if (_LSARG_TARGET_VAR AND _llvm_single_source_target)
+      list(APPEND ${_LSARG_TARGET_VAR} ${_llvm_single_source_target})
+    endif()
   endforeach()
 endmacro()
 
@@ -173,6 +200,7 @@ endmacro()
 # one test and it consists of all sources in the directory (or a curated list,
 # if Source is defined).
 macro(llvm_multisource)
+  cmake_parse_arguments(_LMARG "" "PREFIX;TARGET_VAR" "" ${ARGN})
   if(DEFINED Source)
     set(sources ${Source})
   else()
@@ -181,8 +209,16 @@ macro(llvm_multisource)
   list(LENGTH sources sources_len)
 
   if(sources_len GREATER 0 AND DEFINED PROG)
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-    include_directories(${CMAKE_CURRENT_BINARY_DIR})
-    test_suite_add_executable(${PROG} "${PROG}.c" ${sources})
+    set(executable ${PROG})
+    llvm_test_executable(${executable} ${sources}
+      PREFIX ${_LMARG_PREFIX}
+      TARGET_VAR _llvm_multisource_target)
+    if(_llvm_multisource_target)
+      target_include_directories(${_llvm_multisource_target}
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    endif()
+    if (_LMARG_TARGET_VAR AND _llvm_multisource_target)
+      set(${_LMARG_TARGET_VAR} ${_llvm_multisource_target})
+    endif()
   endif()
 endmacro()
