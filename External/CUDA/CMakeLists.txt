@@ -187,9 +187,9 @@ macro(create_cuda_tests)
   if (EXISTS ${_path_to_libcxx})
     add_library(libcxx SHARED IMPORTED)
     set_property(TARGET libcxx PROPERTY IMPORTED_LOCATION ${_path_to_libcxx})
+    set(HAVE_LIBCXX 1)
   else()
-    message(ERROR "Can't find libcxx location.")
-    return()
+    message(WARNING "Can't find libcxx location.")
   endif()
 
   if(EXISTS "${TEST_SUITE_CUDA_ROOT}/thrust")
@@ -251,16 +251,18 @@ macro(create_cuda_tests)
         list(APPEND ALL_CUDA_TESTS ${VARIANT_CUDA_TESTS})
       endforeach()
 
-      # Same as above, but for libc++
-      # Tell clang to use libc++
-      # We also need to add compiler's include path for cxxabi.h
-      get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
-      set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include)
-      set(_Stdlib_LDFLAGS  -stdlib=libc++)
-      set(_Stdlib_Libs libcxx)
-      set(VARIANT_CUDA_TESTS)
-      create_cuda_test_variant("${_Cuda_Suffix}-${_Std_Suffix}-libc++")
-      list(APPEND ALL_CUDA_TESTS ${VARIANT_CUDA_TESTS})
+      if (HAVE_LIBCXX)
+	# Same as above, but for libc++
+	# Tell clang to use libc++
+	# We also need to add compiler's include path for cxxabi.h
+	get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
+	set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include)
+	set(_Stdlib_LDFLAGS  -stdlib=libc++)
+	set(_Stdlib_Libs libcxx)
+	set(VARIANT_CUDA_TESTS)
+	create_cuda_test_variant("${_Cuda_Suffix}-${_Std_Suffix}-libc++")
+	list(APPEND ALL_CUDA_TESTS ${VARIANT_CUDA_TESTS})
+      endif()
     endforeach()
   endforeach()
 
