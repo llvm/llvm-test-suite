@@ -12,37 +12,50 @@ Externals/
     gcc-X.Y.Z/ -- One or more GCC installation for libstdc++.
 
 export EXTERNALS=/your/externals/path
-export CUDA_EXTERNALS=$EXTERNALS/cuda
+export CUDA_EXTERNALS=$EXTERNALS/cuda  # Note: not $EXTERNALS!
 export CLANG_DIR=/your/clang/build/dir
 export TEST_SUITE_DIR=/path/to/test-suite-sources
 
 * Externals installation
   For each cuda version:
-    # bash cuda-linux64-rel-XXXXXX.run -prefix=$CUDA_EXTERNALS/cuda-7.5 -noprompt -nosymlink
+    $ bash cuda-linux64-rel-XXXXXX.run --toolkit --toolkitpath=$CUDA_EXTERNALS/cuda-Y.Z --silent
 
-  For each GCC version:
-    * extract GCC sources and cd into gcc-X.Y.Z
-    # ../configure --enable-languages=c,c++ --disable-libsanitizer
-    # make bootstrap
-    # make DESTDIR=$CUDA_EXTERNALS/gcc-X.Y.Z install
+  To install libstdc++:
+    # Clone GCC, doesn't need to live inside of $CUDA_EXTERNALS.
+    $ git clone git://gcc.gnu.org/git/gcc.git
+    $ cd gcc
+
+    # Repeat starting from here for each version of libstdc++ you want.
+    $ git checkout gcc-6_2_0  # or whatever version
+    $ mkdir objdir
+    $ cd objdir
+    $ ../configure --enable-languages=c,c++ --disable-libsanitizer
+    $ make bootstrap
+    $ make DESTDIR=$CUDA_EXTERNALS/gcc-X.Y.Z install
+    $ cd ..
+    # Nuke the objdir before building a different gcc version.
+    $ rm -rf objdir
 
   Fetch thrust:
-    # cd $CUDA_EXTERNALS
-    # git clone https://github.com/thrust/thrust.git
+    $ git clone https://github.com/thrust/thrust.git $CUDA_EXTERNALS/thrust
 
 * Configure, build and run tests
   Note that if externals are checked out into <test-suite>/test-suite-externals
   there's no need to specify location explicitly with -DTEST_SUITE_EXTERNALS_DIR=
 
-  # mkdir test-suite-build-dir
-  # cd test-suite-build-dir
-  # PATH=$CLANG_DIR/bin:$PATH CXX=clang++ CC=clang \
-    cmake -G Ninja -DTEST_SUITE_EXTERNALS_DIR=$EXTERNALS $TEST_SUITE_DIR 
-  # ninja cuda-tests-all
-  # lit -j1 Externals/CUDA
+  $ mkdir test-suite-build-dir
+  $ cd test-suite-build-dir
+  $ PATH=$CLANG_DIR/bin:$PATH CXX=clang++ CC=clang \
+    cmake -G Ninja -DTEST_SUITE_EXTERNALS_DIR=$EXTERNALS $TEST_SUITE_DIR
+  $ ninja cuda-tests-all
+  $ lit -j1 Externals/CUDA
 
-  For convenience there are top-level targets that would build only
-  one particular variant of the tests:
+  When you run cmake, it should say "Found CUDA prerequisites $CUDA_EXTERNALS",
+  followed by "Found cuda X.Y" and "Found GCC X.Y.Z" for each version you've
+  installed.
+
+  For convenience there are top-level targets that build only one particular
+  variant of the tests:
 
     cuda-tests-<variant_suffix>
 
