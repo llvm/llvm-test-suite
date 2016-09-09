@@ -1,0 +1,17 @@
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+kernel_printf a 2 3 4.000000 5.000000 abcdefg
+exit 0
