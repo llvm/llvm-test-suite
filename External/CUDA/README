@@ -48,14 +48,17 @@ export TEST_SUITE_DIR=/path/to/test-suite-sources
   $ PATH=$CLANG_DIR/bin:$PATH CXX=clang++ CC=clang \
     cmake -G Ninja -DTEST_SUITE_EXTERNALS_DIR=$EXTERNALS $TEST_SUITE_DIR
   $ ninja cuda-tests-all
-  $ lit -j1 Externals/CUDA
+  $ lit -j1 External/CUDA
 
   When you run cmake, it should say "Found CUDA prerequisites $CUDA_EXTERNALS",
   followed by "Found cuda X.Y" and "Found GCC X.Y.Z" for each version you've
   installed.
 
-  For convenience there are top-level targets that build only one particular
-  variant of the tests:
+  There's a cuda-tests-simple target that excludes tests that take a long time
+  to build (Thrust), and cuda-tests-thrust builds only Thrust.
+
+  There are also top-level targets that build only one particular variant of the
+  tests:
 
     cuda-tests-<variant_suffix>
 
@@ -66,3 +69,6 @@ export TEST_SUITE_DIR=/path/to/test-suite-sources
     <test_name>-<variant suffix>
 
   E.g: thrust-cuda-7.5-c++98-libstdc++-4.9.3 OR axpy-cuda-7.0-c++11-libc++
+
+  `ninja help | grep cuda` will show all the targets, for your copy/pasting
+  pleasure.
