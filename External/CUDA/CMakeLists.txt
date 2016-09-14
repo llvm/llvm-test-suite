@@ -38,7 +38,7 @@ macro(create_one_local_test Name FileGlob)
   if(VariantLibs)
     target_link_libraries(${_target} ${VariantLibs})
   endif()
-  list(APPEND VARIANT_CUDA_TESTS ${_target})
+  add_dependencies(cuda-tests-simple-${VariantSuffix} ${_target})
 endmacro()
 
 # Create targets for CUDA tests that are part of the test suite.
@@ -104,36 +104,29 @@ function(create_thrust_tests VariantSuffix)
     target_compile_options(${_target} PUBLIC ${THRUST_CPPFLAGS})
     target_link_libraries(${_target} ${VariantLibs})
   endif()
+  add_dependencies(cuda-tests-${VariantSuffix} cuda-tests-thrust-${VariantSuffix})
   add_dependencies(cuda-tests-thrust ${_ThrustMainTarget})
-  list(APPEND VARIANT_CUDA_TESTS ${_ThrustMainTarget})
-  set(VARIANT_CUDA_TESTS ${VARIANT_CUDA_TESTS} PARENT_SCOPE)
 endfunction()
 
 # Create set of tests for a given {CUDA,C++ standard,C++ library} tuple.
-# Sets VARIANT_CUDA_TESTS targets in parent's scope.
 function(create_cuda_test_variant VariantSuffix)
   message(STATUS "Creating CUDA test variant ${VariantSuffix}")
+  add_custom_target(cuda-tests-${VariantSuffix}
+    COMMENT "Build CUDA test variant ${VariantSuffix}")
 
   set(VariantLibs ${_Cuda_Libs} ${_Stdlib_Libs})
   list(APPEND CPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
   list(APPEND LDFLAGS ${_Cuda_LDFLAGS} ${_Std_LDFLAGS} ${_Stdlib_LDFLAGS})
 
-  create_local_cuda_tests(${VariantSuffix})
   # Create a separate test target for simple tests that can be built/tested quickly.
-  add_custom_target(cuda-tests-simple-${VariantSuffix} DEPENDS ${VARIANT_CUDA_TESTS}
+  add_custom_target(cuda-tests-simple-${VariantSuffix}
     COMMENT "Build Simple CUDA tests for ${VariantSuffix}")
+  create_local_cuda_tests(${VariantSuffix})
   add_dependencies(cuda-tests-simple cuda-tests-simple-${VariantSuffix})
-  set(VARIANT_CUDA_TESTS  cuda-tests-simple-${VariantSuffix})
 
   if(EXISTS ${THRUST_PATH})
     create_thrust_tests(${VariantSuffix})
   endif()
-
-  # Create target to build all tests for this variant
-  add_custom_target(cuda-tests-${VariantSuffix} DEPENDS ${VARIANT_CUDA_TESTS}
-    COMMENT "Build CUDA test variant ${VariantSuffix}")
-  # And pass it up to the caller
-  set(VARIANT_CUDA_TESTS cuda-tests-${VariantSuffix} PARENT_SCOPE)
 endfunction(create_cuda_test_variant)
 
 macro(create_cuda_tests)
