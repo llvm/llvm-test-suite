@@ -6,8 +6,7 @@ llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
 # Output:
 #    Sets Var=x.y.z
 macro(get_version Var Path)
-    string(REGEX REPLACE ".*-" "" Version ${Path})
-    set(${Var} ${Version})
+    string(REGEX MATCH "[0-9]+(\.[0-9]+)+" ${Var} ${Path})
 endmacro (get_version)
 
 # Helper function to glob CUDA source files and set LANGUAGE property
@@ -171,14 +170,25 @@ macro(create_cuda_tests)
 
   file(GLOB GccVersions ${TEST_SUITE_CUDA_ROOT}/gcc-*)
   list(SORT GccVersions)
-  foreach(GccDir IN LISTS GccVersions)
-    get_version(GccVersion ${GccDir})
-    message(STATUS "Found GCC ${GccVersion}")
-    list(APPEND GCC_PATHS ${GccDir})
-    add_library(libstdcxx-${GccVersion} SHARED IMPORTED)
-    set_property(TARGET libstdcxx-${GccVersion} PROPERTY IMPORTED_LOCATION
-      ${GccDir}/usr/local/lib64/libstdc++.so)
-  endforeach(GccDir)
+  foreach(GccRoot IN LISTS GccVersions)
+    get_version(GccVersion ${GccRoot})
+    foreach(GccDir IN ITEMS ${GccRoot} ${GccRoot}/usr/local)
+      if(EXISTS ${GccDir}/bin/gcc)
+	execute_process(
+	  COMMAND ${GccDir}/bin/gcc -print-file-name=libstdc++.so
+	  OUTPUT_VARIABLE _path_to_libstdcxx
+	  OUTPUT_STRIP_TRAILING_WHITESPACE)
+	if (EXISTS ${_path_to_libstdcxx})
+	  message(STATUS "Found libstdc++ ${GccVersion}")
+	  add_library(libstdcxx-${GccVersion} SHARED IMPORTED)
+	  set_property(TARGET libstdcxx-${GccVersion} PROPERTY IMPORTED_LOCATION
+	    ${GccDir}/lib64/libstdc++.so)
+	  list(APPEND GCC_PATHS ${GccDir})
+	  break()
+	endif()
+      endif()
+    endforeach(GccDir)
+  endforeach(GccRoot)
 
   # Find location of libc++
   execute_process(
@@ -243,7 +253,7 @@ macro(create_cuda_tests)
         get_version(_GccVersion ${_GccPath})
         set(_Gcc_Suffix "libstdc++-${_GccVersion}")
         # Tell clang to use libstdc++ and where to find it.
-        set(_Stdlib_CPPFLAGS -stdlib=libstdc++ -gcc-toolchain ${_GccPath}/usr/local)
+        set(_Stdlib_CPPFLAGS -stdlib=libstdc++ -gcc-toolchain ${_GccPath})
         set(_Stdlib_LDFLAGS  -stdlib=libstdc++)
         # Add libstdc++ as link dependency.
         set(_Stdlib_Libs libstdcxx-${_GccVersion})
