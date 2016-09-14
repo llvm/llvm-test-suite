@@ -69,7 +69,7 @@ macro(create_one_thrust_test TestSource)
 endmacro()
 
 function(create_thrust_tests VariantSuffix)
-  set(_ThrustMainTarget thrust-${VariantSuffix})
+  set(_ThrustMainTarget cuda-tests-thrust-${VariantSuffix})
   if(LARGE_PROBLEM_SIZE)
     set(_ExtraThrustTestArgs "--sizes=large")
   endif()
@@ -104,6 +104,7 @@ function(create_thrust_tests VariantSuffix)
     target_compile_options(${_target} PUBLIC ${THRUST_CPPFLAGS})
     target_link_libraries(${_target} ${VariantLibs})
   endif()
+  add_dependencies(cuda-tests-thrust ${_ThrustMainTarget})
   list(APPEND VARIANT_CUDA_TESTS ${_ThrustMainTarget})
   set(VARIANT_CUDA_TESTS ${VARIANT_CUDA_TESTS} PARENT_SCOPE)
 endfunction()
@@ -206,6 +207,7 @@ macro(create_cuda_tests)
 
   if(EXISTS "${TEST_SUITE_CUDA_ROOT}/thrust")
     message(STATUS "Found Thrust ${THRUST_PATH}")
+    add_custom_target(cuda-tests-thrust COMMENT "All thrust tests.")
     if(THRUST_SPLIT_TESTS)
       message(WARNING
 	"############################################################\n"
@@ -258,9 +260,7 @@ macro(create_cuda_tests)
         # Add libstdc++ as link dependency.
         set(_Stdlib_Libs libstdcxx-${_GccVersion})
 
-        set(VARIANT_CUDA_TESTS)
         create_cuda_test_variant("${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}")
-        list(APPEND ALL_CUDA_TESTS ${VARIANT_CUDA_TESTS})
       endforeach()
 
       if (HAVE_LIBCXX)
@@ -271,15 +271,13 @@ macro(create_cuda_tests)
 	set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include)
 	set(_Stdlib_LDFLAGS  -stdlib=libc++)
 	set(_Stdlib_Libs libcxx)
-	set(VARIANT_CUDA_TESTS)
 	create_cuda_test_variant("${_Cuda_Suffix}-${_Std_Suffix}-libc++")
-	list(APPEND ALL_CUDA_TESTS ${VARIANT_CUDA_TESTS})
       endif()
     endforeach()
   endforeach()
 
   # convenience target to build all CUDA tests.
-  add_custom_target(cuda-tests-all DEPENDS ${ALL_CUDA_TESTS}
+  add_custom_target(cuda-tests-all DEPENDS cuda-tests-simple cuda-tests-thrust
     COMMENT "Build all CUDA tests.")
 endmacro(create_cuda_tests)
 
