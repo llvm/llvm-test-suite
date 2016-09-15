@@ -22,46 +22,6 @@
 #include <cassert>
 #include <stdio.h>
 
-template<bool __B, class __T = void>
-struct eif {};
-
-template <class __T> struct eif<true, __T> {
-  typedef __T type;
-};
-
-// Defines an overload of __fn that accepts one two arithmetic arguments, calls
-// __fn((double)x, (double)y), and returns a double.
-//
-// Note this is different from OVERLOAD_1, which generates an overload that
-// accepts only *integral* arguments.
-/*#define __CUDA_CLANG_FN_INTEGER_OVERLOAD_2(__retty, __fn)                \
-  template <typename __T1, typename __T2>                                \
-  __device__ typename eif<std::numeric_limits<__T1>::is_specialized &&   \
-                              std::numeric_limits<__T2>::is_specialized, \
-                          __retty>::type                                 \
-  __fn(__T1 __x, __T2 __y) {                                             \
-    return __fn((double)__x, (double)__y);                               \
-  }
-__CUDA_CLANG_FN_INTEGER_OVERLOAD_2(double, fmod);*/
-
-/*template <typename T1, typename T2>
-__device__ typename std::enable_if<std::numeric_limits<T1>::is_specialized &&
-                                       std::numeric_limits<T2>::is_specialized,
-                                   double>::type
-fmod(T1 x, T2 y) {
-  static_assert(std::numeric_limits<T1>::is_specialized, "X");
-  static_assert(std::numeric_limits<T2>::is_specialized, "Y");
-  return fmod((double)x, (double)y);
-}*/
-
-/*namespace std {
-using ::fmod;
-}*/
-
-/*namespace std {
-  using ::fmod;
-}*/
-
 // See PR21083
 // Ambiguous is a user-defined type that defines its own overloads of cmath
 // functions. When the std overloads are candidates too (by using or adl),
