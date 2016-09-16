@@ -1,0 +1,2 @@
+../External/CUDA/assert.cu:7: void kernel(): block: [0,0,0], thread: [0,0,0] Assertion `false` failed.
+exit 0
