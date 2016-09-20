@@ -1,7 +1,6 @@
 include_directories(${BENCHMARK_DIR}/src/include)
 add_definitions(-DBOOST_DISABLE_THREADS -Ddeal_II_dimension=3)
-list(APPEND CXXFLAGS -stdlib=libstdc++)
-list(APPEND LDFLAGS -stdlib=libstdc++ -lm)
+list(APPEND LDFLAGS -lm)
 
 macro(verify_n run_type dir n)
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
