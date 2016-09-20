@@ -3,13 +3,15 @@ add_definitions(-DBOOST_DISABLE_THREADS -Ddeal_II_dimension=3)
 list(APPEND LDFLAGS -lm)
 
 macro(verify_n run_type dir n)
+  # Note that the official SPEC fp tolarence is only "-a .0000001", however this
+  # has proven to only work reliably for x86 targets/libm.
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a .0000001
+    -a 1e-5 -r 1e-5
     ${BENCHMARK_DIR}/data/${dir}/output/grid-${n}.eps
     ${CMAKE_CURRENT_BINARY_DIR}/grid-${n}.eps
   )
   llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a .0000001
+    -a 1e-5 -r 1e-5
     ${BENCHMARK_DIR}/data/${dir}/output/solution-${n}.gmv
     ${CMAKE_CURRENT_BINARY_DIR}/solution-${n}.gmv
   )
