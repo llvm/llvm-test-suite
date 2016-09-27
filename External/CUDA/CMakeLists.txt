@@ -282,6 +282,9 @@ macro(create_cuda_tests)
     COMMENT "Build all CUDA tests.")
 endmacro(create_cuda_tests)
 
+# We always want asserts() to run.
+list(APPEND CPPFLAGS "-UNDEBUG")
+
 if(TEST_SUITE_CUDA_ROOT)
   create_cuda_tests()
 endif()

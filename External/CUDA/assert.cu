@@ -1,5 +1,3 @@
-#undef NDEBUG
-
 #include <assert.h>
 #include <stdio.h>
 
