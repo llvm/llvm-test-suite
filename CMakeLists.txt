@@ -162,6 +162,12 @@ endif()
 set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
   "Only run the benchmarking only subset")
 
+set(TEST_SUITE_COLLECT_STATS "FALSE" CACHE BOOL
+    "Collect LLVM statistics")
+if(TEST_SUITE_COLLECT_STATS)
+  list(APPEND CFLAGS -save-stats=obj)
+  list(APPEND CXXFLAGS -save-stats=obj)
+endif()
 
 # Detect and include subdirectories
 # This allows to: Place additional test-suites into the toplevel test-suite
@@ -208,6 +214,9 @@ if(TEST_SUITE_PROFILE_GENERATE)
 endif()
 if(TEST_SUITE_REMOTE_HOST)
   list(APPEND LIT_MODULES remote)
+endif()
+if(TEST_SUITE_COLLECT_STATS)
+  list(APPEND LIT_MODULES stats)
 endif()
 
 # Produce lit.site.cfg
