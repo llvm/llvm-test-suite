@@ -112,6 +112,6 @@ if __name__ == "__main__":
     'test_params' : test_params
     }
   #print "builtin_params = " , test_params
-  import lit
-  lit.main(builtin_parameters)
+  from lit.main import main
+  main(builtin_parameters)
 

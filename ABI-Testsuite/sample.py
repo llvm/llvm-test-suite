@@ -35,6 +35,6 @@ if __name__ == "__main__":
     'clang_site_config': os.path.join(os.getcwd(), 'lit.site.cfg'),
     'test_params' : test_params
     }
-  import lit
-  lit.main(builtin_parameters)
+  from lit.main import main
+  main(builtin_parameters)
 
