@@ -19,11 +19,12 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
 		 DATA_TYPE POLYBENCH_2D(B,N,N,n,n))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   for (i = 0; i < n; i++)
@@ -78,6 +79,50 @@ void kernel_jacobi_2d_imper(int tsteps,
 
 }
 
+__attribute__((optnone)) static void
+kernel_jacobi_2d_imper_StrictFP(int tsteps,
+                                int n,
+                                DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+                                DATA_TYPE POLYBENCH_2D(B,N,N,n,n))
+{
+#pragma STDC FP_CONTRACT OFF
+  int t, i, j;
+
+  for (t = 0; t < _PB_TSTEPS; t++)
+    {
+      for (i = 1; i < _PB_N - 1; i++)
+	for (j = 1; j < _PB_N - 1; j++)
+	  B[i][j] = 0.2 * (A[i][j] + A[i][j-1] + A[i][1+j] + A[1+i][j] + A[i-1][j]);
+      for (i = 1; i < _PB_N-1; i++)
+	for (j = 1; j < _PB_N-1; j++)
+	  A[i][j] = B[i][j];
+    }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static inline int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+         DATA_TYPE POLYBENCH_2D(B,N,N,n,n)) {
+  int i, j;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N; i++)
+    for (j = 0; j < _PB_N; j++)
+      {
+        double V1 = A[i][j];
+        double V2 = B[i][j];
+        double Diff = fabs(V1 - V2);
+        if (Diff > AbsTolerance) {
+          fprintf(stderr, "A[%d][%d] = %lf and B[%d][%d] = %lf differ more than"
+                  " FP_ABSTOLERANCE = %lf\n", i, j, V1, i, j, V2, AbsTolerance);
+          return 0;
+        }
+      }
+
+  /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -87,6 +132,7 @@ int main(int argc, char** argv)
 
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
+  POLYBENCH_2D_ARRAY_DECL(A_StrictFP, DATA_TYPE, N, N, n, n);
   POLYBENCH_2D_ARRAY_DECL(B, DATA_TYPE, N, N, n, n);
 
 
@@ -103,12 +149,19 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  init_array (n, POLYBENCH_ARRAY(A_StrictFP), POLYBENCH_ARRAY(B));
+  kernel_jacobi_2d_imper_StrictFP(tsteps, n, POLYBENCH_ARRAY(A_StrictFP),
+                                  POLYBENCH_ARRAY(B));
+  if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
+  POLYBENCH_FREE_ARRAY(A_StrictFP);
   POLYBENCH_FREE_ARRAY(B);
 
   return 0;

@@ -19,21 +19,23 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array(int ni, int nj,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
 		DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj),
+		DATA_TYPE POLYBENCH_2D(C_StrictFP,NI,NJ,ni,nj),
 		DATA_TYPE POLYBENCH_2D(A,NJ,NJ,nj,nj),
 		DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   *alpha = 32412;
   *beta = 2123;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nj; j++) {
-      C[i][j] = ((DATA_TYPE) i*j) / ni;
+      C_StrictFP[i][j] = C[i][j] = ((DATA_TYPE) i*j) / ni;
       B[i][j] = ((DATA_TYPE) i*j) / ni;
     }
   for (i = 0; i < nj; i++)
@@ -90,6 +92,56 @@ void kernel_symm(int ni, int nj,
 
 }
 
+__attribute__((optnone)) static
+void kernel_symm_StrictFP(int ni, int nj,
+                          DATA_TYPE alpha,
+                          DATA_TYPE beta,
+                          DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj),
+                          DATA_TYPE POLYBENCH_2D(A,NJ,NJ,nj,nj),
+                          DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j, k;
+  DATA_TYPE acc;
+
+  /*  C := alpha*A*B + beta*C, A is symetric */
+  for (i = 0; i < _PB_NI; i++)
+    for (j = 0; j < _PB_NJ; j++)
+      {
+	acc = 0;
+	for (k = 0; k < j - 1; k++)
+	  {
+	    C[k][j] += alpha * A[k][i] * B[i][j];
+	    acc += B[k][j] * A[k][i];
+	  }
+	C[i][j] = beta * C[i][j] + alpha * A[i][i] * B[i][j] + alpha * acc;
+      }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static inline int
+check_FP(int ni, int nj,
+         DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
+         DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj)) {
+  int i, j;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_NI; i++)
+    for (j = 0; j < _PB_NJ; j++)
+      {
+        double V1 = A[i][j];
+        double V2 = B[i][j];
+        double Diff = fabs(V1 - V2);
+        if (Diff > AbsTolerance) {
+          fprintf(stderr, "A[%d][%d] = %lf and B[%d][%d] = %lf differ more than"
+                  " FP_ABSTOLERANCE = %lf\n", i, j, V1, i, j, V2, AbsTolerance);
+          return 0;
+        }
+      }
+
+  /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -101,12 +153,14 @@ int main(int argc, char** argv)
   DATA_TYPE alpha;
   DATA_TYPE beta;
   POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,NI,NJ,ni,nj);
+  POLYBENCH_2D_ARRAY_DECL(C_StrictFP,DATA_TYPE,NI,NJ,ni,nj);
   POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,NJ,NJ,nj,nj);
   POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,NI,NJ,ni,nj);
 
   /* Initialize array(s). */
   init_array (ni, nj, &alpha, &beta,
 	      POLYBENCH_ARRAY(C),
+	      POLYBENCH_ARRAY(C_StrictFP),
 	      POLYBENCH_ARRAY(A),
 	      POLYBENCH_ARRAY(B));
 
@@ -124,9 +178,17 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  kernel_symm_StrictFP(ni, nj,
+                       alpha, beta,
+                       POLYBENCH_ARRAY(C_StrictFP),
+                       POLYBENCH_ARRAY(A),
+                       POLYBENCH_ARRAY(B));
+  if (!check_FP(ni, nj, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, nj,  POLYBENCH_ARRAY(C)));
+  polybench_prevent_dce(print_array(ni, nj, POLYBENCH_ARRAY(C_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(C);

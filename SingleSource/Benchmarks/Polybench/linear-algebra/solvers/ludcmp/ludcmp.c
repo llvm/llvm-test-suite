@@ -19,13 +19,14 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(A,N+1,N+1,n+1,n+1),
 		 DATA_TYPE POLYBENCH_1D(b,N+1,n+1),
 		 DATA_TYPE POLYBENCH_1D(x,N+1,n+1),
 		 DATA_TYPE POLYBENCH_1D(y,N+1,n+1))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   for (i = 0; i <= n; i++)
@@ -108,6 +109,76 @@ void kernel_ludcmp(int n,
 
 }
 
+__attribute__((optnone)) static void
+kernel_ludcmp_StrictFP(int n,
+                       DATA_TYPE POLYBENCH_2D(A,N+1,N+1,n+1,n+1),
+                       DATA_TYPE POLYBENCH_1D(b,N+1,n+1),
+                       DATA_TYPE POLYBENCH_1D(x,N+1,n+1),
+                       DATA_TYPE POLYBENCH_1D(y,N+1,n+1))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j, k;
+
+  DATA_TYPE w;
+
+  b[0] = 1.0;
+  for (i = 0; i < _PB_N; i++)
+    {
+      for (j = i+1; j <= _PB_N; j++)
+        {
+	  w = A[j][i];
+	  for (k = 0; k < i; k++)
+	    w = w- A[j][k] * A[k][i];
+	  A[j][i] = w / A[i][i];
+        }
+      for (j = i+1; j <= _PB_N; j++)
+        {
+	  w = A[i+1][j];
+	  for (k = 0; k <= i; k++)
+	    w = w  - A[i+1][k] * A[k][j];
+	  A[i+1][j] = w;
+        }
+    }
+  y[0] = b[0];
+  for (i = 1; i <= _PB_N; i++)
+    {
+      w = b[i];
+      for (j = 0; j < i; j++)
+	w = w - A[i][j] * y[j];
+      y[i] = w;
+    }
+  x[_PB_N] = y[_PB_N] / A[_PB_N][_PB_N];
+  for (i = 0; i <= _PB_N - 1; i++)
+    {
+      w = y[_PB_N - 1 - (i)];
+      for (j = _PB_N - i; j <= _PB_N; j++)
+	w = w - A[_PB_N - 1 - i][j] * x[j];
+      x[_PB_N - 1 - i] = w / A[_PB_N - 1 - (i)][_PB_N - 1-(i)];
+    }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_1D(A,N+1,n),
+         DATA_TYPE POLYBENCH_1D(B,N+1,n)) {
+  int i;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N+1; i++)
+    {
+      double V1 = A[i];
+      double V2 = B[i];
+      double Diff = fabs(V1 - V2);
+      if (Diff > AbsTolerance) {
+        fprintf(stderr, "A[%d] = %lf and B[%d] = %lf differ more than"
+                " FP_ABSTOLERANCE = %lf\n", i, V1, i, V2, AbsTolerance);
+        return 0;
+      }
+    }
+
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -118,6 +189,7 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N+1, N+1, n+1, n+1);
   POLYBENCH_1D_ARRAY_DECL(b, DATA_TYPE, N+1, n+1);
   POLYBENCH_1D_ARRAY_DECL(x, DATA_TYPE, N+1, n+1);
+  POLYBENCH_1D_ARRAY_DECL(x_StrictFP, DATA_TYPE, N+1, n+1);
   POLYBENCH_1D_ARRAY_DECL(y, DATA_TYPE, N+1, n+1);
 
 
@@ -142,14 +214,28 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  init_array (n,
+	      POLYBENCH_ARRAY(A),
+	      POLYBENCH_ARRAY(b),
+	      POLYBENCH_ARRAY(x_StrictFP),
+	      POLYBENCH_ARRAY(y));
+  kernel_ludcmp (n,
+		 POLYBENCH_ARRAY(A),
+		 POLYBENCH_ARRAY(b),
+		 POLYBENCH_ARRAY(x_StrictFP),
+		 POLYBENCH_ARRAY(y));
+  if (!check_FP(n, POLYBENCH_ARRAY(x), POLYBENCH_ARRAY(x_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(b);
   POLYBENCH_FREE_ARRAY(x);
+  POLYBENCH_FREE_ARRAY(x_StrictFP);
   POLYBENCH_FREE_ARRAY(y);
 
   return 0;

@@ -2,7 +2,7 @@ LEVEL = ../../../../../..
 
 POLYBENCH_UTILS = SingleSource/Benchmarks/Polybench/utilities 
 PROG          = ludcmp
-CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS
+CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS -DFP_ABSTOLERANCE=1e-5
 
 HASH_PROGRAM_OUTPUT = 1
 

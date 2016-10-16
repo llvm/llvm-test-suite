@@ -19,11 +19,13 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_1D(p,N,n),
-		DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
+		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+                DATA_TYPE POLYBENCH_2D(A_StrictFP,N,N,n,n))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
   /*
   LLVM: This change ensures we do not calculate nan values, which are
@@ -42,6 +44,12 @@ void init_array(int n,
       p[i] = i + n;
       for (j = 0; j < n; j++)
       	A[i][j] = j + n;
+    }
+  for (i = 0; i < n; i++)
+    {
+      p[i] = i + n;
+      for (j = 0; j < n; j++)
+      	A_StrictFP[i][j] = j + n;
     }
 }
 
@@ -102,6 +110,62 @@ for (i = 0; i < _PB_N; ++i)
 
 }
 
+__attribute__((optnone)) static
+void kernel_cholesky_StrictFP(int n,
+                              DATA_TYPE POLYBENCH_1D(p,N,n),
+                              DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j, k;
+
+  DATA_TYPE x;
+
+for (i = 0; i < _PB_N; ++i)
+  {
+   /*
+      LLVM: This change ensures we do not calculate nan values, which are
+            formatted differently on different platforms and which may also
+            be optimized unexpectedly.    
+      Original line:      
+            x = A[i][i];      
+    */      
+    x = A[i][i] * n;
+    for (j = 0; j <= i - 1; ++j)
+      x = x - A[i][j] * A[i][j];
+    p[i] = 1.0 / sqrt(x);
+    for (j = i + 1; j < _PB_N; ++j)
+      {
+	x = A[i][j];
+	for (k = 0; k <= i - 1; ++k)
+	  x = x - A[j][k] * A[i][k];
+	A[j][i] = x * p[i];
+      }
+  }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static inline int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+         DATA_TYPE POLYBENCH_2D(B,N,N,n,n)) {
+  int i, j;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N; i++)
+    for (j = 0; j < _PB_N; j++)
+      {
+        double V1 = A[i][j];
+        double V2 = B[i][j];
+        double Diff = fabs(V1 - V2);
+        if (Diff > AbsTolerance) {
+          fprintf(stderr, "A[%d][%d] = %lf and B[%d][%d] = %lf differ more than"
+                  " FP_ABSTOLERANCE = %lf\n", i, j, V1, i, j, V2, AbsTolerance);
+          return 0;
+        }
+      }
+
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -111,10 +175,12 @@ int main(int argc, char** argv)
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(p, DATA_TYPE, N, n);
+  POLYBENCH_2D_ARRAY_DECL(A_StrictFP, DATA_TYPE, N, N, n, n);
 
 
   /* Initialize array(s). */
-  init_array (n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A));
+  init_array (n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A),
+              POLYBENCH_ARRAY(A_StrictFP));
 
   /* Start timer. */
   polybench_start_instruments;
@@ -126,12 +192,17 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  kernel_cholesky_StrictFP(n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A_StrictFP));
+  if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
+  POLYBENCH_FREE_ARRAY(A_StrictFP);
   POLYBENCH_FREE_ARRAY(p);
 
   return 0;

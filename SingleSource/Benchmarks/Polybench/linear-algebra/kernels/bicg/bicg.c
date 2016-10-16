@@ -19,12 +19,13 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array (int nx, int ny,
 		 DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
 		 DATA_TYPE POLYBENCH_1D(r,NX,nx),
 		 DATA_TYPE POLYBENCH_1D(p,NY,ny))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   for (i = 0; i < ny; i++)
@@ -89,6 +90,53 @@ void kernel_bicg(int nx, int ny,
 
 }
 
+__attribute__((optnone)) static
+void kernel_bicg_StrictFP(int nx, int ny,
+                          DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
+                          DATA_TYPE POLYBENCH_1D(s,NY,ny),
+                          DATA_TYPE POLYBENCH_1D(q,NX,nx),
+                          DATA_TYPE POLYBENCH_1D(p,NY,ny),
+                          DATA_TYPE POLYBENCH_1D(r,NX,nx))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j;
+
+  for (i = 0; i < _PB_NY; i++)
+    s[i] = 0;
+  for (i = 0; i < _PB_NX; i++)
+    {
+      q[i] = 0;
+      for (j = 0; j < _PB_NY; j++)
+	{
+	  s[j] = s[j] + r[i] * A[i][j];
+	  q[i] = q[i] + A[i][j] * p[j];
+	}
+    }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(int ny,
+         DATA_TYPE POLYBENCH_1D(A,NY,ny),
+         DATA_TYPE POLYBENCH_1D(B,NX,nx)) {
+  int i;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_NY; i++)
+    {
+      double V1 = A[i];
+      double V2 = B[i];
+      double Diff = fabs(V1 - V2);
+      if (Diff > AbsTolerance) {
+        fprintf(stderr, "A[%d] = %lf and B[%d] = %lf differ more than"
+                " FP_ABSTOLERANCE = %lf\n", i, V1, i, V2, AbsTolerance);
+        return 0;
+      }
+    }
+
+  /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -102,6 +150,8 @@ int main(int argc, char** argv)
   POLYBENCH_1D_ARRAY_DECL(q, DATA_TYPE, NX, nx);
   POLYBENCH_1D_ARRAY_DECL(p, DATA_TYPE, NY, ny);
   POLYBENCH_1D_ARRAY_DECL(r, DATA_TYPE, NX, nx);
+  POLYBENCH_1D_ARRAY_DECL(s_StrictFP, DATA_TYPE, NY, ny);
+  POLYBENCH_1D_ARRAY_DECL(q_StrictFP, DATA_TYPE, NX, nx);
 
   /* Initialize array(s). */
   init_array (nx, ny,
@@ -124,9 +174,22 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  kernel_bicg_StrictFP(nx, ny,
+                       POLYBENCH_ARRAY(A),
+                       POLYBENCH_ARRAY(s_StrictFP),
+                       POLYBENCH_ARRAY(q_StrictFP),
+                       POLYBENCH_ARRAY(p),
+                       POLYBENCH_ARRAY(r));
+
+  if (!check_FP(ny, POLYBENCH_ARRAY(s), POLYBENCH_ARRAY(s_StrictFP)))
+    return 1;
+  if (!check_FP(ny, POLYBENCH_ARRAY(q), POLYBENCH_ARRAY(q_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(s), POLYBENCH_ARRAY(q)));
+  polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(s_StrictFP),
+                                    POLYBENCH_ARRAY(q_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
@@ -134,6 +197,8 @@ int main(int argc, char** argv)
   POLYBENCH_FREE_ARRAY(q);
   POLYBENCH_FREE_ARRAY(p);
   POLYBENCH_FREE_ARRAY(r);
+  POLYBENCH_FREE_ARRAY(s_StrictFP);
+  POLYBENCH_FREE_ARRAY(q_StrictFP);
 
   return 0;
 }

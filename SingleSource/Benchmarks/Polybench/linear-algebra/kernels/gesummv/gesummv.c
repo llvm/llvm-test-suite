@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array(int n,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
@@ -27,6 +27,7 @@ void init_array(int n,
 		DATA_TYPE POLYBENCH_2D(B,N,N,n,n),
 		DATA_TYPE POLYBENCH_1D(x,N,n))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   *alpha = 43532;
@@ -89,6 +90,54 @@ void kernel_gesummv(int n,
 
 }
 
+__attribute__((optnone)) static
+void kernel_gesummv_StrictFP(int n,
+                             DATA_TYPE alpha,
+                             DATA_TYPE beta,
+                             DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+                             DATA_TYPE POLYBENCH_2D(B,N,N,n,n),
+                             DATA_TYPE POLYBENCH_1D(tmp,N,n),
+                             DATA_TYPE POLYBENCH_1D(x,N,n),
+                             DATA_TYPE POLYBENCH_1D(y,N,n))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j;
+
+  for (i = 0; i < _PB_N; i++)
+    {
+      tmp[i] = 0;
+      y[i] = 0;
+      for (j = 0; j < _PB_N; j++)
+	{
+	  tmp[i] = A[i][j] * x[j] + tmp[i];
+	  y[i] = B[i][j] * x[j] + y[i];
+	}
+      y[i] = alpha * tmp[i] + beta * y[i];
+    }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_1D(A,N,n),
+         DATA_TYPE POLYBENCH_1D(B,N,n)) {
+  int i;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N; i++)
+    {
+      double V1 = A[i];
+      double V2 = B[i];
+      double Diff = fabs(V1 - V2);
+      if (Diff > AbsTolerance) {
+        fprintf(stderr, "A[%d] = %lf and B[%d] = %lf differ more than"
+                " FP_ABSTOLERANCE = %lf\n", i, V1, i, V2, AbsTolerance);
+        return 0;
+      }
+    }
+
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -103,6 +152,7 @@ int main(int argc, char** argv)
   POLYBENCH_1D_ARRAY_DECL(tmp, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(x, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(y, DATA_TYPE, N, n);
+  POLYBENCH_1D_ARRAY_DECL(y_StrictFP, DATA_TYPE, N, n);
 
 
   /* Initialize array(s). */
@@ -126,9 +176,18 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  kernel_gesummv_StrictFP(n, alpha, beta,
+                          POLYBENCH_ARRAY(A),
+                          POLYBENCH_ARRAY(B),
+                          POLYBENCH_ARRAY(tmp),
+                          POLYBENCH_ARRAY(x),
+                          POLYBENCH_ARRAY(y_StrictFP));
+  if (!check_FP(n, POLYBENCH_ARRAY(y), POLYBENCH_ARRAY(y_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(y)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(y_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);

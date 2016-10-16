@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(y,N,N,n,n),
 		 DATA_TYPE POLYBENCH_2D(sum,N,N,n,n),
@@ -27,6 +27,7 @@ void init_array (int n,
 		 DATA_TYPE POLYBENCH_1D(beta,N,n),
 		 DATA_TYPE POLYBENCH_1D(r,N,n))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   for (i = 0; i < n; i++)
@@ -91,6 +92,58 @@ void kernel_durbin(int n,
 
 }
 
+__attribute__((optnone)) static
+void kernel_durbin_StrictFP(int n,
+                            DATA_TYPE POLYBENCH_2D(y,N,N,n,n),
+                            DATA_TYPE POLYBENCH_2D(sum,N,N,n,n),
+                            DATA_TYPE POLYBENCH_1D(alpha,N,n),
+                            DATA_TYPE POLYBENCH_1D(beta,N,n),
+                            DATA_TYPE POLYBENCH_1D(r,N,n),
+                            DATA_TYPE POLYBENCH_1D(out,N,n))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, k;
+
+  y[0][0] = r[0];
+  beta[0] = 1;
+  alpha[0] = r[0];
+  for (k = 1; k < _PB_N; k++)
+    {
+      beta[k] = beta[k-1] - alpha[k-1] * alpha[k-1] * beta[k-1];
+      sum[0][k] = r[k];
+      for (i = 0; i <= k - 1; i++)
+	sum[i+1][k] = sum[i][k] + r[k-i-1] * y[i][k-1];
+      alpha[k] = -sum[k][k] * beta[k];
+      for (i = 0; i <= k-1; i++)
+	y[i][k] = y[i][k-1] + alpha[k] * y[k-i-1][k-1];
+      y[k][k] = alpha[k];
+    }
+  for (i = 0; i < _PB_N; i++)
+    out[i] = y[i][_PB_N-1];
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_1D(A,N,n),
+         DATA_TYPE POLYBENCH_1D(B,N,n)) {
+  int i;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N; i++)
+    {
+      double V1 = A[i];
+      double V2 = B[i];
+      double Diff = fabs(V1 - V2);
+      if (Diff > AbsTolerance) {
+        fprintf(stderr, "A[%d] = %lf and B[%d] = %lf differ more than"
+                " FP_ABSTOLERANCE = %lf\n", i, V1, i, V2, AbsTolerance);
+        return 0;
+      }
+    }
+
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -104,6 +157,7 @@ int main(int argc, char** argv)
   POLYBENCH_1D_ARRAY_DECL(beta, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(r, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(out, DATA_TYPE, N, n);
+  POLYBENCH_1D_ARRAY_DECL(out_StrictFP, DATA_TYPE, N, n);
 
 
   /* Initialize array(s). */
@@ -130,9 +184,27 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  init_array (n,
+	      POLYBENCH_ARRAY(y),
+	      POLYBENCH_ARRAY(sum),
+	      POLYBENCH_ARRAY(alpha),
+	      POLYBENCH_ARRAY(beta),
+	      POLYBENCH_ARRAY(r));
+
+  kernel_durbin_StrictFP (n,
+                          POLYBENCH_ARRAY(y),
+                          POLYBENCH_ARRAY(sum),
+                          POLYBENCH_ARRAY(alpha),
+                          POLYBENCH_ARRAY(beta),
+                          POLYBENCH_ARRAY(r),
+                          POLYBENCH_ARRAY(out_StrictFP));
+
+  if (!check_FP(n, POLYBENCH_ARRAY(out), POLYBENCH_ARRAY(out_StrictFP)))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(out)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(out_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(y);

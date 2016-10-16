@@ -19,11 +19,12 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array(int length,
 		DATA_TYPE POLYBENCH_2D(c,LENGTH,LENGTH,length,length),
 		DATA_TYPE POLYBENCH_2D(W,LENGTH,LENGTH,length,length))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
   for (i = 0; i < length; i++)
     for (j = 0; j < length; j++) {
@@ -80,6 +81,56 @@ void kernel_dynprog(int tsteps, int length,
   *out = out_l;
 }
 
+__attribute__((optnone)) static void
+kernel_dynprog_StrictFP(int tsteps, int length,
+                        DATA_TYPE POLYBENCH_2D(c,LENGTH,LENGTH,length,length),
+                        DATA_TYPE POLYBENCH_2D(W,LENGTH,LENGTH,length,length),
+                        DATA_TYPE POLYBENCH_3D(sum_c,LENGTH,LENGTH,LENGTH,length,length,length),
+                        DATA_TYPE *out)
+{
+#pragma STDC FP_CONTRACT OFF
+  int iter, i, j, k;
+
+  DATA_TYPE out_l = 0;
+
+  for (iter = 0; iter < _PB_TSTEPS; iter++)
+    {
+      for (i = 0; i <= _PB_LENGTH - 1; i++)
+	for (j = 0; j <= _PB_LENGTH - 1; j++)
+	  c[i][j] = 0;
+
+      for (i = 0; i <= _PB_LENGTH - 2; i++)
+	{
+	  for (j = i + 1; j <= _PB_LENGTH - 1; j++)
+	    {
+	      sum_c[i][j][i] = 0;
+	      for (k = i + 1; k <= j-1; k++)
+		sum_c[i][j][k] = sum_c[i][j][k - 1] + c[i][k] + c[k][j];
+	      c[i][j] = sum_c[i][j][j-1] + W[i][j];
+	    }
+	}
+      out_l += c[0][_PB_LENGTH - 1];
+    }
+
+  *out = out_l;
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(DATA_TYPE A,
+         DATA_TYPE B) {
+  double AbsTolerance = FP_ABSTOLERANCE;
+  double V1 = A;
+  double V2 = B;
+  double Diff = fabs(V1 - V2);
+  if (Diff > AbsTolerance) {
+    fprintf(stderr, "A = %lf and B = %lf differ more than"
+            " FP_ABSTOLERANCE = %lf\n", V1, V2, AbsTolerance);
+    return 0;
+  }
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -88,7 +139,7 @@ int main(int argc, char** argv)
   int tsteps = TSTEPS;
 
   /* Variable declaration/allocation. */
-  DATA_TYPE out;
+  DATA_TYPE out, out_StrictFP;
   POLYBENCH_3D_ARRAY_DECL(sum_c,DATA_TYPE,LENGTH,LENGTH,LENGTH,length,length,length);
   POLYBENCH_2D_ARRAY_DECL(c,DATA_TYPE,LENGTH,LENGTH,length,length);
   POLYBENCH_2D_ARRAY_DECL(W,DATA_TYPE,LENGTH,LENGTH,length,length);
@@ -110,9 +161,19 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  init_array (length, POLYBENCH_ARRAY(c), POLYBENCH_ARRAY(W));
+  kernel_dynprog (tsteps, length,
+		  POLYBENCH_ARRAY(c),
+		  POLYBENCH_ARRAY(W),
+		  POLYBENCH_ARRAY(sum_c),
+		  &out_StrictFP);
+
+  if (!check_FP(out, out_StrictFP))
+    return 1;
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(out));
+  polybench_prevent_dce(print_array(out_StrictFP));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(sum_c);

@@ -19,12 +19,14 @@
 
 
 /* Array initialization. */
-static
+__attribute__((optnone)) static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
 		DATA_TYPE POLYBENCH_1D(x,N,n),
+		DATA_TYPE POLYBENCH_1D(x_StrictFP,N,n),
 		DATA_TYPE POLYBENCH_1D(c,N,n))
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
   /*
   LLVM: This change ensures we do not calculate nan values, which are
@@ -40,7 +42,7 @@ void init_array(int n,
   */
   for (i = 0; i < n; i++)
     {
-      c[i] = x[i] = ((DATA_TYPE) i+n) / n;
+      c[i] = x_StrictFP[i] = x[i] = ((DATA_TYPE) i+n) / n;
       for (j = 0; j < n; j++)
       	A[i][j] = ((DATA_TYPE) i*j+n) / n;
     }
@@ -86,6 +88,46 @@ void kernel_trisolv(int n,
 
 }
 
+__attribute__((optnone)) static void
+kernel_trisolv_StrictFP(int n,
+                        DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+                        DATA_TYPE POLYBENCH_1D(x,N,n),
+                        DATA_TYPE POLYBENCH_1D(c,N,n))
+{
+#pragma STDC FP_CONTRACT OFF
+  int i, j;
+
+  for (i = 0; i < _PB_N; i++)
+    {
+      x[i] = c[i];
+      for (j = 0; j <= i - 1; j++)
+        x[i] = x[i] - A[i][j] * x[j];
+      x[i] = x[i] / A[i][i];
+    }
+}
+
+/* Return 0 when one of the elements of arrays A and B do not match within the
+   allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
+static int
+check_FP(int n,
+         DATA_TYPE POLYBENCH_1D(A,N,n),
+         DATA_TYPE POLYBENCH_1D(B,N,n)) {
+  int i;
+  double AbsTolerance = FP_ABSTOLERANCE;
+  for (i = 0; i < _PB_N; i++)
+    {
+      double V1 = A[i];
+      double V2 = B[i];
+      double Diff = fabs(V1 - V2);
+      if (Diff > AbsTolerance) {
+        fprintf(stderr, "A[%d] = %lf and B[%d] = %lf differ more than"
+                " FP_ABSTOLERANCE = %lf\n", i, V1, i, V2, AbsTolerance);
+        return 0;
+      }
+    }
+
+  return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -95,11 +137,13 @@ int main(int argc, char** argv)
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(x, DATA_TYPE, N, n);
+  POLYBENCH_1D_ARRAY_DECL(x_StrictFP, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(c, DATA_TYPE, N, n);
 
 
   /* Initialize array(s). */
-  init_array (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x), POLYBENCH_ARRAY(c));
+  init_array (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x),
+              POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(c));
 
   /* Start timer. */
   polybench_start_instruments;
@@ -111,13 +155,16 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+  kernel_trisolv (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(c));
+
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x_StrictFP)));
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(x);
+  POLYBENCH_FREE_ARRAY(x_StrictFP);
   POLYBENCH_FREE_ARRAY(c);
 
   return 0;
