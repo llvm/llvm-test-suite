@@ -2,7 +2,7 @@ LEVEL = ../../../../../..
 
 POLYBENCH_UTILS = SingleSource/Benchmarks/Polybench/utilities 
 PROG          = symm
-CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS -DFP_ABSTOLERANCE=10
+CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS -DFP_ABSTOLERANCE=1e-5
 
 
 ifeq ($(ARCH),Mips)

@@ -43,13 +43,7 @@ void init_array(int n,
     {
       p[i] = i + n;
       for (j = 0; j < n; j++)
-      	A[i][j] = j + n;
-    }
-  for (i = 0; i < n; i++)
-    {
-      p[i] = i + n;
-      for (j = 0; j < n; j++)
-      	A_StrictFP[i][j] = j + n;
+        A_StrictFP[i][j] = A[i][j] = j + n;
     }
 }
 

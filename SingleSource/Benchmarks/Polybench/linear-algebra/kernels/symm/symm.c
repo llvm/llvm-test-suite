@@ -192,6 +192,7 @@ int main(int argc, char** argv)
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(C);
+  POLYBENCH_FREE_ARRAY(C_StrictFP);
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(B);
 
