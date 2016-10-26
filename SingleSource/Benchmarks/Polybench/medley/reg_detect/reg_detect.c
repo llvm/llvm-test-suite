@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int maxgrid,
 		DATA_TYPE POLYBENCH_2D(sum_tang,MAXGRID,MAXGRID,maxgrid,maxgrid),
 		DATA_TYPE POLYBENCH_2D(mean,MAXGRID,MAXGRID,maxgrid,maxgrid),
@@ -100,7 +100,7 @@ void kernel_reg_detect(int niter, int maxgrid, int length,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_reg_detect_StrictFP(int niter, int maxgrid, int length,
                            DATA_TYPE POLYBENCH_2D(sum_tang,MAXGRID,MAXGRID,maxgrid,maxgrid),
                            DATA_TYPE POLYBENCH_2D(mean,MAXGRID,MAXGRID,maxgrid,maxgrid),

@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni, int nj, int nk, int nl, int nm,
 		DATA_TYPE POLYBENCH_2D(A,NI,NK,ni,nk),
 		DATA_TYPE POLYBENCH_2D(B,NK,NJ,nk,nj),
@@ -105,7 +105,7 @@ void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_3mm_StrictFP(int ni, int nj, int nk, int nl, int nm,
                          DATA_TYPE POLYBENCH_2D(E,NI,NJ,ni,nj),
                          DATA_TYPE POLYBENCH_2D(A,NI,NK,ni,nk),

@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
 		DATA_TYPE POLYBENCH_1D(x,N,n),
@@ -88,7 +88,7 @@ void kernel_trisolv(int n,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_trisolv_StrictFP(int n,
                         DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
                         DATA_TYPE POLYBENCH_1D(x,N,n),

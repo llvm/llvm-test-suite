@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int tmax,
 		 int nx,
 		 int ny,
@@ -104,7 +104,7 @@ void kernel_fdtd_2d(int tmax,
 #pragma endscop
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_fdtd_2d_StrictFP(int tmax,
                         int nx,
                         int ny,

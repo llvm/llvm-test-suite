@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni, int nj,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
@@ -92,7 +92,7 @@ void kernel_symm(int ni, int nj,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_symm_StrictFP(int ni, int nj,
                           DATA_TYPE alpha,
                           DATA_TYPE beta,

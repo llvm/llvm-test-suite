@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int length,
 		DATA_TYPE POLYBENCH_2D(c,LENGTH,LENGTH,length,length),
 		DATA_TYPE POLYBENCH_2D(W,LENGTH,LENGTH,length,length))
@@ -81,7 +81,7 @@ void kernel_dynprog(int tsteps, int length,
   *out = out_l;
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_dynprog_StrictFP(int tsteps, int length,
                         DATA_TYPE POLYBENCH_2D(c,LENGTH,LENGTH,length,length),
                         DATA_TYPE POLYBENCH_2D(W,LENGTH,LENGTH,length,length),

@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int n,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
@@ -90,7 +90,7 @@ void kernel_gesummv(int n,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_gesummv_StrictFP(int n,
                              DATA_TYPE alpha,
                              DATA_TYPE beta,

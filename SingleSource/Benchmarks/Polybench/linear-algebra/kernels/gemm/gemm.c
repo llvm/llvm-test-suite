@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni, int nj, int nk,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
@@ -88,7 +88,7 @@ void kernel_gemm(int ni, int nj, int nk,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_gemm_StrictFP(int ni, int nj, int nk,
                           DATA_TYPE alpha,
                           DATA_TYPE beta,

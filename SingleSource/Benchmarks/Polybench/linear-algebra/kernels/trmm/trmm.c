@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni,
 		DATA_TYPE *alpha,
 		DATA_TYPE POLYBENCH_2D(A,NI,NI,ni,ni),
@@ -76,7 +76,7 @@ void kernel_trmm(int ni,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_trmm_StrictFP(int ni,
                      DATA_TYPE alpha,
                      DATA_TYPE POLYBENCH_2D(A,NI,NI,ni,ni),

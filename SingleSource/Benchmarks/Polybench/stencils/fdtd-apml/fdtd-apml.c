@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int cz,
 		 int cxm,
 		 int cym,
@@ -166,7 +166,7 @@ void kernel_fdtd_apml(int cz,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_fdtd_apml_StrictFP(int cz,
                           int cxm,
                           int cym,

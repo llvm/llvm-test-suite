@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni, int nj,
 		DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
 		DATA_TYPE POLYBENCH_2D(R,NJ,NJ,nj,nj),
@@ -120,7 +120,7 @@ void kernel_gramschmidt(int ni, int nj,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_gramschmidt_StrictFP(int ni, int nj,
                             DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
                             DATA_TYPE POLYBENCH_2D(R,NJ,NJ,nj,nj),

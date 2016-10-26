@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE *alpha,
 		 DATA_TYPE *beta,
@@ -109,7 +109,7 @@ void kernel_gemver(int n,
 #pragma endscop
 }
 
-__attribute__((optnone)) static
+static
 void kernel_gemver_StrictFP(int n,
                             DATA_TYPE alpha,
                             DATA_TYPE beta,

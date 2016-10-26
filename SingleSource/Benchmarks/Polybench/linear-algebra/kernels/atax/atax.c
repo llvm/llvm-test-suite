@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int nx, int ny,
 		 DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
 		 DATA_TYPE POLYBENCH_1D(x,NY,ny))
@@ -77,7 +77,7 @@ void kernel_atax(int nx, int ny,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_atax_StrictFP(int nx, int ny,
                           DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
                           DATA_TYPE POLYBENCH_1D(x,NY,ny),

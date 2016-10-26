@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_1D(x1,N,n),
 		DATA_TYPE POLYBENCH_1D(x2,N,n),
@@ -88,7 +88,7 @@ void kernel_mvt(int n,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_mvt_StrictFP(int n,
                          DATA_TYPE POLYBENCH_1D(x1,N,n),
                          DATA_TYPE POLYBENCH_1D(x2,N,n),

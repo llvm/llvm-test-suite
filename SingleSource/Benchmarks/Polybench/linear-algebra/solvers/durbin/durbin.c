@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(y,N,N,n,n),
 		 DATA_TYPE POLYBENCH_2D(sum,N,N,n,n),
@@ -92,7 +92,7 @@ void kernel_durbin(int n,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_durbin_StrictFP(int n,
                             DATA_TYPE POLYBENCH_2D(y,N,N,n,n),
                             DATA_TYPE POLYBENCH_2D(sum,N,N,n,n),

@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int ni, int nj, int nk, int nl,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
@@ -101,7 +101,7 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_2mm_StrictFP(int ni, int nj, int nk, int nl,
                          DATA_TYPE alpha,
                          DATA_TYPE beta,

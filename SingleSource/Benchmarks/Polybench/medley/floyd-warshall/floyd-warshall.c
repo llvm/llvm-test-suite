@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(path,N,N,n,n))
 {
@@ -71,7 +71,7 @@ void kernel_floyd_warshall(int n,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_floyd_warshall_StrictFP(int n, DATA_TYPE POLYBENCH_2D(path,N,N,n,n))
 {
 #pragma STDC FP_CONTRACT OFF

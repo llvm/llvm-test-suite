@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int nr, int nq, int np,
 		DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
 		DATA_TYPE POLYBENCH_3D(A_StrictFP,NR,NQ,NP,nr,nq,np),
@@ -82,7 +82,7 @@ void kernel_doitgen(int nr, int nq, int np,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_doitgen_StrictFP(int nr, int nq, int np,
                              DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
                              DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),

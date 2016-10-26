@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_1D(p,N,n),
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
@@ -104,7 +104,7 @@ for (i = 0; i < _PB_N; ++i)
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_cholesky_StrictFP(int n,
                               DATA_TYPE POLYBENCH_1D(p,N,n),
                               DATA_TYPE POLYBENCH_2D(A,N,N,n,n))

@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(X,N,N,n,n),
 		 DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
@@ -102,7 +102,7 @@ void kernel_adi(int tsteps,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_adi_StrictFP(int tsteps,
                     int n,
                     DATA_TYPE POLYBENCH_2D(X,N,N,n,n),

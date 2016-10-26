@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int m, int n,
 		 DATA_TYPE *float_n,
 		 DATA_TYPE POLYBENCH_2D(data,M,N,m,n))
@@ -93,7 +93,7 @@ void kernel_covariance(int m, int n,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_covariance_StrictFP(int m, int n,
                            DATA_TYPE float_n,
                            DATA_TYPE POLYBENCH_2D(data,M,N,m,n),

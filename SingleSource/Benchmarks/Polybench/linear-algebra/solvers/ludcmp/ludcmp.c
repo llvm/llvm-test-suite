@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(A,N+1,N+1,n+1,n+1),
 		 DATA_TYPE POLYBENCH_1D(b,N+1,n+1),
@@ -109,7 +109,7 @@ void kernel_ludcmp(int n,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_ludcmp_StrictFP(int n,
                        DATA_TYPE POLYBENCH_2D(A,N+1,N+1,n+1,n+1),
                        DATA_TYPE POLYBENCH_1D(b,N+1,n+1),

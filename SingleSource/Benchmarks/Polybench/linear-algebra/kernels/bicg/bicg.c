@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int nx, int ny,
 		 DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
 		 DATA_TYPE POLYBENCH_1D(r,NX,nx),
@@ -90,7 +90,7 @@ void kernel_bicg(int nx, int ny,
 
 }
 
-__attribute__((optnone)) static
+static
 void kernel_bicg_StrictFP(int nx, int ny,
                           DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
                           DATA_TYPE POLYBENCH_1D(s,NY,ny),

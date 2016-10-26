@@ -19,7 +19,7 @@
 
 
 /* Array initialization. */
-__attribute__((optnone)) static
+static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_1D(A,N,n),
 		 DATA_TYPE POLYBENCH_1D(B,N,n))
@@ -74,7 +74,7 @@ void kernel_jacobi_1d_imper(int tsteps,
 
 }
 
-__attribute__((optnone)) static void
+static void
 kernel_jacobi_1d_imper_StrictFP(int tsteps,
                                 int n,
                                 DATA_TYPE POLYBENCH_1D(A,N,n),
