@@ -1,7 +1,6 @@
 add_subdirectory(EH)
 
 list(APPEND CXXFLAGS -Wno-deprecated)
-list(APPEND CPPFLAGS -Wno-deprecated)
 set(FP_TOLERANCE 0.00000001)
 if(ARCH STREQUAL "XCore")
   if(NOT DEFINED SMALL_PROBLEM_SIZE)

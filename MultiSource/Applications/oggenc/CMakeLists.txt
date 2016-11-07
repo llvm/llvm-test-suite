@@ -1,5 +1,5 @@
 set(PROG oggenc)
-list(APPEND CPPFLAGS -fno-strict-aliasing)
+list(APPEND CFLAGS -fno-strict-aliasing)
 list(APPEND LDFLAGS -lm)
 set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/tune)
 set(RUN_OPTIONS "-Q -s 901820 -")

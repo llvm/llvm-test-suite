@@ -1,5 +1,6 @@
 set(PROG SPASS)
-list(APPEND CPPFLAGS -DCLOCK_NO_TIMING -fno-strict-aliasing -w)
+list(APPEND CPPFLAGS -DCLOCK_NO_TIMING)
+list(APPEND CFLAGS -fno-strict-aliasing)
 list(APPEND LDFLAGS -lm)
 if(DEFINED SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS "${CMAKE_CURRENT_SOURCE_DIR}/small_problem.dfg")

@@ -44,7 +44,7 @@ else()
   list(APPEND SourceNames unix_perlmain.c)
   list(APPEND CPPFLAGS -DSPEC_CPU2000_LINUX)
 endif()
-list(APPEND CPPFLAGS -std=gnu89)
+list(APPEND CFLAGS -std=gnu89)
 
 include(TestBigEndian)
 test_big_endian(IS_BIGENDIAN)

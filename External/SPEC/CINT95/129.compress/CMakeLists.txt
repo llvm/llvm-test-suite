@@ -1,6 +1,6 @@
 # iOS compiler have -Werror=return-value, need to disable this explicitely
 # (-w is not enough)
-list(APPEND CPPFLAGS -Wno-return-type)
+list(APPEND CFLAGS -Wno-return-type)
 
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}

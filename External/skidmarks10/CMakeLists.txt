@@ -5,7 +5,7 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
   file(GLOB Source ${TEST_SUITE_SKIDMARKS10_ROOT}/source/*.c)
   list(APPEND CPPFLAGS -I${TEST_SUITE_SKIDMARKS10_ROOT}/source)
   if(ARCH STREQUAL "x86")
-    list(APPEND CPPFLAGS -msse3)
+    list(APPEND CFLAGS -msse3)
   endif()
 
   llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden
