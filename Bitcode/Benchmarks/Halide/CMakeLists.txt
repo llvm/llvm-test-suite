@@ -1,7 +1,7 @@
-if (NOT WIN32)
+if(NOT WIN32)
   list(APPEND LDFLAGS -lpthread -ldl)
 endif()
-if (NOT MSVC)
+if(NOT MSVC)
   list(APPEND CXXFLAGS "-std=c++11")
 endif()
 

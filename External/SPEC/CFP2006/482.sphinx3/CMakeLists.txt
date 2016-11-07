@@ -47,7 +47,7 @@ macro(prepare_data run_type)
   llvm_copy(${TARGET} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/args.an4)
   llvm_copy(${TARGET} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/beams.dat)
   # Create ctlfile and copy .raw files depending on endianess
-  if (IS_BIGENDIAN)
+  if(IS_BIGENDIAN)
     file(GLOB files "${BENCHMARK_DIR}/data/${run_type}/input/*.be.raw")
   else()
     file(GLOB files "${BENCHMARK_DIR}/data/${run_type}/input/*.le.raw")

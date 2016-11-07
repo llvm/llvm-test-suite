@@ -15,7 +15,7 @@ endmacro (get_version)
 macro(cuda_glob Var)
   file(GLOB FileList ${ARGN})
   foreach(File IN LISTS FileList)
-    if (${File} MATCHES ".*\.cu$")
+    if(${File} MATCHES ".*\.cu$")
       set_source_files_properties(${File} PROPERTIES LANGUAGE CXX)
     endif()
   endforeach()
@@ -177,7 +177,7 @@ macro(create_cuda_tests)
 	  COMMAND ${GccDir}/bin/gcc -print-file-name=libstdc++.so
 	  OUTPUT_VARIABLE _path_to_libstdcxx
 	  OUTPUT_STRIP_TRAILING_WHITESPACE)
-	if (EXISTS ${_path_to_libstdcxx})
+	if(EXISTS ${_path_to_libstdcxx})
 	  message(STATUS "Found libstdc++ ${GccVersion}")
 	  add_library(libstdcxx-${GccVersion} SHARED IMPORTED)
 	  set_property(TARGET libstdcxx-${GccVersion} PROPERTY IMPORTED_LOCATION
@@ -195,7 +195,7 @@ macro(create_cuda_tests)
     OUTPUT_VARIABLE _path_to_libcxx
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-  if (EXISTS ${_path_to_libcxx})
+  if(EXISTS ${_path_to_libcxx})
     add_library(libcxx SHARED IMPORTED)
     set_property(TARGET libcxx PROPERTY IMPORTED_LOCATION ${_path_to_libcxx})
     set(HAVE_LIBCXX 1)
@@ -252,7 +252,7 @@ macro(create_cuda_tests)
       foreach(_GccPath IN LISTS GCC_PATHS)
         get_version(_GccVersion ${_GccPath})
         # libstdc++ seems not to support C++14 before version 5.0.
-        if (${_Std} STREQUAL "c++14" AND ${_GccVersion} VERSION_LESS "5.0")
+        if(${_Std} STREQUAL "c++14" AND ${_GccVersion} VERSION_LESS "5.0")
           continue()
         endif()
         set(_Gcc_Suffix "libstdc++-${_GccVersion}")
@@ -265,7 +265,7 @@ macro(create_cuda_tests)
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}")
       endforeach()
 
-      if (HAVE_LIBCXX)
+      if(HAVE_LIBCXX)
 	# Same as above, but for libc++
 	# Tell clang to use libc++
 	# We also need to add compiler's include path for cxxabi.h
