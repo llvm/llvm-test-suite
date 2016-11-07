@@ -1,4 +1,5 @@
-llvm_add_subdirectories(Applications Benchmarks)
+add_subdirectory(Applications)
+add_subdirectory(Benchmarks)
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
-  llvm_add_subdirectories(UnitTests)
+  add_subdirectory(UnitTests)
 endif()

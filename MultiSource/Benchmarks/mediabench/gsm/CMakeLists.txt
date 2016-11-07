@@ -1,1 +1,1 @@
-llvm_add_subdirectories(toast)
+add_subdirectory(toast)

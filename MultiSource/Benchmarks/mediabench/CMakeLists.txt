@@ -1,1 +1,5 @@
-llvm_add_subdirectories(adpcm g721 gsm jpeg mpeg2)
+add_subdirectory(adpcm)
+add_subdirectory(g721)
+add_subdirectory(gsm)
+add_subdirectory(jpeg)
+add_subdirectory(mpeg2)

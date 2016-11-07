@@ -1,1 +1,1 @@
-llvm_add_subdirectories(is)
+add_subdirectory(is)

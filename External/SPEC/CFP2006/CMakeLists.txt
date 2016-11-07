@@ -26,21 +26,17 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   list(APPEND CPPFLAGS -DSPEC_CPU_LP64)
 endif()
 
-macro(cpu2006_subdir)
-  foreach(BENCHMARK ${ARGN})
-    set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
-    set(PROG ${BENCHMARK})
-    file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp ${BENCHMARK_DIR}/src/*.cc)
-    llvm_add_subdirectories(${BENCHMARK})
-  endforeach()
+macro(cpu2006_subdir BENCHMARK)
+  set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
+  set(PROG ${BENCHMARK})
+  file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp ${BENCHMARK_DIR}/src/*.cc)
+  add_subdirectory(${BENCHMARK})
 endmacro()
 
-cpu2006_subdir(
-  433.milc
-  444.namd
-  447.dealII
-  450.soplex
-  453.povray
-  470.lbm
-  482.sphinx3
-)
+cpu2006_subdir(433.milc)
+cpu2006_subdir(444.namd)
+cpu2006_subdir(447.dealII)
+cpu2006_subdir(450.soplex)
+cpu2006_subdir(453.povray)
+cpu2006_subdir(470.lbm)
+cpu2006_subdir(482.sphinx3)

@@ -1,1 +1,5 @@
-llvm_add_subdirectories(anagram bc ft ks yacr2)
+add_subdirectory(anagram)
+add_subdirectory(bc)
+add_subdirectory(ft)
+add_subdirectory(ks)
+add_subdirectory(yacr2)

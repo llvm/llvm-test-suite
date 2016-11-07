@@ -1,2 +1,5 @@
 list(APPEND LDFLAGS -lm)
-llvm_add_subdirectories(datamining linear-algebra medley stencils)
+add_subdirectory(datamining)
+add_subdirectory(linear-algebra)
+add_subdirectory(medley)
+add_subdirectory(stencils)

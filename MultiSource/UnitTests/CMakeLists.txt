@@ -1,4 +1,4 @@
-llvm_add_subdirectories(C++11)
+add_subdirectory(C++11)
 if(ARCH STREQUAL "Mips")
-  llvm_add_subdirectories(Mips)
+  add_subdirectory(Mips)
 endif()

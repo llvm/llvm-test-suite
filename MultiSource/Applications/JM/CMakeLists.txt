@@ -1,1 +1,2 @@
-llvm_add_subdirectories(ldecod lencod)
+add_subdirectory(ldecod)
+add_subdirectory(lencod)

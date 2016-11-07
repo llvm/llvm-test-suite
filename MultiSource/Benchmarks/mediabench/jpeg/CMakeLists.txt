@@ -1,1 +1,1 @@
-llvm_add_subdirectories(jpeg-6a)
+add_subdirectory(jpeg-6a)

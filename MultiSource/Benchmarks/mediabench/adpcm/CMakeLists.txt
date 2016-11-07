@@ -1,1 +1,2 @@
-llvm_add_subdirectories(rawcaudio rawdaudio)
+add_subdirectory(rawcaudio)
+add_subdirectory(rawdaudio)

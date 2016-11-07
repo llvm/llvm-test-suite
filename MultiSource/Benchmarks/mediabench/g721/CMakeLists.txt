@@ -1,1 +1,1 @@
-llvm_add_subdirectories(g721encode)
+add_subdirectory(g721encode)

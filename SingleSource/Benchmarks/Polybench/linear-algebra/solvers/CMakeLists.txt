@@ -1,1 +1,4 @@
-llvm_add_subdirectories(durbin dynprog gramschmidt lu)
+add_subdirectory(durbin)
+add_subdirectory(dynprog)
+add_subdirectory(gramschmidt)
+add_subdirectory(lu)

@@ -1,1 +1,2 @@
-llvm_add_subdirectories(kernels solvers)
+add_subdirectory(kernels)
+add_subdirectory(solvers)

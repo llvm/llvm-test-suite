@@ -1,1 +1,4 @@
-llvm_add_subdirectories(five11 drop3 uudecode uuencode)
+add_subdirectory(drop3)
+add_subdirectory(five11)
+add_subdirectory(uudecode)
+add_subdirectory(uuencode)

@@ -1,1 +1,1 @@
-llvm_add_subdirectories(mpeg2dec)
+add_subdirectory(mpeg2dec)

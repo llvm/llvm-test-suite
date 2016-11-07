@@ -1,4 +1,4 @@
-llvm_add_subdirectories(EH)
+add_subdirectory(EH)
 
 list(APPEND CXXFLAGS -Wno-deprecated)
 list(APPEND CPPFLAGS -Wno-deprecated)

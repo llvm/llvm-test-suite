@@ -22,11 +22,9 @@ macro(llvm_externals_find PATHVAR NAME DESCRIPTION)
   endif()
 endmacro()
 
-llvm_add_subdirectories(
-  CUDA
-  HMMER
-  Nurbs
-  Povray
-  SPEC
-  skidmarks10
-)
+add_subdirectory(CUDA)
+add_subdirectory(HMMER)
+add_subdirectory(Nurbs)
+add_subdirectory(Povray)
+add_subdirectory(SPEC)
+add_subdirectory(skidmarks10)

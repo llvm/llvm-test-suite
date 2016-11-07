@@ -1,4 +1,4 @@
-llvm_add_subdirectories(Large)
+add_subdirectory(Large)
 
 execute_process(COMMAND date +%j OUTPUT_VARIABLE TMP1)
 set(SEED TMP1)

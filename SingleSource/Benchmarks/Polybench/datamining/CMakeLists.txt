@@ -1,1 +1,2 @@
-llvm_add_subdirectories(correlation covariance)
+add_subdirectory(correlation)
+add_subdirectory(covariance)

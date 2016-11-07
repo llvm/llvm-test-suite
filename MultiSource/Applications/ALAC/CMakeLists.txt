@@ -1,1 +1,2 @@
-llvm_add_subdirectories(encode decode)
+add_subdirectory(encode)
+add_subdirectory(decode)

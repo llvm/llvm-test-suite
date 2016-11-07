@@ -1,1 +1,3 @@
-llvm_add_subdirectories(IRSmk AMGmk CrystalMk)
+add_subdirectory(AMGmk)
+add_subdirectory(CrystalMk)
+add_subdirectory(IRSmk)

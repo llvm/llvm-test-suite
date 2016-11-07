@@ -26,26 +26,22 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   list(APPEND CPPFLAGS -DSPEC_CPU_LP64)
 endif()
 
-macro(cpu2006_subdir)
-  foreach(BENCHMARK ${ARGN})
-    set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
-    set(PROG ${BENCHMARK})
-    file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp)
-    llvm_add_subdirectories(${BENCHMARK})
-  endforeach()
+macro(cpu2006_subdir BENCHMARK)
+  set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
+  set(PROG ${BENCHMARK})
+  file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp)
+  add_subdirectory(${BENCHMARK})
 endmacro()
 
-cpu2006_subdir(
-  400.perlbench
-  401.bzip2
-  403.gcc
-  429.mcf
-  445.gobmk
-  456.hmmer
-  458.sjeng
-  462.libquantum
-  464.h264ref
-  471.omnetpp
-  473.astar
-  483.xalancbmk
-)
+cpu2006_subdir(400.perlbench)
+cpu2006_subdir(401.bzip2)
+cpu2006_subdir(403.gcc)
+cpu2006_subdir(429.mcf)
+cpu2006_subdir(445.gobmk)
+cpu2006_subdir(456.hmmer)
+cpu2006_subdir(458.sjeng)
+cpu2006_subdir(462.libquantum)
+cpu2006_subdir(464.h264ref)
+cpu2006_subdir(471.omnetpp)
+cpu2006_subdir(473.astar)
+cpu2006_subdir(483.xalancbmk)
