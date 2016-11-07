@@ -1,3 +1,5 @@
+llvm_add_subdirectories(Large)
+
 list(APPEND LDFLAGS -lm -lstdc++)
 set(FP_ABSTOLERANCE 0.01)
 if(ARCH STREQUAL "XCore")
@@ -6,5 +8,3 @@ if(ARCH STREQUAL "XCore")
   endif()
 endif()
 llvm_singlesource()
-
-llvm_add_subdirectories(Large)

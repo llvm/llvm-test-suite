@@ -1,3 +1,5 @@
+llvm_add_subdirectories(EH)
+
 list(APPEND CXXFLAGS -Wno-deprecated)
 list(APPEND CPPFLAGS -Wno-deprecated)
 set(FP_TOLERANCE 0.00000001)
@@ -16,5 +18,3 @@ if(TARGET_OS STREQUAL "Darwin")
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
 endif()
 llvm_singlesource(PREFIX "shootout-cxx")
-
-llvm_add_subdirectories(EH)
