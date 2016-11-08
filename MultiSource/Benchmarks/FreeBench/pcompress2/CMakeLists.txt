@@ -1,6 +1,6 @@
 set(PROG pcompress2)
 list(APPEND CPPFLAGS -DVERSION="1.00" -DCOMPDATE="today" -DCFLAGS="" -DHOSTNAME="thishost")
-if(DEFINED LARGE_PROBLEM_SIZE)
+if(LARGE_PROBLEM_SIZE)
   set(INPUT_FILE ref.in)
 else()
   set(INPUT_FILE test.in)

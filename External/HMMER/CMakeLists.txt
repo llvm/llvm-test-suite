@@ -13,7 +13,7 @@ if(TEST_SUITE_HMMER_ROOT)
     add_definitions(-DSSE2)
   endif()
 
-  if(DEFINED LARGE_PROBLEM_SIZE)
+  if(LARGE_PROBLEM_SIZE)
     llvm_test_run(--fixed 400 --cpu 1 --num 200000 --seed 1158818515 ${TEST_SUITE_HMMER_ROOT}/globin.hmm)
   else()
     llvm_test_run(--fixed 400 --cpu 1 --num 80000 --seed 1158818515 ${TEST_SUITE_HMMER_ROOT}/globin.hmm)

@@ -1,5 +1,5 @@
 if(ARCH STREQUAL "x86")
-  if(DEFINED USE_REFERENCE_OUTPUT)
+  if(USE_REFERENCE_OUTPUT)
     set(EXEC_XFAILS casts)
   endif()
 endif()

@@ -1,6 +1,6 @@
 set(PROG dbms)
 list(APPEND LDFLAGS -lm)
-if(DEFINED SMALL_PROBLEM_SIZE)
+if(SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS -i ${CMAKE_CURRENT_SOURCE_DIR}/dbms.train.in)
 else()
   set(RUN_OPTIONS -i ${CMAKE_CURRENT_SOURCE_DIR}/dbms.ref.in)

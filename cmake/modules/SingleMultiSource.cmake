@@ -73,7 +73,7 @@ endmacro()
 # SMALL_PROBLEM_SIZE, HASH_PROGRAM_OUTPUT, etc.
 # Create llvm_test_run() and llvm_test_verify() invocation for that.
 function(llvm_test_traditional testfile executable name)
-  if(DEFINED STDIN_FILENAME)
+  if(STDIN_FILENAME)
     list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
   endif()
   if(WORKDIR)
@@ -86,7 +86,7 @@ function(llvm_test_traditional testfile executable name)
     llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
   endif()
 
-  if(NOT DEFINED PROGRAM_IS_NONDETERMINISTIC)
+  if(NOT PROGRAM_IS_NONDETERMINISTIC)
     # Find the reference output file key name.
     if(SMALL_PROBLEM_SIZE)
       set(KEY small)
@@ -97,7 +97,7 @@ function(llvm_test_traditional testfile executable name)
     endif()
 
     # Pick the best reference output based on "programname.reference_output".
-    if(NOT DEFINED NO_REFERENCE_OUTPUT)
+    if(NOT NO_REFERENCE_OUTPUT)
       if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
         set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${KEY})
       elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${KEY})
@@ -112,10 +112,10 @@ function(llvm_test_traditional testfile executable name)
     endif()
 
     set(DIFFPROG ${CMAKE_BINARY_DIR}/tools/fpcmp)
-    if(DEFINED FP_TOLERANCE)
+    if(FP_TOLERANCE)
       set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
     endif()
-    if(DEFINED FP_ABSTOLERANCE)
+    if(FP_ABSTOLERANCE)
       set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
     endif()
     if(REFERENCE_OUTPUT)
@@ -203,7 +203,7 @@ macro(llvm_multisource)
   endif()
   list(LENGTH sources sources_len)
 
-  if(sources_len GREATER 0 AND DEFINED PROG)
+  if(sources_len GREATER 0 AND PROG)
     set(executable ${PROG})
     llvm_test_executable(${executable} ${sources}
       PREFIX ${_LMARG_PREFIX}
