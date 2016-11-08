@@ -1,7 +1,2 @@
-if(ARCH STREQUAL "x86")
-  if(USE_REFERENCE_OUTPUT)
-    set(EXEC_XFAILS casts)
-  endif()
-endif()
 list(APPEND LDFLAGS -lm)
 llvm_singlesource(PREFIX "regression-c")
