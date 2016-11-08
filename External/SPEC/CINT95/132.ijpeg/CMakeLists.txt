@@ -96,4 +96,4 @@ test_input(ref penguin.ppm penguin.out)
 test_input(ref specmun.ppm specmun.out)
 test_input(ref vigo.ppm vigo.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

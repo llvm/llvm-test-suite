@@ -33,4 +33,4 @@ test_input(ref g23.in g23.s)
 test_input(ref s04.in s04.s)
 test_input(ref scilab.in scilab.s)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

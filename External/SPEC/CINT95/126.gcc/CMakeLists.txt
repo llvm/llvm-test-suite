@@ -23,4 +23,4 @@ foreach(input ${inputs})
   test_input(ref ${basename}.o ${basename}.s)
 endforeach()
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

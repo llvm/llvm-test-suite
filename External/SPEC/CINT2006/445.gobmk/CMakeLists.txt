@@ -41,4 +41,4 @@ foreach(tstfile IN ITEMS
   test_input(ref ${tstfile} ${basename}.out)
 endforeach()
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

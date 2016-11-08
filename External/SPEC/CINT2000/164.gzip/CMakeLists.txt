@@ -18,4 +18,4 @@ test_input(ref input.graphic 60)
 test_input(ref input.random 60)
 test_input(ref input.program 60)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

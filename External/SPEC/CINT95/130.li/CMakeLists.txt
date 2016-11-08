@@ -21,4 +21,4 @@ test_input(ref au.lsp boyer.lsp browse.lsp ctak.lsp dderiv.lsp deriv.lsp
                destrum1.lsp destrum2.lsp div2.lsp puzzle0.lsp puzzle1.lsp
                tak0.lsp tak1.lsp tak2.lsp takr.lsp triang.lsp xit.lsp)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

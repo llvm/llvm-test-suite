@@ -17,4 +17,4 @@ test_input(train rivers1.cfg rivers1.out)
 test_input(ref BigLakes2048.cfg BigLakes2048.out)
 test_input(ref rivers.cfg rivers.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

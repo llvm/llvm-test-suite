@@ -43,7 +43,7 @@ test_input(ref 0.05)
 test_input(train 0.05)
 test_input(test 0.10)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 # The benchmark writes the output where the input files are, so we have to
 # copy the data over.

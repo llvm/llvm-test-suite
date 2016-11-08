@@ -24,7 +24,7 @@ test_input(train pds-20.mps pds-20.mps.out 0.02   0.0001 -s1 -e -m5000)
 test_input(ref   ref.mps    ref.out        0.02   0.0001 -m3500)
 test_input(ref   pds-50.mps pds-50.mps.out 0.02   0.0001 -s1 -e -m45000)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 macro(prepare_data run_type)
   llvm_copy_dir(450.soplex

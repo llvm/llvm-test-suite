@@ -154,14 +154,14 @@ foreach(input ${inputs})
   )
 endforeach()
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 include(CopyDir)
-llvm_copy_dir(253.perlbmk ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
+llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
   ${BENCHMARK_DIR}/data/all/input
   ${BENCHMARK_DIR}/data/test/input
 )
-llvm_copy_dir(253.perlbmk ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
   ${BENCHMARK_DIR}/data/all/input
   ${BENCHMARK_DIR}/data/ref/input
 )

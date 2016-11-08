@@ -2,7 +2,6 @@ llvm_externals_find(TEST_SUITE_SKIDMARKS10_ROOT "skidmarks10" "Skidmarks 10")
 
 if(TEST_SUITE_SKIDMARKS10_ROOT)
   set(PROG skidmarks)
-  file(GLOB Source ${TEST_SUITE_SKIDMARKS10_ROOT}/source/*.c)
   list(APPEND CPPFLAGS -I${TEST_SUITE_SKIDMARKS10_ROOT}/source)
   if(ARCH STREQUAL "x86")
     list(APPEND CFLAGS -msse3)
@@ -14,5 +13,6 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
     %o
     ${CMAKE_CURRENT_SOURCE_DIR}/skidmarks.reference_output
   )
-  llvm_multisource()
+  file(GLOB SOURCES ${TEST_SUITE_SKIDMARKS10_ROOT}/source/*.c)
+  llvm_test_executable(skidmarks ${SOURCES})
 endif()

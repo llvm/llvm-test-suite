@@ -20,7 +20,7 @@ test_input(test 0.0002)
 test_input(train 0.00005)
 test_input(ref 0.00005)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 include(CopyDir)
 llvm_copy_dir(453.povray ${CMAKE_CURRENT_BINARY_DIR}/data/test/input

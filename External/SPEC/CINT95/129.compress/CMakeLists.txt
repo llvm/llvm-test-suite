@@ -17,4 +17,4 @@ test_input(test test.in test.out)
 test_input(train test.in test.out)
 test_input(ref bigtest.in bigtest.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

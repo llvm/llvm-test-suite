@@ -28,4 +28,4 @@ test_input(ref scilab.i scilab.s)
 test_input(train cp-decl.i cp-decl.s)
 test_input(test cccp.i cccp.s)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

@@ -25,9 +25,9 @@ test_input(ref ${endianname}1.raw vortex1.out)
 test_input(ref ${endianname}2.raw vortex2.out)
 test_input(ref ${endianname}3.raw vortex3.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 # The benchmark writes the output where the input files are, so we have to
 # copy the data over.
 include(CopyDir)
-llvm_copy_dir(255.vortex ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)
+llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)

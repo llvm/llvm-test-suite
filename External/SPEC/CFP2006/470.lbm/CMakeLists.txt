@@ -19,4 +19,4 @@ test_input(test   20 reference.dat 0 1 100_100_130_cf_a.of)
 test_input(train 300 reference.dat 0 1 100_100_130_cf_b.of)
 test_input(ref  3000 reference.dat 0 0 100_100_130_ldc.of)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

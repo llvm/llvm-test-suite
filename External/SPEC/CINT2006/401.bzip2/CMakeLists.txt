@@ -24,4 +24,4 @@ test_input(ref ${BENCHMARK_DIR}/data/all/input/input.program 280 input.program.o
 test_input(ref ${BENCHMARK_DIR}/data/ref/input/text.html 280 text.html.out)
 test_input(ref ${BENCHMARK_DIR}/data/all/input/input.combined 200 input.combined.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

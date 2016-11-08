@@ -55,4 +55,4 @@ test_input(ref ref.2.out
   -objects 10
 )
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

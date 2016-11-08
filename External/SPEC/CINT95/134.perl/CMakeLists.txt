@@ -21,4 +21,4 @@ test_input(train scrabbl)
 test_input(ref primes)
 test_input(ref scrabbl)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

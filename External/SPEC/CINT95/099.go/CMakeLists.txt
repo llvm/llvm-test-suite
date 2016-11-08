@@ -16,4 +16,4 @@ test_input(ref 5stone21.in 5stone21.out 50 21)
 test_input(ref 9stone21.in 9stone21.out 50 21)
 test_input(ref null.in null.out 50 21)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

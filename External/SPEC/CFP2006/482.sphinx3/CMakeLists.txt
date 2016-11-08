@@ -36,16 +36,15 @@ foreach(s ${Source})
   set_source_files_properties(${s} PROPERTIES COMPILE_DEFINITIONS __FILE__="${basename}")
 endforeach()
 
-llvm_multisource()
-set(TARGET 482.sphinx3)
+llvm_test_executable(${PROG} ${Source})
 
 macro(prepare_data run_type)
   set(DESTDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input)
-  llvm_copy_dir(${TARGET} ${DESTDIR}/model
+  llvm_copy_dir(${PROG} ${DESTDIR}/model
     ${BENCHMARK_DIR}/data/all/input/model
   )
-  llvm_copy(${TARGET} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/args.an4)
-  llvm_copy(${TARGET} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/beams.dat)
+  llvm_copy(${PROG} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/args.an4)
+  llvm_copy(${PROG} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/beams.dat)
   # Create ctlfile and copy .raw files depending on endianess
   if(IS_BIGENDIAN)
     file(GLOB files "${BENCHMARK_DIR}/data/${run_type}/input/*.be.raw")
@@ -56,7 +55,7 @@ macro(prepare_data run_type)
   foreach(f ${files})
     get_filename_component(basename ${f} NAME)
     string(REGEX REPLACE ".(be|le).raw$" "" basename "${basename}")
-    llvm_copy(${TARGET} ${DESTDIR}/${basename}.raw ${f})
+    llvm_copy(${PROG} ${DESTDIR}/${basename}.raw ${f})
     # Determine file size...
     file(READ ${f} content HEX)
     string(LENGTH ${content} content_length)

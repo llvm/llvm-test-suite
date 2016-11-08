@@ -29,4 +29,4 @@ test_input(ref 192M)
 test_input(train 128M)
 test_input(test 64M)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

@@ -20,4 +20,4 @@ test_input(test 33 5)
 test_input(train 143 25)
 test_input(ref 1397 8)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

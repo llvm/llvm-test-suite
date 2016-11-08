@@ -38,4 +38,4 @@ test_input(ref retro.hmm retro.out
   --fixed 0 --mean 500 --num 500000 --sd 350 --seed 0
 )
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

@@ -139,8 +139,7 @@ foreach(input ${inputs})
   )
 endforeach()
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 include(CopyDir)
-llvm_copy_dir(400.perlbench ${CMAKE_CURRENT_BINARY_DIR}/data
-  ${BENCHMARK_DIR}/data)
+llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)

@@ -24,7 +24,7 @@ test_input(ref foreman_ref_ baseline)
 test_input(ref foreman_ref_ main)
 test_input(ref sss_ main)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 # TODO: This will copy a bit more than 50M of data, maybe we should symlink it?
 include(CopyDir)

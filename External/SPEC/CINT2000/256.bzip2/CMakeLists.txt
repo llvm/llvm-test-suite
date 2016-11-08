@@ -16,4 +16,4 @@ test_input(ref input.source 58)
 test_input(ref input.graphic 58)
 test_input(ref input.program 58)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

@@ -117,4 +117,4 @@ test_input(test)
 test_input(train)
 test_input(ref)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})

@@ -3,8 +3,6 @@ if(ARCH STREQUAL "x86")
   llvm_externals_find(TEST_SUITE_NURBS_ROOT "nurbs" "Nurbs")
 
   if(TEST_SUITE_NURBS_ROOT)
-    set(PROG nurbs)
-    file(GLOB Source ${TEST_SUITE_NURBS_ROOT}/*.cpp)
     list(APPEND LDFLAGS -lstdc++)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       list(APPEND CPPFLAGS -DDWORD_IS_ULL)
@@ -16,6 +14,7 @@ if(ARCH STREQUAL "x86")
       ${CMAKE_CURRENT_SOURCE_DIR}/nurbs.reference_output
     )
 
-    llvm_multisource()
+    file(GLOB SOURCES ${TEST_SUITE_NURBS_ROOT}/*.cpp)
+    llvm_test_executable(nurbs ${SOURCES})
   endif()
 endif()

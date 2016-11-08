@@ -20,9 +20,9 @@ test_input(test)
 test_input(train)
 test_input(ref)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
 
 # The benchmark writes the output where the input files are, so we have to
 # copy the data over.
 include(CopyDir)
-llvm_copy_dir(300.twolf ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)
+llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)

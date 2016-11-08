@@ -1,8 +1,6 @@
 llvm_externals_find(TEST_SUITE_POVRAY_ROOT "povray31" "POV-Ray 3.1")
 
 if(TEST_SUITE_POVRAY_ROOT)
-  set(PROG povray)
-
   file(GLOB Source
     ${TEST_SUITE_POVRAY_ROOT}/source/*.c
     ${TEST_SUITE_POVRAY_ROOT}/source/libpng/*.c
@@ -32,5 +30,5 @@ if(TEST_SUITE_POVRAY_ROOT)
     ${CMAKE_CURRENT_SOURCE_DIR}/povray.reference_output
   )
 
-  llvm_multisource()
+  llvm_test_executable(povray ${Source})
 endif()

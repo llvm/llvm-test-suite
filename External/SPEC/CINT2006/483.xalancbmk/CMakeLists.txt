@@ -44,4 +44,4 @@ test_input(test test.xml test.out)
 test_input(train allbooks.xml train.out)
 test_input(ref t5.xml ref.out)
 
-llvm_multisource()
+llvm_test_executable(${PROG} ${Source})
