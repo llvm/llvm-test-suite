@@ -1,6 +1,5 @@
 list(APPEND LDFLAGS -lm )
 set(FP_TOLERANCE 0.001)
-
 set(Source
   ReedSolomon.c
   fbench.c
@@ -27,16 +26,7 @@ set(Source
   salsa20.c
   whetstone.c
 )
-
 if(NOT ARCH STREQUAL "PowerPC" OR NOT TARGET_OS STREQUAL "Darwin")
   list(APPEND Source dt.c)
-endif()
-if(ARCH STREQUAL "Mips")
-  set(RUNTIMELIMIT 2000)
-endif()
-if(ARCH STREQUAL "XCore")
-  if(NOT DEFINED SMALL_PROBLEM_SIZE)
-    set(RUNTIMELIMIT 10800)
-  endif()
 endif()
 llvm_singlesource()
