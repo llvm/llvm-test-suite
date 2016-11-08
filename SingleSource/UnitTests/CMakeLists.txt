@@ -3,44 +3,44 @@ add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
-
 # FIXME: Disable SJLJ tests for now, until EH edges are represented.
 # add_subdirectory(SetjmpLongjmp)
-
 if(TARGET_OS STREQUAL "Darwin")
   add_subdirectory(ObjC)
   add_subdirectory(ObjC++)
 endif()
+
+file(GLOB Source RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.c *.cpp)
 if(TARGET_OS STREQUAL "Darwin")
-  set(PROGRAMS_TO_SKIP 2007-04-25-weak)
+  list(REMOVE_ITEM Source 2007-04-25-weak.c)
   if(ARCH STREQUAL "PowerPC")
-    list(APPEND PROGRAMS_TO_SKIP AtomicOps)
+    list(REMOVE_ITEM Source AtomicOps.c)
   endif()
 endif()
 if(ARCH STREQUAL "AArch64")
-  list(APPEND PROGRAMS_TO_SKIP blockstret)
+  list(REMOVE_ITEM Source blockstret.c)
 endif()
 if(ARCH STREQUAL "Mips")
   add_subdirectory(Mips)
   # Only MIPS 64-bit supports 8 bytes atomic operations.
   if(NOT MIPS_IS_MIPS64_ENABLED)
-    list(APPEND PROGRAMS_TO_SKIP AtomicOps)
+    list(REMOVE_ITEM Source AtomicOps.c)
   endif()
 endif()
 if(ARCH STREQUAL "XCore")
-  list(APPEND PROGRAMS_TO_SKIP AtomicOps)
-  list(APPEND PROGRAMS_TO_SKIP initp1)
+  list(REMOVE_ITEM Source AtomicOps.c)
+  list(REMOVE_ITEM Source initp1.cpp)
   set(XCORE_TARGET_NEEDS_MEMORY 1)
 endif()
 list(APPEND LDFLAGS -lstdc++)
 if(NOT ARCH STREQUAL "x86")
-  list(APPEND PROGRAMS_TO_SKIP
-    ms_struct-bitfield
-    ms_struct-bitfield-1
-    ms_struct-bitfield-init
-    ms_struct-bitfield-init-1
-    ms_struct_pack_layout
-    ms_struct_pack_layout-1
+  list(REMOVE_ITEM Source
+    ms_struct-bitfield.c
+    ms_struct-bitfield-1.c
+    ms_struct-bitfield-init.c
+    ms_struct-bitfield-init-1.c
+    ms_struct_pack_layout.c
+    ms_struct_pack_layout-1.c
   )
 endif()
 llvm_singlesource()

@@ -19,17 +19,13 @@
 #
 #   Invokes llvm_test_executable() for each c/c++ source file.  If
 #   'sources is emptyno sources are specified, creates test executables
-#   for all C/C++ files in current directory, except for those
-#   listed in PROGRAMS_TO_SKIP.
+#   for all C/C++ files in current directory.
 #   Passes optional PREFIX parameter to llvm_test_executable().
 #   If optional TARGET_VAR is specified, the variable is set to
 #   list of all created targets.
 #
 # llvm_multisource(executable)
 #   Invokes llvm_test_executable(executable [sources...])
-#
-# Variables that control target generation:
-#   PROGRAMS_TO_SKIP - list of base names of executalbes to skip.
 #
 ##===----------------------------------------------------------------------===##
 
@@ -144,37 +140,32 @@ macro(llvm_test_executable name)
     set(executable ${name})
   endif()
   unset("${_LTARG_TARGET_VAR}")
-  list(FIND PROGRAMS_TO_SKIP ${executable} exe_idx)
-  list(FIND PROGRAMS_TO_SKIP ${name} name_idx)
-  # Should we skip this?
-  if(${name_idx} EQUAL -1 AND ${exe_idx} EQUAL -1)
-    add_executable(${executable} ${_LTARG_UNPARSED_ARGUMENTS})
-    if(_LTARG_TARGET_VAR)
-      set(${_LTARG_TARGET_VAR} ${executable})
-    endif()
-    append_compile_flags(${executable} ${CFLAGS})
-    append_compile_flags(${executable} ${CPPFLAGS})
-    append_compile_flags(${executable} ${CXXFLAGS})
-    # Note that we cannot use target_link_libraries() here because that one
-    # only interprets inputs starting with '-' as flags.
-    append_link_flags(${executable} ${LDFLAGS})
-    set(executable_path ${CMAKE_CURRENT_BINARY_DIR}/${executable})
-    if(TEST_SUITE_PROFILE_USE)
-      append_compile_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
-      append_link_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
-    endif()
-
-    set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${executable})
-
-    # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
-    # llvm_test_run() was not called yet.
-    if(NOT TESTSCRIPT)
-      llvm_test_traditional(${executable_path}.test ${executable_path} ${name})
-    else()
-      llvm_add_test(${executable_path}.test ${executable_path})
-    endif()
-    test_suite_add_build_dependencies(${executable})
+  add_executable(${executable} ${_LTARG_UNPARSED_ARGUMENTS})
+  if(_LTARG_TARGET_VAR)
+    set(${_LTARG_TARGET_VAR} ${executable})
   endif()
+  append_compile_flags(${executable} ${CFLAGS})
+  append_compile_flags(${executable} ${CPPFLAGS})
+  append_compile_flags(${executable} ${CXXFLAGS})
+  # Note that we cannot use target_link_libraries() here because that one
+  # only interprets inputs starting with '-' as flags.
+  append_link_flags(${executable} ${LDFLAGS})
+  set(executable_path ${CMAKE_CURRENT_BINARY_DIR}/${executable})
+  if(TEST_SUITE_PROFILE_USE)
+    append_compile_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
+    append_link_flags(${executable} -fprofile-instr-use=${executable_path}.profdata)
+  endif()
+
+  set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${executable})
+
+  # Fall back to old style involving RUN_OPTIONS and STDIN_FILENAME if
+  # llvm_test_run() was not called yet.
+  if(NOT TESTSCRIPT)
+    llvm_test_traditional(${executable_path}.test ${executable_path} ${name})
+  else()
+    llvm_add_test(${executable_path}.test ${executable_path})
+  endif()
+  test_suite_add_build_dependencies(${executable})
 endmacro()
 
 # Configure the current directory as a SingleSource subdirectory - i.e. every

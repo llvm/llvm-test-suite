@@ -1,6 +1,18 @@
 list(APPEND LDFLAGS -lm)
 set(FP_TOLERANCE 0.001)
-if(TEST_SUITE_BENCHMARKING_ONLY)
-  list(APPEND PROGRAMS_TO_SKIP IntMM)
+set(Source
+  Bubblesort.c
+  FloatMM.c
+  Oscar.c
+  Perm.c
+  Puzzle.c
+  Queens.c
+  Quicksort.c
+  RealMM.c
+  Towers.c
+  Treesort.c
+)
+if(NOT TEST_SUITE_BENCHMARKING_ONLY)
+  list(APPEND Source IntMM.c)
 endif()
 llvm_singlesource()
