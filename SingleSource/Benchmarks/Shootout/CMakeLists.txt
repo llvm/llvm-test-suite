@@ -20,4 +20,4 @@ set(Source
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   list(APPEND Source hello.c)
 endif()
-llvm_singlesource(PREFIX "shootout")
+llvm_singlesource(PREFIX Shootout-)

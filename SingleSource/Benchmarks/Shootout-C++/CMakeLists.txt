@@ -42,4 +42,4 @@ if(TARGET_OS STREQUAL "Darwin")
   # Necessary for ackermann on iOS
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)
 endif()
-llvm_singlesource(PREFIX "shootout-cxx")
+llvm_singlesource(PREFIX Shootout-C++-)

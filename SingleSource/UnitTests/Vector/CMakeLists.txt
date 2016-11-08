@@ -12,4 +12,4 @@ if(ARCH STREQUAL "AArch64")
   add_subdirectory(AArch64)
 endif()
 
-llvm_singlesource(PREFIX "Vector")
+llvm_singlesource(PREFIX "Vector-")
