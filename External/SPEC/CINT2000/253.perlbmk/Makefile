@@ -7,6 +7,7 @@ SPEC_ROOT := $(SPEC2000_ROOT)
 include $(PROJ_SRC_ROOT)/External/SPEC/Makefile.spec.config
 
 CPPFLAGS += -DSPEC_CPU2000_LINUX_I386 -DSPEC_CPU2000_NEED_BOOL
+CFLAGS += -std=gnu89
 
 # Not sure why this is needed. 
 ifndef RUN_TYPE
