@@ -40,7 +40,7 @@ set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
     "Disable position independent executables and ASLR")
 mark_as_advanced(TEST_SUITE_DISABLE_PIE)
 if(TEST_SUITE_DISABLE_PIE)
-  if(APPLE)
+  if(APPLE AND NOT ARCH STREQUAL "AArch64")
     list(APPEND LDFLAGS -Wl,-no_pie)
   endif()
   # TODO: Add apropriate flags to disable PIE/ASLR on linux, bsd, ...
