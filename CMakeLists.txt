@@ -34,18 +34,6 @@ endif()
 # We want reproducible builds, so using __DATE__ and __TIME__ is bad
 add_definitions(-Werror=date-time)
 
-# Disabling address space randomization makes the performance of memory/cache
-# intensive benchmarks more deterministic.
-set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
-    "Disable position independent executables and ASLR")
-mark_as_advanced(TEST_SUITE_DISABLE_PIE)
-if(TEST_SUITE_DISABLE_PIE)
-  if(APPLE AND NOT ARCH STREQUAL "AArch64")
-    list(APPEND LDFLAGS -Wl,-no_pie)
-  endif()
-  # TODO: Add apropriate flags to disable PIE/ASLR on linux, bsd, ...
-endif()
-
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
@@ -137,6 +125,18 @@ if(NOT DEFINED ENDIAN)
   else()
     set(ENDIAN "little")
   endif()
+endif()
+
+# Disabling address space randomization makes the performance of memory/cache
+# intensive benchmarks more deterministic.
+set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
+    "Disable position independent executables and ASLR")
+mark_as_advanced(TEST_SUITE_DISABLE_PIE)
+if(TEST_SUITE_DISABLE_PIE)
+  if(APPLE AND NOT ARCH STREQUAL "AArch64")
+    list(APPEND LDFLAGS -Wl,-no_pie)
+  endif()
+  # TODO: Add apropriate flags to disable PIE/ASLR on linux, bsd, ...
 endif()
 
 if(ARCH STREQUAL "Mips")
