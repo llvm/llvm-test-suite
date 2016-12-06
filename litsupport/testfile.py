@@ -30,13 +30,13 @@ def parse(context, filename):
     keywords = ['PREPARE:', 'RUN:', 'VERIFY:', 'METRIC:']
     for line_number, command_type, ln in \
             parseIntegratedTestScriptCommands(filename, keywords):
-        if command_type == 'PREPARE':
+        if command_type == 'PREPARE:':
             _parseShellCommand(preparescript, ln)
-        elif command_type == 'RUN':
+        elif command_type == 'RUN:':
             _parseShellCommand(runscript, ln)
-        elif command_type == 'VERIFY':
+        elif command_type == 'VERIFY:':
             _parseShellCommand(verifyscript, ln)
-        elif command_type == 'METRIC':
+        elif command_type == 'METRIC:':
             metric, ln = ln.split(':', 1)
             metricscript = metricscripts.setdefault(metric.strip(), list())
             _parseShellCommand(metricscript, ln)
