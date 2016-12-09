@@ -4,8 +4,9 @@ Compile Time Mark
 This is a collection of applications used for compiler performance testing. It
 currently features a selection of larger applications from the test-suite.
 
-You can use this with:
-$ cmake -DTEST_SUITE_SUBDIRS=CTMark ...
+This is typically used with the following cmake flags:
+$ cmake -DTEST_SUITE_SUBDIRS=CTMark -DTEST_SUITE_RUN_BENCHMARKS=0 ...
+(followed by the usual make, llvm-lit invocations, see the test-suite tutorial)
 
 See also:
 
