@@ -99,8 +99,6 @@ def readmulti(filenames):
     return d
 
 def add_diff_column(d, absolute_diff=False):
-    values = d.unstack(level=0)
-
     has_two_runs = d.index.get_level_values(0).nunique() == 2
     if has_two_runs:
         values0 = values.iloc[:,0]
@@ -145,6 +143,8 @@ def print_filter_stats(reason, before, after):
 # Truncate a string to a maximum length by keeping a prefix, a suffix and ...
 # in the middle
 def truncate(string, prefix_len, suffix_len):
+    if string==():
+        return ""
     return re.sub("^(.{%d}).*(.{%d})$" % (prefix_len, suffix_len),
                   "\g<1>...\g<2>", string)
 
@@ -183,14 +183,13 @@ def format_diff(value):
     else:
         return "%-5d" % value
 
-def print_result(d, limit_output=True, shorten_names=True,
-                 show_diff_column=True, sortkey='diff'):
-    # sort (TODO: is there a more elegant way than create+drop a column?)
-    d['$sortkey'] = d[sortkey].abs()
-    d = d.sort_values("$sortkey", ascending=False)
-    del d['$sortkey']
-    if not show_diff_column:
-        del d['diff']
+def print_result(d, limit_output=True, shorten_names=True, sortkey=None):
+    if sortkey is not None:
+        # sort (TODO: is there a more elegant way than create+drop a column?)
+        d['$sortkey'] = d[sortkey].abs()
+        d = d.sort_values("$sortkey", ascending=False)
+        del d['$sortkey']
+
     dataout = d
     if limit_output:
         # Take 15 topmost elements
@@ -315,9 +314,12 @@ if __name__ == "__main__":
     print "Metric: %s" % metric
     if len(metric) > 0:
         data = data[metrics]
-    data = add_diff_column(data)
+    data = data.unstack(level=0)
 
-    sortkey = 'diff'
+    sortkey = None
+    if config.show_diff:
+        data = add_diff_column(data)
+        sortkey = 'diff'
     if len(config.files) == 1:
         sortkey = data.columns[0]
 
@@ -325,4 +327,4 @@ if __name__ == "__main__":
     print ""
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
-    print_result(data, limit_output, shorten_names, config.show_diff, sortkey)
+    print_result(data, limit_output, shorten_names, sortkey)
