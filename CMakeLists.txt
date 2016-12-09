@@ -178,7 +178,9 @@ if(NOT TEST_SUITE_SUBDIRS)
   set(TEST_SUITE_SUBDIRS "")
   foreach(entry ${sub_cmakelists})
     get_filename_component(subdir ${entry} DIRECTORY)
-    if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+    # Exclude tools and CTMark from default list
+    if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools AND
+       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/CTMark)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
     endif()
   endforeach()
