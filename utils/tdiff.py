@@ -88,28 +88,44 @@ def query_ninja(targets, cwd):
     return parse(out)
 
 
+def determine_max_commandline_len():
+    """Determine maximum length of commandline possible"""
+    # See also http://www.in-ulm.de/~mascheck/various/argmax/
+    sc_arg_max = os.sysconf('SC_ARG_MAX')
+    if sc_arg_max <= 0:
+        return 10000 # wild guess
+    env_len = 0
+    for key,val in os.environ.iteritems():
+        env_len += len(key) + len(val) + 10
+    return sc_arg_max - env_len
+
+
 def get_inputs_rec(target, cwd):
     worklist = [target]
 
     result = dict()
+    maxquerylen = determine_max_commandline_len() - 100
     while len(worklist) > 0:
-        limit = 30   # Limit number of targets to avoid argument list limits
         querylist = []
-        for w in worklist[:limit]:
+        querylen = 0
+        while len(worklist) > 0:
+            w = worklist.pop()
             if w in result:
                 continue
+            querylen += 9 + len(w)
+            if querylen > maxquerylen:
+                break
             querylist.append(w)
-        worklist = worklist[limit:]
         if querylist == []:
             break
 
         queryres = query_ninja(querylist, cwd)
         for res in queryres:
             result[res.target] = res
-            for inp in res.inputs:
-                if inp[1] == 'order-only':
+            for inp,typ in res.inputs:
+                if typ == 'order-only':
                     continue
-                worklist.append(inp[0])
+                worklist.append(inp)
     return result
 
 
