@@ -21,6 +21,20 @@ void srand( unsigned int seed ) {
 }
 // End of RNG implementation
 
+/* Return 0 when V1 and V2 do not match within the allowed FP_ABSTOLERANCE.  */
+static inline int
+check_FP(float V1, float V2) {
+  double AbsTolerance = FP_ABSTOLERANCE;
+  double Diff = fabs(V1 - V2);
+  if (Diff > AbsTolerance) {
+    fprintf(stderr, "A = %lf and B = %lf differ more than"
+                  " FP_ABSTOLERANCE = %lf\n", V1, V2, AbsTolerance);
+    return 0;
+  }
+
+  return 1;
+}
+
 int main(int argc, char *argv[]) {
 	unsigned MAXSIZE;
 	unsigned MAXWAVES;
@@ -29,6 +43,8 @@ int main(int argc, char *argv[]) {
 	float *ImagIn;
 	float *RealOut;
 	float *ImagOut;
+	float *RealOut_StrictFP;
+	float *ImagOut_StrictFP;
 	float *coeff;
 	float *amp;
 	int invfft=0;
@@ -51,6 +67,8 @@ int main(int argc, char *argv[]) {
  ImagIn=(float*)malloc(sizeof(float)*MAXSIZE);
  RealOut=(float*)malloc(sizeof(float)*MAXSIZE);
  ImagOut=(float*)malloc(sizeof(float)*MAXSIZE);
+ RealOut_StrictFP=(float*)malloc(sizeof(float)*MAXSIZE);
+ ImagOut_StrictFP=(float*)malloc(sizeof(float)*MAXSIZE);
  coeff=(float*)malloc(sizeof(float)*MAXWAVES);
  amp=(float*)malloc(sizeof(float)*MAXWAVES);
 
@@ -81,21 +99,30 @@ int main(int argc, char *argv[]) {
 
  /* regular*/
  fft_float (MAXSIZE,invfft,RealIn,ImagIn,RealOut,ImagOut);
+ fft_float_StrictFP (MAXSIZE,invfft,RealIn,ImagIn,RealOut_StrictFP,ImagOut_StrictFP);
  
  printf("RealOut:\n");
- for (i=0;i<MAXSIZE;i++)
-   printf("%f \t", RealOut[i]);
+ for (i=0;i<MAXSIZE;i++) {
+   if (!check_FP(RealOut[i], RealOut_StrictFP[i]))
+     return 1;
+   printf("%f \t", RealOut_StrictFP[i]);
+ }
  printf("\n");
 
 printf("ImagOut:\n");
- for (i=0;i<MAXSIZE;i++)
-   printf("%f \t", ImagOut[i]);
-   printf("\n");
+ for (i=0;i<MAXSIZE;i++) {
+   if (!check_FP(ImagOut[i], ImagOut_StrictFP[i]))
+     return 1;
+   printf("%f \t", ImagOut_StrictFP[i]);
+ }
+ printf("\n");
 
  free(RealIn);
  free(ImagIn);
  free(RealOut);
  free(ImagOut);
+ free(RealOut_StrictFP);
+ free(ImagOut_StrictFP);
  free(coeff);
  free(amp);
  exit(0);
