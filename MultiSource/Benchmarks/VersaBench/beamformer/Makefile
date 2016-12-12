@@ -1,5 +1,6 @@
 LEVEL = ../../../..
 LDFLAGS += -lm
+CFLAGS += -DFP_ABSTOLERANCE=1e-5
 
 PROG     = beamformer
 ifdef LARGE_PROBLEM_SIZE
