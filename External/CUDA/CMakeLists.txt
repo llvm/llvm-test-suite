@@ -40,6 +40,8 @@ macro(create_one_local_test Name FileGlob)
     target_link_libraries(${_executable} ${VariantLibs})
   endif()
   add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
+  # Local tests are presumed to be fast.
+  list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
 endmacro()
 
 # Create targets for CUDA tests that are part of the test suite.
@@ -132,6 +134,15 @@ function(create_cuda_test_variant Std VariantSuffix)
   if(EXISTS ${THRUST_PATH} AND (NOT ${Std} STREQUAL "c++14"))
     create_thrust_tests(${VariantSuffix})
   endif()
+
+  # Target for CUDA tests that take little time to build and run.
+  add_custom_target(check-cuda-simple-${VariantSuffix}
+    COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS}
+            ${CUDA_SIMPLE_TEST_TARGETS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS cuda-tests-simple-${VariantSuffix}
+    USES_TERMINAL)
+  add_dependencies(check-cuda-simple check-cuda-simple-${VariantSuffix})
 endfunction(create_cuda_test_variant)
 
 macro(create_cuda_tests)
@@ -156,11 +167,17 @@ macro(create_cuda_tests)
   # Special target to build all simple tests. Useful for quick smoke test
   # before we embark on heavy-duty compilation which may not be worth it.
   add_custom_target(cuda-tests-simple
-      COMMENT "Build all simple CUDA tests")
+    COMMENT "Build all simple CUDA tests")
+  add_custom_target(check-cuda-simple
+    COMMENT "Run all simple CUDA tests")
 
   # set default GPU arch
   if(NOT CUDA_GPU_ARCH)
     list(APPEND CUDA_GPU_ARCH sm_35)
+  endif()
+
+  if (CUDA_JOBS)
+    set(TEST_SUITE_LIT_FLAGS ${TEST_SUITE_LIT_FLAGS} -j ${CUDA_JOBS})
   endif()
 
   foreach(GpuArch IN LISTS CUDA_GPU_ARCH)

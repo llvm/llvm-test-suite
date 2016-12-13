@@ -144,6 +144,11 @@ if(ARCH STREQUAL "Mips")
   check_symbol_exists(__mips64 "" MIPS_IS_MIPS64_ENABLED)
 endif()
 
+find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
+set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
+mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
+mark_as_advanced(TEST_SUITE_LIT)
+
 add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
@@ -223,10 +228,6 @@ endif()
 # Produce lit.site.cfg
 configure_file("${PROJECT_SOURCE_DIR}/lit.site.cfg.in" "${CMAKE_BINARY_DIR}/lit.site.cfg")
 
-find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
-set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
-mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
-mark_as_advanced(TEST_SUITE_LIT)
 get_property(TEST_SUITE_TARGETS GLOBAL PROPERTY TEST_SUITE_TARGETS)
 add_custom_target(check
   COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} .
