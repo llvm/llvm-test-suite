@@ -298,6 +298,9 @@ macro(create_cuda_tests)
   # convenience target to build all CUDA tests.
   add_custom_target(cuda-tests-all DEPENDS cuda-tests-simple cuda-tests-thrust
     COMMENT "Build all CUDA tests.")
+
+  # stage lit config needed to control how CUDA tests are run.
+  file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endmacro(create_cuda_tests)
 
 # We always want asserts() to run.
