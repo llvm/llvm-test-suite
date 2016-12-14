@@ -1201,7 +1201,9 @@ __device__ void test_llrint()
     static_assert((std::is_same<decltype(llrint(Ambiguous())), Ambiguous>::value), "");
     assert(llrint(1) == 1LL);
     assert(llrint(1.) == 1LL);
+#if CUDA_VERSION > 7050
     assert(llrint(1.f) == 1LL);
+#endif
 }
 
 __device__ void test_llround()
@@ -1296,7 +1298,9 @@ __device__ void test_lrint()
     static_assert((std::is_same<decltype(lrint(Ambiguous())), Ambiguous>::value), "");
     assert(lrint(1) == 1L);
     assert(lrint(1.) == 1L);
+#if CUDA_VERSION > 7050
     assert(lrint(1.f) == 1L);
+#endif
 }
 
 __device__ void test_lround()
