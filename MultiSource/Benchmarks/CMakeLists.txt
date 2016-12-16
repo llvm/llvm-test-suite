@@ -18,7 +18,6 @@ add_subdirectory(llubenchmark)
 add_subdirectory(mediabench)
 add_subdirectory(nbench)
 add_subdirectory(sim)
-add_subdirectory(DOE-ProxyApps-C)
 
 if((NOT "${TARGET_OS}" STREQUAL "Darwin") OR (NOT "${ARCH}" STREQUAL "ARM"))
   add_subdirectory(TSVC)

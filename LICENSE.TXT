@@ -82,7 +82,6 @@ ASC Sequoia:        llvm-test/MultiSource/Benchmarks/ASC_Sequoia/AMGmk
                     llvm-test/MultiSource/Benchmarks/ASC_Sequoia/IRSmk
                     llvm-test/MultiSource/Benchmarks/ASC_Sequoia/sphot
 smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
-XSBench:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/XSBench
 Fhourstones:        llvm-test/MultiSource/Benchmarks/Fhourstones
 Fhourstones-3.1:    llvm-test/MultiSource/Benchmarks/Fhourstones-3.1
 McCat:              llvm-test/MultiSource/Benchmarks/McCat
