@@ -1,0 +1,5 @@
+set(PROG XSBench)
+set(CPPFLAGS -DVERIFICATION)
+set(LDFLAGS -lm)
+set(RUN_OPTIONS -s small -g 1250 -l 1000000)
+llvm_multisource()

@@ -9,7 +9,7 @@ PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  McCat Olden Ptrdist llubenchmark \
                  sim FreeBench MallocBench Prolangs-C SciMark2-C mediabench\
                  nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial\
-                 BitBench ASC_Sequoia TSVC
+                 BitBench ASC_Sequoia TSVC DOE-ProxyApps-C
 
 # Disable TSVC on Darwin until the tests support SMALL_PROBLEM_SIZE=1.
 ifeq ($(TARGET_OS),Darwin)
