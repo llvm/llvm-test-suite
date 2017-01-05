@@ -1,4 +1,4 @@
-// This simple PNG IO library works with *both* the Halide::Image<T> type *and*
+// This simple PNG IO library works with *both* the Halide::Buffer<T> type *and*
 // the simple halide_image.h version. Also now includes PPM support for faster load/save.
 
 #ifndef HALIDE_IMAGE_IO_H
