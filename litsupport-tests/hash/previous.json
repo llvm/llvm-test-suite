@@ -1,0 +1,19 @@
+{
+  "__version__": [
+    0, 
+    5, 
+    0
+  ], 
+  "elapsed": 0.03325676918029785, 
+  "tests": [
+    {
+      "code": "PASS", 
+      "elapsed": 0.008104085922241211, 
+      "metrics": {
+        "hash": "5dbd958d0108aca7182edcc98225739b"
+      }, 
+      "name": "test-suite :: tests/skip.test", 
+      "output": "\ntests/foo.sh"
+    }
+  ]
+}
