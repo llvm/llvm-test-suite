@@ -312,8 +312,8 @@ if __name__ == "__main__":
         print "Remaining: %d" % (final_size,)
 
     # Reduce / add columns
-    print "Metric: %s" % metric
-    if len(metric) > 0:
+    print "Metric: %s" % (",".join(metrics),)
+    if len(metrics) > 0:
         data = data[metrics]
     data = add_diff_column(data)
 
