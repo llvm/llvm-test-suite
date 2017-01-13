@@ -61,6 +61,8 @@ def _collectTime(context, timefiles, metric_name='exec_time'):
 
 
 def mutatePlan(context, plan):
+    if len(plan.runscript) == 0:
+        return
     context.timefiles = []
     plan.runscript = mutateScript(context, plan.runscript)
     plan.metric_collectors.append(
