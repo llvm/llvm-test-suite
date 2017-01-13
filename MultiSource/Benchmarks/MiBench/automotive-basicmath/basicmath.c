@@ -105,7 +105,7 @@ int main(void)
     {
 	 usqrt(l, &q);
 	 //printf("\nsqrt(%lX) = %X, remainder = %X\n", l, q.sqrt, q.frac);
-	 printf("sqrt(%lX) = %X\n", l, q.sqrt);
+	 printf("sqrt(%X) = %X\n", l, q.sqrt);
     }
 
 
