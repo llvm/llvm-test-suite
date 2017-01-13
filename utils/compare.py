@@ -17,6 +17,9 @@ def read_lit_json(filename):
     columns = []
     columnindexes = {}
     info_columns = ['hash']
+    if 'tests' not in jsondata:
+        print "%s: Could not find toplevel 'tests' key"
+        sys.exit(1)
     for test in jsondata['tests']:
         if "name" not in test:
             print "Skipping unnamed test!"
