@@ -35,7 +35,7 @@ def mutateScript(context, script, mutator):
     return mutated_script
 
 
-def executeScript(context, script, useExternalSh=True):
+def executeScript(context, script, scriptBaseName, useExternalSh=True):
     if len(script) == 0:
         return "", "", 0, None
 
@@ -47,8 +47,8 @@ def executeScript(context, script, useExternalSh=True):
         executeFunc = lit.TestRunner.executeScriptInternal
 
     logging.info("\n".join(script))
-    res = executeFunc(context.test, context.litConfig, context.tmpBase, script,
-                      execdir)
+    res = executeFunc(context.test, context.litConfig,
+                      context.tmpBase + "_" + scriptBaseName, script, execdir)
     # The executeScript() functions return lit.Test.Result in some error
     # conditions instead of the normal tuples. Having different return types is
     # really annoying so we transform it back to the usual tuple.
@@ -89,17 +89,17 @@ def check_call(commandline, *aargs, **dargs):
 def executePlan(context, plan):
     """This is the main driver for executing a benchmark."""
     # Execute PREPARE: part of the test.
-    _, _, exitCode, _ = executeScript(context, plan.preparescript)
+    _, _, exitCode, _ = executeScript(context, plan.preparescript, "prepare")
     if exitCode != 0:
         return lit.Test.FAIL
 
     # Execute RUN: part of the test.
-    _, _, exitCode, _ = executeScript(context, plan.runscript)
+    _, _, exitCode, _ = executeScript(context, plan.runscript, "run")
     if exitCode != 0:
         return lit.Test.FAIL
 
     # Execute VERIFY: part of the test.
-    _, _, exitCode, _ = executeScript(context, plan.verifyscript)
+    _, _, exitCode, _ = executeScript(context, plan.verifyscript, "verify")
     if exitCode != 0:
         # The question here is whether to still collects metrics if the
         # benchmark results are invalid. I choose to avoid getting potentially
@@ -118,7 +118,8 @@ def executePlan(context, plan):
 
     # Execute the METRIC: part of the test.
     for metric, metricscript in plan.metricscripts.items():
-        out, err, exitCode, timeoutInfo = executeScript(context, metricscript)
+        out, err, exitCode, timeoutInfo = executeScript(context, metricscript,
+                                                        "metric")
         if exitCode != 0:
             logging.warning("Metric script for '%s' failed", metric)
             continue
@@ -130,7 +131,7 @@ def executePlan(context, plan):
                             metric, out)
 
     # Execute additional profile gathering actions setup by testing modules.
-    _, _, exitCode, _ = executeScript(context, plan.profilescript)
+    _, _, exitCode, _ = executeScript(context, plan.profilescript, "profile")
     if exitCode != 0:
         logging.warning("Profile script '%s' failed", plan.profilescript)
 
