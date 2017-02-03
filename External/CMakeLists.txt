@@ -9,13 +9,15 @@ set(TEST_SUITE_EXTERNALS_DIR "" CACHE PATH
 #   - ${CMAKE_SOURCE_DIR}/test-suite-externals/${NAME}
 macro(llvm_externals_find PATHVAR NAME DESCRIPTION)
   set(${PATHVAR} "" CACHE PATH "Directory containing ${DESCRIPTION} sourcecode")
-  if(TEST_SUITE_EXTERNALS_DIR AND NOT ${PATHVAR} AND
-     IS_DIRECTORY "${TEST_SUITE_EXTERNALS_DIR}/${NAME}")
-    set(${PATHVAR} "${TEST_SUITE_EXTERNALS_DIR}/${NAME}")
-  endif()
-  if(NOT ${PATHVAR} AND
-     IS_DIRECTORY "${CMAKE_SOURCE_DIR}/test-suite-externals/${NAME}")
-    set(${PATHVAR} "${CMAKE_SOURCE_DIR}/test-suite-externals/${NAME}")
+  if(TEST_SUITE_EXTERNALS_DIR)
+    if (NOT ${PATHVAR} AND IS_DIRECTORY "${TEST_SUITE_EXTERNALS_DIR}/${NAME}")
+      set(${PATHVAR} "${TEST_SUITE_EXTERNALS_DIR}/${NAME}")
+    endif()
+  else()
+    if(NOT ${PATHVAR} AND
+       IS_DIRECTORY "${CMAKE_SOURCE_DIR}/test-suite-externals/${NAME}")
+      set(${PATHVAR} "${CMAKE_SOURCE_DIR}/test-suite-externals/${NAME}")
+    endif()
   endif()
   if(${PATHVAR})
     message(STATUS "Found ${DESCRIPTION}: ${${PATHVAR}}")
