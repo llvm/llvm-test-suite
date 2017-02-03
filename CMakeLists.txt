@@ -78,8 +78,7 @@ mark_as_advanced(TEST_SUITE_LLVM_SIZE TEST_SUITE_LLVM_PROFDATA)
 
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
-set(TEST_SUITE_PROFILE_GENERATE "FALSE" CACHE BOOL
-    "Enable lit profile generate mode")
+option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" Off)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
   set(TEST_SUITE_PROFILE_GENERATE "True")
@@ -90,8 +89,9 @@ else()
   set(TEST_SUITE_PROFILE_GENERATE "False")
 endif()
 
-set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
-    "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
+option(TEST_SUITE_PROFILE_USE
+      "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
+      Off)
 
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
@@ -129,8 +129,8 @@ endif()
 
 # Disabling address space randomization makes the performance of memory/cache
 # intensive benchmarks more deterministic.
-set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
-    "Disable position independent executables and ASLR")
+option(TEST_SUITE_DISABLE_PIE
+       "Disable position independent executables and ASLR" On)
 mark_as_advanced(TEST_SUITE_DISABLE_PIE)
 if(TEST_SUITE_DISABLE_PIE)
   if(APPLE AND NOT ARCH STREQUAL "AArch64")
@@ -153,8 +153,8 @@ add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
-set(TEST_SUITE_TAKE_COMPILE_TIME "TRUE" CACHE BOOL
-    "Measure compile time by wrapping compiler invocations in timeit")
+option(TEST_SUITE_TAKE_COMPILE_TIME
+       "Measure compile time by wrapping compiler invocations in timeit" On)
 mark_as_advanced(TEST_SUITE_TAKE_COMPILE_TIME)
 if(TEST_SUITE_TAKE_COMPILE_TIME)
   set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
@@ -163,11 +163,9 @@ if(TEST_SUITE_TAKE_COMPILE_TIME)
   set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
 endif()
 
-set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
-  "Only run the benchmarking only subset")
+option(TEST_SUITE_BENCHMARKING_ONLY "Only run the benchmarking only subset" Off)
 
-set(TEST_SUITE_COLLECT_STATS "FALSE" CACHE BOOL
-    "Collect LLVM statistics")
+option(TEST_SUITE_COLLECT_STATS "Collect LLVM statistics" Off)
 if(TEST_SUITE_COLLECT_STATS)
   list(APPEND CFLAGS -save-stats=obj)
   list(APPEND CXXFLAGS -save-stats=obj)
@@ -199,8 +197,7 @@ foreach(subdir ${TEST_SUITE_SUBDIRS})
   add_subdirectory(${subdir})
 endforeach()
 
-set(TEST_SUITE_RUN_BENCHMARKS "ON" CACHE BOOL
-    "Actually run the benchmarks in lit")
+option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)
 
 set(LIT_MODULES "")
 if(TEST_SUITE_RUN_BENCHMARKS)

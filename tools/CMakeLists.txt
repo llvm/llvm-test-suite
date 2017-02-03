@@ -16,7 +16,7 @@ endmacro()
 
 llvm_add_host_executable(fpcmp-host fpcmp fpcmp.c)
 
-set(TEST_SUITE_USE_PERF "OFF" CACHE BOOL "Use perf (timeit.sh) instead of timeit.c")
+option(TEST_SUITE_USE_PERF "Use perf (timeit.sh) instead of timeit.c" Off)
 if(TEST_SUITE_USE_PERF)
   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/timeit
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh ${CMAKE_CURRENT_BINARY_DIR}/timeit
