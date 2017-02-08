@@ -20,6 +20,7 @@ xcrun_find_update_cache(CMAKE_RANLIB ranlib)
 xcrun_find_update_cache(CMAKE_AR ar)
 xcrun_find_update_cache(CMAKE_STRIP strip)
 xcrun_find_update_cache(CMAKE_NM nm)
+xcrun_find_update_cache(CMAKE_LINKER ld)
 
 set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE STRING "")
 
