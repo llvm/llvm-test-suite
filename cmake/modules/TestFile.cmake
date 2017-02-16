@@ -1,3 +1,11 @@
+##===- TestSuite.cmake ----------------------------------------------------===##
+#
+# Defines helper functions to create .test files that describe how to run a
+# benchmark and optionally how to prepare before running, how to verify the
+# results and how to extract metrics from the output.
+#
+##===----------------------------------------------------------------------===##
+
 # Specify a "RUN: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_run)
   CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE;WORKDIR" "" ${ARGN})

@@ -106,6 +106,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
 
+include(TestSuite)
 include(SingleMultiSource)
 find_package(TCL)
 
