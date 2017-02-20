@@ -69,7 +69,7 @@ AC_CACHE_CHECK([type of operating system we're going to target],
     llvm_cv_target_os_type="IRIX" ;;
   *-*-cygwin*)
     llvm_cv_target_os_type="Cygwin" ;;
-  *-*-darwin* | *-*-macosx*)
+  *-*-darwin* | *-*-macosx* | *-*-ios*)
     llvm_cv_target_os_type="Darwin" ;;
   *-*-minix*)
     llvm_cv_target_os_type="Minix" ;;
