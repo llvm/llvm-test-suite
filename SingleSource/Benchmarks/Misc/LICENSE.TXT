@@ -15,3 +15,7 @@ Pi
 This program is licensed under the LLVM license.  It was written by Don Shull
 and Mark Riordan.
 
+evalloop
+------------------------------------------------------------------------------
+This is licensed under the Python Software Foundation License Version 2.
+See https://www.python.org/download/releases/2.7/license/
