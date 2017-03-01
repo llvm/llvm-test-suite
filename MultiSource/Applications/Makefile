@@ -42,6 +42,12 @@ PARALLEL_DIRS := $(filter-out obsequi, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out lemon, $(PARALLEL_DIRS))
 endif
 
+ifeq ($(ARCH),PowerPC)
+# This test has problems running on powerpc starting with r295538 and should
+# be restored when the issue is corrected.
+PARALLEL_DIRS := $(filter-out oggenc, $(PARALLEL_DIRS))
+endif
+
 ifdef BENCHMARKING_ONLY
 PARALLEL_DIRS := $(filter-out Burg, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out treecc, $(PARALLEL_DIRS))
