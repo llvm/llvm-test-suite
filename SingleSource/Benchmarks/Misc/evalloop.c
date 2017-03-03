@@ -112,7 +112,7 @@ int main() {
 
   // Run the interpreter loop over the buffer enough times to get a performance
   // estimate.
-  for (int i = 0; i < 1000000; ++i) {
+  for (int i = 0; i < 100000; ++i) {
     eval(cmds);
   }
   
