@@ -2,7 +2,11 @@ add_subdirectory(JM)
 add_subdirectory(SIBsim4)
 add_subdirectory(aha)
 add_subdirectory(d)
-add_subdirectory(oggenc)
+if(NOT ARCH STREQUAL "PowerPC")
+# This test has problems running on powerpc starting with r295538 and should
+# be restored when the issue is corrected.
+  add_subdirectory(oggenc)
+endif()
 add_subdirectory(sgefa)
 add_subdirectory(spiff)
 add_subdirectory(viterbi)
