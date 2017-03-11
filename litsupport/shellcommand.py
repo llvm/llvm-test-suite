@@ -1,3 +1,4 @@
+"""Utilities for analyzing and manipulating shell commands."""
 import shlex
 import logging
 import re
@@ -8,10 +9,10 @@ except:
 
 
 class ShellCommand:
-    '''This class represents a parsed shell command (a subset, we do not support
-    arbitrary shell commands yet). The parsed form allows direct access to
-    information like the executable name, working directory or the file
-    to which stdin/stdout/stderr is redirected.'''
+    """This class represents a parsed shell command (a subset of posix shell
+    commands; see parse()). The parsed form allows direct access to information
+    like the executable name, working directory or the file to which
+    stdin/stdout/stderr is redirected."""
     def __init__(self, executable=None, arguments=None):
         self.stdin = None
         self.stdout = None
@@ -24,6 +25,7 @@ class ShellCommand:
         self.envvars = {}
 
     def toCommandline(self):
+        """Transforms ShellCommand object to a posix shell commandline."""
         result = ""
 
         if self.workdir is not None:
@@ -45,6 +47,9 @@ class ShellCommand:
         return result
 
     def wrap(self, new_executable, args):
+        """Adds a prefix to the exeutable. Example:
+        Prefixing `SOMVAR=42 cd mydir && mycmd -v > /dev/null` with `lldb --`
+        becomes `SOMEVAR=42 cd mydir && lldb -- mycmd -v > /dev/null`."""
         self.arguments = args + [self.executable] + self.arguments
         self.executable = new_executable
 
@@ -60,6 +65,11 @@ unhandled_tokens = set([';;', '<<', '>>', '<&', '>&', '<>', '<<-', '>|', '(',
 
 
 def parse(commandline):
+    """Parses a posix shell commandline to a ShellCommand object. This supports
+    typical commandline with environment variables, input/output redirection
+    and switching directories upfront. It does not support full posix shell
+    and will throw an exception if the commandline uses unsupported features.
+    """
     previous_commands = []
     result = ShellCommand()
     tokens = shlex.split(commandline)
@@ -112,12 +122,18 @@ def parse(commandline):
 
 
 # Some executables are just used to cleanup/prepare for a test run, ignore them
-# here.
+# here. This is from a time when there was no concept of a prepare script,
+# it should not be necessary anymore for new test files.
 _ignore_executables = set(['cd', 'rm', 'cp'])
 
 
 def getMainExecutable(context):
-    """Collect md5sum of tested executable"""
+    """Returns the main executable of the current run script. This skips over
+    some commands typically used to setup a benchmark (see _ignore_executables)
+    and returns the first executable found in the run script and prints a
+    warning if more than one executable is found."""
+
+    # Executable name already determined in a previous run?
     if hasattr(context, 'executable'):
         return context.executable
 

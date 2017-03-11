@@ -1,3 +1,7 @@
+"""
+Main integration for llvm-lit: This defines a lit test format.
+Also contains logic to load benchmark modules.
+"""
 import importlib
 import lit
 import lit.util

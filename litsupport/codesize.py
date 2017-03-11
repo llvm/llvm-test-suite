@@ -1,3 +1,4 @@
+"""Test module to collect code size metrics of the benchmark executable."""
 from litsupport import testplan
 import lit.Test
 import logging

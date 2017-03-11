@@ -1,3 +1,4 @@
+"""Test module that runs llvm-profdata merge after executing the benchmark."""
 from litsupport import shellcommand
 from litsupport import testplan
 

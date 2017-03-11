@@ -1,3 +1,5 @@
+"""Test module to run benchmarks in a wrapper application. This is typically
+used to prefix the benchmark command with simulator commands."""
 from litsupport import shellcommand
 from litsupport import testplan
 

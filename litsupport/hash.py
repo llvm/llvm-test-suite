@@ -1,3 +1,4 @@
+"""Test module to collect test executable hashsum."""
 from lit.Test import toMetricValue
 from litsupport import shellcommand
 from litsupport import testplan

@@ -1,3 +1,5 @@
+"""Test Module to perform an extra execution of the benchmark in the linux
+perf tool."""
 from litsupport import shellcommand
 from litsupport import testplan
 from litsupport import run_under
