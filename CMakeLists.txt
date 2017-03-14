@@ -178,20 +178,19 @@ endif()
 # manually specify directories to include test-suites at external locations
 # and to leave out some of the default ones.
 if(NOT TEST_SUITE_SUBDIRS)
-  file(GLOB sub_cmakelists */CMakeLists.txt)
+  file(GLOB sub_cmakelists RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} */CMakeLists.txt)
   set(TEST_SUITE_SUBDIRS "")
   foreach(entry ${sub_cmakelists})
     get_filename_component(subdir ${entry} DIRECTORY)
     # Exclude tools and CTMark from default list
-    if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools AND
-       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/CTMark)
+    if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
     endif()
   endforeach()
-  set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
-      "Semicolon separated list of directories with CMakeLists.txt to include")
+  set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}")
 endif()
-mark_as_advanced(TEST_SUITE_SUBDIRS)
+set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
+    "Semicolon separated list of directories with CMakeLists.txt to include")
 
 foreach(subdir ${TEST_SUITE_SUBDIRS})
   message(STATUS "Adding directory ${subdir}")
