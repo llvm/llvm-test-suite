@@ -27,3 +27,15 @@ set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE STRING "")
 # Append -B so clang picks up the linker coming with the SDK instead of the
 # one in $PATH.
 set(TEST_SUITE_ARCH_FLAGS "${TEST_SUITE_ARCH_FLAGS} -B ${LINKER_DIR}" CACHE STRING "")
+
+# The problem with TEST_SUITE_ARCH_FLAGS is that they will not be used when
+# cmake is testing for features with try_compile().
+#
+# This is a work around for this: try_compile() does honor toolchain files which
+# can chane CMAKE_C_FLAGS.
+#
+# Note that CMAKE_TRY_COMPILE_PLATFORM_VARIABLES used by this is only available
+# in cmake >=3.6
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/arch_flags_toolchain.cmake CACHE STRING "")
+set(CMAKE_TRY_COMPILE_PLATFORM_VARIABLES "TEST_SUITE_ARCH_FLAGS_FORWARD" CACHE STRING "")
+set(TEST_SUITE_ARCH_FLAGS_FORWARD "${TEST_SUITE_ARCH_FLAGS}" CACHE STRING "")
