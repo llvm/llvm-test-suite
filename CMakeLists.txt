@@ -55,6 +55,12 @@ This process created the file `CMakeCache.txt' and the directory `CMakeFiles'.
 Please delete them.")
 endif()
 
+# Sanity check SIZEOF_VOID_P. This is sometimes empty when compiler detection
+# failed, error out to avoid a mostly working but invalid setup.
+if(NOT CMAKE_SIZEOF_VOID_P)
+  message(FATAL_ERROR "CMAKE_SIZEOF_VOID_P is not defined")
+endif()
+
 # Remote configuration (will be set in lit.site.cfg)
 set(TEST_SUITE_REMOTE_CLIENT "ssh" CACHE STRING "Remote execution client")
 set(TEST_SUITE_REMOTE_HOST "" CACHE STRING "Remote execution host")
