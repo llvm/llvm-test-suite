@@ -200,7 +200,8 @@ set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
 
 foreach(subdir ${TEST_SUITE_SUBDIRS})
   message(STATUS "Adding directory ${subdir}")
-  add_subdirectory(${subdir})
+  get_filename_component(subdir_basename ${subdir} NAME)
+  add_subdirectory(${subdir} ${subdir_basename})
 endforeach()
 
 option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)
