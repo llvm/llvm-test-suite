@@ -12,8 +12,17 @@ def mutateCommandLine(context, commandline):
     cmd.wrap('perf', [
         'record',
         '-e', 'cycles,cache-misses,branch-misses',
-        '-o', profilefile
+        '-o', profilefile,
+        '--'
     ])
+    if cmd.stdout is None:
+        cmd.stdout = "/dev/null"
+    else:
+        cmd.stdout += ".perfrecord"
+    if cmd.stderr is None:
+        cmd.stderr = "/dev/null"
+    else:
+        cmd.stderr += ".perfrecord"
     return cmd.toCommandline()
 
 
