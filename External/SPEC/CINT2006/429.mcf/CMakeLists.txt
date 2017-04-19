@@ -1,4 +1,4 @@
-list(APPEND CPPFLAS -DWANT_STDC_PROTO)
+list(APPEND CPPFLAGS -DWANT_STDC_PROTO)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
