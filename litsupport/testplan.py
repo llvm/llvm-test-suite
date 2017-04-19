@@ -106,6 +106,11 @@ def executePlan(context, plan):
         # broken metric values as well for a broken test.
         return lit.Test.FAIL
 
+    # Execute additional profile gathering actions setup by testing modules.
+    _, _, exitCode, _ = executeScript(context, plan.profilescript, "profile")
+    if exitCode != 0:
+        logging.warning("Profile script '%s' failed", plan.profilescript)
+
     # Perform various metric extraction steps setup by testing modules.
     for metric_collector in plan.metric_collectors:
         try:
@@ -129,11 +134,6 @@ def executePlan(context, plan):
         except ValueError:
             logging.warning("Metric reported for '%s' is not a float: '%s'",
                             metric, out)
-
-    # Execute additional profile gathering actions setup by testing modules.
-    _, _, exitCode, _ = executeScript(context, plan.profilescript, "profile")
-    if exitCode != 0:
-        logging.warning("Profile script '%s' failed", plan.profilescript)
 
     return lit.Test.PASS
 
