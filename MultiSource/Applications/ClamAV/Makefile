@@ -17,7 +17,23 @@ Source = $(addprefix libclamav_, \
 	 regerror.c, regfree.c, \
 	 regcomp.c,  regexec.c, strlcpy.c)\
 	 $(addprefix libclamav_nsis_, \
-		 nulsft.c, bzlib.c, infblock.c, LZMADecode.c )
+		 nulsft.c, bzlib.c, infblock.c, LZMADecode.c ) \
+	 $(addprefix zlib_, \
+	 adler32.c \
+	 compress.c \
+	 crc32.c \
+	 deflate.c \
+	 gzclose.c \
+	 gzlib.c \
+	 gzread.c \
+	 gzwrite.c \
+	 infback.c \
+	 inffast.c \
+	 inflate.c \
+	 inftrees.c \
+	 trees.c \
+	 uncompr.c \
+	 zutil.c)
 #        SVN version has these:	
 #	 inflate64.c lzma_iface.c
 #	 $(addprefix libclamav_lzma_, \
@@ -41,8 +57,7 @@ INPUT = $(PROJ_SRC_DIR)/inputs/clam.cab \
         $(PROJ_SRC_DIR)/inputs/rtf-test/rtf-novirus.rtf
 
 PROG = clamscan
-CPPFLAGS += -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS
-LDFLAGS = -lz
+CPPFLAGS += -DHAVE_CONFIG_H -I$(PROJ_SRC_DIR) -I$(PROJ_SRC_DIR)/zlib -DDONT_LOCK_DBDIRS
 RUN_OPTIONS = --debug --exclude-dir .svn --verbose -d$(PROJ_SRC_DIR)/dbdir -r $(INPUT)
 
 include $(LEVEL)/Makefile.config
@@ -120,13 +135,3 @@ endif
 include ../../Makefile.multisrc
 #compare debug output
 DIFFPROG := $(PROGDIR)/DiffOutput.sh "diff "
-
-ifeq ($(TARGET_OS),Darwin)
-EXTRA_LLIFLAGS += -load=libz.dylib
-else
-ifeq ($(TARGET_OS),Linux)
-EXTRA_LLIFLAGS += -load=libz.so.1
-else
-EXTRA_LLIFLAGS += -load=libz
-endif
-endif

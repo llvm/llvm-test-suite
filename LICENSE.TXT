@@ -110,3 +110,4 @@ SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/CustomChecked
                     llvm-test/SingleSource/Gizmos
                     llvm-test/SingleSource/Benchmarks/SmallPT
+zlib:               llvm-test/MultiSource/Applications/ClamAV/zlib_*

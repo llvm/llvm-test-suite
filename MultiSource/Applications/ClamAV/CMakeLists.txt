@@ -82,14 +82,25 @@ set(Source
   shared_options.c
   shared_output.c
   shared_sha256.c
+
+  zlib_adler32.c
+  zlib_compress.c
+  zlib_crc32.c
+  zlib_deflate.c
+  zlib_gzclose.c
+  zlib_gzlib.c
+  zlib_gzread.c
+  zlib_gzwrite.c
+  zlib_infback.c
+  zlib_inffast.c
+  zlib_inflate.c
+  zlib_inftrees.c
+  zlib_trees.c
+  zlib_uncompr.c
+  zlib_zutil.c
 )
 set(PROG clamscan)
-list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I. -DDONT_LOCK_DBDIRS)
-
-# Find zLib library required for building ClamAV
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIRS})
-list(APPEND LDFLAGS ${ZLIB_LIBRARIES})
+list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
 
 set(INPUT
   ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab
@@ -161,13 +172,4 @@ if(ENDIAN STREQUAL "big")
   list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=1)
 endif()
 set(DIFFPROG ${PROGDIR}/DiffOutput.sh "diff ")
-if(TARGET_OS STREQUAL "Darwin")
-  list(APPEND EXTRA_LLIFLAGS -load=libz.dylib)
-else()
-  if(TARGET_OS STREQUAL "Linux")
-    list(APPEND EXTRA_LLIFLAGS -load=libz.so.1)
-  else()
-    list(APPEND EXTRA_LLIFLAGS -load=libz)
-  endif()
-endif()
 llvm_multisource()
