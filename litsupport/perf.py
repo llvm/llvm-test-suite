@@ -11,7 +11,7 @@ def mutateCommandLine(context, commandline):
     cmd = shellcommand.parse(commandline)
     cmd.wrap('perf', [
         'record',
-        '-e', 'cycles,cache-misses,branch-misses',
+        '-e', context.config.perf_profile_events,
         '-o', profilefile,
         '--'
     ])
