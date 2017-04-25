@@ -160,10 +160,10 @@ add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
-option(TEST_SUITE_TAKE_COMPILE_TIME
+option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" On)
-mark_as_advanced(TEST_SUITE_TAKE_COMPILE_TIME)
-if(TEST_SUITE_TAKE_COMPILE_TIME)
+mark_as_advanced(TEST_SUITE_COLLECT_COMPILE_TIME)
+if(TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
   set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
   set(CMAKE_C_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_C_LINK_EXECUTABLE}")
@@ -212,7 +212,7 @@ if(TEST_SUITE_RUN_BENCHMARKS)
 endif()
 list(APPEND LIT_MODULES codesize)
 list(APPEND LIT_MODULES hash)
-if(TEST_SUITE_TAKE_COMPILE_TIME)
+if(TEST_SUITE_COLLECT_COMPILE_TIME)
   list(APPEND LIT_MODULES compiletime)
 endif()
 if(TEST_SUITE_RUN_UNDER)
