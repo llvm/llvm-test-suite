@@ -76,17 +76,32 @@ set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
     "Type of benchmark inputs (may be test,train or ref)")
 
 get_filename_component(CMAKE_C_COMPILER_DIRECTORY ${CMAKE_C_COMPILER} DIRECTORY)
-find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
-             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
-find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
-             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
-mark_as_advanced(TEST_SUITE_LLVM_SIZE TEST_SUITE_LLVM_PROFDATA)
+
+option(TEST_SUITE_COLLECT_CODE_SIZE "Measure code size of binaries" On)
+if(TEST_SUITE_COLLECT_CODE_SIZE)
+  find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
+               HINTS ${CMAKE_C_COMPILER_DIRECTORY})
+  mark_as_advanced(TEST_SUITE_LLVM_SIZE)
+  if(TEST_SUITE_LLVM_SIZE STREQUAL "TEST_SUITE_LLVM_SIZE-NOTFOUND")
+    message(FATAL_ERROR "llvm-size not found.
+Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to Off")
+  endif()
+endif()
+
 
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
 option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" Off)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
+  find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
+               HINTS ${CMAKE_C_COMPILER_DIRECTORY})
+  mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
+  if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
+    message(FATAL_ERROR "llvm-profdata not found.
+Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to Off")
+  endif()
+
   set(TEST_SUITE_PROFILE_GENERATE "True")
   list(APPEND CFLAGS -fprofile-instr-generate)
   list(APPEND CXXFLAGS -fprofile-instr-generate)
@@ -162,7 +177,6 @@ set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" On)
-mark_as_advanced(TEST_SUITE_COLLECT_COMPILE_TIME)
 if(TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
   set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
@@ -206,11 +220,14 @@ endforeach()
 
 option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)
 
+# Construct list testing modules (see litsupport/*.py for available modules)
 set(LIT_MODULES "")
 if(TEST_SUITE_RUN_BENCHMARKS)
   list(APPEND LIT_MODULES run)
 endif()
-list(APPEND LIT_MODULES codesize)
+if(TEST_SUITE_COLLECT_CODE_SIZE)
+  list(APPEND LIT_MODULES codesize)
+endif()
 list(APPEND LIT_MODULES hash)
 if(TEST_SUITE_COLLECT_COMPILE_TIME)
   list(APPEND LIT_MODULES compiletime)
