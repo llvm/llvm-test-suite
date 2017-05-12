@@ -1,3 +1,4 @@
+include(External)
 llvm_externals_find(TEST_SUITE_SKIDMARKS10_ROOT "skidmarks10" "Skidmarks 10")
 
 if(TEST_SUITE_SKIDMARKS10_ROOT)

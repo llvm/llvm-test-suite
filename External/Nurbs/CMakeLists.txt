@@ -1,5 +1,6 @@
 # Nurbs uses SSE and only works on x86.
 if(ARCH STREQUAL "x86")
+  include(External)
   llvm_externals_find(TEST_SUITE_NURBS_ROOT "nurbs" "Nurbs")
 
   if(TEST_SUITE_NURBS_ROOT)

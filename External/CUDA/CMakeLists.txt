@@ -1,3 +1,4 @@
+include(External)
 llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
 
 # Helper macro to extract version number at the end of the string

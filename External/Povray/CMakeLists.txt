@@ -1,3 +1,4 @@
+include(External)
 llvm_externals_find(TEST_SUITE_POVRAY_ROOT "povray31" "POV-Ray 3.1")
 
 if(TEST_SUITE_POVRAY_ROOT)

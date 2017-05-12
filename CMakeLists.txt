@@ -213,9 +213,18 @@ set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
     "Semicolon separated list of directories with CMakeLists.txt to include")
 
 foreach(subdir ${TEST_SUITE_SUBDIRS})
+  # When we add subdirs outside the toplevel source directory then we have to
+  # make up a directory to use for the builddir.
+  if(subdir MATCHES "^/" OR subdir MATCHES "\\.\\.")
+    if(subdir MATCHES "/$")
+      message(FATAL_ERROR "Subdir must not end in '/'")
+    endif()
+    get_filename_component(subdir_name ${subdir} NAME)
+  else()
+    set(subdir_name ${subdir})
+  endif()
   message(STATUS "Adding directory ${subdir}")
-  get_filename_component(subdir_basename ${subdir} NAME)
-  add_subdirectory(${subdir} ${subdir_basename})
+  add_subdirectory(${subdir} ${subdir_name})
 endforeach()
 
 option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)

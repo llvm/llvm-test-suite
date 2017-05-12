@@ -1,3 +1,4 @@
+include(External)
 llvm_externals_find(TEST_SUITE_HMMER_ROOT "hmmer" "HMMER 2.3.2")
 
 if(TEST_SUITE_HMMER_ROOT)
