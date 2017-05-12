@@ -38,6 +38,7 @@ endforeach()
 
 llvm_test_executable(${PROG} ${Source})
 
+include(CopyDir)
 macro(prepare_data run_type)
   set(DESTDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input)
   llvm_copy_dir(${PROG} ${DESTDIR}/model

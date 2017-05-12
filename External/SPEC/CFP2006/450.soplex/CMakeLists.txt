@@ -26,6 +26,7 @@ test_input(ref   pds-50.mps pds-50.mps.out 0.02   0.0001 -s1 -e -m45000)
 
 llvm_test_executable(${PROG} ${Source})
 
+include(CopyDir)
 macro(prepare_data run_type)
   llvm_copy_dir(450.soplex
     ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
