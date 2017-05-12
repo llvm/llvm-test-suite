@@ -40,5 +40,3 @@ if(TEST_SUITE_SPEC2006_ROOT)
   add_subdirectory(CINT2006)
   add_subdirectory(CFP2006)
 endif()
-
-file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

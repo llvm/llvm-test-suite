@@ -10,10 +10,6 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
 
   llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
-  llvm_test_verify(${FPCMP}
-    %o
-    ${CMAKE_CURRENT_SOURCE_DIR}/skidmarks.reference_output
-  )
   file(GLOB SOURCES ${TEST_SUITE_SKIDMARKS10_ROOT}/source/*.c)
   llvm_test_executable(skidmarks ${SOURCES})
 endif()

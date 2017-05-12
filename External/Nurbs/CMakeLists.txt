@@ -17,5 +17,7 @@ if(ARCH STREQUAL "x86")
 
     file(GLOB SOURCES ${TEST_SUITE_NURBS_ROOT}/*.cpp)
     llvm_test_executable(nurbs ${SOURCES})
+
+    file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
   endif()
 endif()

@@ -32,4 +32,6 @@ if(TEST_SUITE_POVRAY_ROOT)
   )
 
   llvm_test_executable(povray ${Source})
+
+  file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
