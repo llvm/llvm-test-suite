@@ -1,6 +1,7 @@
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(${BENCHMARK_DIR}/src ${BENCHMARK_DIR}/src/libutil)
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -fsigned-char)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
