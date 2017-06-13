@@ -2,25 +2,26 @@ Introduction
 ============
 
 This is the benchmark runner for llvm test-suite. It is only available when the
-test-suite was built with cmake. It runs benchmarks, check the results and
-collect various metrics such as runtime, compiletime or code size.
+test-suite was built with cmake. It runs benchmarks, checks the results and
+collects various metrics such as runtime, compiletime or code size.
 
 The runner is implemented as a custom test format for the llvm-lit tool.
 
-.test Files
-===========
+`.test` Files
+=============
 
-.test files specify how to run a benchmark and check the results.
+`.test` files specify how to run a benchmark and check the results.
 
-Each line in a .test file may specify a PREPARE:, RUN: or VERIFY: command as a
-shell command. Each command kind can be specified multiple times to execute
-multiple commands. A benchmark run will first execute all prepare commands,
-then all run commands and finally all verify commands. Metrics like runtime or
-profile data is collected during the RUN: commands.
+Each line in a `.test` file may specify a `PREPARE:`, `RUN:` or `VERIFY:`
+command as a shell command. Each kind can be specified multiple times. A
+benchmark run will first execute all `PREPARE:` commands, then all `RUN:`
+commands and finally all `VERIFY:` commands. Metrics like runtime or profile
+data are collected for the `RUN:` commands.
 
-The lit runner accepts the most common posix shell commands like assigning
-environment variables, redirecting input and outputs and changing the directory
-before starting a benchmark (see shellcommand.py for details).
+Commands are specified as shell commands. However only a subset of posix shell
+functionality is supported: Assigning environment variables, redirecting input
+and outputs, changing the directory and executing commands. (see
+`shellcommand.py` for details).
 
 Example:
 
@@ -29,10 +30,14 @@ Example:
     RUN: ./mybenchmark --size 300 --seed 5555 --verbose > run1.txt
     VERIFY: diff reference_results1.txt run1.txt
 
+TODO: Document `METRIC:` lines.
+
 Usage
 =====
 
-Running cmake on the test-suite creates a `lit.site.cfg` and .test files for each bechmark. llvm-lit can then be used as usual. Some examples:
+Running cmake on the test-suite creates a `lit.site.cfg` and `.test` files for
+each bechmark. `llvm-lit` can then be used as usual. You may alternatively
+install `lit` from the python package index. Examples:
 
     # Run all benchmark in the current directory an subdirecories one at a time.
     $ llvm-lit -j1 .
