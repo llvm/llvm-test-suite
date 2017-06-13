@@ -13,17 +13,23 @@ import argparse
 def read_lit_json(filename):
     import json
     jsondata = json.load(open(filename))
-    testnames = []
     columns = []
     columnindexes = {}
+    names = set()
     info_columns = ['hash']
+    # Pass1: Figure out metrics (= the column index)
     if 'tests' not in jsondata:
         print "%s: Could not find toplevel 'tests' key"
         sys.exit(1)
     for test in jsondata['tests']:
-        if "name" not in test:
-            print "Skipping unnamed test!"
-            continue
+        name = test.get("name")
+        if name is None:
+            sys.stderr.write("Error: Found unnamed test\n" % name)
+            sys.exit(1)
+        if name in names:
+            sys.stderr.write("Error: Multiple tests with name '%s'\n" % name)
+            sys.exit(1)
+        names.add(name)
         if "metrics" not in test:
             print "Warning: '%s' has No metrics!" % test['name']
             continue
@@ -36,12 +42,11 @@ def read_lit_json(filename):
                 columnindexes[name] = len(columns)
                 columns.append(name)
 
+    # Pass2 actual data construction
     nan = float('NaN')
     data = []
+    testnames = []
     for test in jsondata['tests']:
-        if "name" not in test:
-            print "Skipping unnamed test!"
-            continue
         name = test['name']
         if 'shortname' in test:
             name = test['shortname']
