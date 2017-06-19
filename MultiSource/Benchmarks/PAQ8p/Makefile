@@ -9,4 +9,10 @@ else
 RUN_OPTIONS = -4 $(PROJ_SRC_DIR)/file1.in
 endif
 
+ifeq ($(ARCH),AArch64)
+# On AArch64 at -O0 we take longer than the default 500s. Set it to a more
+# comfortable value.
+RUNTIMELIMIT := 1000
+endif
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
