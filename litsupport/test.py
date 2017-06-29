@@ -7,7 +7,7 @@ import lit
 import lit.util
 import logging
 import os
-from lit.formats import FileBasedTest
+from lit.formats import ShTest
 from lit.TestRunner import getTempPaths
 from lit import Test
 from lit.util import to_bytes, to_string
@@ -59,7 +59,7 @@ def load_modules(test_modules):
         modules.append(module)
 
 
-class TestSuiteTest(FileBasedTest):
+class TestSuiteTest(ShTest):
     def __init__(self):
         super(TestSuiteTest, self).__init__()
 
