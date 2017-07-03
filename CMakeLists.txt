@@ -202,8 +202,9 @@ if(NOT TEST_SUITE_SUBDIRS)
   set(TEST_SUITE_SUBDIRS "")
   foreach(entry ${sub_cmakelists})
     get_filename_component(subdir ${entry} DIRECTORY)
-    # Exclude tools and CTMark from default list
-    if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark)
+	 # Exclude tools, CTMark, and MicroBenchmarks from default list
+    if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark
+       AND NOT ${subdir} STREQUAL MicroBenchmarks)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
     endif()
   endforeach()
