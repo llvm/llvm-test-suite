@@ -1,5 +1,7 @@
-# Minimize code size using -Oz.
-set(OPTFLAGS "${OPTFLAGS} -Oz")
+set(OPTFLAGS "${OPTFLAGS} -O3 -fomit-frame-pointer -flto=thin -DNDEBUG")
+if(APPLE)
+  set(OPTFLAGS "${OPTFLAGS} -mdynamic-no-pic")
+endif()
 
 set(CMAKE_C_FLAGS_RELEASE "${OPTFLAGS}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELEASE "${OPTFLAGS}" CACHE STRING "")

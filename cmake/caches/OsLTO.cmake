@@ -1,5 +1,4 @@
-# Minimize code size using -Oz.
-set(OPTFLAGS "${OPTFLAGS} -Oz")
+set(OPTFLAGS "${OPTFLAGS} -Os -flto")
 
 set(CMAKE_C_FLAGS_RELEASE "${OPTFLAGS}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELEASE "${OPTFLAGS}" CACHE STRING "")
