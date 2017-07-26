@@ -11,40 +11,40 @@ endmacro()
 execute_process(COMMAND xcrun ${XCRUN_FLAGS} --show-sdk-path
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 OUTPUT_VARIABLE SDK_PATH)
-xcrun_find_update_cache(CMAKE_AR ar)
-xcrun_find_update_cache(CMAKE_NM nm)
 xcrun_find_update_cache(CMAKE_LINKER ld)
 
 if (CMAKE_C_COMPILER)
   # The user manually specified a compiler which is usually different than
   # the one coming with the SDK.
 
-  # Construct shim for ranlib
+  # Construct shim for ranlib, ar, etc.
   # This is necessary because the ranlib coming with the xcode sdk looks for
   # ../lib/libLTO.dylib and will therefor pick up libLTO.dylib coming with the
   # SDK. However for correct behavior it has to pick up libLTO.dylib coming
   # the clang compiler used.
   xcrun_find_update_cache(SDK_RANLIB ranlib)
   get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
-  file(WRITE ${CMAKE_BINARY_DIR}/ranlib "
-# Shim to have the tool use the correct libLTO.dylib
-DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_RANLIB} \"$@\"
-  ")
-  execute_process(COMMAND chmod +x ${CMAKE_BINARY_DIR}/ranlib)
-  set(CMAKE_RANLIB ${CMAKE_BINARY_DIR}/ranlib CACHE STRING "")
 
-  # Construct shim for strip
-  xcrun_find_update_cache(SDK_STRIP strip)
-  file(WRITE ${CMAKE_BINARY_DIR}/strip "
+  macro(create_shim VARIABLE TOOLNAME)
+    xcrun_find(SDK_TOOL_BIN ${TOOLNAME})
+    file(WRITE ${CMAKE_BINARY_DIR}/${TOOLNAME} "
 # Shim to have the tool use the correct libLTO.dylib
-DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_STRIP} \"$@\"
-  ")
-  execute_process(COMMAND chmod +x ${CMAKE_BINARY_DIR}/strip)
-  set(CMAKE_STRIP ${CMAKE_BINARY_DIR}/strip CACHE STRING "")
+DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} \"$@\"
+    ")
+    execute_process(COMMAND chmod +x ${CMAKE_BINARY_DIR}/${TOOLNAME})
+    set(${VARIABLE} ${CMAKE_BINARY_DIR}/${TOOLNAME} CACHE STRING "")
+  endmacro()
+
+  create_shim(CMAKE_AR ar)
+  create_shim(CMAKE_NM nm)
+  create_shim(CMAKE_RANLIB ranlib)
+  create_shim(CMAKE_STRIP strip)
 else()
   # Search and use compiler coming with the SDK.
   # Note that we do not search CMAKE_CXX_COMPILER here. cmake will try
   # `${CMAKE_C_COMPILER}++` and use that if available.
+  xcrun_find_update_cache(CMAKE_AR ar)
+  xcrun_find_update_cache(CMAKE_NM nm)
   xcrun_find_update_cache(CMAKE_C_COMPILER clang)
   xcrun_find_update_cache(CMAKE_RANLIB ranlib)
   xcrun_find_update_cache(CMAKE_STRIP strip)
