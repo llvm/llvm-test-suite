@@ -1,0 +1,60 @@
+The PENNANT Mini-App
+
+Charles R. Ferenbaugh
+Los Alamos National Laboratory
+cferenba@lanl.gov
+
+Version 0.9 -- February 2016
+LA-CC-12-021
+https://github.com/losalamos/PENNANT
+
+
+Description:
+
+PENNANT is an unstructured mesh physics mini-app designed for advanced
+architecture research.  It contains mesh data structures and a few
+physics algorithms adapted from the LANL rad-hydro code FLAG, and gives
+a sample of the typical memory access patterns of FLAG.
+
+Further documentation can be found in the 'doc' directory of the
+PENNANT distribution.
+
+
+Version Log:
+
+0.9, February 2016:
+     Added leblancx64 problem.  Added energy check diagnostic
+     for verifying large problems.
+
+0.8, November 2015:
+     Added multi-node test problems.  Added information for
+     APEX benchmark testing.
+
+0.7, February 2015:
+     Further optimizations for MPI+OpenMP.
+
+0.6, February 2014:
+     First MPI version.  MPI capability is working and mostly
+     optimized; MPI+OpenMP is working but needs optimization.
+     Replaced GMV mesh reader with internal mesh generators.
+     Added QCS velocity difference routine to reflect a recent
+     bugfix in FLAG.  Increased size of big test problems.
+
+0.5, May 2013:
+     Further optimizations.
+
+0.4, January 2013:
+     First open-source release.  Fixed a bug in QCS and added some
+     optimizations.  Added Sedov and Leblanc test problems, and some
+     new input keywords to support them.
+
+0.3, July 2012:
+     Added OpenMP pragmas and point chunk processing.  Modified physics
+     state arrays to be flat arrays instead of STL vectors.
+
+0.2, June 2012:
+     Added side chunk processing.  Miscellaneous minor cleanup.
+
+0.1, March 2012:
+     Initial release, internal LANL only.
+

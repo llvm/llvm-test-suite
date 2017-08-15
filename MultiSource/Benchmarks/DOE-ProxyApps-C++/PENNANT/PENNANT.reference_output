@@ -1,0 +1,26 @@
+********************
+Running PENNANT v0.9
+********************
+
+--- Mesh Information ---
+Points:  91001
+Zones:  90000
+Sides:  360000
+Edges:  181000
+Side chunks:  704
+Point chunks:  178
+Zone chunks:  176
+Chunk size:  512
+------------------------
+Energy check:  total energy  =   9.424778e-01
+(internal =   9.424778e-01, kinetic =   0.000000e+00)
+dt limiter: Initial timestep
+dt limiter: Hydro dV/V limit for z = 30167
+
+Run complete
+cycle =     10,         cstop =     10
+time  =   5.589080e-02, tstop =   6.000000e+00
+
+Energy check:  total energy  =   9.424778e-01
+(internal =   9.406983e-01, kinetic =   1.779474e-03)
+exit 0
