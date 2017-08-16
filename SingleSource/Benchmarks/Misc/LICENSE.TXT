@@ -15,6 +15,10 @@ Pi
 This program is licensed under the LLVM license.  It was written by Don Shull
 and Mark Riordan.
 
+revertBits
+------------------------------------------------------------------------------
+This program is licensed under the LLVM license.  It was written by Tony Jiang.
+
 evalloop
 ------------------------------------------------------------------------------
 This is licensed under the Python Software Foundation License Version 2.

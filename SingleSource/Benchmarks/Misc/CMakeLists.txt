@@ -23,6 +23,7 @@ set(Source
   oourafft.c
   perlin.c
   pi.c
+  revertBits.c
   richards_benchmark.c
   salsa20.c
   whetstone.c
