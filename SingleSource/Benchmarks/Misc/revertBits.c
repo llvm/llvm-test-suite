@@ -44,7 +44,7 @@ int main (void) {
      !__has_builtin(__builtin_bitreverse64))
   printf("Sum1 = 0, Sum2 = feff800000800000\n");
   return 0;
-#endif
+#else
 
   for (int i = 0; i < NUM; ++i) {
     sum += ReverseBits32(__builtin_bitreverse32(i));
@@ -58,4 +58,5 @@ int main (void) {
   printf("Sum2 = %llx\n", sum);
 
   return 0;
+#endif
 }
