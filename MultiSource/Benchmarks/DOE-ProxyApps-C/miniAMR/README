@@ -1,0 +1,296 @@
+**************************************************************************
+LLVM Test-suite Note:
+**************************************************************************
+The original source is located at https://github.com/Mantevo/miniAMR.
+Beyond this paragraph is the original README contained with the source 
+code.  The Makefile refered to within is not utilized within the 
+test-suite.  The test-suite builds a serial version (openmp and 
+mpi disabled) with its own cmake and make build system.
+**************************************************************************
+
+miniAMR mini-application
+
+--------------------------------------
+Contents of this README file:
+1.      miniAMR overview
+2.      miniAMR versions
+3.      building miniAMR
+4.      running miniAMR
+5.      notes about the code
+--------------------------------------
+
+--------------------------------------
+1. miniAMR overview
+
+     miniAMR applies a stencil calculation on a unit cube computational domain,
+which is divided into blocks. The blocks all have the same number of cells
+in each direction and communicate ghost values with neighboring blocks. With
+adaptive mesh refinement, the blocks can represent different levels of
+refinement in the larger mesh. Neighboring blocks can be at the same level
+or one level different, which means that the length of cells in neighboring
+blocks can differ by only a factor of two in each direction. The calculations
+on the variables in each cell is an averaging of the values in the chosen
+stencil. The refinement and coarsening of the blocks is driven by objects
+that are pushed through the mesh. If a block intersects with the surface
+or the volume of an object, then that block can be refined. There is also
+an option to uniformly refine the mesh. Each cell contains a number of
+variables, each of which is evaluated indepently.
+
+--------------------------------------
+2. miniAMR versions:
+
+- miniAMR_ref:
+
+     reference version: self-contained MPI-parallel.
+
+- miniAMR_serial
+
+     serial version of reference version
+
+-------------------
+3. Building miniAMR:
+
+     To make the code, type 'make' in the directory containing the source.
+The enclosed Makefile.mpi is configured for a general MPI installation.
+Other compiler or other machines will need changes in the CFLAGS
+variable to correspond with the flags available for the compiler being used.
+
+-------------------
+4. Running miniAMR:
+
+ miniAMR can be run like this:
+
+   % <mpi-run-command> ./miniAMR.x
+
+ where <mpi-run-command> varies from system to system but usually looks  something like 'mpirun -np 4 ' or similar.
+
+ Execution is then driven entirely by the default settings, as configured in default-settings.h. Options may be listed using
+
+    % ./miniAMR.x --help
+
+     To run the program, there are several arguments on the command line.
+The list of arguments and their defaults is as follows:
+
+   --nx - block size in x
+   --ny - block size in y
+   --nz - block size in z
+      These control the size of the blocks in the mesh.  All of these need to
+      be even and greater than zero.  The default is 10 for each variable.
+
+   --init_x - initial blocks in x
+   --init_y - initial blocks in y
+   --init_z - initial blocks in z
+      These control the number of the blocks on each processor in the
+      initial mesh.  These need to be greater than zero.  The default
+      is 1 block in each direction per processor.  The initial mesh
+      is a unit cube regardless of the number of blocks.
+
+   --reorder - ordering of blocks
+      This controls whether the blocks are ordered by the RCB algorithm
+      or by a natural ordering of the processors.  The default is 1 which
+      selects the RCB ordering and the natural ordering is 0.
+
+   --npx - number of processors in the x direction
+   --npy - number of processors in the y direction
+   --npz - number of processors in the z direction
+      These control the number of processors is each direction.  The product
+      of these number has to equal the number of processors being used.  The
+      default is 1 block in each direction.
+
+   --max_blocks - maximun number of blocks per processor
+      The maximun number of blocks used per processor.  This is the number of
+      blocks that will be allocated at the start of the run and the code will
+      fail if this number is exceeded.  The default is 500 blocks.
+
+   --num_refine - number of levels of refinement
+      This is the number of levels of refinement that blocks which are refined
+      will be refined to.  If it is zero then the mesh will not be refined.
+      the default is 5 levels of refinement.
+
+   --block_change - number of levels a block can change during refinement
+      This parameter controls the number of levels that a block can change
+      (either refining or coarsening) during a refinement step.  The default
+      is the number of levels of refinement.
+
+   --uniform_refine - if 1, then grid is uniformly refined
+      This controls whether the mesh is uniformly refined.  If it is 1 then the
+      mesh will be uniformly refined, while if it is zero, the refinement will
+      be controlled by objects in the mesh.  The default is 1.
+
+   --refine_freq - frequency (in timesteps) of checking for refinement
+      This determines the frequency (in timesteps) between checking if
+      refinement is needed.  The default is every 5 timesteps.
+
+   --target_active - target number of blocks per processor
+   --target_max - max number of blocks per processor
+   --target_min - min number of blocks per processor
+      These allow the user to control the number of blocks per processor.
+      If these are zero, then no adjustment is made.  If target_active is
+      greater than zero than the code will adjust the number of blocks to
+      that target after the refinement step.  If target_max is greater than
+      zero then the number of blocks will be reduced if it exceeds this
+      number.  Likewise, if target_min is greater than zero, than the number
+      of blocks will be raised if there is less than that number after the
+      refinement step.  The default for all of these is zero.
+
+   --inbalance - percentage inbalance to trigger inbalance
+      This parameter allows the user to set a percentage threshold above
+      which the load will be balanced amoung the processors.  The value
+      that this is checked against is the maximum number of blocks on a
+      processor minus the minimum number of blocks on a processor divided
+      by the average.  The default is zero, which means to always load
+      balance at each refinement step.
+
+   --lb_opt - (0, 1, 2) determine load balance strategy
+      If set to 0, then load balancing is not performed.  The default is
+      set to 1 which load balances each refinement step.  Setting the
+      parameter to 2 results in load balancing at each stage of the
+      refinement step.  If a processor has a large number of blocks which
+      are refined several steps, this allows the work (and space needed)
+      to be shared amoung more processors.
+
+   --num_vars - number of variables (> 0)
+      The number of variables the will be calculated on and communicated.
+      The default is 40 variables.
+
+   --comm_vars - number of vars to communicate together
+      The number of variables that will communicated together.  This will
+      allow shorter but more variables if it is set to something less than
+      the total number of variables.  The default is zero which will
+      communicate all of the variables at once.
+
+   --num_tsteps - number of timesteps (> 0)
+      The number of timesteps for which the simulation will be run.  The
+      default is 20.
+
+   --stages_per_ts - number of comm/calc stages per timestep
+      The number of calculate/communicate stages per timestep.  The default
+      is 20.
+
+   --permute - (no argument) permute communication directions
+      If this is set, then the order of the communication directions will
+      be permuted through the six options available.  The default is
+      to send messages in the x direction first, then y, and then z.
+
+   --blocking_send - (no argument) Use blocking sends in the communication
+      routine instead of the default nonblocking sends.
+
+   --code - change the way communication is done
+      The default is 0 which communicates only the ghost values that are
+      needed.  Setting this to 1 sends all of the ghost values, and setting
+      this to 2 also does all of the message processing (refinement or
+      unrefinement) to be done on the sending side.  This allows us to
+      more closely minic the communication behaviour of codes.
+
+   --checksum_freq - number of stages between checksums
+      The number of stages between calculating checksums on the variables.
+      The default is 5.  If it is zero, no checks are performed.
+
+   --stencil - 7 or 27 point 3D stencil
+      The 3D stencil used for the calculations.  It can be either 7 or 27
+      and the default is 7 since the 27 point calculation will not conserve
+      the sum of the variables except for the case of uniform refinement.
+
+   --error_tol - (e^{-error_tol} ; >= 0) 
+      This determines the error tolerance for the checksums for the variables.
+      the tolerance is 10 to the negative power of error_tol.  The default
+      is 8, so the default tolerance is 10^(-8).
+
+   --report_diffusion - (>= 0) none if 0
+      This determines if the checksums are printed when they are calculated.
+      The default is 0, which is no printing.
+
+   --report_perf - (0 .. 15)
+      This determines how the performance output is displayed.  The default
+      is YAML output (value of 1).  There are four output modes and each is
+      controlled by a bit in the value.  The YAML output (to a file called
+      results.yaml) is controlled by the first bit (report_perf & 1), the 
+      text output file (results.txt) is controlled by the second bit
+      (report_perf & 2), the output to standard out is controlled by the
+      third bit (report_perf & 4), and the output of block decomposition
+      at each refine step is controlled by the forth bit (report_perf & 8).
+      These options can be combined in any way desired and zero to four
+      of these options can be used in any run.  Setting report_perf to 0
+      will result in no output.
+
+   --refine_freq - frequency (timesteps) of refinement (0 for none)
+      This determines how frequently (in timesteps) the mesh is checked
+      and refinement is done.  The default is every 5 timesteps.  If
+      uniform refinement is turned on, the setting of refine_freq does
+      not matter and the mesh will be refined before the first timestep.
+
+   --refine_ghosts - (no argument)
+      The default is to not use the ghost cells of a block to determine if
+      that block will be refined.  Specifying this flag will allow those
+      ghost cells to be used.
+
+   --num_objects - (>= 0) number of objects to cause refinement
+      The number of objects on which refinement is based.  Default is zero.
+
+   --object - type, position, movement, size, size rate of change
+      The object keyword has 14 arguments.  The first two are integers
+      and the rest are floating point numbers.  They are:
+      type - The type of object.  There is 16 types of objects.  They include
+             the surface of a rectangle (0), a solid rectangle (1),
+             the surface of a spheroid (2), a solid spheroid (3),
+             the surface of a hemispheroid (+/- with 3 cutting planes)
+             (4, 6, 8, 10, 12, 14),
+             a solid spheroid (+/- with 3 cutting planes)(5, 7, 9, 11, 13, 15),
+             the surface of a cylinder (20, 22, 24),
+             and the volume of a cylinder (21, 23, 25).
+      bounce - If this is 1 then an object will bounce off of the walls
+               when the center hits an edge of the unit cube.  If it is
+               zero, then the object can leave the mesh.
+      center - Three doubles that determine the center of the object in the
+               x, y, and z directions.
+      move - Three doubles that determine the rate of movement of the center
+             of the object in the x, y, and z directions.  The object moves
+             this far at each timestep.
+      size - The initial size of the object in the x, y, and z directions.
+             If any of these become negative, the object will not be used
+             in the calculations to determine refinement.  These sizes are
+             from the center to the edge in the specified direction.
+      inc - The change in size of the object in the x, y, and z directions.
+
+
+Examples of run scripts for a Cray XE6 that illustrate several of the options:
+
+One sphere moving diagonally on 27 processors:
+
+mpirun -np 27 -N 7 miniAMR.x --num_refine 4 --max_blocks 9000 --npx 3 --npy 3 --npz 3 --nx 8 --ny 8 --nz 8 --num_objects 1 --object 2 0 -1.71 -1.71 -1.71 0.04 0.04 0.04 1.7 1.7 1.7 0.0 0.0 0.0 --num_tsteps 100 --checksum_freq 1
+
+An expanding sphere on 64 processors:
+
+mpirun -np 64 miniAMR.x --num_refine 4 --max_blocks 6000 --init_x 1 --init_y 1 --init_z 1 --npx 4 --npy 4 --npz 4 --nx 8 --ny 8 --nz 8 --num_objects 1 --object 2 0 -0.01 -0.01 -0.01 0.0 0.0 0.0 0.0 0.0 0.0 0.0009 0.0009 0.0009 --num_tsteps 200 --comm_vars 2
+
+Two moving spheres on 16 processors:
+
+mpirun -np 16 miniAMR.x --num_refine 4 --max_blocks 4000 --init_x 1 --init_y 1 --init_z 1 --npx 4 --npy 2 --npz 2 --nx 8 --ny 8 --nz 8 --num_objects 2 --object 2 0 -1.10 -1.10 -1.10 0.030 0.030 0.030 1.5 1.5 1.5 0.0 0.0 0.0 --object 2 0 0.5 0.5 1.76 0.0 0.0 -0.025 0.75 0.75 0.75 0.0 0.0 0.0 --num_tsteps 100 --checksum_freq 4 --stages_per_ts 16
+
+-------------------
+5. The code:
+
+   block.c         Routines to split and recombine blocks
+   check_sum.c     Calculates check_sum for the arrays
+   comm_block.c    Communicate new location for block during refine
+   comm.c          General routine to do interblock communication
+   comm_parent.c   Communicate refine/unrefine information to parents/children
+   comm_refine.c   Communicate block refine/unrefine to neighbors during refine
+   comm_util.c     Utilities to manage communication lists
+   driver.c        Main driver
+   init.c          Initialization routine
+   main.c          Main routine that reads command line and launches program
+   move.c          Routines that check overlap of objects and blocks
+   pack.c          Pack and unpack blocks to move
+   plot.c          Write out block information for plotting
+   profile.c       Write out performance data
+   rcb.c           Load balancing routines
+   refine.c        Routines to direct refinement step
+   stencil.c       Perform stencil calculations
+   target.c        Add/subtract blocks to reach a target number
+   util.c          Utility routines for timing and allocation
+
+-- End README file.
+
+Courtenay T. Vaughan
+(ctvaugh@sandia.gov)
