@@ -1,0 +1,14 @@
+Starting CG solver ... 
+Initial Residual = 65.0072
+Iteration = 20   Residual = 0.0409638
+Iteration = 40   Residual = 0.0116308
+Iteration = 60   Residual = 0.00330043
+Iteration = 80   Residual = 0.000152231
+Iteration = 100   Residual = 8.66762e-06
+Iteration = 120   Residual = 2.50799e-07
+Iteration = 140   Residual = 3.39847e-09
+Iteration = 160   Residual = 6.88585e-11
+Iteration = 180   Residual = 5.97875e-13
+Iteration = 200   Residual = 4.15881e-15
+Final Resid Norm: 4.15881e-15
+exit 0

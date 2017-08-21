@@ -1,0 +1,9 @@
+MiniFE is an proxy application for unstructured implicit 
+finite element codes. It is similar to HPCCG and pHPCCG 
+but provides a much more complete vertical covering of the 
+steps in this class of applications. MiniFE also provides 
+support for computation on multicore nodes, including 
+pthreads and Intel Threading Building Blocks (TBB) for 
+homogeneous multicore and CUDA for GPUs.
+
+This is a serial build for the LLVM test-suite.
