@@ -47,13 +47,23 @@ static bool isNumberChar(char C) {
   }
 }
 
-static const char *BackupNumber(const char *Pos, const char *FirstChar) {
+static const char *BackupNumber(const char *Pos, const char *FirstChar,
+                                const char *End) {
+  // If already at the very beginning, we cannot go back further.
+  // It ensures that the access Pos[-1] is valid.
+  // This also handles the case where the file is empty (FirstChar == End).
+  if (Pos == FirstChar)
+    return Pos;
+
   // If we didn't stop in the middle of a number, don't backup.
-  if (!isNumberChar(*Pos) && !isNumberChar(Pos[-1])) return Pos;
+  if (!(Pos == End || isNumberChar(*Pos)) && !isNumberChar(Pos[-1]))
+    return Pos;
+
   // If we're one past the number, the two numbers can have different number
   // of digits. Even if we're wrong, and we get the previous number, the
   // comparison should have failed anyway.
-  if (!isNumberChar(*Pos)) Pos--;
+  if (Pos == End || !isNumberChar(*Pos))
+    Pos--;
 
   // Otherwise, return to the start of the number.
   bool HasPeriod = false;
@@ -81,6 +91,15 @@ static const char *EndOfNumber(const char *Pos) {
   return Pos;
 }
 
+static bool skip_whitespace(const char **FP, const char *FEnd) {
+  bool skipped_some = false;
+  while (*FP < FEnd && isspace((unsigned char)**FP)) {
+    skipped_some = true;
+    ++*FP;
+  }
+  return skipped_some;
+}
+
 /// CompareNumbers - compare two numbers, returning true if they are different.
 static bool CompareNumbers(const char **F1PP, const char **F2PP,
                            const char *F1End, const char *F2End,
@@ -92,10 +111,14 @@ static bool CompareNumbers(const char **F1PP, const char **F2PP,
 
   // If one of the positions is at a space and the other isn't, chomp up 'til
   // the end of the space.
-  while (isspace(*F1P) && F1P != F1End)
-    ++F1P;
-  while (isspace(*F2P) && F2P != F2End)
-    ++F2P;
+  skip_whitespace(&F1P, F1End);
+  skip_whitespace(&F2P, F2End);
+
+  if (F1P == F1End || F2P == F2End) {
+    fprintf(stderr, ("%s: FP Comparison failed, reached end of file\n"),
+            g_program);
+    return true;
+  }
 
   // If we stop on numbers, compare their difference.
   if (!isNumberChar(*F1P) || !isNumberChar(*F2P)) {
@@ -217,7 +240,8 @@ char *load_file(const char *path, long *size_out) {
 
 int diff_files_with_tolerance(const char *path_a, const char *path_b,
                               double absolute_tolerance,
-                              double relative_tolerance) {
+                              double relative_tolerance,
+                              bool ignore_whitespace) {
   /* First, load the file buffers completely into memory. */
   long A_size, B_size;
   char *data_a = load_file(path_a, &A_size);
@@ -228,7 +252,8 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
     return 0;
 
   /* Otherwise, if our tolerances are 0 then we are done. */
-  if (relative_tolerance == 0.0 && absolute_tolerance == 0.0) {
+  if (relative_tolerance == 0.0 && absolute_tolerance == 0.0 &&
+      !ignore_whitespace) {
     fprintf(stderr, "%s: files differ without tolerance allowance\n",
             g_program);
     return 1;
@@ -246,16 +271,42 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
 
   while (1) {
     // Scan for the end of file or next difference.
-    while (F1P < File1End && F2P < File2End && *F1P == *F2P)
-      ++F1P, ++F2P;
+    while (F1P < File1End && F2P < File2End) {
+      if (*F1P == *F2P) {
+        ++F1P, ++F2P;
+        continue;
+      }
+
+      // With whitespace ignored, skip whitespace chars (if any) and recheck for
+      // the next difference.
+      if (ignore_whitespace) {
+        if (skip_whitespace(&F1P, File1End) | skip_whitespace(&F2P, File2End))
+          continue;
+      }
+
+      break;
+    }
 
     if (F1P >= File1End || F2P >= File2End) break;
+
+    // BackupNumber will also backup when at the first char after a number. This
+    // is to catch when one of the number has more trailing floating-point zeros
+    // than the other. However, when this is the case in both buffers, we'd
+    // repeat the most recent number forever.
+    // Therefore, we fast-stop if both buffers have no number at the current
+    // position.
+    if (!isNumberChar(*F1P) && !isNumberChar(*F2P)) {
+      fprintf(stderr, "%s: FP Comparison failed, not a numeric difference "
+                      "between '%c' and '%c'\n",
+              g_program, F1P[0], F2P[0]);
+      return 1;
+    }
 
     // Okay, we must have found a difference.  Backup to the start of the
     // current number each stream is at so that we can compare from the
     // beginning.
-    F1P = BackupNumber(F1P, File1Start);
-    F2P = BackupNumber(F2P, File2Start);
+    F1P = BackupNumber(F1P, File1Start, File1End);
+    F2P = BackupNumber(F2P, File2Start, File2End);
 
     // Now that we are at the start of the numbers, compare them, exiting if
     // they don't match.
@@ -264,10 +315,10 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
       return 1;
   }
 
-  // Avoid reading before byte 0 in the loop below.
-  if (A_size == 0 || B_size == 0) {
-    fprintf(stderr, "%s File sizes differ\n", g_program);
-    return 1;
+  // Skip any whitespace at the end of the file.
+  if (ignore_whitespace) {
+    skip_whitespace(&F1P, File1End);
+    skip_whitespace(&F2P, File2End);
   }
 
   // Okay, we reached the end of file.  If both files are at the end, we
@@ -276,16 +327,20 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
   bool F2AtEnd = F2P >= File2End;
   if (!F1AtEnd || !F2AtEnd) {
     // Else, we might have run off the end due to a number: backup and retry.
-    if (F1AtEnd && isNumberChar(F1P[-1])) --F1P;
-    if (F2AtEnd && isNumberChar(F2P[-1])) --F2P;
-    F1P = BackupNumber(F1P, File1Start);
-    F2P = BackupNumber(F2P, File2Start);
+    F1P = BackupNumber(F1P, File1Start, File1End);
+    F2P = BackupNumber(F2P, File2Start, File2End);
 
     // Now that we are at the start of the numbers, compare them, exiting if
     // they don't match.
     if (CompareNumbers(&F1P, &F2P, File1End, File2End,
                        absolute_tolerance, relative_tolerance))
       return 1;
+
+    // There might be more whitespace after the number.
+    if (ignore_whitespace) {
+      skip_whitespace(&F1P, File1End);
+      skip_whitespace(&F2P, File2End);
+    }
 
     // If we found the end, we succeeded.
     if (F1P < File1End || F2P < File2End)
@@ -296,17 +351,19 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
 }
 
 void usage() {
-  fprintf(stderr, "usage: %s [-a VALUE] [-r VALUE] <path-A> <path-B>\n\n",
+  fprintf(stderr, "usage: %s [-a VALUE] [-r VALUE] [-i] <path-A> <path-B>\n\n",
           g_program);
   fprintf(stderr, "Compare two files using absolute and relative tolerances\n");
   fprintf(stderr, "when comparing differences between two character\n");
   fprintf(stderr, "which could be real numbers\n");
+  fprintf(stderr, "The -i switch ignores whitespace differences\n");
   exit(2);
 }
 
 int main(int argc, char * const argv[]) {
   double relative_tolerance = 0.0;
   double absolute_tolerance = 0.0;
+  bool ignore_whitespace = false;
   int i;
 
   g_program = argv[0];
@@ -341,6 +398,10 @@ int main(int argc, char * const argv[]) {
       }
       break;
 
+    case 'i':
+      ignore_whitespace = true;
+      break;
+
     default:
       fprintf(stderr, "error: invalid argument '%s'\n\n", arg);
       usage();
@@ -352,6 +413,6 @@ int main(int argc, char * const argv[]) {
     usage();
   }
 
-  return diff_files_with_tolerance(argv[i], argv[i + 1],
-                                   absolute_tolerance, relative_tolerance);
+  return diff_files_with_tolerance(argv[i], argv[i + 1], absolute_tolerance,
+                                   relative_tolerance, ignore_whitespace);
 }
