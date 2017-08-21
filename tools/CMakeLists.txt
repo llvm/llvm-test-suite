@@ -3,16 +3,7 @@
 # as an ad-hoc solution for now. A proper solution would probably be based on
 # ExternalProject_Add(); See also http://reviews.llvm.org/D15004
 
-set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
-mark_as_advanced(TEST_SUITE_HOST_CC)
-macro(llvm_add_host_executable targetname exename sourcefile)
-  add_custom_command(OUTPUT ${exename}
-    COMMAND ${TEST_SUITE_HOST_CC} ${CMAKE_CURRENT_SOURCE_DIR}/${sourcefile} -o ${CMAKE_CURRENT_BINARY_DIR}/${exename}
-    COMMENT "[TEST_SUITE_HOST_CC] Building host executable ${exename}"
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${sourcefile}
-  )
-  add_custom_target(${targetname} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${exename})
-endmacro()
+include(Host)
 
 llvm_add_host_executable(fpcmp-host fpcmp fpcmp.c)
 

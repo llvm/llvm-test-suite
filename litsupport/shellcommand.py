@@ -2,6 +2,7 @@
 import shlex
 import logging
 import re
+import os
 try:
         from shlex import quote  # python 3.3 and above
 except:
@@ -138,15 +139,19 @@ def getMainExecutable(context):
         return context.executable
 
     executable = None
+    cwd = '.';
     for line in context.parsed_runscript:
         cmd = parse(line)
+        if cmd.workdir is not None:
+            cwd = os.path.join(cwd, cmd.workdir)
         if cmd.executable in _ignore_executables:
             continue
+        new_executable = os.path.join(cwd, cmd.executable)
         # We only support one executable yet for collecting md5sums
-        if cmd.executable != executable and executable is not None:
+        if new_executable != executable and executable is not None:
             logging.warning("More than one executable used in test %s",
                             context.test.getFullName())
-        executable = cmd.executable
+        executable = new_executable
     if executable is None:
         logging.warning("No executable found for test %s",
                         context.test.getFullName())
