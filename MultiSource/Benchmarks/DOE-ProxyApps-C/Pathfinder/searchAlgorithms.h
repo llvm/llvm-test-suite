@@ -102,5 +102,6 @@ int findAndLogAllPossibleLegs( Graph *graph, SearchOptions *options );
  */
  
 void doMultiSearchesQT(Configuration *config);
+void doMultiSearches(Configuration *config);
 
 #endif /* SEARCHALGORITHMS_H_ */

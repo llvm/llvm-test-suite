@@ -48,6 +48,7 @@
 #include "vectorUtils.h"
 #include "statistics.h"
 #include "configuration.h"
+#include "yaml.h"
 
 #ifdef QT
    #include "qThreadSearch.h"
@@ -172,7 +173,7 @@ int main(int argc, char *argv[])
                 config->qThreadCount = qCount;
                 break;
             case 'y':
-                if ( commandLine != NULL )
+                /* if ( commandLine != NULL ) */
                 {
                     YAMLOpen();
                     commandLine[0] = '\0';

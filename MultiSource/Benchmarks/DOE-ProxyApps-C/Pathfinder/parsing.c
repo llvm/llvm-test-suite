@@ -533,7 +533,7 @@ char **parseSignature( char *data )
     {
         printf ( "%s ", labels[i] );
     }
-    /* end Debug */
+    / * end Debug */
 
     return labels;
 }
