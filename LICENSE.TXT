@@ -84,6 +84,7 @@ ASC Sequoia:        llvm-test/MultiSource/Benchmarks/ASC_Sequoia/AMGmk
                     llvm-test/MultiSource/Benchmarks/ASC_Sequoia/sphot
 smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
 miniAMR:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/miniAMR
+Pathfinder:         llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/Pathfinder
 XSBench:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/XSBench
 HPCCG:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/HPCCG
 PENNANT:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/PENNANT
