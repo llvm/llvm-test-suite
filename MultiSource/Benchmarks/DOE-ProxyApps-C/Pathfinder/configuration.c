@@ -54,7 +54,7 @@
  Configuration* Configuration_new()
  {
     Configuration *new = malloc(sizeof(Configuration));
-    SearchOptions *options = malloc(sizeof(SearchOptions));
+    SearchOptions *options = SearchOptions_new();
     if ( !new || !options )
     {
         if ( new ) free(new);
