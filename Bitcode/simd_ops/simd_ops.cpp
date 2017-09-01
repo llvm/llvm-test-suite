@@ -59,7 +59,8 @@ int main(int argc, char **argv) {
     return err_code;
 #endif
 #if defined(__i386__) || defined(__x86_64__)
-    if (!__builtin_cpu_supports("avx")) {
+    if (!__builtin_cpu_supports("avx") ||
+        !__builtin_cpu_supports("avx2")) {
       return err_code;
     }
 #endif
