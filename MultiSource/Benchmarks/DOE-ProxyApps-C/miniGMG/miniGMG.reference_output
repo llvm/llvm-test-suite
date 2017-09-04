@@ -1,0 +1,25 @@
+1 MPI Tasks of 1 threads
+truncating the v-cycle at 2^3 subdomains
+creating domain...       done
+  64 x 64 x 64 (per subdomain)
+  128 x 128 x 128 (per process)
+  128 x 128 x 128 (overall)
+  1-deep ghost zones
+  allocated 246 MB
+initializing alpha, beta, RHS for the ``hard problem''...
+  average value of f =   0.000000000000e+00
+done
+MGBuild...                      
+  level= 0, eigenvalue_max ~= 1.000000e+00
+  level= 1, eigenvalue_max ~= -1.000000e+00
+  level= 2, eigenvalue_max ~= -1.000000e+00
+  level= 3, eigenvalue_max ~= -1.000000e+00
+  level= 4, eigenvalue_max ~= -1.000000e+00
+  level= 5, eigenvalue_max ~= -1.000000e+00
+done
+MGSolve...                      done
+MGSolve...                      done
+Error test: h = 7.812500e-03, max = 0.000000e+00
+Error test: h = 7.812500e-03, L2  = 0.000000e+00
+deallocating domain...   done
+exit 0
