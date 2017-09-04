@@ -32,13 +32,13 @@
 // z[r] = alpha*A[r][c]*x[c]+beta*y[r]   // [row][col]
 // z[r] = alpha*A[r][c]*x[c]+beta*y[r]   // [row][col]
 #define __gemv(z,alpha,A,x,beta,y,rows,cols)  {int r,c;double sum;for(r=0;r<(rows);r++){sum=0.0;for(c=0;c<(cols);c++){sum+=(A)[r][c]*(x)[c];}(z)[r]=(alpha)*sum+(beta)*(y)[r];}}
-inline void __axpy(double * z, double alpha, double * x, double beta, double * y, int n){ // z[n] = alpha*x[n]+beta*y[n]
+static inline void __axpy(double * z, double alpha, double * x, double beta, double * y, int n){ // z[n] = alpha*x[n]+beta*y[n]
   int nn;
   for(nn=0;nn<n;nn++){
     z[nn] = alpha*x[nn] + beta*y[nn];
   }
 }
-inline double __dot(double * x, double * y, int n){ // x[n].y[n]
+static inline double __dot(double * x, double * y, int n){ // x[n].y[n]
   int nn;
   double sum = 0.0;
   for(nn=0;nn<n;nn++){
@@ -46,7 +46,7 @@ inline double __dot(double * x, double * y, int n){ // x[n].y[n]
   }
   return(sum);
 }
-inline void __zero(double * z, int n){ // z[n] = 0.0
+static inline void __zero(double * z, int n){ // z[n] = 0.0
   int nn;
   for(nn=0;nn<n;nn++){
     z[nn] = 0.0;
