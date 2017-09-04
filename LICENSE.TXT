@@ -86,6 +86,7 @@ smg2000:            llvm-test/MultiSource/Benchmarks/ASCI_Purple/SMG2000
 miniAMR:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/miniAMR
 Pathfinder:         llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/Pathfinder
 XSBench:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/XSBench
+CLAMR:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/CLAMR
 HPCCG:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/HPCCG
 PENNANT:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/PENNANT
 miniFE:             llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/miniFE
