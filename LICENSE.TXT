@@ -87,6 +87,7 @@ miniAMR:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/miniAMR
 Pathfinder:         llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/Pathfinder
 XSBench:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/XSBench
 miniGMG:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/miniGMG
+RSBench:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C/RSBench
 CLAMR:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/CLAMR
 HPCCG:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/HPCCG
 PENNANT:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/PENNANT

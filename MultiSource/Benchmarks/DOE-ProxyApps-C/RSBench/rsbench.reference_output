@@ -1,0 +1,40 @@
+================================================================================
+                    _____   _____ ____                  _     
+                   |  __ \ / ____|  _ \                | |    
+                   | |__) | (___ | |_) | ___ _ __   ___| |__  
+                   |  _  / \___ \|  _ < / _ \ '_ \ / __| '_ \ 
+                   | | \ \ ____) | |_) |  __/ | | | (__| | | |
+                   |_|  \_\_____/|____/ \___|_| |_|\___|_| |_|
+================================================================================
+                    Developed at Argonne National Laboratory
+                                   Version: 9
+================================================================================
+                                  INPUT SUMMARY
+================================================================================
+Materials:                   12
+H-M Benchmark Size:          Small
+Temperature Dependence:      ON
+Total Nuclides:              68
+Avg Poles per Nuclide:       1,000
+Avg Windows per Nuclide:     1,000
+XS Lookups:                  100,000
+Threads:                     1
+Est. Memory Usage (MB):      6.7
+================================================================================
+                                 INITIALIZATION
+================================================================================
+Generating resonance distributions...
+Generating window distributions...
+Loading Hoogenboom-Martin material data...
+Generating resonance parameter grid...
+Generating window parameter grid...
+Generating 0K l_value data...
+Initialization Complete. (0.00 seconds)
+================================================================================
+                                   SIMULATION
+================================================================================
+Beginning Simulation.
+Calculating XS's...
+
+Simulation Complete.
+exit 0

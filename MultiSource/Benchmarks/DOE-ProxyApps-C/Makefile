@@ -4,6 +4,7 @@ LEVEL = ../../..
 PARALLEL_DIRS = XSBench    \
                 miniAMR    \
                 Pathfinder \
-                miniGMG
+                miniGMG    \
+                RSBench
 
 include $(LEVEL)/Makefile.programs
