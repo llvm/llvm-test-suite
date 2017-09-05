@@ -21,6 +21,7 @@
 #include "mg.h"
 #include "operators.h"
 //------------------------------------------------------------------------------------------------------------------------------
+void MGResetTimers(domain_type * domain);
 int main(int argc, char **argv){
   int MPI_Rank=0;
   int MPI_Tasks=1;
