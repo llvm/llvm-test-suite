@@ -1,0 +1,5 @@
+set(PROG SimpleMOC)
+list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -std=gnu99)
+set(RUN_OPTIONS -i ${CMAKE_CURRENT_SOURCE_DIR}/default.in)
+llvm_multisource()

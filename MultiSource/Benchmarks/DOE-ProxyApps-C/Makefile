@@ -5,6 +5,7 @@ PARALLEL_DIRS = XSBench    \
                 miniAMR    \
                 Pathfinder \
                 miniGMG    \
-                RSBench
+                RSBench    \
+                SimpleMOC
 
 include $(LEVEL)/Makefile.programs

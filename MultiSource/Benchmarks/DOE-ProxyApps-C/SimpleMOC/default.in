@@ -1,0 +1,20 @@
+10 - x_assemblies - Number of assemblies in the x-axis of the reactor
+10 - y_assemblies - Number of assemblies in the y-axis of the reactor
+9 - cai - Number of coarse axial intervals
+5 - fai - Number of fine axial intervals per coarse  axial interval
+2 - axial_exp - Axial source expansion order
+0.05 - radial_ray_sep -  Radial ray separation
+0.25 - axial_z_sep -  Axial stacked z-ray separation
+6 - n_azimuthal  -  Number of azimuthal angles (should be 32)
+10 - n_polar_angles -  Number of polar angles
+10 - n_egroups -  Number of energy groups
+1 - decompose - Turn decomposition on/off (true = 1, false = 0) 
+20 - decomp_assemblies_ax - Number of assemblies per sub-domain (axially) 
+20 - segments_per_track - Average number of segments per track
+21.42 - assembly_width - Width of an assembly - 1.26 x 17 cm
+50.0 - height - Height of the reactor
+0.01 - precision - precision for source convergence
+1000 - n_2D_source_regions_per_assembly - 2D src regions per assembly 
+0 - papi_event_set - PAPI Event Set Choice
+0 - Turn on/off load tracks from OpenMOC (true = 1, false = 0)
+file_name - name of OpenMOC tracking file to load
