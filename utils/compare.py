@@ -249,6 +249,10 @@ if __name__ == "__main__":
                         dest='merge_function', const=pd.DataFrame.min)
     parser.add_argument('--merge-max', action='store_const',
                         dest='merge_function', const=pd.DataFrame.max)
+    parser.add_argument('--lhs-name', default="lhs",
+                        help="Name used to describe left side in 'vs' mode")
+    parser.add_argument('--rhs-name', default="rhs",
+                        help="Name used to describe right side in 'vs' mode")
     parser.add_argument('files', metavar='FILE', nargs='+')
     config = parser.parse_args()
 
@@ -269,7 +273,8 @@ if __name__ == "__main__":
         rhs_merged = config.merge_function(rhs_d, level=1)
 
         # Combine to new dataframe
-        data = pd.concat([lhs_merged, rhs_merged], names=['l/r'], keys=['lhs', 'rhs'])
+        data = pd.concat([lhs_merged, rhs_merged], names=['l/r'],
+                         keys=[config.lhs_name, config.rhs_name])
     else:
         data = readmulti(files)
 
