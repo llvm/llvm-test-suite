@@ -3,7 +3,7 @@ from litsupport import shellcommand
 from litsupport import testplan
 
 
-def mutateCommandline(context, commandline):
+def _mutateCommandline(context, commandline):
     """Adjust runscript to set a different value to the LLVM_PROFILE_FILE
     environment variable for each execution."""
     profilefile = context.tmpBase + ".profraw"
@@ -12,14 +12,14 @@ def mutateCommandline(context, commandline):
     return prefix + commandline
 
 
-def mutateScript(context, script):
-    return testplan.mutateScript(context, script, mutateCommandline)
+def _mutateScript(context, script):
+    return testplan.mutateScript(context, script, _mutateCommandline)
 
 
 def mutatePlan(context, plan):
     context.profilefiles = []
     # Adjust run steps to set LLVM_PROFILE_FILE
-    plan.runscript = mutateScript(context, plan.runscript)
+    plan.runscript = _mutateScript(context, plan.runscript)
     # Run profdata merge at the end
     profdatafile = context.executable + ".profdata"
     args = ['merge', '-output=%s' % profdatafile] + context.profilefiles

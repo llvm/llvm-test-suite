@@ -4,7 +4,7 @@ from litsupport import shellcommand
 from litsupport import testplan
 
 
-def mutateCommandLine(context, commandline):
+def _mutateCommandLine(context, commandline):
     cmd = shellcommand.parse(commandline)
     run_under_cmd = shellcommand.parse(context.config.run_under)
 
@@ -24,4 +24,4 @@ def mutatePlan(context, plan):
     run_under = context.config.run_under
     if run_under:
         plan.runscript = testplan.mutateScript(context, plan.runscript,
-                                               mutateCommandLine)
+                                               _mutateCommandLine)

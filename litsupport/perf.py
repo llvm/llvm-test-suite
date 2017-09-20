@@ -6,7 +6,7 @@ from litsupport import run_under
 import lit.Test
 
 
-def mutateCommandLine(context, commandline):
+def _mutateCommandLine(context, commandline):
     profilefile = context.tmpBase + ".perf_data"
     cmd = shellcommand.parse(commandline)
     cmd.wrap('perf', [
@@ -31,7 +31,7 @@ def mutatePlan(context, plan):
     if context.config.run_under:
         script = testplan.mutateScript(context, script,
                                        run_under.mutateCommandLine)
-    script = testplan.mutateScript(context, script, mutateCommandLine)
+    script = testplan.mutateScript(context, script, _mutateCommandLine)
     plan.profilescript += script
     plan.metric_collectors.append(
         lambda context: {

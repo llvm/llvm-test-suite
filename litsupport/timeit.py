@@ -4,7 +4,7 @@ import lit.Test
 import re
 
 
-def mutateCommandLine(context, commandline):
+def _mutateCommandLine(context, commandline):
     outfile = context.tmpBase + ".out"
     timefile = context.tmpBase + ".time"
     config = context.config
@@ -47,10 +47,10 @@ def mutateCommandLine(context, commandline):
     return cmd.toCommandline()
 
 
-def mutateScript(context, script):
+def _mutateScript(context, script):
     if not hasattr(context, "timefiles"):
         context.timefiles = []
-    return testplan.mutateScript(context, script, mutateCommandLine)
+    return testplan.mutateScript(context, script, _mutateCommandLine)
 
 
 def _collectTime(context, timefiles, metric_name='exec_time'):
@@ -64,7 +64,7 @@ def mutatePlan(context, plan):
     if len(plan.runscript) == 0:
         return
     context.timefiles = []
-    plan.runscript = mutateScript(context, plan.runscript)
+    plan.runscript = _mutateScript(context, plan.runscript)
     plan.metric_collectors.append(
         lambda context: _collectTime(context, context.timefiles)
     )

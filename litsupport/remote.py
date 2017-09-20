@@ -5,7 +5,7 @@ from litsupport import testplan
 import logging
 
 
-def mutateCommandline(context, commandline, suffix=""):
+def _mutateCommandline(context, commandline, suffix=""):
     shfilename = context.tmpBase + suffix + ".sh"
     shfile = open(shfilename, "w")
     shfile.write(commandline + "\n")
@@ -25,11 +25,11 @@ def mutateCommandline(context, commandline, suffix=""):
     return remote_commandline
 
 
-def mutateScript(context, script, suffix=""):
-    mutate = lambda c, cmd: mutateCommandline(c, cmd, suffix)
+def _mutateScript(context, script, suffix=""):
+    mutate = lambda c, cmd: _mutateCommandline(c, cmd, suffix)
     return testplan.mutateScript(context, script, mutate)
 
 
 def mutatePlan(context, plan):
-    plan.preparescript = mutateScript(context, plan.preparescript, "-prepare")
-    plan.runscript = mutateScript(context, plan.runscript)
+    plan.preparescript = _mutateScript(context, plan.preparescript, "-prepare")
+    plan.runscript = _mutateScript(context, plan.runscript)
