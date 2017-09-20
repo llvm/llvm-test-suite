@@ -10,6 +10,12 @@ import subprocess
 
 
 class TestPlan(object):
+    """Describes how to execute a benchmark and how to collect metrics.
+    A script is a list of strings containing shell commands. The available
+    scripts are: preparescript, runscript, verifyscript, profilescript,
+    metricscripts and are executed in this order.
+    metric_collectors contains a list of functions executed after the scripts
+    finished."""
     def __init__(self):
         self.runscript = []
         self.verifyscript = []
@@ -20,6 +26,10 @@ class TestPlan(object):
 
 
 def mutateScript(context, script, mutator):
+    """Apply `mutator` function to every command in the `script` array of
+    strings. The mutator function is called with `context` and the string to
+    be mutated and must return the modified string. Sets `context.tmpBase`
+    to a path unique to every command."""
     previous_tmpbase = context.tmpBase
     i = 0
     mutated_script = []
@@ -36,6 +46,7 @@ def mutateScript(context, script, mutator):
 
 
 def _executeScript(context, script, scriptBaseName, useExternalSh=True):
+    """Execute an array of strings with shellcommands (a script)."""
     if len(script) == 0:
         return "", "", 0, None
 
@@ -74,20 +85,8 @@ def _executeScript(context, script, scriptBaseName, useExternalSh=True):
     return (out, err, exitCode, timeoutInfo)
 
 
-def check_output(commandline, *aargs, **dargs):
-    """Wrapper around subprocess.check_output that logs the command."""
-    logging.info(" ".join(commandline))
-    return subprocess.check_output(commandline, *aargs, **dargs)
-
-
-def check_call(commandline, *aargs, **dargs):
-    """Wrapper around subprocess.check_call that logs the command."""
-    logging.info(" ".join(commandline))
-    return subprocess.check_call(commandline, *aargs, **dargs)
-
-
 def _executePlan(context, plan):
-    """This is the main driver for executing a benchmark."""
+    """Executes a test plan (a TestPlan object)."""
     # Execute PREPARE: part of the test.
     _, _, exitCode, _ = _executeScript(context, plan.preparescript, "prepare")
     if exitCode != 0:
@@ -152,3 +151,15 @@ def executePlanTestResult(context, testplan):
     for key, value in context.result_metrics.items():
         result.addMetric(key, value)
     return result
+
+
+def check_output(commandline, *aargs, **dargs):
+    """Wrapper around subprocess.check_output that logs the command."""
+    logging.info(" ".join(commandline))
+    return subprocess.check_output(commandline, *aargs, **dargs)
+
+
+def check_call(commandline, *aargs, **dargs):
+    """Wrapper around subprocess.check_call that logs the command."""
+    logging.info(" ".join(commandline))
+    return subprocess.check_call(commandline, *aargs, **dargs)
