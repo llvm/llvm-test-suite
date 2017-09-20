@@ -1,9 +1,7 @@
 """Test module to collect test executable hashsum."""
-from lit.Test import toMetricValue
 from litsupport import shellcommand
 from litsupport import testplan
 import hashlib
-import lit.Test
 import logging
 import platform
 
@@ -50,7 +48,7 @@ def same_as_previous(context):
 
 def _getHash(context):
     compute(context)
-    return {'hash': lit.Test.toMetricValue(context.executable_hash)}
+    return {'hash': context.executable_hash}
 
 
 def mutatePlan(context, plan):

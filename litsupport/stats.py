@@ -2,7 +2,6 @@
 
 This assumes the benchmarks were built with the -save-stats=obj flag."""
 import json
-import lit.Test
 import logging
 import os
 from collections import defaultdict
@@ -39,7 +38,7 @@ def _getStats(context):
 
     result = dict()
     for key, value in stats.iteritems():
-        result[key] = lit.Test.toMetricValue(value)
+        result[key] = value
     return result
 
 

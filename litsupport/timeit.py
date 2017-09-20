@@ -1,6 +1,5 @@
 from litsupport import shellcommand
 from litsupport import testplan
-import lit.Test
 import re
 
 
@@ -57,7 +56,7 @@ def _collectTime(context, timefiles, metric_name='exec_time'):
     time = 0.0
     for timefile in timefiles:
         time += getUserTime(timefile)
-    return {metric_name: lit.Test.toMetricValue(time)}
+    return {metric_name: time}
 
 
 def mutatePlan(context, plan):

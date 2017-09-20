@@ -3,7 +3,6 @@ perf tool."""
 from litsupport import shellcommand
 from litsupport import testplan
 from litsupport import run_under
-import lit.Test
 
 
 def _mutateCommandLine(context, commandline):
@@ -34,5 +33,4 @@ def mutatePlan(context, plan):
     script = testplan.mutateScript(context, script, _mutateCommandLine)
     plan.profilescript += script
     plan.metric_collectors.append(
-        lambda context: {
-            'profile': lit.Test.toMetricValue(context.tmpBase + '.perf_data')})
+        lambda context: {'profile': context.tmpBase + '.perf_data'})

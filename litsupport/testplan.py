@@ -116,7 +116,8 @@ def _executePlan(context, plan):
         try:
             additional_metrics = metric_collector(context)
             for metric, value in additional_metrics.items():
-                context.result_metrics[metric] = value
+                litvalue = lit.Test.toMetricValue(value)
+                context.result_metrics[metric] = litvalue
         except Exception as e:
             logging.error("Could not collect metric with %s", metric_collector,
                           exc_info=e)

@@ -1,15 +1,13 @@
 """Test module to collect code size metrics of the benchmark executable."""
 from litsupport import testplan
-import lit.Test
 import logging
 import os.path
 
 
 def _getCodeSize(context):
-    size = os.path.getsize(context.executable)
     # First get the filesize: This should always work.
     metrics = {}
-    metrics['size'] = lit.Test.toMetricValue(size)
+    metrics['size'] = os.path.getsize(context.executable)
 
     # If we have the llvm-size tool available get the size per segment.
     llvm_size = context.config.llvm_size
@@ -37,7 +35,7 @@ def _getCodeSize(context):
                 try:
                     name = values[0]
                     val = int(values[1])
-                    metrics['size.%s' % name] = lit.Test.toMetricValue(val)
+                    metrics['size.%s' % name] = val
                 except ValueError as e:
                     logging.info("Ignoring malformed output line: %s", l)
 
