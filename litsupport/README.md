@@ -72,6 +72,8 @@ code; typical examples are:
   `-fprofile-instr-generate` and enables the `profilegen` module that runs
   `llvm-profdata` after running the benchmarks.
 
+Available modules are found in the `litsupport/modules` directory.
+
 Developing New Modules
 ----------------------
 

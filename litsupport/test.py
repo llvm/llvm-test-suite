@@ -2,32 +2,20 @@
 Main integration for llvm-lit: This defines a lit test format.
 Also contains logic to load benchmark modules.
 """
-import importlib
 import lit
+import lit.TestRunner
 import lit.util
+import lit.formats
+import litsupport.modules
+import litsupport.modules.hash
+import litsupport.testfile
+import litsupport.testplan
 import logging
 import os
-from lit.formats import ShTest
-from lit.TestRunner import getTempPaths
-from lit import Test
-from lit.util import to_bytes, to_string
-
-from litsupport import codesize
-from litsupport import compiletime
-from litsupport import hash
-from litsupport import perf
-from litsupport import profilegen
-from litsupport import remote
-from litsupport import run
-from litsupport import run_under
-from litsupport import testfile
-from litsupport import testplan
-from litsupport import timeit
 
 
 SKIPPED = lit.Test.ResultCode('SKIPPED', False)
 NOEXE = lit.Test.ResultCode('NOEXE', True)
-modules = []
 
 
 class TestContext:
@@ -43,23 +31,7 @@ class TestContext:
         self.tmpBase = tmpBase
 
 
-def load_modules(test_modules):
-    for name in test_modules:
-        modulename = 'litsupport.%s' % name
-        try:
-            module = importlib.import_module(modulename)
-        except ImportError as e:
-            logging.error("Could not import module '%s'" % modulename)
-            sys.exit(1)
-        if not hasattr(module, 'mutatePlan'):
-            logging.error("Invalid test module '%s': No mutatePlan() function."
-                          % modulename)
-            sys.exit(1)
-        logging.info("Loaded test module %s" % module.__file__)
-        modules.append(module)
-
-
-class TestSuiteTest(ShTest):
+class TestSuiteTest(lit.formats.ShTest):
     def __init__(self):
         super(TestSuiteTest, self).__init__()
 
@@ -71,11 +43,11 @@ class TestSuiteTest(ShTest):
             return lit.Test.Result(Test.PASS)
 
         # Parse .test file and initialize context
-        tmpDir, tmpBase = getTempPaths(test)
+        tmpDir, tmpBase = lit.TestRunner.getTempPaths(test)
         lit.util.mkdir_p(os.path.dirname(tmpBase))
         context = TestContext(test, litConfig, tmpDir, tmpBase)
-        testfile.parse(context, test.getSourcePath())
-        plan = testplan.TestPlan()
+        litsupport.testfile.parse(context, test.getSourcePath())
+        plan = litsupport.testplan.TestPlan()
 
         # Report missing test executables.
         if not os.path.exists(context.executable):
@@ -84,8 +56,8 @@ class TestSuiteTest(ShTest):
 
         # Skip unchanged tests
         if config.previous_results:
-            hash.compute(context)
-            if hash.same_as_previous(context):
+            litsupport.modules.hash.compute(context)
+            if litsupport.modules.hash.same_as_previous(context):
                 result = lit.Test.Result(
                         SKIPPED, 'Executable identical to previous run')
                 val = lit.Test.toMetricValue(context.executable_hash)
@@ -93,10 +65,13 @@ class TestSuiteTest(ShTest):
                 return result
 
         # Let test modules modify the test plan.
-        for module in modules:
+        for modulename in config.test_modules:
+            module = litsupport.modules.modules.get(modulename)
+            if module is None:
+                raise Exception("Unknown testmodule '%s'" % modulename)
             module.mutatePlan(context, plan)
 
         # Execute Test plan
-        result = testplan.executePlanTestResult(context, plan)
+        result = litsupport.testplan.executePlanTestResult(context, plan)
 
         return result

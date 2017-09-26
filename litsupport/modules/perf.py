@@ -2,7 +2,7 @@
 perf tool."""
 from litsupport import shellcommand
 from litsupport import testplan
-from litsupport import run_under
+from litsupport.modules import run_under
 
 
 def _mutateCommandLine(context, commandline):
