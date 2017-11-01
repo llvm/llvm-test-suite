@@ -39,6 +39,11 @@ DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} 
   create_shim(CMAKE_NM nm)
   create_shim(CMAKE_RANLIB ranlib)
   create_shim(CMAKE_STRIP strip)
+
+  # Skip linking in cmake compiler tests, as the cmake won't pass the -B flags
+  # required to pick up the correct linker to the early compiler tests. However
+  # it does have an option to not link in the early tests.
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY CACHE STRING "")
 else()
   # Search and use compiler coming with the SDK.
   # Note that we do not search CMAKE_CXX_COMPILER here. cmake will try
