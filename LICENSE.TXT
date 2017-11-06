@@ -93,6 +93,7 @@ CLAMR:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/CLAMR
 HPCCG:              llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/HPCCG
 PENNANT:            llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/PENNANT
 miniFE:             llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/miniFE
+HACCKernels:        llvm-test/MultiSource/Benchmarks/DOE-ProxyApps-C++/HACCKernels
 Fhourstones:        llvm-test/MultiSource/Benchmarks/Fhourstones
 Fhourstones-3.1:    llvm-test/MultiSource/Benchmarks/Fhourstones-3.1
 McCat:              llvm-test/MultiSource/Benchmarks/McCat
