@@ -7,39 +7,42 @@
 // we can successfully compile and run the standard library's implementations
 // of these functions.
 
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201103L
 
 #include <assert.h>
 #include <algorithm>
 #include <functional>
 #include <stdio.h>
 
-__device__ void greater() {
-  assert(std::greater<int>()(1, 0));
-}
-
 __device__ void min() {
   assert(std::min(0, 1) == 0);
-  assert(std::min({5, 1, 10}) == 1);
 }
 
 __device__ void max() {
   assert(std::max(0, 1) == 1);
-  assert(std::max({5, 1, 10}, std::less<int>()) == 10);
 }
 
-__device__ void minmax() {
+// Clang has device-side shims implementing std::min and std::max for scalars
+// starting in C++11, but doesn't implement minimax or std::min/max on
+// initializer_lists until C++14, when it gets these for free from the standard
+// library (because they're constexpr).
+__device__ void cpp14_tests() {
+#if __cplusplus >= 201402L
+  assert(std::greater<int>()(1, 0));
+  assert(std::min({5, 1, 10}) == 1);
+  assert(std::max({5, 1, 10}, std::less<int>()) == 10);
+
   assert(std::minmax(1, 0).first == 0);
   assert(std::minmax(1, 0).second == 1);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).first == -10);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).second == 100);
+#endif
 }
 
 __global__ void kernel() {
-  greater();
   min();
   max();
-  minmax();
+  cpp14_tests();
 }
 
 int main() {
