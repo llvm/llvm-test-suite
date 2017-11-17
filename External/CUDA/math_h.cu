@@ -87,7 +87,6 @@ __device__ Ambiguous lrint(Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous lround(Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous nearbyint(Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous nextafter(Ambiguous, Ambiguous){ return Ambiguous(); }
-__device__ Ambiguous nexttoward(Ambiguous, Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous remainder(Ambiguous, Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous remquo(Ambiguous, Ambiguous, int*){ return Ambiguous(); }
 __device__ Ambiguous rint(Ambiguous){ return Ambiguous(); }
@@ -1363,39 +1362,20 @@ __device__ void test_nextafter()
     static_assert((std::is_same<decltype(nextafter(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
     //assert(nextafter(0,1) == hexfloat<double>(0x1, 0, -1074));
 
-    // Invoke all our overloads, even if we can't be bothered to check the
-    // results.
-    nextafter(0, 1);
-    nextafter(0, 1.);
-    nextafter(0, 1.f);
+    // Invoke all our overloads.  Even though we don't check the exact result
+    // (this is pretty annoying to do for this function), we make sure to *use*
+    // the results so that these function calls can't be DCE'ed.
+    assert(nextafter(0, 1) != 0);
+    assert(nextafter(0, 1.) != 0);
+    assert(nextafter(0, 1.f) != 0);
 
-    nextafter(0., 1);
-    nextafter(0., 1.);
-    nextafter(0., 1.f);
+    assert(nextafter(0., 1) != 0);
+    assert(nextafter(0., 1.) != 0);
+    assert(nextafter(0., 1.f) != 0);
 
-    nextafter(0.f, 1);
-    nextafter(0.f, 1.);
-    nextafter(0.f, 1.f);
-}
-
-__device__ void test_nexttoward()
-{
-    static_assert((std::is_same<decltype(nexttoward(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    //assert(nexttoward(0, 1) == hexfloat<double>(0x1, 0, -1074));
-
-    // Invoke all our overloads, even if we can't be bothered to check the
-    // results.
-    nexttoward(0, 1);
-    nexttoward(0, 1.);
-    nexttoward(0, 1.f);
-
-    nexttoward(0., 1);
-    nexttoward(0., 1.);
-    nexttoward(0., 1.f);
-
-    nexttoward(0.f, 1);
-    nexttoward(0.f, 1.);
-    nexttoward(0.f, 1.f);
+    assert(nextafter(0.f, 1) != 0);
+    assert(nextafter(0.f, 1.) != 0);
+    assert(nextafter(0.f, 1.f) != 0);
 }
 
 __device__ void test_remainder()
@@ -1648,7 +1628,6 @@ __global__ void tests()
     test_nan();
     test_nearbyint();
     test_nextafter();
-    test_nexttoward();
     test_remainder();
     test_remquo();
     test_rint();
