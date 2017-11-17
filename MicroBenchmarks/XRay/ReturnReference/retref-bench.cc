@@ -25,7 +25,7 @@ neverInstrumented() {
 
 [[clang::xray_never_instrument]] static void BM_ReturnNeverInstrumented(
     benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(neverInstrumented());
   }
 }
@@ -41,7 +41,7 @@ alwaysInstrumented() {
 [[clang::xray_never_instrument]] static void BM_ReturnInstrumentedUnPatched(
     benchmark::State& state) {
   __xray_unpatch();
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     int x;
     benchmark::DoNotOptimize(x = alwaysInstrumented());
     benchmark::ClobberMemory();
@@ -55,7 +55,7 @@ BENCHMARK(BM_ReturnInstrumentedUnPatched);
     benchmark::State& state) {
   __xray_patch();
   __xray_unpatch();
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     int x;
     benchmark::DoNotOptimize(x = alwaysInstrumented());
     benchmark::ClobberMemory();
@@ -68,7 +68,7 @@ BENCHMARK(BM_ReturnInstrumentedPatchedThenUnpatched);
 [[clang::xray_never_instrument]] static void BM_ReturnInstrumentedPatched(
     benchmark::State& state) {
   __xray_patch();
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     int x;
     benchmark::DoNotOptimize(alwaysInstrumented());
     benchmark::ClobberMemory();
@@ -79,7 +79,7 @@ BENCHMARK(BM_ReturnInstrumentedPatched);
 
 [[clang::xray_never_instrument]] static void BM_RDTSCP_Cost(
     benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     unsigned cpu;
     unsigned tsc;
     benchmark::DoNotOptimize(tsc = __rdtscp(&cpu));
@@ -104,7 +104,7 @@ BM_ReturnInstrumentedPatchedWithLogHandler(benchmark::State& state) {
   __xray_set_handler(benchmark_handler);
   __xray_patch();
   benchmark::ClobberMemory();
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     int x;
     benchmark::DoNotOptimize(x = alwaysInstrumented());
     benchmark::ClobberMemory();

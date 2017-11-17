@@ -71,7 +71,7 @@ volatile bool log_initialized = false;
   if (state.thread_index == 0) {
     SetUpXRayFDRMultiThreaded(state);
   }
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     val = EmptyFunction();
     benchmark::DoNotOptimize(val);
   }
