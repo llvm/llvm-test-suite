@@ -27,7 +27,7 @@
 #include <strings.h>
 
 /*LINTLIBRARY*/
-#define ERR(s, c)	if(opterr){\
+#define ERR(s, c)	if(unix_smail_opterr){\
 	extern int write();\
 	char errbuf[2];\
 	errbuf[0] = c; errbuf[1] = '\n';\
@@ -35,49 +35,49 @@
 	(void) write(2, s, (unsigned)strlen(s));\
 	(void) write(2, errbuf, 2);}
 
-int	opterr = 1;
-int	optind = 1;
+int	unix_smail_opterr = 1;
+int	unix_smail_optind = 1;
 int	optopt;
 char	*optarg;
 #define EOF (-1)
 
-int getopt(int argc,char **argv,char *opts)
+int unix_smail_getopt(int argc,char **argv,char *opts)
 {
 	static int sp = 1;
 	register int c;
 	register char *cp;
 
 	if(sp == 1)
-		if(optind >= argc ||
-		   argv[optind][0] != '-' || argv[optind][1] == '\0')
+		if(unix_smail_optind >= argc ||
+		   argv[unix_smail_optind][0] != '-' || argv[unix_smail_optind][1] == '\0')
 			return(EOF);
-		else if(strcmp(argv[optind], "--") == NULL) {
-			optind++;
+		else if(strcmp(argv[unix_smail_optind], "--") == NULL) {
+			unix_smail_optind++;
 			return(EOF);
 		}
-	optopt = c = argv[optind][sp];
+	optopt = c = argv[unix_smail_optind][sp];
 	if(c == ':' || (cp=index(opts, c)) == NULL) {
 		ERR(": illegal option -- ", c);
-		if(argv[optind][++sp] == '\0') {
-			optind++;
+		if(argv[unix_smail_optind][++sp] == '\0') {
+			unix_smail_optind++;
 			sp = 1;
 		}
 		return('?');
 	}
 	if(*++cp == ':') {
-		if(argv[optind][sp+1] != '\0')
-			optarg = &argv[optind++][sp+1];
-		else if(++optind >= argc) {
+		if(argv[unix_smail_optind][sp+1] != '\0')
+			optarg = &argv[unix_smail_optind++][sp+1];
+		else if(++unix_smail_optind >= argc) {
 			ERR(": option requires an argument -- ", c);
 			sp = 1;
 			return('?');
 		} else
-			optarg = argv[optind++];
+			optarg = argv[unix_smail_optind++];
 		sp = 1;
 	} else {
-		if(argv[optind][++sp] == '\0') {
+		if(argv[unix_smail_optind][++sp] == '\0') {
 			sp = 1;
-			optind++;
+			unix_smail_optind++;
 		}
 		optarg = NULL;
 	}

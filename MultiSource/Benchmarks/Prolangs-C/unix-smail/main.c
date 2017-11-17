@@ -40,7 +40,7 @@ static char 	*sccsid="@(#)main.c	2.5 (smail) 9/15/87";
 #include        <stdlib.h>
 #include	"defs.h"
 
-int getopt();
+int unix_smail_getopt();
 
 int exitstat = 0;		/* exit status, set by resolve, deliver	*/
 
@@ -114,7 +114,7 @@ int main(int argc,char *argv[])
 
 	char *optstr = "cdvArRlLH:h:p:u:q:a:n:m:f:F:";
 	extern char *optarg;
-	extern int optind;
+	extern int unix_smail_optind;
 
 /*
 **  see if we aren't invoked as rmail
@@ -132,7 +132,7 @@ int main(int argc,char *argv[])
 /*
 **  Process command line arguments
 */
-	while ((c = getopt(argc, argv, optstr)) != EOF) {
+	while ((c = unix_smail_getopt(argc, argv, optstr)) != EOF) {
 		switch ( c ) {
 		case 'd': debug      = YES; 		break;
 		case 'v': debug      = VERBOSE; 	break; 
@@ -162,7 +162,7 @@ int main(int argc,char *argv[])
 			error( EX_USAGE, "valid flags are %s\n", optstr);
 		}
 	}
-	if ( argc <= optind ) {
+	if ( argc <= unix_smail_optind ) {
 		error( EX_USAGE, "usage: %s [flags] address...\n", "smail" );
 	}
 
@@ -174,15 +174,15 @@ int main(int argc,char *argv[])
 /*
 **  Spool the letter in a temporary file.
 */
-	nargc = argc - optind;
+	nargc = argc - unix_smail_optind;
 	if(printaddr == 0) {
-		spool(nargc, &argv[optind]);
+		spool(nargc, &argv[unix_smail_optind]);
 	}
 
 /*
 ** Do aliasing and fullname resolution
 */
-	nargv = alias(&nargc, &argv[optind]);
+	nargv = alias(&nargc, &argv[unix_smail_optind]);
 
 /*
 **  Map argv addresses to <host, user, form, cost>.
