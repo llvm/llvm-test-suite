@@ -44,6 +44,13 @@ DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} 
   # required to pick up the correct linker to the early compiler tests. However
   # it does have an option to not link in the early tests.
   set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY CACHE STRING "")
+
+  # Some benchmarks check for the function re_comp by using
+  # check_function_exists. This function is not available in any Xcode SDK, and
+  # the check returns YES with custom built compilers when we cross-compile,
+  # because of "CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY" explained just
+  # above. We work around that by forcing it to NO.
+  set(HAVE_RE_COMP CACHE BOOL NO)
 else()
   # Search and use compiler coming with the SDK.
   # Note that we do not search CMAKE_CXX_COMPILER here. cmake will try
