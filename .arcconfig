@@ -1,4 +1,4 @@
 {
-  "project_id" : "test-suite",
+  "repository.callsign" : "T",
   "conduit_uri" : "https://reviews.llvm.org/"
 }
