@@ -1,6 +1,6 @@
 LEVEL = ../../../
 PROG = bullet
-CPPFLAGS += -I$(PROJ_SRC_DIR)/include -DNO_TIME
+CPPFLAGS += -I$(PROJ_SRC_DIR)/include -std=gnu++98 -DNO_TIME
 LDFLAGS = -lstdc++ -lm
 
 ifeq ($(ARCH),XCore)

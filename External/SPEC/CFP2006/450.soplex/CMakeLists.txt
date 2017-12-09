@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CXXFLAGS -std=gnu++98)
 
 macro(test_input run_type input outname stdout_reltol info_reltol)
   llvm_test_run(RUN_TYPE ${run_type}

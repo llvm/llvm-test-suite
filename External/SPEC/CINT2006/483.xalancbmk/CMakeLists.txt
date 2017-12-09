@@ -11,6 +11,9 @@ add_definitions(
   -DXML_USE_NATIVE_TRANSCODER
   -DXML_USE_INMEM_MESSAGELOADER
 )
+
+list(APPEND CXXFLAGS -std=gnu++98)
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${BENCHMARK_DIR}/src

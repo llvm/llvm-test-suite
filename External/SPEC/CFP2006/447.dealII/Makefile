@@ -16,7 +16,7 @@ CPPFLAGS += \
         -Ddeal_II_dimension=3     \
         -DBOOST_DISABLE_THREADS   \
         -I$(SPEC_BENCH_DIR)/src/include
-CXXFLAGS += -stdlib=libstdc++
+CXXFLAGS += -stdlib=libstdc++ -std=gnu++98
 
 STDOUT_FILENAME := log
 

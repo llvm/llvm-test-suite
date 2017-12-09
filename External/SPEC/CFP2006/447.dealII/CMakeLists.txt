@@ -1,6 +1,7 @@
 include_directories(${BENCHMARK_DIR}/src/include)
 add_definitions(-DBOOST_DISABLE_THREADS -Ddeal_II_dimension=3)
 list(APPEND LDFLAGS -lm)
+list(APPEND CXXFLAGS -std=gnu++98)
 
 macro(verify_n run_type dir n)
   # Note that the official SPEC fp tolarence is only "-a .0000001", however this

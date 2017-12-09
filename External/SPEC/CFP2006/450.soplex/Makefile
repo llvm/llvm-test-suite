@@ -9,6 +9,7 @@ LEVEL = ../../../..
 FP_ABSTOLERANCE = 1.0e-5
 
 CPPFLAGS += -DNDEBUG
+CXXFLAGS += -std=gnu++98
 
 LDFLAGS = -lstdc++ -lm
 LIBS    = -lstdc++ -lm

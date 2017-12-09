@@ -1,4 +1,5 @@
 LEVEL = ../../..
+CXXFLAGS += -std=gnu++98
 LDFLAGS += -lm -lstdc++
 FP_TOLERANCE := 0.001
 
