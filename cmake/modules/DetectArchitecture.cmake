@@ -28,8 +28,36 @@ macro(detect_architecture variable)
   else()
     message(STATUS "Determine the system architecture - failed")
     file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
-      "Determining the system architecture fialed with the following output:\n${OUTPUT}")
+      "Determining the system architecture failed with the following output:\n${OUTPUT}")
     set(${variable})
   endif()
   
 endmacro(detect_architecture)
+
+#
+# Performs a try_run to determine the cpu architecture of target
+#
+
+macro(detect_x86_cpu_architecture variable)
+  try_run(HAVE_RUN_${variable} HAVE_COMPILE_${variable}
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/cmake/modules/DetectX86CPUArchitecture.c
+    COMPILE_OUTPUT_VARIABLE COMP_OUTPUT
+    RUN_OUTPUT_VARIABLE RUN_OUTPUT)
+
+  if(HAVE_COMPILE_${variable} AND NOT (HAVE_RUN_${variable} STREQUAL  FAILED_TO_RUN))
+    if(RUN_OUTPUT)
+      message(STATUS "Check target system architecture: ${RUN_OUTPUT}")
+      set(${variable} ${RUN_OUTPUT})
+    else()
+      message(SEND_ERROR "Could not detect target system cpu architecture!")
+    endif()
+  else()
+    message(STATUS "Determine the system cpu architecture - failed")
+    file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+      "Determining the system cpu architecture failed with the following output:\n${COMP_OUTPUT}\n${RUN_OUTPUT}")
+    set(${variable})
+  endif()
+
+endmacro(detect_x86_cpu_architecture)
+
