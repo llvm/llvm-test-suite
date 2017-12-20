@@ -16,6 +16,12 @@ ifeq ($(ARCH),$(filter $(ARCH),x86_64 x86_64h))
 DIRS += SSE
 endif
 
+ifeq ($(CC_UNDER_TEST_IS_CLANG), 1)
+ifeq ($(HAVE_X86_AVX512F_INSTRUCTIONS), 1)
+DIRS += AVX512
+endif
+endif
+
 # Assume ARMv7 implies NEON.
 ifneq ($(CC_UNDER_TEST_TARGET_IS_THUMBV7),)
 DIRS += NEON
