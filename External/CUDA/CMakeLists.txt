@@ -1,6 +1,30 @@
 include(External)
 llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
 
+set(SUPPORTED_GPU_CUDA_7_0
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53)
+set(SUPPORTED_GPU_CUDA_7_5
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53)
+set(SUPPORTED_GPU_CUDA_8_0
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62)
+set(SUPPORTED_GPU_CUDA_9_0
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70)
+set(SUPPORTED_GPU_CUDA_9_1
+  sm_30 sm_32 sm_35
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70 sm_72)
+
 # Helper macro to extract version number at the end of the string
 # Input: get_version(Var String)
 #    Where String = /some/string/with/version-x.y.z
@@ -177,14 +201,11 @@ macro(create_cuda_tests)
   if(NOT CUDA_GPU_ARCH)
     list(APPEND CUDA_GPU_ARCH sm_35)
   endif()
+  list(SORT CUDA_GPU_ARCH)
 
   if (CUDA_JOBS)
     set(TEST_SUITE_LIT_FLAGS ${TEST_SUITE_LIT_FLAGS} -j ${CUDA_JOBS})
   endif()
-
-  foreach(GpuArch IN LISTS CUDA_GPU_ARCH)
-    list(APPEND CPPFLAGS --cuda-gpu-arch=${GpuArch})
-  endforeach()
 
   file(GLOB GccVersions ${TEST_SUITE_CUDA_ROOT}/gcc-*)
   list(SORT GccVersions)
@@ -263,6 +284,24 @@ macro(create_cuda_tests)
     get_version(_CudaVersion ${_CudaPath})
     set(_Cuda_Suffix "cuda-${_CudaVersion}")
     set(_Cuda_CPPFLAGS --cuda-path=${_CudaPath} -I${_CudaPath}/include)
+    # clear the list of GPUs to compile for.
+    set(_CudaArchFlags)
+    set(_CudaArchList)
+    string(REPLACE "." "_" _CudaVersionSuffix ${_CudaVersion})
+    foreach(_CudaGpuArch IN LISTS CUDA_GPU_ARCH)
+      if(_CudaGpuArch IN_LIST SUPPORTED_GPU_CUDA_${_CudaVersionSuffix})
+        list(APPEND _CudaArchFlags --cuda-gpu-arch=${_CudaGpuArch})
+        list(APPEND _CudaArchList ${_CudaGpuArch})
+      endif()
+    endforeach()
+    if (_CudaArchList)
+      message(STATUS "Building ${_Cuda_Suffix} targets for ${_CudaArchList}")
+    else()
+      message(WARNING "${_Cuda_Suffix} does not support ${CUDA_GPU_ARCH} GPUs. Skipped.")
+      continue()
+    endif()
+    list(APPEND _Cuda_CPPFLAGS ${_CudaArchFlags})
+
     set(_Cuda_Libs cudart-${_CudaVersion})
     foreach(_Std IN ITEMS "c++98" "c++11" "c++14")
       set(_Std_Suffix "${_Std}")
