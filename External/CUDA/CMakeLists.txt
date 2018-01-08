@@ -61,6 +61,7 @@ macro(create_one_local_test Name FileGlob)
     llvm_test_run()
   endif()
   llvm_test_executable(${_executable} ${_sources})
+  target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
   if(VariantLibs)
     target_link_libraries(${_executable} ${VariantLibs})
   endif()
@@ -98,7 +99,8 @@ macro(create_one_thrust_test TestSource)
   llvm_test_run(--verbose ${_ExtraThrustTestArgs})
   llvm_test_executable(${_executable} ${TestSource})
   target_link_libraries(${_executable} ${VariantLibs})
-  target_compile_options(${_executable} PUBLIC ${THRUST_CPPFLAGS})
+  target_compile_options(${_executable} BEFORE PUBLIC ${THRUST_CPPFLAGS})
+  target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
   list(APPEND THRUST_VARIANT_TESTS ${_executable})
 endmacro()
 
@@ -111,7 +113,8 @@ function(create_thrust_tests VariantSuffix)
     # test framework is common for all tests, so we build it once as a
     # library.
     add_library(ThrustTestFrameworkLib-${VariantSuffix} STATIC ${ThrustTestFramework})
-    append_compile_flags(ThrustTestFrameworkLib-${VariantSuffix} ${CPPFLAGS} ${THRUST_CPPFLAGS})
+    target_compile_options(ThrustTestFrameworkLib-${VariantSuffix} BEFORE PRIVATE ${THRUST_CPPFLAGS})
+    target_compile_options(ThrustTestFrameworkLib-${VariantSuffix} PRIVATE ${VariantCPPFLAGS})
     add_dependencies(ThrustTestFrameworkLib-${VariantSuffix} timeit-host fpcmp-host)
     list(APPEND VariantLibs ThrustTestFrameworkLib-${VariantSuffix})
 
@@ -133,8 +136,12 @@ function(create_thrust_tests VariantSuffix)
     # overhead, so it's actually way slower than running all tests
     # sequentially.
     llvm_test_run(--verbose ${_ExtraThrustTestArgs})
+    # CUDA SDK comes with its own version of thrust in its include directory.
+    # In order to use the thrust library we want, its include path must precede
+    # that of the CUDA SDK include path.
     llvm_test_executable(${_ThrustMainTarget} ${ThrustTestFramework} ${ThrustAllTestSources})
-    target_compile_options(${_ThrustMainTarget} PUBLIC ${THRUST_CPPFLAGS})
+    target_compile_options(${_ThrustMainTarget} BEFORE PUBLIC ${THRUST_CPPFLAGS})
+    target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
     target_link_libraries(${_ThrustMainTarget} ${VariantLibs})
   endif()
   add_dependencies(cuda-tests-${VariantSuffix} cuda-tests-thrust-${VariantSuffix})
@@ -148,7 +155,7 @@ function(create_cuda_test_variant Std VariantSuffix)
     COMMENT "Build CUDA test variant ${VariantSuffix}")
 
   set(VariantLibs ${_Cuda_Libs} ${_Stdlib_Libs})
-  list(APPEND CPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
+  set(VariantCPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
   list(APPEND LDFLAGS ${_Cuda_LDFLAGS} ${_Std_LDFLAGS} ${_Stdlib_LDFLAGS})
 
   # Create a separate test target for simple tests that can be built/tested quickly.
