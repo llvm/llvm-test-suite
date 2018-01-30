@@ -141,7 +141,7 @@ function(create_thrust_tests VariantSuffix)
     # that of the CUDA SDK include path.
     llvm_test_executable(${_ThrustMainTarget} ${ThrustTestFramework} ${ThrustAllTestSources})
     target_compile_options(${_ThrustMainTarget} BEFORE PUBLIC ${THRUST_CPPFLAGS})
-    target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
+    target_compile_options(${_ThrustMainTarget} PUBLIC ${VariantCPPFLAGS})
     target_link_libraries(${_ThrustMainTarget} ${VariantLibs})
   endif()
   add_dependencies(cuda-tests-${VariantSuffix} cuda-tests-thrust-${VariantSuffix})
