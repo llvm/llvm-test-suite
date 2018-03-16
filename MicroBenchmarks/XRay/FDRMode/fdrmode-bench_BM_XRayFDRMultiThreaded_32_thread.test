@@ -1,1 +1,0 @@
-RUN: %S/fdrmode-bench --benchmark_repetitions=10 --benchmark_report_aggregates_only=true --benchmark_filter=BM_XRayFDRMultiThreaded/threads:32$

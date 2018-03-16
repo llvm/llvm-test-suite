@@ -143,6 +143,7 @@ def executePlanTestResult(context, testplan):
     lit.test.Result() object for the results."""
     context.result_output = ""
     context.result_metrics = {}
+    context.micro_results = {}
 
     result_code = _executePlan(context, testplan)
 
@@ -150,6 +151,9 @@ def executePlanTestResult(context, testplan):
     result = lit.Test.Result(result_code, context.result_output)
     for key, value in context.result_metrics.items():
         result.addMetric(key, value)
+    for key, value in context.micro_results.items():
+        result.addMicroResult(key, value)
+
     return result
 
 

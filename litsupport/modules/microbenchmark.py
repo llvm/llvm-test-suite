@@ -23,7 +23,6 @@ def _mutateScript(context, script):
 
 
 def _collectMicrobenchmarkTime(context, microbenchfiles):
-    result = 0.0
     for f in microbenchfiles:
         with open(f) as inp:
             lines = csv.reader(inp)
@@ -31,10 +30,19 @@ def _collectMicrobenchmarkTime(context, microbenchfiles):
             for line in lines:
                 if line[0] == 'name':
                     continue
-                # Note that we cannot create new tests here, so for now we just
-                # add up all the numbers here.
-                result += float(line[3])
-    return {'microbenchmark_time_ns': lit.Test.toMetricValue(result)}
+                # Name for MicroBenchmark
+                name = line[0]
+                # Create Result object with PASS
+                microBenchmark = lit.Test.Result(lit.Test.PASS)
+
+                # Index 3 is cpu_time
+                microBenchmark.addMetric('exec_time', lit.Test.toMetricValue(float(line[3])))
+              
+                # Add Micro Result 
+                context.micro_results[name] = microBenchmark
+
+    # returning the number of microbenchmarks collected as a metric for the base test
+    return ({'MicroBenchmarks': lit.Test.toMetricValue(len(context.micro_results))})
 
 
 def mutatePlan(context, plan):
