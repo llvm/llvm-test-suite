@@ -844,7 +844,9 @@ OBJECT *full_name, FILE_POS *xfpos, BOOLEAN *compressed)
       }
       else
       {
-        system(buff);
+        fprintf(stderr, "Cannot execute system calls!\n");
+        abort();
+//         system(buff);
         fp = fopen(LOUT_EPS, READ_TEXT);
         *compressed = TRUE;
       }

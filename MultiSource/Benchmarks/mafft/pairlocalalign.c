@@ -118,7 +118,10 @@ static void callfoldalign( int nseq, char **mseq )
 	fclose( fp );
 
 	sprintf( com, "env PATH=%s  foldalign210 %s _foldalignin > _foldalignout ", whereispairalign, foldalignopt );
-	res = system( com );
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+	res = 0;
+// 	res = system( com );
 	if( res )
 	{
 		fprintf( stderr, "Error in foldalign\n" );
@@ -152,7 +155,10 @@ static void calllara( int nseq, char **mseq, char *laraarg )
 
 //	fprintf( stderr, "calling LaRA\n" );
 	sprintf( com, "env PATH=%s:/bin:/usr/bin mafft_lara -i _larain -w _laraout -o _lara.params %s", whereispairalign, laraarg );
-	res = system( com );
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+	res = 0;
+// 	res = system( com );
 	if( res )
 	{
 		fprintf( stderr, "Error in lara\n" );
@@ -306,7 +312,9 @@ static float callmxscarna_giving_bpp( char **mseq1, char **mseq2, char **bpp1, c
 		fprintf( fp, *bpp2++ );
 	fclose( fp );
 
-	system( "tr -d '\\r' < _bpporg > _bpp" ); // for cygwin, wakaran
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+// 	system( "tr -d '\\r' < _bpporg > _bpp" ); // for cygwin, wakaran
 
 	t2u( *mseq1 );
 	t2u( *mseq2 );
@@ -324,10 +332,15 @@ static float callmxscarna_giving_bpp( char **mseq1, char **mseq2, char **bpp1, c
 	write1seq( fp, *mseq2 );
 	fclose( fp );
 
-	system( "tr -d '\\r' < _mxscarnainorg > _mxscarnain" ); // for cygwin, wakaran
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+// 	system( "tr -d '\\r' < _mxscarnainorg > _mxscarnain" ); // for cygwin, wakaran
 
 	sprintf( com, "env PATH=%s mxscarnamod -readbpp _mxscarnain > _mxscarnaout 2>_dum", whereispairalign );
-	res = system( com );
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+	res = 0;
+// 	res = system( com );
 	if( res )
 	{
 		fprintf( stderr, "Error in mxscarna\n" );
@@ -379,7 +392,10 @@ static float callmxscarna_slow( char **mseq1, char **mseq2, int alloclen )
 	fclose( fp );
 
 	sprintf( com, "env PATH=%s mxscarnamod _mxscarnain > _mxscarnaout 2>_dum", whereispairalign );
-	res = system( com );
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+	res = 0;
+//	res = system( com );
 	if( res )
 	{
 		fprintf( stderr, "Error in mxscarna\n" );

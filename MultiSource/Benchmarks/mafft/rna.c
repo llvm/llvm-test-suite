@@ -220,7 +220,9 @@ void rnaalifoldcall( char **seq, int nseq, RNApair **pairprob )
 	fclose( fp );
 
 	sprintf( cmd, "RNAalifold -p %s", fnamein );
-	system( cmd );
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+// 	system( cmd );
 
 	fp = fopen( "alifold.out", "r" );
 	if( !fp )
@@ -280,7 +282,9 @@ void rnaalifoldcall( char **seq, int nseq, RNApair **pairprob )
 	}
 	fclose( fp );
 	sprintf( cmd, "rm -f %s", fnamein );
-	system( cmd ); 
+	fprintf(stderr, "Cannot execute system calls!\n");
+	abort();
+// 	system( cmd );
 
 	for( i=0; i<lgth; i++ )
 	{

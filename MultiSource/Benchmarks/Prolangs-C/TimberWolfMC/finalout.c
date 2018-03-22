@@ -109,10 +109,12 @@ if( doCompaction > 0 ) {
     redoFlag = 0 ;
     addpins() ;
 
+    fprintf(stderr, "Cannot execute system calls!\n");
+    abort();
     sprintf( command , "cp %s.cfs cfss1", cktName ) ;
-    system( command ) ;
+//     system( command ) ;
     sprintf( command , "cp %s.cfb cfbb1", cktName ) ;
-    system( command ) ;
+//     system( command ) ;
 
     for( c = 1 ; c <= doCompaction ; c++ ) {
 
@@ -206,10 +208,12 @@ if( doCompaction > 0 ) {
 	rmain() ;
 	redoFlag = 0 ;
 
+        fprintf(stderr, "Cannot execute system calls!\n");
+        abort();
 	sprintf( command , "cp %s.cfs cfss%d", cktName , c + 1) ;
-	system( command ) ;
+// 	system( command ) ;
 	sprintf( command , "cp %s.cfb cfbb%d", cktName , c + 1) ;
-	system( command ) ;
+// 	system( command ) ;
     }
     subpins() ;
     fprintf(fpo,"\n\nCORE Bounding Box: l:%d r:%d b:%d t:%d\n\n",

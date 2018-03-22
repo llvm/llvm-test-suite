@@ -86,20 +86,12 @@ int main(int argc,char **argv)
 
 /* -------------------------------- Delete the temporary output file        */
       if (!DEBUG_FLAG_1) {
-	char *TEMP;
-	TEMP = (char *) malloc((unsigned int) 
-			       (4+strlen(TEMP_OUTPUT_FILE_NAME)));
-	(void) sprintf(TEMP,"rm %s",TEMP_OUTPUT_FILE_NAME);
-	(void) system(TEMP);
+        (void) remove(TEMP_OUTPUT_FILE_NAME);
       }
 
 /* -------------------------------- If errors, delete the object file       */
       if (ERROR) {
-	char *TEMP;
-	TEMP = (char *) malloc((unsigned int) 
-			       (4+strlen(OBJECT_FILE)));
-	(void) sprintf(TEMP,"rm %s",OBJECT_FILE); 
-	(void) system(TEMP); 
+        (void) remove(OBJECT_FILE);
 	(void) printf("Errors detected. Deleted object file.\n");
       }
     }

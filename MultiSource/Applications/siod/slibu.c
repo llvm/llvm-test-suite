@@ -119,7 +119,10 @@ LISP lsystem(LISP args)
 {int retval;
  long iflag;
  iflag = no_interrupt(1);
- retval = system(get_c_string(string_append(args)));
+ fprintf(stderr, "Cannot execute system calls!\n");
+ abort();
+ retval = 0;
+//  retval = system(get_c_string(string_append(args)));
  no_interrupt(iflag);
  if (retval < 0)
    return(cons(flocons(retval),llast_c_errmsg(-1)));

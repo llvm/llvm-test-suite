@@ -149,7 +149,10 @@ OBJECT FilterExecute(OBJECT x, FULL_CHAR *command, OBJECT env)
   else
   {
     /* execute the command, echo error messages, and exit if status problem */
-    status = system( (char *) command);
+    fprintf(stderr, "Cannot execute system calls!\n");
+    abort();
+    status = 0;
+//     status = system( (char *) command);
     err_fp = StringFOpen(FILTER_ERR, READ_TEXT);
     if( err_fp != NULL )
     { while( fgets(line, MAX_LINE, err_fp) != NULL )
