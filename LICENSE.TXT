@@ -63,6 +63,7 @@ Program             Directory
 -------             ---------
 Autoconf:           llvm-test/autoconf
 Benchmark:          llvm-test/libs/benchmark-1.1.0
+LCALS:              llvm-test/MicroBenchmarks/LCALS
 Burg:               llvm-test/MultiSource/Applications/Burg
 Aha:                llvm-test/MultiSource/Applications/aha
 SGEFA:              llvm-test/MultiSource/Applications/sgefa

@@ -1,0 +1,6 @@
+add_subdirectory(SubsetARawLoops)
+add_subdirectory(SubsetALambdaLoops)
+add_subdirectory(SubsetBRawLoops)
+add_subdirectory(SubsetBLambdaLoops)
+add_subdirectory(SubsetCRawLoops)
+add_subdirectory(SubsetCLambdaLoops)
