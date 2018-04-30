@@ -83,7 +83,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 
 #if	(defined(STDC_HEADERS) || defined(__GNU_LIBRARY__) || \
-	   defined(POSIX) || defined(__FreeBSD__) || defined(__APPLE__) \
+	   defined(POSIX) || defined(__FreeBSD__) || defined(__APPLE__) || \
      defined(__OpenBSD__))
 #include <stdlib.h>
 #include <string.h>
