@@ -231,7 +231,7 @@ void run_tests(int size)
 // make a random test set of the chosen size: 
   vector<element_t> buf(length); 
   element_t* buffer = &buf[0]; 
-  element_t* buffer_end = &buf[length]; 
+  element_t* buffer_end = buffer + length; 
   initialize(buffer, buffer + size);            // elements 
   initialize(buffer + size, buffer_end);        // duplicate elements 
   random_shuffle(buffer, buffer_end); 
