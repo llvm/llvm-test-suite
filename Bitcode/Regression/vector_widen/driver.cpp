@@ -2,7 +2,7 @@
 
 template<typename T>
 T rand_value() {
-    return (T)(rand() * 0.125) - 100;
+    return (T)((T)rand() / 8) - 100;
 }
 
 template<typename T>

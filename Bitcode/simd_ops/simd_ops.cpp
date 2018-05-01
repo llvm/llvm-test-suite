@@ -24,7 +24,7 @@ int allocate_aligned(void **mem, size_t alignment, size_t size) {
 
 template<typename T>
 T rand_value() {
-    return (T)(rand() * 0.125) - 100;
+    return (T)((T)rand() / 8) - 100;
 }
 
 // Even on android, we want errors to stdout
