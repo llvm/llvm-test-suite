@@ -22,7 +22,9 @@
 // I/O Specifiers
 #define INFO 0
 #define DEBUG 0
+#ifdef TIMING
 #define SAVE 0
+#endif
 
 // Structures
 typedef struct{

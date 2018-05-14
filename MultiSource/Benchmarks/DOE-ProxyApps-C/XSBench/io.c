@@ -39,9 +39,11 @@ void center_print(const char *s, int width)
 void print_results( Inputs in, int mype, double runtime, int nprocs,
 	unsigned long long vhash )
 {
+        #ifdef TIMING
 	// Calculate Lookups per sec
 	int lookups_per_sec = (int) ((double) in.lookups / runtime);
-	
+	#endif
+
 	// If running in MPI, reduce timing statistics and calculate average
 	#ifdef MPI
 	int total_lookups = 0;
@@ -80,6 +82,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs,
 		#endif
 		border_print();
 
+                #ifdef TIMING
 		// For bechmarking, output lookup/s data to file
 		if( SAVE )
 		{
@@ -87,6 +90,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs,
 			fprintf(out, "%d\t%d\n", in.nthreads, lookups_per_sec);
 			fclose(out);
 		}
+                #endif
 	}
 }
 
