@@ -904,10 +904,8 @@ int get_pos_interval( float z, float dz)
  * negative direction */
 int get_neg_interval( float z, float dz)
 {
-	// NOTE: a bit of trickery using floors to obtain ceils 
-	int interval = INT_MAX - (int) ( (double) INT_MAX 
-			- (double) ( z / dz ) );
-	return interval;
+        int interval = (int) ( ceilf( z / dz ) );
+        return interval;
 }
 
 int calc_next_fai( float z, float dz, bool pos_dir)
