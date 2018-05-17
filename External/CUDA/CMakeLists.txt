@@ -316,10 +316,6 @@ macro(create_cuda_tests)
       set(_Std_LDFLAGS -std=${_Std})
       foreach(_GccPath IN LISTS GCC_PATHS)
         get_version(_GccVersion ${_GccPath})
-        # libstdc++ seems not to support C++14 before version 5.0.
-        if(${_Std} STREQUAL "c++14" AND ${_GccVersion} VERSION_LESS "5.0")
-          continue()
-        endif()
         set(_Gcc_Suffix "libstdc++-${_GccVersion}")
         # Tell clang to use libstdc++ and where to find it.
         set(_Stdlib_CPPFLAGS -stdlib=libstdc++ -gcc-toolchain ${_GccPath})
@@ -327,17 +323,26 @@ macro(create_cuda_tests)
         # Add libstdc++ as link dependency.
         set(_Stdlib_Libs libstdcxx-${_GccVersion})
 
+        # libstdc++ seems not to support C++14 before version 5.0.  We still
+        # want to run in C++14 mode with old libstdc++s to test compiler C++14
+        # with stdlib C++11, but we add a -D so that our tests can detect this.
+        if (${_GccVersion} VERSION_LESS "5.0")
+          list(APPEND _Stdlib_CPPFLAGS -DSTDLIB_VERSION=2011)
+        else()
+          list(APPEND _Stdlib_CPPFLAGS -DSTDLIB_VERSION=2014)
+        endif()
+
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}")
       endforeach()
 
       if(HAVE_LIBCXX)
-	# Same as above, but for libc++
-	# Tell clang to use libc++
-	# We also need to add compiler's include path for cxxabi.h
-	get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
-	set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++-build)
-	set(_Stdlib_LDFLAGS  -stdlib=libc++)
-	set(_Stdlib_Libs libcxx)
+        # Same as above, but for libc++
+        # Tell clang to use libc++
+        # We also need to add compiler's include path for cxxabi.h
+        get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
+        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++-build -DSTDLIB_VERSION=2017)
+        set(_Stdlib_LDFLAGS  -stdlib=libc++)
+        set(_Stdlib_Libs libcxx)
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-libc++")
       endif()
     endforeach()

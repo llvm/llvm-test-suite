@@ -1145,7 +1145,7 @@ __device__ void test_hypot()
     assert(std::hypot(3.f, 4.) == 5);
     assert(std::hypot(3.f, 4.f) == 5);
 
-#if TEST_STD_VER > 14
+#if __cplusplus >= 201703L && STDLIB_VERSION >= 2017
     static_assert((std::is_same<decltype(std::hypot((float)0, (float)0, (float)0)), float>::value), "");
     static_assert((std::is_same<decltype(std::hypot((float)0, (bool)0, (float)0)), double>::value), "");
     static_assert((std::is_same<decltype(std::hypot((float)0, (unsigned short)0, (double)0)), double>::value), "");
@@ -1158,8 +1158,8 @@ __device__ void test_hypot()
     static_assert((std::is_same<decltype(std::hypot((int)0, (int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(hypot(Ambiguous(), Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::hypot(2,3,6) == 7);
-    assert(std::hypot(1,4,8) == 9);
+    assert(std::hypot(2, 3, 6) == 7);
+    assert(std::hypot(1, 4, 8) == 9);
 #endif
 }
 

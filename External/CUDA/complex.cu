@@ -7,10 +7,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <assert.h>
-#include <stdio.h>
-#include <complex>
-
 // These are loosely adapted from libc++'s tests.  In general, we don't care a
 // ton about verifying the return types or results we get, on the assumption
 // that our standard library is correct. But we care deeply about calling every
@@ -19,13 +15,21 @@
 // We do care about the results of complex multiplication / division, since
 // these use code we've written.
 
+#include <stdio.h>
+
 // These tests are pretty annoying to write without C++11, so we require that.
 // In addition, these tests currently don't compile with libc++, because of the
 // issue in https://reviews.llvm.org/D25403.
 //
 // TODO: Once that issue is resolved, take out !defined(_LIBCPP_VERSION) here.
-#if __cplusplus >= 201103L && !defined(_LIBCPP_VERSION)
+//
+// In addition, these tests don't work in C++14 mode with pre-C++14 versions of
+// libstdc++ (compile errors in <complex>).
+#if __cplusplus >= 201103L && !defined(_LIBCPP_VERSION) && \
+    (__cplusplus < 201402L || STDLIB_VERSION >= 2014)
 
+#include <assert.h>
+#include <complex>
 #include <type_traits>
 
 template <class T>
@@ -69,7 +73,7 @@ __device__ void test_promotion() {
 }
 
 __device__ void test_literals() {
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
   using namespace std::literals::complex_literals;
 
   {

@@ -27,7 +27,7 @@ __device__ void max() {
 // initializer_lists until C++14, when it gets these for free from the standard
 // library (because they're constexpr).
 __device__ void cpp14_tests() {
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
   assert(std::greater<int>()(1, 0));
   assert(std::min({5, 1, 10}) == 1);
   assert(std::max({5, 1, 10}, std::less<int>()) == 10);
