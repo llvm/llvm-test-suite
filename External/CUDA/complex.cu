@@ -18,15 +18,10 @@
 #include <stdio.h>
 
 // These tests are pretty annoying to write without C++11, so we require that.
-// In addition, these tests currently don't compile with libc++, because of the
-// issue in https://reviews.llvm.org/D25403.
-//
-// TODO: Once that issue is resolved, take out !defined(_LIBCPP_VERSION) here.
 //
 // In addition, these tests don't work in C++14 mode with pre-C++14 versions of
 // libstdc++ (compile errors in <complex>).
-#if __cplusplus >= 201103L && !defined(_LIBCPP_VERSION) && \
-    (__cplusplus < 201402L || STDLIB_VERSION >= 2014)
+#if __cplusplus >= 201103L && (__cplusplus < 201402L || STDLIB_VERSION >= 2014)
 
 #include <assert.h>
 #include <complex>
