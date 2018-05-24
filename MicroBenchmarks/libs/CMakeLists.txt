@@ -1,5 +1,3 @@
-set(CMAKE_CXX_STANDARD 11)
-set(HAVE_STD_REGEX 1)
 add_subdirectory(benchmark-1.3.0)
 test_suite_add_build_dependencies(benchmark)
 test_suite_add_build_dependencies(output_test_helper)
