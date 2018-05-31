@@ -69,7 +69,10 @@ def _executeScript(context, script, scriptBaseName, useExternalSh=True):
         exitCode = 1
         timeoutInfo = None
     else:
-        (out, err, exitCode, timeoutInfo) = res
+        out = res[0]
+        err = res[1]
+        exitCode = res[2]
+        timeoutInfo = res[3]
 
     # Log script in test output
     context.result_output += "\n" + "\n".join(script)
