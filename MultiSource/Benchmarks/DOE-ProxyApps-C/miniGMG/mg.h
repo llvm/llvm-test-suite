@@ -125,5 +125,6 @@ void destroy_domain(domain_type * domain);
 void      MGBuild(domain_type * domain, double a, double b, double h0);
 void      MGSolve(domain_type * domain, int u_id, int F_id, double a, double b, double desired_mg_norm);
 void print_timing(domain_type *domain);
+void DoBufferCopy(domain_type *domain, int level, int grid_id, int buffer);
 //------------------------------------------------------------------------------------------------------------------------------
 #endif

@@ -1,25 +1,46 @@
 1 MPI Tasks of 1 threads
 truncating the v-cycle at 2^3 subdomains
 creating domain...       done
-  64 x 64 x 64 (per subdomain)
-  128 x 128 x 128 (per process)
-  128 x 128 x 128 (overall)
+  32 x 32 x 32 (per subdomain)
+  64 x 64 x 64 (per process)
+  64 x 64 x 64 (overall)
   1-deep ghost zones
-  allocated 246 MB
+  allocated 34 MB
 initializing alpha, beta, RHS for the ``hard problem''...
-  average value of f =   0.000000000000e+00
+  average value of f =  -1.110223024625e-15
 done
 MGBuild...                      
-  level= 0, eigenvalue_max ~= 1.000000e+00
-  level= 1, eigenvalue_max ~= -1.000000e+00
-  level= 2, eigenvalue_max ~= -1.000000e+00
-  level= 3, eigenvalue_max ~= -1.000000e+00
-  level= 4, eigenvalue_max ~= -1.000000e+00
-  level= 5, eigenvalue_max ~= -1.000000e+00
+  level= 0, eigenvalue_max ~= 1.999996e+00
+  level= 1, eigenvalue_max ~= 1.999984e+00
+  level= 2, eigenvalue_max ~= 1.999935e+00
+  level= 3, eigenvalue_max ~= 1.999740e+00
+  level= 4, eigenvalue_max ~= 1.998958e+00
 done
-MGSolve...                      done
-MGSolve...                      done
-Error test: h = 7.812500e-03, max = 0.000000e+00
-Error test: h = 7.812500e-03, L2  = 0.000000e+00
+MGSolve...                      
+v-cycle= 1, norm=0.00104306838695688285 (1.043068e-03)
+v-cycle= 2, norm=0.00008508164981969001 (8.508165e-05)
+v-cycle= 3, norm=0.00001867173484947213 (1.867173e-05)
+v-cycle= 4, norm=0.00000204150498158241 (2.041505e-06)
+v-cycle= 5, norm=0.00000036859010963302 (3.685901e-07)
+v-cycle= 6, norm=0.00000004500376124219 (4.500376e-08)
+v-cycle= 7, norm=0.00000000777275418452 (7.772754e-09)
+v-cycle= 8, norm=0.00000000096441180332 (9.644118e-10)
+v-cycle= 9, norm=0.00000000016688265714 (1.668827e-10)
+v-cycle=10, norm=0.00000000002055567632 (2.055568e-11)
+done
+MGSolve...                      
+v-cycle= 1, norm=0.00104306838695688285 (1.043068e-03)
+v-cycle= 2, norm=0.00008508164981969001 (8.508165e-05)
+v-cycle= 3, norm=0.00001867173484947213 (1.867173e-05)
+v-cycle= 4, norm=0.00000204150498158241 (2.041505e-06)
+v-cycle= 5, norm=0.00000036859010963302 (3.685901e-07)
+v-cycle= 6, norm=0.00000004500376124219 (4.500376e-08)
+v-cycle= 7, norm=0.00000000777275418452 (7.772754e-09)
+v-cycle= 8, norm=0.00000000096441180332 (9.644118e-10)
+v-cycle= 9, norm=0.00000000016688265714 (1.668827e-10)
+v-cycle=10, norm=0.00000000002055567632 (2.055568e-11)
+done
+Error test: h = 1.562500e-02, max = 3.529710e-04
+Error test: h = 1.562500e-02, L2  = 5.559935e-05
 deallocating domain...   done
 exit 0

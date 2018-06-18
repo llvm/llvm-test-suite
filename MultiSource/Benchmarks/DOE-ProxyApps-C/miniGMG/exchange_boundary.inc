@@ -141,7 +141,34 @@ void exchange_boundary(domain_type *domain, int level, int grid_id, int exchange
     if( (domain->bufferCopies[level][buffer].isFace   && exchange_faces  ) || 
         (domain->bufferCopies[level][buffer].isEdge   && exchange_edges  ) ||
         (domain->bufferCopies[level][buffer].isCorner && exchange_corners) ){
-        DoBufferCopy(domain,level,grid_id,buffer);
+          DoBufferCopy(domain,level,grid_id,buffer);
+  }}
+  _timeEnd = CycleTime();
+  domain->cycles.pack[level] += (_timeEnd-_timeStart);
+ 
+  // loop through MPI send buffers and post Isend's...
+  _timeStart = CycleTime();
+  #ifdef __MPI_THREAD_MULTIPLE
+  #pragma omp parallel for schedule(dynamic,1)
+  #endif
+  for(n=nMessages/2;n<nMessages;n++){
+    MPI_Isend(buffers_packed[n],sizes_packed[n],MPI_DOUBLE,ranks_packed[n],tags_packed[n],MPI_COMM_WORLD,&requests_packed[n]);
+  }
+  _timeEnd = CycleTime();
+  domain->cycles.send[level] += (_timeEnd-_timeStart);
+  #endif
+
+
+  // exchange locally... try and hide within Isend latency... 
+  _timeStart = CycleTime();
+#ifdef OMP
+  #pragma omp parallel for schedule(static,1)
+#endif
+  for(buffer=domain->bufferCopy_Local_Start;buffer<domain->bufferCopy_Local_End;buffer++){
+    if( (domain->bufferCopies[level][buffer].isFace   && exchange_faces  ) || 
+        (domain->bufferCopies[level][buffer].isEdge   && exchange_edges  ) ||
+        (domain->bufferCopies[level][buffer].isCorner && exchange_corners) ){
+          DoBufferCopy(domain,level,grid_id,buffer);
   }}
   _timeEnd = CycleTime();
   domain->cycles.grid2grid[level] += (_timeEnd-_timeStart);
@@ -153,7 +180,7 @@ void exchange_boundary(domain_type *domain, int level, int grid_id, int exchange
   MPI_Waitall(nMessages,requests_packed,status_packed);
   _timeEnd = CycleTime();
   domain->cycles.wait[level] += (_timeEnd-_timeStart);
-  #endif
+
   // unpack MPI receive buffers 
   _timeStart = CycleTime();
   #pragma omp parallel for schedule(static,1)
