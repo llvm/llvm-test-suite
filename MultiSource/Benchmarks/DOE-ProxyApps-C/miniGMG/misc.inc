@@ -20,7 +20,6 @@ void zero_grid(domain_type *domain, int level, int grid_id){
 
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -30,9 +29,7 @@ void zero_grid(domain_type *domain, int level, int grid_id){
     int  dim_j = domain->subdomains[box].levels[level].dim.j;
     int  dim_i = domain->subdomains[box].levels[level].dim.i;
     double * __restrict__ grid = domain->subdomains[box].levels[level].grids[grid_id] + ghosts*(1+pencil+plane);
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=-ghosts;k<dim_k+ghosts;k++){
      for(j=-ghosts;j<dim_j+ghosts;j++){
       for(i=-ghosts;i<dim_i+ghosts;i++){
@@ -40,6 +37,7 @@ void zero_grid(domain_type *domain, int level, int grid_id){
         grid[ijk] = 0.0;
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -58,7 +56,6 @@ void initialize_grid_to_scalar(domain_type *domain, int level, int grid_id, doub
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -68,9 +65,7 @@ void initialize_grid_to_scalar(domain_type *domain, int level, int grid_id, doub
     int  dim_j = domain->subdomains[box].levels[level].dim.j;
     int  dim_i = domain->subdomains[box].levels[level].dim.i;
     double * __restrict__ grid = domain->subdomains[box].levels[level].grids[grid_id] + ghosts*(1+pencil+plane);
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=-ghosts;k<dim_k+ghosts;k++){
      for(j=-ghosts;j<dim_j+ghosts;j++){
       for(i=-ghosts;i<dim_i+ghosts;i++){
@@ -79,6 +74,7 @@ void initialize_grid_to_scalar(domain_type *domain, int level, int grid_id, doub
         grid[ijk] = ghostZone ? 0.0 : scalar;
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -96,7 +92,6 @@ void add_grids(domain_type *domain, int level, int id_c, double scale_a, int id_
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -108,9 +103,7 @@ void add_grids(domain_type *domain, int level, int id_c, double scale_a, int id_
     double * __restrict__ grid_c = domain->subdomains[box].levels[level].grids[id_c] + ghosts*(1+pencil+plane);
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane);
     double * __restrict__ grid_b = domain->subdomains[box].levels[level].grids[id_b] + ghosts*(1+pencil+plane);
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k;k++){
      for(j=0;j<dim_j;j++){
       for(i=0;i<dim_i;i++){
@@ -118,6 +111,7 @@ void add_grids(domain_type *domain, int level, int id_c, double scale_a, int id_
         grid_c[ijk] = scale_a*grid_a[ijk] + scale_b*grid_b[ijk];
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -135,7 +129,6 @@ void mul_grids(domain_type *domain, int level, int id_c, double scale, int id_a,
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -147,9 +140,7 @@ void mul_grids(domain_type *domain, int level, int id_c, double scale, int id_a,
     double * __restrict__ grid_c = domain->subdomains[box].levels[level].grids[id_c] + ghosts*(1+pencil+plane);
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane);
     double * __restrict__ grid_b = domain->subdomains[box].levels[level].grids[id_b] + ghosts*(1+pencil+plane);
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k;k++){
      for(j=0;j<dim_j;j++){
       for(i=0;i<dim_i;i++){
@@ -157,6 +148,7 @@ void mul_grids(domain_type *domain, int level, int id_c, double scale, int id_a,
         grid_c[ijk] = scale*grid_a[ijk]*grid_b[ijk];
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -175,7 +167,6 @@ void scale_grid(domain_type *domain, int level, int id_c, double scale_a, int id
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -186,9 +177,7 @@ void scale_grid(domain_type *domain, int level, int id_c, double scale_a, int id
     int  dim_i = domain->subdomains[box].levels[level].dim.i;
     double * __restrict__ grid_c = domain->subdomains[box].levels[level].grids[id_c] + ghosts*(1+pencil+plane);
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane);
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k;k++){
      for(j=0;j<dim_j;j++){
       for(i=0;i<dim_i;i++){
@@ -196,6 +185,7 @@ void scale_grid(domain_type *domain, int level, int id_c, double scale_a, int id
         grid_c[ijk] = scale_a*grid_a[ijk];
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -216,7 +206,6 @@ double dot(domain_type *domain, int level, int id_a, int id_b){
 #ifdef OMP
   // FIX, schedule(static) is a stand in to guarantee reproducibility...
   #pragma omp parallel for private(box) if(omp_across_boxes) reduction(+:a_dot_b_domain) schedule(static)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -228,9 +217,7 @@ double dot(domain_type *domain, int level, int id_a, int id_b){
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane); // i.e. [0] = first non ghost zone point
     double * __restrict__ grid_b = domain->subdomains[box].levels[level].grids[id_b] + ghosts*(1+pencil+plane);
     double a_dot_b_box = 0.0;
-#ifdef OMP
     #pragma omp parallel for private(i,j,k) if(omp_within_a_box) collapse(2) reduction(+:a_dot_b_box) schedule(static)
-#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -239,6 +226,7 @@ double dot(domain_type *domain, int level, int id_a, int id_b){
     }}}
     a_dot_b_domain+=a_dot_b_box;
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 
   #ifdef __MPI
@@ -268,7 +256,6 @@ double norm(domain_type *domain, int level, int grid_id){ // implements the max 
 #ifdef OMP
   // FIX, schedule(static) is a stand in to guarantee reproducibility...
   #pragma omp parallel for private(box) if(omp_across_boxes) reduction(max:max_norm) schedule(static)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -279,9 +266,7 @@ double norm(domain_type *domain, int level, int grid_id){ // implements the max 
     int  dim_i = domain->subdomains[box].levels[level].dim.i;
     double * __restrict__ grid   = domain->subdomains[box].levels[level].grids[ grid_id] + ghosts*(1+pencil+plane); // i.e. [0] = first non ghost zone point
     double box_norm = 0.0;
-#ifdef OMP
     #pragma omp parallel for private(i,j,k) if(omp_within_a_box) collapse(2) reduction(max:box_norm) schedule(static)
-#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -291,6 +276,7 @@ double norm(domain_type *domain, int level, int grid_id){ // implements the max 
     }}}
     if(box_norm>max_norm){max_norm = box_norm;}
   } // box list
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 
   #ifdef __MPI
@@ -320,7 +306,6 @@ double mean(domain_type *domain, int level, int id_a){
   double sum_domain =  0.0;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes) reduction(+:sum_domain)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -331,9 +316,7 @@ double mean(domain_type *domain, int level, int id_a){
     int  dim_i = domain->subdomains[box].levels[level].dim.i;
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane); // i.e. [0] = first non ghost zone point
     double sum_box = 0.0;
-#ifdef OMP
     #pragma omp parallel for private(i,j,k) if(omp_within_a_box) collapse(2) reduction(+:sum_box)
-#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -342,6 +325,7 @@ double mean(domain_type *domain, int level, int id_a){
     }}}
     sum_domain+=sum_box;
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
   double ncells_domain = (double)domain->dim.i*(double)domain->dim.j*(double)domain->dim.k;
 
@@ -372,7 +356,6 @@ void shift_grid(domain_type *domain, int level, int id_c, int id_a, double shift
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -384,9 +367,7 @@ void shift_grid(domain_type *domain, int level, int id_c, int id_a, double shift
     double * __restrict__ grid_c = domain->subdomains[box].levels[level].grids[id_c] + ghosts*(1+pencil+plane); // i.e. [0] = first non ghost zone point
     double * __restrict__ grid_a = domain->subdomains[box].levels[level].grids[id_a] + ghosts*(1+pencil+plane); // i.e. [0] = first non ghost zone point
 
-#ifdef OMP
     #pragma omp parallel for private(i,j,k) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -394,6 +375,7 @@ void shift_grid(domain_type *domain, int level, int id_c, int id_a, double shift
       grid_c[ijk] = grid_a[ijk] + shift_a;
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -409,7 +391,6 @@ void project_cell_to_face(domain_type *domain, int level, int id_cell, int id_fa
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -426,9 +407,7 @@ void project_cell_to_face(domain_type *domain, int level, int id_cell, int id_fa
       case 1: stride = pencil;break;//j-direction
       case 2: stride =  plane;break;//k-direction
     }
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<=dim_k;k++){ // <= to ensure you do low and high faces
      for(j=0;j<=dim_j;j++){
       for(i=0;i<=dim_i;i++){
@@ -436,5 +415,6 @@ void project_cell_to_face(domain_type *domain, int level, int id_cell, int id_fa
         grid_face[ijk] = 0.5*(grid_cell[ijk-stride] + grid_cell[ijk]); // simple linear interpolation
     }}}
   }
+#endif
   domain->cycles.blas1[level] += (uint64_t)(CycleTime()-_timeStart);
 }

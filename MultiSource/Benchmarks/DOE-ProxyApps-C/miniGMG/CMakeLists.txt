@@ -1,6 +1,4 @@
 set(PROG miniGMG)
-list(APPEND CXXFLAGS -D__PRINT_NORM)
 list(APPEND LDFLAGS -lm)
-set(FP_TOLERANCE 0.00001)
-set(RUN_OPTIONS 5  2 2 2  1 1 1)
+set(RUN_OPTIONS 6  2 2 2  1 1 1)
 llvm_multisource()

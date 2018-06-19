@@ -22,7 +22,6 @@ void restriction(domain_type *domain, int level_f, int id_c, int id_f){
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int ghosts_c = domain->subdomains[box].levels[level_c].ghosts;
@@ -38,10 +37,8 @@ void restriction(domain_type *domain, int level_f, int id_c, int id_f){
   
     double * __restrict__ grid_f = domain->subdomains[box].levels[level_f].grids[id_f] + ghosts_f*(1+pencil_f+plane_f);
     double * __restrict__ grid_c = domain->subdomains[box].levels[level_c].grids[id_c] + ghosts_c*(1+pencil_c+plane_c);
-
-#ifdef OMP  
+  
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k_c;k++){
     for(j=0;j<dim_j_c;j++){
     for(i=0;i<dim_i_c;i++){
@@ -53,6 +50,7 @@ void restriction(domain_type *domain, int level_f, int id_c, int id_f){
                         grid_f[ijk_f  +pencil_f+plane_f]+grid_f[ijk_f+1+pencil_f+plane_f] ) * 0.125;
     }}}
   }
+#endif
   domain->cycles.restriction[level_f] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -73,7 +71,6 @@ void restriction_betas(domain_type * domain, int level_f, int level_c){
 
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
-#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int ghosts_c = domain->subdomains[box].levels[level_c].ghosts;
@@ -106,9 +103,7 @@ void restriction_betas(domain_type * domain, int level_f, int level_c){
     // restrict beta_j (== face in ik)
     beta_f = domain->subdomains[box].levels[level_f].grids[__beta_j] + ghosts_f*plane_f + ghosts_f*pencil_f + ghosts_f;
     beta_c = domain->subdomains[box].levels[level_c].grids[__beta_j] + ghosts_c*plane_c + ghosts_c*pencil_c + ghosts_c;
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k_c;k++){
     for(j=0;j<dim_j_c;j++){
     for(i=0;i<dim_i_c;i++){
@@ -121,9 +116,7 @@ void restriction_betas(domain_type * domain, int level_f, int level_c){
     // restrict beta_k (== face in ij)
     beta_f = domain->subdomains[box].levels[level_f].grids[__beta_k] + ghosts_f*plane_f + ghosts_f*pencil_f + ghosts_f;
     beta_c = domain->subdomains[box].levels[level_c].grids[__beta_k] + ghosts_c*plane_c + ghosts_c*pencil_c + ghosts_c;
-#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
-#endif
     for(k=0;k<dim_k_c;k++){
     for(j=0;j<dim_j_c;j++){
     for(i=0;i<dim_i_c;i++){
@@ -133,5 +126,6 @@ void restriction_betas(domain_type * domain, int level_f, int level_c){
                         beta_f[ijk_f+pencil_f]+beta_f[ijk_f+1+pencil_f] ) * 0.25;
     }}}
   }
+#endif
   domain->cycles.restriction[level_f] += (uint64_t)(CycleTime()-_timeStart);
 }
