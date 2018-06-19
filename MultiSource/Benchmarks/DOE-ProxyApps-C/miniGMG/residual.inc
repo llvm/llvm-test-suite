@@ -23,6 +23,7 @@ void residual(domain_type * domain, int level,  int res_id, int phi_id, int rhs_
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
+#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -40,7 +41,9 @@ void residual(domain_type * domain, int level,  int res_id, int phi_id, int rhs_
     double * __restrict__ beta_k = domain->subdomains[box].levels[level].grids[__beta_k] + ghosts*(1+pencil+plane);
     double * __restrict__ res    = domain->subdomains[box].levels[level].grids[  res_id] + ghosts*(1+pencil+plane);
 
+#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
+#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -57,7 +60,6 @@ void residual(domain_type * domain, int level,  int res_id, int phi_id, int rhs_
       res[ijk] = rhs[ijk]-helmholtz;
     }}}
   }
-#endif
   domain->cycles.residual[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 
@@ -85,6 +87,7 @@ void residual_and_restriction(domain_type *domain, int level_f, int phi_id, int 
   int box;
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
+#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int kk,jj;
     int pencil_c = domain->subdomains[box].levels[level_c].pencil;
@@ -110,7 +113,9 @@ void residual_and_restriction(domain_type *domain, int level_f, int phi_id, int 
     double * __restrict__ beta_k = domain->subdomains[box].levels[level_f].grids[__beta_k] + ghosts_f*(1+pencil_f+plane_f);
     double * __restrict__ res    = domain->subdomains[box].levels[level_c].grids[  res_id] + ghosts_c*(1+pencil_c+plane_c);
 
+#ifdef OMP
     #pragma omp parallel for private(kk,jj) if(omp_within_a_box) collapse(2)
+#endif
     for(kk=0;kk<dim_k_f;kk+=2){
     for(jj=0;jj<dim_j_f;jj+=2){
       int i,j,k;
@@ -136,7 +141,6 @@ void residual_and_restriction(domain_type *domain, int level_f, int phi_id, int 
       }
     }}}}
   }
-#endif
   domain->cycles.residual[level_f] += (uint64_t)(CycleTime()-_timeStart);
 }
 #else
@@ -158,7 +162,9 @@ void residual_and_restriction(domain_type *domain, int level_f, int phi_id, int 
   int omp_within_a_box = (domain->subdomains[0].levels[level_f].dim.i >= CollaborativeThreadingBoxSize);
   int box;
 
+#ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
+#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int pencil_c = domain->subdomains[box].levels[level_c].pencil;
     int  plane_c = domain->subdomains[box].levels[level_c].plane;
@@ -184,7 +190,10 @@ void residual_and_restriction(domain_type *domain, int level_f, int phi_id, int 
     double * __restrict__ res    = domain->subdomains[box].levels[level_c].grids[  res_id] + ghosts_c*(1+pencil_c+plane_c);
 
     int kk;
+#ifdef OMP
     #pragma omp parallel for private(kk) if(omp_within_a_box)
+#endif
+
     for(kk=0;kk<dim_k_f;kk+=2){
       int i,j,k; 
       // zero out the next coarse grid plane

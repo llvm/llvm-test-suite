@@ -24,6 +24,7 @@ void apply_op(domain_type * domain, int level, int Ax_id, int x_id, double a, do
 
 #ifdef OMP
   #pragma omp parallel for private(box) if(omp_across_boxes)
+#endif
   for(box=0;box<domain->subdomains_per_rank;box++){
     int i,j,k,s;
     int pencil = domain->subdomains[box].levels[level].pencil;
@@ -41,7 +42,9 @@ void apply_op(domain_type * domain, int level, int Ax_id, int x_id, double a, do
     double * __restrict__ beta_k = domain->subdomains[box].levels[level].grids[ __beta_k] + ghosts*(1+pencil+plane);
     double * __restrict__ lambda = domain->subdomains[box].levels[level].grids[ __lambda] + ghosts*(1+pencil+plane);
 
+#ifdef OMP
     #pragma omp parallel for private(k,j,i) if(omp_within_a_box) collapse(2)
+#endif
     for(k=0;k<dim_k;k++){
     for(j=0;j<dim_j;j++){
     for(i=0;i<dim_i;i++){
@@ -57,7 +60,7 @@ void apply_op(domain_type * domain, int level, int Ax_id, int x_id, double a, do
       Ax[ijk] = helmholtz;
     }}}
   }
-#endif
+
   domain->cycles.apply_op[level] += (uint64_t)(CycleTime()-_timeStart);
 }
 //------------------------------------------------------------------------------------------------------------------------------
