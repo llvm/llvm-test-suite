@@ -1,3 +1,5 @@
+list(APPEND CPPFLAGS -std=c++98)
+
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}
     ${input}

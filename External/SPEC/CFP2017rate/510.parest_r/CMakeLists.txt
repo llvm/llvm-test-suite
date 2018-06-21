@@ -267,3 +267,4 @@ speccpu2017_add_executable(
   source/libparest/slave/stationary/state_discretization.cc
   source/libparest/slave/stationary/synthetic_data.cc
 )
+set_property(TARGET ${PROG} PROPERTY CXX_STANDARD 98)
