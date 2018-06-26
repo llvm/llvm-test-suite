@@ -4,4 +4,6 @@ if(NOT DEFINED DISABLE_CXX)
   add_subdirectory(libs)
   add_subdirectory(XRay)
   add_subdirectory(LCALS)
+  add_subdirectory(harris)
+
 endif()
