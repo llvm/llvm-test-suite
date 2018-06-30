@@ -42,6 +42,8 @@ __device__ void cpp14_tests() {
   assert(std::minmax(1, 0).second == 1);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).first == -10);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).second == 100);
+  constexpr auto min = std::min(1, 2);
+  constexpr auto max = std::max(1, 2);
 #endif
 }
 
@@ -56,6 +58,8 @@ __host__ __device__ void cpp14_tests_hd() {
   assert(std::minmax(1, 0).second == 1);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).first == -10);
   assert(std::minmax({0, 10, -10, 100}, std::less<int>()).second == 100);
+  constexpr auto min = std::min(1, 2);
+  constexpr auto max = std::max(1, 2);
 #endif
 }
 
