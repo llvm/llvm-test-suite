@@ -17,8 +17,14 @@
 __device__ void min() {
   assert(std::min(0, 1) == 0);
 }
+__host__ __device__ void min_hd() {
+  assert(std::min(0, 1) == 0);
+}
 
 __device__ void max() {
+  assert(std::max(0, 1) == 1);
+}
+__host__ __device__ void max_hd() {
   assert(std::max(0, 1) == 1);
 }
 
@@ -39,10 +45,27 @@ __device__ void cpp14_tests() {
 #endif
 }
 
+// Same tests as cpp14_tests, but from a host-device context.
+__host__ __device__ void cpp14_tests_hd() {
+#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
+  assert(std::greater<int>()(1, 0));
+  assert(std::min({5, 1, 10}) == 1);
+  assert(std::max({5, 1, 10}, std::less<int>()) == 10);
+
+  assert(std::minmax(1, 0).first == 0);
+  assert(std::minmax(1, 0).second == 1);
+  assert(std::minmax({0, 10, -10, 100}, std::less<int>()).first == -10);
+  assert(std::minmax({0, 10, -10, 100}, std::less<int>()).second == 100);
+#endif
+}
+
 __global__ void kernel() {
   min();
+  min_hd();
   max();
+  max_hd();
   cpp14_tests();
+  cpp14_tests_hd();
 }
 
 int main() {
@@ -52,6 +75,11 @@ int main() {
     printf("CUDA error %d\n", (int)err);
     return 1;
   }
+
+  min_hd();
+  max_hd();
+  cpp14_tests_hd();
+
   printf("Success!\n");
   return 0;
 }
