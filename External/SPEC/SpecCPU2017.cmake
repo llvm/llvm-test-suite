@@ -106,7 +106,7 @@ macro (speccpu2017_benchmark)
 
 
     # Mandatory flags
-    add_definitions(-DSPEC -DNDEBUG)
+    add_definitions(-DSPEC -DSPEC_CPU -DNDEBUG)
 
     if (RATE)
       # rate benchmarks never use parallelism
@@ -114,12 +114,34 @@ macro (speccpu2017_benchmark)
     endif ()
 
     # Portability flags
-    if(ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Linux")
-      add_definitions(-DSPEC_LINUX) # 526.blender_r
+    if (ENDIAN STREQUAL "little")
       add_definitions(-DSPEC_AUTO_BYTEORDER=0x12345678)
+    elseif (ENDIAN STREQUAL "big")
+      add_definitions(-DSPEC_AUTO_BYTEORDER=0x87654321)
+    endif ()
+
+    check_type_size("long long" SIZEOF_LONG_LONG)
+    check_type_size("long" SIZEOF_LONG)
+    check_type_size("int" SIZEOF_INT)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 4 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 4 AND SIZEOF_INT EQUAL 4)
+      add_definitions(-DSPEC_ILP32)
+    elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 4 AND SIZEOF_INT EQUAL 4)
+      add_definitions(-DSPEC_P64)
+    elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 8 AND SIZEOF_INT EQUAL 4)
+      add_definitions(-DSPEC_LP64)
+    elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 8 AND SIZEOF_INT EQUAL 8)
+      add_definitions(-DSPEC_ILP64)
+    else ()
+      message(FATAL_ERROR "SPEC CPU 2017 unsupported data model (supported: ILP32/LLP64/LP64/ILP64)")
+    endif ()
+
+    if (TARGET_OS STREQUAL "Linux")
+      add_definitions(-DSPEC_LINUX) # 526.blender_r
+    endif ()
+
+    if(ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Linux")
       if (CMAKE_SIZEOF_VOID_P EQUAL 8)
         # Linux x86_64
-        add_definitions(-DSPEC_LP64)
         add_definitions(-DSPEC_LINUX_X64) # perlbench
       elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
         # Linux x86
@@ -127,7 +149,15 @@ macro (speccpu2017_benchmark)
         add_definitions(-D_FILE_OFFSET_BITS=64)
         add_definitions(-DSPEC_LINUX_I32) # perlbench
       endif ()
+    elseif (ARCH STREQUAL "AArch64" AND TARGET_OS STREQUAL "Linux" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+      # Linux ARM
+      add_definitions(-DSPEC_LINUX_AARCH64)
+    elseif (ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Windows")
+      # Windows x86/x64
     else ()
+      message("ARCH: ${ARCH}")
+      message("TARGET_OS: ${TARGET_OS}")
+      message("CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
       message(FATAL_ERROR
         "Don't know portability flags for SPEC CPU 2017 on this platform")
     endif ()
@@ -228,6 +258,7 @@ macro(speccpu2017_validate_image _imgfile _cmpfile _outfile)
     llvm_add_host_executable(
       ${VALIDATOR}-host ${VALIDATOR} ${_validator_sources}
       LDFLAGS -lm
+      CPPFLAGS -DSPEC
     )
   endif ()
 
