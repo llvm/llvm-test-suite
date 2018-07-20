@@ -87,6 +87,7 @@ macro(create_local_cuda_tests VariantSuffix)
   create_one_local_test(empty empty.cu)
   create_one_local_test(printf printf.cu)
   create_one_local_test(future future.cu)
+  create_one_local_test(simd simd.cu)
 endmacro()
 
 macro(thrust_make_test_name TestName TestSourcePath)
