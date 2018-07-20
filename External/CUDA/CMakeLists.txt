@@ -24,6 +24,11 @@ set(SUPPORTED_GPU_CUDA_9_1
   sm_50 sm_52 sm_53
   sm_60 sm_61 sm_62
   sm_70 sm_72)
+set(SUPPORTED_GPU_CUDA_9_2
+  sm_30 sm_32 sm_35
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70 sm_72)
 
 # Helper macro to extract version number at the end of the string
 # Input: get_version(Var String)
