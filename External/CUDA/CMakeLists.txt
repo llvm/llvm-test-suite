@@ -346,7 +346,7 @@ macro(create_cuda_tests)
         # Tell clang to use libc++
         # We also need to add compiler's include path for cxxabi.h
         get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
-        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++-build -DSTDLIB_VERSION=2017)
+        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++/v1 -DSTDLIB_VERSION=2017)
         set(_Stdlib_LDFLAGS  -stdlib=libc++)
         set(_Stdlib_Libs libcxx)
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-libc++")
