@@ -124,4 +124,3 @@ SingleSource Tests: llvm-test/SingleSource/Benchmarks/Misc
                     llvm-test/SingleSource/Gizmos
                     llvm-test/SingleSource/Benchmarks/SmallPT
 zlib:               llvm-test/MultiSource/Applications/ClamAV/zlib_*
-Rodinia:            llvm-test/MultiSource/Benchmarks/Rodinia
