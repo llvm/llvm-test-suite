@@ -52,27 +52,33 @@ macro(cuda_glob Var)
   set(${Var} ${FileList})
 endmacro(cuda_glob)
 
+macro(create_one_local_test_f Name FileGlob FilterRegex)
+  if (${VariantSuffix} MATCHES ${FilterRegex})
+    cuda_glob(_sources ${FileGlob})
+    set(_executable ${Name}-${VariantSuffix})
+    set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
+    # Verify reference output if it exists.
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
+      set(NO_REFERENCE_OUTPUT 1)
+      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
+      llvm_test_traditional(${_executable})
+    else()
+      # otherwise just run the executable.
+      llvm_test_run()
+    endif()
+    llvm_test_executable(${_executable} ${_sources})
+    target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
+    if(VariantLibs)
+      target_link_libraries(${_executable} ${VariantLibs})
+    endif()
+    add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
+    # Local tests are presumed to be fast.
+    list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
+  endif()
+endmacro()
+
 macro(create_one_local_test Name FileGlob)
-  cuda_glob(_sources ${FileGlob})
-  set(_executable ${Name}-${VariantSuffix})
-  set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
-  # Verify reference output if it exists.
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-    set(NO_REFERENCE_OUTPUT 1)
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-    llvm_test_traditional(${_executable})
-  else()
-    # otherwise just run the executable.
-    llvm_test_run()
-  endif()
-  llvm_test_executable(${_executable} ${_sources})
-  target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
-  if(VariantLibs)
-    target_link_libraries(${_executable} ${VariantLibs})
-  endif()
-  add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
-  # Local tests are presumed to be fast.
-  list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
+  create_one_local_test_f(${Name} ${FileGlob} ".*")
 endmacro()
 
 # Create targets for CUDA tests that are part of the test suite.
@@ -87,7 +93,13 @@ macro(create_local_cuda_tests VariantSuffix)
   create_one_local_test(empty empty.cu)
   create_one_local_test(printf printf.cu)
   create_one_local_test(future future.cu)
-  create_one_local_test(simd simd.cu)
+  # We only need SIMD tests on CUDA-8.0 to verivy that our reference is correct
+  # and matches NVIDIA-provided one.  and on CUDA-9.2 to verify that clang's
+  # implementation matches the reference.  This test also happens to be the
+  # longest one, so by not running unnecessary instances we speed up cuda
+  # buildbot a lot.
+  create_one_local_test_f(simd simd.cu
+                          "cuda-(8[.]0|9[.]2)-c[+][+]11-libc[+][+]")
 endmacro()
 
 macro(thrust_make_test_name TestName TestSourcePath)
