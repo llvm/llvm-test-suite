@@ -3,3 +3,4 @@ list(APPEND CXXFLAGS -I. -DMINIFE_SCALAR=double  -DMINIFE_LOCAL_ORDINAL=int -DMI
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -nx 64 -ny 64 -nz 64)
 llvm_multisource()
+target_include_directories(miniFE PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

@@ -67,8 +67,6 @@ macro(llvm_multisource)
     endif()
     set(_target ${PROG})
     llvm_test_executable(${_target} ${sources})
-    target_include_directories(${_target}
-      PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
   endif()
 endmacro()
 
