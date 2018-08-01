@@ -1,5 +1,5 @@
 LEVEL = ../../..
-LDFLAGS += -lm -lstdc++
+LDFLAGS += -lm -lstdc++ -pthread
 LIBS = -lstdc++
 REQUIRES_EH_SUPPORT = 1
 
