@@ -18,14 +18,14 @@ macro(llvm_test_executable target)
   # Note that we cannot use target_link_libraries() here because that one
   # only interprets inputs starting with '-' as flags.
   append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})
-  set(target_path $<TARGET_FILE:${target}>)
+  set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target})
   if(TEST_SUITE_PROFILE_USE)
     append_target_flags(COMPILE_FLAGS ${target} -fprofile-instr-use=${target_path}.profdata)
     append_target_flags(LINK_LIBRARIES ${target} -fprofile-instr-use=${target_path}.profdata)
   endif()
 
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
-  llvm_add_test_for_target(${target})
+  llvm_add_test(${CMAKE_CURRENT_BINARY_DIR}/${target}.test ${target_path})
   test_suite_add_build_dependencies(${target})
 endmacro()
 
