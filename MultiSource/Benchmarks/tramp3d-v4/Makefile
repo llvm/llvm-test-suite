@@ -14,6 +14,7 @@ ifeq ($(ARCH),Mips)
 # Mips needs a bit more compilation time when Mips64r6 and MSA are used
 # together.
 RUNTIMELIMIT := 700
+CPPFLAGS := "-mxgot"
 endif
 
 include	../../Makefile.multisrc
