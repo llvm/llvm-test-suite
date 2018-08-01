@@ -59,9 +59,7 @@ macro(create_one_local_test_f Name FileGlob FilterRegex)
     set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
     # Verify reference output if it exists.
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-      set(NO_REFERENCE_OUTPUT 1)
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-      llvm_test_traditional(${_executable})
+      llvm_test_traditional(${Name})
     else()
       # otherwise just run the executable.
       llvm_test_run()
