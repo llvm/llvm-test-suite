@@ -8,7 +8,7 @@
 # Defines helpers to add executables and tests. The entry points to this
 # file are:
 #   `llvm_singlesource([PREFIX p] [TARGET_VAR VarName])`, and
-#   `llvm_multisource([PREFIX p] [TARGET_VAR VarName])`
+#   `llvm_multisource()`
 #
 # Following convenience macros provide shortcuts for common test cases:
 #
@@ -21,7 +21,7 @@
 #   If optional TARGET_VAR is specified, the variable is set to
 #   list of all created targets.
 #
-# llvm_multisource([PREFIX p] [TARGET_VAR VarName])
+# llvm_multisource()
 #   Invokes llvm_test_executable(${PROG} [sources...])
 #
 ##===----------------------------------------------------------------------===##
@@ -54,7 +54,6 @@ endmacro()
 # one test and it consists of all sources in the directory (or a curated list,
 # if Source is defined).
 macro(llvm_multisource)
-  cmake_parse_arguments(_LMARG "" "PREFIX;TARGET_VAR" "" ${ARGN})
   if(DEFINED Source)
     set(sources ${Source})
   else()
@@ -66,13 +65,10 @@ macro(llvm_multisource)
     if(NOT TESTSCRIPT)
       llvm_test_traditional(${PROG})
     endif()
-    set(_target ${_LMARG_PREFIX}${PROG})
+    set(_target ${PROG})
     llvm_test_executable(${_target} ${sources})
     target_include_directories(${_target}
       PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-    if(_LMARG_TARGET_VAR)
-      set(${_LMARG_TARGET_VAR} ${_target})
-    endif()
   endif()
 endmacro()
 
