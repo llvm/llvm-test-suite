@@ -1,4 +1,75 @@
-set(Source
+list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
+
+set(INPUT
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clamdoc.tar.gz
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe.bz2
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v2.rar
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v3.rar
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.zip
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/README
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc11.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc1.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc22.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc2.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/doc3.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/docCLAMexe.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf1.rtf
+  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf-novirus.rtf
+)
+set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_SOURCE_DIR}/dbdir -r ${INPUT})
+if(TARGET_OS STREQUAL "Darwin")
+  list(APPEND CPPFLAGS -DC_DARWIN)
+endif()
+if(TARGET_OS STREQUAL "AIX")
+  list(APPEND CPPFLAGS -DC_AIX)
+endif()
+if(TARGET_OS STREQUAL "IRIX")
+  list(APPEND CPPFLAGS -DC_IRIX)
+endif()
+if(TARGET_OS STREQUAL "Cygwin")
+  list(APPEND CPPFLAGS -DC_CYGWIN)
+endif()
+if(TARGET_OS STREQUAL "FreeBSD")
+  list(APPEND CPPFLAGS -DC_BSD)
+endif()
+if(TARGET_OS STREQUAL "OpenBSD")
+  list(APPEND CPPFLAGS -DC_BSD)
+endif()
+if(TARGET_OS STREQUAL "NetBSD")
+  list(APPEND CPPFLAGS -DC_BSD)
+endif()
+if(TARGET_OS STREQUAL "HP-UX")
+  list(APPEND CPPFLAGS -DC_HPUX)
+endif()
+if(TARGET_OS STREQUAL "Interix")
+  list(APPEND CPPFLAGS -DC_INTERIX -DC_WINDOWS)
+endif()
+if(TARGET_OS STREQUAL "Win32")
+  list(APPEND CPPFLAGS -DC_WINDOWS)
+endif()
+if(TARGET_OS STREQUAL "mingw")
+  list(APPEND CPPFLAGS -DC_WINDOWS)
+endif()
+if(TARGET_OS STREQUAL "Linux")
+  list(APPEND CPPFLAGS -DC_LINUX)
+endif()
+if(NOT ARCH STREQUAL "ARM")
+  if(ENDIAN STREQUAL "little")
+    list(APPEND CPPFLAGS -DFPU_WORDS_BIGENDIAN=0)
+  endif()
+  if(ENDIAN STREQUAL "big")
+    list(APPEND CPPFLAGS -DFPU_WORDS_BIGENDIAN=1)
+  endif()
+endif()
+if(ENDIAN STREQUAL "little")
+  list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=0)
+endif()
+if(ENDIAN STREQUAL "big")
+  list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=1)
+endif()
+llvm_multisource(clamscan
   clamscan_clamscan.c
   clamscan_manager.c
   clamscan_others.c
@@ -99,75 +170,3 @@ set(Source
   zlib_uncompr.c
   zlib_zutil.c
 )
-list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
-
-set(INPUT
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clamdoc.tar.gz
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe.bz2
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v2.rar
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v3.rar
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.zip
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/README
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc11.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc1.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc22.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc2.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/doc3.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/docCLAMexe.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf1.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf-novirus.rtf
-)
-set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_SOURCE_DIR}/dbdir -r ${INPUT})
-if(TARGET_OS STREQUAL "Darwin")
-  list(APPEND CPPFLAGS -DC_DARWIN)
-endif()
-if(TARGET_OS STREQUAL "AIX")
-  list(APPEND CPPFLAGS -DC_AIX)
-endif()
-if(TARGET_OS STREQUAL "IRIX")
-  list(APPEND CPPFLAGS -DC_IRIX)
-endif()
-if(TARGET_OS STREQUAL "Cygwin")
-  list(APPEND CPPFLAGS -DC_CYGWIN)
-endif()
-if(TARGET_OS STREQUAL "FreeBSD")
-  list(APPEND CPPFLAGS -DC_BSD)
-endif()
-if(TARGET_OS STREQUAL "OpenBSD")
-  list(APPEND CPPFLAGS -DC_BSD)
-endif()
-if(TARGET_OS STREQUAL "NetBSD")
-  list(APPEND CPPFLAGS -DC_BSD)
-endif()
-if(TARGET_OS STREQUAL "HP-UX")
-  list(APPEND CPPFLAGS -DC_HPUX)
-endif()
-if(TARGET_OS STREQUAL "Interix")
-  list(APPEND CPPFLAGS -DC_INTERIX -DC_WINDOWS)
-endif()
-if(TARGET_OS STREQUAL "Win32")
-  list(APPEND CPPFLAGS -DC_WINDOWS)
-endif()
-if(TARGET_OS STREQUAL "mingw")
-  list(APPEND CPPFLAGS -DC_WINDOWS)
-endif()
-if(TARGET_OS STREQUAL "Linux")
-  list(APPEND CPPFLAGS -DC_LINUX)
-endif()
-if(NOT ARCH STREQUAL "ARM")
-  if(ENDIAN STREQUAL "little")
-    list(APPEND CPPFLAGS -DFPU_WORDS_BIGENDIAN=0)
-  endif()
-  if(ENDIAN STREQUAL "big")
-    list(APPEND CPPFLAGS -DFPU_WORDS_BIGENDIAN=1)
-  endif()
-endif()
-if(ENDIAN STREQUAL "little")
-  list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=0)
-endif()
-if(ENDIAN STREQUAL "big")
-  list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=1)
-endif()
-llvm_multisource(clamscan)

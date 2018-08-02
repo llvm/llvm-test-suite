@@ -46,16 +46,15 @@ endmacro()
 # Configure the current directory as a MultiSource subdirectory - i.e. there is
 # one test and it consists of all sources in the directory (or a curated list,
 # if Source is defined).
-macro(llvm_multisource target)
-  if(DEFINED Source)
-    set(sources ${Source})
-  else()
+function(llvm_multisource target)
+  set(sources ${ARGN})
+  if(NOT sources)
     file(GLOB sources *.c *.cpp *.cc)
   endif()
 
   llvm_test_traditional(${target})
   llvm_test_executable(${target} ${sources})
-endmacro()
+endfunction()
 
 # Sets Var to ${name} with directory and shortest extension removed.
 macro(basename Var name)

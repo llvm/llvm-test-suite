@@ -1,4 +1,3 @@
-set(Source lapi.c lcode.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c lauxlib.c lbaselib.c ldblib.c liolib.c lmathlib.c loslib.c ltablib.c lstrlib.c loadlib.c linit.c lua.c)
 list(APPEND LDFLAGS -lm)
 if(NOT ARCH STREQUAL "XCore")
   list(APPEND CPPFLAGS -DLUA_USE_POSIX)
@@ -17,5 +16,36 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/generate_inputs.sh
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating lua test inputs")
 add_custom_target(lua_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/generate_inputs.sh)
-    llvm_multisource(lua)
+llvm_multisource(lua
+  lapi.c
+  lcode.c
+  ldebug.c
+  ldo.c
+  ldump.c
+  lfunc.c
+  lgc.c
+  llex.c
+  lmem.c
+  lobject.c
+  lopcodes.c
+  lparser.c
+  lstate.c
+  lstring.c
+  ltable.c
+  ltm.c
+  lundump.c
+  lvm.c
+  lzio.c
+  lauxlib.c
+  lbaselib.c
+  ldblib.c
+  liolib.c
+  lmathlib.c
+  loslib.c
+  ltablib.c
+  lstrlib.c
+  loadlib.c
+  linit.c
+  lua.c
+)
 add_dependencies(lua lua_input)

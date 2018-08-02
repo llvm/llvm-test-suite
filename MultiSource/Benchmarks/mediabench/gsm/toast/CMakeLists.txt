@@ -1,4 +1,27 @@
 set(RUN_OPTIONS -cpl ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.pcm)
 list(APPEND CPPFLAGS -DNeedFunctionPrototypes=1 -DSASR)
-set(Source add.c         gsm_decode.c   gsm_option.c  rpe.c          toast.c code.c        gsm_destroy.c  gsm_print.c   short_term.c   toast_lin.c debug.c       gsm_encode.c   long_term.c   table.c     toast_ulaw.c decode.c      gsm_explode.c  lpc.c         toast_alaw.c gsm_create.c  gsm_implode.c  preprocess.c  toast_audio.c)
-llvm_multisource(toast)
+llvm_multisource(toast
+  add.c
+  gsm_decode.c
+  gsm_option.c
+  rpe.c
+  toast.c
+  code.c
+  gsm_destroy.c
+  gsm_print.c
+  short_term.c
+  toast_lin.c
+  debug.c
+  gsm_encode.c
+  long_term.c
+  table.c
+  toast_ulaw.c
+  decode.c
+  gsm_explode.c
+  lpc.c
+  toast_alaw.c
+  gsm_create.c
+  gsm_implode.c
+  preprocess.c
+  toast_audio.c
+)

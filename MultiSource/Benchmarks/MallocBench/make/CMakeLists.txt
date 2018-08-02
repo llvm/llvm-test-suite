@@ -1,4 +1,24 @@
 list(APPEND CPPFLAGS -DHAVE_SIGLIST -DNO_LDAV -DNOMEMOPT -DPOSIX)
-set(Source commands.c job.c dir.c file.c load.c misc.c main.c read.c remake.c remote.c rule.c implicit.c default.c variable.c expand.c function.c vpath.c version.c arscan.c ar.c)
 set(RUN_OPTIONS -n -f ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/GNUmakefile.make USEROPT=BWGC VPATH=${CMAKE_CURRENT_SOURCE_DIR})
-llvm_multisource(make)
+llvm_multisource(make
+  commands.c
+  job.c
+  dir.c
+  file.c
+  load.c
+  misc.c
+  main.c
+  read.c
+  remake.c
+  remote.c
+  rule.c
+  implicit.c
+  default.c
+  variable.c
+  expand.c
+  function.c
+  vpath.c
+  version.c
+  arscan.c
+  ar.c
+)
