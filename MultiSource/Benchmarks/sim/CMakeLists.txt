@@ -1,5 +1,4 @@
-set(PROG sim)
 list(APPEND CPPFLAGS -DUNIX)
 set(RUN_OPTIONS 8 ${CMAKE_CURRENT_SOURCE_DIR}/tob.38-44 ${CMAKE_CURRENT_SOURCE_DIR}/liv.42-48)
 set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
-llvm_multisource()
+llvm_multisource(sim)

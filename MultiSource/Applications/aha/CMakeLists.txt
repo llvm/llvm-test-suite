@@ -1,2 +1,1 @@
-set(PROG aha)
-llvm_multisource()
+llvm_multisource(aha)

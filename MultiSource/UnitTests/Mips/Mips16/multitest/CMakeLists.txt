@@ -1,2 +1,1 @@
-set(PROG multitest)
-llvm_multisource()
+llvm_multisource(multitest)

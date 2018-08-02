@@ -10,7 +10,6 @@ foreach(lib ${CMAKE_DL_LIBS})
 endforeach()
 
 set(Source ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp ${CMAKE_CURRENT_SOURCE_DIR}/x86_17.06.19_halide_runtime.bc ${uosources})
-set(PROG fft)
-llvm_multisource()
+llvm_multisource(fft)
 
 

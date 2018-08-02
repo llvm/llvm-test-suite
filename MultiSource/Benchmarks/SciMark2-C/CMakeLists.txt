@@ -1,6 +1,5 @@
-set(PROG scimark2)
 list(APPEND LDFLAGS -lm)
 if(LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS -large)
 endif()
-llvm_multisource()
+llvm_multisource(scimark2)

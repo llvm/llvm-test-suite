@@ -1,2 +1,1 @@
-set(PROG fixoutput)
-llvm_multisource()
+llvm_multisource(fixoutput)

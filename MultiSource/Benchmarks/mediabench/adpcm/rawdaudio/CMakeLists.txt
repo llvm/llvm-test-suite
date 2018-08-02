@@ -1,5 +1,4 @@
 set(RUN_OPTIONS < ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.adpcm )
-set(PROG rawdaudio)
 set(HASH_PROGRAM_OUTPUT 1)
 set(Source rawdaudio.c adpcm.c)
-llvm_multisource()
+llvm_multisource(rawdaudio)

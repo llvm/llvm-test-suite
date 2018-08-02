@@ -1,6 +1,5 @@
-set(PROG telecomm-gsm)
 list(APPEND CPPFLAGS -DSTUPID_COMPILER -DNeedFunctionPrototypes=1 -DSASR)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -fps -c ${CMAKE_CURRENT_SOURCE_DIR}/large.au)
 set(HASH_PROGRAM_OUTPUT 1)
-llvm_multisource()
+llvm_multisource(telecomm-gsm)

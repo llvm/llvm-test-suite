@@ -19,8 +19,8 @@
 #   for all C/C++ files in current directory.
 #   Passes optional PREFIX parameter to llvm_test_executable().
 #
-# llvm_multisource()
-#   Invokes llvm_test_executable(${PROG} [sources...])
+# llvm_multisource(target)
+#   Invokes llvm_test_executable(${target} [sources...])
 #
 ##===----------------------------------------------------------------------===##
 
@@ -46,16 +46,15 @@ endmacro()
 # Configure the current directory as a MultiSource subdirectory - i.e. there is
 # one test and it consists of all sources in the directory (or a curated list,
 # if Source is defined).
-macro(llvm_multisource)
+macro(llvm_multisource target)
   if(DEFINED Source)
     set(sources ${Source})
   else()
     file(GLOB sources *.c *.cpp *.cc)
   endif()
 
-  llvm_test_traditional(${PROG})
-  set(_target ${PROG})
-  llvm_test_executable(${_target} ${sources})
+  llvm_test_traditional(${target})
+  llvm_test_executable(${target} ${sources})
 endmacro()
 
 # Sets Var to ${name} with directory and shortest extension removed.

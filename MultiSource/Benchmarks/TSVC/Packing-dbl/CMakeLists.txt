@@ -1,5 +1,4 @@
-set(PROG Packing-dbl)
 list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 50000 14)
-llvm_multisource()
+llvm_multisource(Packing-dbl)

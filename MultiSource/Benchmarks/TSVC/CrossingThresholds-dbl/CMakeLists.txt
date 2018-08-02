@@ -1,5 +1,4 @@
-set(PROG CrossingThresholds-dbl)
 list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 5880 14)
-llvm_multisource()
+llvm_multisource(CrossingThresholds-dbl)

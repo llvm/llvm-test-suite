@@ -1,7 +1,6 @@
-set(PROG 8b10b)
 if(SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.txt 2000)
 else()
   set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.txt 20000)
 endif()
-llvm_multisource()
+llvm_multisource(8b10b)

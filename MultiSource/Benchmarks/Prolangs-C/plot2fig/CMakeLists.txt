@@ -1,7 +1,6 @@
 include(CheckFunctionExists)
 check_function_exists(re_comp HAVE_RE_COMP)
 if(HAVE_RE_COMP)
-  set(PROG plot2fig)
   list(APPEND LDFLAGS -lm)
-  llvm_multisource()
+  llvm_multisource(plot2fig)
 endif()

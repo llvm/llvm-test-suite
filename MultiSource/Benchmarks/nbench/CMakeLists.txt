@@ -1,4 +1,3 @@
-set(PROG nbench)
 list(APPEND CPPFLAGS -DBASE_ITERATIONS=25)
 list(APPEND LDFLAGS -lm)
 set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
@@ -9,5 +8,5 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/NNET.DAT
     COMMENT "Copying nbench test input")
 add_custom_target(nbench_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/NNET.DAT)
 
-llvm_multisource()
+llvm_multisource(nbench)
 add_dependencies(nbench nbench_input)

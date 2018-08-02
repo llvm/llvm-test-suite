@@ -1,2 +1,1 @@
-set(PROG iotest)
-llvm_multisource()
+llvm_multisource(iotest)

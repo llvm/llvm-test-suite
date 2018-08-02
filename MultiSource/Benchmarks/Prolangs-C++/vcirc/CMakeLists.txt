@@ -1,3 +1,2 @@
-set(PROG vcirc)
 list(APPEND LDFLAGS -lstdc++)
-llvm_multisource()
+llvm_multisource(vcirc)

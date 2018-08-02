@@ -1,3 +1,2 @@
-set(PROG office)
 list(APPEND LDFLAGS -lstdc++)
-llvm_multisource()
+llvm_multisource(office)

@@ -1,7 +1,6 @@
-set(PROG SIBsim4)
 if(SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS -A4 ${CMAKE_CURRENT_SOURCE_DIR}/x-small.fa ${CMAKE_CURRENT_SOURCE_DIR}/y-small.fa)
 else()
   set(RUN_OPTIONS -A4 ${CMAKE_CURRENT_SOURCE_DIR}/x.fa ${CMAKE_CURRENT_SOURCE_DIR}/y.fa)
 endif()
-llvm_multisource()
+llvm_multisource(SIBsim4)

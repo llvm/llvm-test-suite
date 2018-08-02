@@ -1,4 +1,3 @@
-set(PROG pcompress2)
 list(APPEND CPPFLAGS -DVERSION="1.00" -DCOMPDATE="today" -DCFLAGS="" -DHOSTNAME="thishost")
 if(LARGE_PROBLEM_SIZE)
   set(INPUT_FILE ref.in)
@@ -13,5 +12,5 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_FILE}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Copying pcompress2 test input")
 add_custom_target(pcompress2_input SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_FILE})
-    llvm_multisource()
+    llvm_multisource(pcompress2)
 add_dependencies(pcompress2 pcompress2_input)

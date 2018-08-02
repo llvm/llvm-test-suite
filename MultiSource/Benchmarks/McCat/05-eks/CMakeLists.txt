@@ -1,3 +1,2 @@
-set(PROG eks)
 list(APPEND LDFLAGS -lm)
-llvm_multisource()
+llvm_multisource(eks)

@@ -1,3 +1,2 @@
-set(PROG viterbi)
 list(APPEND CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR} -DPROJ_SRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
-llvm_multisource()
+llvm_multisource(viterbi)

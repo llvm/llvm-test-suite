@@ -1,3 +1,2 @@
-set(PROG life)
 list(APPEND LDFLAGS -lstdc++)
-llvm_multisource()
+llvm_multisource(life)

@@ -1,2 +1,1 @@
-set(PROG football)
-llvm_multisource()
+llvm_multisource(football)

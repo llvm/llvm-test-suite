@@ -1,2 +1,1 @@
-set(PROG unix-tbl)
-llvm_multisource()
+llvm_multisource(unix-tbl)

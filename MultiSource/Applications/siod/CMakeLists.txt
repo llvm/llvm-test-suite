@@ -1,5 +1,4 @@
-set(PROG siod)
 list(APPEND CPPFLAGS -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN -Dunix)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -v1 ${CMAKE_CURRENT_SOURCE_DIR}/test.scm)
-llvm_multisource()
+llvm_multisource(siod)

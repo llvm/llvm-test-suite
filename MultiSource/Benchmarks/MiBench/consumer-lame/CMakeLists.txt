@@ -1,5 +1,4 @@
-set(PROG consumer-lame)
 list(APPEND CPPFLAGS -DHAVEMPGLIB -DLAMEPARSE -DNDEBUG -D__NO_MATH_INLINES -DLAMESNDFILE)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -S ${CMAKE_CURRENT_SOURCE_DIR}/large.wav /dev/null)
-llvm_multisource()
+llvm_multisource(consumer-lame)

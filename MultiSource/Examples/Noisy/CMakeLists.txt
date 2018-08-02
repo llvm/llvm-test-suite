@@ -1,2 +1,1 @@
-set(PROG Noisy)
-llvm_multisource()
+llvm_multisource(Noisy)

@@ -1,2 +1,1 @@
-set(PROG compiler)
-llvm_multisource()
+llvm_multisource(compiler)

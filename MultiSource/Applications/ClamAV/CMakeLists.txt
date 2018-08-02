@@ -99,7 +99,6 @@ set(Source
   zlib_uncompr.c
   zlib_zutil.c
 )
-set(PROG clamscan)
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
 
 set(INPUT
@@ -172,4 +171,4 @@ if(ENDIAN STREQUAL "big")
   list(APPEND CPPFLAGS -DWORDS_BIGENDIAN=1)
 endif()
 set(DIFFPROG ${PROGDIR}/DiffOutput.sh "diff ")
-llvm_multisource()
+llvm_multisource(clamscan)

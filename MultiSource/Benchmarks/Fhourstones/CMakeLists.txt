@@ -1,4 +1,3 @@
-set(PROG fhourstones)
 list(APPEND CPPFLAGS -DUNIX -DTRANSIZE=1050011 -DPROBES=8 -DREPORTPLY=8)
 set(RUN_OPTIONS < ${CMAKE_CURRENT_SOURCE_DIR}/input)
-llvm_multisource()
+llvm_multisource(fhourstones)
