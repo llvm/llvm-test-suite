@@ -66,13 +66,10 @@ macro(basename Var name)
   string(REGEX REPLACE "\\.[^.]*$" "" ${Var} ${_filename})
 endmacro()
 
-# Traditionally CMakeLists.txt files would set RUN_OPTIONS, STDIN_FILENAME,
-# SMALL_PROBLEM_SIZE, HASH_PROGRAM_OUTPUT, etc.
+# Traditionally CMakeLists.txt files would set RUN_OPTIONS, SMALL_PROBLEM_SIZE,
+# HASH_PROGRAM_OUTPUT, etc.
 # Create llvm_test_run() and llvm_test_verify() invocation for that.
 function(llvm_test_traditional name)
-  if(STDIN_FILENAME)
-    list(APPEND RUN_OPTIONS "< ${STDIN_FILENAME}")
-  endif()
   if(WORKDIR)
     list(APPEND RUN_OPTIONS WORKDIR ${WORKDIR})
   endif()

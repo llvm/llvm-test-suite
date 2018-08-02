@@ -1,6 +1,5 @@
 set(PROG office-ispell)
 list(APPEND CPPFLAGS -Dconst=)
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS -a -d ${CMAKE_CURRENT_SOURCE_DIR}/americanmed+)
-set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/large.txt)
+set(RUN_OPTIONS -a -d ${CMAKE_CURRENT_SOURCE_DIR}/americanmed+ < ${CMAKE_CURRENT_SOURCE_DIR}/large.txt)
 llvm_multisource()
