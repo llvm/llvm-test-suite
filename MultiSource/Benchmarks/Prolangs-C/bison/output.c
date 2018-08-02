@@ -217,9 +217,9 @@ void output(void)
   /* output_token_defines(ftable);	JF put out token defines FIRST */
   if (!semantic_parser)		/* JF Put out other stuff */
     {
-      rewind(fattrs);
-      while ((c=getc(fattrs))!=EOF)
-        putc(c,ftable);
+      // rewind(fattrs);
+      // while ((c=getc(fattrs))!=EOF)
+      //   putc(c,ftable);
     }
 
   if (debugflag)
