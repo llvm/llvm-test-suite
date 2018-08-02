@@ -1,7 +1,4 @@
 list(APPEND LDFLAGS -lm)
-if(ARCH STREQUAL "XCore")
-  set(XCORE_TARGET_NEEDS_MEMORY 256)
-endif()
 set(Source
   ackermann.c
   ary3.c

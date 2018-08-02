@@ -2,7 +2,6 @@ include(External)
 llvm_externals_find(TEST_SUITE_SKIDMARKS10_ROOT "skidmarks10" "Skidmarks 10")
 
 if(TEST_SUITE_SKIDMARKS10_ROOT)
-  set(PROG skidmarks)
   list(APPEND CPPFLAGS -I${TEST_SUITE_SKIDMARKS10_ROOT}/source)
   if(ARCH STREQUAL "x86")
     list(APPEND CFLAGS -msse3)

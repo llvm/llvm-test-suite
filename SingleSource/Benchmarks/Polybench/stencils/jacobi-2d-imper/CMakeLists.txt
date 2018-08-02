@@ -1,5 +1,4 @@
 set(POLYBENCH_UTILS SingleSource/Benchmarks/Polybench/utilities )
-set(PROG jacobi-2d-imper)
 list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/${POLYBENCH_UTILS} -DPOLYBENCH_DUMP_ARRAYS)
 if(SMALL_PROBLEM_SIZE)
   list(APPEND CFLAGS -DSMALL_DATASET)

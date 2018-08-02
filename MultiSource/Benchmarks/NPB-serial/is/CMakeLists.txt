@@ -1,8 +1,4 @@
 if(SMALL_PROBLEM_SIZE)
   list(APPEND CPPFLAGS -DSMALL_PROBLEM_SIZE)
-else()
-  if(ARCH STREQUAL "XCore")
-    set(XCORE_TARGET_NEEDS_MEMORY 512)
-  endif()
 endif()
 llvm_multisource(is)
