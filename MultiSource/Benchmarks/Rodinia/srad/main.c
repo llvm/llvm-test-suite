@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
 }
 
 void random_matrix(float I[ROWS][COLS]) {
+
   glibc_compat_srand(SEED);
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLS; j++) {
