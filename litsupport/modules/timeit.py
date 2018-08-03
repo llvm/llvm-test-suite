@@ -1,5 +1,6 @@
 from litsupport import shellcommand
 from litsupport import testplan
+import os
 import re
 
 
@@ -17,9 +18,6 @@ def _mutateCommandLine(context, commandline):
     args += ["--timeout", "7200"]
     args += ["--limit-file-size", "104857600"]
     args += ["--limit-rss-size", "838860800"]
-    if cmd.workdir is not None:
-        args += ["--chdir", cmd.workdir]
-        cmd.workdir = None
     if not config.traditional_output:
         if cmd.stdout is not None:
             args += ["--redirect-stdout", cmd.stdout]
@@ -33,11 +31,18 @@ def _mutateCommandLine(context, commandline):
                             "possible with traditional output")
         args += ["--append-exitstatus"]
         args += ["--redirect-output", outfile]
-    if cmd.stdin is not None:
-        args += ["--redirect-input", cmd.stdin]
+    stdin = cmd.stdin
+    workdir = cmd.workdir
+    if stdin is not None:
+        if not os.path.isabs(stdin) and workdir is not None:
+            stdin = os.path.join(workdir, stdin)
+        args += ["--redirect-input", stdin]
         cmd.stdin = None
     else:
         args += ["--redirect-input", "/dev/null"]
+    if workdir is not None:
+        args += ["--chdir", workdir]
+        cmd.workdir = None
     args += ["--summary", timefile]
     # Remember timefilename for later
     context.timefiles.append(timefile)
