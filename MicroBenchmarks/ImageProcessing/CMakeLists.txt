@@ -1,1 +1,2 @@
 add_subdirectory(Dither)
+add_subdirectory(AnisotropicDiffusion)
