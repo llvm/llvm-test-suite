@@ -4,3 +4,5 @@ add_subdirectory(libs)
 add_subdirectory(XRay)
 add_subdirectory(LCALS)
 add_subdirectory(harris)
+add_subdirectory(ImageProcessing)
+
