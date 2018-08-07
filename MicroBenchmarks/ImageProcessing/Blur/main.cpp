@@ -6,6 +6,7 @@ Indian Institute of Technology Hyderabad
 
 #include "ImageHelper.h"
 #include "blur.h"
+#include <cstdlib>
 #include <iostream>
 
 #define BENCHMARK_LIB
@@ -126,7 +127,7 @@ int main(int argc, char *argv[]) {
 void BENCHMARK_boxBlurKernel(benchmark::State &state) {
 
   int height = state.range(0);
-  int width = state.range(1);
+  int width = state.range(0);
 
   int *outputImage = (int *)malloc(sizeof(int) * (height) * (width));
 
@@ -137,7 +138,7 @@ void BENCHMARK_boxBlurKernel(benchmark::State &state) {
   /* This call is to warm up the cache */
   boxBlurKernel(height, width, inputImage, outputImage);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     boxBlurKernel(height, width, inputImage, outputImage);
   }
   /* Since we are not passing state.range as 20 this if case will always be
@@ -150,16 +151,16 @@ void BENCHMARK_boxBlurKernel(benchmark::State &state) {
   free(outputImage);
 }
 BENCHMARK(BENCHMARK_boxBlurKernel)
-    ->Args({128, 128})
-    ->Args({256, 256})
-    ->Args({512, 512})
-    ->Args({1024, 1024})
+    ->Arg(128)
+    ->Arg(256)
+    ->Arg(512)
+    ->Arg(1024)
     ->Unit(benchmark::kMicrosecond);
 
 void BENCHMARK_GAUSSIAN_BLUR(benchmark::State &state) {
 
   int height = state.range(0);
-  int width = state.range(1);
+  int width = state.range(0);
 
   int *outputImage = (int *)malloc(sizeof(int) * (height) * (width));
 
@@ -169,8 +170,7 @@ void BENCHMARK_GAUSSIAN_BLUR(benchmark::State &state) {
   }
   /* This call is to warm up the cache */
   gaussianBlurKernel(height, width, inputImage, outputImage);
-
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     gaussianBlurKernel(height, width, inputImage, outputImage);
   }
   /* Since we are not passing state.range as 20 this if case will always be
@@ -184,9 +184,9 @@ void BENCHMARK_GAUSSIAN_BLUR(benchmark::State &state) {
 }
 
 BENCHMARK(BENCHMARK_GAUSSIAN_BLUR)
-    ->Args({128, 128})
-    ->Args({256, 256})
-    ->Args({512, 512})
-    ->Args({1024, 1024})
+    ->Arg(128)
+    ->Arg(256)
+    ->Arg(512)
+    ->Arg(1024)
     ->Unit(benchmark::kMicrosecond);
 #endif

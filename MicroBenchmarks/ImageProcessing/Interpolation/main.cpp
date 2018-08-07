@@ -5,6 +5,7 @@
 */
 #include "ImageHelper.h"
 #include "interpolation.h"
+#include <cstdlib>
 #include <iostream> // std::cerr
 
 #define BENCHMARK_LIB
@@ -89,7 +90,7 @@ void BENCHMARK_BICUBIC_INTERPOLATION(benchmark::State &state) {
   /* This call is to warm up the cache */
   bicubicKernel(inputHeight, inputWidth, inputImage, outputImage);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     bicubicKernel(inputHeight, inputWidth, inputImage, outputImage);
   }
 
@@ -126,7 +127,7 @@ void BENCHMARK_BILINEAR_INTERPOLATION(benchmark::State &state) {
   /* This call is to warm up the cache */
   bilinearKernel(inputHeight, inputWidth, inputImage, outputImage);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     bilinearKernel(inputHeight, inputWidth, inputImage, outputImage);
   }
 

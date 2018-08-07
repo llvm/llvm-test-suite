@@ -6,6 +6,7 @@
 #include "ImageHelper.h"
 #include "dither.h"
 #include <cmath>
+#include <cstdlib>
 #include <iostream> // std::cerr
 
 #define BENCHMARK_LIB
@@ -79,7 +80,7 @@ void BENCHMARK_ORDERED_DITHER(benchmark::State &state) {
   /* This call is to warm up the cache */
   orderedDitherKernel(height, width, inputImage, outputImage, temp, n, m);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     orderedDitherKernel(height, width, inputImage, outputImage, temp, n, m);
   }
   /* Since we are not passing state.range as 20 this if case will always be
@@ -105,10 +106,10 @@ static void CustomArguments(benchmark::internal::Benchmark *b) {
     start = 128;
   }
   for (int i = start; i <= limit; i <<= 1) {
-    b->Args({i, 2});
-    b->Args({i, 3});
-    b->Args({i, 4});
-    b->Args({i, 8});
+    b->ArgPair(i, 2);
+    b->ArgPair(i, 3);
+    b->ArgPair(i, 4);
+    b->ArgPair(i, 8);
   }
 }
 BENCHMARK(BENCHMARK_ORDERED_DITHER)
@@ -128,7 +129,7 @@ void BENCHMARK_FLOYD_DITHER(benchmark::State &state) {
   }
   /* This call is to warm up the cache */
   floydDitherKernel(height, width, inputImage, outputImage);
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     floydDitherKernel(height, width, inputImage, outputImage);
   }
   /* Since we are not passing state.range as 20 this if case will always be

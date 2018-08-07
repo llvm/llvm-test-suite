@@ -7,6 +7,7 @@ Indian Institute of Technology Hyderabad
 
 #include "ImageHelper.h"
 #include "glibc_compat_rand.h"
+#include <cstdlib>
 #include <fstream>  // For reading and saving Image
 #include <iostream> // For std::cerr
 

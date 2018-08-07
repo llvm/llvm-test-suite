@@ -6,6 +6,7 @@
 
 #include "ImageHelper.h"
 #include "diffusion.h"
+#include <cstdlib>
 #include <iostream> // std::cerr
 
 #define BENCHMARK_LIB
@@ -82,7 +83,7 @@ void BENCHMARK_ANISTROPIC_DIFFUSION(benchmark::State &state) {
   /* first call made to warm up cache */
   anisotropicDiffusionKernel(height, width, inputImage, outputImage, ITERATION);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     anisotropicDiffusionKernel(height, width, inputImage, outputImage,
                                ITERATION);
   }
