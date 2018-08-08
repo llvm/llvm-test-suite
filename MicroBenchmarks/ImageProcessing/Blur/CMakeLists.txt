@@ -1,6 +1,6 @@
 set(IMAGEPROC_UTILS MicroBenchmarks/ImageProcessing/utils)
 
-list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${IMAGEPROC_UTILS} -std=c++11)
+list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${IMAGEPROC_UTILS})
 list(APPEND LDFLAGS -lm)
 
 llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh ${CMAKE_CURRENT_BINARY_DIR}/boxBlurOutput.txt")
