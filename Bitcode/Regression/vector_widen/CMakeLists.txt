@@ -7,7 +7,8 @@ foreach(lib ${CMAKE_DL_LIBS})
   list(APPEND LDFLAGS -l${lib})
 endforeach()
 
-set(Source ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp ${CMAKE_CURRENT_SOURCE_DIR}/halide_runtime.bc ${CMAKE_CURRENT_SOURCE_DIR}/vector_widen.bc)
-llvm_multisource(widen_bug)
-
-
+llvm_multisource(widen_bug
+  ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/halide_runtime.bc
+  ${CMAKE_CURRENT_SOURCE_DIR}/vector_widen.bc
+)
