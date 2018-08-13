@@ -6,6 +6,7 @@
 #include "ImageHelper.h"
 #include "dilate.h"
 #include <iostream>
+#include <cstdlib>
 
 #define BENCHMARK_LIB
 #ifdef BENCHMARK_LIB
@@ -78,7 +79,7 @@ void BENCHMARK_DILATE(benchmark::State &state) {
   /* This call is to warm up the cache */
   dilateKernel(height, width, inputImage, outputImage, temp);
 
-  for (auto _ : state) {
+  while (state.KeepRunning()) {
     dilateKernel(height, width, inputImage, outputImage, temp);
   }
 

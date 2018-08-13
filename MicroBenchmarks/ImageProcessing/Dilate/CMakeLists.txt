@@ -1,5 +1,5 @@
 set(IMAGEPROC_UTILS MicroBenchmarks/ImageProcessing/utils)
-list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${IMAGEPROC_UTILS} -std=c++11)
+list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${IMAGEPROC_UTILS})
 
 llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh ${CMAKE_CURRENT_BINARY_DIR}/dilateOutput.txt")
 llvm_test_verify("${FPCMP} ${CMAKE_CURRENT_BINARY_DIR}/dilateOutput.txt ${CMAKE_CURRENT_SOURCE_DIR}/dilate.reference_output")
