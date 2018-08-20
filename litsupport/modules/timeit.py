@@ -18,12 +18,19 @@ def _mutateCommandLine(context, commandline):
     args += ["--timeout", "7200"]
     args += ["--limit-file-size", "104857600"]
     args += ["--limit-rss-size", "838860800"]
+    workdir = cmd.workdir
     if not config.traditional_output:
+        stdout = cmd.stdout
         if cmd.stdout is not None:
-            args += ["--redirect-stdout", cmd.stdout]
+            if not os.path.isabs(stdout) and workdir is not None:
+                stdout = os.path.join(workdir, stdout)
+            args += ["--redirect-stdout", stdout]
             cmd.stdout = None
-        if cmd.stderr is not None:
-            args += ["--redirect-stderr", cmd.stderr]
+        stderr = cmd.stderr
+        if stderr is not None:
+            if not os.path.isabs(stderr) and workdir is not None:
+                stderr = os.path.join(workdir, stderr)
+            args += ["--redirect-stderr", stderr]
             cmd.stderr = None
     else:
         if cmd.stdout is not None or cmd.stderr is not None:
@@ -32,7 +39,6 @@ def _mutateCommandLine(context, commandline):
         args += ["--append-exitstatus"]
         args += ["--redirect-output", outfile]
     stdin = cmd.stdin
-    workdir = cmd.workdir
     if stdin is not None:
         if not os.path.isabs(stdin) and workdir is not None:
             stdin = os.path.join(workdir, stdin)
