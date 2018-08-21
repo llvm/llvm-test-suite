@@ -99,9 +99,9 @@ struct malloc_plus_memory_entry {
 
 struct cmp_str
 {
-   bool operator()(char const *a, char const *b)
+   bool operator()(const string &a, const string &b)
    {
-      return strcmp(a, b) < 0;
+      return a.compare(b) < 0;
    }
 };
 
