@@ -16,7 +16,6 @@ geninput() {
 	done
 	count=$2
 	output=${1%.txt}$3.txt
-	echo "gen. input file: '$output'"
 	rm -f $output
 	while [ $count -gt 50 ]; do
 		count=$(($count - 50))
