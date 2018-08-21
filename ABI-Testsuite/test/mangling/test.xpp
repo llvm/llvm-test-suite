@@ -1,6 +1,6 @@
 // This file is distributed under the University of Illinois Open Source License.
 // See LICENSE.TXT for details.
-// RUN: cxx_compiler cxx_11 -c %s -o %t.o
+// RUN: cxx_compiler cxx_11 -D_GLIBCXX_USE_CXX11_ABI=0 -c %s -o %t.o
 // RUN: bindump %t.o | FileCheck -allow-deprecated-dag-overlap prefixes %s
 
 #include <cstddef>
