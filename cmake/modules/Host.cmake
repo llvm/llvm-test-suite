@@ -1,7 +1,7 @@
 set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
 mark_as_advanced(TEST_SUITE_HOST_CC)
 
-macro(llvm_add_host_executable targetname exename)
+function(llvm_add_host_executable targetname exename)
   cmake_parse_arguments(_arg "" "" "LDFLAGS;CPPFLAGS" ${ARGN})
 
   set(_objs)
@@ -31,4 +31,4 @@ macro(llvm_add_host_executable targetname exename)
   )
   add_custom_target(${targetname}
     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${exename}")
-endmacro()
+endfunction()

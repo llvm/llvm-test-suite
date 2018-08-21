@@ -1,8 +1,8 @@
 ##===- SingleMultiSource.cmake --------------------------------------------===##
 #
-# This defines macros to be used by the SingleSource and MultiSource
+# This defines functions to be used by the SingleSource and MultiSource
 # directories. This style of defining benchmarks is considered obsolete now
-# and it is recommended to only use the macros in TestSuite.cmake and
+# and it is recommended to only use the functions in TestSuite.cmake and
 # TestFile.cmake instead.
 #
 # Defines helpers to add executables and tests. The entry points to this
@@ -10,7 +10,7 @@
 #   `llvm_singlesource([PREFIX p])`, and
 #   `llvm_multisource()`
 #
-# Following convenience macros provide shortcuts for common test cases:
+# Following convenience functions provide shortcuts for common test cases:
 #
 # llvm_singlesource([PREFIX p])
 #
@@ -28,7 +28,7 @@ include(TestSuite)
 
 # Configure the current directory as a SingleSource subdirectory - i.e. every
 # file in *.{c,cpp,cc} is treated as its own test.
-macro(llvm_singlesource)
+function(llvm_singlesource)
   cmake_parse_arguments(_LSARG "" "PREFIX" "" ${ARGN})
   if(DEFINED Source)
     set(sources ${Source})
@@ -41,7 +41,7 @@ macro(llvm_singlesource)
     set(_target ${_LSARG_PREFIX}${name})
     llvm_test_executable(${_target} ${source})
   endforeach()
-endmacro()
+endfunction()
 
 # Configure the current directory as a MultiSource subdirectory - i.e. there is
 # one test and it consists of all sources in the directory (or a curated list,
