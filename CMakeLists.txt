@@ -239,7 +239,7 @@ option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)
 set(TEST_SUITE_EXTRA_LIT_MODULES "" CACHE STRING
     "Semicolon separated list of extra lit modules in use")
 mark_as_advanced(TEST_SUITE_EXTRA_LIT_MODULES)
-# Construct list testing modules (see litsupport/*.py for available modules)
+# Construct list testing modules (see also litsupport/modules/*.py)
 set(LIT_MODULES ${TEST_SUITE_EXTRA_LIT_MODULES})
 if(TEST_SUITE_RUN_BENCHMARKS)
   list(APPEND LIT_MODULES run)
