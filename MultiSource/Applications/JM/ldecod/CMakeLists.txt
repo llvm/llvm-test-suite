@@ -1,5 +1,5 @@
 list(APPEND CPPFLAGS -D__USE_LARGEFILE64 -D_FILE_OFFSET_BITS=64)
-list(APPEND LDFLAGS -lm ${TOOLLINKOPTS})
+list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -i ${CMAKE_CURRENT_SOURCE_DIR}/data/test.264 -o Output/test_dec.yuv -r ${CMAKE_CURRENT_SOURCE_DIR}/data/test_rec.yuv)
 set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 llvm_multisource(ldecod)
