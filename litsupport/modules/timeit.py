@@ -10,9 +10,7 @@ def _mutateCommandLine(context, commandline):
     config = context.config
     cmd = shellcommand.parse(commandline)
 
-    timeit = "%s/tools/timeit" % config.test_source_root
-    if config.remote_host:
-        timeit = "%s/tools/timeit-target" % config.test_source_root
+    timeit = "%s/tools/timeit-target" % config.test_source_root
     args = ["--limit-core", "0"]
     args += ["--limit-cpu", "7200"]
     args += ["--timeout", "7200"]

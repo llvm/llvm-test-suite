@@ -5,16 +5,23 @@
 
 include(Host)
 
-llvm_add_host_executable(fpcmp-host fpcmp fpcmp.c)
+llvm_add_host_executable(build-fpcmp fpcmp fpcmp.c)
 
 option(TEST_SUITE_USE_PERF "Use perf (timeit.sh) instead of timeit.c" Off)
 if(TEST_SUITE_USE_PERF)
   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/timeit
-    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh ${CMAKE_CURRENT_BINARY_DIR}/timeit
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh ${CMAKE_CURRENT_BINARY_DIR}/timeit
     COMMAND chmod +x ${CMAKE_CURRENT_BINARY_DIR}/timeit
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh)
-  add_custom_target(timeit-host DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/timeit)
+  add_custom_target(build-timeit DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/timeit)
+
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/timeit-target
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh ${CMAKE_CURRENT_BINARY_DIR}/timeit-target
+    COMMAND chmod +x ${CMAKE_CURRENT_BINARY_DIR}/timeit-target
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh)
+  add_custom_target(build-timeit-target DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/timeit-target)
 else()
   add_executable(timeit-target ${CMAKE_CURRENT_SOURCE_DIR}/timeit.c)
-  llvm_add_host_executable(timeit-host timeit timeit.c)
+  add_executable(build-timeit-target ALIAS timeit-target)
+  llvm_add_host_executable(build-timeit timeit timeit.c)
 endif()
