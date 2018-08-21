@@ -14,12 +14,6 @@ def _mutateCommandline(context, commandline, suffix=""):
 
     config = context.config
     remote_commandline = config.remote_client
-    if config.remote_user:
-        remote_commandline += " -l %s" % config.remote_user
-    if config.remote_port:
-        remote_commandline += " -p %s" % config.remote_port
-    if config.remote_flags:
-        remote_commandline += config.remote_flags
     remote_commandline += " %s" % config.remote_host
     remote_commandline += " /bin/sh %s" % shfilename
     return remote_commandline
