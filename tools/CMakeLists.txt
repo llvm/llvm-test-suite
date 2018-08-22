@@ -7,7 +7,7 @@ include(Host)
 
 llvm_add_host_executable(build-fpcmp fpcmp fpcmp.c)
 
-option(TEST_SUITE_USE_PERF "Use perf (timeit.sh) instead of timeit.c" Off)
+option(TEST_SUITE_USE_PERF "Use perf (timeit.sh) instead of timeit.c" OFF)
 if(TEST_SUITE_USE_PERF)
   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/timeit
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/timeit.sh ${CMAKE_CURRENT_BINARY_DIR}/timeit

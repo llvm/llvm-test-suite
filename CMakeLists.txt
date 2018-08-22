@@ -75,21 +75,21 @@ set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
 
 get_filename_component(CMAKE_C_COMPILER_DIRECTORY ${CMAKE_C_COMPILER} DIRECTORY)
 
-option(TEST_SUITE_COLLECT_CODE_SIZE "Measure code size of binaries" On)
+option(TEST_SUITE_COLLECT_CODE_SIZE "Measure code size of binaries" ON)
 if(TEST_SUITE_COLLECT_CODE_SIZE)
   find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
                HINTS ${CMAKE_C_COMPILER_DIRECTORY})
   mark_as_advanced(TEST_SUITE_LLVM_SIZE)
   if(TEST_SUITE_LLVM_SIZE STREQUAL "TEST_SUITE_LLVM_SIZE-NOTFOUND")
     message(FATAL_ERROR "llvm-size not found.
-Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to Off")
+Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
   endif()
 endif()
 
 
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
-option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" Off)
+option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" OFF)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
   find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
@@ -97,7 +97,7 @@ if(TEST_SUITE_PROFILE_GENERATE)
   mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
   if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
     message(FATAL_ERROR "llvm-profdata not found.
-Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to Off")
+Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
   endif()
 
   set(TEST_SUITE_PROFILE_GENERATE "True")
@@ -110,7 +110,7 @@ endif()
 
 option(TEST_SUITE_PROFILE_USE
       "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
-      Off)
+      OFF)
 
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
@@ -154,7 +154,7 @@ endif()
 # Disabling address space randomization makes the performance of memory/cache
 # intensive benchmarks more deterministic.
 option(TEST_SUITE_DISABLE_PIE
-       "Disable position independent executables and ASLR" On)
+       "Disable position independent executables and ASLR" ON)
 mark_as_advanced(TEST_SUITE_DISABLE_PIE)
 if(TEST_SUITE_DISABLE_PIE)
   if(APPLE AND NOT ARCH STREQUAL "AArch64")
@@ -178,7 +178,7 @@ add_subdirectory(tools)
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME
-       "Measure compile time by wrapping compiler invocations in timeit" On)
+       "Measure compile time by wrapping compiler invocations in timeit" ON)
 if(TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
   set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
@@ -186,9 +186,9 @@ if(TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
 endif()
 
-option(TEST_SUITE_BENCHMARKING_ONLY "Only run the benchmarking only subset" Off)
+option(TEST_SUITE_BENCHMARKING_ONLY "Only run the benchmarking only subset" OFF)
 
-option(TEST_SUITE_COLLECT_STATS "Collect LLVM statistics" Off)
+option(TEST_SUITE_COLLECT_STATS "Collect LLVM statistics" OFF)
 if(TEST_SUITE_COLLECT_STATS)
   list(APPEND CFLAGS -save-stats=obj)
   list(APPEND CXXFLAGS -save-stats=obj)
@@ -234,7 +234,7 @@ foreach(subdir ${TEST_SUITE_SUBDIRS})
   add_subdirectory(${subdir} ${subdir_name})
 endforeach()
 
-option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" On)
+option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" ON)
 
 set(TEST_SUITE_EXTRA_LIT_MODULES "" CACHE STRING
     "Semicolon separated list of extra lit modules in use")
