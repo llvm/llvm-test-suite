@@ -1,2 +1,3 @@
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.txt)
+set(RUN_OPTIONS input.txt)
 llvm_multisource(uuencode)
+llvm_test_data(uuencode input.txt)

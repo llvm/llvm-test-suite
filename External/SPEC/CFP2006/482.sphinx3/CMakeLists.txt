@@ -5,24 +5,24 @@ list(APPEND CFLAGS -fsigned-char)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     ctlfile . args.an4
     > ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/an4.log
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r .0004
-    ${BENCHMARK_DIR}/data/${run_type}/output/considered.out
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/considered.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r .0004
+    data/${run_type}/output/considered.out
+    data/${run_type}/input/considered.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r 1e-6
-    ${BENCHMARK_DIR}/data/${run_type}/output/total_considered.out
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/total_considered.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r 1e-6
+    data/${run_type}/output/total_considered.out
+    data/${run_type}/input/total_considered.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r .001
-    ${BENCHMARK_DIR}/data/${run_type}/output/an4.log
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/an4.log
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r .001
+    data/${run_type}/output/an4.log
+    data/${run_type}/input/an4.log
   )
 endmacro()
 
@@ -37,16 +37,15 @@ foreach(s ${Source})
   set_source_files_properties(${s} PROPERTIES COMPILE_DEFINITIONS __FILE__="${basename}")
 endforeach()
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(482.sphinx3 ${Source})
 
-include(CopyDir)
 macro(prepare_data run_type)
   set(DESTDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input)
-  llvm_copy_dir(${PROG} ${DESTDIR}/model
+  llvm_copy_dir(482.sphinx3 ${DESTDIR}/model
     ${BENCHMARK_DIR}/data/all/input/model
   )
-  llvm_copy(${PROG} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/args.an4)
-  llvm_copy(${PROG} ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/beams.dat)
+  llvm_copy(482.sphinx3 ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/args.an4)
+  llvm_copy(482.sphinx3 ${DESTDIR} ${BENCHMARK_DIR}/data/${run_type}/input/beams.dat)
   # Create ctlfile and copy .raw files depending on endianess
   if(IS_BIGENDIAN)
     file(GLOB files "${BENCHMARK_DIR}/data/${run_type}/input/*.be.raw")
@@ -58,7 +57,7 @@ macro(prepare_data run_type)
   foreach(f ${files})
     get_filename_component(basename ${f} NAME)
     string(REGEX REPLACE ".(be|le).raw$" "" basename "${basename}")
-    llvm_copy(${PROG} ${DESTDIR}/${basename}.raw ${f})
+    llvm_copy(482.sphinx3 ${DESTDIR}/${basename}.raw ${f})
     # Determine file size...
     file(READ ${f} content HEX)
     string(LENGTH ${content} content_length)
@@ -72,6 +71,11 @@ endmacro()
 prepare_data(test)
 prepare_data(train)
 prepare_data(ref)
+llvm_test_data_spec(482.sphinx3 MUST_COPY
+  data/test/output
+  data/train/output
+  data/ref/output
+)
 
 # Data comes with *.test files which should not be read by lit.
 file(GENERATE

@@ -1,3 +1,4 @@
-set(RUN_OPTIONS -2 int ${CMAKE_CURRENT_SOURCE_DIR}/InstructionCombining.cpp.txt)
+set(RUN_OPTIONS -2 int InstructionCombining.cpp.txt)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource(agrep)
+llvm_test_data(agrep InstructionCombining.cpp.txt)

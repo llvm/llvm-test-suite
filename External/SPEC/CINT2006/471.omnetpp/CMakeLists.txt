@@ -97,19 +97,19 @@ endforeach()
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
-    -f ${BENCHMARK_DIR}/data/${run_type}/input/omnetpp.ini
-    > ${CMAKE_CURRENT_BINARY_DIR}/omnetpp.log
+    -f data/${run_type}/input/omnetpp.ini
+    > omnetpp.log
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r 0.00001 -a 0.000001
-    ${BENCHMARK_DIR}/data/${run_type}/output/omnetpp.log
-    ${CMAKE_CURRENT_BINARY_DIR}/omnetpp.log
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r 0.00001 -a 0.000001
+    data/${run_type}/output/omnetpp.log
+    omnetpp.log
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r 0.00001 -a 0.000001
-    ${BENCHMARK_DIR}/data/${run_type}/output/omnetpp.sca
-    ${CMAKE_CURRENT_BINARY_DIR}/omnetpp.sca
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r 0.00001 -a 0.000001
+    data/${run_type}/output/omnetpp.sca
+    omnetpp.sca
   )
 endmacro()
 
@@ -117,4 +117,5 @@ test_input(test)
 test_input(train)
 test_input(ref)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(471.omnetpp ${Source})
+llvm_test_data_spec_default(471.omnetpp)

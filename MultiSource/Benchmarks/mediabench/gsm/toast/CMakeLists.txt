@@ -1,4 +1,4 @@
-set(RUN_OPTIONS -cpl ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.pcm)
+set(RUN_OPTIONS -cpl clinton.pcm)
 list(APPEND CPPFLAGS -DNeedFunctionPrototypes=1 -DSASR)
 llvm_multisource(toast
   add.c
@@ -24,4 +24,7 @@ llvm_multisource(toast
   gsm_implode.c
   preprocess.c
   toast_audio.c
+)
+llvm_test_data(toast SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../data
+  clinton.pcm
 )

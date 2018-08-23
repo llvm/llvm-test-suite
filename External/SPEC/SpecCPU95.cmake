@@ -18,8 +18,15 @@ if(TEST_SUITE_SPEC95_ROOT)
 
   macro(cint95_subdir BENCHMARK)
     set(BENCHMARK_DIR ${TEST_SUITE_SPEC95_ROOT}/benchspec/CINT95/${BENCHMARK})
-    set(PROG ${BENCHMARK})
     file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp)
     add_subdirectory(${BENCHMARK})
   endmacro()
+
+  function(llvm_test_data_spec target)
+    llvm_test_data(${target} SOURCE_DIR ${BENCHMARK_DIR} ${ARGN})
+  endfunction()
+
+  function(llvm_test_data_spec_default target)
+    llvm_test_data_spec(${target} data)
+  endfunction()
 endif()

@@ -25,4 +25,12 @@ if(TEST_SUITE_SPEC2000_ROOT)
     # Work around built in -Werror=implicit-function-declaration default on iOS
     list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
   endif()
+
+  function(llvm_test_data_spec target)
+    llvm_test_data(${target} SOURCE_DIR ${BENCHMARK_DIR} ${ARGN})
+  endfunction()
+
+  function(llvm_test_data_spec_default target)
+    llvm_test_data_spec(${target} data)
+  endfunction()
 endif()

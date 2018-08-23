@@ -1,4 +1,4 @@
-set(RUN_OPTIONS -f ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/adj.awk type=l linelen=70 indent=5 ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/words-large.awk)
+set(RUN_OPTIONS -f INPUT/adj.awk type=l linelen=70 indent=5 INPUT/words-large.awk)
 list(APPEND LDFLAGS -lm)
 list(APPEND CPPFLAGS -DBCOPY_MISSING -DSPRINTF_INT -DDOPRNT_MISSING  -DGCVT_MISSING -DSTRCASE_MISSING -DSTRTOD_MISSING  -DTMPNAM_MISSING)
 
@@ -16,3 +16,4 @@ llvm_multisource(gawk
   io.c
   node.c
 )
+llvm_test_data(gawk INPUT/adj.awk INPUT/words-large.awk)

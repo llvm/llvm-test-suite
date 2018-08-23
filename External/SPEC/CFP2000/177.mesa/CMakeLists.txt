@@ -67,14 +67,11 @@ macro(test_input run_type frames)
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     -frames ${frames} -meshfile mesa.in -ppmfile mesa.ppm
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/mesa.log
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/mesa.log
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/mesa.log data/${run_type}/input/mesa.log
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a 6.0
-    ${BENCHMARK_DIR}/data/${run_type}/output/mesa.ppm
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/mesa.ppm
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -a 6.0 data/${run_type}/output/mesa.ppm data/${run_type}/input/mesa.ppm
   )
 endmacro()
 
@@ -82,9 +79,5 @@ test_input(test 10)
 test_input(train 500)
 test_input(ref 1000)
 
-llvm_test_executable(${PROG} ${Source})
-
-# The benchmark writes the output where the input files are, so we have to
-# copy the data over.
-include(CopyDir)
-llvm_copy_dir(177.mesa ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)
+llvm_test_executable(177.mesa ${Source})
+llvm_test_data_spec(177.mesa MUST_COPY data)

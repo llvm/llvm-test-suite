@@ -7,8 +7,10 @@ if(TEST_SUITE_SKIDMARKS10_ROOT)
     list(APPEND CFLAGS -msse3)
   endif()
 
-  llvm_test_run(0 ${TEST_SUITE_SKIDMARKS10_ROOT}/golden
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
+  llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    0 golden
+  )
   file(GLOB SOURCES ${TEST_SUITE_SKIDMARKS10_ROOT}/source/*.c)
   llvm_test_executable(skidmarks ${SOURCES})
+  llvm_test_data(skidmarks SOURCE_DIR ${TEST_SUITE_SKIDMARKS10_ROOT} golden)
 endif()

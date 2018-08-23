@@ -17,16 +17,14 @@ foreach(FILENAME ${SourceNames})
 endforeach()
 
 macro(test_input run_type iters)
-  llvm_test_run(RUN_TYPE ${run_type}
-    --input ${BENCHMARK_DIR}/data/all/input/namd.input
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    --input data/all/input/namd.input
     --iterations ${iters}
-    --output ${CMAKE_CURRENT_BINARY_DIR}/namd.out
-    > ${CMAKE_CURRENT_BINARY_DIR}/namd.stdout
+    --output namd.out
+    > namd.stdout
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a 0.00001
-    ${BENCHMARK_DIR}/data/${run_type}/output/namd.out
-    ${CMAKE_CURRENT_BINARY_DIR}/namd.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -a 0.00001 data/${run_type}/output/namd.out namd.out
   )
 endmacro()
 
@@ -34,4 +32,5 @@ test_input(test 1)
 test_input(train 1)
 test_input(ref 38)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(444.namd ${Source})
+llvm_test_data_spec_default(444.namd)

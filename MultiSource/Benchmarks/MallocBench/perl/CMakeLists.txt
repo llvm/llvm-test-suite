@@ -1,6 +1,6 @@
 list(APPEND CPPFLAGS -DHAS_STRERROR -DHAS_MKDIR -DHAS_RMDIR -U_POSIX_SOURCE -D__USE_MISC)
 list(APPEND LDFLAGS -lm -lcrypt)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/endsort.perl ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/endsort.perl)
+set(RUN_OPTIONS INPUT/endsort.perl INPUT/endsort.perl)
 llvm_multisource(perl
   array.c
   doarg.c
@@ -24,3 +24,4 @@ llvm_multisource(perl
   regcomp.c
   toke.c
 )
+llvm_test_data(perl INPUT)

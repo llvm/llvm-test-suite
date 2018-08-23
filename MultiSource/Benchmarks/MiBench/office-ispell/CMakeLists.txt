@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -Dconst=)
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS -a -d ${CMAKE_CURRENT_SOURCE_DIR}/americanmed+ < ${CMAKE_CURRENT_SOURCE_DIR}/large.txt)
+set(RUN_OPTIONS -a -d americanmed+ < large.txt)
 llvm_multisource(office-ispell)
+llvm_test_data(office-ispell americanmed+.hash large.txt)

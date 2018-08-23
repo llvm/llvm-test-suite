@@ -12,14 +12,13 @@ include_directories(${BENCHMARK_DIR}/src/include)
 
 macro(test_input run_type tstfile outfile)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
     --quiet --mode gtp
-    < ${BENCHMARK_DIR}/data/${run_type}/input/${tstfile}
+    < ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/${tstfile}
     > ${CMAKE_CURRENT_BINARY_DIR}/${outfile}
-    WORKDIR ${BENCHMARK_DIR}/data/all/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${outfile}
-    ${CMAKE_CURRENT_BINARY_DIR}/${outfile}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${outfile} ${outfile}
   )
 endmacro()
 
@@ -41,4 +40,5 @@ foreach(tstfile IN ITEMS
   test_input(ref ${tstfile} ${basename}.out)
 endforeach()
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(445.gobmk ${Source})
+llvm_test_data_spec_default(445.gobmk)

@@ -1,7 +1,6 @@
 list(APPEND CPPFLAGS -DLLVM)
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS -b 62 -g 0.100 -f 2.00 -h 0.100 -L < ${CMAKE_CURRENT_SOURCE_DIR}/pyruvate_decarboxylase.fasta)
-set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
+set(RUN_OPTIONS -b 62 -g 0.100 -f 2.00 -h 0.100 -L < pyruvate_decarboxylase.fasta)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource(pairlocalalign
   Calignm1.c
@@ -32,3 +31,4 @@ llvm_multisource(pairlocalalign
   suboptalign11.c
   tddis.c
 )
+llvm_test_data(pairlocalalign pyruvate_decarboxylase.fasta)

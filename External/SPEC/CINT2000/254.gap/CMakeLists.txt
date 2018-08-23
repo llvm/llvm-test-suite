@@ -13,15 +13,13 @@ endif()
 LIST(APPEND CFLAGS -fwrapv)
 
 macro(test_input run_type heapsize)
-  llvm_test_run(RUN_TYPE ${run_type}
-    -l ${BENCHMARK_DIR}/data/all/input -q -m ${heapsize}
-    < ${BENCHMARK_DIR}/data/${run_type}/input/${run_type}.in
-    > ${CMAKE_CURRENT_BINARY_DIR}/${run_type}.out
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    -l data/all/input -q -m ${heapsize}
+    < data/${run_type}/input/${run_type}.in
+    > ${run_type}.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r 0.01
-    ${BENCHMARK_DIR}/data/${run_type}/output/${run_type}.out
-    ${CMAKE_CURRENT_BINARY_DIR}/${run_type}.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r 0.01 data/${run_type}/output/${run_type}.out ${run_type}.out
   )
 endmacro()
 
@@ -29,4 +27,5 @@ test_input(ref 192M)
 test_input(train 128M)
 test_input(test 64M)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(254.gap ${Source})
+llvm_test_data_spec_default(254.gap)

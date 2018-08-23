@@ -51,8 +51,15 @@ if(TEST_SUITE_SPEC2006_ROOT)
 
   macro(cpu2006_subdir BENCHMARK)
     set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
-    set(PROG ${BENCHMARK})
     file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp ${BENCHMARK_DIR}/src/*.cc)
     add_subdirectory(${BENCHMARK})
   endmacro()
+
+  function(llvm_test_data_spec target)
+    llvm_test_data(${target} SOURCE_DIR ${BENCHMARK_DIR} ${ARGN})
+  endfunction()
+
+  function(llvm_test_data_spec_default target)
+    llvm_test_data_spec(${target} data)
+  endfunction()
 endif()

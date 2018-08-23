@@ -21,17 +21,18 @@ if(TEST_SUITE_POVRAY_ROOT)
   )
   list(APPEND LDFLAGS -lz -lm)
 
-  llvm_test_run(
-    -I${TEST_SUITE_POVRAY_ROOT}/scenes/advanced/chess2.pov
-    -L${TEST_SUITE_POVRAY_ROOT}/include
+  llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    -Iscenes/advanced/chess2.pov
+    -Linclude
     -GA/dev/null -O-
   )
-  llvm_test_verify(${FPCMP}
-    %o
-    ${CMAKE_CURRENT_SOURCE_DIR}/povray.reference_output
+  llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} %o povray.reference_output
   )
 
   llvm_test_executable(povray ${Source})
+  llvm_test_data(povray povray.reference_output)
+  llvm_test_data(povray SOURCE_DIR ${TEST_SUITE_POVRAY_ROOT} scenes include)
 
   file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()

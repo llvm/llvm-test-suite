@@ -6,7 +6,7 @@ else()
   list(APPEND CXXFLAGS -DTARGET_RT_BIG_ENDIAN=1)
 endif()
 list(APPEND LDFLAGS -lstdc++)
-set(RUN_OPTIONS - - < ${CMAKE_CURRENT_SOURCE_DIR}/tune.caf)
+set(RUN_OPTIONS - - < tune.caf)
 llvm_multisource(alacconvert-decode
   EndianPortable.c
   ALACBitUtilities.c
@@ -21,3 +21,4 @@ llvm_multisource(alacconvert-decode
   main.cpp
   CAFFileALAC.cpp
 )
+llvm_test_data(alacconvert-decode tune.caf)

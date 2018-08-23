@@ -144,7 +144,7 @@ foreach(FILENAME ${SourceNames})
 endforeach()
 
 macro(test_input run_type)
-  set(INPUT_DIR ${BENCHMARK_DIR}/data/${run_type}/input)
+  set(INPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input)
   llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${INPUT_DIR}
     chair.control.cook chair.camera chair.surfaces
     ${CMAKE_CURRENT_BINARY_DIR}/chair.cook.ppm
@@ -164,20 +164,20 @@ macro(test_input run_type)
     ${CMAKE_CURRENT_BINARY_DIR}/pixels_out.kajiya
   )
 
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a 0.005
-    ${BENCHMARK_DIR}/data/${run_type}/output/pixels_out.cook
-    ${CMAKE_CURRENT_BINARY_DIR}/pixels_out.cook
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -a 0.005
+    data/${run_type}/output/pixels_out.cook
+    pixels_out.cook
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a 0.005
-    ${BENCHMARK_DIR}/data/${run_type}/output/pixels_out.rushmeier
-    ${CMAKE_CURRENT_BINARY_DIR}/pixels_out.rushmeier
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -a 0.005
+    data/${run_type}/output/pixels_out.rushmeier
+    pixels_out.rushmeier
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -a 0.005
-    ${BENCHMARK_DIR}/data/${run_type}/output/pixels_out.kajiya
-    ${CMAKE_CURRENT_BINARY_DIR}/pixels_out.kajiya
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -a 0.005
+    data/${run_type}/output/pixels_out.kajiya
+    pixels_out.kajiya
   )
 endmacro()
 
@@ -185,4 +185,5 @@ test_input(ref)
 test_input(train)
 test_input(test)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(252.eon ${Source})
+llvm_test_data_spec_default(252.eon)

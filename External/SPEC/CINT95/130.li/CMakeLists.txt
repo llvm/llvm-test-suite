@@ -4,13 +4,12 @@ add_definitions(-Disnumber=my_isnumber)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     ${ARGN}
     > ${CMAKE_CURRENT_BINARY_DIR}/${run_type}.out
-    WORKDIR ${BENCHMARK_DIR}/data/${run_type}/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${run_type}.out
-    ${CMAKE_CURRENT_BINARY_DIR}/${run_type}.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${run_type}.out ${run_type}.out
   )
 endmacro()
 
@@ -21,4 +20,5 @@ test_input(ref au.lsp boyer.lsp browse.lsp ctak.lsp dderiv.lsp deriv.lsp
                destrum1.lsp destrum2.lsp div2.lsp puzzle0.lsp puzzle1.lsp
                tak0.lsp tak1.lsp tak2.lsp takr.lsp triang.lsp xit.lsp)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(130.li ${Source})
+llvm_test_data_spec_default(130.li)

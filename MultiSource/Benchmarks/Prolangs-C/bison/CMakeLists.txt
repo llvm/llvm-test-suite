@@ -1,2 +1,3 @@
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/parse.y.in -v)
+set(RUN_OPTIONS parse.y.in -v)
 llvm_multisource(mybison)
+llvm_test_data(mybison parse.y.in)

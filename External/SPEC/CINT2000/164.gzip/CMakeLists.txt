@@ -1,12 +1,9 @@
 macro(test_input run_type filename size)
-  llvm_test_run(RUN_TYPE ${run_type}
-    ${BENCHMARK_DIR}/data/${run_type}/input/${filename}
-    ${size}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${filename}.out
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    data/${run_type}/input/${filename} ${size} > ${filename}.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${filename}.out
-    ${CMAKE_CURRENT_BINARY_DIR}/${filename}.out
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${filename}.out ${filename}.out
   )
 endmacro()
 
@@ -18,4 +15,5 @@ test_input(ref input.graphic 60)
 test_input(ref input.random 60)
 test_input(ref input.program 60)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(164.gzip ${Source})
+llvm_test_data_spec_default(164.gzip)

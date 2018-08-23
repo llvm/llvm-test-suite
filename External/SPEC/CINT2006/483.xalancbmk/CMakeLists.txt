@@ -32,14 +32,12 @@ endif()
 
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     -v ${input} xalanc.xsl
     > ${CMAKE_CURRENT_BINARY_DIR}/${output}
-    WORKDIR ${BENCHMARK_DIR}/data/${run_type}/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    -r 0.001
-    ${BENCHMARK_DIR}/data/${run_type}/output/${output}
-    ${CMAKE_CURRENT_BINARY_DIR}/${output}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} -r 0.001 data/${run_type}/output/${output} ${output}
   )
 endmacro()
 
@@ -47,4 +45,5 @@ test_input(test test.xml test.out)
 test_input(train allbooks.xml train.out)
 test_input(ref t5.xml ref.out)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(483.xalancbmk ${Source})
+llvm_test_data_spec_default(483.xalancbmk)

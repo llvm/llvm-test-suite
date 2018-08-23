@@ -1,5 +1,5 @@
 list(APPEND CPPFLAGS -DHAVE_SIGLIST -DNO_LDAV -DNOMEMOPT -DPOSIX)
-set(RUN_OPTIONS -n -f ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/GNUmakefile.make USEROPT=BWGC VPATH=${CMAKE_CURRENT_SOURCE_DIR})
+set(RUN_OPTIONS -n -f INPUT/GNUmakefile.make USEROPT=BWGC)
 llvm_multisource(make
   commands.c
   job.c
@@ -22,3 +22,4 @@ llvm_multisource(make
   arscan.c
   ar.c
 )
+llvm_test_data(make INPUT/GNUmakefile.make)

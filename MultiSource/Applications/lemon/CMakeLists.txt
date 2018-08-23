@@ -1,5 +1,7 @@
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
-  set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/parse.y ${CMAKE_CURRENT_SOURCE_DIR}/example1.y ${CMAKE_CURRENT_SOURCE_DIR}/example2.y ${CMAKE_CURRENT_SOURCE_DIR}/example3.y ${CMAKE_CURRENT_SOURCE_DIR}/example4.y ${CMAKE_CURRENT_SOURCE_DIR}/example5.y ${CMAKE_CURRENT_SOURCE_DIR}/lighttpd_configparser.y ${CMAKE_CURRENT_SOURCE_DIR}/lighttpd_mod_ssi_exprparser.y ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_dtd_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/wireshark_mate_grammar.lemon ${CMAKE_CURRENT_SOURCE_DIR}/xapian_queryparser.lemony ${CMAKE_CURRENT_SOURCE_DIR}/ecmascript.y)
+  set(INPUTS parse.y example1.y example2.y example3.y example4.y example5.y lighttpd_configparser.y lighttpd_mod_ssi_exprparser.y wireshark_dtd_grammar.lemon wireshark_grammar.lemon wireshark_mate_grammar.lemon xapian_queryparser.lemony ecmascript.y)
+  set(RUN_OPTIONS ${INPUTS})
   set(HASH_PROGRAM_OUTPUT 1)
   llvm_multisource(lemon lemon.c)
+  llvm_test_data(lemon ${INPUTS} lempar.c)
 endif()

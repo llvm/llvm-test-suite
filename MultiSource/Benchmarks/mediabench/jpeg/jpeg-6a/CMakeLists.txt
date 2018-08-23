@@ -1,4 +1,4 @@
-set(RUN_OPTIONS -dct int -progressive -opt ${CMAKE_CURRENT_SOURCE_DIR}/../data/testimg.ppm)
+set(RUN_OPTIONS -dct int -progressive -opt testimg.ppm)
 llvm_multisource(cjpeg
   jcapimin.c
   jcapistd.c
@@ -54,4 +54,7 @@ llvm_multisource(cjpeg
   rdbmp.c
   rdswitch.c
   cdjpeg.c
+)
+llvm_test_data(cjpeg SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../data
+  testimg.ppm
 )

@@ -3,7 +3,6 @@ if(NOT ARCH STREQUAL "XCore")
   list(APPEND CPPFLAGS -DLUA_USE_POSIX)
 endif()
 set(RUN_OPTIONS alltests.lua "")
-set(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 set(HASH_PROGRAM_OUTPUT 1)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/generate_inputs.sh

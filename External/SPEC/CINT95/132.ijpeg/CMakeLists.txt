@@ -72,6 +72,7 @@ endforeach()
 
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     -image_file ${input}
     -compression.quality 90
     -compression.optimize_coding 0
@@ -82,11 +83,9 @@ macro(test_input run_type input output)
     -verbose 1
     -GO.findoptcomp
     > ${CMAKE_CURRENT_BINARY_DIR}/${output}
-    WORKDIR ${BENCHMARK_DIR}/data/${run_type}/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${output}
-    ${CMAKE_CURRENT_BINARY_DIR}/${output}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${output} ${output}
   )
 endmacro()
 
@@ -96,4 +95,5 @@ test_input(ref penguin.ppm penguin.out)
 test_input(ref specmun.ppm specmun.out)
 test_input(ref vigo.ppm vigo.out)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(132.ijpeg ${Source})
+llvm_test_data_spec_default(132.ijpeg)

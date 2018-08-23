@@ -1,24 +1,24 @@
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
 
 set(INPUT
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.cab
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clamdoc.tar.gz
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.exe.bz2
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v2.rar
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam-v3.rar
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/clam.zip
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/README
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc11.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc1.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc22.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/Doc2.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/doc3.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/docCLAMexe.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf1.rtf
-  ${CMAKE_CURRENT_SOURCE_DIR}/inputs/rtf-test/rtf-novirus.rtf
+  inputs/clam.cab
+  inputs/clamdoc.tar.gz
+  inputs/clam.exe
+  inputs/clam.exe.bz2
+  inputs/clam-v2.rar
+  inputs/clam-v3.rar
+  inputs/clam.zip
+  inputs/README
+  inputs/rtf-test/Doc11.rtf
+  inputs/rtf-test/Doc1.rtf
+  inputs/rtf-test/Doc22.rtf
+  inputs/rtf-test/Doc2.rtf
+  inputs/rtf-test/doc3.rtf
+  inputs/rtf-test/docCLAMexe.rtf
+  inputs/rtf-test/rtf1.rtf
+  inputs/rtf-test/rtf-novirus.rtf
 )
-set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_SOURCE_DIR}/dbdir -r ${INPUT})
+set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_BINARY_DIR}/dbdir -r ${INPUT})
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -DC_DARWIN)
 endif()
@@ -170,3 +170,4 @@ llvm_multisource(clamscan
   zlib_uncompr.c
   zlib_zutil.c
 )
+llvm_test_data(clamscan ${INPUT} dbdir)

@@ -1,12 +1,11 @@
 macro(test_input run_type input output size0 size1)
   llvm_test_run(RUN_TYPE ${run_type}
+    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
     ${size0} ${size1} ${input}
     > ${CMAKE_CURRENT_BINARY_DIR}/${output}
-    WORKDIR ${BENCHMARK_DIR}/data/${run_type}/input
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${output}
-    ${CMAKE_CURRENT_BINARY_DIR}/${output}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${output} ${output}
   )
 endmacro()
 
@@ -16,4 +15,5 @@ test_input(ref 5stone21.in 5stone21.out 50 21)
 test_input(ref 9stone21.in 9stone21.out 50 21)
 test_input(ref null.in null.out 50 21)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(099.go ${Source})
+llvm_test_data_spec_default(099.go)

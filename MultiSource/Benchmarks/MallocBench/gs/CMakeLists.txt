@@ -1,8 +1,8 @@
 list(APPEND LDFLAGS -lm)
-list(APPEND CPPFLAGS -DNOMEMOPT -DGS_LIB_DEFAULT="${CMAKE_CURRENT_SOURCE_DIR}:${CMAKE_CURRENT_SOURCE_DIR}/fonts")
+list(APPEND CPPFLAGS -DNOMEMOPT -DGS_LIB_DEFAULT=".:./fonts")
 list(APPEND CFLAGS -Wno-implicit-function-declaration)
 list(APPEND CPPFLAGS -DNOPRIVATE)
-set(RUN_OPTIONS -DNODISPLAY ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/large.ps)
+set(RUN_OPTIONS -DNODISPLAY INPUT/large.ps)
 llvm_multisource(gs
   gs.c
   gsmain.c
@@ -68,4 +68,30 @@ llvm_multisource(gs
   gxstroke.c
   gdevmem.c
   gdevs.c
+)
+llvm_test_data(gs
+  INPUT/large.ps
+  Fontmap
+  alphabet.ps
+  copyleft.ps
+  fcutils.ps
+  golfer.ps
+  prfont.ps
+  statusd.ps
+  bdftops.ps
+  decrypt.ps
+  gfonts.ps
+  lines.ps
+  ps2image.ps
+  traceop.ps
+  cheq.ps
+  empty.ps
+  ghost.ps
+  pcharstr.ps
+  pstoppm.ps
+  chess.ps
+  escher.ps
+  ghost2.ps
+  ppath.ps
+  quit.ps
 )

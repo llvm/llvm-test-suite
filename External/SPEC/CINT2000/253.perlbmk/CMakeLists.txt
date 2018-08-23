@@ -72,96 +72,81 @@ endforeach()
 
 macro(test_input run_type perlscript output)
   llvm_test_run(RUN_TYPE ${run_type}
-    -I${BENCHMARK_DIR}/data/all/input/lib ${perlscript}
+    -I${CMAKE_CURRENT_BINARY_DIR}/data/all/input/lib ${perlscript}
     > ${CMAKE_CURRENT_BINARY_DIR}/${output}
     ${ARGN}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${output}
-    ${CMAKE_CURRENT_BINARY_DIR}/${output}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${output} ${output}
   )
 endmacro()
 
 # (Parameters come from the respective XXX.in files)
 test_input(train
-  ${BENCHMARK_DIR}/data/all/input/diffmail.pl
-  2.350.15.24.23.150.out
-  2 350 15 24 23 150
-  WORKDIR ${BENCHMARK_DIR}/data/all/input
+  diffmail.pl 2.350.15.24.23.150.out 2 350 15 24 23 150
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
 )
 test_input(train
-  ${BENCHMARK_DIR}/data/all/input/perfect.pl
-  b.3.out
-  b 3
-  WORKDIR ${BENCHMARK_DIR}/data/all/input
+  perfect.pl b.3.out b 3
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
 )
 test_input(train
-  ${BENCHMARK_DIR}/data/train/input/scrabbl.pl
-  scrabbl.out
-  < ${BENCHMARK_DIR}/data/train/input/scrabbl.in
-  WORKDIR ${BENCHMARK_DIR}/data/train/input
+  scrabbl.pl scrabbl.out < scrabbl.in
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/train/input
 )
 
 test_input(ref
-  ${BENCHMARK_DIR}/data/ref/input/splitmail.pl
-  850.5.19.18.1500.out
-  850 5 19 18 1500
+  splitmail.pl 850.5.19.18.1500.out 850 5 19 18 1500
   WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/ref/input/splitmail.pl
-  704.12.26.16.836.out
-  704 12 26 16 836
+  splitmail.pl 704.12.26.16.836.out 704 12 26 16 836
   WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/ref/input/splitmail.pl
-  535.13.25.24.1091.out
-  535 13 25 24 1091
+  splitmail.pl 535.13.25.24.1091.out 535 13 25 24 1091
   WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/ref/input/splitmail.pl
-  957.12.23.26.1014.out
-  957 12 23 26 1014
+  splitmail.pl 957.12.23.26.1014.out 957 12 23 26 1014
   WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/all/input/diffmail.pl
-  2.550.15.24.23.100.out
-  2 550 15 24 23 100
-  WORKDIR ${BENCHMARK_DIR}/data/all/input
+  diffmail.pl 2.550.15.24.23.100.out 2 550 15 24 23 100
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/all/input/perfect.pl
-  b.3.m.4.out
-  b 3 m 4
-  WORKDIR ${BENCHMARK_DIR}/data/all/input
+  perfect.pl b.3.m.4.out b 3 m 4
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 test_input(ref
-  ${BENCHMARK_DIR}/data/ref/input/makerand.pl
-  makerand.out
-  WORKDIR ${BENCHMARK_DIR}/data/all/input
+  makerand.pl makerand.out
+  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
 )
 
 file(GLOB inputs ${BENCHMARK_DIR}/data/test/input/*.t)
 foreach(input ${inputs})
   get_filename_component(basename ${input} NAME_WE)
   test_input(test
-    ${CMAKE_CURRENT_BINARY_DIR}/data/test/input/${basename}.t
-    ${basename}.out
+    ${basename}.t ${basename}.out
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
   )
 endforeach()
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(253.perlbmk ${Source})
+llvm_test_data_spec(253.perlbmk MUST_COPY
+  data/test/output
+  data/train/input
+  data/train/output
+  data/ref/output
+  data/all/input
+)
 
-include(CopyDir)
-llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
+llvm_copy_dir(253.perlbmk ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
   ${BENCHMARK_DIR}/data/all/input
   ${BENCHMARK_DIR}/data/test/input
 )
-llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+llvm_copy_dir(253.perlbmk ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
   ${BENCHMARK_DIR}/data/all/input
   ${BENCHMARK_DIR}/data/ref/input
 )

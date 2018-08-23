@@ -68,9 +68,8 @@ endmacro()
 # HASH_PROGRAM_OUTPUT, etc.
 # Create llvm_test_run() and llvm_test_verify() invocation for that.
 function(llvm_test_traditional name)
-  if(WORKDIR)
-    list(APPEND RUN_OPTIONS WORKDIR ${WORKDIR})
-  endif()
+  # Always run in the same directory as the executable
+  list(INSERT RUN_OPTIONS 0 WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
   llvm_test_run(${RUN_OPTIONS})
 
   # Hash if we've been asked to.

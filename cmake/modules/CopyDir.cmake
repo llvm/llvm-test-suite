@@ -15,3 +15,17 @@ function(llvm_copy target to from)
     COMMAND ${CMAKE_COMMAND} -E copy ${from} ${to}
   )
 endfunction()
+
+function(llvm_create_symlink target to from)
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${from} ${to}
+  )
+endfunction()
+
+function(llvm_make_directory target)
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${ARGN}
+  )
+endfunction()

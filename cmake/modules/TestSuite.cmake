@@ -4,6 +4,35 @@
 #
 ##===----------------------------------------------------------------------===##
 include(TestFile)
+include(CopyDir)
+
+# Copies files and directories to be used as benchmark input data to the
+# directory of the benchmark executable.
+# Paths are interepreted relative to CMAKE_CURRENT_SOURCE_DIR by default but
+# this can be changed with the SOURCE_DIR argument.
+function(llvm_test_data target)
+  cmake_parse_arguments(_LTDARGS "MUST_COPY" "SOURCE_DIR" "" ${ARGN})
+  set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+  if(_LTDARGS_SOURCE_DIR)
+    set(SOURCE_DIR ${_LTDARGS_SOURCE_DIR})
+  endif()
+  foreach(file ${_LTDARGS_UNPARSED_ARGUMENTS})
+    set(full_path ${SOURCE_DIR}/${file})
+    if(_LTDARGS_MUST_COPY)
+      if(IS_DIRECTORY ${full_path})
+        llvm_copy_dir(${target} $<TARGET_FILE_DIR:${target}>/${file} ${full_path})
+      else()
+        llvm_copy(${target} $<TARGET_FILE_DIR:${target}>/${file} ${full_path})
+      endif()
+    else()
+      get_filename_component(file_subdir ${file} DIRECTORY)
+      if(file_subdir)
+        llvm_make_directory(${target} ${file_subdir})
+      endif()
+      llvm_create_symlink(${target} $<TARGET_FILE_DIR:${target}>/${file} ${full_path})
+    endif()
+  endforeach()
+endfunction()
 
 # Creates a new executable build target. Use this instead of `add_executable`.
 # It applies CFLAGS, CPPFLAGS, CXXFLAGS and LDFLAGS. Creates a .test file if

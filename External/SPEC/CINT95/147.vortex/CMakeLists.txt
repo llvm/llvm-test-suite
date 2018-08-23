@@ -11,12 +11,13 @@ endif()
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
-    ${INPUTNAME}
     WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    ${INPUTNAME}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/vortex.out
-    ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/vortex.out
+llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP}
+    data/${run_type}/output/vortex.out
+    data/${run_type}/input/vortex.out
   )
 endmacro()
 
@@ -24,9 +25,5 @@ test_input(test)
 test_input(train)
 test_input(ref)
 
-llvm_test_executable(${PROG} ${Source})
-
-# The benchmark writes the output where the input files are, so we have to
-# copy the data over.
-include(CopyDir)
-llvm_copy_dir(${PROG} ${CMAKE_CURRENT_BINARY_DIR}/data ${BENCHMARK_DIR}/data)
+llvm_test_executable(147.vortex ${Source})
+llvm_test_data_spec(147.vortex MUST_COPY data)

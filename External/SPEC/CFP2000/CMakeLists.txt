@@ -4,7 +4,6 @@ if(TEST_SUITE_SPEC2000_ROOT)
 
   macro(cfp2000_subdir BENCHMARK)
     set(BENCHMARK_DIR ${TEST_SUITE_SPEC2000_ROOT}/benchspec/CFP2000/${BENCHMARK})
-    set(PROG ${BENCHMARK})
     file(GLOB Source ${BENCHMARK_DIR}/src/*.c ${BENCHMARK_DIR}/src/*.cpp)
     add_subdirectory(${BENCHMARK})
   endmacro()

@@ -1,2 +1,3 @@
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/words 2 < ${CMAKE_CURRENT_SOURCE_DIR}/input.OUT)
+set(RUN_OPTIONS words 2 < input.OUT)
 llvm_multisource(anagram)
+llvm_test_data(anagram words input.OUT)

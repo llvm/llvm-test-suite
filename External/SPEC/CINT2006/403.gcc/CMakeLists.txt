@@ -11,13 +11,11 @@ endif()
 list(APPEND CPPFLAGS -DPOSIX -DSPEC_CPU_HAVE_BOOL)
 
 macro(test_input run_type ifile sfile)
-  llvm_test_run(RUN_TYPE ${run_type}
-    ${BENCHMARK_DIR}/data/${run_type}/input/${ifile}
-    -o ${CMAKE_CURRENT_BINARY_DIR}/${sfile}
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    data/${run_type}/input/${ifile} -o ${sfile}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} ${FPCMP}
-    ${BENCHMARK_DIR}/data/${run_type}/output/${sfile}
-    ${CMAKE_CURRENT_BINARY_DIR}/${sfile}
+  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${FPCMP} data/${run_type}/output/${sfile} ${sfile}
   )
 endmacro()
 
@@ -33,4 +31,5 @@ test_input(ref g23.in g23.s)
 test_input(ref s04.in s04.s)
 test_input(ref scilab.in scilab.s)
 
-llvm_test_executable(${PROG} ${Source})
+llvm_test_executable(403.gcc ${Source})
+llvm_test_data_spec_default(403.gcc)

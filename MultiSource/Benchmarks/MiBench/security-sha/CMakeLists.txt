@@ -1,3 +1,4 @@
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input_large.asc )
+set(RUN_OPTIONS input_large.asc)
 llvm_multisource(security-sha)
+llvm_test_data(security-sha input_large.asc)
