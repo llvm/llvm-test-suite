@@ -36,7 +36,7 @@ set(SUPPORTED_GPU_CUDA_9_2
 # Output:
 #    Sets Var=x.y.z
 macro(get_version Var Path)
-    string(REGEX MATCH "[0-9]+(\.[0-9]+)+" ${Var} ${Path})
+    string(REGEX MATCH "[0-9]+(\\.[0-9]+)+" ${Var} ${Path})
 endmacro (get_version)
 
 # Helper function to glob CUDA source files and set LANGUAGE property
@@ -180,7 +180,7 @@ function(create_cuda_test_variant Std VariantSuffix)
   create_local_cuda_tests(${VariantSuffix})
   add_dependencies(cuda-tests-simple cuda-tests-simple-${VariantSuffix})
 
-  if(EXISTS ${THRUST_PATH} AND (NOT ${Std} STREQUAL "c++14"))
+  if(DEFINED THRUST_PATH AND (NOT ${Std} STREQUAL "c++14"))
     create_thrust_tests(${VariantSuffix})
   endif()
 
