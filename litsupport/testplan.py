@@ -21,6 +21,7 @@ class TestPlan(object):
         self.metricscripts = {}
         self.metric_collectors = []
         self.preparescript = []
+        self.profile_files = []
         self.profilescript = []
 
 
@@ -169,3 +170,22 @@ def check_call(commandline, *aargs, **dargs):
     """Wrapper around subprocess.check_call that logs the command."""
     logging.info(" ".join(commandline))
     return subprocess.check_call(commandline, *aargs, **dargs)
+
+
+def default_read_result_file(context, path):
+    with open(path) as fd:
+        return fd.read()
+
+
+class TestContext:
+    """This class is used to hold data used while constructing a testrun.
+    For example this can be used by modules modifying the commandline with
+    extra instrumentation/measurement wrappers to pass the filenames of the
+    results to a final data collection step."""
+    def __init__(self, test, litConfig, tmpDir, tmpBase):
+        self.test = test
+        self.config = test.config
+        self.litConfig = litConfig
+        self.tmpDir = tmpDir
+        self.tmpBase = tmpBase
+        self.read_result_file = default_read_result_file

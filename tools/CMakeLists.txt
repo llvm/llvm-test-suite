@@ -1,10 +1,13 @@
-# Note that we have to compile fpcmp and timeit for the host machine even when
-# cross compiling to a different target. We use custom rules doing a simple
-# "cc file.c".
+# Tools for compiling and running the benchmarks.
+#
+# Note: Tools used while running the benchmark should be (cross-)compiled
+# normally while tools used for building the benchmark need to be built for
+# the host system (even when cross-compiling the benchmark) with
+# `llvm_add_host_executable`.
 
 include(Host)
 
-llvm_add_host_executable(build-fpcmp fpcmp fpcmp.c)
+add_executable(fpcmp fpcmp.c)
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/HashProgramOutput.sh

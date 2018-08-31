@@ -6,6 +6,14 @@
 include(TestFile)
 include(CopyDir)
 
+set(_DEFAULT_TEST_SUITE_COPY_DATA OFF)
+if(TEST_SUITE_REMOTE_HOST)
+  set(_DEFAULT_TEST_SUITE_COPY_DATA ON)
+endif()
+option(TEST_SUITE_COPY_DATA "Always copy benchmark data to builddir"
+       ${_DEFAULT_TEST_SUITE_COPY_DATA})
+mark_as_advanced(TEST_SUITE_COPY_DATA)
+
 # Copies files and directories to be used as benchmark input data to the
 # directory of the benchmark executable.
 # Paths are interepreted relative to CMAKE_CURRENT_SOURCE_DIR by default but
@@ -18,7 +26,7 @@ function(llvm_test_data target)
   endif()
   foreach(file ${_LTDARGS_UNPARSED_ARGUMENTS})
     set(full_path ${SOURCE_DIR}/${file})
-    if(_LTDARGS_MUST_COPY)
+    if(_LTDARGS_MUST_COPY OR TEST_SUITE_COPY_DATA)
       if(IS_DIRECTORY ${full_path})
         llvm_copy_dir(${target} $<TARGET_FILE_DIR:${target}>/${file} ${full_path})
       else()
@@ -87,9 +95,9 @@ endfunction()
 function(test_suite_add_build_dependencies target)
   add_dependencies(${target}
     build-HashProgramOutput.sh
-    build-fpcmp
     build-timeit
     build-timeit-target
+    fpcmp
   )
 endfunction()
 

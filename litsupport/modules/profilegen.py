@@ -20,6 +20,8 @@ def mutatePlan(context, plan):
     context.profilefiles = []
     # Adjust run steps to set LLVM_PROFILE_FILE environment variable.
     plan.runscript = _mutateScript(context, plan.runscript)
+    plan.profile_files += context.profilefiles
+
     # Run profdata merge at the end
     profdatafile = context.executable + ".profdata"
     args = ['merge', '-output=%s' % profdatafile] + context.profilefiles

@@ -24,23 +24,23 @@ def _mutateScript(context, script):
 
 def _collectMicrobenchmarkTime(context, microbenchfiles):
     for f in microbenchfiles:
-        with open(f) as inp:
-            lines = csv.reader(inp)
-            # First line: "name,iterations,real_time,cpu_time,time_unit..."
-            for line in lines:
-                if line[0] == 'name':
-                    continue
-                # Name for MicroBenchmark
-                name = line[0]
-                # Create Result object with PASS
-                microBenchmark = lit.Test.Result(lit.Test.PASS)
+        content = context.read_result_file(context, f)
+        lines = csv.reader(content.splitlines())
+        # First line: "name,iterations,real_time,cpu_time,time_unit..."
+        for line in lines:
+            if line[0] == 'name':
+                continue
+            # Name for MicroBenchmark
+            name = line[0]
+            # Create Result object with PASS
+            microBenchmark = lit.Test.Result(lit.Test.PASS)
 
-                # Index 3 is cpu_time
-                exec_time_metric = lit.Test.toMetricValue(float(line[3]))
-                microBenchmark.addMetric('exec_time', exec_time_metric)
+            # Index 3 is cpu_time
+            exec_time_metric = lit.Test.toMetricValue(float(line[3]))
+            microBenchmark.addMetric('exec_time', exec_time_metric)
 
-                # Add Micro Result
-                context.micro_results[name] = microBenchmark
+            # Add Micro Result
+            context.micro_results[name] = microBenchmark
 
     # returning the number of microbenchmarks collected as a metric for the
     # base test

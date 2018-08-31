@@ -66,6 +66,12 @@ set(TEST_SUITE_REMOTE_CLIENT "ssh" CACHE STRING "Remote execution client")
 set(TEST_SUITE_REMOTE_HOST "" CACHE STRING "Remote execution host")
 mark_as_advanced(TEST_SUITE_REMOTE_CLIENT)
 
+add_custom_target(rsync
+  COMMAND ${PROJECT_SOURCE_DIR}/utils/rsync.sh
+              ${TEST_SUITE_REMOTE_HOST} ${PROJECT_BINARY_DIR}
+  USES_TERMINAL
+)
+
 # Run Under configuration for RunSafely.sh (will be set in lit.site.cfg)
 set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter")
 

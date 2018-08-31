@@ -17,19 +17,6 @@ SKIPPED = lit.Test.ResultCode('SKIPPED', False)
 NOEXE = lit.Test.ResultCode('NOEXE', True)
 
 
-class TestContext:
-    """This class is used to hold data used while constructing a testrun.
-    For example this can be used by modules modifying the commandline with
-    extra instrumentation/measurement wrappers to pass the filenames of the
-    results to a final data collection step."""
-    def __init__(self, test, litConfig, tmpDir, tmpBase):
-        self.test = test
-        self.config = test.config
-        self.litConfig = litConfig
-        self.tmpDir = tmpDir
-        self.tmpBase = tmpBase
-
-
 class TestSuiteTest(lit.formats.ShTest):
     def __init__(self):
         super(TestSuiteTest, self).__init__()
@@ -44,7 +31,8 @@ class TestSuiteTest(lit.formats.ShTest):
         # Parse .test file and initialize context
         tmpDir, tmpBase = lit.TestRunner.getTempPaths(test)
         lit.util.mkdir_p(os.path.dirname(tmpBase))
-        context = TestContext(test, litConfig, tmpDir, tmpBase)
+        context = litsupport.testplan.TestContext(test, litConfig, tmpDir,
+                                                  tmpBase)
         litsupport.testfile.parse(context, test.getSourcePath())
         plan = litsupport.testplan.TestPlan()
 

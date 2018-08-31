@@ -5,7 +5,6 @@ import re
 
 
 def _mutateCommandLine(context, commandline):
-    outfile = context.tmpBase + ".out"
     timefile = context.tmpBase + ".time"
     config = context.config
     cmd = shellcommand.parse(commandline)
@@ -34,6 +33,7 @@ def _mutateCommandLine(context, commandline):
         if cmd.stdout is not None or cmd.stderr is not None:
             raise Exception("Separate stdout/stderr redirection not " +
                             "possible with traditional output")
+        outfile = context.tmpBase + ".out"
         args += ["--append-exitstatus"]
         args += ["--redirect-output", outfile]
     stdin = cmd.stdin
@@ -64,7 +64,8 @@ def _mutateScript(context, script):
 def _collectTime(context, timefiles, metric_name='exec_time'):
     time = 0.0
     for timefile in timefiles:
-        time += getUserTime(timefile)
+        filecontent = context.read_result_file(context, timefile)
+        time += getUserTimeFromContents(filecontent)
     return {metric_name: time}
 
 
@@ -79,9 +80,14 @@ def mutatePlan(context, plan):
 
 
 def getUserTime(filename):
-    """Extract the user time form a .time file produced by timeit"""
+    """Extract the user time from a .time file produced by timeit"""
     with open(filename) as fd:
-        line = [line for line in fd.readlines() if line.startswith('user')]
+        contents = fd.read()
+        return getUserTimeFromContents(contents)
+
+
+def getUserTimeFromContents(contents):
+    line = [line for line in contents.splitlines() if line.startswith('user')]
     assert len(line) == 1
 
     m = re.match(r'user\s+([0-9.]+)', line[0])
