@@ -1,5 +1,4 @@
 """Test module to collect test executable hashsum."""
-from litsupport import shellcommand
 from litsupport import testplan
 import hashlib
 import logging
@@ -24,7 +23,7 @@ def compute(context):
         h = hashlib.md5()
         h.update(open(executable, 'rb').read())
         context.executable_hash = h.hexdigest()
-    except:
+    except Exception:
         logging.info('Could not calculate hash for %s' % executable)
         context.executable_hash = ''
 

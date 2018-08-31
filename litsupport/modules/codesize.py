@@ -22,13 +22,13 @@ def _getCodeSize(context):
             logging.warning("Unexpected output from llvm-size on '%s'",
                             context.executable)
         else:
-            for l in lines[2:]:
-                l = l.strip()
-                if l == "":
+            for line in lines[2:]:
+                line = line.strip()
+                if line == "":
                     continue
-                values = l.split()
+                values = line.split()
                 if len(values) < 2:
-                    logging.info("Ignoring malformed output line: %s", l)
+                    logging.info("Ignoring malformed output line: %s", line)
                     continue
                 if values[0] == 'Total':
                     continue
@@ -36,8 +36,8 @@ def _getCodeSize(context):
                     name = values[0]
                     val = int(values[1])
                     metrics['size.%s' % name] = val
-                except ValueError as e:
-                    logging.info("Ignoring malformed output line: %s", l)
+                except ValueError:
+                    logging.info("Ignoring malformed output line: %s", line)
 
     return metrics
 

@@ -1,7 +1,6 @@
 """
 Datastructures for test plans; Parsing of .test files; Executing test plans.
 """
-from litsupport import shellcommand
 import lit.Test
 import lit.TestRunner
 import logging

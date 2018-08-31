@@ -10,7 +10,6 @@ import litsupport.modules
 import litsupport.modules.hash
 import litsupport.testfile
 import litsupport.testplan
-import logging
 import os
 
 
@@ -38,9 +37,9 @@ class TestSuiteTest(lit.formats.ShTest):
     def execute(self, test, litConfig):
         config = test.config
         if config.unsupported:
-            return lit.Test.Result(Test.UNSUPPORTED, 'Test is unsupported')
+            return lit.Test.Result(lit.Test.UNSUPPORTED, 'Test is unsupported')
         if litConfig.noExecute:
-            return lit.Test.Result(Test.PASS)
+            return lit.Test.Result(lit.Test.PASS)
 
         # Parse .test file and initialize context
         tmpDir, tmpBase = lit.TestRunner.getTempPaths(test)

@@ -36,13 +36,17 @@ def _collectMicrobenchmarkTime(context, microbenchfiles):
                 microBenchmark = lit.Test.Result(lit.Test.PASS)
 
                 # Index 3 is cpu_time
-                microBenchmark.addMetric('exec_time', lit.Test.toMetricValue(float(line[3])))
-              
-                # Add Micro Result 
+                exec_time_metric = lit.Test.toMetricValue(float(line[3]))
+                microBenchmark.addMetric('exec_time', exec_time_metric)
+
+                # Add Micro Result
                 context.micro_results[name] = microBenchmark
 
-    # returning the number of microbenchmarks collected as a metric for the base test
-    return ({'MicroBenchmarks': lit.Test.toMetricValue(len(context.micro_results))})
+    # returning the number of microbenchmarks collected as a metric for the
+    # base test
+    return ({
+        'MicroBenchmarks': lit.Test.toMetricValue(len(context.micro_results))
+    })
 
 
 def mutatePlan(context, plan):

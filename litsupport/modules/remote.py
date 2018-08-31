@@ -20,7 +20,8 @@ def _mutateCommandline(context, commandline, suffix=""):
 
 
 def _mutateScript(context, script, suffix=""):
-    mutate = lambda c, cmd: _mutateCommandline(c, cmd, suffix)
+    def mutate(context, command):
+        return _mutateCommandline(context, command, suffix)
     return testplan.mutateScript(context, script, mutate)
 
 

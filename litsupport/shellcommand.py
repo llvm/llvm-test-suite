@@ -5,7 +5,7 @@ import re
 import os
 try:
         from shlex import quote  # python 3.3 and above
-except:
+except ImportError:
         from pipes import quote  # python 3.2 and earlier
 
 
@@ -35,7 +35,6 @@ class ShellCommand:
         res_list = [self.executable] + self.arguments
         result += " ".join(map(quote, res_list))
 
-        envlist = []
         for key, value in self.envvars.items():
             result += "%s=%s " % (key, quote(value))
 
@@ -71,7 +70,6 @@ def parse(commandline):
     and switching directories upfront. It does not support full posix shell
     and will throw an exception if the commandline uses unsupported features.
     """
-    previous_commands = []
     result = ShellCommand()
     tokens = shlex.split(commandline)
     i = 0
@@ -139,7 +137,7 @@ def getMainExecutable(context):
         return context.executable
 
     executable = None
-    cwd = '.';
+    cwd = '.'
     for line in context.parsed_runscript:
         cmd = parse(line)
         if cmd.workdir is not None:

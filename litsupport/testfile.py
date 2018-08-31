@@ -2,6 +2,7 @@
 from lit.TestRunner import parseIntegratedTestScriptCommands, \
         getDefaultSubstitutions, applySubstitutions
 from litsupport import shellcommand
+import logging
 
 
 def _parseShellCommand(script, ln):
