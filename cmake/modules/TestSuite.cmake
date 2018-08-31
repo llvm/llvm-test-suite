@@ -34,12 +34,7 @@ function(llvm_test_data target)
   endforeach()
 endfunction()
 
-# Creates a new executable build target. Use this instead of `add_executable`.
-# It applies CFLAGS, CPPFLAGS, CXXFLAGS and LDFLAGS. Creates a .test file if
-# necessary, registers the target with the TEST_SUITE_TARGETS list and makes
-# sure we build the required dependencies for compiletime measurements
-# and support the TEST_SUITE_PROFILE_USE mode.
-function(llvm_test_executable target)
+function(llvm_test_executable_no_test target)
   add_executable(${target} ${ARGN})
   append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
   append_target_flags(COMPILE_FLAGS ${target} ${CPPFLAGS})
@@ -54,8 +49,17 @@ function(llvm_test_executable target)
   endif()
 
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
-  llvm_add_test(${CMAKE_CURRENT_BINARY_DIR}/${target}.test ${target_path})
   test_suite_add_build_dependencies(${target})
+endfunction()
+
+# Creates a new executable build target. Use this instead of `add_executable`.
+# It applies CFLAGS, CPPFLAGS, CXXFLAGS and LDFLAGS. Creates a .test file if
+# necessary, registers the target with the TEST_SUITE_TARGETS list and makes
+# sure we build the required dependencies for compiletime measurements
+# and support the TEST_SUITE_PROFILE_USE mode.
+function(llvm_test_executable target)
+  llvm_test_executable_no_test(${target} ${ARGN})
+  llvm_add_test_for_target(${target})
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
 

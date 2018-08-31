@@ -37,9 +37,11 @@ function(llvm_singlesource)
   endif()
   foreach(source ${sources})
     basename(name ${source})
-    llvm_test_traditional(${name})
     set(_target ${_LSARG_PREFIX}${name})
-    llvm_test_executable(${_target} ${source})
+    llvm_test_executable_no_test(${_target} ${source})
+    set_property(TARGET ${_target} PROPERTY TEST_NAME ${name})
+    llvm_test_traditional(${_target})
+    llvm_add_test_for_target(${_target})
   endforeach()
 endfunction()
 
@@ -52,9 +54,16 @@ function(llvm_multisource target)
     file(GLOB sources *.c *.cpp *.cc)
   endif()
 
+  llvm_test_executable_no_test(${target} ${sources})
   llvm_test_traditional(${target})
-  llvm_test_executable(${target} ${sources})
+  llvm_add_test_for_target(${target})
 endfunction()
+
+macro(llvm_test_verify_hash_program_output _file)
+  llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/HashProgramOutput.sh ${_file}
+  )
+endmacro()
 
 # Sets Var to ${name} with directory and shortest extension removed.
 macro(basename Var name)
@@ -67,14 +76,19 @@ endmacro()
 # Traditionally CMakeLists.txt files would set RUN_OPTIONS, SMALL_PROBLEM_SIZE,
 # HASH_PROGRAM_OUTPUT, etc.
 # Create llvm_test_run() and llvm_test_verify() invocation for that.
-function(llvm_test_traditional name)
+function(llvm_test_traditional target)
+  get_property(name TARGET ${target} PROPERTY TEST_NAME)
+  if(NOT name)
+    set(name ${target})
+  endif()
+
   # Always run in the same directory as the executable
   list(INSERT RUN_OPTIONS 0 WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
   llvm_test_run(${RUN_OPTIONS})
 
   # Hash if we've been asked to.
   if(HASH_PROGRAM_OUTPUT)
-    llvm_test_verify("${CMAKE_SOURCE_DIR}/HashProgramOutput.sh %o")
+    llvm_test_verify_hash_program_output(%o)
   endif()
 
   # Find the reference output file key name.
@@ -88,13 +102,13 @@ function(llvm_test_traditional name)
     endif()
 
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${SIZE_SUFFIX})
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian.${SIZE_SUFFIX})
+      set(REFERENCE_OUTPUT ${name}.reference_output.${ENDIAN}-endian.${SIZE_SUFFIX})
     elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${SIZE_SUFFIX})
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${SIZE_SUFFIX})
+      set(REFERENCE_OUTPUT ${name}.reference_output.${SIZE_SUFFIX})
     elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output.${ENDIAN}-endian)
+      set(REFERENCE_OUTPUT ${name}.reference_output.${ENDIAN}-endian)
     elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
-      set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_output)
+      set(REFERENCE_OUTPUT ${name}.reference_output)
     else()
       message("-- No reference output found for test ${name}")
     endif()
@@ -108,7 +122,10 @@ function(llvm_test_traditional name)
     if(FP_ABSTOLERANCE)
       set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
     endif()
-    llvm_test_verify("${DIFFPROG} %o ${REFERENCE_OUTPUT}")
+    llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+      ${DIFFPROG} %o ${REFERENCE_OUTPUT}
+    )
+    llvm_test_data(${target} ${REFERENCE_OUTPUT})
   endif()
   set(TESTSCRIPT "${TESTSCRIPT}" PARENT_SCOPE)
 endfunction()

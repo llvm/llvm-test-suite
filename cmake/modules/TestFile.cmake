@@ -88,3 +88,8 @@ function(llvm_add_test testfile executable)
   # flush the test script
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
+
+function(llvm_add_test_for_target target)
+  llvm_add_test($<TARGET_FILE:${target}>.test $<TARGET_FILE:${target}>)
+  set(TESTSCRIPT "" PARENT_SCOPE)
+endfunction()
