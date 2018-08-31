@@ -61,7 +61,7 @@ endfunction()
 
 macro(llvm_test_verify_hash_program_output _file)
   llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/HashProgramOutput.sh ${_file}
+    ${CMAKE_BINARY_DIR}/tools/HashProgramOutput.sh ${_file}
   )
 endmacro()
 
