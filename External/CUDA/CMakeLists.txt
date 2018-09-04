@@ -57,14 +57,21 @@ macro(create_one_local_test_f Name FileGlob FilterRegex)
     cuda_glob(_sources ${FileGlob})
     set(_executable ${Name}-${VariantSuffix})
     set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
+    llvm_test_run()
+    set(REFERENCE_OUTPUT)
     # Verify reference output if it exists.
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-      llvm_test_traditional(${Name})
+      set(REFERENCE_OUTPUT ${Name}.reference_output)
+      llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+        ${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
+      )
+      llvm_test_executable(${_executable} ${_sources})
+      llvm_test_data(${_executable}
+                     DEST_SUFFIX "-${VariantSuffix}"
+                     ${REFERENCE_OUTPUT})
     else()
-      # otherwise just run the executable.
-      llvm_test_run()
+      llvm_test_executable(${_executable} ${_sources})
     endif()
-    llvm_test_executable(${_executable} ${_sources})
     target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
     if(VariantLibs)
       target_link_libraries(${_executable} ${VariantLibs})
