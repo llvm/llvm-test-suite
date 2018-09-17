@@ -1,4 +1,4 @@
-//===- fdrmode-bench.cc - XRay Instrumentation Benchmarks ------------------===//
+//===- fdrmode-bench.cc - XRay Instrumentation Benchmarks -----------------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -26,14 +26,13 @@ namespace {
 // stores performed on this variable.
 volatile int val = 0;
 
-__xray::FDRLoggingOptions Options;
-
 }  // namespace
 
 // We define a multi-threaded benchmark which measures the overall costs
 // introduced by the XRay handlers upstream. This will exercise a tight loop
 // calling a single function that practically does nothing.
-[[clang::xray_always_instrument]] __attribute__((noinline)) __attribute__((weak)) int
+[[clang::xray_always_instrument]] __attribute__((noinline))
+__attribute__((weak)) int
 EmptyFunction() {
   return 0;
 }
@@ -45,11 +44,14 @@ volatile bool log_initialized = false;
 [[clang::xray_never_instrument]] void SetUpXRayFDRMultiThreaded(
     benchmark::State& state) {
   if (!log_initialized) {
-    Options.ReportErrors = true;
-    Options.Fd = open("/dev/null", O_WRONLY);
-    assert((Options.Fd != -1) && "Cannot open /dev/null!");
-    __xray_log_init(getpagesize(), 1 << 16, &Options,
-                    sizeof(__xray::FDRLoggingOptions));
+    if (__xray_log_select_mode("xray-fdr") !=
+        XRayLogRegisterStatus::XRAY_REGISTRATION_OK)
+      std::abort();
+
+    std::string flags = "no_file_flush=true:buffer_size=";
+    flags += std::to_string(getpagesize()) + ":buffer_max=";
+    flags += std::to_string(1 << 16);
+    __xray_log_init_mode("xray-fdr", flags.c_str());
     __xray_remove_customevent_handler();
     __xray_patch();
     log_initialized = true;
@@ -67,7 +69,7 @@ volatile bool log_initialized = false;
 }
 
 [[clang::xray_never_instrument]] static void BM_XRayFDRMultiThreaded(
-  benchmark::State& state) {
+    benchmark::State& state) {
   if (state.thread_index == 0) {
     SetUpXRayFDRMultiThreaded(state);
   }
@@ -80,7 +82,6 @@ volatile bool log_initialized = false;
   }
 }
 
-BENCHMARK(BM_XRayFDRMultiThreaded)
-    ->ThreadRange(1, 32);  // Number of threads
+BENCHMARK(BM_XRayFDRMultiThreaded)->ThreadRange(1, 32);  // Number of threads
 
 BENCHMARK_MAIN();
