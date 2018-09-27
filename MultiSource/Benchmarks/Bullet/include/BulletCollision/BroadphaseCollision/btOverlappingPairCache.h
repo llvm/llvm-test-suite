@@ -195,7 +195,7 @@ private:
 	// This assumes proxyId1 and proxyId2 are 16-bit.
 	SIMD_FORCE_INLINE int getHash(int proxyId1, int proxyId2)
 	{
-		int key = (proxyId2 << 16) | proxyId1;
+		unsigned int key = (proxyId2 << 16) | proxyId1;
 		key = ~key + (key << 15);
 		key = key ^ (key >> 12);
 		key = key + (key << 2);
@@ -210,7 +210,7 @@ private:
 	
 	SIMD_FORCE_INLINE	unsigned int getHash(unsigned int proxyId1, unsigned int proxyId2)
 	{
-		int key = static_cast<int>(((unsigned int)proxyId1) | (((unsigned int)proxyId2) <<16));
+		unsigned int key = static_cast<int>(((unsigned int)proxyId1) | (((unsigned int)proxyId2) <<16));
 		// Thomas Wang's hash
 
 		key += ~(key << 15);
