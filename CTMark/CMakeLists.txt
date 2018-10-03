@@ -8,3 +8,5 @@ add_subdirectory(ClamAV)
 add_subdirectory(sqlite3)
 add_subdirectory(consumer-typeset)
 add_subdirectory(mafft)
+
+file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
