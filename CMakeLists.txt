@@ -131,6 +131,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
 
+# Append extra flags. These extra flags are mainly meant for cache files that
+# want to apply flags that get not override even when the user manually
+# specifies CMAKE_C_FLAGS and similar.
+set(TEST_SUITE_EXTRA_C_FLAGS CACHE STRING "Extra flags for CMAKE_C_FLAGS")
+set(TEST_SUITE_EXTRA_CXX_FLAGS CACHE STRING "Extra flags for CMAKE_CXX_FLAGS")
+set(TEST_SUITE_EXTRA_EXE_LINKER_FLAGS CACHE STRING
+    "Extra flags for CMAKE_EXE_LINKER_FLAGS")
+mark_as_advanced(TEST_SUITE_EXTRA_C_FLAGS, TEST_SUITE_EXTRA_CXX_FLAGS,
+                 TEST_SUITE_EXTRA_EXE_LINKER_FLAGS)
+set(CMAKE_C_CFLAGS "${CMAKE_C_CFLAGS} ${TEST_SUITE_EXTRA_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_EXTRA_CXX_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS
+    "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_EXTRA_EXE_LINKER_FLAGS}")
+
 include(TestSuite)
 include(SingleMultiSource)
 find_package(TCL)
