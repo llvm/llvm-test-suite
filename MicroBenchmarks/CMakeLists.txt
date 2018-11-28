@@ -5,4 +5,4 @@ add_subdirectory(XRay)
 add_subdirectory(LCALS)
 add_subdirectory(harris)
 add_subdirectory(ImageProcessing)
-
+add_subdirectory(LoopInterchange)
