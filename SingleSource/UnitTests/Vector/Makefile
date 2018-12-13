@@ -18,7 +18,7 @@ endif
 
 ifeq ($(CC_UNDER_TEST_IS_CLANG), 1)
 ifeq ($(HAVE_X86_AVX512F_INSTRUCTIONS), 1)
-DIRS += AVX512
+DIRS += AVX512F
 endif
 endif
 
