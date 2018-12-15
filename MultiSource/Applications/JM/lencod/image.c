@@ -51,7 +51,7 @@
 #include "output.h"
 #include "cabac.h"
 
-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
 #include <sys/time.h>
 int ftime(struct timeb *tp)
 { 
@@ -2885,5 +2885,3 @@ void read_SP_coefficients()
   }
   fclose(SP_coeff_file);
 }
-
-

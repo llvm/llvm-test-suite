@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-#ifndef __linux__
+#if !defined(__linux__) && !defined(__NetBSD__)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -111,4 +111,3 @@ FILE *fmemopen(void *buf, size_t size, const char *mode) {
 }
 
 #endif // __linux__
-

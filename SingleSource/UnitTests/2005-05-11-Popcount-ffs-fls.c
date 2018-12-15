@@ -2,6 +2,9 @@
  * http://www.hackersdelight.org/HDcode/nlz.cc and
  * http://www.hackersdelight.org/HDcode/ntz.cc
  */
+#if defined(__NetBSD__)
+#include <sys/bitops.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
@@ -72,6 +75,10 @@ int ntz8(unsigned x) {
 #define ffsl ffs
 #endif
 
+#if defined(__NetBSD__)
+#define ffsl ffs64
+#endif
+
 int i;
 int main(void) {
   long long l;
@@ -107,4 +114,3 @@ int main(void) {
 
   return(0);
 }
-
