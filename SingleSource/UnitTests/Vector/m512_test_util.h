@@ -65,6 +65,52 @@ typedef union ALIGNTO(64) {
 int n_errs = 0;
 
 /*
+ * Print the low N 8-bit unsigned integers from p.
+ */
+
+void NOINLINE display_pb(const V512 *p, const char *banner, int n_elems) {
+  int i = 15;
+
+  if (banner) {
+    printf("%s", banner);
+  }
+
+  for (i = n_elems; i >= 0; i--) {
+    printf(" %0.2x", p->u8[i]);
+    if (i > 0 && i % 16 == 0) {
+      printf("\n");
+      if (banner) {
+        printf("%*s", (int)strlen((void *)banner), "");
+      }
+    }
+  }
+  printf("\n");
+}
+
+/*
+ * Print the low N 16-bit unsigned integers from p.
+ */
+
+void NOINLINE display_pw(const V512 *p, const char *banner, int n_elems) {
+  int i = 15;
+
+  if (banner) {
+    printf("%s", banner);
+  }
+
+  for (i = n_elems; i >= 0; i--) {
+    printf(" %0.4x", p->u16[i]);
+    if (i > 0 && i % 8 == 0) {
+      printf("\n");
+      if (banner) {
+        printf("%*s", (int)strlen((void *)banner), "");
+      }
+    }
+  }
+  printf("\n");
+}
+
+/*
  * Print the low N 32-bit unsigned integers from p.
  */
 
@@ -153,6 +199,29 @@ void NOINLINE display_pdf(const V512 *p, const char *banner, int n_elems) {
     }
   }
   printf("\n");
+}
+
+/*
+ * Check that the low N 16-bit elements of "got" and "expected" are the same.
+ */
+int NOINLINE check_equal_nw(void *got, void *expected, int n_elems,
+                            char *banner, int line) {
+  int i, fail = 0;
+  V512 *v1 = (V512 *)got;
+  V512 *v2 = (V512 *)expected;
+
+  for (i = 0; i < n_elems; i++) {
+    if (v1->u16[i] != v2->u16[i]) {
+      printf("ERROR(%d): %s failed at %d'th element:  0x%0.4x != 0x%0.4x\n",
+             line, banner ? banner : "", i, v1->u16[i], v2->u16[i]);
+      display_pw(got, "got:", n_elems);
+      display_pw(expected, "exp:", n_elems);
+      n_errs++;
+      fail = 1;
+      break;
+    }
+  }
+  return fail;
 }
 
 /*

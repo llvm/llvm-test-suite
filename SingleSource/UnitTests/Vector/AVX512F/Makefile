@@ -2,7 +2,7 @@
 
 DIRS = 
 LEVEL = ../../../..
-CFLAGS += -fms-extensions -march=native -mavx512f
+CFLAGS += -fms-extensions -march=native -mavx512f -I${SourceDir}/..
 LDFLAGS += -lm
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
