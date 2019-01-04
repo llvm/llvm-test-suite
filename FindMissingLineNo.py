@@ -40,9 +40,7 @@ xfailed_lines = {}
 read_inputfile(XFAIL_FILE, xfailed_lines)
 
 dbg_line_items = dbg_lines.items()
-for f in range(len(dbg_line_items)):
-    fname = dbg_line_items[f][0]
-    fset = dbg_line_items[f][1]
+for fname, fset in dbg_line_items:
     optset = dbg_opt_lines.get(fname)
     nativeoptset = native_dbg_opt_lines.get(fname)
     xfailedset = xfailed_lines.get(os.path.basename(fname))

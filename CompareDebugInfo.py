@@ -46,24 +46,23 @@ class BreakPoint:
         
     def __repr__(self):
         print self.name
-        items = self.values.items()
-        for i in range(len(items)):
-            print items[i][0]," = ",items[i][1]
+        for k, v in self.values.items():
+            print k, "=", v
         return ''
 
     def compare_args(self, other, file):
         myitems = self.values.items()
         otheritems = other.values.items()
         match = False
-        for i in range(len(myitems)):
+        for i, my_item in enumerate(my_items):
             if i >= len(otheritems):
                 match = True
-                self.missing_args.append(myitems[i][0])
-            elif cmp(myitems[i][1], otheritems[i][1]):
+                self.missing_args.append(myitem[0])
+            elif cmp(myitem[1], otheritems[i][1]):
                 match = True
-                self.notmatching_args.append(myitems[i][0])
+                self.notmatching_args.append(myitem[0])
             else:
-                self.matching_args.append(myitems[i][0])
+                self.matching_args.append(myitem[0])
 
         self.print_list(self.matching_args, " Matching arguments ", file)
         self.print_list(self.notmatching_args, " Not Matching arguments ", file)
@@ -108,9 +107,7 @@ f2_items = f2_breakpoints.items()
     
 f = open(LOG_FILE, "w")
 f.write("Log output\n")
-for f2bp in range(len(f2_items)):
-    id = f2_items[f2bp][0]
-    bp = f2_items[f2bp][1]
+for id, bp in f2_items:
     bp1 = f1_breakpoints.get(id)
     if bp1 is None:
         bp.setMissing()
@@ -127,9 +124,7 @@ read_input(NATIVE_OPT_DBG_OUTPUT_FILE, nf2_breakpoints)
 nf2_items = nf2_breakpoints.items()
     
 nfl = open(NATIVE_LOG_FILE, "w")
-for nf2bp in range(len(nf2_items)):
-    id = nf2_items[nf2bp][0]
-    bp = nf2_items[nf2bp][1]
+for id, bp in nf2_items:
     bp1 = nf1_breakpoints.get(id)
     if bp1 is None:
         bp.setMissing()
@@ -141,8 +136,8 @@ f1_arg_count = 0
 f1_matching_arg_count = 0
 f1_notmatching_arg_count = 0
 f1_missing_arg_count = 0
-for idx in range(len(f1_items)):
-    bp = f1_items[idx][1]
+for f1_item in f1_items:
+    bp = f1_item[1]
     f1_arg_count = f1_arg_count + bp.getArgCount()
     f1_matching_arg_count = f1_matching_arg_count + bp.getMatchingArgCount()
     f1_notmatching_arg_count = f1_notmatching_arg_count + bp.getNotMatchingArgCount()
@@ -152,8 +147,8 @@ nf1_arg_count = 0
 nf1_matching_arg_count = 0
 nf1_notmatching_arg_count = 0
 nf1_missing_arg_count = 0
-for idx in range(len(nf1_items)):
-    bp = nf1_items[idx][1]
+for nf1_item in nf1_items:
+    bp = nf1_item[1]
     nf1_arg_count = nf1_arg_count + bp.getArgCount()
     nf1_matching_arg_count = nf1_matching_arg_count + bp.getMatchingArgCount()
     nf1_notmatching_arg_count = nf1_notmatching_arg_count + bp.getNotMatchingArgCount()
