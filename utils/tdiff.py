@@ -95,7 +95,7 @@ def determine_max_commandline_len():
     if sc_arg_max <= 0:
         return 10000 # wild guess
     env_len = 0
-    for key,val in os.environ.iteritems():
+    for key,val in os.environ.items():
         env_len += len(key) + len(val) + 10
     return sc_arg_max - env_len
 
@@ -140,12 +140,12 @@ def filelist(mode, target, cwd, config):
 
     if config.mode == 'sources':
         # Take leafs in the dependency tree
-        for target, depnode in tree.iteritems():
+        for target, depnode in tree.items():
             if len(depnode.inputs) == 0:
                 yield target
     else:
         # Take files ending in '.o'
-        for target, depnode in tree.iteritems():
+        for target, depnode in tree.items():
             if target.endswith(".o"):
                 # Determine .s/.stats ending used by -save-temps=obj or
                 # -save-stats=obj

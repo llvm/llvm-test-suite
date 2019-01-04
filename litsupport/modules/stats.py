@@ -14,7 +14,7 @@ def _mergeStats(global_stats, statsfilename):
     except Exception as e:
         logging.warning("Could not read '%s'", statsfilename, exc_info=e)
         return
-    for name, value in stats.iteritems():
+    for name, value in stats.items():
         global_stats[name] += value
 
 
@@ -37,7 +37,7 @@ def _getStats(context):
         logging.warning("No stats for '%s'", context.test.getFullName())
 
     result = dict()
-    for key, value in stats.iteritems():
+    for key, value in stats.items():
         result[key] = value
     return result
 

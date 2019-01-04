@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 
 import os
 import sys
@@ -45,14 +46,14 @@ class BreakPoint:
         self.values[arg_name] = value
         
     def __repr__(self):
-        print self.name
+        print(self.name)
         for k, v in self.values.items():
-            print k, "=", v
+            print(k, "=", v)
         return ''
 
     def compare_args(self, other, file):
         myitems = self.values.items()
-        otheritems = other.values.items()
+        otheritems = list(other.values.items())
         match = False
         for i, my_item in enumerate(my_items):
             if i >= len(otheritems):
