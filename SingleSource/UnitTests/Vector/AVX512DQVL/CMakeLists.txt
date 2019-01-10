@@ -1,0 +1,5 @@
+list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${VECTOR_MAIN_DIR})
+list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS "-march=${X86CPU_ARCH}")
+list(APPEND CFLAGS -fms-extensions)
+llvm_singlesource(PREFIX "Vector-AVX512DQVL-")
