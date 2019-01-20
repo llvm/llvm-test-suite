@@ -1,22 +1,21 @@
 /*===------------ glibc_compat_rand.c - glibc rand emulation --------------===*\
- *  *
- *   *                     The LLVM Compiler Infrastructure
- *    *
- *     * This file is distributed under the University of Illinois Open Source
- *      * License. See LICENSE.TXT for details.
- *       *
- *       \*===----------------------------------------------------------------------===*/
+ *
+ * Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+ * See https://llvm.org/LICENSE.txt for license information.
+ * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ *
+\*===----------------------------------------------------------------------===*/
 
 #include "glibc_compat_rand.h"
 
 /**
- *  * This rand implementation is designed to emulate the implementation of
- *   * rand/srand in recent versions of glibc. This is used for programs which
- *    * require this specific rand implementation in order to pass verification
- *     * tests.
- *      *
- *       * For more information, see: http://www.mathstat.dal.ca/~selinger/random/
- *        **/
+ * This rand implementation is designed to emulate the implementation of
+ * rand/srand in recent versions of glibc. This is used for programs which
+ * require this specific rand implementation in order to pass verification
+ * tests.
+ *
+ * For more information, see: http://www.mathstat.dal.ca/~selinger/random/
+ **/
 
 #define TABLE_SIZE 344
 static unsigned int table[TABLE_SIZE];
