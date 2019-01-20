@@ -1,5 +1,6 @@
-// This file is distributed under the University of Illinois Open Source License.
-// See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // RUN: c_compiler -c -o %t1.o -I "common" "common/testsuite.c"
 // RUN: cxx_compiler cxx_rtti -c %s -I "common" -o %t2.o
 // RUN: linker -o %t2%exeext  %t1.o %t2.o
