@@ -7,5 +7,6 @@ PARALLEL_DIRS = XSBench    \
                 miniGMG    \
                 RSBench    \
                 SimpleMOC  \
+                CoMD
 
 include $(LEVEL)/Makefile.programs
