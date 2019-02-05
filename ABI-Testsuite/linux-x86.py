@@ -1,6 +1,7 @@
 # Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 # See https://llvm.org/LICENSE.txt for license information.
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+from __future__ import print_function
 import os
 import sys
 wopt = " -w"
@@ -71,22 +72,22 @@ def build_linker_name(cn):
 
 import subprocess
 if __name__ == "__main__":
-  print sys.argv
+  print(sys.argv)
   litargs = [sys.argv[0]] # args for lit.main
   c_compiler_name = sys.argv[1].strip()
   cxx_compiler_name = build_cxx_compiler_name(c_compiler_name)
   linker_name = build_linker_name(c_compiler_name)
-  #print "C++ compiler:", cxx_compiler_name
-  #print "linker :", linker_name
+  #print("C++ compiler:", cxx_compiler_name)
+  #print("linker :", linker_name)
   for la in sys.argv[2:]:
     litargs.append(la)
   sys.argv = litargs
   cmd = c_compiler_name.split() + [ "-o", "b.exe", "test/common/genselector.c"]
-  #print "cmd = ", cmd
+  #print("cmd = ", cmd)
   rv = subprocess.call(cmd)
-  #print "rv = " , rv
+  #print("rv = " , rv)
   if rv != 0:
-    print "compiler failed: ", cmd
+    print("compiler failed: ", cmd)
     sys.exit(1)
   rv = subprocess.call("./b.exe")
   fp = open("nselector.h")
@@ -105,14 +106,14 @@ if __name__ == "__main__":
   test_params["linker"] = linker_name
   test_params["Platform"] = "linux-" + cmd[0]
 
-  print "test_params = " , test_params
+  print("test_params = " , test_params)
   builtin_parameters = {
     'build_mode' : "Release",
     'llvm_site_config' : os.path.join(os.getcwd(), 'lit.site.cfg'),
     'clang_site_config': os.path.join(os.getcwd(), 'lit.site.cfg'),
     'test_params' : test_params
     }
-  #print "builtin_params = " , test_params
+  #print("builtin_params = " , test_params)
   from lit.main import main
   main(builtin_parameters)
 

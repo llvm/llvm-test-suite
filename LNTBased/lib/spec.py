@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- Python -*-
+from __future__ import print_function
 
 import os
 import shutil
@@ -109,7 +110,7 @@ class TestModule(nt.TestModule):
             with open(command_file, 'w') as f:
                 # Chdir here so that the redirects are put into CWD as well.
                 remote_command = 'cd %s\n%s\n' % (cwd, cmdstr)
-                print >>self.log, "command:", remote_command,
+                print("command:", remote_command, file=self.log, end=' ')
                 f.write(remote_command)
 
             st = os.stat(command_file)
@@ -155,10 +156,10 @@ class TestModule(nt.TestModule):
             suitedir = os.path.join(suitedir, 'CPU' + self.year)
 
         self.datadir = os.path.join(suitedir, self.benchmark, 'data')
-        print >>self.log, "%s\n  options: %s\n\nmake variables: %s\n\n" % (self.testname, str(options), str(make_variables))
+        print("%s\n  options: %s\n\nmake variables: %s\n\n" % (self.testname, str(options), str(make_variables)), file=self.log)
 
         if not os.path.exists(self.datadir):
-            print >>self.log, "skipping, no source under externals"
+            print("skipping, no source under externals", file=self.log) 
             return []
 
         res = self.configure_test_suite(self.OBJROOT)
@@ -209,7 +210,7 @@ class TestModule(nt.TestModule):
                 if result != 0:
                     return self.fail()
                 if not os.path.exists(os.path.join(pgo_dir, 'run_%d.profraw' % i)):
-                    print >>self.log, 'Failed to create PGO output'
+                    print('Failed to create PGO output', file=self.log)
                     return self.fail()
 
             llvm_profdata = os.path.join(os.path.dirname(CC), 'llvm-profdata')
