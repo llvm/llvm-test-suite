@@ -94,6 +94,8 @@ Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
   endif()
 endif()
 
+option(TEST_SUITE_USE_IR_PGO
+  "Use IR PGO instrumentation (requires TEST_SUITE_PROFILE_GENERATE)" OFF)
 
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
@@ -109,9 +111,15 @@ Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
   endif()
 
   set(TEST_SUITE_PROFILE_GENERATE "True")
-  list(APPEND CFLAGS -fprofile-instr-generate)
-  list(APPEND CXXFLAGS -fprofile-instr-generate)
-  list(APPEND LDFLAGS -fprofile-instr-generate)
+
+  set(profile_instrumentation_flags -fprofile-instr-generate)
+  if(TEST_SUITE_USE_IR_PGO)
+    set(profile_instrumentation_flags -fprofile-generate)
+  endif()
+
+  list(APPEND CFLAGS   ${profile_instrumentation_flags})
+  list(APPEND CXXFLAGS ${profile_instrumentation_flags})
+  list(APPEND LDFLAGS  ${profile_instrumentation_flags})
 else()
   set(TEST_SUITE_PROFILE_GENERATE "False")
 endif()

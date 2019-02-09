@@ -70,7 +70,8 @@ code; typical examples are:
   ssh to run benchmarks on a remote device (assuming shared file systems).
 - `cmake -DTEST_SUITE_PROFILE_GENERATE` compiles benchmark with
   `-fprofile-instr-generate` and enables the `profilegen` module that runs
-  `llvm-profdata` after running the benchmarks.
+  `llvm-profdata` after running the benchmarks. To use LLVM IR PGO instead of
+  the clang frontend's PGO feature, set `-DTEST_SUITE_USE_IR_PGO=On`.
 
 Available modules are found in the `litsupport/modules` directory.
 
