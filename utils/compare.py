@@ -6,6 +6,7 @@ Requires the pandas library to be installed."""
 from __future__ import print_function
 
 import pandas as pd
+from scipy import stats
 import sys
 import os.path
 import re
@@ -108,27 +109,39 @@ def readmulti(filenames):
     d = pd.concat(datasets, axis=0, names=['run'], keys=datasetnames)
     return d
 
-def add_diff_column(d, absolute_diff=False):
-    values = d.unstack(level=0)
-
-    has_two_runs = d.index.get_level_values(0).nunique() == 2
+def get_values(values):
+    # Create data view without diff column.
+    if 'diff' in values.columns:
+        values = values[[c for c in values.columns if c != 'diff']]
+    has_two_runs = len(values.columns) == 2
     if has_two_runs:
-        values0 = values.iloc[:,0]
-        values1 = values.iloc[:,1]
+        return (values.iloc[:,0], values.iloc[:,1])
     else:
-        values0 = values.min(axis=1)
-        values1 = values.max(axis=1)
+        return (values.min(axis=1), values.max(axis=1))
 
+def add_diff_column(values, absolute_diff=False):
+    values0, values1 = get_values(values)
     # Quotient or absolute difference?
     if absolute_diff:
         values['diff'] = values1 - values0
     else:
         values['diff'] = values1 / values0
         values['diff'] -= 1.0
-    # unstack() gave us a complicated multiindex for the columns, simplify
-    # things by renaming to a simple index.
-    values.columns = [(c[1] if c[1] else c[0]) for c in values.columns.values]
     return values
+
+def add_geomean_row(data, dataout):
+    """
+    Normalize values1 over values0, compute geomean difference and add a
+    summary row to dataout.
+    """
+    values0, values1 = get_values(data)
+    relative = values1 / values0
+    gm_diff = stats.gmean(relative) - 1.0
+
+    gm_row = {c: '' for c in dataout.columns}
+    gm_row['diff'] = gm_diff
+    gm_row['Program'] = 'Geomean difference'
+    return dataout.append(gm_row, ignore_index=True)
 
 def filter_failed(data, key='Exec'):
     return data.loc[data[key] == "pass"]
@@ -209,6 +222,9 @@ def print_result(d, limit_output=True, shorten_names=True,
     # Turn index into a column so we can format it...
     dataout.insert(0, 'Program', dataout.index)
 
+    if show_diff_column:
+        dataout = add_geomean_row(d, dataout)
+
     formatters = dict()
     formatters['diff'] = format_diff
     if shorten_names:
@@ -220,7 +236,11 @@ def print_result(d, limit_output=True, shorten_names=True,
             return "%-45s" % truncate(name, 10, 30)
 
         formatters['Program'] = lambda name: format_name(name, drop_prefix, drop_suffix)
-    float_format = lambda x: "%6.2f" % (x,)
+    def float_format(x):
+        if x == '':
+            return ''
+        return "%6.2f" % (x,)
+
     pd.set_option("display.max_colwidth", 0)
     out = dataout.to_string(index=False, justify='left',
                             float_format=float_format, formatters=formatters)
@@ -334,6 +354,12 @@ if __name__ == "__main__":
     print("Metric: %s" % (",".join(metrics),))
     if len(metrics) > 0:
         data = data[metrics]
+
+    data = data.unstack(level=0)
+    # unstack() gave us a complicated multiindex for the columns, simplify
+    # things by renaming to a simple index.
+    data.columns = [(c[1] if c[1] else c[0]) for c in data.columns.values]
+
     data = add_diff_column(data)
 
     sortkey = 'diff'
