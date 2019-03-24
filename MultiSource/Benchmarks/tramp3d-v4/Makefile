@@ -10,7 +10,7 @@ RUN_OPTIONS =  --cartvis 1.0 0.0 --rhomin 1e-8 -n 10 --domain 32 32 32
 endif
 FP_ABSTOLERANCE :=  0.0000001
 
-ifeq ($(ARCH),Mips)
+ifeq (-mabi=n64, $(findstring -mabi=n64, $(TARGET_FLAGS)))
 # Mips needs a bit more compilation time when Mips64r6 and MSA are used
 # together.
 RUNTIMELIMIT := 700
