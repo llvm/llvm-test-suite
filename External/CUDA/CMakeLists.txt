@@ -110,6 +110,7 @@ macro(create_local_cuda_tests VariantSuffix)
   # buildbot a lot.
   create_one_local_test_f(simd simd.cu
                           "cuda-(8[.]0|9[.]2)-c[+][+]11-libc[+][+]")
+  create_one_local_test(test_round test_round.cu)
 endmacro()
 
 macro(thrust_make_test_name TestName TestSourcePath)
