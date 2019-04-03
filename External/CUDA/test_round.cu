@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <iostream>
 #include <cassert>
+#include <stdio.h>
 
 // Test the implementation of llvm intrinsic round. In particular, when the
 // source is equidistant between two integers, it rounds away from zero.
