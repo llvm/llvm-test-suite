@@ -1,17 +1,17 @@
 '''Test module to collect google benchmark results.'''
 from litsupport import shellcommand
 from litsupport import testplan
-import csv
+import json
 import lit.Test
 
 
 def _mutateCommandLine(context, commandline):
     cmd = shellcommand.parse(commandline)
-    cmd.arguments.append("--benchmark_format=csv")
+    cmd.arguments.append("--benchmark_format=json")
     # We need stdout outself to get the benchmark csv data.
     if cmd.stdout is not None:
         raise Exception("Rerouting stdout not allowed for microbenchmarks")
-    benchfile = context.tmpBase + '.bench.csv'
+    benchfile = context.tmpBase + '.bench.json'
     cmd.stdout = benchfile
     context.microbenchfiles.append(benchfile)
 
@@ -25,18 +25,18 @@ def _mutateScript(context, script):
 def _collectMicrobenchmarkTime(context, microbenchfiles):
     for f in microbenchfiles:
         content = context.read_result_file(context, f)
-        lines = csv.reader(content.splitlines())
-        # First line: "name,iterations,real_time,cpu_time,time_unit..."
-        for line in lines:
-            if line[0] == 'name':
-                continue
+        data = json.loads(content)
+
+        # Create a micro_result for each benchmark
+        for benchmark in data['benchmarks']:
             # Name for MicroBenchmark
-            name = line[0]
+            name = benchmark['name']
+
             # Create Result object with PASS
             microBenchmark = lit.Test.Result(lit.Test.PASS)
 
-            # Index 3 is cpu_time
-            exec_time_metric = lit.Test.toMetricValue(float(line[3]))
+            # Add the exec_time metric for this result
+            exec_time_metric = lit.Test.toMetricValue(benchmark['cpu_time'])
             microBenchmark.addMetric('exec_time', exec_time_metric)
 
             # Add Micro Result
