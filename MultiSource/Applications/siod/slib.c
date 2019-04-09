@@ -129,7 +129,11 @@ long inums_dim = 256;
 struct user_type_hooks *user_types = NULL;
 long user_tc_next = tc_user_min;
 struct gc_protected *protected_registers = NULL;
+#if defined(__GLIBC__)
+ucontext_t save_regs_gc_mark;
+#else
 jmp_buf save_regs_gc_mark;
+#endif
 double gc_rt;
 long gc_cells_collected;
 char *user_ch_readm = "";
@@ -1266,9 +1270,18 @@ void gc_mark_and_sweep(void)
    {heap->type = tc_free_cell;
     heap->gc_mark = 0;
     ++heap;}
+#if defined(__GLIBC__)
+ // With glibc, some register is mangled in jmp buffer, so object that
+ // is pointed by those register is collected as garbage. We use getcontext
+ // to avoid such issue.
+ getcontext(&save_regs_gc_mark);
+ mark_locations((LISP *) &save_regs_gc_mark.uc_mcontext,
+                (LISP *) (((char *) &save_regs_gc_mark.uc_mcontext) + sizeof(mcontext_t)));
+#else
  setjmp(save_regs_gc_mark);
  mark_locations((LISP *) save_regs_gc_mark,
 		(LISP *) (((char *) save_regs_gc_mark) + sizeof(save_regs_gc_mark)));
+#endif
  mark_protected_registers();
  mark_locations((LISP *) stack_start_ptr,
 		(LISP *) &stack_end);
