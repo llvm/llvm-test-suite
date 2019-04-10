@@ -6,12 +6,13 @@ from litsupport.modules import run_under
 
 
 def _mutateCommandLine(context, commandline):
-    profilefile = context.tmpBase + ".perf_data"
+    context.profilefile = context.tmpBase + ".perf_data"
+    # Storing profile file in context allows other modules to be aware of it.
     cmd = shellcommand.parse(commandline)
     cmd.wrap('perf', [
         'record',
         '-e', context.config.perf_profile_events,
-        '-o', profilefile,
+        '-o', context.profilefile,
         '--'
     ])
     if cmd.stdout is None:
@@ -33,4 +34,4 @@ def mutatePlan(context, plan):
     script = testplan.mutateScript(context, script, _mutateCommandLine)
     plan.profilescript += script
     plan.metric_collectors.append(
-        lambda context: {'profile': context.tmpBase + '.perf_data'})
+        lambda context: {'profile': context.profilefile})
