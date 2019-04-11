@@ -275,7 +275,7 @@ if __name__ == "__main__":
                         help="Name used to describe left side in 'vs' mode")
     parser.add_argument('--rhs-name', default="rhs",
                         help="Name used to describe right side in 'vs' mode")
-    parser.add_argument('files', metavar='FILE', nargs='+')
+    parser.add_argument('files', metavar='FILE', nargs='+', help="To compare two groups of results, put 'vs' between them")
     config = parser.parse_args()
 
     if config.show_diff is None:
