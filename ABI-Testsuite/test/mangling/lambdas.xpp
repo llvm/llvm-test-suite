@@ -49,5 +49,6 @@ void call_foo4() {
 template<typename T> struct S1 {
    static int x;
 };
-template<typename T> int S1<T>::x = []{ return 1;}();
+int extVar;
+template<typename T> int S1<T>::x = []{ return extVar;}();
 template int S1<int>::x;
