@@ -90,7 +90,7 @@ if(TEST_SUITE_COLLECT_CODE_SIZE)
   mark_as_advanced(TEST_SUITE_LLVM_SIZE)
   if(TEST_SUITE_LLVM_SIZE STREQUAL "TEST_SUITE_LLVM_SIZE-NOTFOUND")
     message(FATAL_ERROR "llvm-size not found.
-Make sure it is in your path or specify it via -DTEST_SUITE_LLVM_SIZE:FILEPATH=\"\" or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
+Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
   endif()
 endif()
 
@@ -107,7 +107,7 @@ if(TEST_SUITE_PROFILE_GENERATE)
   mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
   if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
     message(FATAL_ERROR "llvm-profdata not found.
-Make sure it is in your path or specify it via -DTEST_SUITE_LLVM_PROFDATA:FILEPATH=\"\" or set TEST_SUITE_PROFILE_GENERATE to OFF")
+Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
   endif()
 
   set(TEST_SUITE_PROFILE_GENERATE "True")
@@ -216,10 +216,7 @@ endif()
 find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
 set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
 mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
-if(TEST_SUITE_LIT STREQUAL "TEST_SUITE_LIT-NOTFOUND")
-  message(FATAL_ERROR "llvm-lit not found.
-Make sure it is in your path or specify it via -DTEST_SUITE_LIT:FILEPATH=\"\"")
-endif()
+mark_as_advanced(TEST_SUITE_LIT)
 
 add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
