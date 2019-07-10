@@ -1,0 +1,14 @@
+LLVM notes
+----------
+This directory contains the Google Benchmark source code. Currently, the checked out
+Benchmark library version is v1.3.0.
+
+This directory is under a different license than LLVM.
+
+Changes:
+* https://github.com/google/benchmark/commit/ff2c255af5bb2fc2e5cd3b3685f0c6283117ce73
+  is applied on top of v1.3.0 to add s390x Support.
+* https://github.com/google/benchmark/commit/aad6a5fa767529d3353bd3beb89e126c7b0868ca
+  is applied on top of v1.3.0 to add NetBSD Support.
+* https://github.com/google/benchmark/commit/4abdfbb802d1b514703223f5f852ce4a507d32d2
+  is applied on top of v1.3.0 to add RISC-V timer support.
