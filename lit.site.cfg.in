@@ -5,6 +5,7 @@ config.test_exec_root = "@CMAKE_BINARY_DIR@"
 config.remote_client = "@TEST_SUITE_REMOTE_CLIENT@"
 config.remote_host = "@TEST_SUITE_REMOTE_HOST@"
 config.run_under = "@TEST_SUITE_RUN_UNDER@"
+config.user_mode_emulation = @TEST_SUITE_USER_MODE_EMULATION@
 config.strip_tool = "@CMAKE_STRIP@"
 config.profile_generate = @TEST_SUITE_PROFILE_GENERATE@
 config.llvm_profdata = "@TEST_SUITE_LLVM_PROFDATA@"

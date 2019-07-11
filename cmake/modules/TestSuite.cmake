@@ -99,7 +99,8 @@ function(test_suite_add_build_dependencies target)
     build-HashProgramOutput.sh
     build-timeit
     build-timeit-target
-    fpcmp
+    build-fpcmp
+    build-fpcmp-target
   )
 endfunction()
 

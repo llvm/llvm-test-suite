@@ -77,6 +77,18 @@ endif()
 # Run Under configuration for RunSafely.sh (will be set in lit.site.cfg)
 set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter")
 
+# User mode emulation configuration (e.g. running under qemu)
+# (will be set in lit.site.cfg)
+set(TEST_SUITE_USER_MODE_EMULATION NO CACHE BOOL
+    "RUN_UNDER is used to run tests under emulation.")
+# Set value to python style True/False
+if (TEST_SUITE_USER_MODE_EMULATION)
+  set(TEST_SUITE_USER_MODE_EMULATION "True")
+else()
+  set(TEST_SUITE_USER_MODE_EMULATION "False")
+endif()
+
+
 # run type/benchmark size configuration (mostly for SPEC at the moment)
 set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
     "Type of benchmark inputs (may be test,train or ref)")
@@ -220,7 +232,10 @@ mark_as_advanced(TEST_SUITE_LIT)
 
 add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
-set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
+set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp-target)
+if (TEST_SUITE_USER_MODE_EMULATION)
+  set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
+endif()
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" ON)

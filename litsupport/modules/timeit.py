@@ -9,7 +9,14 @@ def _mutateCommandLine(context, commandline):
     config = context.config
     cmd = shellcommand.parse(commandline)
 
-    timeit = "%s/tools/timeit-target" % config.test_source_root
+    if config.user_mode_emulation:
+        # user_mode_emulation should be true if tests are being run via
+        # user-mode emulation (e.g. Qemu) and thus the host version of timeit
+        # should be used.
+        timeit_name = "timeit"
+    else:
+        timeit_name = "timeit-target"
+    timeit = "%s/tools/%s" % (config.test_source_root, timeit_name)
     args = ["--limit-core", "0"]
     args += ["--limit-cpu", "7200"]
     args += ["--timeout", "7200"]

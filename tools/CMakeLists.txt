@@ -7,7 +7,9 @@
 
 include(Host)
 
-add_executable(fpcmp fpcmp.c)
+add_executable(fpcmp-target ${CMAKE_CURRENT_SOURCE_DIR}/fpcmp.c)
+add_executable(build-fpcmp-target ALIAS fpcmp-target)
+llvm_add_host_executable(build-fpcmp fpcmp fpcmp.c)
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/HashProgramOutput.sh
