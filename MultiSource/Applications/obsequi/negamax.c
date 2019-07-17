@@ -5,6 +5,7 @@
 #include <time.h>
 #include <ctype.h>
 
+#define PRINT_DOES_X_WIN_INFO
 
 //#################################################################
 // Statistics gathering variables and functions.
@@ -304,6 +305,12 @@ search_for_move(char dir, s32bit *row, s32bit *col, u64bit *nodes)
   return value;
 }
 
+extern s32bit
+#ifdef PRINT_DOES_X_WIN_INFO
+does_next_player_win(s32bit next_player, s32bit print);
+#else
+does_next_player_win(s32bit next_player);
+#endif
 
 //=================================================================
 // Negamax Function.
