@@ -141,8 +141,8 @@ def add_geomean_row(data, dataout):
 
     gm_row = {c: '' for c in dataout.columns}
     gm_row['diff'] = gm_diff
-    gm_row['Program'] = 'Geomean difference'
-    return dataout.append(gm_row, ignore_index=True)
+    series = pd.Series(gm_row, name='Geomean difference')
+    return dataout.append(series)
 
 def filter_failed(data, key='Exec'):
     return data.loc[data[key] == "pass"]
@@ -220,11 +220,11 @@ def print_result(d, limit_output=True, shorten_names=True,
         # Take 15 topmost elements
         dataout = dataout.head(15)
 
+    if show_diff_column:
+      dataout = add_geomean_row(d, dataout)
+
     # Turn index into a column so we can format it...
     dataout.insert(0, 'Program', dataout.index)
-
-    if show_diff_column:
-        dataout = add_geomean_row(d, dataout)
 
     formatters = dict()
     formatters['diff'] = format_diff
