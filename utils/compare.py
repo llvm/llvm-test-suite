@@ -32,10 +32,10 @@ def read_lit_json(filename):
         if name in names:
             sys.stderr.write("Error: Multiple tests with name '%s'\n" % name)
             sys.exit(1)
-        names.add(name)
         if "metrics" not in test:
-            print("Warning: '%s' has No metrics!" % test['name'])
+            print("Warning: '%s' has no metrics, skipping!" % test['name'])
             continue
+        names.add(name)
         for name in test["metrics"].keys():
             if name not in columnindexes:
                 columnindexes[name] = len(columns)
@@ -50,15 +50,16 @@ def read_lit_json(filename):
     data = []
     testnames = []
     for test in jsondata['tests']:
+        if "metrics" not in test:
+            continue
         name = test['name']
         if 'shortname' in test:
             name = test['shortname']
         testnames.append(name)
 
         datarow = [nan] * len(columns)
-        if "metrics" in test:
-            for (metricname, value) in test['metrics'].items():
-                datarow[columnindexes[metricname]] = value
+        for (metricname, value) in test['metrics'].items():
+            datarow[columnindexes[metricname]] = value
         for (name, value) in test.items():
             index = columnindexes.get(name)
             if index is not None:
