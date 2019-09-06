@@ -70,7 +70,7 @@ zastore(register ref *op)
 	size = op->size;
 	if ( size > op - osbot ) return e_stackunderflow;
 	refcpy(op->value.refs, op - size, size);
-	op[-size] = *op;
+	op[-((intptr_t)size)] = *op;
 	pop(size);
 	return 0;
 }
