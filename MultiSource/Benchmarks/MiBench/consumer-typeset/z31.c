@@ -349,7 +349,7 @@ OBJECT GetMemory(int siz, FILE_POS *pos)
   debug1(DMA, DDD, "GetMemory( %d )", siz);
 
   /* get memory from operating system, if not enough left here */
-  if( &next_free[siz] > top_free )
+  if( !next_free || &next_free[siz] > top_free )
   {
 #if DEBUG_ON
     DebugRegisterUsage(MEM_OBJECTS, 1, MEM_CHUNK * sizeof(ALIGN));
