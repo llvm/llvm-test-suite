@@ -25,6 +25,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 
+set(LLVM_CODESIGNING_IDENTITY "" CACHE STRING
+  "Sign executables and dylibs with the given identity or skip if empty (Darwin Only)")
+
 add_definitions(-DNDEBUG)
 option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
 if(${TEST_SUITE_SUPPRESS_WARNINGS})

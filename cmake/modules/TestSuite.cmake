@@ -58,6 +58,7 @@ function(llvm_test_executable_no_test target)
     append_target_flags(LINK_LIBRARIES ${target} -fprofile-instr-use=${target_path}.profdata)
   endif()
 
+  llvm_codesign(${target})
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   test_suite_add_build_dependencies(${target})
 endfunction()
@@ -123,5 +124,55 @@ function(append_target_flags propertyname target)
     # is LINK_LIBRARIES, as extra whitespace violates CMP0004
     string(STRIP "${old_flags} ${quoted}" new_flags)
     set_target_properties(${target} PROPERTIES ${propertyname} "${new_flags}")
+  endif()
+endfunction()
+
+# Usage: llvm_codesign(name [FORCE] [ENTITLEMENTS file] [BUNDLE_PATH path])
+function(llvm_codesign name)
+  cmake_parse_arguments(ARG "FORCE" "ENTITLEMENTS;BUNDLE_PATH" "" ${ARGN})
+  if(NOT LLVM_CODESIGNING_IDENTITY)
+    return()
+  endif()
+
+  if(CMAKE_GENERATOR STREQUAL "Xcode")
+    set_target_properties(${name} PROPERTIES
+      XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ${LLVM_CODESIGNING_IDENTITY}
+    )
+    if(DEFINED ARG_ENTITLEMENTS)
+      set_target_properties(${name} PROPERTIES
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS ${ARG_ENTITLEMENTS}
+      )
+    endif()
+  elseif(APPLE AND CMAKE_HOST_SYSTEM_NAME MATCHES Darwin)
+    if(NOT CMAKE_CODESIGN)
+      set(CMAKE_CODESIGN xcrun codesign)
+    endif()
+    if(NOT CMAKE_CODESIGN_ALLOCATE)
+      execute_process(
+        COMMAND xcrun -f codesign_allocate
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE CMAKE_CODESIGN_ALLOCATE
+      )
+    endif()
+    if(DEFINED ARG_ENTITLEMENTS)
+      set(pass_entitlements --entitlements ${ARG_ENTITLEMENTS})
+    endif()
+
+    if (NOT ARG_BUNDLE_PATH)
+      set(ARG_BUNDLE_PATH $<TARGET_FILE:${name}>)
+    endif()
+
+    if(ARG_FORCE)
+      set(force_flag "-f")
+    endif()
+
+    add_custom_command(
+      TARGET ${name} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+              env CODESIGN_ALLOCATE=${CMAKE_CODESIGN_ALLOCATE}
+              ${CMAKE_CODESIGN} -s ${LLVM_CODESIGNING_IDENTITY}
+              ${pass_entitlements} ${force_flag} ${ARG_BUNDLE_PATH}
+      COMMENT "Codesign ${name}"
+    )
   endif()
 endfunction()

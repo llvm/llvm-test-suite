@@ -31,4 +31,6 @@ function(llvm_add_host_executable targetname exename)
   )
   add_custom_target(${targetname}
     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${exename}")
+  llvm_codesign(${targetname}
+          BUNDLE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${exename}")
 endfunction()
