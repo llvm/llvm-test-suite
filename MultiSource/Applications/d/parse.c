@@ -1585,7 +1585,7 @@ commit_tree(Parser *p, PNode *pn) {
   }
   if (pn->reduction && pn->reduction->final_code)
     pn->reduction->final_code(
-      pn, (void**)&pn->children.v[0], pn->children.n,
+      pn, (void**)pn->children.v, pn->children.n,
       (int)&((PNode*)(NULL))->parse_node, (D_Parser*)p);
   if (pn->evaluated) {
     if (!p->user.save_parse_tree && !internal)
