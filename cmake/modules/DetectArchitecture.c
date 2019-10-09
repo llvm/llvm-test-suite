@@ -8,6 +8,12 @@ const char *str = "ARCHITECTURE IS Alpha";
 const char *str = "ARCHITECTURE IS Mips";
 #elif defined(__powerpc__) || defined(__ppc__) || defined(__power__)
 const char *str = "ARCHITECTURE IS PowerPC";
+#elif defined(__riscv)
+#if __riscv_xlen == 64
+const char *str = "ARCHITECTURE IS riscv64";
+#elif __riscv_xlen == 32
+const char *str = "ARCHITECTURE IS riscv32";
+#endif
 #elif defined(__s390__)
 const char *str = "ARCHITECTURE IS SystemZ";
 #elif defined(__sparc__)
