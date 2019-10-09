@@ -1,0 +1,278 @@
+add_subdirectory(ieee)
+
+# GCC C Torture Suite is conventionally run without warnings
+list(APPEND CFLAGS "-w")
+
+set(TestsToSkip)
+
+##
+## Main Test Blacklist for Clang
+##
+
+# Tests with features unsupported by Clang (usually GCC extensions)
+# (Big list of naughty tests)
+file(GLOB UnsupportedTests CONFIGURE_DEPENDS
+  # GCC Extension: Nested functions
+  20000822-1.c
+  20010209-1.c
+  20010605-1.c
+  20030501-1.c
+  20040520-1.c
+  20061220-1.c
+  20090219-1.c
+  920415-1.c
+  920428-2.c
+  920501-7.c
+  920612-2.c
+  920721-4.c
+  921017-1.c
+  921215-1.c
+  931002-1.c
+  comp-goto-2.c
+  nest-align-1.c
+  nest-stdar-1.c
+  nestfunc-1.c
+  nestfunc-2.c
+  nestfunc-3.c
+  nestfunc-5.c
+  nestfunc-6.c
+  nestfunc-7.c
+  pr22061-3.c
+  pr22061-4.c
+  pr24135.c
+  pr51447.c
+  pr71494.c
+
+  # Variable length arrays in structs
+  20020412-1.c
+  20040308-1.c
+  20040423-1.c
+  20041218-2.c
+  20070919-1.c
+  align-nest.c
+  pr41935.c
+  pr82210.c
+
+  # Initialization of flexible array member
+  pr28865.c
+
+  # GCC Extension: __builtin_*
+  20071018-1.c       # __builtin_malloc
+  20071120-1.c       # __builtin_malloc
+  builtin-bitops-1.c # __builtin_clrsb, __builtin_clrsbl, __builtin_clrsbll
+  pr36765.c          # __builtin_malloc
+  pr39228.c          # __builtin_isinff, __builtin_isinfl
+  pr43008.c          # __builtin_malloc
+  pr47237.c          # __builtin_apply, __builtin_apply_args
+  pr78586.c          # __builtin_sprintf
+  pr79327.c          # __builtin_sprintf
+  pr84339.c          # __builtin_malloc, __builtin_free
+  pr84478.c          # __builtin_malloc
+  pr85331.c          # __builtin_shuffle
+  strlen-7.c         # __builtin_malloc
+  va-arg-pack-1.c    # __builtin_va_arg_pack
+
+  # Clang does not support 'DD' suffix on floating constant
+  pr80692.c
+
+  # Test requires compiler to recognise llabs without including <inttypes.h> -
+  # clang will only recognise this function if the header is included.
+  20021127-1.c
+
+  # Tests __attribute__((noinit))
+  noinit-attribute.c
+
+  # We are unable to parse the dg-additional-options for this test, which is
+  # required for it to work (we discard any with `target`, but we need the
+  # define for this test)
+  20101011-1.c
+
+  # The following rely on C Undefined Behavior
+
+  # Test relies on UB around (float)INT_MAX
+  20031003-1.c
+
+  # UB: Expects very specific behavior around setjmp/longjmp and allocas, which
+  # clang is not obliged to replicate.
+  pr64242.c
+
+  # The following all expect very specific optimiser behavior from the compiler
+
+  # __builtin_return_address(n) with n > 0 not guaranteed to give expected result
+  20010122-1.c
+
+  # Expects gnu89 inline behavior
+  20001121-1.c
+  20020107-1.c
+  930526-1.c
+  961223-1.c
+  980608-1.c
+  bcp-1.c
+  loop-2c.c
+  p18298.c
+  restrict-1.c
+  unroll-1.c
+  va-arg-7.c
+  va-arg-8.c
+
+  # Clang at O0 does not work out the code referencing the undefined symbol can
+  # never be executed
+  medce-1.c
+
+  # Expects that function is always inlined
+  990208-1.c
+
+  # pragma optimize("-option") is ignored by Clang
+  alias-1.c
+  pr79043.c
+
+  # The following all expect very specific optimiser behavior from the compiler
+  # around __printf_chk and friends.
+  fprintf-chk-1.c
+  printf-chk-1.c
+  vfprintf-chk-1.c
+  vprintf-chk-1.c
+
+)
+list(APPEND TestsToSkip ${UnsupportedTests})
+
+# Tests where clang currently has bugs or issues
+file(GLOB FailingTests CONFIGURE_DEPENDS
+
+  # Handling of bitfields is different between clang and GCC:
+  # http://lists.llvm.org/pipermail/llvm-dev/2017-October/118507.html
+  # https://gcc.gnu.org/ml/gcc/2017-10/msg00192.html
+  # http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1260.htm
+  bitfld-3.c
+  bitfld-5.c
+  pr32244-1.c
+  pr34971.c
+
+  # This causes a stacktrace on x86 in X86TargetLowering::LowerCallTo
+  pr84169.c
+
+  # clang complains the array is too large
+  991014-1.c
+
+  # __builtin_setjmp/__builtin_longjmp are interacting badly with optimisation
+  pr60003.c
+)
+list(APPEND TestsToSkip ${FailingTests})
+
+##
+## Tests that require extra CFLAGS in Clang
+##
+
+# Tests that require -fwrapv
+file(GLOB TestRequiresFWrapV CONFIGURE_DEPENDS
+  # Test relies on undefined signed overflow behavior (int foo - INT_MIN).
+  20040409-1.c
+  20040409-2.c
+  20040409-3.c
+)
+
+# Tests that require -Wno-return-type
+file(GLOB TestRequiresWNoReturnType CONFIGURE_DEPENDS
+  # Non-void function must return a value
+  920302-1.c
+  920501-3.c
+  920728-1.c
+)
+
+# Tests that require libm (-lm ldflag)
+file(GLOB TestRequiresLibM CONFIGURE_DEPENDS
+  980709-1.c
+  float-floor.c
+)
+
+# Tests that require newnlib Nano IO (--undefined=_printf_float ldflag)
+file(GLOB TestRequiresNanoIO CONFIGURE_DEPENDS
+  920501-8.c
+  930513-1.c
+)
+
+##
+## Architecture-specific Test Blacklists
+##
+
+
+# Tests that require mmap
+include(CheckSymbolExists)
+CHECK_SYMBOL_EXISTS("mmap" "sys/types.h;sys/mman.h" HAVE_MMAP)
+if (NOT HAVE_MMAP)
+  file(GLOB MMapTests
+    loop-2f.c
+    loop-2g.c
+  )
+  list(APPEND TestsToSkip ${MMapTests})
+endif()
+
+# x86-only Tests
+if(NOT ARCH MATCHES "x86")
+  file(GLOB X86OnlyTests CONFIGURE_DEPENDS
+    990413-2.c
+  )
+
+  list(APPEND TestsToSkip ${X86OnlyTests})
+endif()
+
+# RISC-V Test Blacklist
+if(ARCH MATCHES "riscv")
+  file(GLOB RISCVTestsToSkip CONFIGURE_DEPENDS
+    # No backend support for __builtin_longjmp/__builtin_setjmp
+    built-in-setjmp.c
+    pr84521.c
+  )
+
+  # RISC-V 32-bit Test Blacklist
+  if (ARCH MATCHES "riscv32")
+    file(GLOB RISCV32TestsToSkip CONFIGURE_DEPENDS
+      # No support for __int128 on rv32
+      pr84748.c
+    )
+
+    list(APPEND RISCVTestsToSkip ${RISCV32TestsToSkip})
+  endif()
+
+  list(APPEND TestsToSkip ${RISCVTestsToSkip})
+endif()
+
+##
+## Test target setup
+##
+
+file(GLOB TestFiles CONFIGURE_DEPENDS
+  *.c
+)
+foreach(TestToSkip ${TestsToSkip})
+  list(REMOVE_ITEM TestFiles ${TestToSkip})
+endforeach()
+
+foreach(File ${TestFiles})
+  set(MaybeCFlags)
+  set(MaybeLDFlags)
+
+  # Add Test-specific CFLAGS/LDFLAGS here
+
+  if(${File} IN_LIST TestRequiresLibM)
+    list(APPEND MaybeLDFlags "-lm")
+  endif()
+
+  if(${File} IN_LIST TestRequiresWNoReturnType)
+    list(APPEND MaybeCFlags "-Wno-return-type")
+  endif()
+
+  if(${File} IN_LIST TestRequiresFWrapV)
+    list(APPEND MaybeCFlags "-fwrapv")
+  endif()
+
+  if(${File} IN_LIST TestRequiresNanoIO)
+    list(APPEND MaybeLDFlags "-Wl,-u,_printf_float")
+  endif()
+
+  # Add Test Target
+  gcc_torture_execute_test(${File}
+                           PREFIX "GCC-C-execute"
+                           CFLAGS ${MaybeCFlags}
+                           LDFLAGS ${MaybeLDFlags})
+endforeach()
