@@ -31,7 +31,9 @@ function(gcc_torture_dg_options_cflags Variable File)
   endforeach()
 
   # Remove any flags that will make clang error
-  list(REMOVE_ITEM DG_CFLAGS ${CLANG_ERRORING_CFLAGS})
+  if (DG_CFLAGS)
+    list(REMOVE_ITEM DG_CFLAGS ${CLANG_ERRORING_CFLAGS})
+  endif()
 
   # Set the parent scope variable
   set(${Variable} ${DG_CFLAGS} PARENT_SCOPE)
