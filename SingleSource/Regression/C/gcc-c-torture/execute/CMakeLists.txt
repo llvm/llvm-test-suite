@@ -96,6 +96,9 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # clang is not obliged to replicate.
   pr64242.c
 
+  # UB: Creates two `restrict` pointers that alias in the same scope.
+  pr38212.c
+
   # The following all expect very specific optimiser behavior from the compiler
 
   # __builtin_return_address(n) with n > 0 not guaranteed to give expected result
