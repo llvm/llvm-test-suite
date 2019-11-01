@@ -1,4 +1,4 @@
-if(ARCH MATCHES "x86" OR ARCH MATCHES "riscv")
+if(ARCH MATCHES "x86" OR ARCH MATCHES "riscv"  OR ARCH MATCHES "SystemZ")
   add_subdirectory(gcc-c-torture)
 endif()
 

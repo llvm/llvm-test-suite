@@ -240,6 +240,20 @@ if(ARCH MATCHES "riscv")
   list(APPEND TestsToSkip ${RISCVTestsToSkip})
 endif()
 
+# SystemZ Test Blacklist
+if(ARCH MATCHES "SystemZ")
+  file(GLOB SystemZTestsToSkip CONFIGURE_DEPENDS
+    # error: __builtin_longjmp is not supported for the current target
+    # error: __builtin_setjmp is not supported for the current target
+    built-in-setjmp.c
+    pr84521.c
+    # Triggers "Unsupported stack frame traversal count"
+    20030323-1.c
+  )
+
+  list(APPEND TestsToSkip ${SystemZTestsToSkip})
+endif()
+
 ##
 ## Test target setup
 ##
