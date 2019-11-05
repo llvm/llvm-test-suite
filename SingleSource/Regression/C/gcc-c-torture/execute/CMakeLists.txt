@@ -219,6 +219,33 @@ if(NOT ARCH MATCHES "x86")
   list(APPEND TestsToSkip ${X86OnlyTests})
 endif()
 
+# MIPS Test Blacklist
+if(ARCH MATCHES "Mips")
+  file(GLOB MipsTestsToSkip CONFIGURE_DEPENDS
+    # No backend support for __builtin_longjmp/__builtin_setjmp
+    built-in-setjmp.c
+    pr84521.c
+    # Triggers "return address can be determined only for current frame"
+    20030323-1.c
+    # These test cases compiled very long due PR43263.
+    pr20621-1.c
+    pr23135.c
+    pr28982b.c
+  )
+
+  # MIPS 32-bit Test Blacklist
+  if(NOT MIPS_IS_MIPS64_ENABLED)
+    file(GLOB Mips32TestsToSkip CONFIGURE_DEPENDS
+      # No support for __int128 on MIPS 32-bit
+      pr84748.c
+    )
+
+    list(APPEND MipsTestsToSkip ${Mips32TestsToSkip})
+  endif()
+
+  list(APPEND TestsToSkip ${MipsTestsToSkip})
+endif()
+
 # RISC-V Test Blacklist
 if(ARCH MATCHES "riscv")
   file(GLOB RISCVTestsToSkip CONFIGURE_DEPENDS
