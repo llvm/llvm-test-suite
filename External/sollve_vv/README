@@ -1,0 +1,54 @@
+SOLLVE OpenMP Offloading Validation & Verification Suite
+https://crpl.cis.udel.edu/ompvvsollve/
+
+This directory contains a CMakeLists.txt for the SOLLVE OpenMP
+Offloading Validation and Verification Suite so it can be built as part
+of the LLVM test-suite. Its sources are not part of the test-suite but
+have to be fetched separately from https://github.com/SOLLVE/sollve_vv.
+
+The sources are expected either in ${TEST_SUITE_SOLLVEVV_ROOT} or
+${TEST_SUITE_EXTERNALS_DIR}/sollve_vv, where TEST_SUITE_SOLLVEVV_ROOT
+and TEST_SUITE_EXTERNALS_DIR are CMake configure variables. If none of
+them are set, it will look into
+${CMAKE_SOURCE_DIR}/test-suite-externals/sollve_vv where
+CMAKE_SOURCE_DIR is the root directory of the test-suite sources.
+
+The CMakeLists.txt will search for all C and C++ source files of the
+OpenMP V&V suite, compile and run them. That is, running llvm-lit
+(or "make check") will require a compatible accelerator on the running
+machine.
+
+OpenMP support is autodetected by CMake, but clang requires additional
+flags to enable offloading. An example run is:
+
+$ cmake ../llvm-test-suite -GNinja -DCMAKE_BUILD_TYPE=Release           \
+  -DTEST_SUITE_SOLLVEVV_ROOT=${HOME}/src/sollve_vv                      \
+  -DTEST_SUITE_LIT=${HOME}/build/llvm-project/release/bin/llvm-lit      \
+  -DCMAKE_C_COMPILER=${HOME}/install/llvm-project/release/bin/clang     \
+  -DCMAKE_CXX_COMPILER=${HOME}/install/llvm-project/release/bin/clang++ \
+  -DTEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
+  -DTEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70;-lopenmptarget \
+  -DTEST_SUITE_LIT_FLAGS=-svj1
+
+$ LD_LIBRARY_PATH=${HOME}/install/llvm-project/release/lib ninja check
+
+
+Clang also needs to be compiled with enabled offloading for the chosen
+target. A configuration compatible for the commands above is:
+
+$ cmake ../llvm-project/llvm -GNinja -DCMAKE_BUILD_TYPE=Release   \
+  -DCMAKE_INSTALL_PREFIX=${HOME}/install/llvm-project/release     \
+  -DLLVM_ENABLE_PROJECTS=clang;openmp                             \
+  -DCUDA_TOOLKIT_ROOT_DIR=/soft/compilers/cuda/cuda-10.1.243      \
+  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=70
+
+$ cmake install
+
+
+In this example, Clang is not installed into a default search path such
+that the paths have to be specified explicitly. The options
+"-DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=70" and "-march=sm_70" are to
+select the PTX version to compile to. "-DCUDA_TOOLKIT_ROOT_DIR" and
+"--cuda-path" point to the CUDA SDK to use. The option
+"-DTEST_SUITE_LIT_FLAGS=-j1" is required to not run the tests in parallel;
+multiple tests may conflict while running on the same GPU and thus fail.

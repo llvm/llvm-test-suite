@@ -188,6 +188,7 @@ endif()
 include(TestSuite)
 include(SingleMultiSource)
 find_package(TCL)
+find_package(OpenMP)
 
 if(NOT DEFINED TARGET_OS)
   message(STATUS "Check target operating system - ${CMAKE_SYSTEM_NAME}")
