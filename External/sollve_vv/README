@@ -26,6 +26,7 @@ $ cmake ../llvm-test-suite -GNinja -DCMAKE_BUILD_TYPE=Release           \
   -DTEST_SUITE_LIT=${HOME}/build/llvm-project/release/bin/llvm-lit      \
   -DCMAKE_C_COMPILER=${HOME}/install/llvm-project/release/bin/clang     \
   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm-project/release/bin/clang++ \
+  -DTEST_SUITE_SUBDIRS=External/sollve_vv                               \
   -DTEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
   -DTEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70;-lopenmptarget \
   -DTEST_SUITE_LIT_FLAGS=-svj1
