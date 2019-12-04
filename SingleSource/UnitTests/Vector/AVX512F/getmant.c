@@ -116,9 +116,9 @@ float getmant_ps(float src, int interval, int sc) {
 double getmant_pd(double src, int interval, int sc) {
   union {
     struct {
-      unsigned long int fraction : 52;
-      unsigned int exp : 11;
-      unsigned int sign : 1;
+      unsigned long long fraction : 52;
+      unsigned long long exp : 11;
+      unsigned long long sign : 1;
     } st;
     double value;
   } dst;
