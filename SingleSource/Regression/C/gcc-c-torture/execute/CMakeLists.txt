@@ -281,6 +281,22 @@ if(ARCH MATCHES "SystemZ")
   list(APPEND TestsToSkip ${SystemZTestsToSkip})
 endif()
 
+# Darwin Test Blacklist
+if(TARGET_OS STREQUAL "Darwin")
+  file(GLOB DarwinTestsToSkip CONFIGURE_DEPENDS
+    # error: aliases are not supported on darwin
+    alias-2.c
+    alias-3.c
+    alias-4.c
+    # Undefined symbols for architecture x86_64:
+    # "_printf_float", referenced from:
+    # -u command line option
+    930513-1.c
+    920501-8.c
+  )
+  list(APPEND TestsToSkip ${DarwinTestsToSkip})
+endif()
+
 ##
 ## Test target setup
 ##
