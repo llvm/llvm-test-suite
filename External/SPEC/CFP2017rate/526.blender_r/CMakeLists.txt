@@ -15,6 +15,7 @@ add_definitions(
   -DHAVE_UNSIGNED_CHAR
 )
 add_compile_options(-funsigned-char)
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-D__BOOL_DEFINED>)
 speccpu2017_add_include_dirs(
   specrand
   blender/extern/binreloc/include
