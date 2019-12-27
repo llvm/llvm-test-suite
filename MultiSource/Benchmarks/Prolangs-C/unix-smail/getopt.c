@@ -37,7 +37,7 @@
 
 int	unix_smail_opterr = 1;
 int	unix_smail_optind = 1;
-int	optopt_;
+int	unix_smail_optopt;
 char	*optarg;
 #define EOF (-1)
 
@@ -55,7 +55,7 @@ int unix_smail_getopt(int argc,char **argv,char *opts)
 			unix_smail_optind++;
 			return(EOF);
 		}
-	optopt_ = c = argv[unix_smail_optind][sp];
+	unix_smail_optopt = c = argv[unix_smail_optind][sp];
 	if(c == ':' || (cp=index(opts, c)) == NULL) {
 		ERR(": illegal option -- ", c);
 		if(argv[unix_smail_optind][++sp] == '\0') {
