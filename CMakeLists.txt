@@ -229,6 +229,13 @@ if(ARCH STREQUAL "Mips")
   check_symbol_exists(__mips64 "" MIPS_IS_MIPS64_ENABLED)
 endif()
 
+# PowerPC/Linux needs -ffp-contract=off so that:
+#     The outputs can be compared to gcc.
+#     The outputs match the reference outputs.
+if(ARCH STREQUAL "PowerPC")
+  add_definitions(-ffp-contract=off)
+endif()
+
 find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
 set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
 mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
