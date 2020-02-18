@@ -60,15 +60,15 @@ init_contexts (struct img_par* img)
 
 
   //--- texture coding contexts ---
-  BIARI_CTX_INIT1 (                 NUM_IPR_CTX,  tc->ipr_contexts,     INIT_IPR,       img->model_number);
-  BIARI_CTX_INIT1 (                 NUM_CIPR_CTX, tc->cipr_contexts,    INIT_CIPR,      img->model_number);
-  BIARI_CTX_INIT2 (3,               NUM_CBP_CTX,  tc->cbp_contexts,     INIT_CBP,       img->model_number);
-  BIARI_CTX_INIT2 (8,               NUM_BCBP_CTX, tc->bcbp_contexts,    INIT_BCBP,      img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_MAP_CTX,  tc->map_contexts,     INIT_MAP,       img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_LAST_CTX, tc->last_contexts,    INIT_LAST,      img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_ONE_CTX,  tc->one_contexts,     INIT_ONE,       img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_ABS_CTX,  tc->abs_contexts,     INIT_ABS,       img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_MAP_CTX,  tc->fld_map_contexts, INIT_FLD_MAP,   img->model_number);
-  BIARI_CTX_INIT2 (NUM_BLOCK_TYPES, NUM_LAST_CTX, tc->fld_last_contexts,INIT_FLD_LAST,  img->model_number);
+  BIARI_CTX_INIT1 (   NUM_IPR_CTX,  tc->ipr_contexts,     INIT_IPR,       img->model_number);
+  BIARI_CTX_INIT1 (   NUM_CIPR_CTX, tc->cipr_contexts,    INIT_CIPR,      img->model_number);
+  BIARI_CTX_INIT2 (3, NUM_CBP_CTX,  tc->cbp_contexts,     INIT_CBP,       img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_BCBP_CTX, tc->bcbp_contexts,    INIT_BCBP,      img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_MAP_CTX,  tc->map_contexts,     INIT_MAP,       img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_LAST_CTX, tc->last_contexts,    INIT_LAST,      img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_ONE_CTX,  tc->one_contexts,     INIT_ONE,       img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_ABS_CTX,  tc->abs_contexts,     INIT_ABS,       img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_MAP_CTX,  tc->fld_map_contexts, INIT_FLD_MAP,   img->model_number);
+  BIARI_CTX_INIT2 (8, NUM_LAST_CTX, tc->fld_last_contexts,INIT_FLD_LAST,  img->model_number);
 }
 
