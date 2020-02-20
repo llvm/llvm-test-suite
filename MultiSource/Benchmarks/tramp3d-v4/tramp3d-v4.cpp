@@ -8,6 +8,7 @@
 #include <limits>
 #include <math.h>
 #include <cstring>
+#include <sstream>
 
 namespace Smarts {
 template<class T>
