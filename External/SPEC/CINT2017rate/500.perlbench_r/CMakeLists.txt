@@ -6,6 +6,8 @@ endif ()
 
 speccpu2017_benchmark(RATE)
 
+add_definitions(-DSPEC_MACOSX_X64)
+
 add_definitions(
   -DPERL_CORE
   -DDOUBLE_SLASHES_SPECIAL=0
