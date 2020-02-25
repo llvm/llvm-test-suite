@@ -154,8 +154,6 @@ macro (speccpu2017_benchmark)
       add_definitions(-DSPEC_LINUX_AARCH64)
     elseif (ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Windows")
       # Windows x86/x64
-    elseif (TARGET_OS STREQUAL "Darwin")
-      add_definitions(-DSPEC_MACOSX)
     else ()
       message("ARCH: ${ARCH}")
       message("TARGET_OS: ${TARGET_OS}")
