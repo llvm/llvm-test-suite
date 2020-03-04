@@ -1,4 +1,4 @@
-list(APPEND CPPFLAGS -D__USE_LARGEFILE64 -D_FILE_OFFSET_BITS=64)
+list(APPEND CPPFLAGS -fcommon -D__USE_LARGEFILE64 -D_FILE_OFFSET_BITS=64)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -i data/test.264 -o Output/test_dec.yuv -r data/test_rec.yuv)
 llvm_multisource(ldecod)

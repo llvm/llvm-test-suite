@@ -1,3 +1,4 @@
+list(APPEND CFLAGS -fcommon)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS irsmk_input)
 llvm_multisource(IRSmk)
