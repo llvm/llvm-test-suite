@@ -17,10 +17,19 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <cstdlib>
 #include <cstring>
+#include <iostream>
 #include <vector>
 
 #include "benchmark/benchmark.h"
+
+// This function prevents the compiler from interfering with `memcmp` and
+// makes sure the function is called.
+int RealMemCmp(const char *p, const char *q, size_t s)
+    __attribute__((no_builtin("memcmp"))) {
+  return memcmp(p, q, s);
+}
 
 // Benchmarks `memcmp(p, q, size) OP 0` where n is known at compile time and OP
 // is defined by `Pred`. The compiler typically inlines the memcmp + comparion
@@ -44,6 +53,13 @@ void BM_MemCmp(benchmark::State& state) {
   for (int i = 0; i < kNumElements; ++i)
     Mod().template Change<kSize>(p + i * kSize);
 
+  // First check the validity of the results.
+  if (Pred::Cmp(RealMemCmp(p, q, kSize)) != Pred::Cmp(memcmp(p, q, kSize))) {
+    std::cerr << "invalid results for Pred=" << Pred::kDisplay
+              << " Mod=" << Mod::kDisplay << " kSize=" << kSize << std::endl;
+    std::exit(1);
+  }
+
   benchmark::DoNotOptimize(p);
   benchmark::DoNotOptimize(q);
 
@@ -52,7 +68,7 @@ void BM_MemCmp(benchmark::State& state) {
     benchmark::ClobberMemory();
 
     for (int i = 0; i < kNumElements; ++i) {
-      int res = Pred()(memcmp(p + i * kSize, q + i * kSize, kSize));
+      bool res = Pred::Cmp(memcmp(p + i * kSize, q + i * kSize, kSize));
       benchmark::DoNotOptimize(res);
     }
   }
@@ -61,37 +77,35 @@ void BM_MemCmp(benchmark::State& state) {
 
 // Predicates.
 struct EqZero {
-  bool operator()(int v) const { return v == 0; }
+  static bool Cmp(int v) { return v == 0; }
+  inline static constexpr const char kDisplay[] = "EqZero";
 };
 struct LessThanZero {
-  bool operator()(int v) const { return v < 0; }
+  static bool Cmp(int v) { return v < 0; }
+  inline static constexpr const char kDisplay[] = "LessThanZero";
 };
 struct GreaterThanZero {
-  bool operator()(int v) const { return v > 0; }
+  static bool Cmp(int v) { return v > 0; }
+  inline static constexpr const char kDisplay[] = "GreaterThanZero";
 };
 
 // Functors to change the first/mid/last or no value.
 struct None {
   template <int kSize>
   void Change(char* const p) const {}
+  inline static constexpr const char kDisplay[] = "None";
 };
 struct First {
-  template <int kSize>
-  void Change(char* const p) const {
-    p[0] = 128;
-  }
+  template <int kSize> void Change(char *const p) const { p[0] = 0xff; }
+  inline static constexpr const char kDisplay[] = "First";
 };
 struct Mid {
-  template <int kSize>
-  void Change(char* const p) const {
-    p[kSize / 2] = 128;
-  }
+  template <int kSize> void Change(char *const p) const { p[kSize / 2] = 0xff; }
+  inline static constexpr const char kDisplay[] = "Mid";
 };
 struct Last {
-  template <int kSize>
-  void Change(char* const p) const {
-    p[kSize - 1] = 128;
-  }
+  template <int kSize> void Change(char *const p) const { p[kSize - 1] = 0xff; }
+  inline static constexpr const char kDisplay[] = "Last";
 };
 
 #define MEMCMP_BENCHMARK_PRED_CHANGE(size, pred, change) \
