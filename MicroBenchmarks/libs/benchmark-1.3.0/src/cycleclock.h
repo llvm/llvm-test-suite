@@ -82,6 +82,15 @@ inline BENCHMARK_ALWAYS_INLINE int64_t Now() {
   uint64_t low, high;
   __asm__ volatile("rdtsc" : "=a"(low), "=d"(high));
   return (high << 32) | low;
+#elif defined(__hexagon__)
+  uint64_t  retv;
+
+  asm volatile ("r0=#0x52; trap0(#0); %0=r1:0;"
+         :"=r"(retv)        /* output */
+         :                  /* no inputs */
+         :"r0", "r1"      /* clobbered register */
+         );
+  return(retv);
 #elif defined(__powerpc__) || defined(__ppc__)
   // This returns a time-base, which is not always precisely a cycle-count.
   int64_t tbl, tbu0, tbu1;

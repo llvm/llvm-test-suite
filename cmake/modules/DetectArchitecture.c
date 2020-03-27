@@ -22,6 +22,8 @@ const char *str = "ARCHITECTURE IS Sparc";
 const char *str = "ARCHITECTURE IS XCore";
 #elif defined(__i386__) || defined(__x86_64__)
 const char *str = "ARCHITECTURE IS x86";
+#elif defined(__hexagon__)
+const char *str = "ARCHITECTURE IS Hexagon";
 #endif
 
 int main(int argc, char **argv) {
