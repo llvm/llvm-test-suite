@@ -4,7 +4,7 @@
 include(External)
 
 set(TEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS "-fopenmp-targets=nvptx64-nvidia-cuda;-Xopenmp-target;-march=sm_70" CACHE STRING "Compiler arguments for OpenMP offloading")
-set(TEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS "-fopenmp-targets=nvptx64-nvidia-cuda;-Xopenmp-target;-march=sm_70;-lopenmptarget" CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS "-fopenmp-targets=nvptx64-nvidia-cuda;-Xopenmp-target;-march=sm_70;-lomptarget" CACHE STRING "Linker arguments for OpenMP offloading")
 
 function (add_sollvevv LANG)
   set(_includedir "${TEST_SUITE_SOLLVEVV_ROOT}/ompvv" )
