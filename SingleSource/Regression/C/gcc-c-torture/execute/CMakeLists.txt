@@ -281,6 +281,21 @@ if(ARCH MATCHES "SystemZ")
   list(APPEND TestsToSkip ${SystemZTestsToSkip})
 endif()
 
+# AArch64 Test Blacklist
+if(ARCH MATCHES "AArch64")
+  file(GLOB AArch64TestsToSkip CONFIGURE_DEPENDS
+    # error: __builtin_longjmp is not supported for the current target
+    # error: __builtin_setjmp is not supported for the current target
+    built-in-setjmp.c
+    pr84521.c
+    # Triggers an assertion failure at at least -O3
+    va-arg-22.c
+  )
+
+  list(APPEND TestsToSkip ${AArch64TestsToSkip})
+endif()
+
+
 # Darwin Test Blacklist
 if(TARGET_OS STREQUAL "Darwin")
   file(GLOB DarwinTestsToSkip CONFIGURE_DEPENDS
