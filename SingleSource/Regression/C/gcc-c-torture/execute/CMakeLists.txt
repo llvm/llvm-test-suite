@@ -290,6 +290,9 @@ if(ARCH MATCHES "AArch64")
     pr84521.c
     # Triggers an assertion failure at at least -O3
     va-arg-22.c
+    # Triggers an assertion failure in RegBankSelect pass at -O0 (GlobalIsel)
+    pr71626-1.c
+    pr71626-2.c
   )
 
   list(APPEND TestsToSkip ${AArch64TestsToSkip})
