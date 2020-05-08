@@ -46,22 +46,22 @@ void init_data() {
 
 void do_mm_mmask_i64gather_epi32() {
   int i;
-  for (i = 0; i < NUM; i += 2) {
+  for (i = 0; i < NUM; i += 4) {
     __m128i ind = _mm_loadu_si128((const __m128i *)(g_index + i));
     __m128i old_dst = _mm_loadu_si128((__m128i const *)(dst_i + i));
     __m128i gtr =
-        _mm_mmask_i64gather_epi32(old_dst, mask128[i / 2], ind, src_i, SCALE);
+        _mm_mmask_i64gather_epi32(old_dst, mask128[i / 4], ind, src_i, SCALE);
     _mm_storeu_si128((__m128i *)(dst128_i + i), gtr);
   }
 }
 
 void do_mm_mmask_i64gather_ps() {
   int i;
-  for (i = 0; i < NUM; i += 2) {
+  for (i = 0; i < NUM; i += 4) {
     __m128i ind = _mm_loadu_si128((const __m128i *)(g_index + i));
     __m128 old_dst = _mm_loadu_ps(dst_f + i);
     __m128 gtr =
-        _mm_mmask_i64gather_ps(old_dst, mask128[i / 2], ind, src_f, SCALE);
+        _mm_mmask_i64gather_ps(old_dst, mask128[i / 4], ind, src_f, SCALE);
     _mm_storeu_ps(dst128_f + i, gtr);
   }
 }
@@ -110,16 +110,42 @@ int check(int id, int *res_dst, int *pass_thru_vals, int *mask, int *src,
   return 0;
 }
 
+int checkh(int id, int *res_dst, int *pass_thru_vals, int *mask, int *src,
+          int elems_in_vector) {
+  int i;
+  for (i = 0; i < NUM; i++) {
+    int kmask = mask[i / elems_in_vector];
+    int kmask_bit = kmask & (1 << (i % elems_in_vector));
+
+    int v;
+    if (i % elems_in_vector >= elems_in_vector / 2)
+      v = 0;
+    else
+      v = kmask_bit ? src[g_index[i]] : pass_thru_vals[i];
+    // printf("v= %d, g_index[i] = %ld, src[g_index[i]]= %d, res_dst[i]=%d\n ",
+    // v, g_index[i], src[g_index[i]], res_dst[i]);
+
+    if (v != res_dst[i]) {
+      printf("The testcase #%d FAILed at %d iteration\n", id, i);
+
+      printf("Expected value %d, actual %d\n", v, res_dst[i]);
+
+      return -1;
+    }
+  }
+  return 0;
+}
+
 int main() {
   int error = 0;
 
   init_data();
 
   do_mm_mmask_i64gather_epi32();
-  error |= check(1, dst128_i, dst_i, mask128, src_i, 2);
+  error |= checkh(1, dst128_i, dst_i, mask128, src_i, 4);
 
   do_mm_mmask_i64gather_ps();
-  error |= check(2, (int *)dst128_f, (int *)dst_f, mask128, (int *)src_f, 2);
+  error |= checkh(2, (int *)dst128_f, (int *)dst_f, mask128, (int *)src_f, 4);
 
   do_mm256_mmask_i64gather_epi32();
   error |= check(3, dst256_i, dst_i, mask256, src_i, 4);
