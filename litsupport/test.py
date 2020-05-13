@@ -13,9 +13,11 @@ import litsupport.testplan
 import os
 
 
-SKIPPED = lit.Test.ResultCode('SKIPPED', False)
-NOEXE = lit.Test.ResultCode('NOEXE', True)
+NOCHANGE = lit.Test.ResultCode('NOCHANGE', False)
+lit.main.add_result_category(NOCHANGE, "Executable Unchanged")
 
+NOEXE = lit.Test.ResultCode('NOEXE', True)
+lit.main.add_result_category(NOEXE, "Executable Missing")
 
 class TestSuiteTest(lit.formats.ShTest):
     def __init__(self):
@@ -46,7 +48,7 @@ class TestSuiteTest(lit.formats.ShTest):
             litsupport.modules.hash.compute(context)
             if litsupport.modules.hash.same_as_previous(context):
                 result = lit.Test.Result(
-                        SKIPPED, 'Executable identical to previous run')
+                        NOCHANGE, 'Executable identical to previous run')
                 val = lit.Test.toMetricValue(context.executable_hash)
                 result.addMetric('hash', val)
                 return result

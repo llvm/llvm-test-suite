@@ -12,7 +12,7 @@
       "metrics": {
         "hash": "5dbd958d0108aca7182edcc98225739b"
       }, 
-      "name": "test-suite :: tests/skip.test", 
+      "name": "test-suite :: tests/nochange.test",
       "output": "\ntests/foo.sh"
     }
   ]
