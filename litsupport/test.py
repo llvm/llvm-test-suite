@@ -19,9 +19,11 @@ NOEXE = lit.Test.ResultCode('NOEXE', True)
 # add_result_category has been added recently to lit. Lit will crash if it encounters a result code that has not been registered.
 # However, some users rely on the lit version provided by pypi that does not require or have add_result_category.
 # See for more details: http://lists.llvm.org/pipermail/llvm-commits/Week-of-Mon-20200511/780899.html
-if lit.main.add_result_category:
+try:
     lit.main.add_result_category(NOEXE, "Executable Missing")
     lit.main.add_result_category(NOCHANGE, "Executable Unchanged")
+except AttributeError:
+    pass
 
 
 class TestSuiteTest(lit.formats.ShTest):
