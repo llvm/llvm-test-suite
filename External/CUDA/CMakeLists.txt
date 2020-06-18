@@ -36,7 +36,7 @@ set(SUPPORTED_GPU_CUDA_11_0 ${SUPPORTED_GPU_CUDA_10_2}
 # Output:
 #    Sets Var=x.y.z
 macro(get_version Var Path)
-    string(REGEX MATCH "[0-9]+(\\.[0-9]+)+" ${Var} ${Path})
+    string(REGEX MATCH "[0-9]+(\\.[0-9]+)*" ${Var} ${Path})
 endmacro (get_version)
 
 # Helper function to glob CUDA source files and set LANGUAGE property
@@ -252,7 +252,7 @@ macro(create_cuda_tests)
 	  message(STATUS "Found libstdc++ ${GccVersion}")
 	  add_library(libstdcxx-${GccVersion} SHARED IMPORTED)
 	  set_property(TARGET libstdcxx-${GccVersion} PROPERTY IMPORTED_LOCATION
-	    ${GccDir}/lib64/libstdc++.so)
+	    ${_path_to_libstdcxx})
 	  list(APPEND GCC_PATHS ${GccDir})
 	  break()
 	endif()
