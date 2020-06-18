@@ -5,35 +5,30 @@ set(SUPPORTED_GPU_CUDA_7_0
   sm_20 sm_21
   sm_30 sm_32 sm_35 sm_37
   sm_50 sm_52 sm_53)
-set(SUPPORTED_GPU_CUDA_7_5
-  sm_20 sm_21
-  sm_30 sm_32 sm_35 sm_37
-  sm_50 sm_52 sm_53)
-set(SUPPORTED_GPU_CUDA_8_0
-  sm_20 sm_21
-  sm_30 sm_32 sm_35 sm_37
-  sm_50 sm_52 sm_53
+set(SUPPORTED_GPU_CUDA_7_5 ${SUPPORTED_GPU_CUDA_7_0})
+
+set(SUPPORTED_GPU_CUDA_8_0 ${SUPPORTED_GPU_CUDA_7_5}
   sm_60 sm_61 sm_62)
-set(SUPPORTED_GPU_CUDA_9_0
+
+set(SUPPORTED_GPU_CUDA_9_0 ${SUPPORTED_GPU_CUDA_8_0}
+  sm_70)
+set(SUPPORTED_GPU_CUDA_9_1 ${SUPPORTED_GPU_CUDA_9_0}
+  sm_72)
+# 9.2 removed sm_2x
+set(SUPPORTED_GPU_CUDA_9_2
   sm_30 sm_32 sm_35 sm_37
   sm_50 sm_52 sm_53
   sm_60 sm_61 sm_62
-  sm_70)
-set(SUPPORTED_GPU_CUDA_9_1
-  sm_30 sm_32 sm_35
-  sm_50 sm_52 sm_53
-  sm_60 sm_61 sm_62
-  sm_70 sm_72)
-set(SUPPORTED_GPU_CUDA_9_2
-  sm_30 sm_32 sm_35
-  sm_50 sm_52 sm_53
-  sm_60 sm_61 sm_62
-  sm_70 sm_72)
-set(SUPPORTED_GPU_CUDA_10_0
-  sm_30 sm_32 sm_35
-  sm_50 sm_52 sm_53
-  sm_60 sm_61 sm_62
-  sm_70 sm_72 sm_75)
+  sm_70 sm_72
+)
+
+set(SUPPORTED_GPU_CUDA_10_0 ${SUPPORTED_GPU_CUDA_9_2}
+  sm_75)
+set(SUPPORTED_GPU_CUDA_10_1 ${SUPPORTED_GPU_CUDA_10_0})
+set(SUPPORTED_GPU_CUDA_10_2 ${SUPPORTED_GPU_CUDA_10_1})
+
+set(SUPPORTED_GPU_CUDA_11_0 ${SUPPORTED_GPU_CUDA_10_2}
+  sm_80)
 
 # Helper macro to extract version number at the end of the string
 # Input: get_version(Var String)
