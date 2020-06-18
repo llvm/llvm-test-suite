@@ -18,8 +18,8 @@ import os
 # However, some users rely on the lit version provided by pypi that does not require or have add_result_category.
 # See for more details: http://lists.llvm.org/pipermail/llvm-commits/Week-of-Mon-20200511/780899.html
 try:
-    NOCHANGE = lit.Test.ResultCode('NOCHANGE', 'Executable Missing', False)
-    NOEXE = lit.Test.ResultCode('NOEXE', 'Executable Unchanged', True)
+    NOCHANGE = lit.Test.ResultCode('NOCHANGE', 'Executable Unchanged', False)
+    NOEXE = lit.Test.ResultCode('NOEXE', 'Executable Missing', True)
 except TypeError:
     NOCHANGE = lit.Test.ResultCode('NOCHANGE', False)
     NOEXE = lit.Test.ResultCode('NOEXE', True)
