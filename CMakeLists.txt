@@ -233,6 +233,7 @@ endif()
 #     The outputs can be compared to gcc.
 #     The outputs match the reference outputs.
 if(ARCH STREQUAL "PowerPC")
+  check_symbol_exists(_LP64 "" PPC_IS_PPC64_ENABLED)
   add_definitions(-ffp-contract=off)
 endif()
 
