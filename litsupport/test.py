@@ -13,17 +13,16 @@ import litsupport.testplan
 import os
 
 
-NOCHANGE = lit.Test.ResultCode('NOCHANGE', False)
-NOEXE = lit.Test.ResultCode('NOEXE', True)
-
-# add_result_category has been added recently to lit. Lit will crash if it encounters a result code that has not been registered.
+# The ResultCode constructor has been changed recently in lit.  An additional parameter has ben added, which
+# results in: TypeError: __new__() takes exactly 4 arguments (3 given)
 # However, some users rely on the lit version provided by pypi that does not require or have add_result_category.
 # See for more details: http://lists.llvm.org/pipermail/llvm-commits/Week-of-Mon-20200511/780899.html
 try:
-    lit.main.add_result_category(NOEXE, "Executable Missing")
-    lit.main.add_result_category(NOCHANGE, "Executable Unchanged")
-except AttributeError:
-    pass
+    NOCHANGE = lit.Test.ResultCode('NOCHANGE', 'Executable Unchanged', False)
+    NOEXE = lit.Test.ResultCode('NOEXE', 'Executable Missing', True)
+except TypeError:
+    NOCHANGE = lit.Test.ResultCode('NOCHANGE', False)
+    NOEXE = lit.Test.ResultCode('NOEXE', True)
 
 
 class TestSuiteTest(lit.formats.ShTest):
