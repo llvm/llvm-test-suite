@@ -91,6 +91,9 @@ int main() {
       case 14:
         printf("core");
         break;
+      default:
+        printf("unknown");
+        return 1;
       }
       break;
     case 7:
