@@ -8,15 +8,54 @@
 #include <random>
 #include <stdlib.h>
 
-#define EXPECT_MATRIX_EQ(A, B, R, C)                                           \
-  do {                                                                         \
-    for (unsigned r = 0; r < R; r++)                                           \
-      for (unsigned c = 0; c < C; c++)                                         \
-        if (A[r + c * R] != B[r + c * R]) {                                    \
-          std::cerr << "mismatch at " << r << ":" << c << "\n";                \
-          exit(1);                                                             \
-        }                                                                      \
-  } while (false)
+#define ABSTOL 0.000001
+#define RELTOL 0.00001
+bool fpcmp(double V1, double V2, double AbsTolerance, double RelTolerance) {
+  // Check to see if these are inside the absolute tolerance
+  if (AbsTolerance < fabs(V1 - V2)) {
+    // Nope, check the relative tolerance...
+    double Diff;
+    if (V2)
+      Diff = fabs(V1 / V2 - 1.0);
+    else if (V1)
+      Diff = fabs(V2 / V1 - 1.0);
+    else
+      Diff = 0; // Both zero.
+    if (Diff > RelTolerance) {
+      return true;
+    }
+  }
+  return false;
+}
+
+template <typename ElementTy, typename std::enable_if_t<
+                                  std::is_integral<ElementTy>::value, int> = 0>
+void expectMatrixEQ(ElementTy *A, ElementTy *B, unsigned R, unsigned C) {
+  do {
+    for (unsigned r = 0; r < R; r++)
+      for (unsigned c = 0; c < C; c++)
+        if (A[r + c * R] != B[r + c * R]) {
+          std::cerr << "mismatch at " << r << ":" << c << "\n";
+          exit(1);
+        }
+  } while (false);
+}
+
+template <typename ElementTy,
+          typename std::enable_if_t<std::is_floating_point<ElementTy>::value,
+                                    int> = 0>
+void expectMatrixEQ(ElementTy *A, ElementTy *B, unsigned R,
+                      unsigned C) {
+  do {
+    for (unsigned r = 0; r < R; r++)
+      for (unsigned c = 0; c < C; c++)
+        if (fpcmp(A[r + c * R], B[r + c * R], ABSTOL, RELTOL)) {
+          std::cerr << "mismatch at " << r << ":" << c << "\n";
+          exit(1);
+        }
+  } while (false);
+}
+
 
 template <typename EltTy>
 void zeroMatrix(EltTy *M, unsigned Rows, unsigned Cols) {
@@ -33,13 +72,25 @@ template <typename EltTy> void print(EltTy *X, unsigned Rows, unsigned Cols) {
   }
 }
 
-template <typename Ty> void initRandom(Ty *A, unsigned Rows, unsigned Cols) {
+template <typename ElementTy,
+          typename std::enable_if_t<std::is_floating_point<ElementTy>::value,
+                                    int> = 0>
+void initRandom(ElementTy *A, unsigned Rows, unsigned Cols) {
   std::default_random_engine generator;
-  std::uniform_int_distribution<double> distribution(-10.0, 10.0);
-  auto random_double = std::bind(distribution, generator);
+  std::uniform_real_distribution<ElementTy> distribution(-10.0, 10.0);
 
   for (unsigned i = 0; i < Rows * Cols; i++)
-    A[i] = random_double();
+    A[i] = distribution(generator);
+}
+
+template <typename ElementTy, typename std::enable_if_t<
+                                  std::is_integral<ElementTy>::value, int> = 0>
+void initRandom(ElementTy *A, unsigned Rows, unsigned Cols) {
+  std::default_random_engine generator;
+  std::uniform_int_distribution<ElementTy> distribution(-10, 10);
+
+  for (unsigned i = 0; i < Rows * Cols; i++)
+    A[i] = distribution(generator);
 }
 
 template <typename EltTy, unsigned R, unsigned C>
@@ -82,8 +133,8 @@ template <typename EltTy, unsigned R0, unsigned C0> void testTranspose() {
   transposeSpec<EltTy, R0, C0>(ResSpec, X);
   transposeBuiltin<EltTy, R0, C0>(ResBuiltin, X);
 
-  EXPECT_MATRIX_EQ(ResBase, ResBuiltin, R0, C0);
-  EXPECT_MATRIX_EQ(ResBase, ResSpec, C0, R0);
+  expectMatrixEQ(ResBase, ResBuiltin, R0, C0);
+  expectMatrixEQ(ResBase, ResSpec, C0, R0);
 }
 
 template <typename EltTy, unsigned R0, unsigned C0, unsigned C1>
@@ -150,9 +201,9 @@ void testMultiply() {
   multiplySpec<EltTy, R0, C0, C1>(ResSpec, X, Y);
   multiplyBuiltin<EltTy, R0, C0, C1>(ResBuiltin, X, Y);
 
-  EXPECT_MATRIX_EQ(ResSpec, ResBuiltin, R0, C1);
-  EXPECT_MATRIX_EQ(ResBase, ResBuiltin, R0, C1);
-  EXPECT_MATRIX_EQ(ResBase, ResSpec, R0, C1);
+  expectMatrixEQ(ResSpec, ResBuiltin, R0, C1);
+  expectMatrixEQ(ResBase, ResBuiltin, R0, C1);
+  expectMatrixEQ(ResBase, ResSpec, R0, C1);
 }
 
 int main(void) {
