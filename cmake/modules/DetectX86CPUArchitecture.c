@@ -29,7 +29,20 @@ int main() {
       case 87:
         printf("knl");
         break;
+      case 140:
+        printf("tiger-lake");
+        break;
+      case 165:
+        printf("comet-lake");
+        break;
+      case 126:
+      case 125:
+      case 106:
+      case 108:
+        printf("ice-lake");
+        break;
       case 92:
+      case 95:
         printf("goldmont");
         break;
       case 90:
