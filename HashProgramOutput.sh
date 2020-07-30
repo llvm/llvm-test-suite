@@ -18,7 +18,7 @@ fi
 
 mv $1 $1.bak
 if [ $is_md5sum = "0" ]; then
-    $md5cmd < $1.bak > $1
+    $md5cmd -q < $1.bak > $1
 else
     $md5cmd < $1.bak | cut -d' ' -f 1 > $1
 fi

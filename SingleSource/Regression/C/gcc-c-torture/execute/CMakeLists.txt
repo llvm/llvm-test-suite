@@ -99,6 +99,10 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # UB: Creates two `restrict` pointers that alias in the same scope.
   pr38212.c
 
+  # UB: Each comparisons in (cyx != cyy || mpn_cmp (dx, dy, size + 1) != 0 ||
+  #     dx[size] != 0x12345678) is UB on its own.
+  921202-1.c
+
   # The following all expect very specific optimiser behavior from the compiler
 
   # __builtin_return_address(n) with n > 0 not guaranteed to give expected result
