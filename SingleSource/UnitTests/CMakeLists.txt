@@ -1,3 +1,5 @@
+include(CheckCCompilerFlag)
+
 add_subdirectory(C++11)
 add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
@@ -45,4 +47,13 @@ if(NOT ARCH STREQUAL "x86")
     ms_struct_pack_layout-1.c
   )
 endif()
+
+# Enable matrix types extension tests for compilers supporting -fenable-matrix.
+check_c_compiler_flag(-fenable-matrix COMPILER_HAS_MATRIX_FLAG)
+if (COMPILER_HAS_MATRIX_FLAG)
+  set_property(SOURCE matrix-types-spec.cpp PROPERTY COMPILE_FLAGS -fenable-matrix)
+else()
+  list(REMOVE_ITEM Source matrix-types-spec.cpp)
+endif()
+
 llvm_singlesource()
