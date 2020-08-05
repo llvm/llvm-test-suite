@@ -1352,6 +1352,8 @@ __device__ void test_nearbyint()
     assert(nearbyint(V(1)) == 1);
     assert(nearbyint(V(1.)) == 1);
     assert(nearbyint(V(1.f)) == 1);
+    // There are more checks in test_rint(). rint and nearbyint behave the same
+    // way on the GPU, so we only test them in one place.
 }
 
 __device__ void test_nextafter()
@@ -1443,7 +1445,7 @@ __device__ void test_remquo()
     assert(std::remquo(V(0.5f), 1.f, &ip) == 0.5);
 }
 
-__device__ void test_rint()
+__device__ void test_rint_nearbyint()
 {
     static_assert((std::is_same<decltype(rint((float)0)), float>::value), "");
     static_assert((std::is_same<decltype(rint((bool)0)), double>::value), "");
@@ -1457,9 +1459,35 @@ __device__ void test_rint()
     static_assert((std::is_same<decltype(rint((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(rintf(0)), float>::value), "");
     static_assert((std::is_same<decltype(rint(Ambiguous())), Ambiguous>::value), "");
-    assert(rint(V(1)) == 1);
-    assert(rint(V(1.)) == 1);
-    assert(rint(V(1.f)) == 1);
+    // Verify that rint/nearbyint produce identical correct results
+    auto check = [](double input, double fpresult) {
+      // FP rint()/nearbyint must match the expected result.
+      assert(rint(V(float(input))) == float(fpresult));
+      assert(nearbyint(V(float(input))) == float(fpresult));
+      assert(rint(V(input)) == fpresult);
+      assert(nearbyint(V(input)) == fpresult);
+      // for integral types, std::rint(input) == std::rint(double(input))
+      int iinput = input;
+      assert(std::rint(V(iinput)) == std::rint(double(V(iinput))));
+      assert(std::nearbyint(V(iinput)) == std::nearbyint(double(V(iinput))));
+    };
+    // Whole values round to themselves and do not change sign.
+    check(0.0, 0.0);
+    check(-0.0, -0.0);
+    check(1.0, 1.0);
+    check(-1.0, -1.0);
+    // Half-way values round towards nearest even number.
+    check(2.5, 2.0);
+    check(-2.5, -2.0);
+    check(3.5, 4.0);
+    check(-3.5, -4.0);
+    // Everything else is rounded towards nearest integer.
+    check(2.1, 2.0);
+    check(-2.1, -2.0);
+    check(2.7, 3.0);
+    check(-2.7, -3.0);
+    check(3.9, 4.0);
+    check(-3.9, -4.0);
 }
 
 __device__ void test_round()
@@ -1638,7 +1666,7 @@ __global__ void tests()
     test_nextafter();
     test_remainder();
     test_remquo();
-    test_rint();
+    test_rint_nearbyint();
     test_round();
     test_scalbln();
     test_scalbn();
