@@ -58,7 +58,7 @@ __global__ void kernel() {
 }
 
 int main() {
-  kernel<<<32, 32>>>();
+  kernel<<<1, 1>>>();
   cudaError_t err = cudaDeviceSynchronize();
   if (err != cudaSuccess) {
     printf("CUDA error %d\n", (int)err);

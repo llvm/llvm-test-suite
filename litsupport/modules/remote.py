@@ -1,6 +1,6 @@
 """Test module to execute a benchmark through ssh on a remote device.
 This assumes all relevant directories and files are present on the remote
-device (typically shared by NFS)."""
+device (typically transferred via `ninja rsync`, or shared by NFS)."""
 from litsupport import testplan
 import logging
 import os

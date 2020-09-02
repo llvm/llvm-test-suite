@@ -95,14 +95,23 @@ __device__ Ambiguous scalbn(Ambiguous, Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous tgamma(Ambiguous){ return Ambiguous(); }
 __device__ Ambiguous trunc(Ambiguous){ return Ambiguous(); }
 
+
+// helper function to prevent compiler constant-folding test inputs.
+
+template <typename T>
+__device__ T V(T input) {
+  volatile T tmp = input;
+  return tmp;
+}
+
 __device__ void test_abs()
 {
     static_assert((std::is_same<decltype(abs((float)0)), float>::value), "");
     static_assert((std::is_same<decltype(abs((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(abs(Ambiguous())), Ambiguous>::value), "");
-    assert(abs(-1) == 1);
-    assert(abs(-1.) == 1);
-    assert(abs(-1.f) == 1);
+    assert(abs(V(-1)) == 1);
+    assert(abs(V(-1.)) == 1);
+    assert(abs(V(-1.f)) == 1);
 }
 
 __device__ void test_acos()
@@ -119,9 +128,9 @@ __device__ void test_acos()
     static_assert((std::is_same<decltype(acos((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(acosf(0)), float>::value), "");
     static_assert((std::is_same<decltype(acos(Ambiguous())), Ambiguous>::value), "");
-    assert(acos(1) == 0);
-    assert(acos(1.) == 0);
-    assert(acos(1.f) == 0);
+    assert(acos(V(1)) == 0);
+    assert(acos(V(1.)) == 0);
+    assert(acos(V(1.f)) == 0);
 }
 
 __device__ void test_asin()
@@ -138,9 +147,9 @@ __device__ void test_asin()
     static_assert((std::is_same<decltype(asin((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(asinf(0)), float>::value), "");
     static_assert((std::is_same<decltype(asin(Ambiguous())), Ambiguous>::value), "");
-    assert(asin(0) == 0);
-    assert(asin(0.) == 0);
-    assert(asin(0.f) == 0);
+    assert(asin(V(0)) == 0);
+    assert(asin(V(0.)) == 0);
+    assert(asin(V(0.f)) == 0);
 }
 
 __device__ void test_atan()
@@ -157,9 +166,9 @@ __device__ void test_atan()
     static_assert((std::is_same<decltype(atan((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(atanf(0)), float>::value), "");
     static_assert((std::is_same<decltype(atan(Ambiguous())), Ambiguous>::value), "");
-    assert(atan(0) == 0);
-    assert(atan(0.) == 0);
-    assert(atan(0.f) == 0);
+    assert(atan(V(0)) == 0);
+    assert(atan(V(0.)) == 0);
+    assert(atan(V(0.f)) == 0);
 }
 
 __device__ void test_atan2()
@@ -176,17 +185,17 @@ __device__ void test_atan2()
     static_assert((std::is_same<decltype(atan2f(0,0)), float>::value), "");
     static_assert((std::is_same<decltype(atan2((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(atan2(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(atan2(0, 1) == 0);
-    assert(atan2(0, 1.) == 0);
-    assert(atan2(0, 1.f) == 0);
+    assert(atan2(V(0), 1) == 0);
+    assert(atan2(V(0), 1.) == 0);
+    assert(atan2(V(0), 1.f) == 0);
 
-    assert(atan2(0., 1) == 0);
-    assert(atan2(0., 1.) == 0);
-    assert(atan2(0., 1.f) == 0);
+    assert(atan2(V(0.), 1) == 0);
+    assert(atan2(V(0.), 1.) == 0);
+    assert(atan2(V(0.), 1.f) == 0);
 
-    assert(atan2(0.f, 1) == 0);
-    assert(atan2(0.f, 1.) == 0);
-    assert(atan2(0.f, 1.f) == 0);
+    assert(atan2(V(0.f), 1) == 0);
+    assert(atan2(V(0.f), 1.) == 0);
+    assert(atan2(V(0.f), 1.f) == 0);
 }
 
 __device__ void test_ceil()
@@ -203,9 +212,9 @@ __device__ void test_ceil()
     static_assert((std::is_same<decltype(ceil((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(ceilf(0)), float>::value), "");
     static_assert((std::is_same<decltype(ceil(Ambiguous())), Ambiguous>::value), "");
-    assert(ceil(0) == 0);
-    assert(ceil(0.) == 0);
-    assert(ceil(0.f) == 0);
+    assert(ceil(V(0)) == 0);
+    assert(ceil(V(0.)) == 0);
+    assert(ceil(V(0.f)) == 0);
 }
 
 __device__ void test_cos()
@@ -222,9 +231,9 @@ __device__ void test_cos()
     static_assert((std::is_same<decltype(cos((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(cosf(0)), float>::value), "");
     static_assert((std::is_same<decltype(cos(Ambiguous())), Ambiguous>::value), "");
-    assert(cos(0) == 1);
-    assert(cos(0.) == 1);
-    assert(cos(0.f) == 1);
+    assert(cos(V(0)) == 1);
+    assert(cos(V(0.)) == 1);
+    assert(cos(V(0.f)) == 1);
 }
 
 __device__ void test_cosh()
@@ -241,9 +250,9 @@ __device__ void test_cosh()
     static_assert((std::is_same<decltype(cosh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(coshf(0)), float>::value), "");
     static_assert((std::is_same<decltype(cosh(Ambiguous())), Ambiguous>::value), "");
-    assert(cosh(0) == 1);
-    assert(cosh(0.) == 1);
-    assert(cosh(0.f) == 1);
+    assert(cosh(V(0)) == 1);
+    assert(cosh(V(0.)) == 1);
+    assert(cosh(V(0.f)) == 1);
 }
 
 __device__ void test_exp()
@@ -260,9 +269,9 @@ __device__ void test_exp()
     static_assert((std::is_same<decltype(exp((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(expf(0)), float>::value), "");
     static_assert((std::is_same<decltype(exp(Ambiguous())), Ambiguous>::value), "");
-    assert(exp(0) == 1);
-    assert(exp(0.) == 1);
-    assert(exp(0.f) == 1);
+    assert(exp(V(0)) == 1);
+    assert(exp(V(0.)) == 1);
+    assert(exp(V(0.f)) == 1);
 }
 
 __device__ void test_fabs()
@@ -279,9 +288,9 @@ __device__ void test_fabs()
     static_assert((std::is_same<decltype(fabs((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(fabsf(0.0f)), float>::value), "");
     static_assert((std::is_same<decltype(fabs(Ambiguous())), Ambiguous>::value), "");
-    assert(fabs(-1) == 1);
-    assert(fabs(-1.) == 1);
-    assert(fabs(-1.f) == 1);
+    assert(fabs(V(-1)) == 1);
+    assert(fabs(V(-1.)) == 1);
+    assert(fabs(V(-1.f)) == 1);
 }
 
 __device__ void test_floor()
@@ -298,9 +307,9 @@ __device__ void test_floor()
     static_assert((std::is_same<decltype(floor((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(floorf(0)), float>::value), "");
     static_assert((std::is_same<decltype(floor(Ambiguous())), Ambiguous>::value), "");
-    assert(floor(1) == 1);
-    assert(floor(1.) == 1);
-    assert(floor(1.f) == 1);
+    assert(floor(V(1)) == 1);
+    assert(floor(V(1.)) == 1);
+    assert(floor(V(1.f)) == 1);
 }
 
 __device__ void test_fmod()
@@ -318,17 +327,17 @@ __device__ void test_fmod()
     static_assert((std::is_same<decltype(fmod((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(fmod(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(fmod(1.5, 1) == .5);
-    assert(fmod(1.5, 1.) == .5);
-    assert(fmod(1.5, 1.f) == .5);
+    assert(fmod(V(1.5), 1) == .5);
+    assert(fmod(V(1.5), 1.) == .5);
+    assert(fmod(V(1.5), 1.f) == .5);
 
-    assert(fmod(1.5f, 1) == .5);
-    assert(fmod(1.5f, 1.) == .5);
-    assert(fmod(1.5f, 1.f) == .5);
+    assert(fmod(V(1.5f), 1) == .5);
+    assert(fmod(V(1.5f), 1.) == .5);
+    assert(fmod(V(1.5f), 1.f) == .5);
 
-    assert(fmod(2, 1) == 0);
-    assert(fmod(2, 1.) == 0);
-    assert(fmod(2, 1.f) == 0);
+    assert(fmod(V(2), 1) == 0);
+    assert(fmod(V(2), 1.) == 0);
+    assert(fmod(V(2), 1.f) == 0);
 }
 
 __device__ void test_frexp()
@@ -346,9 +355,9 @@ __device__ void test_frexp()
     static_assert((std::is_same<decltype(frexp((double)0, &ip)), double>::value), "");
     static_assert((std::is_same<decltype(frexpf(0, &ip)), float>::value), "");
     static_assert((std::is_same<decltype(frexp(Ambiguous(), &ip)), Ambiguous>::value), "");
-    assert(frexp(0, &ip) == 0);
-    assert(frexp(0., &ip) == 0);
-    assert(frexp(0.f, &ip) == 0);
+    assert(frexp(V(0), &ip) == 0);
+    assert(frexp(V(0.), &ip) == 0);
+    assert(frexp(V(0.f), &ip) == 0);
 }
 
 __device__ void test_ldexp()
@@ -366,9 +375,9 @@ __device__ void test_ldexp()
     static_assert((std::is_same<decltype(ldexp((double)0, ip)), double>::value), "");
     static_assert((std::is_same<decltype(ldexpf(0, ip)), float>::value), "");
     static_assert((std::is_same<decltype(ldexp(Ambiguous(), ip)), Ambiguous>::value), "");
-    assert(ldexp(1, ip) == 2);
-    assert(ldexp(1., ip) == 2);
-    assert(ldexp(1.f, ip) == 2);
+    assert(ldexp(V(1), ip) == 2);
+    assert(ldexp(V(1.), ip) == 2);
+    assert(ldexp(V(1.f), ip) == 2);
 }
 
 __device__ void test_log()
@@ -385,9 +394,9 @@ __device__ void test_log()
     static_assert((std::is_same<decltype(log((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(logf(0)), float>::value), "");
     static_assert((std::is_same<decltype(log(Ambiguous())), Ambiguous>::value), "");
-    assert(log(1) == 0);
-    assert(log(1.) == 0);
-    assert(log(1.f) == 0);
+    assert(log(V(1)) == 0);
+    assert(log(V(1.)) == 0);
+    assert(log(V(1.f)) == 0);
 }
 
 __device__ void test_log10()
@@ -404,9 +413,9 @@ __device__ void test_log10()
     static_assert((std::is_same<decltype(log10((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(log10f(0)), float>::value), "");
     static_assert((std::is_same<decltype(log10(Ambiguous())), Ambiguous>::value), "");
-    assert(log10(1) == 0);
-    assert(log10(1.) == 0);
-    assert(log10(1.f) == 0);
+    assert(log10(V(1)) == 0);
+    assert(log10(V(1.)) == 0);
+    assert(log10(V(1.f)) == 0);
 }
 
 __device__ void test_modf()
@@ -416,9 +425,9 @@ __device__ void test_modf()
     static_assert((std::is_same<decltype(modff(0, (float*)0)), float>::value), "");
     static_assert((std::is_same<decltype(modf(Ambiguous(), (Ambiguous*)0)), Ambiguous>::value), "");
     double i;
-    assert(modf(1, &i) == 0);
-    assert(modf(1., &i) == 0);
-    assert(modf(1.f, &i) == 0);
+    assert(modf(V(1), &i) == 0);
+    assert(modf(V(1.), &i) == 0);
+    assert(modf(V(1.f), &i) == 0);
 }
 
 __device__ void test_pow()
@@ -435,17 +444,17 @@ __device__ void test_pow()
     static_assert((std::is_same<decltype(powf(0,0)), float>::value), "");
     static_assert((std::is_same<decltype(pow((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(pow(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(pow(1, 1) == 1);
-    assert(pow(1., 1) == 1);
-    assert(pow(1.f, 1) == 1);
+    assert(pow(V(1), 1) == 1);
+    assert(pow(V(1.), 1) == 1);
+    assert(pow(V(1.f), 1) == 1);
 
-    assert(pow(1, 1.) == 1);
-    assert(pow(1., 1.) == 1);
-    assert(pow(1.f, 1.) == 1);
+    assert(pow(V(1), 1.) == 1);
+    assert(pow(V(1.), 1.) == 1);
+    assert(pow(V(1.f), 1.) == 1);
 
-    assert(pow(1, 1.f) == 1);
-    assert(pow(1., 1.f) == 1);
-    assert(pow(1.f, 1.f) == 1);
+    assert(pow(V(1), 1.f) == 1);
+    assert(pow(V(1.), 1.f) == 1);
+    assert(pow(V(1.f), 1.f) == 1);
 }
 
 __device__ void test_sin()
@@ -481,9 +490,9 @@ __device__ void test_sinh()
     static_assert((std::is_same<decltype(sinh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(sinhf(0)), float>::value), "");
     static_assert((std::is_same<decltype(sinh(Ambiguous())), Ambiguous>::value), "");
-    assert(sinh(0) == 0);
-    assert(sinh(0.) == 0);
-    assert(sinh(0.f) == 0);
+    assert(sinh(V(0)) == 0);
+    assert(sinh(V(0.)) == 0);
+    assert(sinh(V(0.f)) == 0);
 }
 
 __device__ void test_sqrt()
@@ -500,9 +509,9 @@ __device__ void test_sqrt()
     static_assert((std::is_same<decltype(sqrt((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(sqrtf(0)), float>::value), "");
     static_assert((std::is_same<decltype(sqrt(Ambiguous())), Ambiguous>::value), "");
-    assert(sqrt(4) == 2);
-    assert(sqrt(4.) == 2);
-    assert(sqrt(4.f) == 2);
+    assert(sqrt(V(4)) == 2);
+    assert(sqrt(V(4.)) == 2);
+    assert(sqrt(V(4.f)) == 2);
 }
 
 __device__ void test_tan()
@@ -519,9 +528,9 @@ __device__ void test_tan()
     static_assert((std::is_same<decltype(tan((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(tanf(0)), float>::value), "");
     static_assert((std::is_same<decltype(tan(Ambiguous())), Ambiguous>::value), "");
-    assert(tan(0) == 0);
-    assert(tan(0.) == 0);
-    assert(tan(0.f) == 0);
+    assert(tan(V(0)) == 0);
+    assert(tan(V(0.)) == 0);
+    assert(tan(V(0.f)) == 0);
 }
 
 __device__ void test_tanh()
@@ -538,9 +547,9 @@ __device__ void test_tanh()
     static_assert((std::is_same<decltype(tanh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(tanhf(0)), float>::value), "");
     static_assert((std::is_same<decltype(tanh(Ambiguous())), Ambiguous>::value), "");
-    assert(tanh(0) == 0);
-    assert(tanh(0.) == 0);
-    assert(tanh(0.f) == 0);
+    assert(tanh(V(0)) == 0);
+    assert(tanh(V(0.)) == 0);
+    assert(tanh(V(0.f)) == 0);
 }
 
 __device__ void test_signbit()
@@ -552,9 +561,9 @@ __device__ void test_signbit()
     static_assert((std::is_same<decltype(signbit((double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(signbit(0)), bool>::value), "");
     static_assert((std::is_same<decltype(signbit(Ambiguous())), Ambiguous>::value), "");
-    assert(signbit(-1) == true);
-    assert(signbit(-1.) == true);
-    assert(signbit(-1.f) == true);
+    assert(signbit(V(-1)) == true);
+    assert(signbit(V(-1.)) == true);
+    assert(signbit(V(-1.f)) == true);
 }
 
 __device__ void test_fpclassify()
@@ -566,9 +575,9 @@ __device__ void test_fpclassify()
     static_assert((std::is_same<decltype(fpclassify((double)0)), int>::value), "");
     static_assert((std::is_same<decltype(fpclassify(0)), int>::value), "");
     static_assert((std::is_same<decltype(fpclassify(Ambiguous())), Ambiguous>::value), "");
-    assert(fpclassify(-1) == FP_NORMAL);
-    assert(fpclassify(-1.) == FP_NORMAL);
-    assert(fpclassify(-1.f) == FP_NORMAL);
+    assert(fpclassify(V(-1)) == FP_NORMAL);
+    assert(fpclassify(V(-1.)) == FP_NORMAL);
+    assert(fpclassify(V(-1.f)) == FP_NORMAL);
 }
 
 __device__ void test_isfinite()
@@ -580,9 +589,9 @@ __device__ void test_isfinite()
     static_assert((std::is_same<decltype(isfinite((double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isfinite(0)), bool>::value), "");
     static_assert((std::is_same<decltype(isfinite(Ambiguous())), Ambiguous>::value), "");
-    assert(isfinite(-1) == true);
-    assert(isfinite(-1.) == true);
-    assert(isfinite(-1.f) == true);
+    assert(isfinite(V(-1)) == true);
+    assert(isfinite(V(-1.)) == true);
+    assert(isfinite(V(-1.f)) == true);
 }
 
 __device__ void test_isnormal()
@@ -594,9 +603,9 @@ __device__ void test_isnormal()
     static_assert((std::is_same<decltype(isnormal((double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isnormal(0)), bool>::value), "");
     static_assert((std::is_same<decltype(isnormal(Ambiguous())), Ambiguous>::value), "");
-    assert(std::isnormal(-1) == true);
-    assert(std::isnormal(-1.) == true);
-    assert(std::isnormal(-1.f) == true);
+    assert(std::isnormal(V(-1)) == true);
+    assert(std::isnormal(V(-1.)) == true);
+    assert(std::isnormal(V(-1.f)) == true);
 }
 
 __device__ void test_isgreater()
@@ -610,17 +619,17 @@ __device__ void test_isgreater()
     static_assert((std::is_same<decltype(isgreater((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isgreater(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isgreater(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::isgreater(-1, 0) == false);
-    assert(std::isgreater(-1, 0.) == false);
-    assert(std::isgreater(-1, 0.f) == false);
+    assert(std::isgreater(V(-1), 0) == false);
+    assert(std::isgreater(V(-1), 0.) == false);
+    assert(std::isgreater(V(-1), 0.f) == false);
 
-    assert(std::isgreater(-1., 0) == false);
-    assert(std::isgreater(-1., 0.) == false);
-    assert(std::isgreater(-1., 0.f) == false);
+    assert(std::isgreater(V(-1.), 0) == false);
+    assert(std::isgreater(V(-1.), 0.) == false);
+    assert(std::isgreater(V(-1.), 0.f) == false);
 
-    assert(std::isgreater(-1.f, 0) == false);
-    assert(std::isgreater(-1.f, 0.) == false);
-    assert(std::isgreater(-1.f, 0.f) == false);
+    assert(std::isgreater(V(-1.f), 0) == false);
+    assert(std::isgreater(V(-1.f), 0.) == false);
+    assert(std::isgreater(V(-1.f), 0.f) == false);
 }
 
 __device__ void test_isgreaterequal()
@@ -634,17 +643,17 @@ __device__ void test_isgreaterequal()
     static_assert((std::is_same<decltype(isgreaterequal((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isgreaterequal(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isgreaterequal(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::isgreaterequal(-1, 0) == false);
-    assert(std::isgreaterequal(-1, 0.) == false);
-    assert(std::isgreaterequal(-1, 0.f) == false);
+    assert(std::isgreaterequal(V(-1), 0) == false);
+    assert(std::isgreaterequal(V(-1), 0.) == false);
+    assert(std::isgreaterequal(V(-1), 0.f) == false);
 
-    assert(std::isgreaterequal(-1., 0) == false);
-    assert(std::isgreaterequal(-1., 0.) == false);
-    assert(std::isgreaterequal(-1., 0.f) == false);
+    assert(std::isgreaterequal(V(-1.), 0) == false);
+    assert(std::isgreaterequal(V(-1.), 0.) == false);
+    assert(std::isgreaterequal(V(-1.), 0.f) == false);
 
-    assert(std::isgreaterequal(-1.f, 0) == false);
-    assert(std::isgreaterequal(-1.f, 0.) == false);
-    assert(std::isgreaterequal(-1.f, 0.f) == false);
+    assert(std::isgreaterequal(V(-1.f), 0) == false);
+    assert(std::isgreaterequal(V(-1.f), 0.) == false);
+    assert(std::isgreaterequal(V(-1.f), 0.f) == false);
 }
 
 __device__ void test_isinf()
@@ -666,9 +675,9 @@ __device__ void test_isinf()
 #endif
 
     static_assert((std::is_same<decltype(isinf(0)), bool>::value), "");
-    assert(std::isinf(-1) == false);
-    assert(std::isinf(-1.) == false);
-    assert(std::isinf(-1.f) == false);
+    assert(std::isinf(V(-1)) == false);
+    assert(std::isinf(V(-1.)) == false);
+    assert(std::isinf(V(-1.f)) == false);
 }
 
 __device__ void test_isless()
@@ -682,17 +691,17 @@ __device__ void test_isless()
     static_assert((std::is_same<decltype(isless((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isless(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isless(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::isless(-1, 0) == true);
-    assert(std::isless(-1, 0.) == true);
-    assert(std::isless(-1, 0.f) == true);
+    assert(std::isless(V(-1), 0) == true);
+    assert(std::isless(V(-1), 0.) == true);
+    assert(std::isless(V(-1), 0.f) == true);
 
-    assert(std::isless(-1., 0) == true);
-    assert(std::isless(-1., 0.) == true);
-    assert(std::isless(-1., 0.f) == true);
+    assert(std::isless(V(-1.), 0) == true);
+    assert(std::isless(V(-1.), 0.) == true);
+    assert(std::isless(V(-1.), 0.f) == true);
 
-    assert(std::isless(-1.f, 0) == true);
-    assert(std::isless(-1.f, 0.) == true);
-    assert(std::isless(-1.f, 0.f) == true);
+    assert(std::isless(V(-1.f), 0) == true);
+    assert(std::isless(V(-1.f), 0.) == true);
+    assert(std::isless(V(-1.f), 0.f) == true);
 }
 
 __device__ void test_islessequal()
@@ -706,17 +715,17 @@ __device__ void test_islessequal()
     static_assert((std::is_same<decltype(islessequal((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(islessequal(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(islessequal(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::islessequal(-1, 0) == true);
-    assert(std::islessequal(-1, 0.) == true);
-    assert(std::islessequal(-1, 0.f) == true);
+    assert(std::islessequal(V(-1), 0) == true);
+    assert(std::islessequal(V(-1), 0.) == true);
+    assert(std::islessequal(V(-1), 0.f) == true);
 
-    assert(std::islessequal(-1., 0) == true);
-    assert(std::islessequal(-1., 0.) == true);
-    assert(std::islessequal(-1., 0.f) == true);
+    assert(std::islessequal(V(-1.), 0) == true);
+    assert(std::islessequal(V(-1.), 0.) == true);
+    assert(std::islessequal(V(-1.), 0.f) == true);
 
-    assert(std::islessequal(-1.f, 0) == true);
-    assert(std::islessequal(-1.f, 0.) == true);
-    assert(std::islessequal(-1.f, 0.f) == true);
+    assert(std::islessequal(V(-1.f), 0) == true);
+    assert(std::islessequal(V(-1.f), 0.) == true);
+    assert(std::islessequal(V(-1.f), 0.f) == true);
 }
 
 __device__ void test_islessgreater()
@@ -730,17 +739,17 @@ __device__ void test_islessgreater()
     static_assert((std::is_same<decltype(islessgreater((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(islessgreater(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(islessgreater(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::islessgreater(-1, 0) == true);
-    assert(std::islessgreater(-1, 0.) == true);
-    assert(std::islessgreater(-1, 0.f) == true);
+    assert(std::islessgreater(V(-1), 0) == true);
+    assert(std::islessgreater(V(-1), 0.) == true);
+    assert(std::islessgreater(V(-1), 0.f) == true);
 
-    assert(std::islessgreater(-1., 0) == true);
-    assert(std::islessgreater(-1., 0.) == true);
-    assert(std::islessgreater(-1., 0.f) == true);
+    assert(std::islessgreater(V(-1.), 0) == true);
+    assert(std::islessgreater(V(-1.), 0.) == true);
+    assert(std::islessgreater(V(-1.), 0.f) == true);
 
-    assert(std::islessgreater(-1.f, 0) == true);
-    assert(std::islessgreater(-1.f, 0.) == true);
-    assert(std::islessgreater(-1.f, 0.f) == true);
+    assert(std::islessgreater(V(-1.f), 0) == true);
+    assert(std::islessgreater(V(-1.f), 0.) == true);
+    assert(std::islessgreater(V(-1.f), 0.f) == true);
 }
 
 __device__ void test_isnan()
@@ -762,9 +771,9 @@ __device__ void test_isnan()
 #endif
 
     static_assert((std::is_same<decltype(isnan(0)), bool>::value), "");
-    assert(std::isnan(-1) == false);
-    assert(std::isnan(-1.) == false);
-    assert(std::isnan(-1.f) == false);
+    assert(std::isnan(V(-1)) == false);
+    assert(std::isnan(V(-1.)) == false);
+    assert(std::isnan(V(-1.f)) == false);
 }
 
 __device__ void test_isunordered()
@@ -778,17 +787,17 @@ __device__ void test_isunordered()
     static_assert((std::is_same<decltype(isunordered((double)0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isunordered(0, (double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isunordered(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::isunordered(-1, 0) == false);
-    assert(std::isunordered(-1, 0.) == false);
-    assert(std::isunordered(-1, 0.f) == false);
+    assert(std::isunordered(V(-1), 0) == false);
+    assert(std::isunordered(V(-1), 0.) == false);
+    assert(std::isunordered(V(-1), 0.f) == false);
 
-    assert(std::isunordered(-1., 0) == false);
-    assert(std::isunordered(-1., 0.) == false);
-    assert(std::isunordered(-1., 0.f) == false);
+    assert(std::isunordered(V(-1.), 0) == false);
+    assert(std::isunordered(V(-1.), 0.) == false);
+    assert(std::isunordered(V(-1.), 0.f) == false);
 
-    assert(std::isunordered(-1.f, 0) == false);
-    assert(std::isunordered(-1.f, 0.) == false);
-    assert(std::isunordered(-1.f, 0.f) == false);
+    assert(std::isunordered(V(-1.f), 0) == false);
+    assert(std::isunordered(V(-1.f), 0.) == false);
+    assert(std::isunordered(V(-1.f), 0.f) == false);
 }
 
 __device__ void test_acosh()
@@ -805,9 +814,9 @@ __device__ void test_acosh()
     static_assert((std::is_same<decltype(acosh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(acoshf(0)), float>::value), "");
     static_assert((std::is_same<decltype(acosh(Ambiguous())), Ambiguous>::value), "");
-    assert(std::acosh(1) == 0);
-    assert(std::acosh(1.) == 0);
-    assert(std::acosh(1.f) == 0);
+    assert(std::acosh(V(1)) == 0);
+    assert(std::acosh(V(1.)) == 0);
+    assert(std::acosh(V(1.f)) == 0);
 }
 
 __device__ void test_asinh()
@@ -824,9 +833,9 @@ __device__ void test_asinh()
     static_assert((std::is_same<decltype(asinh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(asinhf(0)), float>::value), "");
     static_assert((std::is_same<decltype(asinh(Ambiguous())), Ambiguous>::value), "");
-    assert(asinh(0) == 0);
-    assert(asinh(0.) == 0);
-    assert(asinh(0.f) == 0);
+    assert(asinh(V(0)) == 0);
+    assert(asinh(V(0.)) == 0);
+    assert(asinh(V(0.f)) == 0);
 }
 
 __device__ void test_atanh()
@@ -843,9 +852,9 @@ __device__ void test_atanh()
     static_assert((std::is_same<decltype(atanh((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(atanhf(0)), float>::value), "");
     static_assert((std::is_same<decltype(atanh(Ambiguous())), Ambiguous>::value), "");
-    assert(atanh(0) == 0);
-    assert(atanh(0.) == 0);
-    assert(atanh(0.f) == 0);
+    assert(atanh(V(0)) == 0);
+    assert(atanh(V(0.)) == 0);
+    assert(atanh(V(0.f)) == 0);
 }
 
 __device__ void test_cbrt()
@@ -862,9 +871,9 @@ __device__ void test_cbrt()
     static_assert((std::is_same<decltype(cbrt((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(cbrtf(0)), float>::value), "");
     static_assert((std::is_same<decltype(cbrt(Ambiguous())), Ambiguous>::value), "");
-    assert(cbrt(1) == 1);
-    assert(cbrt(1.) == 1);
-    assert(cbrt(1.f) == 1);
+    assert(cbrt(V(1)) == 1);
+    assert(cbrt(V(1.)) == 1);
+    assert(cbrt(V(1.f)) == 1);
 }
 
 __device__ void test_copysign()
@@ -889,17 +898,17 @@ __device__ void test_copysign()
     static_assert((std::is_same<decltype(copysign((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(copysign(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::copysign(1, 1) == 1);
-    assert(std::copysign(1., 1) == 1);
-    assert(std::copysign(1.f, 1) == 1);
+    assert(std::copysign(V(1), 1) == 1);
+    assert(std::copysign(V(1.), 1) == 1);
+    assert(std::copysign(V(1.f), 1) == 1);
 
-    assert(std::copysign(1, 1.) == 1);
-    assert(std::copysign(1., 1.) == 1);
-    assert(std::copysign(1.f, 1.) == 1);
+    assert(std::copysign(V(1), 1.) == 1);
+    assert(std::copysign(V(1.), 1.) == 1);
+    assert(std::copysign(V(1.f), 1.) == 1);
 
-    assert(std::copysign(1, 1.f) == 1);
-    assert(std::copysign(1., 1.f) == 1);
-    assert(std::copysign(1.f, 1.f) == 1);
+    assert(std::copysign(V(1), 1.f) == 1);
+    assert(std::copysign(V(1.), 1.f) == 1);
+    assert(std::copysign(V(1.f), 1.f) == 1);
 }
 
 __device__ void test_erf()
@@ -916,9 +925,9 @@ __device__ void test_erf()
     static_assert((std::is_same<decltype(erf((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(erff(0)), float>::value), "");
     static_assert((std::is_same<decltype(erf(Ambiguous())), Ambiguous>::value), "");
-    assert(erf(0) == 0);
-    assert(erf(0.) == 0);
-    assert(erf(0.f) == 0);
+    assert(erf(V(0)) == 0);
+    assert(erf(V(0.)) == 0);
+    assert(erf(V(0.f)) == 0);
 }
 
 __device__ void test_erfc()
@@ -935,9 +944,9 @@ __device__ void test_erfc()
     static_assert((std::is_same<decltype(erfc((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(erfcf(0)), float>::value), "");
     static_assert((std::is_same<decltype(erfc(Ambiguous())), Ambiguous>::value), "");
-    assert(erfc(0) == 1);
-    assert(erfc(0.) == 1);
-    assert(erfc(0.f) == 1);
+    assert(erfc(V(0)) == 1);
+    assert(erfc(V(0.)) == 1);
+    assert(erfc(V(0.f)) == 1);
 }
 
 __device__ void test_exp2()
@@ -954,9 +963,9 @@ __device__ void test_exp2()
     static_assert((std::is_same<decltype(exp2((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(exp2f(0)), float>::value), "");
     static_assert((std::is_same<decltype(exp2(Ambiguous())), Ambiguous>::value), "");
-    assert(exp2(1) == 2);
-    assert(exp2(1.) == 2);
-    assert(exp2(1.f) == 2);
+    assert(exp2(V(1)) == 2);
+    assert(exp2(V(1.)) == 2);
+    assert(exp2(V(1.f)) == 2);
 }
 
 __device__ void test_expm1()
@@ -973,9 +982,9 @@ __device__ void test_expm1()
     static_assert((std::is_same<decltype(expm1((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(expm1f(0)), float>::value), "");
     static_assert((std::is_same<decltype(expm1(Ambiguous())), Ambiguous>::value), "");
-    assert(expm1(0) == 0);
-    assert(expm1(0.) == 0);
-    assert(expm1(0.f) == 0);
+    assert(expm1(V(0)) == 0);
+    assert(expm1(V(0.)) == 0);
+    assert(expm1(V(0.f)) == 0);
 }
 
 __device__ void test_fdim()
@@ -993,17 +1002,17 @@ __device__ void test_fdim()
     static_assert((std::is_same<decltype(fdim((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(fdim(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::fdim(1, 0) == 1);
-    assert(std::fdim(1., 0) == 1);
-    assert(std::fdim(1.f, 0) == 1);
+    assert(std::fdim(V(1), 0) == 1);
+    assert(std::fdim(V(1.), 0) == 1);
+    assert(std::fdim(V(1.f), 0) == 1);
 
-    assert(std::fdim(1, 0.) == 1);
-    assert(std::fdim(1., 0.) == 1);
-    assert(std::fdim(1.f, 0.) == 1);
+    assert(std::fdim(V(1), 0.) == 1);
+    assert(std::fdim(V(1.), 0.) == 1);
+    assert(std::fdim(V(1.f), 0.) == 1);
 
-    assert(std::fdim(1, 0.f) == 1);
-    assert(std::fdim(1., 0.f) == 1);
-    assert(std::fdim(1.f, 0.f) == 1);
+    assert(std::fdim(V(1), 0.f) == 1);
+    assert(std::fdim(V(1.), 0.f) == 1);
+    assert(std::fdim(V(1.f), 0.f) == 1);
 }
 
 __device__ void test_fma()
@@ -1030,35 +1039,35 @@ __device__ void test_fma()
     static_assert((std::is_same<decltype(fmaf(0,0,0)), float>::value), "");
     static_assert((std::is_same<decltype(fma(Ambiguous(), Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::fma(1, 1, 1) == 2);
-    assert(std::fma(1., 1, 1) == 2);
-    assert(std::fma(1.f, 1, 1) == 2);
-    assert(std::fma(1, 1., 1) == 2);
-    assert(std::fma(1., 1., 1) == 2);
-    assert(std::fma(1.f, 1., 1) == 2);
-    assert(std::fma(1, 1.f, 1) == 2);
-    assert(std::fma(1., 1.f, 1) == 2);
-    assert(std::fma(1.f, 1.f, 1) == 2);
+    assert(std::fma(V(1), 1, 1) == 2);
+    assert(std::fma(V(1.), 1, 1) == 2);
+    assert(std::fma(V(1.f), 1, 1) == 2);
+    assert(std::fma(V(1), 1., 1) == 2);
+    assert(std::fma(V(1.), 1., 1) == 2);
+    assert(std::fma(V(1.f), 1., 1) == 2);
+    assert(std::fma(V(1), 1.f, 1) == 2);
+    assert(std::fma(V(1.), 1.f, 1) == 2);
+    assert(std::fma(V(1.f), 1.f, 1) == 2);
 
-    assert(std::fma(1, 1, 1.) == 2);
-    assert(std::fma(1., 1, 1.) == 2);
-    assert(std::fma(1.f, 1, 1.) == 2);
-    assert(std::fma(1, 1., 1.) == 2);
-    assert(std::fma(1., 1., 1.) == 2);
-    assert(std::fma(1.f, 1., 1.) == 2);
-    assert(std::fma(1, 1.f, 1.) == 2);
-    assert(std::fma(1., 1.f, 1.) == 2);
-    assert(std::fma(1.f, 1.f, 1.) == 2);
+    assert(std::fma(V(1), 1, 1.) == 2);
+    assert(std::fma(V(1.), 1, 1.) == 2);
+    assert(std::fma(V(1.f), 1, 1.) == 2);
+    assert(std::fma(V(1), 1., 1.) == 2);
+    assert(std::fma(V(1.), 1., 1.) == 2);
+    assert(std::fma(V(1.f), 1., 1.) == 2);
+    assert(std::fma(V(1), 1.f, 1.) == 2);
+    assert(std::fma(V(1.), 1.f, 1.) == 2);
+    assert(std::fma(V(1.f), 1.f, 1.) == 2);
 
-    assert(std::fma(1, 1, 1.f) == 2);
-    assert(std::fma(1., 1, 1.f) == 2);
-    assert(std::fma(1.f, 1, 1.f) == 2);
-    assert(std::fma(1, 1., 1.f) == 2);
-    assert(std::fma(1., 1., 1.f) == 2);
-    assert(std::fma(1.f, 1., 1.f) == 2);
-    assert(std::fma(1, 1.f, 1.f) == 2);
-    assert(std::fma(1., 1.f, 1.f) == 2);
-    assert(std::fma(1.f, 1.f, 1.f) == 2);
+    assert(std::fma(V(1), 1, 1.f) == 2);
+    assert(std::fma(V(1.), 1, 1.f) == 2);
+    assert(std::fma(V(1.f), 1, 1.f) == 2);
+    assert(std::fma(V(1), 1., 1.f) == 2);
+    assert(std::fma(V(1.), 1., 1.f) == 2);
+    assert(std::fma(V(1.f), 1., 1.f) == 2);
+    assert(std::fma(V(1), 1.f, 1.f) == 2);
+    assert(std::fma(V(1.), 1.f, 1.f) == 2);
+    assert(std::fma(V(1.f), 1.f, 1.f) == 2);
 }
 
 __device__ void test_fmax()
@@ -1076,17 +1085,17 @@ __device__ void test_fmax()
     static_assert((std::is_same<decltype(fmax((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(fmax(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::fmax(1, 0) == 1);
-    assert(std::fmax(1., 0) == 1);
-    assert(std::fmax(1.f, 0) == 1);
+    assert(std::fmax(V(1), 0) == 1);
+    assert(std::fmax(V(1.), 0) == 1);
+    assert(std::fmax(V(1.f), 0) == 1);
 
-    assert(std::fmax(1, 0.) == 1);
-    assert(std::fmax(1., 0.) == 1);
-    assert(std::fmax(1.f, 0.) == 1);
+    assert(std::fmax(V(1), 0.) == 1);
+    assert(std::fmax(V(1.), 0.) == 1);
+    assert(std::fmax(V(1.f), 0.) == 1);
 
-    assert(std::fmax(1, 0.f) == 1);
-    assert(std::fmax(1., 0.f) == 1);
-    assert(std::fmax(1.f, 0.f) == 1);
+    assert(std::fmax(V(1), 0.f) == 1);
+    assert(std::fmax(V(1.), 0.f) == 1);
+    assert(std::fmax(V(1.f), 0.f) == 1);
 }
 
 __device__ void test_fmin()
@@ -1104,17 +1113,17 @@ __device__ void test_fmin()
     static_assert((std::is_same<decltype(fmin((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(fmin(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::fmin(1, 0) == 0);
-    assert(std::fmin(1., 0) == 0);
-    assert(std::fmin(1.f, 0) == 0);
+    assert(std::fmin(V(1), 0) == 0);
+    assert(std::fmin(V(1.), 0) == 0);
+    assert(std::fmin(V(1.f), 0) == 0);
 
-    assert(std::fmin(1, 0.) == 0);
-    assert(std::fmin(1., 0.) == 0);
-    assert(std::fmin(1.f, 0.) == 0);
+    assert(std::fmin(V(1), 0.) == 0);
+    assert(std::fmin(V(1.), 0.) == 0);
+    assert(std::fmin(V(1.f), 0.) == 0);
 
-    assert(std::fmin(1, 0.f) == 0);
-    assert(std::fmin(1., 0.f) == 0);
-    assert(std::fmin(1.f, 0.f) == 0);
+    assert(std::fmin(V(1), 0.f) == 0);
+    assert(std::fmin(V(1.), 0.f) == 0);
+    assert(std::fmin(V(1.f), 0.f) == 0);
 }
 
 __device__ void test_hypot()
@@ -1132,17 +1141,17 @@ __device__ void test_hypot()
     static_assert((std::is_same<decltype(hypot((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(hypot(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::hypot(3, 4) == 5);
-    assert(std::hypot(3, 4.) == 5);
-    assert(std::hypot(3, 4.f) == 5);
+    assert(std::hypot(V(3), 4) == 5);
+    assert(std::hypot(V(3), 4.) == 5);
+    assert(std::hypot(V(3), 4.f) == 5);
 
-    assert(std::hypot(3., 4) == 5);
-    assert(std::hypot(3., 4.) == 5);
-    assert(std::hypot(3., 4.f) == 5);
+    assert(std::hypot(V(3.), 4) == 5);
+    assert(std::hypot(V(3.), 4.) == 5);
+    assert(std::hypot(V(3.), 4.f) == 5);
 
-    assert(std::hypot(3.f, 4) == 5);
-    assert(std::hypot(3.f, 4.) == 5);
-    assert(std::hypot(3.f, 4.f) == 5);
+    assert(std::hypot(V(3.f), 4) == 5);
+    assert(std::hypot(V(3.f), 4.) == 5);
+    assert(std::hypot(V(3.f), 4.f) == 5);
 }
 
 __device__ void test_ilogb()
@@ -1159,9 +1168,9 @@ __device__ void test_ilogb()
     static_assert((std::is_same<decltype(ilogb((double)0)), int>::value), "");
     static_assert((std::is_same<decltype(ilogbf(0)), int>::value), "");
     static_assert((std::is_same<decltype(ilogb(Ambiguous())), Ambiguous>::value), "");
-    assert(ilogb(1) == 0);
-    assert(ilogb(1.) == 0);
-    assert(ilogb(1.f) == 0);
+    assert(ilogb(V(1)) == 0);
+    assert(ilogb(V(1.)) == 0);
+    assert(ilogb(V(1.f)) == 0);
 }
 
 __device__ void test_lgamma()
@@ -1178,9 +1187,9 @@ __device__ void test_lgamma()
     static_assert((std::is_same<decltype(lgamma((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(lgammaf(0)), float>::value), "");
     static_assert((std::is_same<decltype(lgamma(Ambiguous())), Ambiguous>::value), "");
-    assert(lgamma(1) == 0);
-    assert(lgamma(1.) == 0);
-    assert(lgamma(1.f) == 0);
+    assert(lgamma(V(1)) == 0);
+    assert(lgamma(V(1.)) == 0);
+    assert(lgamma(V(1.f)) == 0);
 }
 
 __device__ void test_llrint()
@@ -1197,10 +1206,10 @@ __device__ void test_llrint()
     static_assert((std::is_same<decltype(llrint((double)0)), long long>::value), "");
     static_assert((std::is_same<decltype(llrintf(0)), long long>::value), "");
     static_assert((std::is_same<decltype(llrint(Ambiguous())), Ambiguous>::value), "");
-    assert(llrint(1) == 1LL);
-    assert(llrint(1.) == 1LL);
+    assert(llrint(V(1)) == 1LL);
+    assert(llrint(V(1.)) == 1LL);
 #if CUDA_VERSION > 7050
-    assert(llrint(1.f) == 1LL);
+    assert(llrint(V(1.f)) == 1LL);
 #endif
 }
 
@@ -1218,9 +1227,9 @@ __device__ void test_llround()
     static_assert((std::is_same<decltype(llround((double)0)), long long>::value), "");
     static_assert((std::is_same<decltype(llroundf(0)), long long>::value), "");
     static_assert((std::is_same<decltype(llround(Ambiguous())), Ambiguous>::value), "");
-    assert(llround(1) == 1LL);
-    assert(llround(1.) == 1LL);
-    assert(llround(1.f) == 1LL);
+    assert(llround(V(1)) == 1LL);
+    assert(llround(V(1.)) == 1LL);
+    assert(llround(V(1.f)) == 1LL);
 }
 
 __device__ void test_log1p()
@@ -1237,9 +1246,9 @@ __device__ void test_log1p()
     static_assert((std::is_same<decltype(log1p((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(log1pf(0)), float>::value), "");
     static_assert((std::is_same<decltype(log1p(Ambiguous())), Ambiguous>::value), "");
-    assert(log1p(0) == 0);
-    assert(log1p(0.) == 0);
-    assert(log1p(0.f) == 0);
+    assert(log1p(V(0)) == 0);
+    assert(log1p(V(0.)) == 0);
+    assert(log1p(V(0.f)) == 0);
 }
 
 __device__ void test_log2()
@@ -1256,9 +1265,9 @@ __device__ void test_log2()
     static_assert((std::is_same<decltype(log2((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(log2f(0)), float>::value), "");
     static_assert((std::is_same<decltype(log2(Ambiguous())), Ambiguous>::value), "");
-    assert(log2(1) == 0);
-    assert(log2(1.) == 0);
-    assert(log2(1.f) == 0);
+    assert(log2(V(1)) == 0);
+    assert(log2(V(1.)) == 0);
+    assert(log2(V(1.f)) == 0);
 }
 
 __device__ void test_logb()
@@ -1275,9 +1284,9 @@ __device__ void test_logb()
     static_assert((std::is_same<decltype(logb((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(logbf(0)), float>::value), "");
     static_assert((std::is_same<decltype(logb(Ambiguous())), Ambiguous>::value), "");
-    assert(logb(1) == 0);
-    assert(logb(1.) == 0);
-    assert(logb(1.f) == 0);
+    assert(logb(V(1)) == 0);
+    assert(logb(V(1.)) == 0);
+    assert(logb(V(1.f)) == 0);
 }
 
 __device__ void test_lrint()
@@ -1294,10 +1303,10 @@ __device__ void test_lrint()
     static_assert((std::is_same<decltype(lrint((double)0)), long>::value), "");
     static_assert((std::is_same<decltype(lrintf(0)), long>::value), "");
     static_assert((std::is_same<decltype(lrint(Ambiguous())), Ambiguous>::value), "");
-    assert(lrint(1) == 1L);
-    assert(lrint(1.) == 1L);
+    assert(lrint(V(1)) == 1L);
+    assert(lrint(V(1.)) == 1L);
 #if CUDA_VERSION > 7050
-    assert(lrint(1.f) == 1L);
+    assert(lrint(V(1.f)) == 1L);
 #endif
 }
 
@@ -1315,9 +1324,9 @@ __device__ void test_lround()
     static_assert((std::is_same<decltype(lround((double)0)), long>::value), "");
     static_assert((std::is_same<decltype(lroundf(0)), long>::value), "");
     static_assert((std::is_same<decltype(lround(Ambiguous())), Ambiguous>::value), "");
-    assert(lround(1) == 1L);
-    assert(lround(1.) == 1L);
-    assert(lround(1.f) == 1L);
+    assert(lround(V(1)) == 1L);
+    assert(lround(V(1.)) == 1L);
+    assert(lround(V(1.f)) == 1L);
 }
 
 __device__ void test_nan()
@@ -1340,9 +1349,11 @@ __device__ void test_nearbyint()
     static_assert((std::is_same<decltype(nearbyint((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(nearbyintf(0)), float>::value), "");
     static_assert((std::is_same<decltype(nearbyint(Ambiguous())), Ambiguous>::value), "");
-    assert(nearbyint(1) == 1);
-    assert(nearbyint(1.) == 1);
-    assert(nearbyint(1.f) == 1);
+    assert(nearbyint(V(1)) == 1);
+    assert(nearbyint(V(1.)) == 1);
+    assert(nearbyint(V(1.f)) == 1);
+    // There are more checks in test_rint(). rint and nearbyint behave the same
+    // way on the GPU, so we only test them in one place.
 }
 
 __device__ void test_nextafter()
@@ -1364,17 +1375,17 @@ __device__ void test_nextafter()
     // Invoke all our overloads.  Even though we don't check the exact result
     // (this is pretty annoying to do for this function), we make sure to *use*
     // the results so that these function calls can't be DCE'ed.
-    assert(nextafter(0, 1) != 0);
-    assert(nextafter(0, 1.) != 0);
-    assert(nextafter(0, 1.f) != 0);
+    assert(nextafter(V(0), 1) != 0);
+    assert(nextafter(V(0), 1.) != 0);
+    assert(nextafter(V(0), 1.f) != 0);
 
-    assert(nextafter(0., 1) != 0);
-    assert(nextafter(0., 1.) != 0);
-    assert(nextafter(0., 1.f) != 0);
+    assert(nextafter(V(0.), 1) != 0);
+    assert(nextafter(V(0.), 1.) != 0);
+    assert(nextafter(V(0.), 1.f) != 0);
 
-    assert(nextafter(0.f, 1) != 0);
-    assert(nextafter(0.f, 1.) != 0);
-    assert(nextafter(0.f, 1.f) != 0);
+    assert(nextafter(V(0.f), 1) != 0);
+    assert(nextafter(V(0.f), 1.) != 0);
+    assert(nextafter(V(0.f), 1.f) != 0);
 }
 
 __device__ void test_remainder()
@@ -1392,17 +1403,17 @@ __device__ void test_remainder()
     static_assert((std::is_same<decltype(remainder((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(remainder(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
 
-    assert(std::remainder(1.5, 1) == -.5);
-    assert(std::remainder(1.5, 1.) == -.5);
-    assert(std::remainder(1.5, 1.f) == -.5);
+    assert(std::remainder(V(1.5), 1) == -.5);
+    assert(std::remainder(V(1.5), 1.) == -.5);
+    assert(std::remainder(V(1.5), 1.f) == -.5);
 
-    assert(std::remainder(1.5f, 1) == -.5);
-    assert(std::remainder(1.5f, 1.) == -.5);
-    assert(std::remainder(1.5f, 1.f) == -.5);
+    assert(std::remainder(V(1.5f), 1) == -.5);
+    assert(std::remainder(V(1.5f), 1.) == -.5);
+    assert(std::remainder(V(1.5f), 1.f) == -.5);
 
-    assert(std::remainder(2, 1) == 0);
-    assert(std::remainder(2, 1.) == 0);
-    assert(std::remainder(2, 1.f) == 0);
+    assert(std::remainder(V(2), 1) == 0);
+    assert(std::remainder(V(2), 1.) == 0);
+    assert(std::remainder(V(2), 1.f) == 0);
 }
 
 __device__ void test_remquo()
@@ -1421,20 +1432,20 @@ __device__ void test_remquo()
     static_assert((std::is_same<decltype(remquo((int)0, (int)0, &ip)), double>::value), "");
     static_assert((std::is_same<decltype(remquo(Ambiguous(), Ambiguous(), &ip)), Ambiguous>::value), "");
 
-    assert(std::remquo(1, 1, &ip) == 0);
-    assert(std::remquo(1, 1., &ip) == 0);
-    assert(std::remquo(1, 1.f, &ip) == 0);
+    assert(std::remquo(V(1), 1, &ip) == 0);
+    assert(std::remquo(V(1), 1., &ip) == 0);
+    assert(std::remquo(V(1), 1.f, &ip) == 0);
 
-    assert(std::remquo(0.5, 1, &ip) == 0.5);
-    assert(std::remquo(0.5, 1., &ip) == 0.5);
-    assert(std::remquo(0.5, 1.f, &ip) == 0.5);
+    assert(std::remquo(V(0.5), 1, &ip) == 0.5);
+    assert(std::remquo(V(0.5), 1., &ip) == 0.5);
+    assert(std::remquo(V(0.5), 1.f, &ip) == 0.5);
 
-    assert(std::remquo(0.5f, 1, &ip) == 0.5);
-    assert(std::remquo(0.5f, 1., &ip) == 0.5);
-    assert(std::remquo(0.5f, 1.f, &ip) == 0.5);
+    assert(std::remquo(V(0.5f), 1, &ip) == 0.5);
+    assert(std::remquo(V(0.5f), 1., &ip) == 0.5);
+    assert(std::remquo(V(0.5f), 1.f, &ip) == 0.5);
 }
 
-__device__ void test_rint()
+__device__ void test_rint_nearbyint()
 {
     static_assert((std::is_same<decltype(rint((float)0)), float>::value), "");
     static_assert((std::is_same<decltype(rint((bool)0)), double>::value), "");
@@ -1448,9 +1459,35 @@ __device__ void test_rint()
     static_assert((std::is_same<decltype(rint((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(rintf(0)), float>::value), "");
     static_assert((std::is_same<decltype(rint(Ambiguous())), Ambiguous>::value), "");
-    assert(rint(1) == 1);
-    assert(rint(1.) == 1);
-    assert(rint(1.f) == 1);
+    // Verify that rint/nearbyint produce identical correct results
+    auto check = [](double input, double fpresult) {
+      // FP rint()/nearbyint must match the expected result.
+      assert(rint(V(float(input))) == float(fpresult));
+      assert(nearbyint(V(float(input))) == float(fpresult));
+      assert(rint(V(input)) == fpresult);
+      assert(nearbyint(V(input)) == fpresult);
+      // for integral types, std::rint(input) == std::rint(double(input))
+      int iinput = input;
+      assert(std::rint(V(iinput)) == std::rint(double(V(iinput))));
+      assert(std::nearbyint(V(iinput)) == std::nearbyint(double(V(iinput))));
+    };
+    // Whole values round to themselves and do not change sign.
+    check(0.0, 0.0);
+    check(-0.0, -0.0);
+    check(1.0, 1.0);
+    check(-1.0, -1.0);
+    // Half-way values round towards nearest even number.
+    check(2.5, 2.0);
+    check(-2.5, -2.0);
+    check(3.5, 4.0);
+    check(-3.5, -4.0);
+    // Everything else is rounded towards nearest integer.
+    check(2.1, 2.0);
+    check(-2.1, -2.0);
+    check(2.7, 3.0);
+    check(-2.7, -3.0);
+    check(3.9, 4.0);
+    check(-3.9, -4.0);
 }
 
 __device__ void test_round()
@@ -1467,9 +1504,9 @@ __device__ void test_round()
     static_assert((std::is_same<decltype(round((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(roundf(0)), float>::value), "");
     static_assert((std::is_same<decltype(round(Ambiguous())), Ambiguous>::value), "");
-    assert(round(1) == 1);
-    assert(round(1.) == 1);
-    assert(round(1.f) == 1);
+    assert(round(V(1)) == 1);
+    assert(round(V(1.)) == 1);
+    assert(round(V(1.f)) == 1);
 }
 
 __device__ void test_scalbln()
@@ -1486,17 +1523,17 @@ __device__ void test_scalbln()
     static_assert((std::is_same<decltype(scalbln((double)0, (long)0)), double>::value), "");
     static_assert((std::is_same<decltype(scalblnf(0, (long)0)), float>::value), "");
     static_assert((std::is_same<decltype(scalbln(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::scalbln(1, 1) == 2);
-    assert(std::scalbln(1, 1.) == 2);
-    assert(std::scalbln(1, 1.f) == 2);
+    assert(std::scalbln(V(1), 1) == 2);
+    assert(std::scalbln(V(1), 1.) == 2);
+    assert(std::scalbln(V(1), 1.f) == 2);
 
-    assert(std::scalbln(1., 1) == 2);
-    assert(std::scalbln(1., 1.) == 2);
-    assert(std::scalbln(1., 1.f) == 2);
+    assert(std::scalbln(V(1.), 1) == 2);
+    assert(std::scalbln(V(1.), 1.) == 2);
+    assert(std::scalbln(V(1.), 1.f) == 2);
 
-    assert(std::scalbln(1.f, 1) == 2);
-    assert(std::scalbln(1.f, 1.) == 2);
-    assert(std::scalbln(1.f, 1.f) == 2);
+    assert(std::scalbln(V(1.f), 1) == 2);
+    assert(std::scalbln(V(1.f), 1.) == 2);
+    assert(std::scalbln(V(1.f), 1.f) == 2);
 }
 
 __device__ void test_scalbn()
@@ -1513,17 +1550,17 @@ __device__ void test_scalbn()
     static_assert((std::is_same<decltype(scalbn((double)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(scalbnf(0, (int)0)), float>::value), "");
     static_assert((std::is_same<decltype(scalbn(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
-    assert(std::scalbn(1, 1) == 2);
-    assert(std::scalbn(1, 1.) == 2);
-    assert(std::scalbn(1, 1.f) == 2);
+    assert(std::scalbn(V(1), 1) == 2);
+    assert(std::scalbn(V(1), 1.) == 2);
+    assert(std::scalbn(V(1), 1.f) == 2);
 
-    assert(std::scalbn(1., 1) == 2);
-    assert(std::scalbn(1., 1.) == 2);
-    assert(std::scalbn(1., 1.f) == 2);
+    assert(std::scalbn(V(1.), 1) == 2);
+    assert(std::scalbn(V(1.), 1.) == 2);
+    assert(std::scalbn(V(1.), 1.f) == 2);
 
-    assert(std::scalbn(1.f, 1) == 2);
-    assert(std::scalbn(1.f, 1.) == 2);
-    assert(std::scalbn(1.f, 1.f) == 2);
+    assert(std::scalbn(V(1.f), 1) == 2);
+    assert(std::scalbn(V(1.f), 1.) == 2);
+    assert(std::scalbn(V(1.f), 1.f) == 2);
 }
 
 __device__ void test_tgamma()
@@ -1540,9 +1577,9 @@ __device__ void test_tgamma()
     static_assert((std::is_same<decltype(tgamma((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(tgammaf(0)), float>::value), "");
     static_assert((std::is_same<decltype(tgamma(Ambiguous())), Ambiguous>::value), "");
-    assert(tgamma(1) == 1);
-    assert(tgamma(1.) == 1);
-    assert(tgamma(1.f) == 1);
+    assert(tgamma(V(1)) == 1);
+    assert(tgamma(V(1.)) == 1);
+    assert(tgamma(V(1.f)) == 1);
 }
 
 __device__ void test_trunc()
@@ -1559,9 +1596,9 @@ __device__ void test_trunc()
     static_assert((std::is_same<decltype(trunc((double)0)), double>::value), "");
     static_assert((std::is_same<decltype(truncf(0)), float>::value), "");
     static_assert((std::is_same<decltype(trunc(Ambiguous())), Ambiguous>::value), "");
-    assert(trunc(1) == 1);
-    assert(trunc(1.) == 1);
-    assert(trunc(1.f) == 1);
+    assert(trunc(V(1)) == 1);
+    assert(trunc(V(1.)) == 1);
+    assert(trunc(V(1.f)) == 1);
 }
 
 __global__ void tests()
@@ -1629,7 +1666,7 @@ __global__ void tests()
     test_nextafter();
     test_remainder();
     test_remquo();
-    test_rint();
+    test_rint_nearbyint();
     test_round();
     test_scalbln();
     test_scalbn();
