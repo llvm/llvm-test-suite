@@ -207,10 +207,14 @@ def format_diff(value):
     else:
         return "%-5d" % value
 
-def print_result(d, limit_output=True, shorten_names=True,
-                 show_diff_column=True, sortkey='diff'):
+def print_result(d, limit_output=True, shorten_names=True, minimal_names=False,
+                 show_diff_column=True, sortkey='diff', sort_by_abs=True):
     # sort (TODO: is there a more elegant way than create+drop a column?)
-    d['$sortkey'] = d[sortkey].abs()
+    if sort_by_abs:
+        d['$sortkey'] = d[sortkey].abs()
+    else:
+        d['$sortkey'] = d[sortkey]
+
     d = d.sort_values("$sortkey", ascending=False)
     del d['$sortkey']
     if not show_diff_column:
@@ -236,7 +240,17 @@ def print_result(d, limit_output=True, shorten_names=True,
                 name = name[:-common_suffix]
             return "%-45s" % truncate(name, 10, 30)
 
-        formatters['Program'] = lambda name: format_name(name, drop_prefix, drop_suffix)
+
+        def strip_name_fully(name):
+            name = name.split('/')[-1]
+            if name.endswith('.test'):
+                name = name[:-5]
+            return name
+
+        if minimal_names:
+            formatters['Program'] = strip_name_fully
+        else:
+            formatters['Program'] = lambda name: format_name(name, drop_prefix, drop_suffix)
     def float_format(x):
         if x == '':
             return ''
@@ -277,6 +291,10 @@ if __name__ == "__main__":
     parser.add_argument('--rhs-name', default="rhs",
                         help="Name used to describe right side in 'vs' mode")
     parser.add_argument('files', metavar='FILE', nargs='+', help="To compare two groups of results, put 'vs' between them")
+    parser.add_argument('--minimal-names', action='store_true',
+                        dest='minimal_names', default=False)
+    parser.add_argument('--no-abs-sort', action='store_true',
+                        dest='no_abs_sort', default=False, help="Don't use abs() when sorting results")
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -371,4 +389,4 @@ if __name__ == "__main__":
     print("")
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
-    print_result(data, limit_output, shorten_names, config.show_diff, sortkey)
+    print_result(data, limit_output, shorten_names, config.minimal_names, config.show_diff, sortkey, config.no_abs_sort)
