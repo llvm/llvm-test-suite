@@ -16,9 +16,14 @@ jobs:
       with:
         fetch-depth: 2
 
+    - name: Get clang-format-diff.py tool
+      run: |
+        wget https://raw.githubusercontent.com/intel/llvm/sycl/clang/tools/clang-format/clang-format-diff.py
+        chmod u+x clang-format-diff.py
+      
     - name: Run clang-format for the patch
       run: |
-        git diff -U0 --no-color ${GITHUB_SHA}^1 ${GITHUB_SHA} -- | ./clang/tools/clang-format/clang-format-diff.py -p1 -binary clang-format-9 > ./clang-format.patch
+        git diff -U0 --no-color ${GITHUB_SHA}^1 ${GITHUB_SHA} -- | python clang-format-diff.py -p1 -binary clang-format-9 > ./clang-format.patch
     # Add patch with formatting fixes to CI job artifacts
     - uses: actions/upload-artifact@v1
       with:
