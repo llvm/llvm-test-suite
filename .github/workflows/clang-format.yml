@@ -3,7 +3,7 @@ name: clang-format-check
 on:
   pull_request:
     branches:
-    - sycl
+    - intel
 
 jobs:
   build:
