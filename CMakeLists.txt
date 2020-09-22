@@ -4,6 +4,12 @@ include(CheckSymbolExists)
 
 project(test-suite C CXX)
 
+function(append value)
+  foreach(variable ${ARGN})
+    set(${variable} "${${variable}} ${value}" PARENT_SCOPE)
+  endforeach(variable)
+endfunction()
+
 # The test-suite is designed to be built in release mode anyway and
 # falls over unless -DNDEBUG is set.
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -155,6 +161,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
+
+if (TESTSUITE_USE_LINKER)
+    append("-fuse-ld=${TESTSUITE_USE_LINKER}"
+    CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAG)
+endif()
 
 # Append extra flags. These extra flags are mainly meant for cache files that
 # want to apply flags that get not override even when the user manually
