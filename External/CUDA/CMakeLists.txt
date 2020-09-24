@@ -98,6 +98,7 @@ macro(create_local_cuda_tests VariantSuffix)
   create_one_local_test(empty empty.cu)
   create_one_local_test(printf printf.cu)
   create_one_local_test(future future.cu)
+  create_one_local_test(builtin_var builtin_var.cu)
   # We only need SIMD tests on CUDA-8.0 to verivy that our reference is correct
   # and matches NVIDIA-provided one.  and on CUDA-9.2 to verify that clang's
   # implementation matches the reference.  This test also happens to be the
