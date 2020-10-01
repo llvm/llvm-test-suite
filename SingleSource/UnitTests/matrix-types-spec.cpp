@@ -2,8 +2,7 @@
 // specification.
 
 // Only build the tests if the proper extensions is available.
-// #if __has_extension(matrix_types)
-#if 0
+#if __has_extension(matrix_types)
 
 #include <iostream>
 #include <random>
