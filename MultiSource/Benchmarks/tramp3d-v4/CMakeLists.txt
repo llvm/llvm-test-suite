@@ -1,5 +1,4 @@
 list(APPEND CXXFLAGS -fno-exceptions)
-list(APPEND LDFLAGS -lstdc++)
 if(SMALL_PROBLEM_SIZE)
   set(RUN_OPTIONS --cartvis 1.0 0.0 --rhomin 1e-8 -n 4 --domain 32 32 32)
 else()

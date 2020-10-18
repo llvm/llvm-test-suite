@@ -1,3 +1,3 @@
 list(APPEND CXXFLAGS -pthread)
-list(APPEND LDFLAGS -lm -lstdc++ -pthread)
+list(APPEND LDFLAGS -lm -pthread)
 llvm_singlesource()

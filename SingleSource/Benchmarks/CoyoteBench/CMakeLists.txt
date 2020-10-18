@@ -1,2 +1,2 @@
-list(APPEND LDFLAGS -lm -lstdc++)
+list(APPEND LDFLAGS -lm)
 llvm_singlesource()

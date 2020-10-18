@@ -1,4 +1,3 @@
-list(APPEND LDFLAGS -lstdc++)
 set(RUN_OPTIONS < input)
 llvm_multisource(hexxagon)
 target_include_directories(hexxagon PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

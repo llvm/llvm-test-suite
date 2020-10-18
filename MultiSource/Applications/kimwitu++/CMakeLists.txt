@@ -1,5 +1,4 @@
 list(APPEND CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR} -DYYDEBUG=1)
-list(APPEND LDFLAGS -lstdc++)
 set(RUN_OPTIONS -f test  -o -v -s kcc inputs/f3.k inputs/f2.k inputs/f1.k)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource(kc)

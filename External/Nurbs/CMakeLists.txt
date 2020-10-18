@@ -4,7 +4,6 @@ if(ARCH STREQUAL "x86")
   llvm_externals_find(TEST_SUITE_NURBS_ROOT "nurbs" "Nurbs")
 
   if(TEST_SUITE_NURBS_ROOT)
-    list(APPEND LDFLAGS -lstdc++)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       list(APPEND CPPFLAGS -DDWORD_IS_ULL)
     endif()

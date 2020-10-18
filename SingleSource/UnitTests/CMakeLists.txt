@@ -36,7 +36,6 @@ if(ARCH STREQUAL "XCore")
   list(REMOVE_ITEM Source AtomicOps.c)
   list(REMOVE_ITEM Source initp1.cpp)
 endif()
-list(APPEND LDFLAGS -lstdc++)
 if(NOT ARCH STREQUAL "x86")
   list(REMOVE_ITEM Source
     ms_struct-bitfield.c

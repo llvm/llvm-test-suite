@@ -1,4 +1,4 @@
-list(APPEND LDFLAGS -lstdc++ -lm)
+list(APPEND LDFLAGS -lm)
 if(SMALL_PROBLEM_SIZE)
   set(INPUT small.cnf)
 else()

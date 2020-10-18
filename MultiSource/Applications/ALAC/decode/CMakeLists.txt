@@ -5,7 +5,6 @@ else()
   list(APPEND CFLAGS -DTARGET_RT_BIG_ENDIAN=1)
   list(APPEND CXXFLAGS -DTARGET_RT_BIG_ENDIAN=1)
 endif()
-list(APPEND LDFLAGS -lstdc++)
 set(RUN_OPTIONS - - < tune.caf)
 llvm_multisource(alacconvert-decode
   EndianPortable.c

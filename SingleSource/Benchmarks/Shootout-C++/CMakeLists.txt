@@ -32,7 +32,7 @@ if(NOT TEST_SUITE_BENCHMARKING_ONLY)
     wordfreq.cpp
   )
 endif()
-list(APPEND LDFLAGS -lstdc++ -lm)
+list(APPEND LDFLAGS -lm)
 if(TARGET_OS STREQUAL "Darwin")
   # Necessary for ackermann on iOS
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x800000)

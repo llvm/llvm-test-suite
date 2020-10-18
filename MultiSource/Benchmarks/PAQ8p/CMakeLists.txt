@@ -1,5 +1,5 @@
 list(APPEND CPPFLAGS -DNOASM -DLLVM)
-list(APPEND LDFLAGS -lstdc++ -lm)
+list(APPEND LDFLAGS -lm)
 if(SMALL_PROBLEM_SIZE)
   set(INPUTS small.in)
   set(RUN_OPTIONS -1 ${INPUTS})
