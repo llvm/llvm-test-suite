@@ -1202,9 +1202,9 @@ void lame_init(lame_global_flags *gfp)
 {
 
   /*
-   *  Disable floating point exepctions
+   *  Disable floating point exceptions
    */
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) && defined(FP_X_INV) && defined(FP_X_DZ)
   {
   /* seet floating point mask to the Linux default */
   fp_except_t mask;
