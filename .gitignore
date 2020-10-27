@@ -2,3 +2,4 @@
 # External/*
 /test-suite-externals
 *.pyc
+/build*
