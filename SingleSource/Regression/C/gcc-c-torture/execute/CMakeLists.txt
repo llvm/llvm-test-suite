@@ -302,6 +302,26 @@ if(ARCH MATCHES "AArch64")
   list(APPEND TestsToSkip ${AArch64TestsToSkip})
 endif()
 
+# ARM Test Blacklist
+if(ARCH MATCHES "ARM")
+  file(GLOB ARMTestsToSkip CONFIGURE_DEPENDS
+    # No support for __int128 on ARM 32-bit
+    pr84748.c
+
+    # With some command line options, linking fails with:
+    # pr89434.c:(.text+0xac): undefined reference to `__mulodi4'
+    pr89434.c
+
+    # Fails in the front end with:
+    # clang: llvm/include/llvm/Support/Casting.h:269: typename
+    #   cast_retty<X, Y *>::ret_type llvm::cast(Y *) [X = llvm::PointerType,
+    #   Y = llvm::Type]: Assertion `isa<X>(Val) && "cast<Ty>() argument of
+    #   incompatible type!"' failed.
+    va-arg-22.c
+  )
+
+  list(APPEND TestsToSkip ${ARMTestsToSkip})
+endif()
 
 # Darwin Test Blacklist
 if(TARGET_OS STREQUAL "Darwin")
