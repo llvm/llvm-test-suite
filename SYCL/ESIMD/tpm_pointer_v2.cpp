@@ -108,7 +108,11 @@ int main(void) {
 
           // some work with Z
           for (int j = 0; j < SZ - 1; ++j) {
+<<<<<<< HEAD
             if ( *(*(z[j])) < *(*(z[j + 1])) )
+=======
+            if (*(*(z[j])) < *(*(z[j + 1])))
+>>>>>>> fe7b8274 (ESIMD: add TPM tests)
               z[j] = y2 + j;
             if (j % 18 == 0)
               (*(*(z[j])))++;
@@ -186,7 +190,11 @@ int main(void) {
 
   // same work with Z
   for (int j = 0; j < SZ - 1; ++j) {
+<<<<<<< HEAD
     if ( *(*(z[j])) < *(*(z[j + 1])) )
+=======
+    if (*(*(z[j])) < *(*(z[j + 1])))
+>>>>>>> fe7b8274 (ESIMD: add TPM tests)
       z[j] = y2 + j;
     if (j % 18 == 0)
       (*(*(z[j])))++;
