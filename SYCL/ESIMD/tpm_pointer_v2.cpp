@@ -30,15 +30,14 @@ int main(void) {
   std::cout << "Running on " << dev.get_info<info::device::name>() << "\n";
   auto ctx = q.get_context();
 
-  int *output = static_cast<int *>(
-      malloc_shared(VL * sizeof(int), dev, ctx));
+  int *output = static_cast<int *>(malloc_shared(VL * sizeof(int), dev, ctx));
   memset(output, 0, VL * sizeof(int));
 
   int offx1 = 111;
   int offx2 = 55;
   int offy1 = 499;
   int offy2 = 223;
-  int offz  = 99;
+  int offz = 99;
   int base1 = 500;
   int base2 = 100;
   int divisor = 4;
@@ -46,87 +45,87 @@ int main(void) {
   {
     auto e = q.submit([&](handler &cgh) {
       cgh.parallel_for<class Test>(
-        sycl::range<1> {1}, [=](id<1> i) SYCL_ESIMD_KERNEL {
-          using namespace sycl::INTEL::gpu;
+          sycl::range<1>{1}, [=](id<1> i) SYCL_ESIMD_KERNEL {
+            using namespace sycl::INTEL::gpu;
 
-          int x1[SZ];
-          for (int j = 0; j < SZ; ++j) {
-            int idx = (j + offx1) % SZ;
-            x1[idx] = (idx % 2) == 0 ? j : base1;
-          }
-
-          int x2[SZ];
-          for (int j = 0; j < SZ; ++j) {
-            int idx = (j + offx2) % SZ;
-            x2[idx] = base2 << (j % 32);
-          }
-
-          int* y1[SZ];
-          for (int j = 0; j < SZ; ++j) {
-            int idx = (j + offy1) % SZ;
-            y1[j] = j % 6 == 0 ? x1 + idx : x2 + idx;
-          }
-
-          int* y2[SZ];
-          for (int j = 0; j < SZ; ++j) {
-            int idx = (j + offy2) % SZ;
-            y2[j] = j % 2 == 0 ? x2 + idx : x1 + idx;
-          }
-
-          int** z[SZ];
-          for (int j = 0; j < SZ; ++j) {
-            int idx = (j + offz) % SZ;
-            z[j] = y1 + idx;
-          }
-
-          // some work with X1
-          for (int j = 1; j < SZ; ++j) {
-            if ((x1[j] + j) > base1)
-              x1[j] = (j * (x1[j] + x1[j - 1]) / divisor) - base2;
-          }
-
-          // some work with X2
-          for (int j = 1; j < SZ; ++j) {
-            if ((x2[j] + j) < base2)
-              x2[j] = (divisor * (x2[j] - x2[j - 1]) / j) + base1;
-          }
-
-          // some work with Y1
-          for (int j = 0; j < SZ; j += 2) {
-            if (*(y1[j]) > *(y1[j + 1]))
-              *(y1[j]) = *(y1[j + 1]) - *(y1[j]);
-          }
-
-          // some work with Y2
-          for (int j = 1; j < SZ - 1; j += 2) {
-            if ((*(y2[j]) <= *(y2[j + 1]))) {
-              auto temp = y2[j];
-              y2[j] = y2[j + 1];
-              y2[j + 1] = temp;
+            int x1[SZ];
+            for (int j = 0; j < SZ; ++j) {
+              int idx = (j + offx1) % SZ;
+              x1[idx] = (idx % 2) == 0 ? j : base1;
             }
-          }
 
-          // some work with Z
-          for (int j = 0; j < SZ - 1; ++j) {
+            int x2[SZ];
+            for (int j = 0; j < SZ; ++j) {
+              int idx = (j + offx2) % SZ;
+              x2[idx] = base2 << (j % 32);
+            }
+
+            int *y1[SZ];
+            for (int j = 0; j < SZ; ++j) {
+              int idx = (j + offy1) % SZ;
+              y1[j] = j % 6 == 0 ? x1 + idx : x2 + idx;
+            }
+
+            int *y2[SZ];
+            for (int j = 0; j < SZ; ++j) {
+              int idx = (j + offy2) % SZ;
+              y2[j] = j % 2 == 0 ? x2 + idx : x1 + idx;
+            }
+
+            int **z[SZ];
+            for (int j = 0; j < SZ; ++j) {
+              int idx = (j + offz) % SZ;
+              z[j] = y1 + idx;
+            }
+
+            // some work with X1
+            for (int j = 1; j < SZ; ++j) {
+              if ((x1[j] + j) > base1)
+                x1[j] = (j * (x1[j] + x1[j - 1]) / divisor) - base2;
+            }
+
+            // some work with X2
+            for (int j = 1; j < SZ; ++j) {
+              if ((x2[j] + j) < base2)
+                x2[j] = (divisor * (x2[j] - x2[j - 1]) / j) + base1;
+            }
+
+            // some work with Y1
+            for (int j = 0; j < SZ; j += 2) {
+              if (*(y1[j]) > *(y1[j + 1]))
+                *(y1[j]) = *(y1[j + 1]) - *(y1[j]);
+            }
+
+            // some work with Y2
+            for (int j = 1; j < SZ - 1; j += 2) {
+              if ((*(y2[j]) <= *(y2[j + 1]))) {
+                auto temp = y2[j];
+                y2[j] = y2[j + 1];
+                y2[j + 1] = temp;
+              }
+            }
+
+            // some work with Z
+            for (int j = 0; j < SZ - 1; ++j) {
 <<<<<<< HEAD
-            if ( *(*(z[j])) < *(*(z[j + 1])) )
+              if (*(*(z[j])) < *(*(z[j + 1])))
 =======
             if (*(*(z[j])) < *(*(z[j + 1])))
 >>>>>>> fe7b8274 (ESIMD: add TPM tests)
-              z[j] = y2 + j;
-            if (j % 18 == 0)
-              (*(*(z[j])))++;
-          }
+                z[j] = y2 + j;
+              if (j % 18 == 0)
+                (*(*(z[j])))++;
+            }
 
-          int o = 0;
-          for (int j = 0; j < SZ; ++j) {
-            if (j % 3 == 0)
-              o += *(*(z[j]));
-          }
+            int o = 0;
+            for (int j = 0; j < SZ; ++j) {
+              if (j % 3 == 0)
+                o += *(*(z[j]));
+            }
 
-          simd<int, VL> inc(0, 1);
-          block_store<int, VL>(output, inc + o);
-        });
+            simd<int, VL> inc(0, 1);
+            block_store<int, VL>(output, inc + o);
+          });
     });
     e.wait();
   }
@@ -155,7 +154,7 @@ int main(void) {
       x2[j] = (divisor * (x2[j] - x2[j - 1]) / j) + base1;
   }
 
-  int* y1[SZ];
+  int *y1[SZ];
   for (int j = 0; j < SZ; ++j) {
     int idx = (j + offy1) % SZ;
     y1[j] = j % 6 == 0 ? x1 + idx : x2 + idx;
@@ -167,7 +166,7 @@ int main(void) {
       *(y1[j]) = *(y1[j + 1]) - *(y1[j]);
   }
 
-  int* y2[SZ];
+  int *y2[SZ];
   for (int j = 0; j < SZ; ++j) {
     int idx = (j + offy2) % SZ;
     y2[j] = j % 2 == 0 ? x2 + idx : x1 + idx;
@@ -182,7 +181,7 @@ int main(void) {
     }
   }
 
-  int** z[SZ];
+  int **z[SZ];
   for (int j = 0; j < SZ; ++j) {
     int idx = (j + offz) % SZ;
     z[j] = y1 + idx;
@@ -191,7 +190,7 @@ int main(void) {
   // same work with Z
   for (int j = 0; j < SZ - 1; ++j) {
 <<<<<<< HEAD
-    if ( *(*(z[j])) < *(*(z[j + 1])) )
+    if (*(*(z[j])) < *(*(z[j + 1])))
 =======
     if (*(*(z[j])) < *(*(z[j + 1])))
 >>>>>>> fe7b8274 (ESIMD: add TPM tests)
