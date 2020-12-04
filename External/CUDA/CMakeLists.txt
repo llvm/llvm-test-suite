@@ -189,7 +189,7 @@ function(create_cuda_test_variant Std VariantSuffix)
   create_local_cuda_tests(${VariantSuffix})
   add_dependencies(cuda-tests-simple cuda-tests-simple-${VariantSuffix})
 
-  if(DEFINED THRUST_PATH AND (NOT ${Std} STREQUAL "c++14"))
+  if(DEFINED THRUST_PATH AND (NOT ${Std} IN_LIST "c++14;c++17;c++20"))
     create_thrust_tests(${VariantSuffix})
   endif()
 
@@ -337,7 +337,7 @@ macro(create_cuda_tests)
     list(APPEND _Cuda_CPPFLAGS ${_CudaArchFlags})
 
     set(_Cuda_Libs cudart-${_CudaVersion})
-    foreach(_Std IN ITEMS "c++98" "c++11" "c++14")
+    foreach(_Std IN ITEMS "c++98" "c++11" "c++14" "c++17" "c++20")
       set(_Std_Suffix "${_Std}")
       set(_Std_CPPFLAGS -std=${_Std})
       set(_Std_LDFLAGS -std=${_Std})
