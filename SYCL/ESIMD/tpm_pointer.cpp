@@ -87,14 +87,10 @@ int main(void) {
                 *(y[j]) = *(y[j + 1]) - *(y[j]);
             }
 
-            int o = 0;
-            for (int j = 0; j < SZ; ++j) {
-              if (j % 3 == 0)
-                o += *(y[j]);
-            }
-
-            simd<int, VL> inc(0, 1);
-            block_store<int, VL>(output, inc + o);
+            simd<int, VL> val(0);
+            for (int j = 0; j < SZ; ++j)
+              val.select<1, 1>(j % VL) += *(y[j]);
+            block_store<int, VL>(output, val);
           });
     });
     e.wait();
@@ -141,20 +137,16 @@ int main(void) {
       *(y[j]) = *(y[j + 1]) - *(y[j]);
   }
 
-  int o = 0;
-  for (int j = 0; j < SZ; ++j) {
-    if (j % 3 == 0)
-      o += *(y[j]);
-  }
+  int o[VL] = {0};
+  for (int j = 0; j < SZ; ++j)
+    o[j % VL] += *(y[j]);
 
   int err_cnt = 0;
-  for (int j = 0; j < VL; ++j) {
-    if (output[j] != (o + j))
+  for (int j = 0; j < VL; ++j)
+    if (output[j] != o[j])
       err_cnt += 1;
-  }
 
   if (err_cnt > 0) {
-    std::cout << "GPU: " << output[0] << " vs CPU: " << o << "\n";
     std::cout << "FAILED.\n";
     return 1;
   }
