@@ -1,5 +1,4 @@
-//==---------------- pointer_tpm_v2.cpp  - DPC++ ESIMD on-device test
-//------------==//
+//==--------------- tpm_pointer_v2.cpp - DPC++ ESIMD on-device test ----==//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -9,8 +8,13 @@
 // TODO enable on Windows and Level Zero
 // REQUIRES: linux && gpu && opencl
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
-// RUN: %HOST_RUN_PLACEHOLDER %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out
+
+// This test is intended to use pointer to Thread Private Memory (TPM) located
+// in TPM to support implementation in ESIMD backend. In order to force using
+// of TPM need to allocate 96x32 bytes or more.
+// This test uses pointer to pointer in TPM to trigger some thresholds in
+// backend.
 
 #include "esimd_test_utils.hpp"
 
@@ -195,6 +199,8 @@ int main(void) {
   for (int j = 0; j < VL; ++j)
     if (output[j] != o[j])
       err_cnt += 1;
+
+  free(output, ctx);
 
   if (err_cnt > 0) {
     std::cout << "FAILED.\n";
