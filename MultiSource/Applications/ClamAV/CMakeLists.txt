@@ -170,6 +170,8 @@ llvm_multisource(clamscan
   zlib_uncompr.c
   zlib_zutil.c
 )
-find_package(Intl REQUIRED)
-target_link_libraries(clamscan ${Intl_LIBRARIES})
+if(TARGET_OS STREQUAL "Linux")
+  find_package(Intl REQUIRED)
+  target_link_libraries(clamscan ${Intl_LIBRARIES})
+endif()
 llvm_test_data(clamscan ${INPUT} dbdir)
