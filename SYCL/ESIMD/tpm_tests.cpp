@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
   std::cout << "Running on " << dev.get_info<info::device::name>() << "\n";
   auto ctx = q.get_context();
 
-  int *output = static_cast<int *>(
-          sycl::malloc_shared(VL * sizeof(int), dev, ctx));
+  int *output =
+      static_cast<int *>(sycl::malloc_shared(VL * sizeof(int), dev, ctx));
   memset(output, 0, VL * sizeof(int));
 
   int case_num = atoi(argv[1]);
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
               if (case_num == 2) {
                 for (int j = 0; j < SZ; ++j)
                   val.select<1, 1>(j % VL) += *(y1[j]) - *(y2[j]);
-              } else {  // case_num == 3
+              } else { // case_num == 3
                 int **z[SZ];
                 for (int j = 0; j < SZ; ++j) {
                   int idx = (j + offz) % SZ;
@@ -207,7 +207,7 @@ int main(int argc, char **argv) {
     if (case_num == 2) {
       for (int j = 0; j < SZ; ++j)
         o[j % VL] += *(y1[j]) - *(y2[j]);
-    } else {  // case_num == 3
+    } else { // case_num == 3
       int **z[SZ];
       for (int j = 0; j < SZ; ++j) {
         int idx = (j + offz) % SZ;
