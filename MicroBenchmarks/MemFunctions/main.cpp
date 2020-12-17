@@ -26,8 +26,8 @@
 
 // This function prevents the compiler from interfering with `memcmp` and
 // makes sure the function is called.
-int RealMemCmp(const char *p, const char *q, size_t s)
-    __attribute__((no_builtin("memcmp"))) {
+__attribute__((no_builtin("memcmp")))
+int RealMemCmp(const char *p, const char *q, size_t s) {
   return memcmp(p, q, s);
 }
 
