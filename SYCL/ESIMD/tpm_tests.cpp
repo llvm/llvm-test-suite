@@ -14,7 +14,7 @@
 
 // Since in ESIMD a single WI occupies entire underlying H/W thread, SYCL
 // private memory maps to what's known as 'thread private memory' in CM.
-// This test is intended to use TPM to support implementation in ESIMD
+// This test is intended to check TPM support implementation in ESIMD
 // backend. In order to force using of TPM need to allocate 96x32 bytes or more.
 
 #include "esimd_test_utils.hpp"
