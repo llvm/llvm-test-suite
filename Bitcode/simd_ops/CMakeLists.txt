@@ -25,4 +25,5 @@ foreach(sourcebc ${uosources})
     ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_scalar_tests/scalar_${namebc}.bc
   )
   target_link_libraries(simd_ops_${namebc} simd_ops)
+  set_property(TARGET simd_ops_${namebc} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endforeach()
