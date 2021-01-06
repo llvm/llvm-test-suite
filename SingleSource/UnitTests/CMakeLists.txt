@@ -12,6 +12,11 @@ if(TARGET_OS STREQUAL "Darwin")
   add_subdirectory(ObjC++)
 endif()
 
+# Fortran
+if(TEST_SUITE_FORTRAN)
+  add_subdirectory(Fortran)
+endif()
+
 file(GLOB Source RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.c *.cpp)
 if(TARGET_OS STREQUAL "AIX" AND ARCH STREQUAL "PowerPC" AND NOT PPC_IS_PPC64_ENABLED) 
   list(REMOVE_ITEM Source AtomicOps.c)

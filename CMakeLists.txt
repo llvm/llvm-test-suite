@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.4.3)
 
 include(CheckSymbolExists)
 
+option(TEST_SUITE_FORTRAN "Enable Fortran test suite" OFF)
+
 project(test-suite C CXX)
+
+if(TEST_SUITE_FORTRAN)
+  enable_language(Fortran)
+endif()
 
 function(append value)
   foreach(variable ${ARGN})
@@ -21,6 +27,9 @@ mark_as_advanced(CMAKE_INSTALL_PREFIX CMAKE_BUILD_TYPE)
 # On the other hand we often want to switch compiler or cflags
 mark_as_advanced(CLEAR CMAKE_C_COMPILER CMAKE_CXX_COMPILER CMAKE_LINKER
   CMAKE_C_FLAGS CMAKE_CXX_FLAGS CMAKE_EXE_LINKER_FLAGS)
+if(TEST_SUITE_FORTRAN)
+    mark_as_advanced(CLEAR CMAKE_Fortran_COMPILER)
+endif()
 
 # The files in cmake/caches often want to pass along additional flags to select
 # the target architecture. Note that you should still use
@@ -29,6 +38,9 @@ set(TEST_SUITE_ARCH_FLAGS CACHE STRING
    "Extra flags to select target architecture.")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
+if(TEST_SUITE_FORTRAN)
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
+endif()
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 
 set(LLVM_CODESIGNING_IDENTITY "" CACHE STRING
@@ -153,12 +165,16 @@ option(TEST_SUITE_PROFILE_USE
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
 # the user specified CMAKE_C_FLAGS etc. need not be changed.
 set(TEST_SUITE_DIAGNOSE_FLAGS CACHE STRING
-   "Extra flags appended to CMAKE_C_FLAGS + CMAKE_CXX_FLAGS")
+   "Extra flags appended to CMAKE_C_FLAGS + CMAKE_CXX_FLAGS + CMAKE_Fortran_FLAGS")
 set(TEST_SUITE_DIAGNOSE_LINKER_FLAGS CACHE STRING
     "Extra flags appended to CMAKE_EXE_LINKER_FLAGS")
 mark_as_advanced(TEST_SUITE_DIAGNOSE_FLAGS TEST_SUITE_DIAGNOSE_LINKER_FLAGS)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
+if(TEST_SUITE_FORTRAN)
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
+endif()
+
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
 
@@ -172,12 +188,25 @@ endif()
 # specifies CMAKE_C_FLAGS and similar.
 set(TEST_SUITE_EXTRA_C_FLAGS CACHE STRING "Extra flags for CMAKE_C_FLAGS")
 set(TEST_SUITE_EXTRA_CXX_FLAGS CACHE STRING "Extra flags for CMAKE_CXX_FLAGS")
+if(TEST_SUITE_FORTRAN)
+  set(TEST_SUITE_EXTRA_Fortran_FLAGS CACHE STRING "Extra flags for CMAKE_Fortran_FLAGS")
+endif()
+
 set(TEST_SUITE_EXTRA_EXE_LINKER_FLAGS CACHE STRING
     "Extra flags for CMAKE_EXE_LINKER_FLAGS")
 mark_as_advanced(TEST_SUITE_EXTRA_C_FLAGS, TEST_SUITE_EXTRA_CXX_FLAGS,
                  TEST_SUITE_EXTRA_EXE_LINKER_FLAGS)
+
+if(TEST_SUITE_FORTRAN)
+  mark_as_advanced(TEST_SUITE_EXTRA_Fortran_FLAGS TEST_SUITE_EXTRA_EXE_LINKER_FLAGS)
+endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TEST_SUITE_EXTRA_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_EXTRA_CXX_FLAGS}")
+if(TEST_SUITE_FORTRAN)
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${TEST_SUITE_EXTRA_Fortran_FLAGS}")
+endif()
+
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_EXTRA_EXE_LINKER_FLAGS}")
 
