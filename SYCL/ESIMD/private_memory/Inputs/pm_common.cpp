@@ -1,16 +1,10 @@
-//==--------------- private_memory_access.cpp - DPC++ ESIMD on-device test -==//
+//==--------------- pm_common.cpp - DPC++ ESIMD on-device test ------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// TODO enable on Windows and Level Zero
-// REQUIRES: linux && gpu && opencl
-// RUN: %clangxx-esimd -fsycl %s -o %t.out
-// RUN: %ESIMD_RUN_PLACEHOLDER %t.out 1
-// RUN: %ESIMD_RUN_PLACEHOLDER %t.out 2
-// RUN: %ESIMD_RUN_PLACEHOLDER %t.out 3
 
 // Since in ESIMD a single WI occupies entire underlying H/W thread, SYCL
 // private memory maps to what's known as 'thread private memory' in CM.
@@ -28,8 +22,9 @@ using namespace cl::sycl;
 constexpr unsigned VL = 8;
 constexpr unsigned SZ = 800; // big enough to use TPM
 
-ESIMD_INLINE void work(int *o, int case_num, int offx1, int offx2, int offy1,
-                       int offy2, int offz, int base1, int base2, int divisor) {
+template<int CASE_NUM>
+ESIMD_INLINE void work(int *o, int offx1, int offx2, int offy1,
+		int offy2, int offz, int base1, int base2, int divisor) {
   int x1[SZ];
   for (int j = 0; j < SZ; ++j) {
     int idx = (j + offx1) % SZ;
@@ -54,7 +49,7 @@ ESIMD_INLINE void work(int *o, int case_num, int offx1, int offx2, int offy1,
       x2[j] = (divisor * (x2[j] - x2[j - 1]) / j) + base1;
   }
 
-  if (case_num == 1) {
+  if constexpr (CASE_NUM == 1) {
     for (int j = 0; j < SZ; ++j)
       o[j % VL] += x1[j] - x2[j];
   } else {
@@ -85,10 +80,12 @@ ESIMD_INLINE void work(int *o, int case_num, int offx1, int offx2, int offy1,
       }
     }
 
-    if (case_num == 2) {
+    if constexpr (CASE_NUM == 2) {
       for (int j = 0; j < SZ; ++j)
         o[j % VL] += *(y1[j]) - *(y2[j]);
-    } else { // case_num == 3
+    } else {
+      static_assert(CASE_NUM == 3, "invalid CASE_NUM");
+
       int **z[SZ];
       for (int j = 0; j < SZ; ++j) {
         int idx = (j + offz) % SZ;
@@ -109,12 +106,9 @@ ESIMD_INLINE void work(int *o, int case_num, int offx1, int offx2, int offy1,
   }
 }
 
-int main(int argc, char **argv) {
-  if (argc != 2) {
-    std::cout << "Skipped! Specify case number" << std::endl;
-    return 1;
-  }
+template <int CASE_NUM> class KernelID;
 
+template <int CASE_NUM> int test() {
   queue q(esimd_test::ESIMDSelector{}, esimd_test::createExceptionHandler());
 
   auto dev = q.get_device();
@@ -124,9 +118,6 @@ int main(int argc, char **argv) {
   int *output =
       static_cast<int *>(sycl::malloc_shared(VL * sizeof(int), dev, ctx));
   memset(output, 0, VL * sizeof(int));
-
-  int case_num = atoi(argv[1]);
-  std::cout << "CASE NUM: " << case_num << std::endl;
 
   int offx1 = 111;
   int offx2 = 55;
@@ -139,28 +130,26 @@ int main(int argc, char **argv) {
 
   {
     auto e = q.submit([&](handler &cgh) {
-      cgh.parallel_for<class Test>(sycl::range<1>{1},
-                                   [=](id<1> i) SYCL_ESIMD_KERNEL {
-                                     using namespace sycl::INTEL::gpu;
+      cgh.parallel_for<KernelID<CASE_NUM>>(sycl::range<1>{1}, [=](id<1> i) SYCL_ESIMD_KERNEL {
+        using namespace sycl::INTEL::gpu;
 
-                                     int o[VL] = {0};
+        int o[VL] = {0};
 
-                                     work(o, case_num, offx1, offx2, offy1,
-                                          offy2, offz, base1, base2, divisor);
+        work<CASE_NUM>(o, offx1, offx2, offy1, offy2, offz, base1, base2, divisor);
 
-                                     simd<int, VL> val(0);
-                                     for (int j = 0; j < VL; j++)
-                                       val.select<1, 1>(j) += o[j];
+        simd<int, VL> val(0);
+        for (int j = 0; j < VL; j++)
+          val.select<1, 1>(j) += o[j];
 
-                                     block_store<int, VL>(output, val);
-                                   });
+        block_store<int, VL>(output, val);
+      });
     });
     e.wait();
   }
 
   int o[VL] = {0};
 
-  work(o, case_num, offx1, offx2, offy1, offy2, offz, base1, base2, divisor);
+  work<CASE_NUM>(o, offx1, offx2, offy1, offy2, offz, base1, base2, divisor);
 
   int err_cnt = 0;
   for (int j = 0; j < VL; ++j)
@@ -176,4 +165,20 @@ int main(int argc, char **argv) {
 
   std::cout << "Passed\n";
   return 0;
+}
+
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    std::cout << "Skipped! Specify case number" << std::endl;
+    return 1;
+  }
+
+  int case_num = atoi(argv[1]);
+  switch (case_num) {
+	case 1: return test<1>();
+	case 2: return test<2>();
+	case 3: return test<3>();
+  }
+  std::cerr << "Invalid case number: " << case_num << "\n";
+  return 1;
 }
