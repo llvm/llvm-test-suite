@@ -6,7 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows
-// REQUIRES: linux && gpu && opencl
+// REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out
 //
@@ -58,7 +59,7 @@ template <typename T, unsigned VL, unsigned STRIDE> bool test(queue q) {
     A[i] = (T)i;
   }
 
-  {
+  try {
     buffer<T, 1> buf(A, range<1>(size));
     range<1> glob_range{size / VL};
 
@@ -67,6 +68,10 @@ template <typename T, unsigned VL, unsigned STRIDE> bool test(queue q) {
       Kernel<T, VL, STRIDE> kernel(acc);
       cgh.parallel_for(glob_range, kernel);
     });
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    delete[] A;
+    return e.get_cl_code();
   }
 
   int err_cnt = 0;

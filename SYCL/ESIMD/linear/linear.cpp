@@ -5,8 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// TODO enable on Windows and Level Zero
-// REQUIRES: linux && gpu && opencl
+// TODO enable on Windows
+// REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -I%S/.. -o %t.out
 // RUN: %HOST_RUN_PLACEHOLDER %t.out %S/linear_in.bmp %S/linear_gold_hw.bmp
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out %S/linear_in.bmp %S/linear_gold_hw.bmp
@@ -54,7 +55,7 @@ int main(int argc, char *argv[]) {
   // Sets output to blank image.
   output_image.setData(new unsigned char[img_size]);
 
-  {
+  try {
     unsigned int img_width = width * bpp / (8 * sizeof(int));
 
     cl::sycl::image<2> imgInput(
@@ -124,6 +125,9 @@ int main(int argc, char *argv[]) {
           });
     });
     e.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    return e.get_cl_code();
   }
 
   output_image.save("linear_out.bmp");

@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows
 // REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -I%S/.. -o %t.out
 // RUN: %HOST_RUN_PLACEHOLDER %t.out %S/points.big.json
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out %S/points.big.json
@@ -547,8 +548,12 @@ int main(int argc, char *argv[]) {
     std::cerr << "Usage: kmeans.exe input_file" << std::endl;
     exit(1);
   }
+
+  cl::sycl::property_list props{property::queue::enable_profiling{},
+                                property::queue::in_order()};
   queue q(esimd_test::ESIMDSelector{}, esimd_test::createExceptionHandler(),
-          property::queue::enable_profiling{});
+          props);
+
   auto dev = q.get_device();
   auto ctxt = q.get_context();
 
@@ -661,7 +666,7 @@ int main(int argc, char *argv[]) {
                                           cmk_accum_reduction((uint *)accum, i);
                                         });
     });
-    e.wait();
+    e1.wait();
     kernel2_time_in_ns += report_time("kernel2", e1);
 #endif
 
@@ -678,10 +683,17 @@ int main(int argc, char *argv[]) {
     kernel3_time_in_ns += report_time("kernel3", e2);
   };
 
-  for (auto i = 0; i < NUM_ITERATIONS - 1; i++) {
-    submitJobs(false);
+  try {
+    for (auto i = 0; i < NUM_ITERATIONS - 1; i++) {
+      submitJobs(false);
+    }
+    submitJobs(true);
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    delete cpu_points;
+    delete cpu_centroids;
+    return e.get_cl_code();
   }
-  submitJobs(true);
 
   //---
 

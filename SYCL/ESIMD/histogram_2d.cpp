@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows and Level Zero
 // REQUIRES: linux && gpu && opencl
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %HOST_RUN_PLACEHOLDER %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]) {
                          image_channel_type::unsigned_int32,
                          range<2>{width / sizeof(uint4), height});
 
-  {
+  try {
     // create ranges
     // We need that many workitems
     auto GlobalRange = range<2>(range_width, range_height);
@@ -206,7 +207,11 @@ int main(int argc, char *argv[]) {
 
     // SYCL will enqueue and run the kernel. Recall that the buffer's data is
     // given back to the host at the end of scope.
-  } // make sure data is given back to the host at the end of this scope
+    // make sure data is given back to the host at the end of this scope
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    return e.get_cl_code();
+  }
 
   writeHist(bins);
   writeHist(cpuHistogram);

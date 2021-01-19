@@ -5,8 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// TODO enable on Windows and Level Zero
-// REQUIRES: linux && gpu && opencl
+// TODO enable on Windows
+// REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out 16
 
@@ -171,7 +172,7 @@ int main(int argc, char **argv) {
   auto LocalRange = cl::sycl::range<1>(NUM_BINS / 16);
   cl::sycl::nd_range<1> Range(GlobalRange, LocalRange);
 
-  {
+  try {
     auto e = q.submit([&](cl::sycl::handler &cgh) {
       cgh.parallel_for<histogram_slm>(
           prg.get_kernel<histogram_slm>(), Range,
@@ -181,6 +182,9 @@ int main(int argc, char **argv) {
           });
     });
     e.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    return e.get_cl_code();
   }
 
   std::cout << "finish GPU histogram\n";

@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows
 // REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %HOST_RUN_PLACEHOLDER %t.out 20
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out 20
@@ -144,14 +145,20 @@ int main(int argc, char *argv[]) {
 
   // compute local sum for every chunk of PREFIX_ENTRIES
   cl::sycl::range<2> GlobalRange{size / PREFIX_ENTRIES, 1};
-  auto e0 = q.submit([&](handler &cgh) {
-    cgh.parallel_for<class Sum_tuple>(
-        GlobalRange * LocalRange, [=](item<2> it) SYCL_ESIMD_KERNEL {
-          cmk_sum_tuple_count(pInputs, it.get_id(0));
-        });
-  });
-
-  e0.wait();
+  try {
+    auto e0 = q.submit([&](handler &cgh) {
+      cgh.parallel_for<class Sum_tuple>(
+          GlobalRange * LocalRange, [=](item<2> it) SYCL_ESIMD_KERNEL {
+            cmk_sum_tuple_count(pInputs, it.get_id(0));
+          });
+    });
+    e0.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    free(pInputs, ctxt);
+    free(pExpectOutputs);
+    return e.get_cl_code();
+  }
 
   bool pass = memcmp(pInputs, pExpectOutputs,
                      size * TUPLE_SZ * sizeof(unsigned int)) == 0;

@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows
 // REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %HOST_RUN_PLACEHOLDER %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out
@@ -33,6 +34,7 @@ int main(void) {
   auto dev = q.get_device();
   std::cout << "Running on " << dev.get_info<info::device::name>() << "\n";
   auto ctxt = q.get_context();
+  // TODO: release memory in the end of the test
   TYPE *A =
       static_cast<TYPE *>(malloc_shared(InputSize * sizeof(TYPE), dev, ctxt));
   int *B =
@@ -46,7 +48,7 @@ int main(void) {
     }
   }
 
-  {
+  try {
     cl::sycl::range<1> GroupRange{InputSize / VL};
     cl::sycl::range<1> TaskRange{GroupSize};
     cl::sycl::nd_range<1> Range(GroupRange, TaskRange);
@@ -68,6 +70,9 @@ int main(void) {
           });
     });
     e.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    return e.get_cl_code();
   }
 
   auto compute_reduce_sum = [](TYPE A[InputSize]) -> int {

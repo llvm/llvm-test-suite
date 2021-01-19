@@ -1,4 +1,4 @@
-// UNSUPPORTED: cuda
+// UNSUPPORTED: cuda,cl_options
 // CUDA does not support SPIR-V.
 //
 // >> ---- compile src1
@@ -37,7 +37,7 @@
 //
 // >> ---- link the full hetero app
 // RUN: %clangxx wrapper.o a.o b.o -o app.exe -lsycl
-// RUN: env SYCL_BE=%sycl_be ./app.exe | FileCheck %s
+// RUN: %BE_RUN_PLACEHOLDER ./app.exe | FileCheck %s
 // CHECK: pass
 
 //==----------- test.cpp - Tests SYCL separate compilation -----------------==//

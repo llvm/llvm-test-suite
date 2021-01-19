@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 // TODO enable on Windows
 // REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -o %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out
 
@@ -31,7 +32,7 @@ int main(void) {
     C[i] = 0.0f;
   }
 
-  {
+  try {
     buffer<float, 1> bufa(A, range<1>(Size));
     buffer<float, 1> bufb(B, range<1>(Size));
     buffer<float, 1> bufc(C, range<1>(Size));
@@ -62,6 +63,14 @@ int main(void) {
           });
     });
     e.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+
+    delete[] A;
+    delete[] B;
+    delete[] C;
+
+    return e.get_cl_code();
   }
 
   int err_cnt = 0;

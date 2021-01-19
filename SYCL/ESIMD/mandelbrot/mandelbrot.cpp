@@ -5,8 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// TODO enable on Windows and Level Zero
-// REQUIRES: linux && gpu && opencl
+// TODO enable on Windows
+// REQUIRES: linux && gpu
+// UNSUPPORTED: cuda
 // RUN: %clangxx-esimd -fsycl %s -I%S/.. -o %t.out
 // RUN: %ESIMD_RUN_PLACEHOLDER %t.out %T/output.ppm %S/golden_hw.ppm
 
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
   // Sets output to blank image.
   unsigned char *buf = new unsigned char[img_size];
 
-  {
+  try {
     cl::sycl::image<2> imgOutput((unsigned int *)buf, image_channel_order::rgba,
                                  image_channel_type::unsigned_int8,
                                  range<2>{WIDTH, HEIGHT});
@@ -115,6 +116,10 @@ int main(int argc, char *argv[]) {
           });
     });
     e.wait();
+  } catch (cl::sycl::exception const &e) {
+    std::cout << "SYCL exception caught: " << e.what() << '\n';
+    delete[] buf;
+    return e.get_cl_code();
   }
 
   char *out_file = argv[1];
