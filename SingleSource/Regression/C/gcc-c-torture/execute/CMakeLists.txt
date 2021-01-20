@@ -190,6 +190,7 @@ file(GLOB TestRequiresWNoReturnType CONFIGURE_DEPENDS
 file(GLOB TestRequiresLibM CONFIGURE_DEPENDS
   980709-1.c
   float-floor.c
+  complex-5.c  # -lm needed on FreeBSD
 )
 
 # Tests that require newnlib Nano IO (--undefined=_printf_float ldflag)
