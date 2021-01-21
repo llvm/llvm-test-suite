@@ -326,7 +326,7 @@ macro(speccpu2017_add_executable)
     endforeach()
   else ()
     file(GLOB_RECURSE _sources
-      ${SRC_DIR}/*.c ${SRC_DIR}/*.cpp ${SRC_DIR}/*.cc ${SRC_DIR}/*.C)
+      ${SRC_DIR}/*.c ${SRC_DIR}/*.cpp ${SRC_DIR}/*.cc ${SRC_DIR}/*.C ${SRC_DIR}/*.f ${SRC_DIR}/*.F ${SRC_DIR}/*.f90 ${SRC_DIR}/*.F90)
   endif ()
 
   llvm_test_executable(${PROG} ${_sources})
