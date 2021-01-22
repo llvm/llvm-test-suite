@@ -1,5 +1,7 @@
-#add_subdirectory(503.bwaves_r)    # Fortran
-#add_subdirectory(507.cactuBSSN_r) # C++, C, Fortran
+if (TEST_SUITE_FORTRAN)
+  add_subdirectory(503.bwaves_r)    # Fortran
+  #add_subdirectory(507.cactuBSSN_r) # C++, C, Fortran
+endif ()
 add_subdirectory(508.namd_r)       # C++
 add_subdirectory(510.parest_r)     # C++
 add_subdirectory(511.povray_r)     # C++, C
