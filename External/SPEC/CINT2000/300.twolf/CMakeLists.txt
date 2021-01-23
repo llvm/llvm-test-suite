@@ -1,5 +1,6 @@
 list(APPEND CPPFLAGS -DHAVE_SIGNED_CHAR)
 list(APPEND LDFLAGS -lm)
+list(APPEND LDFLAGS -Wl,-zmuldefs)
 list(APPEND CFLAGS -Wno-return-type)
 
 macro(test_input run_type)
