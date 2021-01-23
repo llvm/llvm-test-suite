@@ -233,6 +233,8 @@ endif()
 
 include(TestSuite)
 include(SingleMultiSource)
+# Needs by External/sollve_vv.
+find_package(OpenMP)
 
 if(NOT DEFINED TARGET_OS)
   message(STATUS "Check target operating system - ${CMAKE_SYSTEM_NAME}")
