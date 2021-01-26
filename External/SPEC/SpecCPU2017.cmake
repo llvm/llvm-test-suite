@@ -252,14 +252,14 @@ endmacro ()
 macro(speccpu2017_validate_image _imgfile _cmpfile _outfile)
   cmake_parse_arguments(_carg "" "RUN_TYPE" "SUITE_TYPE" ${ARGN})
 
-  set(VALIDATOR imagevalidate_${BENCHMARK_NO})
-  if (NOT TARGET ${VALIDATOR}-host)
+  set(VALIDATOR imagevalidate_${BENCHMARK_NO}-target)
+  if (NOT TARGET ${VALIDATOR})
     file(GLOB_RECURSE _validator_sources "${SRC_DIR}/image_validator/*.c")
-    llvm_add_host_executable(
-      ${VALIDATOR}-host ${VALIDATOR} ${_validator_sources}
-      LDFLAGS -lm
-      CPPFLAGS -DSPEC
-    )
+
+    add_executable(${VALIDATOR} ${_validator_sources})
+    target_link_libraries(${VALIDATOR} m)
+    set_target_properties(${VALIDATOR} PROPERTIES COMPILE_FLAGS "-DSPEC")
+    add_dependencies(${VALIDATOR} timeit-target)
   endif ()
 
   if ((NOT DEFINED _carg_SUITE_TYPE) OR (${BENCHMARK_SUITE_TYPE} IN_LIST _carg_SUITE_TYPE))
@@ -331,8 +331,8 @@ macro(speccpu2017_add_executable)
 
   llvm_test_executable(${PROG} ${_sources})
 
-  if (TARGET ${VALIDATOR}-host)
-    add_dependencies(${PROG} ${VALIDATOR}-host)
+  if (TARGET ${VALIDATOR})
+    add_dependencies(${PROG} ${VALIDATOR})
   endif ()
 endmacro()
 
