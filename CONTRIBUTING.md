@@ -55,8 +55,23 @@ for more information.
 
 - Create a pull request for your changes following [Creating a pull request
 instructions](https://help.github.com/articles/creating-a-pull-request/).
-- CI will run checks (e.g. clang-format-check) as soon as the PR is created.
-- Once the PR is approved and all checks have passed, the pull request is
+- CI will run checks which are prerequisites for submitting PR:
+  - clang-format-check/build checks that the patch matches coding style
+    (see [clang-format](https://clang.llvm.org/docs/ClangFormat.html));
+  - Jenkins/pre-ci-cuda - runs all related tests on CUDA backend for GPU device
+    on Ubuntu 18.04;
+  - Jenkins/pre-ci-linux - runs all related tests on Ubuntu 18.04 machine with
+  Level_Zero backend (GPU device) and OpenCL backend (CPU, GPU and FPGA
+  emulator devices);
+  - Jenkins/pre-ci-windows - runs all related tests on Windows Server 2019 with
+  Level_Zero backend (GPU device) and OpenCL backend (CPU, GPU and FPGA
+  emulator devices).
+
+The last three checks are done for the latest available nightly build for DPC++
+compiler and runtime from [intel/llvm](https://github.com/intel/llvm). The
+build happens around 18:00 UTC if there are new commits since previous build.
+
+Once the PR is approved and all checks have passed, the pull request is
 ready for merge.
 
 ### Merge
