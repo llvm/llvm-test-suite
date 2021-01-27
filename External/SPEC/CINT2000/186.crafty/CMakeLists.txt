@@ -26,7 +26,7 @@ if(LONG_LONG_TYPE_SIZE GREATER 7)
   list(APPEND CPPFLAGS -DHAS_LONGLONG)
 endif()
 
-list(APPEND LDFLAGS -Wl,-zmuldefs)
+list(APPEND LDFLAGS ${LD_MULTIDEF_FLAG})
 
 set(SourceNames
   attacks.c
