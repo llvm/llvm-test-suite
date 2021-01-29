@@ -13,55 +13,55 @@ add_compile_options(-fgnu89-inline)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_test_DIR}/t1.c" -O3 -finline-limit=50000 -o t1.opts-O3_-finline-limit_50000.s
+  "${RUN_test_DIR}/t1.c" -O3 -finline-limit=50000 -o t1.opts-O3_-finline-limit_50000.s
   RUN_TYPE test
 )
 
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${INPUT_train_DIR}/200.c" -O3 -finline-limit=50000 -o 200.opts-O3_-finline-limit_50000.s
+  "${RUN_train_DIR}/200.c" -O3 -finline-limit=50000 -o 200.opts-O3_-finline-limit_50000.s
   RUN_TYPE train
 )
 
 speccpu2017_run_test(
-  "${INPUT_train_DIR}/scilab.c" -O3 -finline-limit=50000 -o scilab.opts-O3_-finline-limit_50000.s
+  "${RUN_train_DIR}/scilab.c" -O3 -finline-limit=50000 -o scilab.opts-O3_-finline-limit_50000.s
   RUN_TYPE train
 )
 
 speccpu2017_run_test(
-  "${INPUT_train_DIR}/train01.c" -O3 -finline-limit=50000 -o train01.opts-O3_-finline-limit_50000.s
+  "${RUN_train_DIR}/train01.c" -O3 -finline-limit=50000 -o train01.opts-O3_-finline-limit_50000.s
   RUN_TYPE train
 )
 
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/gcc-pp.c" -O3 -finline-limit=0 -fif-conversion -fif-conversion2 -o gcc-pp.opts-O3_-finline-limit_0_-fif-conversion_-fif-conversion2.s
+  "${RUN_ref_DIR}/gcc-pp.c" -O3 -finline-limit=0 -fif-conversion -fif-conversion2 -o gcc-pp.opts-O3_-finline-limit_0_-fif-conversion_-fif-conversion2.s
   RUN_TYPE ref
   SUITE_TYPE rate
 )
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/gcc-pp.c" -O2 -finline-limit=36000 -fpic -o gcc-pp.opts-O2_-finline-limit_36000_-fpic.s
+  "${RUN_ref_DIR}/gcc-pp.c" -O2 -finline-limit=36000 -fpic -o gcc-pp.opts-O2_-finline-limit_36000_-fpic.s
   RUN_TYPE ref
   SUITE_TYPE rate
 )
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/gcc-smaller.c" -O3 -fipa-pta -o gcc-smaller.opts-O3_-fipa-pta.s
+  "${RUN_ref_DIR}/gcc-smaller.c" -O3 -fipa-pta -o gcc-smaller.opts-O3_-fipa-pta.s
   RUN_TYPE ref
   SUITE_TYPE rate
 )
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/ref32.c" -O5 -o ref32.opts-O5.s
+  "${RUN_ref_DIR}/ref32.c" -O5 -o ref32.opts-O5.s
   RUN_TYPE ref
   SUITE_TYPE rate
 )
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/ref32.c" -O3 -fselective-scheduling -fselective-scheduling2 -o ref32.opts-O3_-fselective-scheduling_-fselective-scheduling2.s
+  "${RUN_ref_DIR}/ref32.c" -O3 -fselective-scheduling -fselective-scheduling2 -o ref32.opts-O3_-fselective-scheduling_-fselective-scheduling2.s
   RUN_TYPE ref
   SUITE_TYPE rate
 )
@@ -458,3 +458,5 @@ speccpu2017_add_executable(
   mini-gmp.c
   spec_qsort/spec_qsort.c
 )
+
+speccpu2017_prepare_rundir()

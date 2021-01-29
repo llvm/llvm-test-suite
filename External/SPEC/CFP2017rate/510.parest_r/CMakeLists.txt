@@ -11,21 +11,21 @@ speccpu2017_add_include_dirs(include .)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_test_DIR}/test.prm"
+  "${RUN_test_DIR}/test.prm"
   RUN_TYPE test
 )
 
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${INPUT_train_DIR}/train.prm"
+  "${RUN_train_DIR}/train.prm"
   RUN_TYPE train
 )
 
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/ref.prm"
+  "${RUN_ref_DIR}/ref.prm"
   RUN_TYPE ref
 )
 
@@ -268,3 +268,4 @@ speccpu2017_add_executable(
   source/libparest/slave/stationary/synthetic_data.cc
 )
 set_property(TARGET ${PROG} PROPERTY CXX_STANDARD 98)
+speccpu2017_prepare_rundir()

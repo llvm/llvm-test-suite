@@ -13,7 +13,7 @@ endif ()
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_test_DIR}/test.txt"
+  "${RUN_test_DIR}/test.txt"
   STDOUT test.out
   RUN_TYPE test
 )
@@ -21,7 +21,7 @@ speccpu2017_run_test(
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${INPUT_train_DIR}/train.txt"
+  "${RUN_train_DIR}/train.txt"
   STDOUT train.out
   RUN_TYPE train
 )
@@ -29,7 +29,7 @@ speccpu2017_run_test(
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${INPUT_ref_DIR}/ref.txt"
+  "${RUN_ref_DIR}/ref.txt"
   STDOUT ref.out
   RUN_TYPE ref
 )
@@ -38,3 +38,4 @@ speccpu2017_run_test(
 
 speccpu2017_verify_output()
 speccpu2017_add_executable()
+speccpu2017_prepare_rundir()
