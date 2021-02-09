@@ -11,7 +11,9 @@ add_subdirectory(526.blender_r)    # C++, C
 #add_subdirectory(527.cam4_r)      # Fortran, C
 add_subdirectory(538.imagick_r)    # C
 add_subdirectory(544.nab_r)        # C
-#add_subdirectory(549.fotonik3d_r) # Fortran
-#add_subdirectory(554.roms_r)      # Fortran
+if (TEST_SUITE_FORTRAN)
+  add_subdirectory(549.fotonik3d_r) # Fortran
+  #add_subdirectory(554.roms_r)     # Fortran
+endif ()
 
 add_subdirectory(997.specrand_fr)  # C
