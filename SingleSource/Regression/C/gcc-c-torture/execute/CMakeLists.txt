@@ -140,6 +140,9 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   vfprintf-chk-1.c
   vprintf-chk-1.c
 
+  # Clang at -O0 does not enable -finstrument-functions
+  # (https://bugs.llvm.org/show_bug.cgi?id=49143)
+  eeprof-1.c
 )
 list(APPEND TestsToSkip ${UnsupportedTests})
 
