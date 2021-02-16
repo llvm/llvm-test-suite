@@ -14,7 +14,6 @@ speccpu2017_add_include_dirs(
 
 speccpu2017_run_test(
   spec_test.par
-  WORKDIR input
   STDOUT spec_test.out
   RUN_TYPE test
 )
@@ -24,7 +23,6 @@ speccpu2017_run_test(
 
 speccpu2017_run_test(
   spec_train.par
-  WORKDIR input
   STDOUT spec_train.out
   RUN_TYPE train
 )
@@ -33,7 +31,6 @@ speccpu2017_run_test(
 
 speccpu2017_run_test(
   spec_ref.par
-  WORKDIR input
   STDOUT spec_ref.out
   RUN_TYPE ref
 )
@@ -50,3 +47,6 @@ set_property(TARGET ${PROG} PROPERTY C_STANDARD 99)
 target_compile_definitions(${PROG} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:FCODE>)
 target_compile_definitions(${PROG} PRIVATE $<$<COMPILE_LANGUAGE:C>:CCODE>)
 target_compile_definitions(${PROG} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:CCODE CCTK_DISABLE_RESTRICT=1>)
+
+# Copy the input data to the rundir
+speccpu2017_prepare_rundir()
