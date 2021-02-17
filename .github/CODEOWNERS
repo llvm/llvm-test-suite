@@ -1,0 +1,67 @@
+* @vladimirlaz
+
+# AOT compilation
+SYCL/AOT @AGindinson @dm-vodopyanov @AlexeySachkov @romanovvlad
+
+# Atomics
+SYCL/AtomicRef @AGindinson 
+
+# SYCL RT specific tests
+SYCL/Basic @intel/llvm-reviewers-runtime
+SYCL/Config @intel/llvm-reviewers-runtime
+SYCL/FilterSelector @intel/llvm-reviewers-runtime
+SYCL/HostInteropTask @intel/llvm-reviewers-runtime
+SYCL/InorderQueue @intel/llvm-reviewers-runtime
+SYCL/KernelAndProgram @intel/llvm-reviewers-runtime
+SYCL/KernelParams @intel/llvm-reviewers-runtime
+SYCL/Scheduler @intel/llvm-reviewers-runtime
+SYCL/Tracing  @intel/llvm-reviewers-runtime
+
+# Device code split
+SYCL/DeviceCodeSplit @AlexeySachkov  @Fznamznon
+
+# Device library
+SYCL/DeviceLib @vzakhari
+
+# dot_product API
+SYCL/DotProduct @rdeodhar
+
+# Explicit SIMD
+SYCL/ESIMD @kbobrovs @DenisBakhvalov
+
+# Function pointers
+SYCL/FunctionPointers @AlexeySachkov
+
+# Functor
+SYCL/Functor @AlexeySachkov
+
+# Group algorithms
+SYCL/GroupAlgorithm @Pennycook @AlexeySachkov
+SYCL/SubGroup @Pennycook @AlexeySachkov
+
+# Hierarchical parallelism
+SYCL/HierPar @kbobrovs
+
+# Inline assembler
+SYCL/InlineAsm @AlexeySachkov
+
+# Online compiler
+SYCL/OnlineCompiler @v-klochkov
+
+# Plugin interface
+SYCL/Plugin @smaslov-intel
+
+# Reduction algorithms
+SYCL/Reduction @v-klochkov
+
+# Separate compilation
+SYCL/SeparateCompile @AlexeySachkov  @Fznamznon
+
+# Specialization constant
+SYCL/SpecConstants @kbobrovs
+
+# Specialization constant
+SYCL/USM @jbrodman
+
+# Stream
+SYCL/Basic/stream @againull
