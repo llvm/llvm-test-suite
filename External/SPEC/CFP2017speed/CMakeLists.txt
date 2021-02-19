@@ -10,7 +10,7 @@ add_subdirectory(638.imagick_s)    # C
 add_subdirectory(644.nab_s)        # C
 if (TEST_SUITE_FORTRAN)
   add_subdirectory(649.fotonik3d_s) # Fortran
-  #add_subdirectory(654.roms_s)     # Fortran
+  add_subdirectory(654.roms_s)      # Fortran
 endif ()
 
 add_subdirectory(996.specrand_fs)  # C
