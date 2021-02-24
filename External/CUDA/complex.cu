@@ -22,6 +22,18 @@
 // libstdc++ (compile errors in <complex>).
 #if __cplusplus >= 201103L && (__cplusplus < 201402L || STDLIB_VERSION >= 2014)
 
+// Support for non-fp std::complex is unspecified:
+// http://eel.is/c++draft/complex.numbers.general#2.sentence-1
+#if defined(__GLIBCXX__) && _GLIBCXX_RELEASE >= 9
+// newer versions of libstdc++ do not support implicit conversion from such
+// types.
+#undef TEST_NONFLOAT_COMPLEX
+#else
+// libc++ and the older versions of libstdc++ have better support for non-float
+// complex, so we can still test them.
+#define TEST_NONFLOAT_COMPLEX 1
+#endif
+
 #include <assert.h>
 #include <complex>
 #include <type_traits>
@@ -121,13 +133,13 @@ __device__ void test_plus_equals() {
     assert(c.imag() == 5);
 
     std::complex<T> c3;
-
+#if TEST_NONFLOAT_COMPLEX
     c3 = c;
     std::complex<int> ic(1, 1);
     c3 += ic;
     assert(c3.real() == 4);
     assert(c3.imag() == 6);
-
+#endif
     c3 = c;
     std::complex<float> fc(1, 1);
     c3 += fc;
@@ -158,13 +170,13 @@ __device__ void test_minus_equals() {
     assert(c.imag() == -5);
 
     std::complex<T> c3;
-
+#if TEST_NONFLOAT_COMPLEX
     c3 = c;
     std::complex<int> ic (1,1);
     c3 -= ic;
     assert(c3.real() == -4);
     assert(c3.imag() == -6);
-
+#endif
     c3 = c;
     std::complex<float> fc (1,1);
     c3 -= fc;
@@ -196,11 +208,13 @@ __device__ void test_times_equals() {
 
     std::complex<T> c3;
 
+#if TEST_NONFLOAT_COMPLEX
     c3 = c;
     std::complex<int> ic (1,1);
     c3 *= ic;
     assert(c3.real() == -11.5);
     assert(c3.imag() ==   3.5);
+#endif
 
     c3 = c;
     std::complex<float> fc (1,1);
@@ -238,10 +252,12 @@ __device__ void test_divide_equals() {
     std::complex<T> c3;
 
     c3 = c;
+#if TEST_NONFLOAT_COMPLEX
     std::complex<int> ic (1,1);
     c3 /= ic;
     assert(c3.real() ==  0.5);
     assert(c3.imag() == -0.5);
+#endif
 
     c3 = c;
     std::complex<float> fc (1,1);
