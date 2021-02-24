@@ -8,11 +8,6 @@ project(test-suite C CXX)
 
 if(TEST_SUITE_FORTRAN)
   enable_language(Fortran)
-  if(NOT CMAKE_GENERATOR STREQUAL "Ninja")
-      message(WARNING
-	"Fortran test suite may NOT build with this CMAKE_GENERATOR = ${CMAKE_GENERATOR}.\n"
-	"Recommend using Ninja 1.10 or later by adding -G \"Ninja\" to cmake invocation.")
-  endif()
 endif()
 
 function(append value)

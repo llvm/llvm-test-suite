@@ -4,6 +4,7 @@
 include(External)
 include(CopyDir)
 include(Host)
+include(Fortran)
 
 # Search for SPEC CPU 2017 root directory.
 llvm_externals_find(TEST_SUITE_SPEC2017_ROOT "speccpu2017" "SPEC CPU2017")

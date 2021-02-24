@@ -4,6 +4,8 @@ if (NOT TEST_SUITE_SPEC2017_ROOT)
   return ()
 endif ()
 
+ninja_required()
+
 speccpu2017_benchmark(RATE)
 
 speccpu2017_add_include_dirs(.)
