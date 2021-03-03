@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 struct a {
   int64_t b;
@@ -35,11 +36,11 @@ int main() {
   e = h.c;
   f(&h);
 
-  printf("d.b = %li\n", d.b);
-  printf("d.c = %li\n", d.c);
-  printf("s.b = %li\n", s.b);
-  printf("s.c = %li\n", s.c);
-  printf("e = %li\n", e);
+  printf("d.b = %" PRIi64 "\n", d.b);
+  printf("d.c = %" PRIi64 "\n", d.c);
+  printf("s.b = %" PRIi64 "\n", s.b);
+  printf("s.c = %" PRIi64 "\n", s.c);
+  printf("e = %" PRIi64 "\n", e);
 
   return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int32_t *a;
 uint8_t b = 7;
@@ -32,8 +33,8 @@ int main() {
   a = &temp_1;
   d();
 
-  printf("b = %i\n", b);
-  printf("x = %i\n", x);
+  printf("b = %" PRIu8 "\n", b);
+  printf("x = %" PRIi32 "\n", x);
 
   return 0;
 }

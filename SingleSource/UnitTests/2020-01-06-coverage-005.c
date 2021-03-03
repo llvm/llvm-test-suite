@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 uint32_t a, c, d;
 uint64_t b;
@@ -81,11 +82,11 @@ int main() {
   h();
   g();
 
-  printf("a = %i\n", a);
-  printf("b = %li\n", b);
-  printf("c = %i\n", c);
-  printf("d = %i\n", d);
-  printf("e = %i\n", e);
+  printf("a = %" PRIu32 "\n", a);
+  printf("b = %" PRIu64 "\n", b);
+  printf("c = %" PRIu32 "\n", c);
+  printf("d = %" PRIu32 "\n", d);
+  printf("e = %" PRIi16 "\n", e);
 
   return 0;
 }

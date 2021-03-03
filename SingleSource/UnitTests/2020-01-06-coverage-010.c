@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int32_t *a;
 int32_t b, d, f;
@@ -80,16 +81,16 @@ int main() {
   a = &temp_1;
   k();
 
-  printf("b = %i\n", b);
-  printf("c = %i\n", c);
-  printf("d = %i\n", d);
-  printf("x = %i\n", x);
-  printf("e = %i\n", e);
-  printf("y = %i\n", y);
-  printf("z = %i\n", z);
-  printf("v = %i\n", v);
-  printf("f = %i\n", f);
-  printf("w = %i\n", w);
+  printf("b = %" PRIi32 "\n", b);
+  printf("c = %" PRIi8 "\n", c);
+  printf("d = %" PRIi32 "\n", d);
+  printf("x = %" PRIi32 "\n", x);
+  printf("e = %" PRIi32 "\n", e);
+  printf("y = %" PRIi32 "\n", y);
+  printf("z = %" PRIi32 "\n", z);
+  printf("v = %" PRIi32 "\n", v);
+  printf("f = %" PRIi32 "\n", f);
+  printf("w = %" PRIi32 "\n", w);
 
   return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int32_t a, b;
 
@@ -56,12 +57,12 @@ int main() {
   j();
   y = h(h_call_argument_1);
 
-  printf("a = %i\n", a);
-  printf("b = %i\n", b);
-  printf("d.c = %i\n", d.c);
-  printf("y = %li\n", y);
-  printf("h_call_argument_1 = %i\n", h_call_argument_1);
-  printf("x = %li\n", x);
+  printf("a = %" PRIi32 "\n", a);
+  printf("b = %" PRIi32 "\n", b);
+  printf("d.c = %" PRIu16 "\n", d.c);
+  printf("y = %" PRIi64 "\n", y);
+  printf("h_call_argument_1 = %" PRIi32 "\n", h_call_argument_1);
+  printf("x = %" PRIi64 "\n", x);
 
   return 0;
 }

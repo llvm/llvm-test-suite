@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 #pragma pack(1)
 
@@ -31,9 +32,9 @@ int main() {
   b.a = val_1;
   d();
 
-  printf("b.a = %i\n", b.a);
-  printf("c = %i\n", c);
-  printf("x = %i\n", x);
+  printf("b.a = %u\n", b.a);
+  printf("c = %" PRIi32 "\n", c);
+  printf("x = %" PRIi32 "\n", x);
 
   return 0;
 }

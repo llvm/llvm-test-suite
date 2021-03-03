@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int8_t a;
 int32_t x;
@@ -17,8 +18,8 @@ int main() {
   a = val_1;
   b();
 
-  printf("a = %i\n", a);
-  printf("x = %i\n", x);
+  printf("a = %" PRIi8 "\n", a);
+  printf("x = %" PRIi32 "\n", x);
 
   return 0;
 }

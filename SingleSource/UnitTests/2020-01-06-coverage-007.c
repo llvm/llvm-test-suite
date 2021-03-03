@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 uint32_t a;
 const uint32_t b = -1L, c;
@@ -24,10 +25,10 @@ int main() {
   a = val_1;
   e();
 
-  printf("a = %i\n", a);
-  printf("b = %i\n", b);
-  printf("c = %i\n", c);
-  printf("d = %i\n", d);
+  printf("a = %" PRIu32 "\n", a);
+  printf("b = %" PRIu32 "\n", b);
+  printf("c = %" PRIu32 "\n", c);
+  printf("d = %" PRIi16 "\n", d);
 
   return 0;
 }

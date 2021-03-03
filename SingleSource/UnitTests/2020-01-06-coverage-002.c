@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int32_t a, c, e;
 int8_t b;
@@ -65,14 +66,14 @@ int32_t main() {
   a = val_1;
   z = f();
 
-  printf("a = %i\n", a);
-  printf("b = %i\n", b);
-  printf("c = %i\n", c);
-  printf("d = %i\n", d);
-  printf("x = %i\n", x);
-  printf("e = %i\n", e);
-  printf("z = %li\n", z);
-  printf("y = %li\n", y);
+  printf("a = %" PRIi32 "\n", a);
+  printf("b = %" PRIi8 "\n", b);
+  printf("c = %" PRIi32 "\n", c);
+  printf("d = %" PRIi16 "\n", d);
+  printf("x = %" PRIi32 "\n", x);
+  printf("e = %" PRIi32 "\n", e);
+  printf("z = %" PRIi64 "\n", z);
+  printf("y = %" PRIi64 "\n", y);
 
   return 0;
 }
