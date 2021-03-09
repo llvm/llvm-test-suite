@@ -1,7 +1,6 @@
 list(APPEND CPPFLAGS -DHAVE_SIGNED_CHAR)
 list(APPEND LDFLAGS -lm)
-list(APPEND LDFLAGS ${LD_MULTIDEF_FLAG})
-list(APPEND CFLAGS -Wno-return-type)
+list(APPEND CFLAGS -Wno-return-type -fcommon)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}

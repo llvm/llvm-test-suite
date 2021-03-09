@@ -1,5 +1,4 @@
 include(External)
-include(CheckCSourceCompiles)
 llvm_externals_find(TEST_SUITE_SPEC2000_ROOT "speccpu2000" "SPEC CPU2000")
 if(TEST_SUITE_SPEC2000_ROOT)
   # SPEC supports three "run types": ref, train and test
@@ -34,18 +33,4 @@ if(TEST_SUITE_SPEC2000_ROOT)
   function(llvm_test_data_spec_default target)
     llvm_test_data_spec(${target} data)
   endfunction()
-
-  function(check_supports_zmuldefs)
-    # Does not check whether the option has an effect.
-    # -z options are usually ignored if the particular option.
-    # Alternative option is --allow-multiple-definition
-    set(CMAKE_REQUIRED_LINK_OPTIONS "-Wl,-zmuldefs")
-    check_c_source_compiles("int main() { return 0; };" LINKER_SUPPORTS_ZMULDEFS)
-  endfunction()
-
-  check_supports_zmuldefs()
-  set(LD_MULTIDEF_FLAG)
-  if(LINKER_SUPPORTS_ZMULDEFS)
-    set(LD_MULTIDEF_FLAG "-Wl,-zmuldefs")
-  endif()
 endif()
