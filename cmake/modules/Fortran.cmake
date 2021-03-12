@@ -27,3 +27,7 @@ function(ninja_required)
       "Please use use Ninja 1.10 or later by adding -G \"Ninja\" to cmake invocation.\n")
   endif()
 endfunction()
+
+# standard CMake Utility Modules specific to Fortran
+# https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html
+include(CheckFortranCompilerFlag)

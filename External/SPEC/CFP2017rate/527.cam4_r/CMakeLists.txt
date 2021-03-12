@@ -91,8 +91,6 @@ add_definitions(
   -DSPEC_CASE_FLAG
 )
 
-add_compile_options(-fallow-argument-mismatch)
-
 ## test ########################################################################
 
 speccpu2017_run_test(RUN_TYPE test)
@@ -572,6 +570,12 @@ speccpu2017_add_executable(
   zeff.f90
   zenith.F90
 )
+
+check_fortran_compiler_flag("-fallow-argument-mismatch" SUPPORTS_FALLOW_ARGUMENT_MISMATCH)
+if (SUPPORTS_FALLOW_ARGUMENT_MISMATCH)
+  target_compile_options(${PROG} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-fallow-argument-mismatch>)
+endif ()
+
 target_link_libraries(${PROG} PRIVATE netcdf)
 
 speccpu2017_prepare_rundir()
