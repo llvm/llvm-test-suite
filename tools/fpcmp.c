@@ -1,4 +1,4 @@
-/*===-- timeit.c - LLVM Test Suite Timing Tool ------------------*- C++ -*-===*\
+/*===-- fpcmp.c - LLVM Floating point comparison tool ---------------------===*\
 |*                                                                            *|
 |* Part of the LLVM Project, under the Apache License v2.0 with LLVM          *|
 |* Exceptions.                                                                *|
