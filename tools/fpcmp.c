@@ -12,6 +12,7 @@
 
 #include <ctype.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,57 +39,71 @@ static bool isExponentChar(char C) {
   }
 }
 
-static bool isNumberChar(char C) {
+static bool isDigitChar(char C) {
   switch (C) {
   case '0': case '1': case '2': case '3': case '4':
   case '5': case '6': case '7': case '8': case '9':
-  case '.': return true;
-  default: return isSignedChar(C) || isExponentChar(C);
+    return true;
+  default:
+    return false;
   }
 }
 
-static const char *BackupNumber(const char *Pos, const char *FirstChar,
-                                const char *End) {
-  // If already at the very beginning, we cannot go back further.
-  // It ensures that the access Pos[-1] is valid.
-  // This also handles the case where the file is empty (FirstChar == End).
-  if (Pos == FirstChar)
-    return Pos;
-
-  // If we didn't stop in the middle of a number, don't backup.
-  if (!(Pos == End || isNumberChar(*Pos)) && !isNumberChar(Pos[-1]))
-    return Pos;
-
-  // If we're one past the number, the two numbers can have different number
-  // of digits. Even if we're wrong, and we get the previous number, the
-  // comparison should have failed anyway.
-  if (Pos == End || !isNumberChar(*Pos))
-    Pos--;
-
-  // Otherwise, return to the start of the number.
-  bool HasPeriod = false;
-  while (Pos > FirstChar && isNumberChar(Pos[-1])) {
-    // Backup over at most one period.
-    if (Pos[-1] == '.') {
-      if (HasPeriod)
-        break;
-      HasPeriod = true;
-    }
-
-    --Pos;
-    if (Pos > FirstChar && isSignedChar(Pos[0]) && !isExponentChar(Pos[-1]))
-      break;
-  }
-  return Pos;
+static bool isPossibleStartOfNumber(char C) {
+  return isDigitChar(C) || isSignedChar(C) || C == '.';
 }
 
-/// EndOfNumber - Return the first character that is not part of the specified
-/// number.  This assumes that the buffer is null terminated, so it won't fall
-/// off the end.
-static const char *EndOfNumber(const char *Pos) {
-  while (isNumberChar(*Pos))
+static const char *AdvanceNumber(const char *StartPos, const char *End) {
+  const char *Pos = StartPos;
+  const char *EndOfNumber = NULL;
+
+  // Sign character (optional)
+  if (Pos < End && isSignedChar(*Pos))
     ++Pos;
-  return Pos;
+
+  // Pre-decimal digits (optional)
+  while (Pos < End && isDigitChar(*Pos)) {
+    ++Pos;
+    EndOfNumber = Pos;
+  }
+
+  // Decimal separator
+  if (Pos < End && *Pos == '.') {
+    ++Pos;
+
+    // Post-decimal digits (require at least one when period present)
+    bool HasPostDecimalDigit = false;
+    while (Pos < End && isDigitChar(*Pos)) {
+      HasPostDecimalDigit = true;
+
+      ++Pos;
+      EndOfNumber = Pos;
+    }
+    if (!HasPostDecimalDigit)
+      return EndOfNumber;
+  }
+
+  // Require a valid number before the exponent.
+  // (e.g. don't recognize '+e1' as a number)
+  if (!EndOfNumber)
+    return EndOfNumber;
+
+  // Exponent separator
+  if (Pos < End && isExponentChar(*Pos)) {
+    ++Pos;
+
+    // Exponent sign (optional)
+    if (Pos < End && isSignedChar(*Pos))
+      ++Pos;
+
+    // Exponent digits (require at least one when 'e' present)
+    while (Pos < End && isDigitChar(*Pos)) {
+      ++Pos;
+      EndOfNumber = Pos;
+    }
+  }
+
+  return EndOfNumber;
 }
 
 static bool skip_whitespace(const char **FP, const char *FEnd) {
@@ -101,58 +116,50 @@ static bool skip_whitespace(const char **FP, const char *FEnd) {
 }
 
 /// CompareNumbers - compare two numbers, returning true if they are different.
-static bool CompareNumbers(const char **F1PP, const char **F2PP,
-                           const char *F1End, const char *F2End,
-                           double AbsTolerance, double RelTolerance) {
-  const char *F1P = *F1PP;
-  const char *F2P = *F2PP;
+static bool CompareNumbers(const char *F1P, const char *F2P, const char *F1End,
+                           const char *F2End, double AbsTolerance,
+                           double RelTolerance) {
   const char *F1NumEnd, *F2NumEnd;
+  const ptrdiff_t F1Len = F1End - F1P;
+  const ptrdiff_t F2Len = F2End - F2P;
   double V1 = 0.0, V2 = 0.0;
 
-  // If one of the positions is at a space and the other isn't, chomp up 'til
-  // the end of the space.
-  skip_whitespace(&F1P, F1End);
-  skip_whitespace(&F2P, F2End);
+  // Fast character-by-character comparison of the numbers.
+  if (F1Len == F2Len && memcmp(F1P, F2P, F1Len) == 0)
+    return false;
 
-  if (F1P == F1End || F2P == F2End) {
-    fprintf(stderr, ("%s: FP Comparison failed, reached end of file\n"),
-            g_program);
-    return true;
+  // Note that some ugliness is built into this to permit support for numbers
+  // that use "D" or "d" as their exponential marker, e.g. "1.234D45".  This
+  // occurs in 200.sixtrack in spec2k.
+  V1 = strtod(F1P, (char **)(&F1NumEnd));
+  V2 = strtod(F2P, (char **)(&F2NumEnd));
+
+  if (*F1NumEnd == 'D' || *F1NumEnd == 'd') {
+    // Copy string into tmp buffer to replace the 'D' with an 'e'.
+    char *StrTmp = malloc(F1Len + 1);
+    memcpy(StrTmp, F1P, F1Len + 1);
+
+    // Strange exponential notation!
+    StrTmp[(unsigned)(F1NumEnd - F1P)] = 'e';
+
+    V1 = strtod(&StrTmp[0], (char **)(&F1NumEnd));
+    F1NumEnd = F1P + (F1NumEnd - &StrTmp[0]);
+
+    free(StrTmp);
   }
 
-  // If we stop on numbers, compare their difference.
-  if (!isNumberChar(*F1P) || !isNumberChar(*F2P)) {
-    // The diff failed.
-    F1NumEnd = F1P;
-    F2NumEnd = F2P;
-  } else {
-    // Note that some ugliness is built into this to permit support for numbers
-    // that use "D" or "d" as their exponential marker, e.g. "1.234D45".  This
-    // occurs in 200.sixtrack in spec2k.
-    V1 = strtod(F1P, (char**)(&F1NumEnd));
-    V2 = strtod(F2P, (char**)(&F2NumEnd));
+  if (*F2NumEnd == 'D' || *F2NumEnd == 'd') {
+    // Copy string into tmp buffer to replace the 'D' with an 'e'.
+    char *StrTmp = malloc(F2Len + 1);
+    memcpy(StrTmp, F2P, F2Len + 1);
 
-    if (*F1NumEnd == 'D' || *F1NumEnd == 'd') {
-      // Copy string into tmp buffer to replace the 'D' with an 'e'.
-      char StrTmp[200];
-      memcpy(StrTmp, F1P, EndOfNumber(F1NumEnd)+1 - F1P);
-      // Strange exponential notation!
-      StrTmp[(unsigned)(F1NumEnd-F1P)] = 'e';
+    // Strange exponential notation!
+    StrTmp[(unsigned)(F2NumEnd - F2P)] = 'e';
 
-      V1 = strtod(&StrTmp[0], (char**)(&F1NumEnd));
-      F1NumEnd = F1P + (F1NumEnd-&StrTmp[0]);
-    }
+    V2 = strtod(&StrTmp[0], (char **)(&F2NumEnd));
+    F2NumEnd = F2P + (F2NumEnd - &StrTmp[0]);
 
-    if (*F2NumEnd == 'D' || *F2NumEnd == 'd') {
-      // Copy string into tmp buffer to replace the 'D' with an 'e'.
-      char StrTmp[200];
-      memcpy(StrTmp, F2P, EndOfNumber(F2NumEnd)+1 - F2P);
-      // Strange exponential notation!
-      StrTmp[(unsigned)(F2NumEnd-F2P)] = 'e';
-
-      V2 = strtod(&StrTmp[0], (char**)(&F2NumEnd));
-      F2NumEnd = F2P + (F2NumEnd-&StrTmp[0]);
-    }
+    free(StrTmp);
   }
 
   if (F1NumEnd == F1P || F2NumEnd == F2P) {
@@ -161,8 +168,12 @@ static bool CompareNumbers(const char **F1PP, const char **F2PP,
     return true;
   }
 
+  // Quick check for identical values
+  if (V1 == V2)
+    return false;
+
   // Check to see if these are inside the absolute tolerance
-  if (AbsTolerance < fabs(V1-V2)) {
+  if (AbsTolerance == 0.0 || AbsTolerance < fabs(V1 - V2)) {
     // Nope, check the relative tolerance...
     double Diff;
     if (V2)
@@ -171,7 +182,7 @@ static bool CompareNumbers(const char **F1PP, const char **F2PP,
       Diff = fabs(V2/V1 - 1.0);
     else
       Diff = 0;  // Both zero.
-    if (Diff > RelTolerance) {
+    if (RelTolerance == 0.0 || Diff > RelTolerance) {
       fprintf(stderr, ("%s: Compared: %e and %e\n"
                        "abs. diff = %e rel.diff = %e\n"
                        "Out of tolerance: rel/abs: %e/%e\n"),
@@ -180,8 +191,6 @@ static bool CompareNumbers(const char **F1PP, const char **F2PP,
     }
   }
 
-  // Otherwise, advance our read pointers to the end of the numbers.
-  *F1PP = F1NumEnd;  *F2PP = F2NumEnd;
   return false;
 }
 
@@ -251,14 +260,6 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
   if (A_size == B_size && memcmp(data_a, data_b, A_size) == 0)
     return 0;
 
-  /* Otherwise, if our tolerances are 0 then we are done. */
-  if (relative_tolerance == 0.0 && absolute_tolerance == 0.0 &&
-      !ignore_whitespace) {
-    fprintf(stderr, "%s: files differ without tolerance allowance\n",
-            g_program);
-    return 1;
-  }
-
   /* *** */
 
   // Okay, now that we opened the files, scan them for the first difference.
@@ -270,81 +271,84 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
   const char *F2P = File2Start;
 
   while (1) {
-    // Scan for the end of file or next difference.
-    while (F1P < File1End && F2P < File2End) {
-      if (*F1P == *F2P) {
-        ++F1P, ++F2P;
-        continue;
-      }
-
-      // With whitespace ignored, skip whitespace chars (if any) and recheck for
-      // the next difference.
+    // Reached the end of at least one file?
+    if (F1P >= File1End || F2P >= File2End) {
+      // Skip any whitespace at the end of the file.
       if (ignore_whitespace) {
-        if (skip_whitespace(&F1P, File1End) | skip_whitespace(&F2P, File2End))
-          continue;
+        skip_whitespace(&F1P, File1End);
+        skip_whitespace(&F2P, File2End);
       }
-
       break;
     }
 
-    if (F1P >= File1End || F2P >= File2End) break;
-
-    // BackupNumber will also backup when at the first char after a number. This
-    // is to catch when one of the number has more trailing floating-point zeros
-    // than the other. However, when this is the case in both buffers, we'd
-    // repeat the most recent number forever.
-    // Therefore, we fast-stop if both buffers have no number at the current
-    // position.
-    if (!isNumberChar(*F1P) && !isNumberChar(*F2P)) {
-      fprintf(stderr, "%s: FP Comparison failed, not a numeric difference "
-                      "between '%c' and '%c'\n",
-              g_program, F1P[0], F2P[0]);
-      return 1;
+    // Scan for the end of file or next difference.
+    if (*F1P == *F2P && !isPossibleStartOfNumber(*F1P)) {
+      ++F1P, ++F2P;
+      continue;
     }
 
-    // Okay, we must have found a difference.  Backup to the start of the
-    // current number each stream is at so that we can compare from the
-    // beginning.
-    F1P = BackupNumber(F1P, File1Start, File1End);
-    F2P = BackupNumber(F2P, File2Start, File2End);
+    // With whitespace ignored, skip whitespace chars (if any) and recheck for
+    // the next difference. Otherwise, only ignore whitespace before numbers.
+    const char *F1NumStart = F1P;
+    const char *F2NumStart = F2P;
+    if (ignore_whitespace) {
+      if (skip_whitespace(&F1P, File1End) | skip_whitespace(&F2P, File2End))
+        continue;
+    } else {
+      skip_whitespace(&F1NumStart, File1End);
+      skip_whitespace(&F2NumStart, File2End);
+    }
+
+    const char *F1NumEnd = AdvanceNumber(F1NumStart, File1End);
+    const char *F2NumEnd = AdvanceNumber(F2NumStart, File2End);
+
+    // If one side is a number, but not the other, we found a difference.
+    if (!F1NumEnd || !F2NumEnd) {
+      // If there is no number starting at the current position, it might be a
+      // non-numeric difference.
+      if (*F1P != *F2P)
+        break;
+
+      // Otherwise, try over with the next pair to eventually find the
+      // difference or a matching number. Consider:
+      //
+      //     +1.0
+      //     ++1.0
+      //
+      // Starting with the first + characters, the first will be recognized as a
+      // number, but not the second. Only when comparing the second characters
+      // both will be recognized as numbers.
+      ++F1P, ++F2P;
+      continue;
+    }
 
     // Now that we are at the start of the numbers, compare them, exiting if
     // they don't match.
-    if (CompareNumbers(&F1P, &F2P, File1End, File2End,
+    if (CompareNumbers(F1NumStart, F2NumStart, F1NumEnd, F2NumEnd,
                        absolute_tolerance, relative_tolerance))
       return 1;
-  }
 
-  // Skip any whitespace at the end of the file.
-  if (ignore_whitespace) {
-    skip_whitespace(&F1P, File1End);
-    skip_whitespace(&F2P, File2End);
+    // Numbers compare equal, continue after the numbers.
+    F1P = F1NumEnd;
+    F2P = F2NumEnd;
   }
 
   // Okay, we reached the end of file.  If both files are at the end, we
   // succeeded.
   bool F1AtEnd = F1P >= File1End;
   bool F2AtEnd = F2P >= File2End;
+  if (!F1AtEnd && !F2AtEnd) {
+    fprintf(stderr,
+            "%s: FP Comparison failed, not a numeric difference between '%c' "
+            "and '%c'\n",
+            g_program, F1P[0], F2P[0]);
+    return 1;
+  }
   if (!F1AtEnd || !F2AtEnd) {
-    // Else, we might have run off the end due to a number: backup and retry.
-    F1P = BackupNumber(F1P, File1Start, File1End);
-    F2P = BackupNumber(F2P, File2Start, File2End);
-
-    // Now that we are at the start of the numbers, compare them, exiting if
-    // they don't match.
-    if (CompareNumbers(&F1P, &F2P, File1End, File2End,
-                       absolute_tolerance, relative_tolerance))
-      return 1;
-
-    // There might be more whitespace after the number.
-    if (ignore_whitespace) {
-      skip_whitespace(&F1P, File1End);
-      skip_whitespace(&F2P, File2End);
-    }
-
-    // If we found the end, we succeeded.
-    if (F1P < File1End || F2P < File2End)
-      return 1;
+    fprintf(stderr,
+            "%s: FP Comparison failed, unexpected end of one of the files\n",
+            g_program);
+    return 1;
   }
 
   return 0;
