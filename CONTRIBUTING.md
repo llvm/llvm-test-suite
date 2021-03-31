@@ -39,8 +39,10 @@ for more information.
     branch.
     - `-f` to also correct unstaged changes
     - `--diff` to only print the diff without applying
-- Instructions about running DPC++ tests
-  - see [README.md](SYCL/README.md).
+
+### Testing
+
+- See [SYCL/README.md](SYCL/README.md) for instructions.
 
 ### Commit message
 
@@ -55,6 +57,10 @@ for more information.
 
 - Create a pull request for your changes following [Creating a pull request
 instructions](https://help.github.com/articles/creating-a-pull-request/).
+  - PR description should follow same rules as commit message. It is used as
+    commit message on the final merge.
+- Changes addressing comments made during code review should be added as a
+  separate commits to the same PR.
 - CI will run checks which are prerequisites for submitting PR:
   - clang-format-check/build checks that the patch matches coding style
     (see [clang-format](https://clang.llvm.org/docs/ClangFormat.html));
@@ -76,12 +82,7 @@ ready for merge.
 
 ### Merge
 
-Project maintainers merge pull requests using one of the following options:
+Project maintainers merge pull requests by "Squash and merge". PR description
+is used as final commit message.
 
-- [Rebase and merge] The preferable choice for PRs containing a single commit
-- [Squash and merge] Used when there are multiple commits in the PR
-  - Squashing is done to make sure that the project is buildable on any commit
-- [Create a merge commit] Used for LLVM pull-down PRs to preserve hashes of the
-commits pulled from the LLVM community repository
-
-*Other names and brands may be claimed as the property of others.
+\*Other names and brands may be claimed as the property of others.
