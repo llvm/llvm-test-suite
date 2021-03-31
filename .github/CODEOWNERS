@@ -54,6 +54,9 @@ SYCL/Plugin @smaslov-intel
 # Reduction algorithms
 SYCL/Reduction @v-klochkov
 
+# Image sampler
+SYCL/Sampler @cperkinsintel
+
 # Separate compilation
 SYCL/SeparateCompile @AlexeySachkov  @Fznamznon
 
