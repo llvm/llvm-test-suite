@@ -39,6 +39,9 @@ SYCL/Functor @AlexeySachkov
 SYCL/GroupAlgorithm @Pennycook @AlexeySachkov
 SYCL/SubGroup @Pennycook @AlexeySachkov
 
+# Group local memory
+SYCL/GroupLocalMemory @sergey-semenov
+
 # Hierarchical parallelism
 SYCL/HierPar @kbobrovs
 
