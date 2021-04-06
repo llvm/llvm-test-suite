@@ -1,4 +1,5 @@
 add_subdirectory(CUDA)
+add_subdirectory(HIP)
 add_subdirectory(HMMER)
 add_subdirectory(Nurbs)
 add_subdirectory(Povray)

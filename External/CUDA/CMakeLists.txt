@@ -1,4 +1,5 @@
 include(External)
+include(GPUTestVariant)
 llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
 
 set(SUPPORTED_GPU_CUDA_7_0
@@ -30,83 +31,36 @@ set(SUPPORTED_GPU_CUDA_10_2 ${SUPPORTED_GPU_CUDA_10_1})
 set(SUPPORTED_GPU_CUDA_11_0 ${SUPPORTED_GPU_CUDA_10_2}
   sm_80)
 
-# Helper macro to extract version number at the end of the string
-# Input: get_version(Var String)
-#    Where String = /some/string/with/version-x.y.z
-# Output:
-#    Sets Var=x.y.z
-macro(get_version Var Path)
-    string(REGEX MATCH "[0-9]+(\\.[0-9]+)*$" ${Var} ${Path})
-endmacro (get_version)
-
-# Helper function to glob CUDA source files and set LANGUAGE property
-# to CXX on each of them. Sets Var in parent scope to the list of
-# files found.
-macro(cuda_glob Var)
-  file(GLOB FileList ${ARGN})
-  foreach(File IN LISTS FileList)
-    if(${File} MATCHES ".*\.cu$")
-      set_source_files_properties(${File} PROPERTIES LANGUAGE CXX)
-    endif()
-  endforeach()
-  set(${Var} ${FileList})
-endmacro(cuda_glob)
-
-macro(create_one_local_test_f Name FileGlob FilterRegex)
-  if (${VariantSuffix} MATCHES ${FilterRegex})
-    cuda_glob(_sources ${FileGlob})
-    set(_executable ${Name}-${VariantSuffix})
-    set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
-    llvm_test_run()
-    set(REFERENCE_OUTPUT)
-    # Verify reference output if it exists.
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-      set(REFERENCE_OUTPUT ${Name}.reference_output)
-      llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-        ${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
-      )
-      llvm_test_executable(${_executable} ${_sources})
-      llvm_test_data(${_executable}
-                     DEST_SUFFIX "-${VariantSuffix}"
-                     ${REFERENCE_OUTPUT})
-    else()
-      llvm_test_executable(${_executable} ${_sources})
-    endif()
-    target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
-    if(VariantLibs)
-      target_link_libraries(${_executable} ${VariantLibs})
-    endif()
-    add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
-    # Local tests are presumed to be fast.
-    list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
-  endif()
-endmacro()
-
-macro(create_one_local_test Name FileGlob)
-  create_one_local_test_f(${Name} ${FileGlob} ".*")
-endmacro()
-
 # Create targets for CUDA tests that are part of the test suite.
 macro(create_local_cuda_tests VariantSuffix)
-  create_one_local_test(assert assert.cu)
-  create_one_local_test(axpy axpy.cu)
-  create_one_local_test(algorithm algorithm.cu)
-  create_one_local_test(cmath cmath.cu)
-  create_one_local_test(complex complex.cu)
-  create_one_local_test(math_h math_h.cu)
-  create_one_local_test(new new.cu)
-  create_one_local_test(empty empty.cu)
-  create_one_local_test(printf printf.cu)
-  create_one_local_test(future future.cu)
-  create_one_local_test(builtin_var builtin_var.cu)
-  # We only need SIMD tests on CUDA-8.0 to verivy that our reference is correct
+  set(VariantOffload "cuda")
+  list(APPEND CUDA_LOCAL_TESTS assert)
+  list(APPEND CUDA_LOCAL_TESTS axpy)
+  list(APPEND CUDA_LOCAL_TESTS algorithm)
+  list(APPEND CUDA_LOCAL_TESTS cmath)
+  list(APPEND CUDA_LOCAL_TESTS complex)
+  list(APPEND CUDA_LOCAL_TESTS math_h)
+  list(APPEND CUDA_LOCAL_TESTS new)
+  list(APPEND CUDA_LOCAL_TESTS empty)
+  list(APPEND CUDA_LOCAL_TESTS printf)
+  list(APPEND CUDA_LOCAL_TESTS future)
+  list(APPEND CUDA_LOCAL_TESTS builtin_var)
+  list(APPEND CUDA_LOCAL_TESTS test_round)
+  foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
+    create_one_local_test(${_cuda_test} ${_cuda_test}.cu
+                          ${VariantOffload} ${VariantSuffix}
+                          "${VariantCPPFLAGS}" "${VariantLibs}")
+  endforeach()
+
+  # We only need SIMD tests on CUDA-8.0 to verify that our reference is correct
   # and matches NVIDIA-provided one.  and on CUDA-9.2 to verify that clang's
   # implementation matches the reference.  This test also happens to be the
   # longest one, so by not running unnecessary instances we speed up cuda
   # buildbot a lot.
   create_one_local_test_f(simd simd.cu
-                          "cuda-(8[.]0|9[.]2)-c[+][+]11-libc[+][+]")
-  create_one_local_test(test_round test_round.cu)
+                          "cuda-(8[.]0|9[.]2)-c[+][+]11-libc[+][+]"
+                          ${VariantOffload} ${VariantSuffix}
+                          "${VariantCPPFLAGS}" "${VariantLibs}")
 endmacro()
 
 macro(thrust_make_test_name TestName TestSourcePath)
@@ -196,7 +150,7 @@ function(create_cuda_test_variant Std VariantSuffix)
   # Target for CUDA tests that take little time to build and run.
   add_custom_target(check-cuda-simple-${VariantSuffix}
     COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS}
-            ${CUDA_SIMPLE_TEST_TARGETS}
+            ${VARIANT_SIMPLE_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS cuda-tests-simple-${VariantSuffix}
     USES_TERMINAL)

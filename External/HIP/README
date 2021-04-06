@@ -1,0 +1,30 @@
+HIP Tests
+==========
+
+HIP tests are enabled if cmake is invoked with
+-DTEST_SUITE_EXTERNALS_DIR=<externals path> and specified externals
+directory contains at least one ROCm installation.
+
+Expected externals directory structure:
+Externals/
+  hip/
+    rocm-X.Y.Z/ -- One or more ROCm installation.
+
+export EXTERNAL_DIR=/your/Externals/path
+export AMDGPU_ARCHS=gfx906;gfx908 # List of AMDGPU archs to compile
+export CLANG_DIR=/your/clang/build/dir
+export TEST_SUITE_DIR=/path/to/test-suite-sources
+
+Configure, build and run tests:
+
+```
+$ mkdir test-suite-build-dir
+$ cd test-suite-build-dir
+$ PATH=$CLANG_DIR/bin:$PATH CXX=clang++ CC=clang cmake -G Ninja -DTEST_SUITE_EXTERNALS_DIR=$EXTERNAL_DIR -DAMDGPU_ARCHS=$AMDGPU_ARCHS -DCMAKE_CXX_COMPILER="$CLANG_DIR/bin/clang++" -DCMAKE_C_COMPILER="$CLANG_DIR/bin/clang" $TEST_SUITE_DIR
+$ ninja hip-tests-simple
+$ ninja check-hip-simple
+```
+
+This will build every test for each of the installed ROCm in the
+$EXTERNAL_DIR/hip location, and run them against the expected
+reference_output.
