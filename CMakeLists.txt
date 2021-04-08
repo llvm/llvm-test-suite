@@ -210,10 +210,18 @@ endif()
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_EXTRA_EXE_LINKER_FLAGS}")
 
-# Use X/OPEN compatibility flag on AIX for C tests to avoid problems
-# with some versions of the system headers.
 if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
+  # Use X/OPEN compatibility flag on AIX for C tests to avoid problems
+  # with some versions of the system headers.
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE=700")
+  # On AIX, the environment variable 'OBJECT_MODE' specifies the bit
+  # mode for compilation.
+  if(DEFINED ENV{OBJECT_MODE})
+    # Specify maximum data heap size on AIX for 32-bit programs.
+    if($ENV{OBJECT_MODE} STREQUAL "32")
+      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-bmaxdata:0x80000000")
+    endif()
+  endif()
 endif()
 
 # This is either directly the C++ ABI library or the full C++ library
