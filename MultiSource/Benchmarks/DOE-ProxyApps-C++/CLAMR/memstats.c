@@ -57,11 +57,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <sys/sysctl.h>
 #include <unistd.h>
 #include <string.h>
 
 #ifdef __APPLE_CC__
+#include <sys/sysctl.h>
 #include <mach/mach_host.h>
 #include <mach/task.h>
 #endif
