@@ -40,7 +40,7 @@ SYCL/GroupAlgorithm @Pennycook @AlexeySachkov
 SYCL/SubGroup @Pennycook @AlexeySachkov
 
 # Group local memory
-SYCL/GroupLocalMemory @sergey-semenov
+SYCL/GroupLocalMemory @sergey-semenov @Pennycook
 
 # Hierarchical parallelism
 SYCL/HierPar @kbobrovs
