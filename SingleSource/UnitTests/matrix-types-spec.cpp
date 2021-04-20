@@ -28,8 +28,8 @@ bool fpcmp(double V1, double V2, double AbsTolerance, double RelTolerance) {
   return false;
 }
 
-template <typename ElementTy, typename std::enable_if_t<
-                                  std::is_integral<ElementTy>::value, int> = 0>
+template <typename ElementTy, typename std::enable_if<
+                                  std::is_integral<ElementTy>::value, int>::type = 0>
 void expectMatrixEQ(ElementTy *A, ElementTy *B, unsigned R, unsigned C) {
   do {
     for (unsigned r = 0; r < R; r++)
@@ -42,8 +42,8 @@ void expectMatrixEQ(ElementTy *A, ElementTy *B, unsigned R, unsigned C) {
 }
 
 template <typename ElementTy,
-          typename std::enable_if_t<std::is_floating_point<ElementTy>::value,
-                                    int> = 0>
+          typename std::enable_if<std::is_floating_point<ElementTy>::value,
+                                    int>::type = 0>
 void expectMatrixEQ(ElementTy *A, ElementTy *B, unsigned R,
                       unsigned C) {
   do {
@@ -73,8 +73,8 @@ template <typename EltTy> void print(EltTy *X, unsigned Rows, unsigned Cols) {
 }
 
 template <typename ElementTy,
-          typename std::enable_if_t<std::is_floating_point<ElementTy>::value,
-                                    int> = 0>
+          typename std::enable_if<std::is_floating_point<ElementTy>::value,
+                                    int>::type = 0>
 void initRandom(ElementTy *A, unsigned Rows, unsigned Cols) {
   std::default_random_engine generator;
   std::uniform_real_distribution<ElementTy> distribution(-10.0, 10.0);
@@ -83,8 +83,8 @@ void initRandom(ElementTy *A, unsigned Rows, unsigned Cols) {
     A[i] = distribution(generator);
 }
 
-template <typename ElementTy, typename std::enable_if_t<
-                                  std::is_integral<ElementTy>::value, int> = 0>
+template <typename ElementTy, typename std::enable_if<
+                                  std::is_integral<ElementTy>::value, int>::type = 0>
 void initRandom(ElementTy *A, unsigned Rows, unsigned Cols) {
   std::default_random_engine generator;
   std::uniform_int_distribution<ElementTy> distribution(-10, 10);
