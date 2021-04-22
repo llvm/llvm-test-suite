@@ -106,53 +106,56 @@ macro (speccpu2017_benchmark)
     endforeach ()
 
 
-    # Mandatory flags
-    add_definitions(-DSPEC -DSPEC_CPU -DNDEBUG)
+    # Mandatory SPEC definitions
+    set(SPEC_COMMON_DEFS)
+    list(APPEND SPEC_COMMON_DEFS "-DSPEC;-DSPEC_CPU;-DNDEBUG")
 
     if (RATE)
       # rate benchmarks never use parallelism
-      add_definitions(-DSPEC_AUTO_SUPPRESS_OPENMP)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_AUTO_SUPPRESS_OPENMP")
     endif ()
 
     # Portability flags
+    # SPEC_AUTO_BYTEORDER_value variable is used for Fortran tests that use specpp
     if (ENDIAN STREQUAL "little")
-      add_definitions(-DSPEC_AUTO_BYTEORDER=0x12345678)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_AUTO_BYTEORDER=0x12345678")
     elseif (ENDIAN STREQUAL "big")
-      add_definitions(-DSPEC_AUTO_BYTEORDER=0x87654321)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_AUTO_BYTEORDER=0x87654321")
     endif ()
 
     check_type_size("long long" SIZEOF_LONG_LONG)
     check_type_size("long" SIZEOF_LONG)
     check_type_size("int" SIZEOF_INT)
+    # SPEC_PTR_TYPE variable is used for Fortran tests that use specpp
     if (CMAKE_SIZEOF_VOID_P EQUAL 4 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 4 AND SIZEOF_INT EQUAL 4)
-      add_definitions(-DSPEC_ILP32)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_ILP32")
     elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 4 AND SIZEOF_INT EQUAL 4)
-      add_definitions(-DSPEC_P64)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_P64")
     elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 8 AND SIZEOF_INT EQUAL 4)
-      add_definitions(-DSPEC_LP64)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_LP64")
     elseif (CMAKE_SIZEOF_VOID_P EQUAL 8 AND SIZEOF_LONG_LONG EQUAL 8 AND SIZEOF_LONG EQUAL 8 AND SIZEOF_INT EQUAL 8)
-      add_definitions(-DSPEC_ILP64)
+      list(APPEND "-DSPEC_ILP64")
     else ()
       message(FATAL_ERROR "SPEC CPU 2017 unsupported data model (supported: ILP32/LLP64/LP64/ILP64)")
     endif ()
 
     if (TARGET_OS STREQUAL "Linux")
-      add_definitions(-DSPEC_LINUX) # 526.blender_r
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_LINUX") # 526.blender_r
     endif ()
 
     if(ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Linux")
       if (CMAKE_SIZEOF_VOID_P EQUAL 8)
         # Linux x86_64
-        add_definitions(-DSPEC_LINUX_X64) # perlbench
+	list(APPEND SPEC_COMMON_DEFS "-DSPEC_LINUX_X64") # perlbench
       elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
         # Linux x86
-        add_definitions(-DSPEC_ILP32)
-        add_definitions(-D_FILE_OFFSET_BITS=64)
-        add_definitions(-DSPEC_LINUX_I32) # perlbench
+	list(APPEND SPEC_COMMON_DEFS "-DSPEC_ILP32")
+	list(APPEND SPEC_COMMON_DEFS "-D_FILE_OFFSET_BITS=64")
+	list(APPEND SPEC_COMMON_DEFS "-DSPEC_LINUX_I32") # perlbench
       endif ()
     elseif (ARCH STREQUAL "AArch64" AND TARGET_OS STREQUAL "Linux" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
       # Linux ARM
-      add_definitions(-DSPEC_LINUX_AARCH64)
+      list(APPEND SPEC_COMMON_DEFS "-DSPEC_LINUX_AARCH64")
     elseif (ARCH STREQUAL "x86" AND TARGET_OS STREQUAL "Windows")
       # Windows x86/x64
     else ()
@@ -164,7 +167,14 @@ macro (speccpu2017_benchmark)
     endif ()
 
     # No OpenMP for the moment, even for the _s suites.
-    add_definitions(-DSPEC_SUPPRESS_OPENMP)
+    list(APPEND SPEC_COMMON_DEFS "-DSPEC_SUPPRESS_OPENMP")
+
+    # Add SPEC_COMMON_DEFS
+    add_definitions(${SPEC_COMMON_DEFS})
+
+    # Used by cam4, pop2, and wrf tests for portability
+    # https://gcc.gnu.org/gcc-10/porting_to.html
+    check_fortran_compiler_flag("-fallow-argument-mismatch" SUPPORTS_FALLOW_ARGUMENT_MISMATCH)
 
   endif ()
 endmacro()
@@ -349,5 +359,36 @@ macro(speccpu2017_prepare_rundir)
       llvm_copy_dir(${PROG} "${RUN_${_runtype}_DIR}" "${INPUT_all_DIR}")
     endif ()
     llvm_copy_dir(${PROG} "${RUN_${_runtype}_DIR}" "${INPUT_${_runtype}_DIR}")
+  endforeach ()
+endmacro()
+
+# Run specpp on all Fortran files, but do not do it recursively.
+# https://www.spec.org/cpu2017/Docs/specpp.html
+# specpp is needed due to legacy use of filepp by climate/weather codes.
+macro(speccpu2017_run_specpp)
+  cmake_parse_arguments(_arg "" "" "SPECPP_SRCS;SPECPP_DEFS" ${ARGN})
+  set(_specpp_bin ${TEST_SUITE_SPEC2017_ROOT}/bin/specpp)
+  # Add common specpp arguments used by all SPEC CPU 2017 tests.
+  # -U__FILE__ is included as a work around. Source files uses _FILE_
+  # as the filename without the path, but a few source files have a
+  # typo and use __FILE__ instead which is an absolute path. So specpp
+  # fails to do a replacement with just the filename (i.e. without the
+  # path as intended). This is usually a benign error, but __FILE__
+  # can lead to a deeply nested directory due CMake's build
+  # directories. As a result, the source file line length becomes
+  # incredibly long, so you end up with a ridiculously long line that
+  # some compilers, like GCC, are unable to compile.
+  set(ARG_COMMON -w -U__FILE__ ${SPEC_COMMON_DEFS} -DSPEC_CASE_FLAG -I${SRC_DIR})
+
+  foreach(_absfilename ${_arg_SPECPP_SRCS})
+    # message("Adding to source ${_absfilename} to target ${PROG}")
+    get_filename_component(_filename ${_absfilename} NAME)
+    add_custom_command(
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${_filename}"
+      COMMAND "${_specpp_bin}" ${ARG_COMMON} ${_arg_SPECPP_DEFS} "${_absfilename}" > "${CMAKE_CURRENT_BINARY_DIR}/${_filename}"
+      DEPENDS "${_absfilename}"
+      VERBATIM
+      )
+    target_sources(${PROG} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${_filename}")
   endforeach ()
 endmacro()
