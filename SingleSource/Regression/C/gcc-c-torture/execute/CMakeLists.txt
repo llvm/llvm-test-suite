@@ -57,19 +57,9 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   pr28865.c
 
   # GCC Extension: __builtin_*
-  20071018-1.c       # __builtin_malloc
-  20071120-1.c       # __builtin_malloc
-  builtin-bitops-1.c # __builtin_clrsb, __builtin_clrsbl, __builtin_clrsbll
-  pr36765.c          # __builtin_malloc
   pr39228.c          # __builtin_isinff, __builtin_isinfl
-  pr43008.c          # __builtin_malloc
   pr47237.c          # __builtin_apply, __builtin_apply_args
-  pr78586.c          # __builtin_sprintf
-  pr79327.c          # __builtin_sprintf
-  pr84339.c          # __builtin_malloc, __builtin_free
-  pr84478.c          # __builtin_malloc
   pr85331.c          # __builtin_shuffle
-  strlen-7.c         # __builtin_malloc
   va-arg-pack-1.c    # __builtin_va_arg_pack
 
   # Clang does not support 'DD' suffix on floating constant
