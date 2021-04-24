@@ -172,9 +172,11 @@ macro (speccpu2017_benchmark)
     # Add SPEC_COMMON_DEFS
     add_definitions(${SPEC_COMMON_DEFS})
 
-    # Used by cam4, pop2, and wrf tests for portability
-    # https://gcc.gnu.org/gcc-10/porting_to.html
-    check_fortran_compiler_flag("-fallow-argument-mismatch" SUPPORTS_FALLOW_ARGUMENT_MISMATCH)
+    if (TEST_SUITE_FORTRAN)
+      # Used by cam4, pop2, and wrf tests for portability
+      # https://gcc.gnu.org/gcc-10/porting_to.html
+      check_fortran_compiler_flag("-fallow-argument-mismatch" SUPPORTS_FALLOW_ARGUMENT_MISMATCH)
+    endif ()
 
   endif ()
 endmacro()
