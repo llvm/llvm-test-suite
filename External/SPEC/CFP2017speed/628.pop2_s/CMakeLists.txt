@@ -6,25 +6,9 @@ endif ()
 
 ninja_required()
 
-speccpu2017_benchmark(SPEED)
+speccpu2017_convert_bigendian_required()
 
-# Check if compiler can support big-endian IO format, if true proceed
-# otherwise, return immediately. This is due to some binary input
-# files stored in big-endian format
-if (ENDIAN STREQUAL "little")
-  # GCC
-  check_fortran_compiler_flag("-fconvert=big-endian" SUPPORTS_FCONVERT_BIG_ENDIAN)
-  # Intel
-  check_fortran_compiler_flag("-convert big_endian" SUPPORTS_CONVERT_BIG_ENDIAN)
-  # Flang
-  # TBD
-  if (NOT SUPPORTS_FCONVERT_BIG_ENDIAN)
-  elseif (NOT SUPPORTS_CONVERT_BIG_ENDIAN)
-  else ()
-    message(WARN "628.pop2_s not supported. No way to read big-endian binary IO on little-endian architecture.")
-    return ()
-  endif ()
-endif ()
+speccpu2017_benchmark(SPEED)
 
 macro(pop2_prepare_rundir)
   # Re-use the speccpu2017_prepare_rundir but then implement an input
@@ -137,8 +121,8 @@ speccpu2017_add_executable(
 file(GLOB POP2_F90_SRCS ${SRC_DIR}/*.F90)
 list(REMOVE_ITEM POP2_F90_SRCS ${SRC_DIR}/test.F90)
 
-speccpu2017_run_specpp(
-  SPECPP_SRCS ${POP2_F90_SRCS} SPECPP_DEFS
+speccpu2017_run_specpp(TARGET ${PROG}
+  SRCS ${POP2_F90_SRCS} DEFS
   -D_MPISERIAL
   -D_NETCDF
   -D_USEBOX

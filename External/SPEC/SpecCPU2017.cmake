@@ -364,11 +364,16 @@ macro(speccpu2017_prepare_rundir)
   endforeach ()
 endmacro()
 
-# Run specpp on all Fortran files, but do not do it recursively.
+# Run specpp on a list of SRCS provided and add them to the TARGET.
+# Three arguments are required:
+# TARGET must be already be defined prior to calling this command.
+# SRCS is provided usually via a GLOB command external to this macro.
+# DEFS are the arguments that would normally be passed to specpp.
 # https://www.spec.org/cpu2017/Docs/specpp.html
-# specpp is needed due to legacy use of filepp by climate/weather codes.
+# specpp is needed due to legacy use of filepp by a number of
+# climate/weather codes.
 macro(speccpu2017_run_specpp)
-  cmake_parse_arguments(_arg "" "" "SPECPP_SRCS;SPECPP_DEFS" ${ARGN})
+  cmake_parse_arguments(_arg "" "TARGET" "SRCS;DEFS" ${ARGN})
   set(_specpp_bin ${TEST_SUITE_SPEC2017_ROOT}/bin/specpp)
   # Add common specpp arguments used by all SPEC CPU 2017 tests.
   # -U__FILE__ is included as a work around. Source files uses _FILE_
@@ -382,15 +387,36 @@ macro(speccpu2017_run_specpp)
   # some compilers, like GCC, are unable to compile.
   set(ARG_COMMON -w -U__FILE__ ${SPEC_COMMON_DEFS} -DSPEC_CASE_FLAG -I${SRC_DIR})
 
-  foreach(_absfilename ${_arg_SPECPP_SRCS})
+  foreach(_absfilename ${_arg_SRCS})
     # message("Adding to source ${_absfilename} to target ${PROG}")
     get_filename_component(_filename ${_absfilename} NAME)
     add_custom_command(
       OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${_filename}"
-      COMMAND "${_specpp_bin}" ${ARG_COMMON} ${_arg_SPECPP_DEFS} "${_absfilename}" > "${CMAKE_CURRENT_BINARY_DIR}/${_filename}"
+      COMMAND "${_specpp_bin}" ${ARG_COMMON} ${_arg_DEFS} "${_absfilename}" > "${CMAKE_CURRENT_BINARY_DIR}/${_filename}"
       DEPENDS "${_absfilename}"
       VERBATIM
       )
-    target_sources(${PROG} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${_filename}")
+    target_sources(${_arg_TARGET} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${_filename}")
   endforeach ()
 endmacro()
+
+
+# Check if compiler can support big-endian IO format, if true proceed
+# otherwise, return immediately. This is due to some binary input
+# files stored in big-endian format that are required by the SPEC tests
+macro(speccpu2017_convert_bigendian_required)
+  if (ENDIAN STREQUAL "little")
+    # GCC
+    check_fortran_compiler_flag("-fconvert=big-endian" SUPPORTS_FCONVERT_BIG_ENDIAN)
+    # Intel
+    check_fortran_compiler_flag("-convert big_endian" SUPPORTS_CONVERT_BIG_ENDIAN)
+    # Flang
+    # TBD
+    if (NOT SUPPORTS_FCONVERT_BIG_ENDIAN)
+    elseif (NOT SUPPORTS_CONVERT_BIG_ENDIAN)
+    else ()
+      message(WARN "Test not supported. No way to read big-endian binary IO on little-endian architecture.")
+      return ()
+    endif ()
+  endif ()
+endmacro ()
