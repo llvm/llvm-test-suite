@@ -6,6 +6,6 @@ endif ()
 
 speccpu2017_benchmark(SPEED ORIGIN 527.cam4_r)
 
-speccpu2017_inherit(../../CFP2017rate/527.cam4_r)
+set(CAM4_SPECPP_DEFS "-DUSE_COSP")
 
-add_definitions(-DUSE_COSP)
+speccpu2017_inherit(../../CFP2017rate/527.cam4_r)
