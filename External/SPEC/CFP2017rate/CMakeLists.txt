@@ -6,7 +6,9 @@ add_subdirectory(508.namd_r)       # C++
 add_subdirectory(510.parest_r)     # C++
 add_subdirectory(511.povray_r)     # C++, C
 add_subdirectory(519.lbm_r)        # C
-#add_subdirectory(521.wrf_r)       # Fortran, C
+if (TEST_SUITE_FORTRAN)
+  add_subdirectory(521.wrf_r)      # Fortran, C
+endif ()
 add_subdirectory(526.blender_r)    # C++, C
 if (TEST_SUITE_FORTRAN)
   add_subdirectory(527.cam4_r)     # Fortran, C

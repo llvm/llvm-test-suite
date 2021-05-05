@@ -4,7 +4,7 @@ if (TEST_SUITE_FORTRAN)
 endif ()
 add_subdirectory(619.lbm_s)        # C
 if (TEST_SUITE_FORTRAN)
-  #add_subdirectory(621.wrf_s)     # Fortran, C
+  add_subdirectory(621.wrf_s)      # Fortran, C
   add_subdirectory(627.cam4_s)     # Fortran, C
   add_subdirectory(628.pop2_s)     # Fortran, C
 endif ()
