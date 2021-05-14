@@ -5,8 +5,12 @@ llvm_externals_find(TEST_SUITE_HIP_ROOT "hip" "HIP prerequisites")
 # Create targets for HIP tests that are part of the test suite.
 macro(create_local_hip_tests VariantSuffix)
   set(VariantOffload "hip")
+  # Set per-source compilation/link options
+  set_source_files_properties(with_fopenmp.hip PROPERTIES
+    COMPILE_FLAGS -fopenmp)
   # Add HIP tests to be added to hip-tests-simple
   list(APPEND HIP_LOCAL_TESTS empty)
+  list(APPEND HIP_LOCAL_TESTS with_fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
   foreach(_hip_test IN LISTS HIP_LOCAL_TESTS)
     create_one_local_test(${_hip_test} ${_hip_test}.hip
