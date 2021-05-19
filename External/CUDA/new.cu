@@ -4,6 +4,11 @@
 #include <new>
 #include <stdio.h>
 
+// We can not use host-side variable std::nothrow.
+// Re-declare it as a __device__ variable.
+// TODO: do that in clang's CUDA header wrappers.
+extern decltype(std::nothrow) __device__ std::nothrow;
+
 __device__ void global_new() {
   void* x = ::operator new(42);
   assert(x != NULL);
