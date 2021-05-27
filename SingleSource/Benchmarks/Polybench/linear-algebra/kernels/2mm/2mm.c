@@ -26,8 +26,11 @@ void init_array(int ni, int nj, int nk, int nl,
 		DATA_TYPE POLYBENCH_2D(A,NI,NK,ni,nl),
 		DATA_TYPE POLYBENCH_2D(B,NK,NJ,nk,nj),
 		DATA_TYPE POLYBENCH_2D(C,NL,NJ,nl,nj),
-		DATA_TYPE POLYBENCH_2D(D,NI,NL,ni,nl),
-                DATA_TYPE POLYBENCH_2D(D_StrictFP,NI,NL,ni,nl))
+		DATA_TYPE POLYBENCH_2D(D,NI,NL,ni,nl)
+#if !FMA_DISABLED
+                , DATA_TYPE POLYBENCH_2D(D_StrictFP,NI,NL,ni,nl)
+#endif
+		)
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
@@ -43,9 +46,11 @@ void init_array(int ni, int nj, int nk, int nl,
   for (i = 0; i < nl; i++)
     for (j = 0; j < nj; j++)
       C[i][j] = ((DATA_TYPE) i*(j+3)) / nl;
+#if !FMA_DISABLED
   for (i = 0; i < ni; i++)
     for (j = 0; j < nl; j++)
       D_StrictFP[i][j] = D[i][j] = ((DATA_TYPE) i*(j+2)) / nk;
+#endif
 }
 
 
@@ -101,6 +106,10 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_2mm_StrictFP(int ni, int nj, int nk, int nl,
                          DATA_TYPE alpha,
@@ -155,6 +164,7 @@ check_FP(int ni, int nl,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -172,7 +182,9 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,NK,NJ,nk,nj);
   POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,NL,NJ,nl,nj);
   POLYBENCH_2D_ARRAY_DECL(D,DATA_TYPE,NI,NL,ni,nl);
+#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(D_StrictFP,DATA_TYPE,NI,NL,ni,nl);
+#endif
 
   /* Initialize array(s). */
   init_array (ni, nj, nk, nl, &alpha, &beta,
@@ -198,6 +210,11 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(ni, nl, POLYBENCH_ARRAY(D)));
+#else
   kernel_2mm_StrictFP(ni, nj, nk, nl,
                       alpha, beta,
                       POLYBENCH_ARRAY(tmp),
@@ -212,6 +229,7 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(ni, nl, POLYBENCH_ARRAY(D_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(tmp);
@@ -219,7 +237,9 @@ int main(int argc, char** argv)
   POLYBENCH_FREE_ARRAY(B);
   POLYBENCH_FREE_ARRAY(C);
   POLYBENCH_FREE_ARRAY(D);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(D_StrictFP);
+#endif
 
   return 0;
 }

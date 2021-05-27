@@ -90,6 +90,10 @@ void kernel_bicg(int nx, int ny,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static
 void kernel_bicg_StrictFP(int nx, int ny,
                           DATA_TYPE POLYBENCH_2D(A,NX,NY,nx,ny),
@@ -137,6 +141,7 @@ check_FP(int ny,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -150,8 +155,10 @@ int main(int argc, char** argv)
   POLYBENCH_1D_ARRAY_DECL(q, DATA_TYPE, NX, nx);
   POLYBENCH_1D_ARRAY_DECL(p, DATA_TYPE, NY, ny);
   POLYBENCH_1D_ARRAY_DECL(r, DATA_TYPE, NX, nx);
+#if !FMA_DISABLED
   POLYBENCH_1D_ARRAY_DECL(s_StrictFP, DATA_TYPE, NY, ny);
   POLYBENCH_1D_ARRAY_DECL(q_StrictFP, DATA_TYPE, NX, nx);
+#endif
 
   /* Initialize array(s). */
   init_array (nx, ny,
@@ -174,6 +181,12 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(s),
+                                    POLYBENCH_ARRAY(q)));
+#else
   kernel_bicg_StrictFP(nx, ny,
                        POLYBENCH_ARRAY(A),
                        POLYBENCH_ARRAY(s_StrictFP),
@@ -190,6 +203,7 @@ int main(int argc, char** argv)
      by the function call in argument. */
   polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(s_StrictFP),
                                     POLYBENCH_ARRAY(q_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
@@ -197,8 +211,10 @@ int main(int argc, char** argv)
   POLYBENCH_FREE_ARRAY(q);
   POLYBENCH_FREE_ARRAY(p);
   POLYBENCH_FREE_ARRAY(r);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(s_StrictFP);
   POLYBENCH_FREE_ARRAY(q_StrictFP);
+#endif
 
   return 0;
 }

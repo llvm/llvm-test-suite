@@ -166,6 +166,10 @@ void kernel_fdtd_apml(int cz,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_fdtd_apml_StrictFP(int cz,
                           int cxm,
@@ -253,6 +257,7 @@ check_FP(int cz, int cxm, int cym,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -272,10 +277,12 @@ int main(int argc, char** argv)
   POLYBENCH_3D_ARRAY_DECL(Ex,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
   POLYBENCH_3D_ARRAY_DECL(Ey,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
   POLYBENCH_3D_ARRAY_DECL(Hz,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
+#if !FMA_DISABLED
   POLYBENCH_3D_ARRAY_DECL(Bza_StrictFP,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
   POLYBENCH_3D_ARRAY_DECL(Ex_StrictFP,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
   POLYBENCH_3D_ARRAY_DECL(Ey_StrictFP,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
   POLYBENCH_3D_ARRAY_DECL(Hz_StrictFP,DATA_TYPE,CZ+1,CYM+1,CXM+1,cz+1,cym+1,cxm+1);
+#endif
   POLYBENCH_1D_ARRAY_DECL(czm,DATA_TYPE,CZ+1,cz+1);
   POLYBENCH_1D_ARRAY_DECL(czp,DATA_TYPE,CZ+1,cz+1);
   POLYBENCH_1D_ARRAY_DECL(cxmh,DATA_TYPE,CXM+1,cxm+1);
@@ -321,6 +328,15 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(cz, cxm, cym,
+  				    POLYBENCH_ARRAY(Bza),
+  				    POLYBENCH_ARRAY(Ex),
+  				    POLYBENCH_ARRAY(Ey),
+  				    POLYBENCH_ARRAY(Hz)));
+#else
   init_array (cz, cxm, cym, &mui, &ch,
   	      POLYBENCH_ARRAY(Ax),
   	      POLYBENCH_ARRAY(Ry),
@@ -364,6 +380,7 @@ int main(int argc, char** argv)
   				    POLYBENCH_ARRAY(Ex_StrictFP),
   				    POLYBENCH_ARRAY(Ey_StrictFP),
   				    POLYBENCH_ARRAY(Hz_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(Ax);
@@ -374,10 +391,12 @@ int main(int argc, char** argv)
   POLYBENCH_FREE_ARRAY(Ex);
   POLYBENCH_FREE_ARRAY(Ey);
   POLYBENCH_FREE_ARRAY(Hz);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(Bza_StrictFP);
   POLYBENCH_FREE_ARRAY(Ex_StrictFP);
   POLYBENCH_FREE_ARRAY(Ey_StrictFP);
   POLYBENCH_FREE_ARRAY(Hz_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(czm);
   POLYBENCH_FREE_ARRAY(czp);
   POLYBENCH_FREE_ARRAY(cxmh);
