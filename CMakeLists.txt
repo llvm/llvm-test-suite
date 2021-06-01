@@ -243,6 +243,10 @@ include(TestSuite)
 include(SingleMultiSource)
 # Needs by External/sollve_vv.
 find_package(OpenMP)
+# Fortran Helper Modules
+if(TEST_SUITE_FORTRAN)
+  include(Fortran)
+endif()
 
 if(NOT DEFINED TARGET_OS)
   message(STATUS "Check target operating system - ${CMAKE_SYSTEM_NAME}")
@@ -338,6 +342,10 @@ if(NOT TEST_SUITE_SUBDIRS)
 	 # Exclude tools and CTMark from default list
     if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
+    endif()
+    # Exclude Fortran tests unless explicitly activated
+    if(NOT TEST_SUITE_FORTRAN)
+      list(REMOVE_ITEM TEST_SUITE_SUBDIRS Fortran)
     endif()
   endforeach()
   set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}")
