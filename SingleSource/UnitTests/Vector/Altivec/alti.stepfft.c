@@ -27,10 +27,10 @@ int main(void)
    float *x,*y,*z,*w;
    float t1,ln2,mflops;
 /* allocate storage for x,y,z,w on 4-word bndr. */
-   x = (float *)malloc(8*N);
-   y = (float *)malloc(8*N);
-   z = (float *)malloc(8*N);
-   w = (float *)malloc(4*N);
+   posix_memalign((void **)&x,16,8*N);
+   posix_memalign((void **)&y,16,8*N);
+   posix_memalign((void **)&z,16,8*N);
+   posix_memalign((void **)&w,16,4*N);
    first = 1;
    for(icase=0;icase<2;icase++){
    if(first){
