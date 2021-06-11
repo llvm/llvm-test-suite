@@ -92,10 +92,6 @@ void kernel_durbin(int n,
 
 }
 
-#if !FMA_DISABLED
-// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
-// discrepancies which cause the accuracy checks to fail.
-// In this case, the test runs with the option -ffp-contract=off
 static
 void kernel_durbin_StrictFP(int n,
                             DATA_TYPE POLYBENCH_2D(y,N,N,n,n),
@@ -148,7 +144,6 @@ check_FP(int n,
 
   return 1;
 }
-#endif
 
 int main(int argc, char** argv)
 {
@@ -162,9 +157,7 @@ int main(int argc, char** argv)
   POLYBENCH_1D_ARRAY_DECL(beta, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(r, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(out, DATA_TYPE, N, n);
-#if !FMA_DISABLED
   POLYBENCH_1D_ARRAY_DECL(out_StrictFP, DATA_TYPE, N, n);
-#endif
 
 
   /* Initialize array(s). */
@@ -191,11 +184,6 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
-#if FMA_DISABLED
-  /* Prevent dead-code elimination. All live-out data must be printed
-     by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(out)));
-#else
   init_array (n,
 	      POLYBENCH_ARRAY(y),
 	      POLYBENCH_ARRAY(sum),
@@ -217,7 +205,6 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(out_StrictFP)));
-#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(y);

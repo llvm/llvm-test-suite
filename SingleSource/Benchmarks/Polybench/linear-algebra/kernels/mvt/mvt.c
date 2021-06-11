@@ -23,10 +23,8 @@ static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_1D(x1,N,n),
 		DATA_TYPE POLYBENCH_1D(x2,N,n),
-#if !FMA_DISABLED
 		DATA_TYPE POLYBENCH_1D(x1_StrictFP,N,n),
 		DATA_TYPE POLYBENCH_1D(x2_StrictFP,N,n),
-#endif
 		DATA_TYPE POLYBENCH_1D(y_1,N,n),
 		DATA_TYPE POLYBENCH_1D(y_2,N,n),
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
@@ -36,14 +34,8 @@ void init_array(int n,
 
   for (i = 0; i < n; i++)
     {
-#if !FMA_DISABLED
-      x1_StrictFP[i] =
-#endif
-	      x1[i] = ((DATA_TYPE) i) / n;
-#if !FMA_DISABLED
-      x2_StrictFP[i] =
-#endif
-	      x2[i] = ((DATA_TYPE) i + 1) / n;
+      x1_StrictFP[i] = x1[i] = ((DATA_TYPE) i) / n;
+      x2_StrictFP[i] = x2[i] = ((DATA_TYPE) i + 1) / n;
       y_1[i] = ((DATA_TYPE) i + 3) / n;
       y_2[i] = ((DATA_TYPE) i + 4) / n;
       for (j = 0; j < n; j++)
@@ -96,10 +88,6 @@ void kernel_mvt(int n,
 
 }
 
-#if !FMA_DISABLED
-// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
-// discrepancies which cause the accuracy checks to fail.
-// In this case, the test runs with the option -ffp-contract=off
 static
 void kernel_mvt_StrictFP(int n,
                          DATA_TYPE POLYBENCH_1D(x1,N,n),
@@ -141,7 +129,6 @@ check_FP(int n,
 
   return 1;
 }
-#endif
 
 int main(int argc, char** argv)
 {
@@ -152,10 +139,8 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(x1, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(x2, DATA_TYPE, N, n);
-#if !FMA_DISABLED
   POLYBENCH_1D_ARRAY_DECL(x1_StrictFP, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(x2_StrictFP, DATA_TYPE, N, n);
-#endif
   POLYBENCH_1D_ARRAY_DECL(y_1, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(y_2, DATA_TYPE, N, n);
 
@@ -164,10 +149,8 @@ int main(int argc, char** argv)
   init_array (n,
 	      POLYBENCH_ARRAY(x1),
 	      POLYBENCH_ARRAY(x2),
-#if !FMA_DISABLED
 	      POLYBENCH_ARRAY(x1_StrictFP),
 	      POLYBENCH_ARRAY(x2_StrictFP),
-#endif
 	      POLYBENCH_ARRAY(y_1),
 	      POLYBENCH_ARRAY(y_2),
 	      POLYBENCH_ARRAY(A));
@@ -187,12 +170,6 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
-#if FMA_DISABLED
-  /* Prevent dead-code elimination. All live-out data must be printed
-     by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x1),
-                                    POLYBENCH_ARRAY(x2)));
-#else
   kernel_mvt_StrictFP(n,
                       POLYBENCH_ARRAY(x1_StrictFP),
                       POLYBENCH_ARRAY(x2_StrictFP),
@@ -208,16 +185,13 @@ int main(int argc, char** argv)
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x1_StrictFP),
                                     POLYBENCH_ARRAY(x2_StrictFP)));
-#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(x1);
   POLYBENCH_FREE_ARRAY(x2);
-#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(x1_StrictFP);
   POLYBENCH_FREE_ARRAY(x2_StrictFP);
-#endif
   POLYBENCH_FREE_ARRAY(y_1);
   POLYBENCH_FREE_ARRAY(y_2);
 
