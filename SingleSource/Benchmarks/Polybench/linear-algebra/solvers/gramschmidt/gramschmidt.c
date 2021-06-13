@@ -120,6 +120,10 @@ void kernel_gramschmidt(int ni, int nj,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_gramschmidt_StrictFP(int ni, int nj,
                             DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
@@ -174,6 +178,7 @@ check_FP(int ni, int nj,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -185,9 +190,11 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,NI,NJ,ni,nj);
   POLYBENCH_2D_ARRAY_DECL(R,DATA_TYPE,NJ,NJ,nj,nj);
   POLYBENCH_2D_ARRAY_DECL(Q,DATA_TYPE,NI,NJ,ni,nj);
+#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(A_StrictFP,DATA_TYPE,NI,NJ,ni,nj);
   POLYBENCH_2D_ARRAY_DECL(R_StrictFP,DATA_TYPE,NJ,NJ,nj,nj);
   POLYBENCH_2D_ARRAY_DECL(Q_StrictFP,DATA_TYPE,NI,NJ,ni,nj);
+#endif
 
   /* Initialize array(s). */
   init_array (ni, nj,
@@ -208,6 +215,14 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(ni, nj,
+                                    POLYBENCH_ARRAY(A),
+                                    POLYBENCH_ARRAY(R),
+                                    POLYBENCH_ARRAY(Q)));
+#else
   init_array (ni, nj,
 	      POLYBENCH_ARRAY(A_StrictFP),
 	      POLYBENCH_ARRAY(R_StrictFP),
@@ -230,14 +245,17 @@ int main(int argc, char** argv)
                                     POLYBENCH_ARRAY(A_StrictFP),
                                     POLYBENCH_ARRAY(R_StrictFP),
                                     POLYBENCH_ARRAY(Q_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(R);
   POLYBENCH_FREE_ARRAY(Q);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(A_StrictFP);
   POLYBENCH_FREE_ARRAY(R_StrictFP);
   POLYBENCH_FREE_ARRAY(Q_StrictFP);
+#endif
 
   return 0;
 }

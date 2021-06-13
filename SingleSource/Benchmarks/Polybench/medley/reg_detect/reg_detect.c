@@ -100,6 +100,10 @@ void kernel_reg_detect(int niter, int maxgrid, int length,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_reg_detect_StrictFP(int niter, int maxgrid, int length,
                            DATA_TYPE POLYBENCH_2D(sum_tang,MAXGRID,MAXGRID,maxgrid,maxgrid),
@@ -162,6 +166,7 @@ check_FP(int maxgrid,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -174,7 +179,9 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(sum_tang, DATA_TYPE, MAXGRID, MAXGRID, maxgrid, maxgrid);
   POLYBENCH_2D_ARRAY_DECL(mean, DATA_TYPE, MAXGRID, MAXGRID, maxgrid, maxgrid);
   POLYBENCH_2D_ARRAY_DECL(path, DATA_TYPE, MAXGRID, MAXGRID, maxgrid, maxgrid);
+#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(path_StrictFP, DATA_TYPE, MAXGRID, MAXGRID, maxgrid, maxgrid);
+#endif
   POLYBENCH_3D_ARRAY_DECL(diff, DATA_TYPE, MAXGRID, MAXGRID, LENGTH, maxgrid, maxgrid, length);
   POLYBENCH_3D_ARRAY_DECL(sum_diff, DATA_TYPE, MAXGRID, MAXGRID, LENGTH, maxgrid, maxgrid, length);
 
@@ -199,6 +206,11 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(maxgrid, POLYBENCH_ARRAY(path)));
+#else
   init_array (maxgrid,
 	      POLYBENCH_ARRAY(sum_tang),
 	      POLYBENCH_ARRAY(mean),
@@ -215,12 +227,15 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(maxgrid, POLYBENCH_ARRAY(path_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(sum_tang);
   POLYBENCH_FREE_ARRAY(mean);
   POLYBENCH_FREE_ARRAY(path);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(path_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(diff);
   POLYBENCH_FREE_ARRAY(sum_diff);
 

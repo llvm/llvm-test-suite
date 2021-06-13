@@ -121,6 +121,10 @@ void kernel_correlation(int m, int n,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_correlation_StrictFP(int m, int n,
                             DATA_TYPE float_n,
@@ -206,6 +210,7 @@ check_FP(int m,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -217,7 +222,9 @@ int main(int argc, char** argv)
   DATA_TYPE float_n;
   POLYBENCH_2D_ARRAY_DECL(data,DATA_TYPE,M,N,m,n);
   POLYBENCH_2D_ARRAY_DECL(symmat,DATA_TYPE,M,M,m,m);
+#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(symmat_StrictFP,DATA_TYPE,M,M,m,m);
+#endif
   POLYBENCH_1D_ARRAY_DECL(mean,DATA_TYPE,M,m);
   POLYBENCH_1D_ARRAY_DECL(stddev,DATA_TYPE,M,m);
 
@@ -238,6 +245,11 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(symmat)));
+#else
   init_array (m, n, &float_n, POLYBENCH_ARRAY(data));
   kernel_correlation (m, n, float_n,
 		      POLYBENCH_ARRAY(data),
@@ -250,11 +262,14 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(symmat_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(data);
   POLYBENCH_FREE_ARRAY(symmat);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(symmat_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(mean);
   POLYBENCH_FREE_ARRAY(stddev);
 

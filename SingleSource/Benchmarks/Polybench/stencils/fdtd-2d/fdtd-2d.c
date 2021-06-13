@@ -104,6 +104,10 @@ void kernel_fdtd_2d(int tmax,
 #pragma endscop
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_fdtd_2d_StrictFP(int tmax,
                         int nx,
@@ -157,6 +161,7 @@ check_FP(int nx, int ny,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -169,9 +174,11 @@ int main(int argc, char** argv)
   POLYBENCH_2D_ARRAY_DECL(ex,DATA_TYPE,NX,NY,nx,ny);
   POLYBENCH_2D_ARRAY_DECL(ey,DATA_TYPE,NX,NY,nx,ny);
   POLYBENCH_2D_ARRAY_DECL(hz,DATA_TYPE,NX,NY,nx,ny);
+#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(ex_StrictFP,DATA_TYPE,NX,NY,nx,ny);
   POLYBENCH_2D_ARRAY_DECL(ey_StrictFP,DATA_TYPE,NX,NY,nx,ny);
   POLYBENCH_2D_ARRAY_DECL(hz_StrictFP,DATA_TYPE,NX,NY,nx,ny);
+#endif
   POLYBENCH_1D_ARRAY_DECL(_fict_,DATA_TYPE,TMAX,tmax);
 
   /* Initialize array(s). */
@@ -196,6 +203,13 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(ex),
+				    POLYBENCH_ARRAY(ey),
+				    POLYBENCH_ARRAY(hz)));
+#else
   init_array (tmax, nx, ny,
 	      POLYBENCH_ARRAY(ex_StrictFP),
 	      POLYBENCH_ARRAY(ey_StrictFP),
@@ -212,14 +226,17 @@ int main(int argc, char** argv)
   polybench_prevent_dce(print_array(nx, ny, POLYBENCH_ARRAY(ex_StrictFP),
 				    POLYBENCH_ARRAY(ey_StrictFP),
 				    POLYBENCH_ARRAY(hz_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(ex);
   POLYBENCH_FREE_ARRAY(ey);
   POLYBENCH_FREE_ARRAY(hz);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(ex_StrictFP);
   POLYBENCH_FREE_ARRAY(ey_StrictFP);
   POLYBENCH_FREE_ARRAY(hz_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(_fict_);
 
   return 0;

@@ -81,6 +81,10 @@ void kernel_dynprog(int tsteps, int length,
   *out = out_l;
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_dynprog_StrictFP(int tsteps, int length,
                         DATA_TYPE POLYBENCH_2D(c,LENGTH,LENGTH,length,length),
@@ -131,6 +135,7 @@ check_FP(DATA_TYPE A,
   }
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -139,7 +144,10 @@ int main(int argc, char** argv)
   int tsteps = TSTEPS;
 
   /* Variable declaration/allocation. */
-  DATA_TYPE out, out_StrictFP;
+  DATA_TYPE out;
+#if !FMA_DISABLED
+  DATA_TYPE out_StrictFP;
+#endif
   POLYBENCH_3D_ARRAY_DECL(sum_c,DATA_TYPE,LENGTH,LENGTH,LENGTH,length,length,length);
   POLYBENCH_2D_ARRAY_DECL(c,DATA_TYPE,LENGTH,LENGTH,length,length);
   POLYBENCH_2D_ARRAY_DECL(W,DATA_TYPE,LENGTH,LENGTH,length,length);
@@ -161,6 +169,11 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(out));
+#else
   init_array (length, POLYBENCH_ARRAY(c), POLYBENCH_ARRAY(W));
   kernel_dynprog (tsteps, length,
 		  POLYBENCH_ARRAY(c),
@@ -174,6 +187,7 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(out_StrictFP));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(sum_c);
