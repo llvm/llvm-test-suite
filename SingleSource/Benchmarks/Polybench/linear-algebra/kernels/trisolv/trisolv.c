@@ -23,7 +23,9 @@ static
 void init_array(int n,
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
 		DATA_TYPE POLYBENCH_1D(x,N,n),
+#if !FMA_DISABLED
 		DATA_TYPE POLYBENCH_1D(x_StrictFP,N,n),
+#endif
 		DATA_TYPE POLYBENCH_1D(c,N,n))
 {
 #pragma STDC FP_CONTRACT OFF
@@ -42,7 +44,11 @@ void init_array(int n,
   */
   for (i = 0; i < n; i++)
     {
-      c[i] = x_StrictFP[i] = x[i] = ((DATA_TYPE) i+n) / n;
+      c[i] =
+#if !FMA_DISABLED
+	      x_StrictFP[i] = 
+#endif
+	      x[i] = ((DATA_TYPE) i+n) / n;
       for (j = 0; j < n; j++)
       	A[i][j] = ((DATA_TYPE) i*j+n) / n;
     }
@@ -88,6 +94,10 @@ void kernel_trisolv(int n,
 
 }
 
+#if !FMA_DISABLED
+// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
+// discrepancies which cause the accuracy checks to fail.
+// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_trisolv_StrictFP(int n,
                         DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
@@ -128,6 +138,7 @@ check_FP(int n,
 
   return 1;
 }
+#endif
 
 int main(int argc, char** argv)
 {
@@ -137,13 +148,18 @@ int main(int argc, char** argv)
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(x, DATA_TYPE, N, n);
+#if !FMA_DISABLED
   POLYBENCH_1D_ARRAY_DECL(x_StrictFP, DATA_TYPE, N, n);
+#endif
   POLYBENCH_1D_ARRAY_DECL(c, DATA_TYPE, N, n);
 
 
   /* Initialize array(s). */
   init_array (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x),
-              POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(c));
+#if !FMA_DISABLED
+              POLYBENCH_ARRAY(x_StrictFP),
+#endif
+	      POLYBENCH_ARRAY(c));
 
   /* Start timer. */
   polybench_start_instruments;
@@ -155,16 +171,24 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
+#if FMA_DISABLED
+  /* Prevent dead-code elimination. All live-out data must be printed
+     by the function call in argument. */
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x)));
+#else
   kernel_trisolv (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(c));
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x_StrictFP)));
+#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
   POLYBENCH_FREE_ARRAY(x);
+#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(x_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(c);
 
   return 0;
