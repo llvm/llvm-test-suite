@@ -71,10 +71,6 @@ void kernel_seidel_2d(int tsteps,
 
 }
 
-#if !FMA_DISABLED
-// NOTE: FMA_DISABLED is true for targets where FMA contraction causes
-// discrepancies which cause the accuracy checks to fail.
-// In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_seidel_2d_StrictFP(int tsteps,
                           int n,
@@ -115,7 +111,6 @@ check_FP(int n,
   /* All elements are within the allowed FP_ABSTOLERANCE error margin.  */
   return 1;
 }
-#endif
 
 int main(int argc, char** argv)
 {
@@ -125,9 +120,7 @@ int main(int argc, char** argv)
 
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
-#if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(A_StrictFP, DATA_TYPE, N, N, n, n);
-#endif
 
 
   /* Initialize array(s). */
@@ -143,11 +136,6 @@ int main(int argc, char** argv)
   polybench_stop_instruments;
   polybench_print_instruments;
 
-#if FMA_DISABLED
-  /* Prevent dead-code elimination. All live-out data must be printed
-     by the function call in argument. */
-  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
-#else
   init_array (n, POLYBENCH_ARRAY(A_StrictFP));
   kernel_seidel_2d (tsteps, n, POLYBENCH_ARRAY(A_StrictFP));
 
@@ -157,13 +145,10 @@ int main(int argc, char** argv)
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A_StrictFP)));
-#endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
-#if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(A_StrictFP);
-#endif
 
   return 0;
 }
