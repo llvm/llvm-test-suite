@@ -1,0 +1,61 @@
+
+From:
+http://www.itl.nist.gov/div897/ctg/fortran_form.htm
+
+Fortran
+Available Test Suites
+
+The FORTRAN78 test suite is a product of the NIST Information Technology 
+Laboratory (ITL). It is used to determine, insofar as is practical, the degree 
+to which a FORTRAN processor conforms to FIPS Fortran. 
+The Fortran test suite consists of programs containing features of Standard 
+Fortran, their related data and an executive program that prepares the audit 
+routines for compilation. Each program includes tests and supporting 
+procedures indicating the results of the tests. The testing of a processor in 
+a particular hardware/operating system environment is accomplished by 
+compiling and executing each program. 
+
+From:
+http://www.itl.nist.gov/div897/ctg/softagre.htm
+
+Software Acknowledgment and Redistribution
+
+The conformance test suites provided here are released by the National 
+Institute of Standards and Technology (NIST), an agency of the U.S. 
+Department of Commerce, Gaithersburg MD 20899, USA. The test suites bear 
+no warranty, either express or implied. NIST does not assume legal liability 
+nor responsibility for a User's use of a test suite or the results of such 
+use. 
+
+Please note that within the United States, copyright protection, under 
+Section 105 of the United States Code, Title 17, is not available for any 
+work of the United States Government and/or for any works created by United 
+States Government employees. User acknowledges that these test suites contain 
+work which was created by NIST employees and is therefore in the public 
+domain and not subject to copyright. The User may use, distribute, or 
+incorporate these test suites provided the User acknowledges this via an 
+explicit acknowledgment of NIST-related contributions to the User's work. 
+User also agrees to acknowledge, via an explicit acknowledgment, that any 
+modifications or alterations have been made to these test suites before 
+redistribution.
+
+
+Acknowledgment:
+The present version has been slighly altered in the following way:
+- a non standard conforming FORMAT statement has been fixed in FM110.f.
+- Hollerith strings in FORMAT statements have been converted to quoted
+  strings to conform to the Fortran 95 standard.
+
+Modifications:
+June 10 by Nichols A. Romero
+- modified driver_run input and output files to make it easier to update LLVM Test-Suite
+- remove a number of problematic tests, see CMakeLists.txt
+June 11 by Nichols A. Romero
+- adjust I0? logical unit (I06,I08,etc.) for many tests to avoid race conditions when
+  running in parallel
+- rename CSEQ, DIRFILE, CDIR for many tests to avoid race conditions when running in
+  parallel
+June 12 by Nichols A. Romero
+- remove `driver_parse` script since it is not needed or used.
+June 23 by Nichols A. Romero
+- Added comments regarding the use of the `driver_run` script.

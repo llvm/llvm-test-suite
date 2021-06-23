@@ -1,0 +1,92 @@
+#! /bin/sh -u
+
+# `driver_run` script is NOT intended to used for running the LLVM
+# test-suite, nor is it invoked by any of the LLVM test-suite
+# infrastructure. It is provided for convenience for the specific
+# purpose of updating the reference_output files should the need to do
+# so arise.
+
+# Fortran compiler name
+FC='gfortran'
+# option to produce executable name
+EXECOPT='-o'
+# run test 257 (that uses PAUSE)
+EXE257=1
+# do not run tests that include deleted features in Fortran 95
+AVOID_DELETED_F95=0
+
+#
+# main loop
+#
+for file in `ls FM???.f`
+do
+  process_it=1
+  #
+  # If requested, do not run tests that contain features
+  # deleted in Fortran 95
+  #
+  if [ x"${AVOID_DELETED_F95}" != x0 ]; then
+    if [ `grep -c '^[^C*].....[ ]*\bASSIGN\b' ${file}` -ne 0 ]; then
+      process_it=0
+    elif [ `grep -c '^[^C*].....[ ]*\bPAUSE\b' ${file}` -ne 0 ]; then
+      process_it=0
+    elif [ x"${file}" = x'FM719.f' ]; then
+      process_it=0
+    fi
+  fi
+
+  basename=`basename ${file} .f`
+
+  # If requested, run the test
+  if [ ${process_it} -eq 0 ]; then
+    echo "Skip ${basename}"
+  else
+    result="${basename}".reference_output
+    data="${basename}".reference_input
+
+    echo "Process ${basename}"
+
+    eval "${FC}" "${file}" "${EXECOPT}" a.out
+
+    # FM257 tests PAUSE
+    if [ x"${basename}" = xFM257 ]; then
+      if [ x"${EXE257}" = x0 ]; then
+        echo "Skip ${basename}"
+      else
+        {
+         cat <<__EOT__
+go
+
+
+
+__EOT__
+        } < /dev/null | \
+        ./a.out  > "${result}" &
+        pn=`ps | grep a.out | grep -v grep | sed 's/ *\([0-9]*\).*/\1/'`
+        kill -15 "${pn}"
+        kill -15 "${pn}"
+        kill -15 "${pn}"
+        kill -15 "${pn}"
+        kill -15 "${pn}"
+      fi
+    elif [ -f "${data}" ]; then
+      ./a.out < "${data}" > "${result}"
+    else
+      ./a.out > "${result}"
+    fi
+
+    # hard-coded to exit 0
+    echo "exit 0" >> "${result}"
+    
+    rm -f a.out
+  fi
+done
+
+rm -f fort.*
+echo "Finished."
+
+#
+# Possible error extraction
+#
+
+#grep -n 'FAIL' *.res | grep -v '0 TESTS FAILED' | grep -v 'TEST[ ]*PASS/FAIL'

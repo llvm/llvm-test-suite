@@ -82,6 +82,11 @@ function(llvm_test_traditional target)
     set(name ${target})
   endif()
 
+  # Find the reference input
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_input)
+    list(APPEND RUN_OPTIONS < ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_input)
+  endif()
+
   # Always run in the same directory as the executable
   list(INSERT RUN_OPTIONS 0 WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
   llvm_test_run(${RUN_OPTIONS})
