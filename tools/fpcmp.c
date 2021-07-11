@@ -257,8 +257,11 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
   char *data_b = load_file(path_b, &B_size);
 
   /* Fast path equivalent buffers. */
-  if (A_size == B_size && memcmp(data_a, data_b, A_size) == 0)
+  if (A_size == B_size && memcmp(data_a, data_b, A_size) == 0) {
+    free(data_a);
+    free(data_b);
     return 0;
+  }
 
   /* *** */
 
@@ -325,8 +328,11 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
     // Now that we are at the start of the numbers, compare them, exiting if
     // they don't match.
     if (CompareNumbers(F1NumStart, F2NumStart, F1NumEnd, F2NumEnd,
-                       absolute_tolerance, relative_tolerance))
+                       absolute_tolerance, relative_tolerance)) {
+      free(data_a);
+      free(data_b);
       return 1;
+    }
 
     // Numbers compare equal, continue after the numbers.
     F1P = F1NumEnd;
@@ -342,14 +348,21 @@ int diff_files_with_tolerance(const char *path_a, const char *path_b,
             "%s: FP Comparison failed, not a numeric difference between '%c' "
             "and '%c'\n",
             g_program, F1P[0], F2P[0]);
+    free(data_a);
+    free(data_b);
     return 1;
   }
   if (!F1AtEnd || !F2AtEnd) {
     fprintf(stderr,
             "%s: FP Comparison failed, unexpected end of one of the files\n",
             g_program);
+    free(data_a);
+    free(data_b);
     return 1;
   }
+
+  free(data_a);
+  free(data_b);
 
   return 0;
 }
