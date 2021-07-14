@@ -39,7 +39,7 @@ if (SUPPORTS_LEGACY)
   add_compile_options(-std=legacy)
 endif ()
 
-llvm_singlesource()
 set(FP_TOLERANCE 1.0e-11) # set by the most sensitive numerical test
+llvm_singlesource()
 
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
