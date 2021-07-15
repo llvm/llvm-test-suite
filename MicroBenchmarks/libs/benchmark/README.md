@@ -6,7 +6,6 @@
 [![test-bindings](https://github.com/google/benchmark/workflows/test-bindings/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Atest-bindings)
 
 [![Build Status](https://travis-ci.org/google/benchmark.svg?branch=master)](https://travis-ci.org/google/benchmark)
-[![Build status](https://ci.appveyor.com/api/projects/status/u0qsyp7t1tk7cpxs/branch/master?svg=true)](https://ci.appveyor.com/project/google/benchmark/branch/master)
 [![Coverage Status](https://coveralls.io/repos/google/benchmark/badge.svg)](https://coveralls.io/r/google/benchmark)
 
 
@@ -39,7 +38,8 @@ as some of the structural aspects of the APIs are similar.
 
 [Discussion group](https://groups.google.com/d/forum/benchmark-discuss)
 
-IRC channel: [freenode](https://freenode.net) #googlebenchmark
+IRC channels:
+* [libera](https://libera.chat) #benchmark
 
 [Additional Tooling Documentation](docs/tools.md)
 
@@ -227,6 +227,11 @@ can link to pthread by adding `-pthread` to your linker command. Note, you can
 also use `-lpthread`, but there are potential issues with ordering of command
 line parameters if you use that.
 
+On QNX, the pthread library is part of libc and usually included automatically
+(see
+[`pthread_create()`](https://www.qnx.com/developers/docs/7.1/index.html#com.qnx.doc.neutrino.lib_ref/topic/p/pthread_create.html)).
+There's no separate pthread library to link.
+
 ### Building with Visual Studio 2015 or 2017
 
 The `shlwapi` library (`-lshlwapi`) is required to support a call to `CPUInfo` which reads the registry. Either add `shlwapi.lib` under `[ Configuration Properties > Linker > Input ]`, or use the following:
@@ -298,6 +303,8 @@ too (`-lkstat`).
 [Manual Timing](#manual-timing)
 
 [Setting the Time Unit](#setting-the-time-unit)
+
+[Random Interleaving](docs/random_interleaving.md)
 
 [User-Requested Performance Counters](docs/perf_counters.md)
 
@@ -612,6 +619,23 @@ BENCHMARK(BM_SetInsert)
     ->Args({1<<10, 80})
     ->Args({3<<10, 80})
     ->Args({8<<10, 80});
+```
+
+For the most common scenarios, helper methods for creating a list of
+integers for a given sparse or dense range are provided.
+
+```c++
+BENCHMARK(BM_SetInsert)
+    ->ArgsProduct({
+      benchmark::CreateRange(8, 128, /*multi=*/2),
+      benchmark::CreateDenseRange(1, 4, /*step=*/1)
+    })
+// would generate the same benchmark arguments as
+BENCHMARK(BM_SetInsert)
+    ->ArgsProduct({
+      {8, 16, 32, 64, 128},
+      {1, 2, 3, 4}
+    });
 ```
 
 For more complex patterns of inputs, passing a custom function to `Apply` allows
@@ -1243,6 +1267,7 @@ int main(int argc, char** argv) {
       benchmark::RegisterBenchmark(test_input.name(), BM_test, test_input);
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
+  benchmark::Shutdown();
 }
 ```
 

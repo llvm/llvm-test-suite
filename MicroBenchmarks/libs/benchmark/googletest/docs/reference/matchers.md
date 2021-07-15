@@ -56,7 +56,7 @@ will be changed.
 `IsTrue` and `IsFalse` are useful when you need to use a matcher, or for types
 that can be explicitly converted to Boolean, but are not implicitly converted to
 Boolean. In other cases, you can use the basic
-[`EXPECT_TRUE` and `EXPECT_FALSE`](../primer.md#basic-assertions) assertions.
+[`EXPECT_TRUE` and `EXPECT_FALSE`](assertions.md#boolean) assertions.
 
 ## Floating-Point Matchers {#FpMatchers}
 
@@ -116,6 +116,7 @@ messages, you can use:
 | `BeginEndDistanceIs(m)` | `argument` is a container whose `begin()` and `end()` iterators are separated by a number of increments matching `m`. E.g. `BeginEndDistanceIs(2)` or `BeginEndDistanceIs(Lt(2))`. For containers that define a `size()` method, `SizeIs(m)` may be more efficient. |
 | `ContainerEq(container)` | The same as `Eq(container)` except that the failure message also includes which elements are in one container but not the other. |
 | `Contains(e)` | `argument` contains an element that matches `e`, which can be either a value or a matcher. |
+| `Contains(e).Times(n)` | `argument` contains elements that match `e`, which can be either a value or a matcher, and the number of matches is `n`, which can be either a value or a matcher. Unlike the plain `Contains` and `Each` this allows to check for arbitrary occurrences including testing for absence with `Contains(e).Times(0)`. |
 | `Each(e)` | `argument` is a container where *every* element matches `e`, which can be either a value or a matcher. |
 | `ElementsAre(e0, e1, ..., en)` | `argument` has `n + 1` elements, where the *i*-th element matches `ei`, which can be a value or a matcher. |
 | `ElementsAreArray({e0, e1, ..., en})`, `ElementsAreArray(a_container)`, `ElementsAreArray(begin, end)`, `ElementsAreArray(array)`, or `ElementsAreArray(array, count)` | The same as `ElementsAre()` except that the expected element values/matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
@@ -146,7 +147,6 @@ messages, you can use:
     one might write:
 
     ```cpp
-    using ::std::get;
     MATCHER(FooEq, "") {
       return std::get<0>(arg).Equals(std::get<1>(arg));
     }
@@ -237,6 +237,7 @@ You can make a matcher from one or more other matchers:
 | `AnyOf(m1, m2, ..., mn)` | `argument` matches at least one of the matchers `m1` to `mn`. |
 | `AnyOfArray({m0, m1, ..., mn})`, `AnyOfArray(a_container)`, `AnyOfArray(begin, end)`, `AnyOfArray(array)`, or `AnyOfArray(array, count)` | The same as `AnyOf()` except that the matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
 | `Not(m)` | `argument` doesn't match matcher `m`. |
+| `Conditional(cond, m1, m2)` | Matches matcher `m1` if `cond` evalutes to true, else matches `m2`.|
 
 ## Adapters for Matchers
 
@@ -259,7 +260,7 @@ which must be a permanent callback.
 
 ## Defining Matchers
 
-| Matcher                              | Description                           |
+| Macro                                | Description                           |
 | :----------------------------------- | :------------------------------------ |
 | `MATCHER(IsEven, "") { return (arg % 2) == 0; }` | Defines a matcher `IsEven()` to match an even number. |
 | `MATCHER_P(IsDivisibleBy, n, "") { *result_listener << "where the remainder is " << (arg % n); return (arg % n) == 0; }` | Defines a matcher `IsDivisibleBy(n)` to match a number divisible by `n`. |

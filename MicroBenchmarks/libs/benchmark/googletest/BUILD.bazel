@@ -39,6 +39,11 @@ licenses(["notice"])
 exports_files(["LICENSE"])
 
 config_setting(
+    name = "qnx",
+    constraint_values = ["@platforms//os:qnx"],
+)
+
+config_setting(
     name = "windows",
     constraint_values = ["@platforms//os:windows"],
 )
@@ -54,12 +59,6 @@ config_setting(
 config_setting(
     name = "has_absl",
     values = {"define": "absl=1"},
-)
-
-config_setting(
-    name = "ios",
-    values = {"apple_platform_type": "ios"},
-    visibility = [":__subpackages__"],
 )
 
 # Library that defines the FRIEND_TEST macro.
@@ -92,10 +91,7 @@ cc_library(
         "googlemock/include/gmock/*.h",
     ]),
     copts = select({
-        ":ios": [
-            "-xobjective-c++",
-            "-pthread",
-        ],
+        ":qnx": [],
         ":windows": [],
         "//conditions:default": ["-pthread"],
     }),
@@ -114,6 +110,7 @@ cc_library(
         "googletest/include",
     ],
     linkopts = select({
+        ":qnx": [],
         ":windows": [],
         "//conditions:default": ["-pthread"],
     }),

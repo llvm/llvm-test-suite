@@ -135,7 +135,7 @@ struct ValueUnion {
   template <class T, int N>
   std::array<T, N> GetAsArray() {
     const int ArrSize = sizeof(T) * N;
-    CHECK_LE(ArrSize, Size);
+    BM_CHECK_LE(ArrSize, Size);
     std::array<T, N> Arr;
     std::memcpy(Arr.data(), data(), ArrSize);
     return Arr;
@@ -545,7 +545,7 @@ double GetCPUCyclesPerSecond(CPUInfo::Scaling scaling) {
   // cannot always be relied upon. The same reasons apply to /proc/cpuinfo as
   // well.
   if (ReadFromFile("/sys/devices/system/cpu/cpu0/tsc_freq_khz", &freq)
-      // If CPU scaling is disabled, use the the *current* frequency.
+      // If CPU scaling is disabled, use the *current* frequency.
       // Note that we specifically don't want to read cpuinfo_cur_freq,
       // because it is only readable by root.
       || (scaling == CPUInfo::Scaling::DISABLED &&

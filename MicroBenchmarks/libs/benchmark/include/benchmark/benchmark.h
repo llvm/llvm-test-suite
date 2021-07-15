@@ -42,6 +42,7 @@ BENCHMARK(BM_StringCopy);
 int main(int argc, char** argv) {
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
+  benchmark::Shutdown();
   return 0;
 }
 
@@ -186,6 +187,7 @@ BENCHMARK(BM_test)->Unit(benchmark::kMillisecond);
 #include <vector>
 
 #if defined(BENCHMARK_HAS_CXX11)
+#include <atomic>
 #include <initializer_list>
 #include <type_traits>
 #include <utility>
@@ -274,6 +276,7 @@ class BenchmarkReporter;
 class MemoryManager;
 
 void Initialize(int* argc, char** argv);
+void Shutdown();
 
 // Report to stdout all arguments in 'argv' as unrecognized except the first.
 // Returns true there is at least on unrecognized argument (i.e. 'argc' > 1).
@@ -325,6 +328,14 @@ BENCHMARK_UNUSED static int stream_init_anchor = InitializeStreams();
 #define BENCHMARK_HAS_NO_INLINE_ASSEMBLY
 #endif
 
+// Force the compiler to flush pending writes to global memory. Acts as an
+// effective read/write barrier
+#ifdef BENCHMARK_HAS_CXX11
+inline BENCHMARK_ALWAYS_INLINE void ClobberMemory() {
+  std::atomic_signal_fence(std::memory_order_acq_rel);
+}
+#endif
+
 // The DoNotOptimize(...) function can be used to prevent a value or
 // expression from being optimized away by the compiler. This function is
 // intended to add little to no overhead.
@@ -344,11 +355,11 @@ inline BENCHMARK_ALWAYS_INLINE void DoNotOptimize(Tp& value) {
 #endif
 }
 
-// Force the compiler to flush pending writes to global memory. Acts as an
-// effective read/write barrier
+#ifndef BENCHMARK_HAS_CXX11
 inline BENCHMARK_ALWAYS_INLINE void ClobberMemory() {
   asm volatile("" : : : "memory");
 }
+#endif
 #elif defined(_MSC_VER)
 template <class Tp>
 inline BENCHMARK_ALWAYS_INLINE void DoNotOptimize(Tp const& value) {
@@ -356,13 +367,15 @@ inline BENCHMARK_ALWAYS_INLINE void DoNotOptimize(Tp const& value) {
   _ReadWriteBarrier();
 }
 
+#ifndef BENCHMARK_HAS_CXX11
 inline BENCHMARK_ALWAYS_INLINE void ClobberMemory() { _ReadWriteBarrier(); }
+#endif
 #else
 template <class Tp>
 inline BENCHMARK_ALWAYS_INLINE void DoNotOptimize(Tp const& value) {
   internal::UseCharPointer(&reinterpret_cast<char const volatile&>(value));
 }
-// FIXME Add ClobberMemory() for non-gnu and non-msvc compilers
+// FIXME Add ClobberMemory() for non-gnu and non-msvc compilers, before C++11.
 #endif
 
 // This class is used for user-defined counters.
@@ -1314,6 +1327,7 @@ class Fixture : public internal::Benchmark {
     ::benchmark::Initialize(&argc, argv);                               \
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) return 1; \
     ::benchmark::RunSpecifiedBenchmarks();                              \
+    ::benchmark::Shutdown();                                            \
     return 0;                                                           \
   }                                                                     \
   int main(int, char**)
@@ -1418,6 +1432,8 @@ class BenchmarkReporter {
 
     std::string benchmark_name() const;
     BenchmarkName run_name;
+    int64_t family_index;
+    int64_t per_family_instance_index;
     RunType run_type;
     std::string aggregate_name;
     std::string report_label;  // Empty if not set by benchmark.
@@ -1465,6 +1481,19 @@ class BenchmarkReporter {
     bool has_memory_result;
     double allocs_per_iter;
     int64_t max_bytes_used;
+  };
+
+  struct PerFamilyRunReports {
+    PerFamilyRunReports() : num_runs_total(0), num_runs_done(0) {}
+
+    // How many runs will all instances of this benchmark perform?
+    int num_runs_total;
+
+    // How many runs have happened already?
+    int num_runs_done;
+
+    // The reports about (non-errneous!) runs of this family.
+    std::vector<BenchmarkReporter::Run> Runs;
   };
 
   // Construct a BenchmarkReporter with the output stream set to 'std::cout'
@@ -1630,6 +1659,21 @@ inline double GetTimeUnitMultiplier(TimeUnit unit) {
   }
   BENCHMARK_UNREACHABLE();
 }
+
+// Creates a list of integer values for the given range and multiplier.
+// This can be used together with ArgsProduct() to allow multiple ranges
+// with different multiplers.
+// Example:
+// ArgsProduct({
+//   CreateRange(0, 1024, /*multi=*/32),
+//   CreateRange(0, 100, /*multi=*/4),
+//   CreateDenseRange(0, 4, /*step=*/1),
+// });
+std::vector<int64_t> CreateRange(int64_t lo, int64_t hi, int multi);
+
+// Creates a list of integer values for the given range and step.
+std::vector<int64_t> CreateDenseRange(int64_t start, int64_t limit,
+                                      int step);
 
 }  // namespace benchmark
 
