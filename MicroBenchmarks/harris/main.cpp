@@ -7,7 +7,7 @@ int sum = 0;
 
 // This function initializes the input image to checkbox image
 void initCheckboardImage(int height, int width,
-                         float image[(2 + HEIGHT)][2 + WIDTH]) {
+                         float image[4 + HEIGHT][4 + WIDTH]) {
   int last_pixel_x = 0;
   int last_pixel_y = 0;
   for (int i = 0; i < height; i++) {
@@ -29,12 +29,12 @@ void initCheckboardImage(int height, int width,
 }
 
 // Writes image matrix to a file.
-void printImage(int height, int width, float arr[(2 + HEIGHT)][2 + WIDTH],
+void printImage(int height, int width, float arr[HEIGHT][WIDTH],
                 int dummy) {
   std::ofstream myfile;
   myfile.open("output.txt");
-  for (int i = 0; i < height - 2; i++) {
-    for (int j = 0; j < width - 2; j++) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
       if (arr[i][j] < 0) {
         myfile << 0;
       } else if (arr[i][j] > 255) {
@@ -58,25 +58,25 @@ void BENCHMARK_HARRIS(benchmark::State &state) {
   int height = state.range(0);
   int width = state.range(1);
 
-  float(*image)[HEIGHT + 2][WIDTH + 2];
-  image = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  initCheckboardImage((HEIGHT + 2), (WIDTH + 2), *image);
+  float(*image)[HEIGHT + 4][WIDTH + 4];
+  image = (float(*)[HEIGHT + 4][WIDTH + 4])
+      malloc(sizeof(float) * (4 + HEIGHT) * (4 + WIDTH));
+  initCheckboardImage(HEIGHT + 4, WIDTH + 4, *image);
 
-  float(*imageOutput)[2 + HEIGHT][2 + WIDTH];
-  imageOutput = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
+  float(*imageOutput)[HEIGHT][WIDTH];
+  imageOutput = (float(*)[HEIGHT][WIDTH])
+      malloc(sizeof(float) * HEIGHT * WIDTH);
 
   float(*Ix)[2 + HEIGHT][2 + WIDTH];
   float(*Iy)[2 + HEIGHT][2 + WIDTH];
   float(*Ixx)[2 + HEIGHT][2 + WIDTH];
   float(*Ixy)[2 + HEIGHT][2 + WIDTH];
   float(*Iyy)[2 + HEIGHT][2 + WIDTH];
-  float(*Sxx)[2 + HEIGHT][2 + WIDTH];
-  float(*Sxy)[2 + HEIGHT][2 + WIDTH];
-  float(*Syy)[2 + HEIGHT][2 + WIDTH];
-  float(*det)[2 + HEIGHT][2 + WIDTH];
-  float(*trace)[2 + HEIGHT][2 + WIDTH];
+  float(*Sxx)[HEIGHT][WIDTH];
+  float(*Sxy)[HEIGHT][WIDTH];
+  float(*Syy)[HEIGHT][WIDTH];
+  float(*det)[HEIGHT][WIDTH];
+  float(*trace)[HEIGHT][WIDTH];
 
   Ix = (float(*)[2 + HEIGHT][2 + WIDTH])
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
@@ -88,16 +88,11 @@ void BENCHMARK_HARRIS(benchmark::State &state) {
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
   Iyy = (float(*)[2 + HEIGHT][2 + WIDTH])
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Sxx = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Sxy = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Syy = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  det = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  trace = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
+  Sxx = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  Sxy = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  Syy = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  det = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  trace = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
 
   harrisKernel(height, width, *image, *imageOutput, *Ix, *Iy, *Ixx, *Ixy, *Iyy,
                *Sxx, *Sxy, *Syy, *det, *trace);
@@ -118,14 +113,13 @@ void BENCHMARK_HARRIS(benchmark::State &state) {
   free((void *)det);
   free((void *)trace);
 
-  for (int i = 0; i < height + 2; i++) {
-    for (int j = 0; j < width + 2; j++) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
       sum = (sum + 1) & (int)(*imageOutput)[i][j];
     }
   }
 
-  state.SetBytesProcessed(sizeof(float) * (height + 2) * (width + 2) *
-                          state.iterations());
+  state.SetBytesProcessed(sizeof(float) * height * width * state.iterations());
 
   free((void *)imageOutput);
   free((void *)image);
@@ -149,25 +143,25 @@ int main(int argc, char *argv[]) {
 #endif
 
   // Extra Call to verify output of kernel
-  float(*image)[HEIGHT + 2][WIDTH + 2];
-  image = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  initCheckboardImage((HEIGHT + 2), (WIDTH + 2), *image);
+  float(*image)[HEIGHT + 4][WIDTH + 4];
+  image = (float(*)[HEIGHT + 4][WIDTH + 4])
+      malloc(sizeof(float) * (HEIGHT + 4) * (WIDTH + 4));
+  initCheckboardImage(HEIGHT + 4, WIDTH + 4, *image);
 
-  float(*imageOutput)[2 + HEIGHT][2 + WIDTH];
-  imageOutput = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
+  float(*imageOutput)[HEIGHT][WIDTH];
+  imageOutput = (float(*)[HEIGHT][WIDTH])
+      malloc(sizeof(float) * HEIGHT * WIDTH);
 
   float(*Ix)[2 + HEIGHT][2 + WIDTH];
   float(*Iy)[2 + HEIGHT][2 + WIDTH];
   float(*Ixx)[2 + HEIGHT][2 + WIDTH];
   float(*Ixy)[2 + HEIGHT][2 + WIDTH];
   float(*Iyy)[2 + HEIGHT][2 + WIDTH];
-  float(*Sxx)[2 + HEIGHT][2 + WIDTH];
-  float(*Sxy)[2 + HEIGHT][2 + WIDTH];
-  float(*Syy)[2 + HEIGHT][2 + WIDTH];
-  float(*det)[2 + HEIGHT][2 + WIDTH];
-  float(*trace)[2 + HEIGHT][2 + WIDTH];
+  float(*Sxx)[HEIGHT][WIDTH];
+  float(*Sxy)[HEIGHT][WIDTH];
+  float(*Syy)[HEIGHT][WIDTH];
+  float(*det)[HEIGHT][WIDTH];
+  float(*trace)[HEIGHT][WIDTH];
 
   Ix = (float(*)[2 + HEIGHT][2 + WIDTH])
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
@@ -179,16 +173,11 @@ int main(int argc, char *argv[]) {
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
   Iyy = (float(*)[2 + HEIGHT][2 + WIDTH])
       malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Sxx = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Sxy = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  Syy = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  det = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
-  trace = (float(*)[2 + HEIGHT][2 + WIDTH])
-      malloc(sizeof(float) * (2 + HEIGHT) * (2 + WIDTH));
+  Sxx = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  Sxy = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  Syy = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  det = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
+  trace = (float(*)[HEIGHT][WIDTH])malloc(sizeof(float) * HEIGHT * WIDTH);
 
   harrisKernel(HEIGHT, WIDTH, *image, *imageOutput, *Ix, *Iy, *Ixx, *Ixy, *Iyy,
                *Sxx, *Sxy, *Syy, *det, *trace);
@@ -205,9 +194,9 @@ int main(int argc, char *argv[]) {
   free((void *)trace);
 
   if (argc == 2) {
-    printImage(HEIGHT + 2, WIDTH + 2, *imageOutput, sum);
+    printImage(HEIGHT, WIDTH, *imageOutput, sum);
   } else {
-    printImage(HEIGHT + 2, WIDTH + 2, *imageOutput, -1);
+    printImage(HEIGHT, WIDTH, *imageOutput, -1);
   }
 
   free((void *)image);
