@@ -74,7 +74,7 @@ macro(create_hip_tests)
     get_version(_RocmVersion ${_RocmPath})
     set(_HIP_Suffix "hip-${_RocmVersion}")
     # Set up HIP test flags
-    set(_HIP_CPPFLAGS -xhip --hip-device-lib-path=${_RocmPath}/amdgcn/bitcode
+    set(_HIP_CPPFLAGS -D__HIP_ROCclr__ -xhip --hip-device-lib-path=${_RocmPath}/amdgcn/bitcode
                       -I${_RocmPath}/include)
     set(_HIP_LDFLAGS -L${_RocmPath}/lib -lamdhip64)
     set(_HIP_Libs amdhip64-${RocmVersion})
