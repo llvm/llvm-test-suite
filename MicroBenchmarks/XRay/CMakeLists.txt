@@ -1,8 +1,13 @@
-add_subdirectory(ReturnReference)
-if(NOT TARGET_OS STREQUAL "Darwin")
-  # FDRMode test is failing on Darwin because
-  # `__xray_log_select_mode("xray-fdr")` returns `XRAY_MODE_NOT_FOUND`.
-  #
-  # Disable the test until it is fixed. rdar://problem/44578416
+include(CheckIncludeFiles)
+
+check_cxx_compiler_flag(-fxray-instrument COMPILER_HAS_FXRAY_INSTRUMENT)
+check_include_files("xray/xray_interface.h" HAVE_XRAY_INTERFACE_INCLUDE LANGUAGE CXX)
+
+if(COMPILER_HAS_FXRAY_INSTRUMENT AND HAVE_XRAY_INTERFACE_INCLUDE AND ARCH STREQUAL "x86" AND NOT TARGET_OS STREQUAL "Darwin")
+  message(STATUS "XRay tests enabled")
+
+  add_subdirectory(ReturnReference)
   add_subdirectory(FDRMode)
+else()
+  message(STATUS "Compiler does not support XRay; tests disabled")
 endif()
