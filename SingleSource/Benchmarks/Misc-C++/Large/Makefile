@@ -1,4 +1,5 @@
 LEVEL = ../../../..
+CPPFLAGS += -ffp-contract=off -DFMA_DISABLED=1
 LDFLAGS += -lm -lstdc++
 LIBS = -lstdc++
 FP_ABSTOLERANCE := 0.01

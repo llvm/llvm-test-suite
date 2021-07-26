@@ -3,6 +3,8 @@
 DIRS = 
 LEVEL = ../../../..
 FP_TOLERANCE := 0.016
+CPPFLAGS   += -ffp-contract=off -DFMA_DISABLED=1
+
 LDFLAGS += -lm
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc
