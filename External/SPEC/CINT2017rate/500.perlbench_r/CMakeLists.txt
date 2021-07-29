@@ -6,6 +6,10 @@ endif ()
 
 speccpu2017_benchmark(RATE)
 
+if (TARGET_OS STREQUAL "Darwin")
+  add_definitions(-DSPEC_MACOSX_X64)
+endif ()
+
 add_definitions(
   -DPERL_CORE
   -DDOUBLE_SLASHES_SPECIAL=0
