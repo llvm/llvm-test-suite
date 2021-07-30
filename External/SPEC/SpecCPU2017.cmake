@@ -352,9 +352,11 @@ macro(speccpu2017_prepare_rundir)
     llvm_copy_dir(${PROG} "${RUN_${_runtype}_DIR}" "${INPUT_${_runtype}_DIR}")
 
     file(MAKE_DIRECTORY "${RUN_${_runtype}_DIR}/compare")
-    llvm_copy_dir(${PROG} "${RUN_${_runtype}_DIR}/compare" "${OUTPUT_${_runtype}_DIR}")
+    llvm_copy_dir(${PROG}
+      "${RUN_${_runtype}_DIR}/compare" "${OUTPUT_${_runtype}_DIR}")
     if (EXISTS "${OUTPUT_${_runtype}_DIR}/../compare")
-        llvm_copy_dir(${PROG} "${RUN_${_runtype}_DIR}/compare" "${OUTPUT_${_runtype}_DIR}/../compare")
+        llvm_copy_dir(${PROG}
+          "${RUN_${_runtype}_DIR}/compare" "${OUTPUT_${_runtype}_DIR}/../compare")
     endif ()
   endforeach ()
 endmacro()
