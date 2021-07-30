@@ -260,6 +260,7 @@ macro(speccpu2017_validate_image _imgfile _cmpfile _outfile)
     add_executable(${VALIDATOR} ${_validator_sources})
     target_link_libraries(${VALIDATOR} m)
     set_target_properties(${VALIDATOR} PROPERTIES COMPILE_FLAGS "-DSPEC")
+    add_dependencies(${VALIDATOR} build-timeit)
     add_dependencies(${VALIDATOR} build-timeit-target)
   endif ()
 
