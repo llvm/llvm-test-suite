@@ -14,7 +14,6 @@ link_libraries(-lm)
 
 speccpu2017_run_test(
   hkrdenq 1930344093 1000
-  WORKDIR input
   STDOUT hkrdenq.out
   RUN_TYPE test
 )
@@ -23,14 +22,12 @@ speccpu2017_run_test(
 
 speccpu2017_run_test(
   aminos 391519156 1000
-  WORKDIR input
   STDOUT aminos.out
   RUN_TYPE train
 )
 
 speccpu2017_run_test(
   gcn4dna 1850041461 300
-  WORKDIR input
   STDOUT gcn4dna.out
   RUN_TYPE train
 )
@@ -39,7 +36,6 @@ speccpu2017_run_test(
 
 speccpu2017_run_test(
   1am0 1122214447 122
-  WORKDIR input
   STDOUT 1am0.out
   RUN_TYPE ref
   SUITE_TYPE rate
@@ -70,3 +66,4 @@ speccpu2017_add_executable(
   regex-alpha/regexec.c
   regex-alpha/regfree.c
 )
+speccpu2017_prepare_rundir()

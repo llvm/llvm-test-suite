@@ -34,7 +34,6 @@ speccpu2017_add_include_dirs(
 speccpu2017_run_test(
   -v test.xml xalanc.xsl
   STDOUT test-test.out
-  WORKDIR input
   RUN_TYPE test
 )
 
@@ -43,7 +42,6 @@ speccpu2017_run_test(
 speccpu2017_run_test(
   -v allbooks.xml xalanc.xsl
   STDOUT train-allbooks.out
-  WORKDIR input
   RUN_TYPE train
 )
 
@@ -52,7 +50,6 @@ speccpu2017_run_test(
 speccpu2017_run_test(
   -v t5.xml xalanc.xsl
   STDOUT ref-t5.out
-  WORKDIR input
   RUN_TYPE ref
 )
 
@@ -818,4 +815,4 @@ speccpu2017_add_executable(
   YearDatatypeValidator.cpp
   YearMonthDatatypeValidator.cpp
 )
-
+speccpu2017_prepare_rundir()

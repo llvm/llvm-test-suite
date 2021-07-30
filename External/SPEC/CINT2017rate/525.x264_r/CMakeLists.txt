@@ -174,6 +174,7 @@ set(ldecod_SourceNames
   ldecod_src/biaridecod.c
   ldecod_src/input.c
 )
+speccpu2017_prepare_rundir()
 set(ldecod_Sources)
 foreach (_file IN LISTS ldecod_SourceNames)
   list(APPEND ldecod_Sources "${SRC_DIR}/${_file}")

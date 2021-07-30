@@ -13,7 +13,6 @@ link_libraries(-lm)
 speccpu2017_run_test(
   20 reference.dat 0 1 100_100_130_cf_a.of
   STDOUT lbm.out
-  WORKDIR input
   RUN_TYPE test
   SUITE_TYPE rate
 )
@@ -23,7 +22,6 @@ speccpu2017_run_test(
 speccpu2017_run_test(
   300 reference.dat 0 1 100_100_130_cf_b.of
   STDOUT lbm.out
-  WORKDIR input
   RUN_TYPE train
   SUITE_TYPE rate
 )
@@ -33,7 +31,6 @@ speccpu2017_run_test(
 speccpu2017_run_test(
   3000 reference.dat 0 0 100_100_130_ldc.of
   STDOUT lbm.out
-  WORKDIR input
   RUN_TYPE ref
   SUITE_TYPE rate
 )
@@ -44,3 +41,4 @@ speccpu2017_run_test(
 # while the program output also uses spaces for indention.
 speccpu2017_verify_output(ABSOLUTE_TOLERANCE 0.0000001 IGNORE_WHITESPACE)
 speccpu2017_add_executable()
+speccpu2017_prepare_rundir()
