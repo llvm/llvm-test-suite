@@ -7,10 +7,10 @@
 
 // Initialize arrays A, B and T with random numbers.
 template <typename T> static void init_data(T *A, unsigned N) {
-  std::uniform_real_distribution<T> dist(-100, 100);
+  std::uniform_real_distribution<> dist(-100, 100);
   std::mt19937 rng(12345);
   for (unsigned i = 0; i < N; i++)
-    A[i] = dist(rng);
+    A[i] = (T)dist(rng);
 }
 
 template <unsigned N, typename T>
