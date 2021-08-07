@@ -276,6 +276,20 @@ void runBatch(char *configFile, Configuration *config)
     printf ("\n\nSearches complete.\n");
 }
 
+void mygets(char *str, size_t n)
+{
+    size_t len;
+
+    if ( fgets(str, n, stdin) == NULL )
+    {
+        printf("Error: No input provided.\n\n\t---Exiting---");
+        exit(0);
+    }
+
+    len = strlen(str);
+    if ( len > 0 && str[len - 1] == '\n' )
+        str[len - 1] = '\0';
+}
 
 void runInteractively(char *fileName, Configuration *config)
 {
@@ -299,7 +313,7 @@ void runInteractively(char *fileName, Configuration *config)
         do {
 
             printf("\nPlease insert a node label for this signature (\"\" to complete, \"bail\" to exit):\n");
-            gets(stringBuffer);
+            mygets(stringBuffer, sizeof stringBuffer);
 
             if ( strcmp (stringBuffer, "bail") == 0 )
                 exit(1);
