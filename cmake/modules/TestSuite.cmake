@@ -108,6 +108,7 @@ function(test_suite_add_build_dependencies target)
     build-timeit-target
     build-fpcmp
     build-fpcmp-target
+    build-litsupport
   )
 endfunction()
 

@@ -1,7 +1,10 @@
 import sys
+import os
 
-config.test_source_root = "@CMAKE_BINARY_DIR@"
-config.test_exec_root = "@CMAKE_BINARY_DIR@"
+_directory =  os.path.dirname(os.path.abspath(__file__))
+
+config.test_source_root = _directory
+config.test_exec_root = _directory
 config.remote_client = "@TEST_SUITE_REMOTE_CLIENT@"
 config.remote_host = "@TEST_SUITE_REMOTE_HOST@"
 config.run_under = "@TEST_SUITE_RUN_UNDER@"
@@ -11,4 +14,4 @@ config.profile_generate = @TEST_SUITE_PROFILE_GENERATE@
 config.llvm_profdata = "@TEST_SUITE_LLVM_PROFDATA@"
 config.test_modules = "@LIT_MODULES@".split(';')
 
-lit_config.load_config(config, "@CMAKE_SOURCE_DIR@/lit.cfg")
+lit_config.load_config(config, os.path.join(_directory, "lit.cfg"))

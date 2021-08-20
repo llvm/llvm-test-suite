@@ -292,6 +292,8 @@ if (TEST_SUITE_USER_MODE_EMULATION)
   set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 endif()
 
+add_subdirectory(litsupport)
+
 option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" ON)
 if(TEST_SUITE_COLLECT_COMPILE_TIME)
@@ -324,15 +326,13 @@ if(NOT TEST_SUITE_SUBDIRS)
   set(TEST_SUITE_SUBDIRS "")
   foreach(entry ${sub_cmakelists})
     get_filename_component(subdir ${entry} DIRECTORY)
-	 # Exclude tools and CTMark from default list
-    if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark)
-      list(APPEND TEST_SUITE_SUBDIRS ${subdir})
-    endif()
-    # Exclude Fortran tests unless explicitly activated
-    if(NOT TEST_SUITE_FORTRAN)
-      list(REMOVE_ITEM TEST_SUITE_SUBDIRS Fortran)
-    endif()
+    list(APPEND TEST_SUITE_SUBDIRS ${subdir})
   endforeach()
+  # Drop things we do not want to be automatically added.
+  list(REMOVE_ITEM TEST_SUITE_SUBDIRS litsupport tools CTMark)
+  if(NOT TEST_SUITE_FORTRAN)
+    list(REMOVE_ITEM TEST_SUITE_SUBDIRS Fortran)
+  endif()
   set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}")
 endif()
 set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
