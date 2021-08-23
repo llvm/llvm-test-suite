@@ -299,7 +299,7 @@ macro(create_cuda_tests)
         get_version(_GccVersion ${_GccPath})
         set(_Gcc_Suffix "libstdc++-${_GccVersion}")
         # Tell clang to use libstdc++ and where to find it.
-        set(_Stdlib_CPPFLAGS -stdlib=libstdc++ -gcc-toolchain ${_GccPath})
+        set(_Stdlib_CPPFLAGS -stdlib=libstdc++ --gcc-toolchain=${_GccPath})
         set(_Stdlib_LDFLAGS  -stdlib=libstdc++)
         # Add libstdc++ as link dependency.
         set(_Stdlib_Libs libstdcxx-${_GccVersion})
