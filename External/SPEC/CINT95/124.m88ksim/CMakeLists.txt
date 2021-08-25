@@ -111,11 +111,11 @@ endforeach()
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
-    -c < ${CTLFILE} > ${CMAKE_CURRENT_BINARY_DIR}/${run_type}.out
+    WORKDIR %S/data/${run_type}/input
+    -c < ${CTLFILE} > %S/${run_type}.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/${run_type}.out ${run_type}.out
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/${run_type}.out %S/${run_type}.out
   )
 endmacro()
 

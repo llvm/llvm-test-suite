@@ -37,8 +37,8 @@ macro(create_one_local_test_f Name FileGlob FilterRegex
     # Verify reference output if it exists.
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
       set(REFERENCE_OUTPUT ${Name}.reference_output)
-      llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-        ${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
+      llvm_test_verify(WORKDIR %S
+        %b/${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
       )
       llvm_test_executable(${_executable} ${_sources})
       llvm_test_data(${_executable}

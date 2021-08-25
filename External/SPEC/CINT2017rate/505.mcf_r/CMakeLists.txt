@@ -11,7 +11,7 @@ speccpu2017_add_include_dirs(spec_qsort)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${RUN_test_DIR}/inp.in"
+  "${RUN_test_DIR_REL}/inp.in"
   STDOUT inp.out
   RUN_TYPE test
 )
@@ -19,7 +19,7 @@ speccpu2017_run_test(
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${RUN_train_DIR}/inp.in"
+  "${RUN_train_DIR_REL}/inp.in"
   STDOUT inp.out
   RUN_TYPE train
 )
@@ -27,7 +27,7 @@ speccpu2017_run_test(
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${RUN_ref_DIR}/inp.in"
+  "${RUN_ref_DIR_REL}/inp.in"
   STDOUT inp.out
   RUN_TYPE ref
 )

@@ -13,13 +13,13 @@ endif()
 LIST(APPEND CFLAGS -fwrapv)
 
 macro(test_input run_type heapsize)
-  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR %S
     -l data/all/input -q -m ${heapsize}
     < data/${run_type}/input/${run_type}.in
     > ${run_type}.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r 0.01 data/${run_type}/output/${run_type}.out ${run_type}.out
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r 0.01 %S/data/${run_type}/output/${run_type}.out %S/${run_type}.out
   )
 endmacro()
 

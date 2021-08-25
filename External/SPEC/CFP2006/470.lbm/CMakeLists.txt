@@ -4,14 +4,14 @@ list(APPEND LDFLAGS -lm)
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     ${ARGN}
-    > ${CMAKE_CURRENT_BINARY_DIR}/lbm.out
+    > %S/lbm.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -a 0.0000001
-    data/${run_type}/output/lbm.out
-    lbm.out
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -a 0.0000001
+    %S/data/${run_type}/output/lbm.out
+    %S/lbm.out
   )
 endmacro()
 

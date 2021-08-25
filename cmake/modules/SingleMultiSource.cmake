@@ -60,9 +60,7 @@ function(llvm_multisource target)
 endfunction()
 
 macro(llvm_test_verify_hash_program_output _file)
-  llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/tools/HashProgramOutput.sh ${_file}
-  )
+  llvm_test_verify(%b/HashProgramOutput.sh ${_file})
 endmacro()
 
 # Sets Var to ${name} with directory and shortest extension removed.
@@ -84,11 +82,12 @@ function(llvm_test_traditional target)
 
   # Find the reference input
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_input)
-    list(APPEND RUN_OPTIONS < ${CMAKE_CURRENT_SOURCE_DIR}/${name}.reference_input)
+    list(APPEND RUN_OPTIONS < %S/${name}.reference_input)
+    llvm_test_data(${target} ${name}.reference_input)
   endif()
 
   # Always run in the same directory as the executable
-  list(INSERT RUN_OPTIONS 0 WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
+  list(INSERT RUN_OPTIONS 0 WORKDIR %S)
   llvm_test_run(${RUN_OPTIONS})
 
   # Hash if we've been asked to.
@@ -120,16 +119,14 @@ function(llvm_test_traditional target)
   endif()
 
   if(REFERENCE_OUTPUT)
-    set(DIFFPROG ${FPCMP})
+    set(DIFFPROG %b/${FPCMP})
     if(FP_TOLERANCE)
       set(DIFFPROG "${DIFFPROG} -r ${FP_TOLERANCE}")
     endif()
     if(FP_ABSTOLERANCE)
       set(DIFFPROG "${DIFFPROG} -a ${FP_ABSTOLERANCE}")
     endif()
-    llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-      ${DIFFPROG} %o ${REFERENCE_OUTPUT}
-    )
+    llvm_test_verify(${DIFFPROG} %o %S/${REFERENCE_OUTPUT})
     llvm_test_data(${target} ${REFERENCE_OUTPUT})
   endif()
   set(TESTSCRIPT "${TESTSCRIPT}" PARENT_SCOPE)

@@ -17,14 +17,14 @@ foreach(FILENAME ${SourceNames})
 endforeach()
 
 macro(test_input run_type iters)
-  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR %S
     --input data/all/input/namd.input
     --iterations ${iters}
     --output namd.out
     > namd.stdout
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -a 0.00001 data/${run_type}/output/namd.out namd.out
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -a 0.00001 %S/data/${run_type}/output/namd.out %S/namd.out
   )
 endmacro()
 

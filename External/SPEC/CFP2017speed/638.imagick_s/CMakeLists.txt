@@ -9,7 +9,7 @@ speccpu2017_benchmark(SPEED ORIGIN 538.imagick_r)
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  -limit disk 0 "${RUN_ref_DIR}/refspeed_input.tga" -resize 817%
+  -limit disk 0 "${RUN_ref_DIR_REL}/refspeed_input.tga" -resize 817%
   -rotate -2.76 -shave 540x375 -alpha remove -auto-level -contrast-stretch 1x1%
   -colorspace Lab -channel R -equalize +channel -colorspace sRGB
   -define histogram:unique-colors=false -adaptive-blur 0x5 -despeckle

@@ -64,14 +64,14 @@ endforeach()
 
 macro(test_input run_type frames)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     -frames ${frames} -meshfile mesa.in -ppmfile mesa.ppm
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/mesa.log data/${run_type}/input/mesa.log
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/mesa.log %S/data/${run_type}/input/mesa.log
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -a 6.0 data/${run_type}/output/mesa.ppm data/${run_type}/input/mesa.ppm
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -a 6.0 %S/data/${run_type}/output/mesa.ppm %S/data/${run_type}/input/mesa.ppm
   )
 endmacro()
 

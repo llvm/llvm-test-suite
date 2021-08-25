@@ -1,11 +1,11 @@
 macro(test_input run_type input output size0 size1)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     ${size0} ${size1} ${input}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${output}
+    > %S/${output}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/${output} ${output}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/${output} %S/${output}
   )
 endmacro()
 

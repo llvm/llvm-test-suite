@@ -11,21 +11,21 @@ speccpu2017_add_include_dirs(include .)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${RUN_test_DIR}/test.prm"
+  "${RUN_test_DIR_REL}/test.prm"
   RUN_TYPE test
 )
 
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${RUN_train_DIR}/train.prm"
+  "${RUN_train_DIR_REL}/train.prm"
   RUN_TYPE train
 )
 
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${RUN_ref_DIR}/ref.prm"
+  "${RUN_ref_DIR_REL}/ref.prm"
   RUN_TYPE ref
 )
 

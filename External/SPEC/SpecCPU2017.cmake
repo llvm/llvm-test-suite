@@ -102,6 +102,7 @@ macro (speccpu2017_benchmark)
     # Create benchmark working directories.
     foreach (_run_type IN LISTS TEST_SUITE_RUN_TYPE)
       set(RUN_${_run_type}_DIR "${CMAKE_CURRENT_BINARY_DIR}/run_${_run_type}")
+      set(RUN_${_run_type}_DIR_REL "%S/run_${_run_type}")
       file(MAKE_DIRECTORY ${RUN_${_run_type}_DIR})
     endforeach ()
 
@@ -223,25 +224,24 @@ macro (speccpu2017_run_test)
 
       set(_stdout)
       if (DEFINED _arg_STDOUT)
-        set(_stdout > "${RUN_${_arg_RUN_TYPE}_DIR}/${_arg_STDOUT}")
+        set(_stdout > "${RUN_${_arg_RUN_TYPE}_DIR_REL}/${_arg_STDOUT}")
       endif ()
 
       set(_stderr)
       if (DEFINED _arg_STDERR)
-        set(_stderr 2> "${RUN_${_arg_RUN_TYPE}_DIR}/${_arg_STDERR}")
+        set(_stderr 2> "${RUN_${_arg_RUN_TYPE}_DIR_REL}/${_arg_STDERR}")
       endif ()
 
-      set(_workdir "${RUN_${_arg_RUN_TYPE}_DIR}")
       # perlbench, xalancbmk need to be invoked with relative paths
       # (SPEC made modifications that prepend another path to find the rundir)
-     file(RELATIVE_PATH _executable
-          "${_workdir}" "${CMAKE_CURRENT_BINARY_DIR}/${PROG}")
+      file(RELATIVE_PATH _executable
+          "${RUN_${_arg_RUN_TYPE}_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/${PROG}")
       set (_executable EXECUTABLE "${_executable}")
 
       llvm_test_run(
         ${_arg_UNPARSED_ARGUMENTS} ${_stdout} ${_stderr}
         RUN_TYPE ${_arg_RUN_TYPE}
-        WORKDIR "${_workdir}"
+        WORKDIR "${RUN_${_arg_RUN_TYPE}_DIR_REL}"
         ${_executable}
       )
     endif ()
@@ -268,10 +268,10 @@ macro(speccpu2017_validate_image _imgfile _cmpfile _outfile)
     get_filename_component(_basename "${_imgfile}" NAME_WE)
     get_filename_component(_ext "${_imgfile}" EXT)
     llvm_test_verify(
-      cd "${RUN_${_carg_RUN_TYPE}_DIR}" &&
-      "${CMAKE_CURRENT_BINARY_DIR}/${VALIDATOR}" ${_carg_UNPARSED_ARGUMENTS}
-        "${_imgfile}" "${RUN_${_carg_RUN_TYPE}_DIR}/compare/${_cmpfile}"
-        > ${RUN_${_carg_RUN_TYPE}_DIR}/${_outfile}
+      cd "${RUN_${_carg_RUN_TYPE}_DIR_REL}" &&
+      "%S/${VALIDATOR}" ${_carg_UNPARSED_ARGUMENTS}
+        "${_imgfile}" "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/${_cmpfile}"
+        > ${RUN_${_carg_RUN_TYPE}_DIR_REL}/${_outfile}
       RUN_TYPE ${_carg_RUN_TYPE}
     )
   endif ()
@@ -302,10 +302,10 @@ macro(speccpu2017_verify_output)
     file(GLOB_RECURSE _reffiles "${OUTPUT_${_runtype}_DIR}/*")
     foreach (_reffile IN LISTS _reffiles)
       file(RELATIVE_PATH _filename "${OUTPUT_${_runtype}_DIR}" "${_reffile}")
-      set(_outfile "${RUN_${_runtype}_DIR}/${_filename}")
-      set(_comparefile "${RUN_${_runtype}_DIR}/compare/${_filename}")
+      set(_outfile "${RUN_${_runtype}_DIR_REL}/${_filename}")
+      set(_comparefile "${RUN_${_runtype}_DIR_REL}/compare/${_filename}")
       llvm_test_verify(RUN_TYPE ${_runtype}
-        "${FPCMP}" ${_abstol} ${_reltol} ${_ignorewhitespace}
+        "%b/${FPCMP}" ${_abstol} ${_reltol} ${_ignorewhitespace}
           "${_comparefile}" "${_outfile}"
       )
     endforeach ()

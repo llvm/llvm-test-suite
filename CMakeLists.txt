@@ -287,9 +287,9 @@ mark_as_advanced(TEST_SUITE_LIT)
 
 add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
-set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp-target)
+set(FPCMP fpcmp-target)
 if (TEST_SUITE_USER_MODE_EMULATION)
-  set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
+  set(FPCMP fpcmp)
 endif()
 
 add_subdirectory(litsupport)

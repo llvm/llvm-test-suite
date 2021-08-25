@@ -6,12 +6,11 @@ list(APPEND LDFLAGS -lm)
 list(APPEND CXXFLAGS -ffp-contract=off -DFMA_DISABLED=1)
 list(APPEND CFLAGS -ffp-contract=off -DFMA_DISABLED=1)
 
-llvm_test_verify_hash_program_output(bilateralFilterOutput.txt)
-llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-  ${FPCMP} bilateralFilter.reference_output bilateralFilterOutput.txt
-)
+llvm_test_run(WORKDIR %S)
+llvm_test_verify_hash_program_output(%S/bilateralFilterOutput.txt)
+llvm_test_verify(
+  %b/${FPCMP} %S/bilateralFilter.reference_output %S/bilateralFilterOutput.txt)
 
-llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 llvm_test_executable(BilateralFilter ../utils/ImageHelper.cpp ../utils/glibc_compat_rand.c main.cpp bilateralFilterKernel.c)
 llvm_test_data(BilateralFilter bilateralFilter.reference_output)
 

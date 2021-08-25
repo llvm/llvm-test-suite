@@ -9,9 +9,7 @@ if(ARCH STREQUAL "x86")
     endif()
 
     llvm_test_run(/k all timed /t 500 /vsteps 192 /usteps 192 /vcp 20 /ucp 20)
-    llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-      ${FPCMP} %o nurbs.reference_output
-    )
+    llvm_test_verify(%b/${FPCMP} %o %S/nurbs.reference_output)
 
     file(GLOB SOURCES ${TEST_SUITE_NURBS_ROOT}/*.cpp)
     llvm_test_executable(nurbs ${SOURCES})

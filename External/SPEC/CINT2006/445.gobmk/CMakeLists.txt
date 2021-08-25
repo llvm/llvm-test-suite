@@ -12,13 +12,13 @@ include_directories(${BENCHMARK_DIR}/src/include)
 
 macro(test_input run_type tstfile outfile)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
+    WORKDIR %S/data/all/input
     --quiet --mode gtp
-    < ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input/${tstfile}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${outfile}
+    < %S/data/${run_type}/input/${tstfile}
+    > %S/${outfile}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/${outfile} ${outfile}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/${outfile} %S/${outfile}
   )
 endmacro()
 

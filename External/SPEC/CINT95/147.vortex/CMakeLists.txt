@@ -11,13 +11,13 @@ endif()
 
 macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     ${INPUTNAME}
   )
-llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP}
-    data/${run_type}/output/vortex.out
-    data/${run_type}/input/vortex.out
+llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP}
+    %S/data/${run_type}/output/vortex.out
+    %S/data/${run_type}/input/vortex.out
   )
 endmacro()
 

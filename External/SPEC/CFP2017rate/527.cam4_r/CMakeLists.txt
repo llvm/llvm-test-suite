@@ -38,12 +38,11 @@ macro(cam4_validator)
     add_executable(${VALIDATOR} "${SRC_DIR}/validate-cam.f90" $<TARGET_OBJECTS:cam4_netcdf>)
   endif ()
 
-  llvm_test_verify(
-    cd "${RUN_${_carg_RUN_TYPE}_DIR}" &&
-    "${CMAKE_CURRENT_BINARY_DIR}/${VALIDATOR}" 10 0.0035
-    "${DATA_${_carg_RUN_TYPE}_DIR}/compare/h0_ctrl.nc" h0.nc >
-    "${RUN_${_carg_RUN_TYPE}_DIR}/cam4_validate.txt" &&
-    diff -b "${RUN_${_carg_RUN_TYPE}_DIR}/cam4_validate.txt" "${OUTPUT_${_carg_RUN_TYPE}_DIR}/cam4_validate.txt"
+  llvm_test_verify(WORKDIR ${RUN_${_carg_RUN_TYPE}_DIR_REL}
+    "%S/${VALIDATOR}" 10 0.0035
+    "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/h0_ctrl.nc" h0.nc >
+    "${RUN_${_carg_RUN_TYPE}_DIR_REL}/cam4_validate.txt" &&
+    diff -b "${RUN_${_carg_RUN_TYPE}_DIR_REL}/cam4_validate.txt" "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/cam4_validate.txt"
     RUN_TYPE ${_carg_RUN_TYPE}
     )
 endmacro ()

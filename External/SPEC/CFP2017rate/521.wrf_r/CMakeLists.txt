@@ -38,13 +38,12 @@ macro(wrf_validator)
       $<TARGET_OBJECTS:wrf_netcdf> $<TARGET_OBJECTS:wrf_specpp_${BENCHMARK_SUITE_TYPE}>)
   endif ()
 
-  llvm_test_verify(
-    cd "${RUN_${_carg_RUN_TYPE}_DIR}" &&
-    "${CMAKE_CURRENT_BINARY_DIR}/${VALIDATOR}"
-    "${DATA_${_carg_RUN_TYPE}_DIR}/compare/wrf_reference_01"
+  llvm_test_verify(WORKDIR ${RUN_${_carg_RUN_TYPE}_DIR_REL}
+    "%S/${VALIDATOR}"
+    "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/wrf_reference_01"
     wrfout_d01_2000-01-24_14_00_00 >
-    "${RUN_${_carg_RUN_TYPE}_DIR}/diffwrf_output_01.txt" &&
-    diff -b "${RUN_${_carg_RUN_TYPE}_DIR}/diffwrf_output_01.txt" "${OUTPUT_${_carg_RUN_TYPE}_DIR}/diffwrf_output_01.txt"
+    "${RUN_${_carg_RUN_TYPE}_DIR_REL}/diffwrf_output_01.txt" &&
+    diff -b "${RUN_${_carg_RUN_TYPE}_DIR_REL}/diffwrf_output_01.txt" "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/diffwrf_output_01.txt"
     RUN_TYPE ${_carg_RUN_TYPE}
     )
 endmacro ()

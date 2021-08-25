@@ -7,17 +7,14 @@ list(APPEND LDFLAGS -lm)
 list(APPEND CXXFLAGS -ffp-contract=off -DFMA_DISABLED=1)
 list(APPEND CFLAGS -ffp-contract=off -DFMA_DISABLED=1)
 
-llvm_test_verify_hash_program_output(boxBlurOutput.txt)
-llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-  ${FPCMP} boxBlur.reference_output boxBlurOutput.txt
-)
+llvm_test_run(WORKDIR %S)
+llvm_test_verify_hash_program_output(%S/boxBlurOutput.txt)
+llvm_test_verify(%b/${FPCMP} %S/boxBlur.reference_output %S/boxBlurOutput.txt)
 
-llvm_test_verify_hash_program_output(gaussianBlurOutput.txt)
-llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-  ${FPCMP} gaussianBlur.reference_output gaussianBlurOutput.txt
-)
+llvm_test_verify_hash_program_output(%S/gaussianBlurOutput.txt)
+llvm_test_verify(
+  %b/${FPCMP} %S/gaussianBlur.reference_output %S/gaussianBlurOutput.txt)
 
-llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR})
 llvm_test_executable(blur ../utils/ImageHelper.cpp ../utils/glibc_compat_rand.c main.cpp boxBlurKernel.c gaussianBlurKernel.c)
 llvm_test_data(blur boxBlur.reference_output gaussianBlur.reference_output)
 

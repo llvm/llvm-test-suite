@@ -1,14 +1,14 @@
 macro(test_input run_type output)
   llvm_test_run(RUN_TYPE ${run_type}
-    ${ARGN} > ${CMAKE_CURRENT_BINARY_DIR}/${output}
+    ${ARGN} > %S/${output}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r 0.01 data/${run_type}/output/${output} ${output}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r 0.01 %S/data/${run_type}/output/${output} %S/${output}
   )
 endmacro()
 
 test_input(test test.out
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
+  WORKDIR %S/data/test/input
   -scanfile c756hel.in
   -trainfile1 a10.img
   -stride 2
@@ -19,7 +19,7 @@ test_input(test test.out
   -objects 1
 )
 test_input(train train.out
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/train/input
+  WORKDIR %S/data/train/input
   -scanfile c756hel.in
   -trainfile1 a10.img
   -stride 2
@@ -30,7 +30,7 @@ test_input(train train.out
   -objects 3
 )
 test_input(ref ref.1.out
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
   -scanfile c756hel.in
   -trainfile1 a10.img
   -trainfile2 hc.img
@@ -42,7 +42,7 @@ test_input(ref ref.1.out
   -objects 10
 )
 test_input(ref ref.2.out
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
   -scanfile c756hel.in
   -trainfile1 a10.img
   -trainfile2 hc.img

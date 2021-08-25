@@ -99,17 +99,17 @@ macro(test_input run_type)
   llvm_test_run(RUN_TYPE ${run_type}
     -f data/${run_type}/input/omnetpp.ini
     > omnetpp.log
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    WORKDIR %S
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r 0.00001 -a 0.000001
-    data/${run_type}/output/omnetpp.log
-    omnetpp.log
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r 0.00001 -a 0.000001
+    %S/data/${run_type}/output/omnetpp.log
+    %S/omnetpp.log
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r 0.00001 -a 0.000001
-    data/${run_type}/output/omnetpp.sca
-    omnetpp.sca
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r 0.00001 -a 0.000001
+    %S/data/${run_type}/output/omnetpp.sca
+    %S/omnetpp.sca
   )
 endmacro()
 

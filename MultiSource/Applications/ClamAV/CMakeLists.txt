@@ -18,7 +18,7 @@ set(INPUT
   inputs/rtf-test/rtf1.rtf
   inputs/rtf-test/rtf-novirus.rtf
 )
-set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d${CMAKE_CURRENT_BINARY_DIR}/dbdir -r ${INPUT})
+set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d%S/dbdir -r ${INPUT})
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -DC_DARWIN)
 endif()

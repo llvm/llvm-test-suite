@@ -4,7 +4,6 @@ SET_SOURCE_FILES_PROPERTIES(${bcsources} PROPERTIES LANGUAGE CXX)
 test_img_input(rgb 0.1 10)
 test_img_input(rgba 0.1 10)
 
-llvm_multisource(halide_bilateral_grid
-  ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp
-  ${bcsources}
-)
+llvm_test_executable(halide_bilateral_grid driver.cpp ${bcsources})
+test_img_data(halide_bilateral_grid rgb)
+test_img_data(halide_bilateral_grid rgba)

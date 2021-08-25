@@ -4,7 +4,6 @@ SET_SOURCE_FILES_PROPERTIES(${bcsources} PROPERTIES LANGUAGE CXX)
 test_img_input(rgb 8 1 1 10)
 test_img_input(rgba 8 1 1 10)
 
-llvm_multisource(halide_local_laplacian
-  ${CMAKE_CURRENT_SOURCE_DIR}/driver.cpp
-  ${bcsources}
-)
+llvm_test_executable(halide_local_laplacian driver.cpp ${bcsources})
+test_img_data(halide_local_laplacian rgb)
+test_img_data(halide_local_laplacian rgba)

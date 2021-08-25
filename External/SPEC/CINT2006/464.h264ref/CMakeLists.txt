@@ -3,19 +3,19 @@ list(APPEND CFLAGS -fsigned-char)
 
 macro(test_input run_type leading level)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     -d ${leading}encoder_${level}.cfg
-    > ${CMAKE_CURRENT_BINARY_DIR}/${leading}${level}_encodelog.out
+    > %S/${leading}${level}_encodelog.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP}
-    data/${run_type}/output/${leading}${level}_encodelog.out
-    ${leading}${level}_encodelog.out
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP}
+    %S/data/${run_type}/output/${leading}${level}_encodelog.out
+    %S/${leading}${level}_encodelog.out
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP}
-    data/${run_type}/output/${leading}${level}_leakybucketparam.cfg
-    data/${run_type}/input/${leading}${level}_leakybucketparam.cfg
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP}
+    %S/data/${run_type}/output/${leading}${level}_leakybucketparam.cfg
+    %S/data/${run_type}/input/${leading}${level}_leakybucketparam.cfg
   )
 
 endmacro()

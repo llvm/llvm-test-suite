@@ -12,7 +12,7 @@ link_libraries(-lm)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  -limit disk 0 "${RUN_test_DIR}/test_input.tga" -shear 25 -resize 640x480
+  -limit disk 0 "${RUN_test_DIR_REL}/test_input.tga" -shear 25 -resize 640x480
   -negate -alpha Off test_output.tga
   RUN_TYPE test
 )
@@ -25,7 +25,7 @@ speccpu2017_validate_image(
 ## train #######################################################################
 
 speccpu2017_run_test(
-  -limit disk 0 "${RUN_train_DIR}/train_input.tga" -resize 320x240 -shear 31
+  -limit disk 0 "${RUN_train_DIR_REL}/train_input.tga" -resize 320x240 -shear 31
   -edge 140 -negate -flop -resize 900x900 -edge 10 train_output.tga
   RUN_TYPE train
 )
@@ -38,7 +38,7 @@ speccpu2017_validate_image(
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  -limit disk 0 "${RUN_ref_DIR}/refrate_input.tga" -edge 41
+  -limit disk 0 "${RUN_ref_DIR_REL}/refrate_input.tga" -edge 41
   -resample 181% -emboss 31 -colorspace YUV -mean-shift 19x19+15%
   -resize 30% refrate_output.tga
   RUN_TYPE ref

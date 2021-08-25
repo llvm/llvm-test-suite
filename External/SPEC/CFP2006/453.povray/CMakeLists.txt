@@ -2,18 +2,18 @@ list(APPEND LDFLAGS -lm)
 
 macro(test_input run_type stdout_reltol)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     SPEC-benchmark-${run_type}.ini
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r ${stdout_reltol}
-    data/${run_type}/output/SPEC-benchmark.log
-    data/${run_type}/input/SPEC-benchmark.log
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r ${stdout_reltol}
+    %S/data/${run_type}/output/SPEC-benchmark.log
+    %S/data/${run_type}/input/SPEC-benchmark.log
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP}
-    data/${run_type}/output/SPEC-benchmark.tga
-    data/${run_type}/input/SPEC-benchmark.tga
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP}
+    %S/data/${run_type}/output/SPEC-benchmark.tga
+    %S/data/${run_type}/input/SPEC-benchmark.tga
   )
 endmacro()
 

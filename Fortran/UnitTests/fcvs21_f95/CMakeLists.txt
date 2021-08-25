@@ -31,7 +31,7 @@
 # amend README file if you modify the tests.
 
 # clean-up fort.* files otherwise one of the tests will fail
-llvm_test_prepare("rm -f ${CMAKE_CURRENT_BINARY_DIR}/fort.*")
+llvm_test_prepare(rm -f %S/fort.*)
 
 # Test 509 requires this flag in more recent versions of GCC
 check_fortran_compiler_flag("-std=legacy" SUPPORTS_LEGACY)

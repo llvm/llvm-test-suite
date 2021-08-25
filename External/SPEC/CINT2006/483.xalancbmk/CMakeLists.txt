@@ -32,12 +32,12 @@ endif()
 
 macro(test_input run_type input output)
   llvm_test_run(RUN_TYPE ${run_type}
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/${run_type}/input
+    WORKDIR %S/data/${run_type}/input
     -v ${input} xalanc.xsl
-    > ${CMAKE_CURRENT_BINARY_DIR}/${output}
+    > %S/${output}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} -r 0.001 data/${run_type}/output/${output} ${output}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} -r 0.001 %S/data/${run_type}/output/${output} %S/${output}
   )
 endmacro()
 

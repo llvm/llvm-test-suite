@@ -72,56 +72,56 @@ endforeach()
 
 macro(test_input run_type perlscript output)
   llvm_test_run(RUN_TYPE ${run_type}
-    -I${CMAKE_CURRENT_BINARY_DIR}/data/all/input/lib ${perlscript}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${output}
+    -I%S/data/all/input/lib ${perlscript}
+    > %S/${output}
     ${ARGN}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/${output} ${output}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/${output} %S/${output}
   )
 endmacro()
 
 # (Parameters come from the respective XXX.in files)
 test_input(train
   diffmail.pl 2.350.15.24.23.150.out 2 350 15 24 23 150
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
+  WORKDIR %S/data/all/input
 )
 test_input(train
   perfect.pl b.3.out b 3
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/all/input
+  WORKDIR %S/data/all/input
 )
 test_input(train
   scrabbl.pl scrabbl.out < scrabbl.in
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/train/input
+  WORKDIR %S/data/train/input
 )
 
 test_input(ref
   splitmail.pl 850.5.19.18.1500.out 850 5 19 18 1500
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   splitmail.pl 704.12.26.16.836.out 704 12 26 16 836
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   splitmail.pl 535.13.25.24.1091.out 535 13 25 24 1091
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   splitmail.pl 957.12.23.26.1014.out 957 12 23 26 1014
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   diffmail.pl 2.550.15.24.23.100.out 2 550 15 24 23 100
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   perfect.pl b.3.m.4.out b 3 m 4
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 test_input(ref
   makerand.pl makerand.out
-  WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/ref/input
+  WORKDIR %S/data/ref/input
 )
 
 file(GLOB inputs ${BENCHMARK_DIR}/data/test/input/*.t)
@@ -129,7 +129,7 @@ foreach(input ${inputs})
   get_filename_component(basename ${input} NAME_WE)
   test_input(test
     ${basename}.t ${basename}.out
-    WORKDIR ${CMAKE_CURRENT_BINARY_DIR}/data/test/input
+    WORKDIR %S/data/test/input
   )
 endforeach()
 

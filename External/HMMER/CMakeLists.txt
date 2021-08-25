@@ -12,15 +12,15 @@ if(TEST_SUITE_HMMER_ROOT)
     add_definitions(-DSSE2)
   endif()
 
-  llvm_test_prepare(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+  llvm_test_prepare(WORKDIR %S
     cp -f globin.hmm run.hmm
   )
   if(LARGE_PROBLEM_SIZE)
-    llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    llvm_test_run(WORKDIR %S
       --fixed 400 --cpu 1 --num 200000 --seed 1158818515 run.hmm
     )
   else()
-    llvm_test_run(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+    llvm_test_run(WORKDIR %S
       --fixed 400 --cpu 1 --num 80000 --seed 1158818515 run.hmm
     )
   endif()

@@ -10,11 +10,11 @@ list(APPEND CFLAGS -std=gnu89)
 list(APPEND CPPFLAGS -D__DATE__="XXX" -D__TIME__="XXX")
 
 macro(test_input run_type ifile sfile)
-  llvm_test_run(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+  llvm_test_run(RUN_TYPE ${run_type} WORKDIR %S
     data/${run_type}/input/${ifile} -o ${sfile}
   )
-  llvm_test_verify(RUN_TYPE ${run_type} WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
-    ${FPCMP} data/${run_type}/output/${sfile} ${sfile}
+  llvm_test_verify(RUN_TYPE ${run_type}
+    %b/${FPCMP} %S/data/${run_type}/output/${sfile} %S/${sfile}
   )
 endmacro()
 

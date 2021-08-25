@@ -11,7 +11,7 @@ speccpu2017_add_include_dirs(.)
 ## test ########################################################################
 
 speccpu2017_run_test(
-  "${RUN_test_DIR}/test.sgf"
+  "${RUN_test_DIR_REL}/test.sgf"
   STDOUT test.out
   RUN_TYPE test
 )
@@ -19,7 +19,7 @@ speccpu2017_run_test(
 ## train #######################################################################
 
 speccpu2017_run_test(
-  "${RUN_train_DIR}/train.sgf"
+  "${RUN_train_DIR_REL}/train.sgf"
   STDOUT train.out
   RUN_TYPE train
 )
@@ -27,7 +27,7 @@ speccpu2017_run_test(
 ## ref #########################################################################
 
 speccpu2017_run_test(
-  "${RUN_ref_DIR}/ref.sgf"
+  "${RUN_ref_DIR_REL}/ref.sgf"
   STDOUT ref.out
   RUN_TYPE ref
 )
