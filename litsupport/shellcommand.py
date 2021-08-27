@@ -32,11 +32,11 @@ class ShellCommand:
         if self.workdir is not None:
             result += "cd %s && " % quote(self.workdir)
 
-        res_list = [self.executable] + self.arguments
-        result += " ".join(map(quote, res_list))
-
         for key, value in self.envvars.items():
             result += "%s=%s " % (key, quote(value))
+
+        res_list = [self.executable] + self.arguments
+        result += " ".join(map(quote, res_list))
 
         if self.stdin is not None:
             result += " < %s" % quote(self.stdin)

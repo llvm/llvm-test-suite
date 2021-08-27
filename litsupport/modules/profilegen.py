@@ -7,9 +7,10 @@ def _mutateCommandline(context, commandline):
     """Adjust runscript to set a different value to the LLVM_PROFILE_FILE
     environment variable for each execution."""
     profilefile = context.tmpBase + ".profraw"
-    prefix = "env LLVM_PROFILE_FILE=%s " % profilefile
     context.profilefiles.append(profilefile)
-    return prefix + commandline
+    cmd = shellcommand.parse(commandline)
+    cmd.envvars.update({"LLVM_PROFILE_FILE": profilefile})
+    return cmd.toCommandline()
 
 
 def _mutateScript(context, script):
