@@ -10,12 +10,13 @@ def _getCodeSize(context):
     metrics['size'] = os.path.getsize(context.executable)
 
     # If we have the llvm-size tool available get the size per segment.
-    llvm_size = context.config.llvm_size
-    if llvm_size:
-        # --format=sysv is easier to parse than darwin/berkeley.
-        cmdline = [llvm_size, '--format=sysv', context.executable]
-        out = testplan.check_output(cmdline).decode('utf-8', errors='ignore')
-        lines = out.splitlines()
+    filename = context.test.getSourcePath()
+    if filename.endswith(".test"):
+        filename = filename[:-len(".test")]
+    filename += ".size"
+    if os.path.exists(filename):
+        with open(filename, "r") as fp:
+            lines = fp.readlines()
         # First line contains executable name, second line should be a
         # "section   size    addr" header, numbers start after that.
         if "section" not in lines[1] or "size" not in lines[1]:

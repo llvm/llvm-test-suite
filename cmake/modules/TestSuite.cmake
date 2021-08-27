@@ -61,6 +61,12 @@ function(llvm_test_executable_no_test target)
   llvm_codesign(${target})
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   test_suite_add_build_dependencies(${target})
+
+  if(TEST_SUITE_LLVM_SIZE)
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<TARGET_FILE:${target}>
+      > $<TARGET_FILE:${target}>.size)
+  endif()
 endfunction()
 
 # Creates a new executable build target. Use this instead of `add_executable`.
