@@ -71,3 +71,6 @@ SYCL/USM @jbrodman
 
 # Stream
 SYCL/Basic/stream @againull
+
+#BFloat16 conversion
+SYCL/BFloat16 @AlexeySotkin @MrSidims
