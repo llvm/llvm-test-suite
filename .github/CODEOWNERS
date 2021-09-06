@@ -29,9 +29,6 @@ SYCL/DotProduct @rdeodhar
 # Explicit SIMD
 SYCL/ESIMD @kbobrovs @DenisBakhvalov
 
-# Function pointers
-SYCL/FunctionPointers @AlexeySachkov
-
 # Functor
 SYCL/Functor @AlexeySachkov
 
