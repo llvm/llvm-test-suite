@@ -64,8 +64,8 @@ SYCL/SeparateCompile @AlexeySachkov  @Fznamznon
 # Specialization constant
 SYCL/SpecConstants @kbobrovs
 
-# Specialization constant
-SYCL/USM @jbrodman
+# Unified Shared Memory (USM)
+SYCL/USM @jbrodman @sergey-semenov
 
 # Stream
 SYCL/Basic/stream @againull
