@@ -1,6 +1,7 @@
 include(CheckCCompilerFlag)
 
 add_subdirectory(C++11)
+add_subdirectory(Float)
 add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
 add_subdirectory(Vector)
