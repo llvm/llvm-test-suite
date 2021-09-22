@@ -7,6 +7,7 @@ SYCL/AOT @AGindinson @dm-vodopyanov @AlexeySachkov @romanovvlad
 SYCL/AtomicRef @AGindinson 
 
 # SYCL RT specific tests
+SYCL/Assert @intel/llvm-reviewers-runtime
 SYCL/Basic @intel/llvm-reviewers-runtime
 SYCL/Config @intel/llvm-reviewers-runtime
 SYCL/FilterSelector @intel/llvm-reviewers-runtime
