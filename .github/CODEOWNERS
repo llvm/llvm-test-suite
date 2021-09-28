@@ -28,7 +28,7 @@ SYCL/DeviceLib @vzakhari
 SYCL/DotProduct @rdeodhar
 
 # Explicit SIMD
-SYCL/ESIMD @kbobrovs @DenisBakhvalov
+SYCL/ESIMD @kbobrovs @v-klochkov
 
 # Functor
 SYCL/Functor @AlexeySachkov
