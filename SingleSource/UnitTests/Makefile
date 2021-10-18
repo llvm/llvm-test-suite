@@ -10,7 +10,7 @@ DIRS :=
 DIRS += Vector
 DIRS += Vectorizer
 
-DIRS += SignlessTypes Threads C++11
+DIRS += SignlessTypes Threads C++11 Float
 
 # Only test Obj-C on Darwin.
 ifeq ($(TARGET_OS),Darwin)

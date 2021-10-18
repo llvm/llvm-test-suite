@@ -24,10 +24,10 @@
 //
 #define CHECK_VALUE(cond, value)                                               \
     do {                                                                       \
-      if (!cond) {                                                             \
+      if (!(cond)) {                                                           \
         printf("Check '%s' in file '%s' at line %d "                           \
                "failed for the value '%" VAL_FORMAT "'\n",                     \
-               #cond, __FILE__, __LINE__, value);                              \
+               #cond, __FILE__, __LINE__, (value));                            \
         exit(-1);                                                              \
       }                                                                        \
     } while(0)
@@ -49,11 +49,11 @@
         INT_TYPE i;                                                            \
         FLOAT_TYPE f;                                                          \
       } u;                                                                     \
-      u.i = value;                                                             \
-      if (u.f != expected) {                                                   \
+      u.i = (value);                                                           \
+      if (u.f != (expected)) {                                                 \
          printf("Check in file '%s' at line %d failed: "                       \
                 "'%" INT_FORMAT "' != '%" FLOAT_FORMAT "'\n",                  \
-                __FILE__, __LINE__, value, expected);                          \
+                __FILE__, __LINE__, (INT_TYPE)(value), (expected));            \
         exit(-1);                                                              \
       }                                                                        \
     } while(0)

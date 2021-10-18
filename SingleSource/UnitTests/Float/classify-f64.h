@@ -26,9 +26,7 @@
 #define INT_TYPE     uint64_t
 #define FLOAT_TYPE   double
 
-uint64_t DoubleNaNValues[] = {
-    F64_MAKE(0, F64_EXP_MASK,                F64_PAYLOAD_MASK),
-    F64_MAKE(1, F64_EXP_MASK,                F64_PAYLOAD_MASK),
+uint64_t DoubleQNaNValues[] = {
     F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | F64_PAYLOAD_MASK),
     F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | F64_PAYLOAD_MASK),
 
@@ -37,13 +35,20 @@ uint64_t DoubleNaNValues[] = {
 
     F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | 0x0004000000000000ULL),
     F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0002000000000000ULL),
-    F64_MAKE(0, F64_EXP_MASK,                0x0004000000000000ULL),
-    F64_MAKE(1, F64_EXP_MASK,                0x0002000000000000ULL),
 
-    F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | 0x0002000000000000ULL),
-    F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0004000000000000ULL),
-    F64_MAKE(0, F64_EXP_MASK,                0x0000000000000001ULL),
-    F64_MAKE(1, F64_EXP_MASK,                0x0000000000000002ULL)
+    F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | 0x0000000000000001ULL),
+    F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0000000000000002ULL)
+};
+
+uint64_t DoubleSNaNValues[] = {
+    F64_MAKE(0, F64_EXP_MASK, F64_PAYLOAD_MASK),
+    F64_MAKE(1, F64_EXP_MASK, F64_PAYLOAD_MASK),
+
+    F64_MAKE(0, F64_EXP_MASK, 0x0004000000000000ULL),
+    F64_MAKE(1, F64_EXP_MASK, 0x0002000000000000ULL),
+
+    F64_MAKE(0, F64_EXP_MASK, 0x0000000000000001ULL),
+    F64_MAKE(1, F64_EXP_MASK, 0x0000000000000002ULL)
 };
 
 uint64_t DoubleInfValues[] = {
@@ -121,8 +126,18 @@ int test_double() {
   CHECK_EQ(F64_NORMAL(0, F64_EXP_MAX, F64_MANTISSA_MASK), 1.7976931348623157e+308);
   CHECK_EQ(F64_NORMAL(1, F64_EXP_MAX, F64_MANTISSA_MASK), -1.7976931348623157e+308);
 
-  for (unsigned i = 0; i < DimOf(DoubleNaNValues); i++) {
-    uint64_t *IPtr = DoubleNaNValues + i;
+  for (unsigned i = 0; i < DimOf(DoubleQNaNValues); i++) {
+    uint64_t *IPtr = DoubleQNaNValues + i;
+    uint64_t IX = *IPtr;
+    double X = *(double *)IPtr;
+    CHECK_VALUE(__builtin_isnan(X), IX);
+    CHECK_VALUE(!__builtin_isinf(X), IX);
+    CHECK_VALUE(!__builtin_isfinite(X), IX);
+    CHECK_VALUE(!__builtin_isnormal(X), IX);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IX);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleSNaNValues); i++) {
+    uint64_t *IPtr = DoubleSNaNValues + i;
     uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
     CHECK_VALUE(__builtin_isnan(X), IX);

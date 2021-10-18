@@ -24,11 +24,12 @@
 // to various float types. So instead of preparing bit patterns, rely on builtin
 // functions and macro definitions provided by the compiler.
 
-long double LongDoubleNaNValues[8];
+long double LongDoubleSNaNValues[4];
+long double LongDoubleQNaNValues[4];
 #ifdef __LDBL_HAS_INFINITY__
 long double LongDoubleInfValues[2];
 #endif
-long double LongDoubleZeroValues[] = { 0.0L, -0.0L};
+long double LongDoubleZeroValues[] = { 0.0L, -0.0L };
 #ifdef __LDBL_HAS_DENORM__
 long double LongDoubleDenormValues[2];
 #endif
@@ -39,14 +40,15 @@ long double LongDoubleNormalValues[6];
 #define FLOAT_TYPE   long double
 
 void prepare_ldouble_tables() {
-  LongDoubleNaNValues[0] = __builtin_nanl("");
-  LongDoubleNaNValues[1] = -__builtin_nanl("");
-  LongDoubleNaNValues[2] = __builtin_nanl("0x01");
-  LongDoubleNaNValues[3] = -__builtin_nanl("0x01");
-  LongDoubleNaNValues[4] = __builtin_nansl("");
-  LongDoubleNaNValues[5] = -__builtin_nansl("");
-  LongDoubleNaNValues[6] = __builtin_nansl("0x01");
-  LongDoubleNaNValues[7] = -__builtin_nansl("0x01");
+  LongDoubleQNaNValues[0] = __builtin_nanl("");
+  LongDoubleQNaNValues[1] = -__builtin_nanl("");
+  LongDoubleQNaNValues[2] = __builtin_nanl("0x01");
+  LongDoubleQNaNValues[3] = -__builtin_nanl("0x01");
+
+  LongDoubleSNaNValues[0] = __builtin_nansl("");
+  LongDoubleSNaNValues[1] = -__builtin_nansl("");
+  LongDoubleSNaNValues[2] = __builtin_nansl("0x01");
+  LongDoubleSNaNValues[3] = -__builtin_nansl("0x01");
 
 #ifdef __LDBL_HAS_INFINITY__
   LongDoubleInfValues[0] = __builtin_infl();
@@ -66,8 +68,16 @@ void prepare_ldouble_tables() {
 }
 
 int test_ldouble() {
-  for (unsigned i = 0; i < DimOf(LongDoubleNaNValues); i++) {
-    long double X = LongDoubleNaNValues[i];
+  for (unsigned i = 0; i < DimOf(LongDoubleQNaNValues); i++) {
+    long double X = LongDoubleQNaNValues[i];
+    CHECK_VALUE(__builtin_isnan(X), X);
+    CHECK_VALUE(!__builtin_isinf(X), X);
+    CHECK_VALUE(!__builtin_isfinite(X), X);
+    CHECK_VALUE(!__builtin_isnormal(X), X);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, X);
+  }
+  for (unsigned i = 0; i < DimOf(LongDoubleSNaNValues); i++) {
+    long double X = LongDoubleSNaNValues[i];
     CHECK_VALUE(__builtin_isnan(X), X);
     CHECK_VALUE(!__builtin_isinf(X), X);
     CHECK_VALUE(!__builtin_isfinite(X), X);

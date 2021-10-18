@@ -26,9 +26,7 @@
 #define INT_TYPE     uint32_t
 #define FLOAT_TYPE   float
 
-uint32_t FloatNaNValues[] = {
-    F32_MAKE(0, F32_EXP_MASK,                F32_PAYLOAD_MASK),
-    F32_MAKE(1, F32_EXP_MASK,                F32_PAYLOAD_MASK),
+uint32_t FloatQNaNValues[] = {
     F32_MAKE(0, F32_EXP_MASK, F32_QNAN_BIT | F32_PAYLOAD_MASK),
     F32_MAKE(1, F32_EXP_MASK, F32_QNAN_BIT | F32_PAYLOAD_MASK),
 
@@ -37,13 +35,20 @@ uint32_t FloatNaNValues[] = {
 
     F32_MAKE(0, F32_EXP_MASK, F32_QNAN_BIT | 0x00200000U),
     F32_MAKE(1, F32_EXP_MASK, F32_QNAN_BIT | 0x00100000U),
-    F32_MAKE(0, F32_EXP_MASK,                0x00200000U),
-    F32_MAKE(1, F32_EXP_MASK,                0x00100000U),
 
     F32_MAKE(0, F32_EXP_MASK, F32_QNAN_BIT | 0x00000001U),
-    F32_MAKE(1, F32_EXP_MASK, F32_QNAN_BIT | 0x00000002U),
-    F32_MAKE(0, F32_EXP_MASK,                0x00000001U),
-    F32_MAKE(1, F32_EXP_MASK,                0x00000002U)
+    F32_MAKE(1, F32_EXP_MASK, F32_QNAN_BIT | 0x00000002U)
+};
+
+uint32_t FloatSNaNValues[] = {
+    F32_MAKE(0, F32_EXP_MASK, F32_PAYLOAD_MASK),
+    F32_MAKE(1, F32_EXP_MASK, F32_PAYLOAD_MASK),
+
+    F32_MAKE(0, F32_EXP_MASK, 0x00200000U),
+    F32_MAKE(1, F32_EXP_MASK, 0x00100000U),
+
+    F32_MAKE(0, F32_EXP_MASK, 0x00000001U),
+    F32_MAKE(1, F32_EXP_MASK, 0x00000002U)
 };
 
 uint32_t FloatInfValues[] = {
@@ -121,8 +126,18 @@ int test_float() {
   CHECK_EQ(F32_NORMAL(0, F32_EXP_MAX, F32_MANTISSA_MASK), 3.4028234664e38F);
   CHECK_EQ(F32_NORMAL(1, F32_EXP_MAX, F32_MANTISSA_MASK), -3.4028234664e38F);
 
-  for (unsigned i = 0; i < DimOf(FloatNaNValues); i++) {
-    uint32_t *IPtr = FloatNaNValues + i;
+  for (unsigned i = 0; i < DimOf(FloatQNaNValues); i++) {
+    uint32_t *IPtr = FloatQNaNValues + i;
+    uint32_t IX = *IPtr;
+    float X = *(float *)IPtr;
+    CHECK_VALUE(__builtin_isnan(X), IX);
+    CHECK_VALUE(!__builtin_isinf(X), IX);
+    CHECK_VALUE(!__builtin_isfinite(X), IX);
+    CHECK_VALUE(!__builtin_isnormal(X), IX);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IX);
+  }
+  for (unsigned i = 0; i < DimOf(FloatSNaNValues); i++) {
+    uint32_t *IPtr = FloatSNaNValues + i;
     uint32_t IX = *IPtr;
     float X = *(float *)IPtr;
     CHECK_VALUE(__builtin_isnan(X), IX);
