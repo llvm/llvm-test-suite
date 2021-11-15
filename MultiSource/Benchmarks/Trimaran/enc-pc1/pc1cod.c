@@ -234,7 +234,7 @@ code()
 } 
 
 /* Use Linear congruential PRNG */
-int my_rand_r(int *seedp)
+unsigned my_rand_r(unsigned *seedp)
 {
   /* Knuth & Lewis */
   unsigned x = *seedp * 1664525 + 1013904223;
@@ -246,7 +246,7 @@ main(int argc, const char **argv)
 {
   int NumInput = 20000;
   int Print;
-  int random_seed = 1;
+  unsigned random_seed = 1;
   
   if (argc == 2) NumInput = atoi(argv[1]);
   
