@@ -165,7 +165,7 @@ QUAD_EDGE next_edge, avail_edge;
 
 void delete_all_edges() { next_edge= 0; avail_edge = NYL;}
 
-#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MINGW32__)
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MINGW32__) || defined(_AIX)
 #define MEMALIGN_IS_NOT_AVAILABLE
 #endif
 
