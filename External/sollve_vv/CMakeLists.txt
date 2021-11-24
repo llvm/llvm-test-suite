@@ -145,7 +145,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     5.0/target/test_target_mapping_before_alloc.c
     5.0/target/test_target_parallel_for_notequals.c
     5.0/target/test_target_uses_allocators_cgroup.c
-    5.0/target/test_target_uses_allocators_const.c
     5.0/target/test_target_uses_allocators_default.c
     5.0/target/test_target_uses_allocators_high_bw.c
     5.0/target/test_target_uses_allocators_large_cap.c
