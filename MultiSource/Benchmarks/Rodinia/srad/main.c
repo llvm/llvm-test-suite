@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _AIX
+#define AIX_RAND_MAX 2147483647
+#endif
 void random_matrix(float I[ROWS][COLS]);
 void srad_kernel(float dN[ROWS][COLS], float dS[ROWS][COLS],
                  float dW[ROWS][COLS], float dE[ROWS][COLS],
@@ -80,7 +83,11 @@ void random_matrix(float I[ROWS][COLS]) {
   glibc_compat_srand(SEED);
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLS; j++) {
+      #ifdef _AIX
+      I[i][j] = glibc_compat_rand() / (float)AIX_RAND_MAX;
+      #else
       I[i][j] = glibc_compat_rand() / (float)RAND_MAX;
+      #endif
     }
   }
 }

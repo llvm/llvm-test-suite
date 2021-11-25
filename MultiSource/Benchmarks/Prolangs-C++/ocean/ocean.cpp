@@ -12,6 +12,9 @@
 #if defined(__XS1B__)
 #include "xcoretestsuite.h"
 #endif
+#ifdef _AIX
+#define AIX_RAND_MAX 2147483647
+#endif
 
 //cell.cc
 Cell *Cell::getCellAt(Coordinate aCoord) {
@@ -127,11 +130,19 @@ Cell *Predator::reproduce(Coordinate anOffset) {
 #define MAX 32767
 
 float Random::randReal(void) {
+#ifdef _AIX
+  return random()/(float)AIX_RAND_MAX;
+#else
   return random()/(float)RAND_MAX;
+#endif
 }
 
 unsigned Random::nextIntBetween(int low, int high) {
+#ifdef _AIX
+  return (long long)(random())* high / AIX_RAND_MAX;
+#else
   return (long long)(random())* high / RAND_MAX;
+#endif
 }
 
 //ocean.cc
