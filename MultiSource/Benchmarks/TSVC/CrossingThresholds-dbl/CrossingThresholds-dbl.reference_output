@@ -2,7 +2,7 @@ Running each loop 5880 times...
 
 Loop 	 Time(Sec) 	 Checksum 
 S281	 0.00 		32000 
-S1281	 0.00 		inf 
+S1281	 0.00 		INF 
 S291	 0.00 		32000 
 S292	 0.00 		31967.999999994 
 S293	 0.00 		32000 

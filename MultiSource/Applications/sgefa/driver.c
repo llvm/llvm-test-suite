@@ -47,7 +47,7 @@ main()
 	    t += (*col<0.0 ? -*col : *col );
 	  anorm = ( anorm > t ? anorm : t );
       }
-      printf("One-Norm(A) ---------- %e.\n", anorm );
+      printf("One-Norm(A) ---------- %E.\n", anorm );
 
 
     /* Test SGEFA. */

@@ -227,24 +227,24 @@ void check(int name){
 		sumarray += array[i];
 	}
 
-	if (name == 1) printf("%.*g \n",digits,suma);
-	if (name == 2) printf("%.*g \n",digits,sumb);
-	if (name == 3) printf("%.*g \n",digits,sumc);
-	if (name == 4) printf("%.*g \n",digits,sumd);
-	if (name == 5) printf("%.*g \n",digits,sume);
-	if (name == 11) printf("%.*g \n",digits,sumaa);
-	if (name == 22) printf("%.*g \n",digits,sumbb);
-	if (name == 33) printf("%.*g \n",digits,sumcc);
-	if (name == 0) printf("%.*g \n",digits,sumarray);
-	if (name == 12) printf("%.*g \n",digits,suma+sumb);
-	if (name == 25) printf("%.*g \n",digits,sumb+sume);
-	if (name == 13) printf("%.*g \n",digits,suma+sumc);
-	if (name == 123) printf("%.*g \n",digits,suma+sumb+sumc);
-	if (name == 1122) printf("%.*g \n",digits,sumaa+sumbb);
-	if (name == 112233) printf("%.*g \n",digits,sumaa+sumbb+sumcc);
-	if (name == 111) printf("%.*g \n",digits,sumaa+suma);
-	if (name == -1) printf("%.*g \n",digits,temp);
-	if (name == -12) printf("%.*g \n",digits,temp+sumb);
+	if (name == 1) printf("%.*G \n",digits,suma);
+	if (name == 2) printf("%.*G \n",digits,sumb);
+	if (name == 3) printf("%.*G \n",digits,sumc);
+	if (name == 4) printf("%.*G \n",digits,sumd);
+	if (name == 5) printf("%.*G \n",digits,sume);
+	if (name == 11) printf("%.*G \n",digits,sumaa);
+	if (name == 22) printf("%.*G \n",digits,sumbb);
+	if (name == 33) printf("%.*G \n",digits,sumcc);
+	if (name == 0) printf("%.*G \n",digits,sumarray);
+	if (name == 12) printf("%.*G \n",digits,suma+sumb);
+	if (name == 25) printf("%.*G \n",digits,sumb+sume);
+	if (name == 13) printf("%.*G \n",digits,suma+sumc);
+	if (name == 123) printf("%.*G \n",digits,suma+sumb+sumc);
+	if (name == 1122) printf("%.*G \n",digits,sumaa+sumbb);
+	if (name == 112233) printf("%.*G \n",digits,sumaa+sumbb+sumcc);
+	if (name == 111) printf("%.*G \n",digits,sumaa+suma);
+	if (name == -1) printf("%.*G \n",digits,temp);
+	if (name == -12) printf("%.*G \n",digits,temp+sumb);
 
 }
 
