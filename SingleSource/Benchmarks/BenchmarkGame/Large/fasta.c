@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _AIX
 #include <err.h>
+#endif
 
 #define WIDTH 60
 #define MIN(a,b) ((a) <= (b) ? (a) : (b))

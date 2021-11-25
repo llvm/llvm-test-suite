@@ -33,7 +33,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#ifndef _AIX
 #include <err.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
