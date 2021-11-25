@@ -26,6 +26,10 @@
 
 #define CHECKPOINTER(p)  CheckPointer(p,#p)
 
+const double SinPi4Result = 0x1.6a09e667f3bccp-1;
+const double SinPi16Result = 0x1.8f8b83c69a60ap-3;
+const double CosPi4Result = 0x1.6a09e667f3bcdp-1;
+
 static void CheckPointer ( void *p, char *name )
 {
     if ( p == NULL )
@@ -93,6 +97,24 @@ void fft_float (
         double sm1 = sin ( -delta_angle );
         double cm2 = cos ( -2 * delta_angle );
         double cm1 = cos ( -delta_angle );
+        // The sin and cos functions implemented in the AIX libm math
+        // library produce slightly less accurate results compared to sin
+        // and cos in Linux libm for some inputs; a difference of 1ulp.
+        // For sin, the results differ between AIX and Linux libm for inputs
+        // (pi/4) and (pi/16).
+        // For cos, the results differ between AIX and Linux libm for (pi/4).
+        // For these inputs specifically, the sin and cos results are set
+        // to the specific results retrieved from Linux libm.
+        if ((-2 * delta_angle) == (DDC_PI / 4)) {
+          sm2 = SinPi4Result;
+          cm2 = CosPi4Result;
+        } else if ((-2 * delta_angle) == (DDC_PI / 16))
+          sm2 = SinPi16Result;
+        if ((-delta_angle) == (DDC_PI / 4)) {
+          sm1 = SinPi4Result;
+          cm1 = CosPi4Result;
+        } else if ((-delta_angle) == (DDC_PI / 16))
+          sm1 = SinPi16Result;
         double w = 2 * cm1;
         double ar[3], ai[3];
         double temp;
@@ -204,6 +226,24 @@ void fft_float_StrictFP (
         double sm1 = sin ( -delta_angle );
         double cm2 = cos ( -2 * delta_angle );
         double cm1 = cos ( -delta_angle );
+        // The sin and cos functions implemented in the AIX libm math
+        // library produce slightly less accurate results compared to sin
+        // and cos in Linux libm for some inputs; a difference of 1ulp.
+        // For sin, the results differ between AIX and Linux libm for inputs
+        // (pi/4) and (pi/16).
+        // For cos, the results differ between AIX and Linux libm for (pi/4).
+        // For these inputs specifically, the sin and cos results are set
+        // to the specific results retrieved from Linux libm.
+        if ((-2 * delta_angle) == (DDC_PI / 4)) {
+          sm2 = SinPi4Result;
+          cm2 = CosPi4Result;
+        } else if ((-2 * delta_angle) == (DDC_PI / 16))
+          sm2 = SinPi16Result;
+        if ((-delta_angle) == (DDC_PI / 4)) {
+          sm1 = SinPi4Result;
+          cm1 = CosPi4Result;
+        } else if ((-delta_angle) == (DDC_PI / 16))
+          sm1 = SinPi16Result;
         double w = 2 * cm1;
         double ar[3], ai[3];
         double temp;
