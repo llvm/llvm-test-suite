@@ -27,7 +27,7 @@
   #if !defined(ENV_BEOS)
     #define ENV_HAVE_GETPASS
 
-    #if !defined(sun)
+    #if !defined(sun) && !defined(_AIX)
       #define ENV_HAVE_TIMEGM
     #endif
 
