@@ -1069,8 +1069,17 @@ static int dirent_compare(const struct dirent *a, const struct dirent *b) {
 	int ret = strcmp(a->d_name, b->d_name);
 	if (ret != 0)
 		return ret;
+#ifdef _AIX
+       struct stat a_stat;
+       struct stat b_stat;
+       stat(a->d_name, &a_stat);
+       stat(b->d_name, &b_stat);
+       if (a_stat.st_mode < b_stat.st_mode) return -1;
+       if (a_stat.st_mode > b_stat.st_mode) return 1;
+#else
 	if (a->d_type < b->d_type) return -1;
 	if (a->d_type > b->d_type) return 1;
+#endif
 	if (a->d_reclen < b->d_reclen) return -1;
 	if (a->d_reclen > b->d_reclen) return 1;
 	return 0;
