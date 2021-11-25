@@ -31,7 +31,11 @@
 #include <sys/resource.h>
 #include <grp.h>
 #include <utime.h>
+#ifdef _AIX
+#include <fcntl.h>
+#else
 #include <sys/fcntl.h>
+#endif
 #endif
 
 #if defined(__osf__) || defined(sun)
