@@ -1,4 +1,10 @@
-set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
+set(_host_cc_default "cc")
+if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  # If we are using Clang, we can use executable for the host even
+  # if CMake is configured to cross-compile.
+  set(_host_cc_default "${CMAKE_C_COMPILER}")
+endif ()
+set(TEST_SUITE_HOST_CC "${_host_cc_default}" CACHE STRING "C compiler targetting the host")
 mark_as_advanced(TEST_SUITE_HOST_CC)
 
 function(llvm_add_host_executable targetname exename)
