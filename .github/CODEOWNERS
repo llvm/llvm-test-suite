@@ -10,6 +10,7 @@ SYCL/AtomicRef @AGindinson
 SYCL/Assert @intel/llvm-reviewers-runtime
 SYCL/Basic @intel/llvm-reviewers-runtime
 SYCL/Config @intel/llvm-reviewers-runtime
+SYCL/DiscardEvents @intel/llvm-reviewers-runtime
 SYCL/FilterSelector @intel/llvm-reviewers-runtime
 SYCL/HostInteropTask @intel/llvm-reviewers-runtime
 SYCL/InorderQueue @intel/llvm-reviewers-runtime
