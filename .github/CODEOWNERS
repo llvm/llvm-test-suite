@@ -30,7 +30,7 @@ SYCL/DeviceLib/ITTAnnotations @vzakhari @MrSidims @AGindinson
 SYCL/DotProduct @rdeodhar
 
 # Explicit SIMD
-SYCL/ESIMD @kbobrovs @v-klochkov
+SYCL/ESIMD @kbobrovs @v-klochkov @sndmitriev
 
 # Functor
 SYCL/Functor @AlexeySachkov
