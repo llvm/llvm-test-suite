@@ -78,3 +78,6 @@ SYCL/BFloat16 @AlexeySotkin @MrSidims
 
 # Deprecated features
 SYCL/DeprecatedFeatures @intel/llvm-reviewers-runtime
+
+# XPTI and XPTI Framework
+SYCL/XPTI @intel/llvm-reviewers-runtime
