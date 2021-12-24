@@ -56,6 +56,9 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # Initialization of flexible array member
   pr28865.c
 
+  # Initialization of union is not required to initialize padding.
+  pr19687.c
+
   # GCC Extension: __builtin_*
   pr39228.c          # __builtin_isinff, __builtin_isinfl
   pr47237.c          # __builtin_apply, __builtin_apply_args
