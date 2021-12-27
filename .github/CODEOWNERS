@@ -55,6 +55,9 @@ SYCL/OnlineCompiler @v-klochkov
 # Plugin interface
 SYCL/Plugin @smaslov-intel
 
+# Printf
+SYCL/Printf @AlexeySachkov @AGindinson @mlychkov
+
 # Reduction algorithms
 SYCL/Reduction @v-klochkov
 
