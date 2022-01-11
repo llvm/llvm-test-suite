@@ -8,24 +8,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    - name: Get clang-format first
-      run: sudo apt-get install -yqq clang-format-9
 
+    container:
+      image: ghcr.io/intel/llvm/sycl_ubuntu2004_nightly:no-drivers
+
+    steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 2
-
-    - name: Get clang-format-diff.py tool
-      run: |
-        wget https://raw.githubusercontent.com/intel/llvm/sycl/clang/tools/clang-format/clang-format-diff.py
-        chmod u+x clang-format-diff.py
       
     - name: Run clang-format for the patch
       shell: bash {0}
       run: |
         git clang-format ${GITHUB_SHA}^1
         git diff > ./clang-format.patch
+
     # Add patch with formatting fixes to CI job artifacts
     - uses: actions/upload-artifact@v1
       with:
