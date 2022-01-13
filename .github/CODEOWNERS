@@ -1,35 +1,34 @@
 * @vladimirlaz @romanovvlad @bader
 
 # Use runtime team as the umbrella for most of the tests
-SYCL @intel/llvm-reviewers-runtime
+/SYCL/ @intel/llvm-reviewers-runtime
 
-# AOT compilation
-SYCL/AOT @intel/dpcpp-tools-reviewers
 
-#BFloat16 conversion
-SYCL/BFloat16 @AlexeySotkin @intel/dpcpp-tools-reviewers
-
-# Device code split
-SYCL/DeviceCodeSplit @intel/dpcpp-tools-reviewers
-
-# Explicit SIMD
-SYCL/ESIMD @intel/dpcpp-esimd-reviewers
+# SYCL sub-directory matchers are grouped by code owner first, followed by
+# alphabetical order within the group. Please, keep this ordering.
 
 # Group algorithms
-SYCL/GroupAlgorithm @Pennycook @intel/llvm-reviewers-runtime
-SYCL/SubGroup @Pennycook @intel/llvm-reviewers-runtime
-SYCL/SubGroupMask @Pennycook @intel/llvm-reviewers-runtime
-SYCL/GroupLocalMemory @Pennycook @intel/llvm-reviewers-runtime
+/SYCL/GroupAlgorithm/ @Pennycook @intel/llvm-reviewers-runtime
+/SYCL/GroupLocalMemory/ @Pennycook @intel/llvm-reviewers-runtime
+/SYCL/SubGroup/ @Pennycook @intel/llvm-reviewers-runtime
+/SYCL/SubGroupMask/ @Pennycook @intel/llvm-reviewers-runtime
 
 # Plugin interface for Level Zero
-SYCL/Plugin/*level-zero* @intel/dpcpp-l0-pi-reviewers
-SYCL/Plugin/*level_zero* @intel/dpcpp-l0-pi-reviewers
+/SYCL/Plugin/*level[-_]zero* @intel/dpcpp-l0-pi-reviewers
+
+# Explicit SIMD
+/SYCL/ESIMD/ @intel/dpcpp-esimd-reviewers
+
+# BFloat16 conversion
+/SYCL/BFloat16/ @AlexeySotkin @intel/dpcpp-tools-reviewers
+
+# Compiler tests
+/SYCL/AOT/ @intel/dpcpp-tools-reviewers
+/SYCL/DeviceCodeSplit/ @intel/dpcpp-tools-reviewers
+/SYCL/SeparateCompile/ @intel/dpcpp-tools-reviewers
 
 # Printf
-SYCL/Printf @intel/dpcpp-tools-reviewers
-
-# Separate compilation
-SYCL/SeparateCompile @intel/dpcpp-tools-reviewers
+/SYCL/Printf/ @intel/dpcpp-tools-reviewers
 
 # Specialization constant
-SYCL/SpecConstants @intel/dpcpp-tools-reviewers
+/SYCL/SpecConstants/ @intel/dpcpp-tools-reviewers
