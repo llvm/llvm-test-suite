@@ -3,7 +3,7 @@ static int d[][8] = {};
 
 int main ()
 {
-  int e;
+  int e = 0;
   for (int b = 0; b < 4; b++)
     {
       __builtin_printf ("%d\n", b, e);
