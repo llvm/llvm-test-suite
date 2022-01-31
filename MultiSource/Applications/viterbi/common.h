@@ -130,10 +130,13 @@ static inline void dvarray_clear(dvarray* array)
 static inline double sTime()
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
 { static struct timeval  this_tv;
-  static struct timezone dumbTZ;
   double t;
-                                                                                                                                                         
+#if !defined(_AIX) || defined(_ALL_SOURCE)
+  static struct timezone dumbTZ;
   gettimeofday(&this_tv, &dumbTZ);
+#else
+  gettimeofday(&this_tv, NULL);
+#endif
   t = this_tv.tv_sec + 0.000001*this_tv.tv_usec;
   return t;
 }
