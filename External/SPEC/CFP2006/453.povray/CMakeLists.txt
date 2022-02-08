@@ -1,5 +1,13 @@
 list(APPEND LDFLAGS -lm)
 
+if(ARCH STREQUAL "AArch64")
+  # On AArch64 and for C/C++ the new behavior is to flip 'fpp-contract' to
+  # 'on'. This breaks floating point comparison of results.
+  # Turn off the flag so that the result image matches the reference
+  # output.
+  list(APPEND CXXFLAGS -ffp-contract=off)
+endif()
+
 macro(test_input run_type stdout_reltol)
   llvm_test_run(RUN_TYPE ${run_type}
     WORKDIR %S/data/${run_type}/input
