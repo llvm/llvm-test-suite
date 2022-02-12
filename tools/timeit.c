@@ -333,9 +333,16 @@ static int execute_target_process(char * const argv[]) {
   if (g_target_data_size_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_DATA, g_target_data_size_limit);
   }
+#if !defined(__APPLE__)
+  // On Apple platforms, RLIMIT_RSS is mapped to RLIMIT_AS and setting RLIMIT_AS
+  // to a value smaller than the current virtual memory size will fail, This is
+  // incompatible with the current usage in timeit and can cause issues on
+  // platforms enforcing strict virtual memory size limits. Ignore RLIMIT_RSS on
+  // Apple platforms for now.
   if (g_target_rss_size_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_RSS, g_target_rss_size_limit);
   }
+#endif
   if (g_target_file_size_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_FSIZE, g_target_file_size_limit);
   }
