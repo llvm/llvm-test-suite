@@ -95,7 +95,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_num_threads.c
     4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_private.c
     4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_schedule_private.c
-    4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_thread_limit.c
     4.5/target_update/test_target_update_depend.c
     4.5/target_update/test_target_update_devices.c
     4.5/target_update/test_target_update_from.c
