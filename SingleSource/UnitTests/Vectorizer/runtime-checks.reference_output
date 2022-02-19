@@ -1,0 +1,28 @@
+Checking 1 read, 1 write, step 1, char
+Checking 1 read, 1 write, step 1, int
+Checking 1 read, 1 write, step 1, long long
+Checking 1 read, 1 write, offset 3, char
+Checking 1 read, 1 write, offset 3, int
+Checking 1 read, 1 write, offset 3, long long
+Checking 1 read, 1 write, offset -3, char
+Checking 1 read, 1 write, offset -3, int
+Checking 1 read, 1 write, offset -3, long long
+Checking 1 read, 1 write, index count down, char
+Checking 1 read, 1 write, index count down, int
+Checking 1 read, 1 write, index count down, long long
+Checking 1 read, 1 write, index count down 2, char
+Checking 1 read, 1 write, index count down 2, int
+Checking 1 read, 1 write, index count down 2, long long
+Checking 1 read, 1 write, 2 inductions, different steps, char
+Checking 1 read, 1 write, 2 inductions, different steps, int
+Checking 1 read, 1 write, 2 inductions, different steps, long long
+Checking 1 read, 1 write, induction increment 2, char
+Checking 1 read, 1 write, induction increment 2, int
+Checking 1 read, 1 write, induction increment 2, long long
+Checking 2 reads, 1 write, simple indices, int
+Checking 2 reads, 1 write, simple indices, char
+Checking 2 reads, 1 write, simple indices, long long
+Checking 1 read, 2 writes, simple indices, char
+Checking 1 read, 2 writes, simple indices, int
+Checking 1 read, 2 writes, simple indices, long long
+exit 0
