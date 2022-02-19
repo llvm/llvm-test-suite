@@ -12,6 +12,7 @@
 
 #include "QCS.hh"
 
+#include <algorithm>
 #include <cmath>
 #include "Memory.hh"
 #include "InputFile.hh"
