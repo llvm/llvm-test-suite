@@ -251,6 +251,15 @@ void JSONReporter::PrintRunData(Run const& run) {
   out << indent << FormatKV("threads", run.threads) << ",\n";
   if (run.run_type == BenchmarkReporter::Run::RT_Aggregate) {
     out << indent << FormatKV("aggregate_name", run.aggregate_name) << ",\n";
+    out << indent << FormatKV("aggregate_unit", [&run]() -> const char* {
+      switch (run.aggregate_unit) {
+        case StatisticUnit::kTime:
+          return "time";
+        case StatisticUnit::kPercentage:
+          return "percentage";
+      }
+      BENCHMARK_UNREACHABLE();
+    }()) << ",\n";
   }
   if (run.error_occurred) {
     out << indent << FormatKV("error_occurred", run.error_occurred) << ",\n";
@@ -258,8 +267,17 @@ void JSONReporter::PrintRunData(Run const& run) {
   }
   if (!run.report_big_o && !run.report_rms) {
     out << indent << FormatKV("iterations", run.iterations) << ",\n";
-    out << indent << FormatKV("real_time", run.GetAdjustedRealTime()) << ",\n";
-    out << indent << FormatKV("cpu_time", run.GetAdjustedCPUTime());
+    if (run.run_type != Run::RT_Aggregate ||
+        run.aggregate_unit == StatisticUnit::kTime) {
+      out << indent << FormatKV("real_time", run.GetAdjustedRealTime())
+          << ",\n";
+      out << indent << FormatKV("cpu_time", run.GetAdjustedCPUTime());
+    } else {
+      assert(run.aggregate_unit == StatisticUnit::kPercentage);
+      out << indent << FormatKV("real_time", run.real_accumulated_time)
+          << ",\n";
+      out << indent << FormatKV("cpu_time", run.cpu_accumulated_time);
+    }
     out << ",\n"
         << indent << FormatKV("time_unit", GetTimeUnitString(run.time_unit));
   } else if (run.report_big_o) {
@@ -277,9 +295,20 @@ void JSONReporter::PrintRunData(Run const& run) {
     out << ",\n" << indent << FormatKV(c.first, c.second);
   }
 
-  if (run.has_memory_result) {
+  if (run.memory_result) {
+    const MemoryManager::Result memory_result = *run.memory_result;
     out << ",\n" << indent << FormatKV("allocs_per_iter", run.allocs_per_iter);
-    out << ",\n" << indent << FormatKV("max_bytes_used", run.max_bytes_used);
+    out << ",\n"
+        << indent << FormatKV("max_bytes_used", memory_result.max_bytes_used);
+
+    auto report_if_present = [&out, &indent](const char* label, int64_t val) {
+      if (val != MemoryManager::TombstoneValue)
+        out << ",\n" << indent << FormatKV(label, val);
+    };
+
+    report_if_present("total_allocated_bytes",
+                      memory_result.total_allocated_bytes);
+    report_if_present("net_heap_growth", memory_result.net_heap_growth);
   }
 
   if (!run.report_label.empty()) {
@@ -287,5 +316,8 @@ void JSONReporter::PrintRunData(Run const& run) {
   }
   out << '\n';
 }
+
+const int64_t MemoryManager::TombstoneValue =
+    std::numeric_limits<int64_t>::max();
 
 }  // end namespace benchmark

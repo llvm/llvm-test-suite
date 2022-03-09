@@ -1866,6 +1866,33 @@ TEST(EndsWithTest, CanDescribeSelf) {
   EXPECT_EQ("ends with \"Hi\"", Describe(m));
 }
 
+// Tests WhenBase64Unescaped.
+
+TEST(WhenBase64UnescapedTest, MatchesUnescapedBase64Strings) {
+  const Matcher<const char*> m1 = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m1.Matches("invalid base64"));
+  EXPECT_FALSE(m1.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m1.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+
+  const Matcher<const std::string&> m2 = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m2.Matches("invalid base64"));
+  EXPECT_FALSE(m2.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m2.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<const internal::StringView&> m3 =
+      WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m3.Matches("invalid base64"));
+  EXPECT_FALSE(m3.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m3.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(WhenBase64UnescapedTest, CanDescribeSelf) {
+  const Matcher<const char*> m = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_EQ("matches after Base64Unescape ends with \"!\"", Describe(m));
+}
+
 // Tests MatchesRegex().
 
 TEST(MatchesRegexTest, MatchesStringMatchingGivenRegex) {
@@ -4616,6 +4643,16 @@ TEST(ResultOfTest, CanDescribeItself) {
             "isn't equal to \"foo\"", DescribeNegation(matcher));
 }
 
+// Tests that ResultOf() can describe itself when provided a result description.
+TEST(ResultOfTest, CanDescribeItselfWithResultDescription) {
+  Matcher<int> matcher =
+      ResultOf("string conversion", &IntToStringFunction, StrEq("foo"));
+
+  EXPECT_EQ("whose string conversion is equal to \"foo\"", Describe(matcher));
+  EXPECT_EQ("whose string conversion isn't equal to \"foo\"",
+            DescribeNegation(matcher));
+}
+
 // Tests that ResultOf() can explain the match result.
 int IntFunction(int input) { return input == 42 ? 80 : 90; }
 
@@ -5397,12 +5434,14 @@ class Streamlike {
   }
 
  private:
-  class ConstIter : public std::iterator<std::input_iterator_tag,
-                                         value_type,
-                                         ptrdiff_t,
-                                         const value_type*,
-                                         const value_type&> {
+  class ConstIter {
    public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = T;
+    using difference_type = ptrdiff_t;
+    using pointer = const value_type*;
+    using reference = const value_type&;
+
     ConstIter(const Streamlike* s,
               typename std::list<value_type>::iterator pos)
         : s_(s), pos_(pos) {}
@@ -6410,19 +6449,16 @@ TEST(IsReadableTypeNameTest, ReturnsFalseForLongFunctionTypeNames) {
 
 TEST(FormatMatcherDescriptionTest, WorksForEmptyDescription) {
   EXPECT_EQ("is even",
-            FormatMatcherDescription(false, "IsEven", Strings()));
+            FormatMatcherDescription(false, "IsEven", {}, Strings()));
   EXPECT_EQ("not (is even)",
-            FormatMatcherDescription(true, "IsEven", Strings()));
+            FormatMatcherDescription(true, "IsEven", {}, Strings()));
 
-  const char* params[] = {"5"};
-  EXPECT_EQ("equals 5",
-            FormatMatcherDescription(false, "Equals",
-                                     Strings(params, params + 1)));
+  EXPECT_EQ("equals (a: 5)",
+            FormatMatcherDescription(false, "Equals", {"a"}, {"5"}));
 
-  const char* params2[] = {"5", "8"};
-  EXPECT_EQ("is in range (5, 8)",
-            FormatMatcherDescription(false, "IsInRange",
-                                     Strings(params2, params2 + 2)));
+  EXPECT_EQ(
+      "is in range (a: 5, b: 8)",
+      FormatMatcherDescription(false, "IsInRange", {"a", "b"}, {"5", "8"}));
 }
 
 // Tests PolymorphicMatcher::mutable_impl().
@@ -7260,7 +7296,7 @@ TEST(ElementsAreTest, CanDescribeNegationOfExpectingNoElement) {
   EXPECT_EQ("isn't empty", DescribeNegation(m));
 }
 
-TEST(ElementsAreTest, CanDescribeNegationOfExpectingOneElment) {
+TEST(ElementsAreTest, CanDescribeNegationOfExpectingOneElement) {
   Matcher<const list<int>&> m = ElementsAre(Gt(5));
   EXPECT_EQ(
       "doesn't have 1 element, or\n"
@@ -7781,8 +7817,8 @@ TEST(MatcherPMacroTest, Works) {
   EXPECT_TRUE(m.Matches(36));
   EXPECT_FALSE(m.Matches(5));
 
-  EXPECT_EQ("is greater than 32 and 5", Describe(m));
-  EXPECT_EQ("not (is greater than 32 and 5)", DescribeNegation(m));
+  EXPECT_EQ("is greater than 32 and (n: 5)", Describe(m));
+  EXPECT_EQ("not (is greater than 32 and (n: 5))", DescribeNegation(m));
   EXPECT_EQ("", Explain(m, 36));
   EXPECT_EQ("", Explain(m, 5));
 }
@@ -7793,8 +7829,8 @@ MATCHER_P(_is_Greater_Than32and_, n, "") { return arg > 32 && arg > n; }
 TEST(MatcherPMacroTest, GeneratesCorrectDescription) {
   const Matcher<int> m = _is_Greater_Than32and_(5);
 
-  EXPECT_EQ("is greater than 32 and 5", Describe(m));
-  EXPECT_EQ("not (is greater than 32 and 5)", DescribeNegation(m));
+  EXPECT_EQ("is greater than 32 and (n: 5)", Describe(m));
+  EXPECT_EQ("not (is greater than 32 and (n: 5))", DescribeNegation(m));
   EXPECT_EQ("", Explain(m, 36));
   EXPECT_EQ("", Explain(m, 5));
 }
@@ -7827,7 +7863,8 @@ TEST(MatcherPMacroTest, WorksWhenExplicitlyInstantiatedWithReference) {
   // likely it will just annoy the user.  If the address is
   // interesting, the user should consider passing the parameter by
   // pointer instead.
-  EXPECT_EQ("references uncopyable 1-byte object <31>", Describe(m));
+  EXPECT_EQ("references uncopyable (variable: 1-byte object <31>)",
+            Describe(m));
 }
 
 // Tests that the body of MATCHER_Pn() can reference the parameter
@@ -7878,8 +7915,10 @@ TEST(MatcherPnMacroTest,
   // likely they will just annoy the user.  If the addresses are
   // interesting, the user should consider passing the parameters by
   // pointers instead.
-  EXPECT_EQ("references any of (1-byte object <31>, 1-byte object <32>)",
-            Describe(m));
+  EXPECT_EQ(
+      "references any of (variable1: 1-byte object <31>, variable2: 1-byte "
+      "object <32>)",
+      Describe(m));
 }
 
 // Tests that a simple MATCHER_P2() definition works.
@@ -7891,8 +7930,9 @@ TEST(MatcherPnMacroTest, Works) {
   EXPECT_TRUE(m.Matches(36L));
   EXPECT_FALSE(m.Matches(15L));
 
-  EXPECT_EQ("is not in closed range (10, 20)", Describe(m));
-  EXPECT_EQ("not (is not in closed range (10, 20))", DescribeNegation(m));
+  EXPECT_EQ("is not in closed range (low: 10, hi: 20)", Describe(m));
+  EXPECT_EQ("not (is not in closed range (low: 10, hi: 20))",
+            DescribeNegation(m));
   EXPECT_EQ("", Explain(m, 36L));
   EXPECT_EQ("", Explain(m, 15L));
 }
@@ -8378,7 +8418,7 @@ TEST(AnyOfArrayTest, ExplainsMatchResultCorrectly) {
   // Explain with matchers
   const Matcher<int> g1 = AnyOfArray({GreaterThan(1)});
   const Matcher<int> g2 = AnyOfArray({GreaterThan(1), GreaterThan(2)});
-  // Explains the first positiv match and all prior negative matches...
+  // Explains the first positive match and all prior negative matches...
   EXPECT_EQ("which is 1 less than 1", Explain(g1, 0));
   EXPECT_EQ("which is the same as 1", Explain(g1, 1));
   EXPECT_EQ("which is 1 more than 1", Explain(g1, 2));
@@ -8486,6 +8526,12 @@ TEST(ThrowsTest, Examples) {
   EXPECT_THAT(
       std::function<void()>([]() { throw std::runtime_error("message"); }),
       ThrowsMessage<std::runtime_error>(HasSubstr("message")));
+}
+
+TEST(ThrowsTest, PrintsExceptionWhat) {
+  EXPECT_THAT(
+      std::function<void()>([]() { throw std::runtime_error("ABC123XYZ"); }),
+      ThrowsMessage<std::runtime_error>(HasSubstr("ABC123XYZ")));
 }
 
 TEST(ThrowsTest, DoesNotGenerateDuplicateCatchClauseWarning) {
@@ -8601,15 +8647,6 @@ TEST_P(ThrowsPredicateTest, FailWrongTypeNonStd) {
   EXPECT_FALSE(matcher.MatchAndExplain([]() { throw 10; }, &listener));
   EXPECT_THAT(listener.str(),
               HasSubstr("throws an exception of an unknown type"));
-}
-
-TEST_P(ThrowsPredicateTest, FailWrongMessage) {
-  Matcher<std::function<void()>> matcher = GetParam();
-  StringMatchResultListener listener;
-  EXPECT_FALSE(matcher.MatchAndExplain(
-      []() { throw std::runtime_error("wrong message"); }, &listener));
-  EXPECT_THAT(listener.str(), HasSubstr("std::runtime_error"));
-  EXPECT_THAT(listener.str(), Not(HasSubstr("wrong message")));
 }
 
 TEST_P(ThrowsPredicateTest, FailNoThrow) {

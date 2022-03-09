@@ -85,7 +85,7 @@ std::string GetFileReporterOutput(int argc, char* argv[]);
 struct Results;
 typedef std::function<void(Results const&)> ResultsCheckFn;
 
-size_t AddChecker(const char* bm_name_pattern, ResultsCheckFn fn);
+size_t AddChecker(const char* bm_name_pattern, const ResultsCheckFn& fn);
 
 // Class holding the results of a benchmark.
 // It is passed in calls to checker functions.
@@ -113,9 +113,7 @@ struct Results {
     return NumIterations() * GetTime(kRealTime);
   }
   // get the cpu_time duration of the benchmark in seconds
-  double DurationCPUTime() const {
-    return NumIterations() * GetTime(kCpuTime);
-  }
+  double DurationCPUTime() const { return NumIterations() * GetTime(kCpuTime); }
 
   // get the string for a result by name, or nullptr if the name
   // is not found

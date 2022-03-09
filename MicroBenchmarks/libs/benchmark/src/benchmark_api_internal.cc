@@ -16,7 +16,7 @@ BenchmarkInstance::BenchmarkInstance(Benchmark* benchmark, int family_idx,
       per_family_instance_index_(per_family_instance_idx),
       aggregation_report_mode_(benchmark_.aggregation_report_mode_),
       args_(args),
-      time_unit_(benchmark_.time_unit_),
+      time_unit_(benchmark_.GetTimeUnit()),
       measure_process_cpu_time_(benchmark_.measure_process_cpu_time_),
       use_real_time_(benchmark_.use_real_time_),
       use_manual_time_(benchmark_.use_manual_time_),
@@ -78,6 +78,9 @@ BenchmarkInstance::BenchmarkInstance(Benchmark* benchmark, int family_idx,
   if (!benchmark_.thread_counts_.empty()) {
     name_.threads = StrFormat("threads:%d", threads_);
   }
+
+  setup_ = benchmark_.setup_;
+  teardown_ = benchmark_.teardown_;
 }
 
 State BenchmarkInstance::Run(
@@ -90,5 +93,20 @@ State BenchmarkInstance::Run(
   return st;
 }
 
+void BenchmarkInstance::Setup() const {
+  if (setup_) {
+    State st(/*iters*/ 1, args_, /*thread_id*/ 0, threads_, nullptr, nullptr,
+             nullptr);
+    setup_(st);
+  }
+}
+
+void BenchmarkInstance::Teardown() const {
+  if (teardown_) {
+    State st(/*iters*/ 1, args_, /*thread_id*/ 0, threads_, nullptr, nullptr,
+             nullptr);
+    teardown_(st);
+  }
+}
 }  // namespace internal
 }  // namespace benchmark

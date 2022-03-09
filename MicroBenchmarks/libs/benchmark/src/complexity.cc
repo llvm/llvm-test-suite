@@ -15,12 +15,13 @@
 // Source project : https://github.com/ismaelJimenez/cpp.leastsq
 // Adapted to be used with google benchmark
 
-#include "benchmark/benchmark.h"
+#include "complexity.h"
 
 #include <algorithm>
 #include <cmath>
+
+#include "benchmark/benchmark.h"
 #include "check.h"
-#include "complexity.h"
 
 namespace benchmark {
 
@@ -199,6 +200,7 @@ std::vector<BenchmarkReporter::Run> ComputeBigO(
   big_o.repetition_index = Run::no_repetition_index;
   big_o.threads = reports[0].threads;
   big_o.aggregate_name = "BigO";
+  big_o.aggregate_unit = StatisticUnit::kTime;
   big_o.report_label = reports[0].report_label;
   big_o.iterations = 0;
   big_o.real_accumulated_time = result_real.coef;
@@ -220,6 +222,7 @@ std::vector<BenchmarkReporter::Run> ComputeBigO(
   rms.per_family_instance_index = reports[0].per_family_instance_index;
   rms.run_type = BenchmarkReporter::Run::RT_Aggregate;
   rms.aggregate_name = "RMS";
+  rms.aggregate_unit = StatisticUnit::kPercentage;
   rms.report_label = big_o.report_label;
   rms.iterations = 0;
   rms.repetition_index = Run::no_repetition_index;

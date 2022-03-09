@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ostream>
 
+#include "benchmark/export.h"
 #include "internal_macros.h"
 #include "log.h"
 
@@ -13,10 +14,8 @@ namespace internal {
 
 typedef void(AbortHandlerT)();
 
-inline AbortHandlerT*& GetAbortHandler() {
-  static AbortHandlerT* handler = &std::abort;
-  return handler;
-}
+BENCHMARK_EXPORT
+AbortHandlerT*& GetAbortHandler();
 
 BENCHMARK_NORETURN inline void CallAbortHandler() {
   GetAbortHandler()();
@@ -36,10 +35,17 @@ class CheckHandler {
 
   LogType& GetLog() { return log_; }
 
+#if defined(COMPILER_MSVC)
+#pragma warning(push)
+#pragma warning(disable : 4722)
+#endif
   BENCHMARK_NORETURN ~CheckHandler() BENCHMARK_NOEXCEPT_OP(false) {
     log_ << std::endl;
     CallAbortHandler();
   }
+#if defined(COMPILER_MSVC)
+#pragma warning(pop)
+#endif
 
   CheckHandler& operator=(const CheckHandler&) = delete;
   CheckHandler(const CheckHandler&) = delete;

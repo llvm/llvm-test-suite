@@ -36,7 +36,7 @@ struct TestCase {
       BM_CHECK(run.report_label == label) << "expected " << label << " got "
                                        << run.report_label;
     } else {
-      BM_CHECK(run.report_label == "");
+      BM_CHECK(run.report_label.empty());
     }
     // clang-format on
   }
@@ -45,7 +45,7 @@ struct TestCase {
 std::vector<TestCase> ExpectedResults;
 
 int AddCases(std::initializer_list<TestCase> const& v) {
-  for (auto N : v) {
+  for (const auto& N : v) {
     ExpectedResults.push_back(N);
   }
   return 0;

@@ -26,7 +26,7 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+
 // Low-level types and utilities for porting Google Test to various
 // platforms.  All macros ending with _ and symbols defined in an
 // internal namespace are subject to change without notice.  Code
@@ -38,7 +38,9 @@
 // files are expected to #include this.  Therefore, it cannot #include
 // any other Google Test header.
 
-// GOOGLETEST_CM0001 DO NOT DELETE
+// IWYU pragma: private, include "gtest/gtest.h"
+// IWYU pragma: friend gtest/.*
+// IWYU pragma: friend gmock/.*
 
 #ifndef GOOGLETEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 #define GOOGLETEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
@@ -168,7 +170,6 @@
 //   GTEST_HAS_TYPED_TEST   - typed tests
 //   GTEST_HAS_TYPED_TEST_P - type-parameterized tests
 //   GTEST_IS_THREADSAFE    - Google Test is thread-safe.
-//   GOOGLETEST_CM0007 DO NOT DELETE
 //   GTEST_USES_POSIX_RE    - enhanced POSIX regex is used. Do not confuse with
 //                            GTEST_HAS_POSIX_RE (see above) which users can
 //                            define themselves.
@@ -191,9 +192,7 @@
 //   GTEST_AMBIGUOUS_ELSE_BLOCKER_ - for disabling a gcc warning.
 //   GTEST_ATTRIBUTE_UNUSED_  - declares that a class' instances or a
 //                              variable don't have to be used.
-//   GTEST_DISALLOW_ASSIGN_   - disables copy operator=.
 //   GTEST_DISALLOW_COPY_AND_ASSIGN_ - disables copy ctor and operator=.
-//   GTEST_DISALLOW_MOVE_ASSIGN_   - disables move operator=.
 //   GTEST_DISALLOW_MOVE_AND_ASSIGN_ - disables move ctor and operator=.
 //   GTEST_MUST_USE_RESULT_   - declares that a function's result must be used.
 //   GTEST_INTENTIONAL_CONST_COND_PUSH_ - start code section where MSVC C4127 is
@@ -220,7 +219,6 @@
 // Regular expressions:
 //   RE             - a simple regular expression class using the POSIX
 //                    Extended Regular Expression syntax on UNIX-like platforms
-//                    GOOGLETEST_CM0008 DO NOT DELETE
 //                    or a reduced regular exception syntax on other
 //                    platforms, including Windows.
 // Logging:
@@ -264,9 +262,17 @@
 #include <string.h>
 
 #include <cerrno>
+// #include <condition_variable>  // Guarded by GTEST_IS_THREADSAFE below
 #include <cstdint>
+#include <iostream>
 #include <limits>
+#include <locale>
+#include <memory>
+#include <string>
+// #include <mutex>  // Guarded by GTEST_IS_THREADSAFE below
+#include <tuple>
 #include <type_traits>
+#include <vector>
 
 #ifndef _WIN32_WCE
 # include <sys/types.h>
@@ -277,13 +283,6 @@
 # include <AvailabilityMacros.h>
 # include <TargetConditionals.h>
 #endif
-
-#include <iostream>  // NOLINT
-#include <locale>
-#include <memory>
-#include <string>  // NOLINT
-#include <tuple>
-#include <vector>  // NOLINT
 
 #include "gtest/internal/custom/gtest-port.h"
 #include "gtest/internal/gtest-port-arch.h"
@@ -689,28 +688,19 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 # define GTEST_ATTRIBUTE_PRINTF_(string_index, first_to_check)
 #endif
 
-
-// A macro to disallow copy operator=
-// This should be used in the private: declarations for a class.
-#define GTEST_DISALLOW_ASSIGN_(type) \
-  type& operator=(type const &) = delete
-
 // A macro to disallow copy constructor and operator=
 // This should be used in the private: declarations for a class.
+// NOLINT is for modernize-use-trailing-return-type in macro uses.
 #define GTEST_DISALLOW_COPY_AND_ASSIGN_(type) \
   type(type const&) = delete;                 \
-  type& operator=(type const&) = delete
-
-// A macro to disallow move operator=
-// This should be used in the private: declarations for a class.
-#define GTEST_DISALLOW_MOVE_ASSIGN_(type) \
-  type& operator=(type &&) noexcept = delete
+  type& operator=(type const&) = delete /* NOLINT */
 
 // A macro to disallow move constructor and operator=
 // This should be used in the private: declarations for a class.
+// NOLINT is for modernize-use-trailing-return-type in macro uses.
 #define GTEST_DISALLOW_MOVE_AND_ASSIGN_(type) \
   type(type&&) noexcept = delete;             \
-  type& operator=(type&&) noexcept = delete
+  type& operator=(type&&) noexcept = delete /* NOLINT */
 
 // Tell the compiler to warn about unused return values for functions declared
 // with this macro.  The macro should be used on function declarations
@@ -761,6 +751,12 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 
 #endif  // GTEST_IS_THREADSAFE
 
+#if GTEST_IS_THREADSAFE
+// Some platforms don't support including these threading related headers.
+#include <condition_variable>  // NOLINT
+#include <mutex>  // NOLINT
+#endif  // GTEST_IS_THREADSAFE
+
 // GTEST_API_ qualifies all symbols that must be exported. The definitions below
 // are guarded by #ifndef to give embedders a chance to define GTEST_API_ in
 // gtest/internal/custom/gtest-port.h
@@ -791,6 +787,20 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 # define GTEST_NO_INLINE_ __attribute__((noinline))
 #else
 # define GTEST_NO_INLINE_
+#endif
+
+#if defined(__clang__)
+// Nested ifs to avoid triggering MSVC warning.
+#if __has_attribute(disable_tail_calls)
+// Ask the compiler not to perform tail call optimization inside
+// the marked function.
+#define GTEST_NO_TAIL_CALL_ __attribute__((disable_tail_calls))
+#endif
+#elif __GNUC__
+#define GTEST_NO_TAIL_CALL_ \
+  __attribute__((optimize("no-optimize-sibling-calls")))
+#else
+#define GTEST_NO_TAIL_CALL_
 #endif
 
 // _LIBCPP_VERSION is defined by the libc++ library from the LLVM project.
@@ -998,7 +1008,7 @@ inline void FlushInfoLog() { fflush(nullptr); }
 //
 // GTEST_CHECK_ is an all-mode assert. It aborts the program if the condition
 // is not satisfied.
-//  Synopsys:
+//  Synopsis:
 //    GTEST_CHECK_(boolean_condition);
 //     or
 //    GTEST_CHECK_(boolean_condition) << "Additional message";
@@ -1053,7 +1063,7 @@ struct ConstRef<T&> { typedef T& type; };
 // const Foo*).  When you use ImplicitCast_, the compiler checks that
 // the cast is safe.  Such explicit ImplicitCast_s are necessary in
 // surprisingly many situations where C++ demands an exact type match
-// instead of an argument type convertable to a target type.
+// instead of an argument type convertible to a target type.
 //
 // The syntax for using ImplicitCast_ is the same as for static_cast:
 //
@@ -1165,71 +1175,8 @@ void ClearInjectableArgvs();
 
 // Defines synchronization primitives.
 #if GTEST_IS_THREADSAFE
-# if GTEST_HAS_PTHREAD
-// Sleeps for (roughly) n milliseconds.  This function is only for testing
-// Google Test's own constructs.  Don't use it in user tests, either
-// directly or indirectly.
-inline void SleepMilliseconds(int n) {
-  const timespec time = {
-    0,                  // 0 seconds.
-    n * 1000L * 1000L,  // And n ms.
-  };
-  nanosleep(&time, nullptr);
-}
-# endif  // GTEST_HAS_PTHREAD
 
-# if GTEST_HAS_NOTIFICATION_
-// Notification has already been imported into the namespace.
-// Nothing to do here.
-
-# elif GTEST_HAS_PTHREAD
-// Allows a controller thread to pause execution of newly created
-// threads until notified.  Instances of this class must be created
-// and destroyed in the controller thread.
-//
-// This class is only for testing Google Test's own constructs. Do not
-// use it in user tests, either directly or indirectly.
-class Notification {
- public:
-  Notification() : notified_(false) {
-    GTEST_CHECK_POSIX_SUCCESS_(pthread_mutex_init(&mutex_, nullptr));
-  }
-  ~Notification() {
-    pthread_mutex_destroy(&mutex_);
-  }
-
-  // Notifies all threads created with this notification to start. Must
-  // be called from the controller thread.
-  void Notify() {
-    pthread_mutex_lock(&mutex_);
-    notified_ = true;
-    pthread_mutex_unlock(&mutex_);
-  }
-
-  // Blocks until the controller thread notifies. Must be called from a test
-  // thread.
-  void WaitForNotification() {
-    for (;;) {
-      pthread_mutex_lock(&mutex_);
-      const bool notified = notified_;
-      pthread_mutex_unlock(&mutex_);
-      if (notified)
-        break;
-      SleepMilliseconds(10);
-    }
-  }
-
- private:
-  pthread_mutex_t mutex_;
-  bool notified_;
-
-  GTEST_DISALLOW_COPY_AND_ASSIGN_(Notification);
-};
-
-# elif GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_PHONE && !GTEST_OS_WINDOWS_RT
-
-GTEST_API_ void SleepMilliseconds(int n);
-
+# if GTEST_OS_WINDOWS
 // Provides leak-safe Windows kernel handle ownership.
 // Used in death tests and in threading support.
 class GTEST_API_ AutoHandle {
@@ -1258,23 +1205,45 @@ class GTEST_API_ AutoHandle {
 
   GTEST_DISALLOW_COPY_AND_ASSIGN_(AutoHandle);
 };
+# endif
 
+# if GTEST_HAS_NOTIFICATION_
+// Notification has already been imported into the namespace.
+// Nothing to do here.
+
+# else
 // Allows a controller thread to pause execution of newly created
 // threads until notified.  Instances of this class must be created
 // and destroyed in the controller thread.
 //
 // This class is only for testing Google Test's own constructs. Do not
 // use it in user tests, either directly or indirectly.
+// TODO(b/203539622): Replace unconditionally with absl::Notification.
 class GTEST_API_ Notification {
  public:
-  Notification();
-  void Notify();
-  void WaitForNotification();
+  Notification() : notified_(false) {}
+  Notification(const Notification&) = delete;
+  Notification& operator=(const Notification&) = delete;
+
+  // Notifies all threads created with this notification to start. Must
+  // be called from the controller thread.
+  void Notify() {
+    std::lock_guard<std::mutex> lock(mu_);
+    notified_ = true;
+    cv_.notify_all();
+  }
+
+  // Blocks until the controller thread notifies. Must be called from a test
+  // thread.
+  void WaitForNotification() {
+    std::unique_lock<std::mutex> lock(mu_);
+    cv_.wait(lock, [this]() { return notified_; });
+  }
 
  private:
-  AutoHandle event_;
-
-  GTEST_DISALLOW_COPY_AND_ASSIGN_(Notification);
+  std::mutex mu_;
+  std::condition_variable cv_;
+  bool notified_;
 };
 # endif  // GTEST_HAS_NOTIFICATION_
 
@@ -2219,29 +2188,29 @@ using TimeInMillis = int64_t;  // Represents time in milliseconds.
 #define GTEST_DECLARE_bool_(name)          \
   namespace testing {                      \
   GTEST_API_ extern bool GTEST_FLAG(name); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 #define GTEST_DECLARE_int32_(name)                 \
   namespace testing {                              \
   GTEST_API_ extern std::int32_t GTEST_FLAG(name); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 #define GTEST_DECLARE_string_(name)                 \
   namespace testing {                               \
   GTEST_API_ extern ::std::string GTEST_FLAG(name); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 
 // Macros for defining flags.
 #define GTEST_DEFINE_bool_(name, default_val, doc)  \
   namespace testing {                               \
   GTEST_API_ bool GTEST_FLAG(name) = (default_val); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 #define GTEST_DEFINE_int32_(name, default_val, doc)         \
   namespace testing {                                       \
   GTEST_API_ std::int32_t GTEST_FLAG(name) = (default_val); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 #define GTEST_DEFINE_string_(name, default_val, doc)         \
   namespace testing {                                        \
   GTEST_API_ ::std::string GTEST_FLAG(name) = (default_val); \
-  }
+  } static_assert(true, "no-op to require trailing semicolon")
 
 #endif  // !defined(GTEST_DECLARE_bool_)
 
@@ -2329,6 +2298,7 @@ namespace testing {
 namespace internal {
 template <typename T>
 using Optional = ::absl::optional<T>;
+inline ::absl::nullopt_t Nullopt() { return ::absl::nullopt; }
 }  // namespace internal
 }  // namespace testing
 #else
@@ -2342,6 +2312,7 @@ namespace testing {
 namespace internal {
 template <typename T>
 using Optional = ::std::optional<T>;
+inline ::std::nullopt_t Nullopt() { return ::std::nullopt; }
 }  // namespace internal
 }  // namespace testing
 // The case where absl is configured NOT to alias std::optional is not

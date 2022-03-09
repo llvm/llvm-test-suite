@@ -202,7 +202,8 @@ bool FindBenchmarksInternal(const std::string& re,
 Benchmark::Benchmark(const char* name)
     : name_(name),
       aggregation_report_mode_(ARM_Unspecified),
-      time_unit_(kNanosecond),
+      time_unit_(GetDefaultTimeUnit()),
+      use_default_time_unit_(true),
       range_multiplier_(kRangeMultiplier),
       min_time_(0),
       iterations_(0),
@@ -211,10 +212,13 @@ Benchmark::Benchmark(const char* name)
       use_real_time_(false),
       use_manual_time_(false),
       complexity_(oNone),
-      complexity_lambda_(nullptr) {
+      complexity_lambda_(nullptr),
+      setup_(nullptr),
+      teardown_(nullptr) {
   ComputeStatistics("mean", StatisticsMean);
   ComputeStatistics("median", StatisticsMedian);
   ComputeStatistics("stddev", StatisticsStdDev);
+  ComputeStatistics("cv", StatisticsCV, kPercentage);
 }
 
 Benchmark::~Benchmark() {}
@@ -232,6 +236,7 @@ Benchmark* Benchmark::Arg(int64_t x) {
 
 Benchmark* Benchmark::Unit(TimeUnit unit) {
   time_unit_ = unit;
+  use_default_time_unit_ = false;
   return this;
 }
 
@@ -320,6 +325,18 @@ Benchmark* Benchmark::Apply(void (*custom_arguments)(Benchmark* benchmark)) {
   return this;
 }
 
+Benchmark* Benchmark::Setup(void (*setup)(const benchmark::State&)) {
+  BM_CHECK(setup != nullptr);
+  setup_ = setup;
+  return this;
+}
+
+Benchmark* Benchmark::Teardown(void (*teardown)(const benchmark::State&)) {
+  BM_CHECK(teardown != nullptr);
+  teardown_ = teardown;
+  return this;
+}
+
 Benchmark* Benchmark::RangeMultiplier(int multiplier) {
   BM_CHECK(multiplier > 1);
   range_multiplier_ = multiplier;
@@ -398,9 +415,10 @@ Benchmark* Benchmark::Complexity(BigOFunc* complexity) {
   return this;
 }
 
-Benchmark* Benchmark::ComputeStatistics(std::string name,
-                                        StatisticsFunc* statistics) {
-  statistics_.emplace_back(name, statistics);
+Benchmark* Benchmark::ComputeStatistics(const std::string& name,
+                                        StatisticsFunc* statistics,
+                                        StatisticUnit unit) {
+  statistics_.emplace_back(name, statistics, unit);
   return this;
 }
 
@@ -446,6 +464,10 @@ int Benchmark::ArgsCnt() const {
   return static_cast<int>(args_.front().size());
 }
 
+TimeUnit Benchmark::GetTimeUnit() const {
+  return use_default_time_unit_ ? GetDefaultTimeUnit() : time_unit_;
+}
+
 //=============================================================================//
 //                            FunctionBenchmark
 //=============================================================================//
@@ -464,8 +486,7 @@ std::vector<int64_t> CreateRange(int64_t lo, int64_t hi, int multi) {
   return args;
 }
 
-std::vector<int64_t> CreateDenseRange(int64_t start, int64_t limit,
-                                      int step) {
+std::vector<int64_t> CreateDenseRange(int64_t start, int64_t limit, int step) {
   BM_CHECK_LE(start, limit);
   std::vector<int64_t> args;
   for (int64_t arg = start; arg <= limit; arg += step) {

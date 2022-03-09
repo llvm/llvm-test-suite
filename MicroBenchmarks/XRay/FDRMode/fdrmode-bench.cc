@@ -69,14 +69,14 @@ volatile bool log_initialized = false;
 
 [[clang::xray_never_instrument]] static void BM_XRayFDRMultiThreaded(
     benchmark::State& state) {
-  if (state.thread_index == 0) {
+  if (state.thread_index() == 0) {
     SetUpXRayFDRMultiThreaded(state);
   }
   for (auto _ : state) {
     val = EmptyFunction();
     benchmark::DoNotOptimize(val);
   }
-  if (state.thread_index == 0) {
+  if (state.thread_index() == 0) {
     TearDownXRayFDRMultiThreaded(state);
   }
 }

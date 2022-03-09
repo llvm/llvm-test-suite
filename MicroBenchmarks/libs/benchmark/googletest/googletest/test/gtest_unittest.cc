@@ -111,15 +111,15 @@ TEST_F(StreamingListenerTest, OnTestIterationEnd) {
   EXPECT_EQ("event=TestIterationEnd&passed=1&elapsed_time=0ms\n", *output());
 }
 
-TEST_F(StreamingListenerTest, OnTestCaseStart) {
+TEST_F(StreamingListenerTest, OnTestSuiteStart) {
   *output() = "";
-  streamer_.OnTestCaseStart(TestCase("FooTest", "Bar", nullptr, nullptr));
+  streamer_.OnTestSuiteStart(TestSuite("FooTest", "Bar", nullptr, nullptr));
   EXPECT_EQ("event=TestCaseStart&name=FooTest\n", *output());
 }
 
-TEST_F(StreamingListenerTest, OnTestCaseEnd) {
+TEST_F(StreamingListenerTest, OnTestSuiteEnd) {
   *output() = "";
-  streamer_.OnTestCaseEnd(TestCase("FooTest", "Bar", nullptr, nullptr));
+  streamer_.OnTestSuiteEnd(TestSuite("FooTest", "Bar", nullptr, nullptr));
   EXPECT_EQ("event=TestCaseEnd&passed=1&elapsed_time=0ms\n", *output());
 }
 
@@ -404,7 +404,7 @@ TEST(FormatTimeInMillisAsSecondsTest, FormatsNegativeNumber) {
 
 // Tests FormatEpochTimeInMillisAsIso8601().  The correctness of conversion
 // for particular dates below was verified in Python using
-// datetime.datetime.fromutctimestamp(<timetamp>/1000).
+// datetime.datetime.fromutctimestamp(<timestamp>/1000).
 
 // FormatEpochTimeInMillisAsIso8601 depends on the current timezone, so we
 // have to set up a particular timezone to obtain predictable results.
@@ -450,6 +450,12 @@ class FormatEpochTimeInMillisAsIso8601Test : public Test {
     tzset();
     GTEST_DISABLE_MSC_WARNINGS_POP_()
 #else
+#if GTEST_OS_LINUX_ANDROID && __ANDROID_API__ < 21
+    // Work around KitKat bug in tzset by setting "UTC" before setting "UTC+00".
+    // See https://github.com/android/ndk/issues/1604.
+    setenv("TZ", "UTC", 1);
+    tzset();
+#endif
     if (time_zone) {
       setenv(("TZ"), time_zone, 1);
     } else {
@@ -2017,7 +2023,7 @@ void ExpectNonFatalFailureRecordingPropertyWithReservedKeyOutsideOfTestSuite(
 }
 
 // Tests that property recording functions in UnitTest outside of tests
-// functions correcly.  Creating a separate instance of UnitTest ensures it
+// functions correctly.  Creating a separate instance of UnitTest ensures it
 // is in a state similar to the UnitTest's singleton's between tests.
 class UnitTestRecordPropertyTest :
     public testing::internal::UnitTestRecordPropertyTestHelper {
@@ -7792,4 +7798,36 @@ TEST(RegisterTest, WasRegistered) {
   }
 
   FAIL() << "Didn't find the test!";
+}
+
+// Test that the pattern globbing algorithm is linear. If not, this test should
+// time out.
+TEST(PatternGlobbingTest, MatchesFilterLinearRuntime) {
+  std::string name(100, 'a');  // Construct the string (a^100)b
+  name.push_back('b');
+
+  std::string pattern;  // Construct the string ((a*)^100)b
+  for (int i = 0; i < 100; ++i) {
+    pattern.append("a*");
+  }
+  pattern.push_back('b');
+
+  EXPECT_TRUE(
+      testing::internal::UnitTestOptions::MatchesFilter(name, pattern.c_str()));
+}
+
+TEST(PatternGlobbingTest, MatchesFilterWithMultiplePatterns) {
+  const std::string name = "aaaa";
+  EXPECT_TRUE(testing::internal::UnitTestOptions::MatchesFilter(name, "a*"));
+  EXPECT_TRUE(testing::internal::UnitTestOptions::MatchesFilter(name, "a*:"));
+  EXPECT_FALSE(testing::internal::UnitTestOptions::MatchesFilter(name, "ab"));
+  EXPECT_FALSE(testing::internal::UnitTestOptions::MatchesFilter(name, "ab:"));
+  EXPECT_TRUE(testing::internal::UnitTestOptions::MatchesFilter(name, "ab:a*"));
+}
+
+TEST(PatternGlobbingTest, MatchesFilterEdgeCases) {
+  EXPECT_FALSE(testing::internal::UnitTestOptions::MatchesFilter("", "*a"));
+  EXPECT_TRUE(testing::internal::UnitTestOptions::MatchesFilter("", "*"));
+  EXPECT_FALSE(testing::internal::UnitTestOptions::MatchesFilter("a", ""));
+  EXPECT_TRUE(testing::internal::UnitTestOptions::MatchesFilter("", ""));
 }

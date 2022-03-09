@@ -27,7 +27,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some matchers that depend on gmock-matchers.h.
@@ -35,7 +34,8 @@
 // Note that tests are implemented in gmock-matchers_test.cc rather than
 // gmock-more-matchers-test.cc.
 
-// GOOGLETEST_CM0002 DO NOT DELETE
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
 
 #ifndef GOOGLEMOCK_INCLUDE_GMOCK_GMOCK_MORE_MATCHERS_H_
 #define GOOGLEMOCK_INCLUDE_GMOCK_GMOCK_MORE_MATCHERS_H_

@@ -63,7 +63,7 @@ BM_DEFINE_bool(benchmark_list_tests, false);
 // A regular expression that specifies the set of benchmarks to execute.  If
 // this flag is empty, or if this flag is the string \"all\", all benchmarks
 // linked into the binary are run.
-BM_DEFINE_string(benchmark_filter, ".");
+BM_DEFINE_string(benchmark_filter, "");
 
 // Minimum number of seconds we should run benchmark before results are
 // considered significant.  For cpu-time based tests, this is the lower bound
@@ -121,12 +121,16 @@ BM_DEFINE_string(benchmark_perf_counters, "");
 // pairs. Kept internal as it's only used for parsing from env/command line.
 BM_DEFINE_kvpairs(benchmark_context, {});
 
+// Set the default time unit to use for reports
+// Valid values are 'ns', 'us', 'ms' or 's'
+BM_DEFINE_string(benchmark_time_unit, "");
+
 // The level of verbose logging to output
 BM_DEFINE_int32(v, 0);
 
 namespace internal {
 
-std::map<std::string, std::string>* global_context = nullptr;
+BENCHMARK_EXPORT std::map<std::string, std::string>* global_context = nullptr;
 
 // FIXME: wouldn't LTO mess this up?
 void UseCharPointer(char const volatile*) {}
@@ -145,14 +149,13 @@ State::State(IterationCount max_iters, const std::vector<int64_t>& ranges,
       error_occurred_(false),
       range_(ranges),
       complexity_n_(0),
-      counters(),
-      thread_index(thread_i),
-      threads(n_threads),
+      thread_index_(thread_i),
+      threads_(n_threads),
       timer_(timer),
       manager_(manager),
       perf_counters_measurement_(perf_counters_measurement) {
   BM_CHECK(max_iterations != 0) << "At least one iteration must be run";
-  BM_CHECK_LT(thread_index, threads)
+  BM_CHECK_LT(thread_index_, threads_)
       << "thread_index must be less than threads";
 
   // Note: The use of offsetof below is technically undefined until C++17
@@ -185,7 +188,10 @@ void State::PauseTiming() {
   BM_CHECK(started_ && !finished_ && !error_occurred_);
   timer_->StopTimer();
   if (perf_counters_measurement_) {
-    auto measurements = perf_counters_measurement_->StopAndGetMeasurements();
+    std::vector<std::pair<std::string, double>> measurements;
+    if (!perf_counters_measurement_->Stop(measurements)) {
+      BM_CHECK(false) << "Perf counters read the value failed.";
+    }
     for (const auto& name_and_measurement : measurements) {
       auto name = name_and_measurement.first;
       auto measurement = name_and_measurement.second;
@@ -363,7 +369,7 @@ void RunBenchmarks(const std::vector<BenchmarkInstance>& benchmarks,
                                              additional_run_stats.begin(),
                                              additional_run_stats.end());
           per_family_reports.erase(
-              (int)reports_for_family->Runs.front().family_index);
+              static_cast<int>(reports_for_family->Runs.front().family_index));
         }
       }
 
@@ -378,10 +384,7 @@ void RunBenchmarks(const std::vector<BenchmarkInstance>& benchmarks,
 
 // Disable deprecated warnings temporarily because we need to reference
 // CSVReporter but don't want to trigger -Werror=-Wdeprecated-declarations
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+BENCHMARK_DISABLE_DEPRECATED_WARNING
 
 std::unique_ptr<BenchmarkReporter> CreateReporter(
     std::string const& name, ConsoleReporter::OutputOptions output_opts) {
@@ -389,18 +392,16 @@ std::unique_ptr<BenchmarkReporter> CreateReporter(
   if (name == "console") {
     return PtrType(new ConsoleReporter(output_opts));
   } else if (name == "json") {
-    return PtrType(new JSONReporter);
+    return PtrType(new JSONReporter());
   } else if (name == "csv") {
-    return PtrType(new CSVReporter);
+    return PtrType(new CSVReporter());
   } else {
     std::cerr << "Unexpected format: '" << name << "'\n";
     std::exit(1);
   }
 }
 
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
+BENCHMARK_RESTORE_DEPRECATED_WARNING
 
 }  // end namespace
 
@@ -434,17 +435,41 @@ ConsoleReporter::OutputOptions GetOutputOptions(bool force_no_color) {
 
 }  // end namespace internal
 
+BenchmarkReporter* CreateDefaultDisplayReporter() {
+  static auto default_display_reporter =
+      internal::CreateReporter(FLAGS_benchmark_format,
+                               internal::GetOutputOptions())
+          .release();
+  return default_display_reporter;
+}
+
 size_t RunSpecifiedBenchmarks() {
-  return RunSpecifiedBenchmarks(nullptr, nullptr);
+  return RunSpecifiedBenchmarks(nullptr, nullptr, FLAGS_benchmark_filter);
+}
+
+size_t RunSpecifiedBenchmarks(std::string spec) {
+  return RunSpecifiedBenchmarks(nullptr, nullptr, std::move(spec));
 }
 
 size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter) {
-  return RunSpecifiedBenchmarks(display_reporter, nullptr);
+  return RunSpecifiedBenchmarks(display_reporter, nullptr,
+                                FLAGS_benchmark_filter);
+}
+
+size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
+                              std::string spec) {
+  return RunSpecifiedBenchmarks(display_reporter, nullptr, std::move(spec));
 }
 
 size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
                               BenchmarkReporter* file_reporter) {
-  std::string spec = FLAGS_benchmark_filter;
+  return RunSpecifiedBenchmarks(display_reporter, file_reporter,
+                                FLAGS_benchmark_filter);
+}
+
+size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
+                              BenchmarkReporter* file_reporter,
+                              std::string spec) {
   if (spec.empty() || spec == "all")
     spec = ".";  // Regexp that matches all benchmarks
 
@@ -453,8 +478,7 @@ size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
   std::unique_ptr<BenchmarkReporter> default_display_reporter;
   std::unique_ptr<BenchmarkReporter> default_file_reporter;
   if (!display_reporter) {
-    default_display_reporter = internal::CreateReporter(
-        FLAGS_benchmark_format, internal::GetOutputOptions());
+    default_display_reporter.reset(CreateDefaultDisplayReporter());
     display_reporter = default_display_reporter.get();
   }
   auto& Out = display_reporter->GetOutputStream();
@@ -500,6 +524,21 @@ size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
   return benchmarks.size();
 }
 
+namespace {
+// stores the time unit benchmarks use by default
+TimeUnit default_time_unit = kNanosecond;
+}  // namespace
+
+TimeUnit GetDefaultTimeUnit() { return default_time_unit; }
+
+void SetDefaultTimeUnit(TimeUnit unit) { default_time_unit = unit; }
+
+std::string GetBenchmarkFilter() { return FLAGS_benchmark_filter; }
+
+void SetBenchmarkFilter(std::string value) {
+  FLAGS_benchmark_filter = std::move(value);
+}
+
 void RegisterMemoryManager(MemoryManager* manager) {
   internal::memory_manager = manager;
 }
@@ -516,25 +555,45 @@ void AddCustomContext(const std::string& key, const std::string& value) {
 
 namespace internal {
 
+void (*HelperPrintf)();
+
 void PrintUsageAndExit() {
-  fprintf(stdout,
-          "benchmark"
-          " [--benchmark_list_tests={true|false}]\n"
-          "          [--benchmark_filter=<regex>]\n"
-          "          [--benchmark_min_time=<min_time>]\n"
-          "          [--benchmark_repetitions=<num_repetitions>]\n"
-          "          [--benchmark_enable_random_interleaving={true|false}]\n"
-          "          [--benchmark_report_aggregates_only={true|false}]\n"
-          "          [--benchmark_display_aggregates_only={true|false}]\n"
-          "          [--benchmark_format=<console|json|csv>]\n"
-          "          [--benchmark_out=<filename>]\n"
-          "          [--benchmark_out_format=<json|console|csv>]\n"
-          "          [--benchmark_color={auto|true|false}]\n"
-          "          [--benchmark_counters_tabular={true|false}]\n"
-          "          [--benchmark_perf_counters=<counter>,...]\n"
-          "          [--benchmark_context=<key>=<value>,...]\n"
-          "          [--v=<verbosity>]\n");
+  if (HelperPrintf) {
+    HelperPrintf();
+  } else {
+    fprintf(stdout,
+            "benchmark"
+            " [--benchmark_list_tests={true|false}]\n"
+            "          [--benchmark_filter=<regex>]\n"
+            "          [--benchmark_min_time=<min_time>]\n"
+            "          [--benchmark_repetitions=<num_repetitions>]\n"
+            "          [--benchmark_enable_random_interleaving={true|false}]\n"
+            "          [--benchmark_report_aggregates_only={true|false}]\n"
+            "          [--benchmark_display_aggregates_only={true|false}]\n"
+            "          [--benchmark_format=<console|json|csv>]\n"
+            "          [--benchmark_out=<filename>]\n"
+            "          [--benchmark_out_format=<json|console|csv>]\n"
+            "          [--benchmark_color={auto|true|false}]\n"
+            "          [--benchmark_counters_tabular={true|false}]\n"
+            "          [--benchmark_context=<key>=<value>,...]\n"
+            "          [--benchmark_time_unit={ns|us|ms|s}]\n"
+            "          [--v=<verbosity>]\n");
+  }
   exit(0);
+}
+
+void SetDefaultTimeUnitFromFlag(const std::string& time_unit_flag) {
+  if (time_unit_flag == "s") {
+    return SetDefaultTimeUnit(kSecond);
+  } else if (time_unit_flag == "ms") {
+    return SetDefaultTimeUnit(kMillisecond);
+  } else if (time_unit_flag == "us") {
+    return SetDefaultTimeUnit(kMicrosecond);
+  } else if (time_unit_flag == "ns") {
+    return SetDefaultTimeUnit(kNanosecond);
+  } else if (!time_unit_flag.empty()) {
+    PrintUsageAndExit();
+  }
 }
 
 void ParseCommandLineFlags(int* argc, char** argv) {
@@ -560,15 +619,14 @@ void ParseCommandLineFlags(int* argc, char** argv) {
         ParseStringFlag(argv[i], "benchmark_out_format",
                         &FLAGS_benchmark_out_format) ||
         ParseStringFlag(argv[i], "benchmark_color", &FLAGS_benchmark_color) ||
-        // "color_print" is the deprecated name for "benchmark_color".
-        // TODO: Remove this.
-        ParseStringFlag(argv[i], "color_print", &FLAGS_benchmark_color) ||
         ParseBoolFlag(argv[i], "benchmark_counters_tabular",
                       &FLAGS_benchmark_counters_tabular) ||
         ParseStringFlag(argv[i], "benchmark_perf_counters",
                         &FLAGS_benchmark_perf_counters) ||
         ParseKeyValueFlag(argv[i], "benchmark_context",
                           &FLAGS_benchmark_context) ||
+        ParseStringFlag(argv[i], "benchmark_time_unit",
+                        &FLAGS_benchmark_time_unit) ||
         ParseInt32Flag(argv[i], "v", &FLAGS_v)) {
       for (int j = i; j != *argc - 1; ++j) argv[j] = argv[j + 1];
 
@@ -584,6 +642,7 @@ void ParseCommandLineFlags(int* argc, char** argv) {
       PrintUsageAndExit();
     }
   }
+  SetDefaultTimeUnitFromFlag(FLAGS_benchmark_time_unit);
   if (FLAGS_benchmark_color.empty()) {
     PrintUsageAndExit();
   }
@@ -599,14 +658,13 @@ int InitializeStreams() {
 
 }  // end namespace internal
 
-void Initialize(int* argc, char** argv) {
+void Initialize(int* argc, char** argv, void (*HelperPrintf)()) {
   internal::ParseCommandLineFlags(argc, argv);
   internal::LogLevel() = FLAGS_v;
+  internal::HelperPrintf = HelperPrintf;
 }
 
-void Shutdown() {
-  delete internal::global_context;
-}
+void Shutdown() { delete internal::global_context; }
 
 bool ReportUnrecognizedArguments(int argc, char** argv) {
   for (int i = 1; i < argc; ++i) {

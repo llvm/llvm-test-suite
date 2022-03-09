@@ -1,6 +1,18 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
-
 licenses(["notice"])
+
+load("//:config/generate_export_header.bzl", "generate_export_header")
+
+posix_copts = [
+    "-fvisibility=hidden",
+    "-fvisibility-inlines-hidden",
+]
+
+# Generate header to provide ABI export symbols
+generate_export_header(
+    out = "include/benchmark/export.h",
+    lib = "benchmark",
+    static_define = "BENCHMARK_STATIC_DEFINE",
+)
 
 config_setting(
     name = "qnx",
@@ -29,13 +41,24 @@ cc_library(
         ],
         exclude = ["src/benchmark_main.cc"],
     ),
-    hdrs = ["include/benchmark/benchmark.h"],
+    hdrs = [
+        "include/benchmark/benchmark.h",
+        "include/benchmark/export.h", # From generate_export_header
+    ],
     linkopts = select({
         ":windows": ["-DEFAULTLIB:shlwapi.lib"],
         "//conditions:default": ["-pthread"],
     }),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
+    copts = select({
+        ":windows": [],
+        "//conditions:default": posix_copts,
+    }),
+    local_defines = select({
+        ":windows": ["benchmark_EXPORTS"],
+        "//conditions:default": [],
+    }),
 )
 
 cc_library(
@@ -45,6 +68,10 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [":benchmark"],
+    copts = select({
+        ":windows": [],
+        "//conditions:default": posix_copts,
+    }),
 )
 
 cc_library(

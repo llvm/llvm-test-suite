@@ -26,7 +26,7 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+
 // Google Test filepath utilities
 //
 // This header file declares classes and functions used internally by
@@ -35,7 +35,9 @@
 // This file is #included in gtest/internal/gtest-internal.h.
 // Do not include this header file separately!
 
-// GOOGLETEST_CM0001 DO NOT DELETE
+// IWYU pragma: private, include "gtest/gtest.h"
+// IWYU pragma: friend gtest/.*
+// IWYU pragma: friend gmock/.*
 
 #ifndef GOOGLETEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
 #define GOOGLETEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_

@@ -41,14 +41,17 @@ SubMap& GetSubstitutions() {
   // clang-format off
   static std::string safe_dec_re = "[0-9]*[.]?[0-9]+([eE][-+][0-9]+)?";
   static std::string time_re = "([0-9]+[.])?[0-9]+";
+  static std::string percentage_re = "[0-9]+[.][0-9]{2}";
   static SubMap map = {
       {"%float", "[0-9]*[.]?[0-9]+([eE][-+][0-9]+)?"},
       // human-readable float
       {"%hrfloat", "[0-9]*[.]?[0-9]+([eE][-+][0-9]+)?[kMGTPEZYmunpfazy]?"},
+      {"%percentage", percentage_re},
       {"%int", "[ ]*[0-9]+"},
       {" %s ", "[ ]+"},
       {"%time", "[ ]*" + time_re + "[ ]+ns"},
       {"%console_report", "[ ]*" + time_re + "[ ]+ns [ ]*" + time_re + "[ ]+ns [ ]*[0-9]+"},
+      {"%console_percentage_report", "[ ]*" + percentage_re + "[ ]+% [ ]*" + percentage_re + "[ ]+% [ ]*[0-9]+"},
       {"%console_us_report", "[ ]*" + time_re + "[ ]+us [ ]*" + time_re + "[ ]+us [ ]*[0-9]+"},
       {"%console_ms_report", "[ ]*" + time_re + "[ ]+ms [ ]*" + time_re + "[ ]+ms [ ]*[0-9]+"},
       {"%console_s_report", "[ ]*" + time_re + "[ ]+s [ ]*" + time_re + "[ ]+s [ ]*[0-9]+"},
@@ -138,7 +141,7 @@ void CheckCases(TestCaseList const& checks, std::stringstream& output) {
 class TestReporter : public benchmark::BenchmarkReporter {
  public:
   TestReporter(std::vector<benchmark::BenchmarkReporter*> reps)
-      : reporters_(reps) {}
+      : reporters_(std::move(reps)) {}
 
   virtual bool ReportContext(const Context& context) BENCHMARK_OVERRIDE {
     bool last_ret = false;
@@ -180,7 +183,7 @@ class ResultsChecker {
  public:
   struct PatternAndFn : public TestCase {  // reusing TestCase for its regexes
     PatternAndFn(const std::string& rx, ResultsCheckFn fn_)
-        : TestCase(rx), fn(fn_) {}
+        : TestCase(rx), fn(std::move(fn_)) {}
     ResultsCheckFn fn;
   };
 
@@ -188,7 +191,7 @@ class ResultsChecker {
   std::vector<Results> results;
   std::vector<std::string> field_names;
 
-  void Add(const std::string& entry_pattern, ResultsCheckFn fn);
+  void Add(const std::string& entry_pattern, const ResultsCheckFn& fn);
 
   void CheckResults(std::stringstream& output);
 
@@ -207,7 +210,8 @@ ResultsChecker& GetResultsChecker() {
 }
 
 // add a results checker for a benchmark
-void ResultsChecker::Add(const std::string& entry_pattern, ResultsCheckFn fn) {
+void ResultsChecker::Add(const std::string& entry_pattern,
+                         const ResultsCheckFn& fn) {
   check_patterns.emplace_back(entry_pattern, fn);
 }
 
@@ -296,7 +300,7 @@ std::vector<std::string> ResultsChecker::SplitCsv_(const std::string& line) {
 
 }  // end namespace internal
 
-size_t AddChecker(const char* bm_name, ResultsCheckFn fn) {
+size_t AddChecker(const char* bm_name, const ResultsCheckFn& fn) {
   auto& rc = internal::GetResultsChecker();
   rc.Add(bm_name, fn);
   return rc.results.size();
@@ -314,9 +318,7 @@ int Results::NumThreads() const {
   return num;
 }
 
-double Results::NumIterations() const {
-  return GetAs<double>("iterations");
-}
+double Results::NumIterations() const { return GetAs<double>("iterations"); }
 
 double Results::GetTime(BenchmarkTime which) const {
   BM_CHECK(which == kCpuTime || which == kRealTime);
@@ -381,10 +383,8 @@ int SetSubstitutions(
 
 // Disable deprecated warnings temporarily because we need to reference
 // CSVReporter but don't want to trigger -Werror=-Wdeprecated-declarations
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+BENCHMARK_DISABLE_DEPRECATED_WARNING
+
 void RunOutputTests(int argc, char* argv[]) {
   using internal::GetTestCaseList;
   benchmark::Initialize(&argc, argv);
@@ -443,9 +443,7 @@ void RunOutputTests(int argc, char* argv[]) {
   internal::GetResultsChecker().CheckResults(csv.out_stream);
 }
 
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
+BENCHMARK_RESTORE_DEPRECATED_WARNING
 
 int SubstrCnt(const std::string& haystack, const std::string& pat) {
   if (pat.length() == 0) return 0;
@@ -469,9 +467,8 @@ static char RandomHexChar() {
 
 static std::string GetRandomFileName() {
   std::string model = "test.%%%%%%";
-  for (auto & ch :  model) {
-    if (ch == '%')
-      ch = RandomHexChar();
+  for (auto& ch : model) {
+    if (ch == '%') ch = RandomHexChar();
   }
   return model;
 }
@@ -488,8 +485,7 @@ static std::string GetTempFileName() {
   int retries = 3;
   while (--retries) {
     std::string name = GetRandomFileName();
-    if (!FileExists(name))
-      return name;
+    if (!FileExists(name)) return name;
   }
   std::cerr << "Failed to create unique temporary file name" << std::endl;
   std::abort();

@@ -1084,7 +1084,7 @@ using ::testing::Lt;
 ```
 
 says that `Blah` will be called with arguments `x`, `y`, and `z` where `x < y <
-z`. Note that in this example, it wasn't necessary specify the positional
+z`. Note that in this example, it wasn't necessary to specify the positional
 matchers.
 
 As a convenience and example, gMock provides some matchers for 2-tuples,
@@ -1452,7 +1452,7 @@ the pointer is copied. When the last matcher that references the implementation
 object dies, the implementation object will be deleted.
 
 Therefore, if you have some complex matcher that you want to use again and
-again, there is no need to build it everytime. Just assign it to a matcher
+again, there is no need to build it every time. Just assign it to a matcher
 variable and use that variable repeatedly! For example,
 
 ```cpp
@@ -1754,7 +1754,7 @@ specifies the following DAG (where `s1` is `A -> B`, and `s2` is `A -> C -> D`):
        |
   A ---|
        |
-        +---> C ---> D
+       +---> C ---> D
 ```
 
 This means that A must occur before B and C, and C must occur before D. There's
@@ -1980,6 +1980,7 @@ If the mock method also needs to return a value as well, you can chain
 
 ```cpp
 using ::testing::_;
+using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
@@ -2033,10 +2034,7 @@ class MockRolodex : public Rolodex {
 }
 ...
   MockRolodex rolodex;
-  vector<string> names;
-  names.push_back("George");
-  names.push_back("John");
-  names.push_back("Thomas");
+  vector<string> names = {"George", "John", "Thomas"};
   EXPECT_CALL(rolodex, GetNames(_))
       .WillOnce(SetArrayArgument<0>(names.begin(), names.end()));
 ```
@@ -2604,7 +2602,7 @@ efficient. When the last action that references the implementation object dies,
 the implementation object will be deleted.
 
 If you have some complex action that you want to use again and again, you may
-not have to build it from scratch everytime. If the action doesn't have an
+not have to build it from scratch every time. If the action doesn't have an
 internal state (i.e. if it always does the same thing no matter how many times
 it has been called), you can assign it to an action variable and use that
 variable repeatedly. For example:
@@ -4191,7 +4189,7 @@ This implementation class does *not* need to inherit from any particular class.
 What matters is that it must have a `Perform()` method template. This method
 template takes the mock function's arguments as a tuple in a **single**
 argument, and returns the result of the action. It can be either `const` or not,
-but must be invokable with exactly one template argument, which is the result
+but must be invocable with exactly one template argument, which is the result
 type. In other words, you must be able to call `Perform<R>(args)` where `R` is
 the mock function's return type and `args` is its arguments in a tuple.
 
