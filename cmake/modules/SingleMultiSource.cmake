@@ -7,16 +7,16 @@
 #
 # Defines helpers to add executables and tests. The entry points to this
 # file are:
-#   `llvm_singlesource([PREFIX p] [sources...])`, and
+#   `llvm_singlesource([PREFIX p])`, and
 #   `llvm_multisource()`
 #
 # Following convenience functions provide shortcuts for common test cases:
 #
-# llvm_singlesource([PREFIX p] [sources...])
+# llvm_singlesource([PREFIX p])
 #
-#   Invokes llvm_test_executable() for each C/C++/Fortran source file.
-#   If sources is empty, creates test executables for all C/C++/Fortran
-#   files in current directory.
+#   Invokes llvm_test_executable() for each c/c++ source file.  If
+#   'sources is emptyno sources are specified, creates test executables
+#   for all C/C++ files in current directory.
 #   Passes optional PREFIX parameter to llvm_test_executable().
 #
 # llvm_multisource(target)
@@ -27,22 +27,14 @@
 include(TestSuite)
 
 # Configure the current directory as a SingleSource subdirectory - i.e. every
-# C/C++/Fortran file is treated as its own test.
+# file in *.{c,cpp,cc} is treated as its own test.
 function(llvm_singlesource)
-  # PREFIX is optional so it cannot be a named argument.
   cmake_parse_arguments(_LSARG "" "PREFIX" "" ${ARGN})
-  if(DEFINED _LSARG_PREFIX)
-    # Remove "PREFIX" and the associated value from ARGN so that it only
-    # contains sources.
-    list(REMOVE_AT ARGN 0)
-    list(REMOVE_AT ARGN 0)
-  endif()
-
-  set(sources ${ARGN})
-  if(NOT sources)
+  if(DEFINED Source)
+    set(sources ${Source})
+  else()
     file(GLOB sources *.c *.cpp *.cc *.f *.F *.f90 *.F90)
   endif()
-
   foreach(source ${sources})
     basename(name ${source})
     set(_target ${_LSARG_PREFIX}${name})
