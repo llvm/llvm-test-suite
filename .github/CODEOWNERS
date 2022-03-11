@@ -14,13 +14,14 @@
 /SYCL/SubGroupMask/ @Pennycook @intel/llvm-reviewers-runtime
 
 # Plugin interface for Level Zero
-/SYCL/Plugin/*level[-_]zero* @intel/dpcpp-l0-pi-reviewers
+/SYCL/Plugin/*level-zero* @intel/dpcpp-l0-pi-reviewers
+/SYCL/Plugin/*level_zero* @intel/dpcpp-l0-pi-reviewers
 
 # Explicit SIMD
 /SYCL/ESIMD/ @intel/dpcpp-esimd-reviewers
 
 # BFloat16 conversion
-/SYCL/BFloat16/ @AlexeySotkin @intel/dpcpp-tools-reviewers
+/SYCL/BFloat16/ @intel/dpcpp-tools-reviewers
 
 # Compiler tests
 /SYCL/AOT/ @intel/dpcpp-tools-reviewers
