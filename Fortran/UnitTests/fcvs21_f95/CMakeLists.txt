@@ -33,11 +33,17 @@
 # clean-up fort.* files otherwise one of the tests will fail
 llvm_test_prepare(rm -f %S/fort.*)
 
-# Test 509 requires this flag in more recent versions of GCC
+file(GLOB Source CONFIGURE_DEPENDS *.f)
+
+# Test 509 requires this flag in more recent versions of GCC.
+# If this flag is not supported, the test should be excluded.
 check_fortran_compiler_flag("-std=legacy" SUPPORTS_LEGACY)
 if (SUPPORTS_LEGACY)
   add_compile_options(-std=legacy)
-endif ()
+else()
+  # Regex because the GLOB returns the full path to each file
+  list(FILTER Source EXCLUDE REGEX "FM509\.f$")
+endif()
 
 set(FP_TOLERANCE 1.0e-11) # set by the most sensitive numerical test
 llvm_singlesource()
