@@ -134,7 +134,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     5.0/simd/test_simd_if.c
     5.0/simd/test_simd_nontemporal.c
     5.0/simd/test_simd_order_concurrent.c
-    5.0/target/test_target_allocate.c
     5.0/target/test_target_defaultmap_default.c
     5.0/target/test_target_defaultmap_firstprivate.c
     5.0/target/test_target_defaultmap_none.c
