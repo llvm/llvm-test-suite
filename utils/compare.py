@@ -262,7 +262,7 @@ def print_result(d, limit_output=True, shorten_names=True, minimal_names=False,
     print(out)
     print(d.describe())
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(prog='compare.py')
     parser.add_argument('-a', '--all', action='store_true')
     parser.add_argument('-f', '--full', action='store_true')
@@ -390,3 +390,7 @@ if __name__ == "__main__":
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
     print_result(data, limit_output, shorten_names, config.minimal_names, config.show_diff, sortkey, config.no_abs_sort)
+
+
+if __name__ == "__main__":
+    main()
