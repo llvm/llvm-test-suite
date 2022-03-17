@@ -309,9 +309,9 @@ if __name__ == "__main__":
 
         # Filter minimum of lhs and rhs
         lhs_d = readmulti(lhs)
-        lhs_merged = config.merge_function(lhs_d, level=1)
+        lhs_merged = lhs_d.groupby(level=1).apply(config.merge_function)
         rhs_d = readmulti(rhs)
-        rhs_merged = config.merge_function(rhs_d, level=1)
+        rhs_merged = rhs_d.groupby(level=1).apply(config.merge_function)
 
         # Combine to new dataframe
         data = pd.concat([lhs_merged, rhs_merged], names=['l/r'],
