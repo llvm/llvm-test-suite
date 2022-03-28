@@ -9,7 +9,7 @@ static std::mt19937 rng;
 // Initialize array A with random numbers.
 template <typename Ty>
 static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
-  std::uniform_int_distribution<int64_t> distrib(
+  std::uniform_int_distribution<uint64_t> distrib(
       std::numeric_limits<Ty>::min(), std::numeric_limits<Ty>::max());
   for (unsigned i = 0; i < N; i++)
     A[i] = static_cast<Ty>(distrib(rng));
