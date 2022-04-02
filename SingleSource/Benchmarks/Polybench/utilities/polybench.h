@@ -620,40 +620,40 @@ void print_element(double el, int pos, char *out)
   block.datum = el;
   /* each nibble as a char, within the printable range */
 #ifdef __BIG_ENDIAN__
-    *(out+pos+15) = ((block.bytes[0]&0xF0)>>4)+'0';
-    *(out+pos+14) = (block.bytes[0]&0x0F)     +'0';
-    *(out+pos+13) = ((block.bytes[1]&0xF0)>>4)+'0';
-    *(out+pos+12) = (block.bytes[1]&0x0F)     +'0';
-    *(out+pos+11) = ((block.bytes[2]&0xF0)>>4)+'0';
-    *(out+pos+10) = (block.bytes[2]&0x0F)     +'0';
-    *(out+pos+9) = ((block.bytes[3]&0xF0)>>4)+'0';
-    *(out+pos+8) =   (block.bytes[3]&0x0F)   +'0';
-    *(out+pos+7) = ((block.bytes[4]&0xF0)>>4)+'0';
-    *(out+pos+6) = (block.bytes[4]&0x0F)     +'0';
-    *(out+pos+5) = ((block.bytes[5]&0xF0)>>4)+'0';
-    *(out+pos+4) = (block.bytes[5]&0x0F)     +'0';
-    *(out+pos+3) = ((block.bytes[6]&0xF0)>>4)+'0';
-    *(out+pos+2) = (block.bytes[6]&0x0F)     +'0';
-    *(out+pos+1) = ((block.bytes[7]&0xF0)>>4)+'0';
-    *(out+pos) =   (block.bytes[7]&0x0F)     +'0';
-  #else
-    *(out+pos)   = ((block.bytes[0]&0xF0)>>4)+'0';
-    *(out+pos+1) = (block.bytes[0]&0x0F)     +'0';
-    *(out+pos+2) = ((block.bytes[1]&0xF0)>>4)+'0';
-    *(out+pos+3) = (block.bytes[1]&0x0F)     +'0';
-    *(out+pos+4) = ((block.bytes[2]&0xF0)>>4)+'0';
-    *(out+pos+5) = (block.bytes[2]&0x0F)     +'0';
-    *(out+pos+6) = ((block.bytes[3]&0xF0)>>4)+'0';
-    *(out+pos+7) = (block.bytes[3]&0x0F)     +'0';
-    *(out+pos+8) = ((block.bytes[4]&0xF0)>>4)+'0';
-    *(out+pos+9) = (block.bytes[4]&0x0F)     +'0';
-    *(out+pos+10) = ((block.bytes[5]&0xF0)>>4)+'0';
-    *(out+pos+11) = (block.bytes[5]&0x0F)     +'0';
-    *(out+pos+12) = ((block.bytes[6]&0xF0)>>4)+'0';
-    *(out+pos+13) = (block.bytes[6]&0x0F)     +'0';
-    *(out+pos+14) = ((block.bytes[7]&0xF0)>>4)+'0';
-    *(out+pos+15) = (block.bytes[7]&0x0F)     +'0';
-	#endif
+  *(out+pos+15) = ((block.bytes[0]&0xF0)>>4)+'0';
+  *(out+pos+14) = (block.bytes[0]&0x0F)     +'0';
+  *(out+pos+13) = ((block.bytes[1]&0xF0)>>4)+'0';
+  *(out+pos+12) = (block.bytes[1]&0x0F)     +'0';
+  *(out+pos+11) = ((block.bytes[2]&0xF0)>>4)+'0';
+  *(out+pos+10) = (block.bytes[2]&0x0F)     +'0';
+  *(out+pos+9) = ((block.bytes[3]&0xF0)>>4)+'0';
+  *(out+pos+8) =   (block.bytes[3]&0x0F)   +'0';
+  *(out+pos+7) = ((block.bytes[4]&0xF0)>>4)+'0';
+  *(out+pos+6) = (block.bytes[4]&0x0F)     +'0';
+  *(out+pos+5) = ((block.bytes[5]&0xF0)>>4)+'0';
+  *(out+pos+4) = (block.bytes[5]&0x0F)     +'0';
+  *(out+pos+3) = ((block.bytes[6]&0xF0)>>4)+'0';
+  *(out+pos+2) = (block.bytes[6]&0x0F)     +'0';
+  *(out+pos+1) = ((block.bytes[7]&0xF0)>>4)+'0';
+  *(out+pos) =   (block.bytes[7]&0x0F)     +'0';
+#else
+  *(out+pos)   = ((block.bytes[0]&0xF0)>>4)+'0';
+  *(out+pos+1) = (block.bytes[0]&0x0F)     +'0';
+  *(out+pos+2) = ((block.bytes[1]&0xF0)>>4)+'0';
+  *(out+pos+3) = (block.bytes[1]&0x0F)     +'0';
+  *(out+pos+4) = ((block.bytes[2]&0xF0)>>4)+'0';
+  *(out+pos+5) = (block.bytes[2]&0x0F)     +'0';
+  *(out+pos+6) = ((block.bytes[3]&0xF0)>>4)+'0';
+  *(out+pos+7) = (block.bytes[3]&0x0F)     +'0';
+  *(out+pos+8) = ((block.bytes[4]&0xF0)>>4)+'0';
+  *(out+pos+9) = (block.bytes[4]&0x0F)     +'0';
+  *(out+pos+10) = ((block.bytes[5]&0xF0)>>4)+'0';
+  *(out+pos+11) = (block.bytes[5]&0x0F)     +'0';
+  *(out+pos+12) = ((block.bytes[6]&0xF0)>>4)+'0';
+  *(out+pos+13) = (block.bytes[6]&0x0F)     +'0';
+  *(out+pos+14) = ((block.bytes[7]&0xF0)>>4)+'0';
+  *(out+pos+15) = (block.bytes[7]&0x0F)     +'0';
+#endif
 }
 
 #endif /* !POLYBENCH_H */
