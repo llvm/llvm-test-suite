@@ -114,7 +114,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     5.0/flush/test_flush_no_memory_order_clause.c
     5.0/master_taskloop/test_master_taskloop.c
     5.0/master_taskloop_simd/test_master_taskloop_simd.c
-    5.0/parallel_for/test_parallel_for_allocate.c
     5.0/parallel_for/test_parallel_for_notequals.c
     5.0/parallel_for/test_parallel_for_order_concurrent.c
     5.0/parallel_for_simd/test_parallel_for_simd_atomic.c
