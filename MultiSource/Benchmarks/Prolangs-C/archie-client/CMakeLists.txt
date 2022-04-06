@@ -1,4 +1,5 @@
 include(CheckFunctionExists)
+list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
 check_function_exists(re_comp HAVE_RE_COMP)
 
 if(HAVE_RE_COMP)

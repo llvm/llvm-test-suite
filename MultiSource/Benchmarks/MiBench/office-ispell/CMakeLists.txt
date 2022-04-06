@@ -1,4 +1,4 @@
-list(APPEND CPPFLAGS -Dconst=)
+list(APPEND CPPFLAGS  -Wno-implicit-function-declaration -Dconst=)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -a -d americanmed+ < large.txt)
 llvm_multisource(office-ispell)
