@@ -3,7 +3,7 @@ extern void abort (void);
 float x = -1.5f;
 
 float
-rintf ()
+rintf (void)
 {
   static const float TWO23 = 8388608.0;
 
