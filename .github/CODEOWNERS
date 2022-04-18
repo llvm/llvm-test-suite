@@ -1,8 +1,7 @@
-* @vladimirlaz @romanovvlad @bader
+* @pvchupin
 
 # Use runtime team as the umbrella for most of the tests
 /SYCL/ @intel/llvm-reviewers-runtime
-
 
 # SYCL sub-directory matchers are grouped by code owner first, followed by
 # alphabetical order within the group. Please, keep this ordering.
