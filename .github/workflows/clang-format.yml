@@ -20,6 +20,7 @@ jobs:
     - name: Run clang-format for the patch
       shell: bash {0}
       run: |
+        git config --global --add safe.directory /__w/llvm-test-suite/llvm-test-suite
         git clang-format ${GITHUB_SHA}^1
         git diff > ./clang-format.patch
 
