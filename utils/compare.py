@@ -124,6 +124,8 @@ def get_values(values):
 
 def add_diff_column(metric, values, absolute_diff=False):
     values0, values1 = get_values(values[metric])
+    values0.fillna(0.0, inplace=True)
+    values1.fillna(0.0, inplace=True)
     # Quotient or absolute difference?
     if absolute_diff:
         values[(metric, 'diff')] = values1 - values0
@@ -206,14 +208,15 @@ def determine_common_prefix_suffix(names, min_len=8):
     prefix_len = max(0, min(shortest_name - suffix_len, prefix_len))
     return (prefix_len, suffix_len)
 
-def format_diff(value):
+def format_relative_diff(value):
     if not isinstance(value, numbers.Integral):
         return "%4.1f%%" % (value * 100.)
     else:
         return "%-5d" % value
 
 def print_result(d, limit_output=True, shorten_names=True, minimal_names=False,
-                 show_diff_column=True, sortkey='diff', sort_by_abs=True):
+                 show_diff_column=True, sortkey='diff', sort_by_abs=True,
+                 absolute_diff=False):
     metrics = d.columns.levels[0]
     if sort_by_abs:
         d = d.sort_values(by=(metrics[0], sortkey), key=pd.Series.abs, ascending=False)
@@ -233,8 +236,9 @@ def print_result(d, limit_output=True, shorten_names=True, minimal_names=False,
         dataout = dataout.head(15)
 
     formatters = dict()
-    for m in metrics:
-        formatters[(m, 'diff')] = format_diff
+    if not absolute_diff:
+        for m in metrics:
+            formatters[(m, 'diff')] = format_relative_diff
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -261,7 +265,8 @@ def print_result(d, limit_output=True, shorten_names=True, minimal_names=False,
     dataout.insert(0, 'Program', formatted_program)
     # Add the geometric mean row after we have formatted the program names
     # as it will otherwise interfere with common prefix/suffix computation.
-    if show_diff_column:
+    if show_diff_column and not absolute_diff:
+        # geometric mean only makes sense for relative differences.
         dataout = add_geomean_row(metrics, d, dataout)
 
     def float_format(x):
@@ -286,6 +291,8 @@ def main():
     parser.add_argument('--nodiff', action='store_false', dest='show_diff',
                         default=None)
     parser.add_argument('--diff', action='store_true', dest='show_diff')
+    parser.add_argument('--absolute-diff', action='store_true',
+                        help='Use an absolute instead of a relative difference')
     parser.add_argument('--filter-short', action='store_true',
                         dest='filter_short')
     parser.add_argument('--no-filter-failed', action='store_false',
@@ -392,7 +399,7 @@ def main():
     data = data.unstack(level=0)
 
     for metric in data.columns.levels[0]:
-        data = add_diff_column(metric, data)
+        data = add_diff_column(metric, data, absolute_diff=config.absolute_diff)
 
     sortkey = 'diff'
     # TODO: should we still be sorting by diff even if the diff is hidden?
@@ -403,7 +410,9 @@ def main():
     print("")
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
-    print_result(data, limit_output, shorten_names, config.minimal_names, config.show_diff, sortkey, config.no_abs_sort)
+    print_result(data, limit_output, shorten_names, config.minimal_names,
+                 config.show_diff, sortkey, config.no_abs_sort,
+                 config.absolute_diff)
 
 
 if __name__ == "__main__":
