@@ -1,6 +1,5 @@
 # GCC C Torture Suite is conventionally run without warnings
-list(APPEND CFLAGS "-w")
-
+list(APPEND CFLAGS -Wno-implicit-function-declaration -w)
 set(TestsToSkip)
 
 ##
