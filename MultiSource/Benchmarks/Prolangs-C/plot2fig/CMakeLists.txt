@@ -1,6 +1,7 @@
 include(CheckFunctionExists)
 check_function_exists(re_comp HAVE_RE_COMP)
-list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
+list(APPEND CXXFLAGS -Wno-implicit-function-declaration)
+list(APPEND CFLAGS -Wno-implicit-function-declaration)
 if(HAVE_RE_COMP)
   list(APPEND LDFLAGS -lm)
   llvm_multisource(plot2fig)
