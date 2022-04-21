@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -DD_BUILD_VERSION=5725)
+list(APPEND CFLAGS -Wno-implicit-function-declaration)
 set(RUN_OPTIONS -v grammar.g)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource(make_dparser
