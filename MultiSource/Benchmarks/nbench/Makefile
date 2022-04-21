@@ -2,6 +2,7 @@ LEVEL = ../../..
 
 PROG     = nbench
 CPPFLAGS = -DBASE_ITERATIONS=25
+CFLAGS += -Wno-implicit-function-declaration
 LDFLAGS  =
 
 include	../../Makefile.multisrc
