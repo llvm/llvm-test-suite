@@ -58,5 +58,7 @@ PROGRAMS_TO_SKIP += initp1
 XCORE_TARGET_NEEDS_MEMORY := 1
 endif
 
+CFLAGS += -Wno-implicit-function-declaration
+
 LDFLAGS += -lstdc++
 include $(LEVEL)/SingleSource/Makefile.singlesrc

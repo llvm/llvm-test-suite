@@ -6,6 +6,9 @@ add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
+
+list(APPEND CFLAGS -Wno-implicit-function-declaration)
+
 # FIXME: Disable SJLJ tests for now, until EH edges are represented.
 # add_subdirectory(SetjmpLongjmp)
 if(TARGET_OS STREQUAL "Darwin")
