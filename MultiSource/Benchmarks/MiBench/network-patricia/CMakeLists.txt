@@ -1,3 +1,4 @@
+list(APPEND CFLAGS -Wno-implicit-function-declaration)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS large.udp)
 set(HASH_PROGRAM_OUTPUT 1)

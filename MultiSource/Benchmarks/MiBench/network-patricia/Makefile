@@ -1,5 +1,6 @@
 LEVEL = ../../../..
 
+CFLAGS += -Wno-implicit-function-declaration
 PROG     = network-patricia
 LDFLAGS  = -lm
 RUN_OPTIONS = $(PROJ_SRC_DIR)/large.udp
