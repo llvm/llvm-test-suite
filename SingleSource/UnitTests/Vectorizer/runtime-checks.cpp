@@ -240,6 +240,22 @@ int main(void) {
   }
 
   {
+    DEFINE_SCALAR_AND_VECTOR_FN2(
+      for (unsigned i = 0, sum = 0; i < TC; i++) {
+        sum += A[i] + 10;
+        B[TC / 2] = sum;
+      }
+    );
+
+    checkOverlappingMemoryOneRuntimeCheck<uint8_t>(
+        ScalarFn, VectorFn, "1 read, 1 write to invariant address, step 1, uint8_t");
+    checkOverlappingMemoryOneRuntimeCheck<uint32_t>(
+        ScalarFn, VectorFn, "1 read, 1 write to invariant address, step 1, uint32_t");
+    checkOverlappingMemoryOneRuntimeCheck<uint64_t>(
+        ScalarFn, VectorFn, "1 read, 1 write to invariant address, step 1, uint64_t");
+  }
+
+  {
     DEFINE_SCALAR_AND_VECTOR_FN3(
       for (unsigned i = 0; i < TC; i++)
         A[i] = B[i] + C[i] + 10;
