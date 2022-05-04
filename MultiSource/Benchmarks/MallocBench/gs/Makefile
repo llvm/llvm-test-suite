@@ -5,7 +5,7 @@ LDFLAGS += -lm
 CPPFLAGS += -DNOMEMOPT \
             -DGS_LIB_DEFAULT=\"$(PROJ_SRC_DIR):$(PROJ_SRC_DIR)/fonts\"
 
-CFLAGS += -Wno-implicit-function-declaration
+CFLAGS += -Wno-implicit-function-declaration -Wno-implicit-int
 
 #
 # This is to work around a bug where having a function prototype that is

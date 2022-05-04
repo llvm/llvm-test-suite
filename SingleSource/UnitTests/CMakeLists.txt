@@ -7,7 +7,7 @@ add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
 
-list(APPEND CFLAGS -Wno-implicit-function-declaration)
+list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int)
 
 # FIXME: Disable SJLJ tests for now, until EH edges are represented.
 # add_subdirectory(SetjmpLongjmp)

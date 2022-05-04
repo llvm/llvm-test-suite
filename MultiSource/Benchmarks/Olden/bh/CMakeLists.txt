@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -fcommon -DTORONTO)
+list(APPEND CFLAGS -Wno-implicit-int)
 list(APPEND LDFLAGS -lm)
 if(LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS 40000 30)

@@ -6,6 +6,8 @@ EXEC_XFAILS = casts
 endif
 endif
 
+CFLAGS += -Wno-implicit-int
+
 ifdef BENCHMARKING_ONLY
 PROGRAMS_TO_SKIP += \
 	2003-05-14-initialize-string \

@@ -1,4 +1,5 @@
 set(RUN_OPTIONS < clinton.pcm)
+list(APPEND CFLAGS -Wno-implicit-int)
 llvm_multisource(rawcaudio
   rawcaudio.c
   adpcm.c

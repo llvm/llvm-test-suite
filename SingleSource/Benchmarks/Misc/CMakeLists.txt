@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm )
+list(APPEND CFLAGS -Wno-implicit-int)
 set(FP_TOLERANCE 0.001)
 set(Source
   ReedSolomon.c

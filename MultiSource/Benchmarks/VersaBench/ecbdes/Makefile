@@ -1,6 +1,7 @@
 LEVEL = ../../../..
 
 PROG     = ecbdes
+CFLAGS += -Wno-implicit-int
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 34
 else

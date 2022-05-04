@@ -5,4 +5,5 @@ if(ARCH MATCHES "x86" OR ARCH MATCHES "riscv" OR
 endif()
 
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -Wno-implicit-int)
 llvm_singlesource(PREFIX "Regression-C-")

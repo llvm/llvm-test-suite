@@ -1,5 +1,5 @@
 LEVEL = ../../../..
-
+CFLAGS += -Wno-implicit-int
 PROG     = enc-pc1
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = 20000000

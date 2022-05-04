@@ -1,6 +1,5 @@
 list(APPEND CPPFLAGS -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN -Dunix)
-list(APPEND CXXFLAGS -Wno-implicit-function-declaration)
-list(APPEND CFLAGS -Wno-implicit-function-declaration)
+list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -v1 test.scm)
 llvm_multisource(siod)

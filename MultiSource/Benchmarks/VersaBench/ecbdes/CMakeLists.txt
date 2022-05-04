@@ -1,3 +1,4 @@
+list(APPEND CFLAGS -Wno-implicit-int)
 if(LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS 34)
 else()

@@ -12,5 +12,6 @@ TARGET_FLAGS += -maltivec
 # setting TEST_TARGET_FLAGS is needed within the LNT environment.
 TEST_TARGET_FLAGS += -maltivec
 LCCFLAGS += -maltivec
+CFLAGS += -Wno-implicit-int
 
 include $(LEVEL)/SingleSource/Makefile.singlesrc

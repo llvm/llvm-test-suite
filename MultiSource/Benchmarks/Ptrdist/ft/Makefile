@@ -5,6 +5,7 @@ RUN_OPTIONS += 6000 100000
 else
 RUN_OPTIONS +=  1500 100000
 endif
+CFLAGS += -Wno-implicit-int
 HASH_PROGRAM_OUTPUT = 1
 include $(LEVEL)/MultiSource/Makefile.multisrc
 

@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -Wno-implicit-int)
 set(RUN_OPTIONS input_large.pgm /dev/null -s)
 set(HASH_PROGRAM_OUTPUT 1)
 llvm_multisource(automotive-susan)

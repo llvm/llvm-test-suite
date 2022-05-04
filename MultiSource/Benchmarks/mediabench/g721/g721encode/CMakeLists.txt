@@ -1,4 +1,5 @@
 set(RUN_OPTIONS -4 -l < clinton.pcm)
+list(APPEND CFLAGS -Wno-implicit-int)
 llvm_multisource(encode
   encode.c
   g711.c

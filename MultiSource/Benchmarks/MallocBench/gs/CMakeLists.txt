@@ -1,6 +1,6 @@
 list(APPEND LDFLAGS -lm)
 list(APPEND CPPFLAGS -DNOMEMOPT -DGS_LIB_DEFAULT=".:./fonts")
-list(APPEND CFLAGS -Wno-implicit-function-declaration)
+list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int)
 list(APPEND CPPFLAGS -DNOPRIVATE)
 set(RUN_OPTIONS -DNODISPLAY INPUT/large.ps)
 llvm_multisource(gs

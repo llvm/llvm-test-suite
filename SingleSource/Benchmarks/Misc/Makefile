@@ -1,5 +1,6 @@
 LEVEL = ../../..
 LDFLAGS += -lm 
+CFLAGS += -Wno-implicit-int
 FP_TOLERANCE := 0.001
 
 include $(LEVEL)/Makefile.config

@@ -1,5 +1,6 @@
 LEVEL = ../../../../..
 STDIN_FILENAME = $(SourceDir)/../data/clinton.adpcm 
+CFLAGS += -Wno-implicit-int
 PROG = rawdaudio
 HASH_PROGRAM_OUTPUT = 1
 

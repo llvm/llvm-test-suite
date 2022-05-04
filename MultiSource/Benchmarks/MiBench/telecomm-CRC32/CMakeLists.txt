@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -Wno-implicit-int)
 set(RUN_OPTIONS large.pcm)
 llvm_multisource(telecomm-CRC32)
 llvm_test_data(telecomm-CRC32 large.pcm)

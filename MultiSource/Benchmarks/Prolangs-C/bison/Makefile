@@ -1,7 +1,6 @@
 LEVEL = ../../../..
 
-CFLAGS += -Wno-implicit-function-declaration
-CXXFLAGS += -Wno-implicit-function-declaration
+CFLAGS += -Wno-implicit-function-declaration -Wno-implicit-int
 
 PROG = mybison
 RUN_OPTIONS = $(PROJ_SRC_DIR)/parse.y.in -v
