@@ -1,6 +1,7 @@
 LEVEL = ../../..
 PROG     = spiff
 CPPFLAGS = 
+CFLAGS += -Wno-implicit-int
 LDFLAGS  =
 
 #RUN_OPTIONS = $(PROJ_SRC_DIR)/Sample.1 $(PROJ_SRC_DIR)/Sample.2
