@@ -51,6 +51,12 @@ DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} 
   # because of "CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY" explained just
   # above. We work around that by forcing it to NO.
   set(HAVE_RE_COMP CACHE BOOL NO)
+
+  # Likewise, some benchmarks look for librt, which does not exist on darwin
+  # systems, but the check returns YES because we don't actually link, given
+  # the CMAKE_TRY_COMPILE_TARGET_TYPE setting above.  We work around that by
+  # forcing it to NO.
+  set(HAVE_LIB_RT CACHE BOOL NO)
 else()
   # Search and use compiler coming with the SDK.
   # Note that we do not search CMAKE_CXX_COMPILER here. cmake will try
