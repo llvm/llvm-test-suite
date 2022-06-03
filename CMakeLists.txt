@@ -53,7 +53,10 @@ if(${TEST_SUITE_SUPPRESS_WARNINGS})
 endif()
 
 # We want reproducible builds, so using __DATE__ and __TIME__ is bad
-add_definitions(-Werror=date-time)
+# FIXME: Add this unconditionally when flang starts supporting it.
+if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
+  add_definitions(-Werror=date-time)
+endif()
 
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
