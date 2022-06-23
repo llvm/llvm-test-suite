@@ -33,7 +33,23 @@
 # clean-up fort.* files otherwise one of the tests will fail
 llvm_test_prepare(rm -f %S/fort.*)
 
+# Group 1:
+# Tests 905 and 907 use list-directed output, for which the standard allows some
+# flexibility, e.g.,  with regards to how many white space characters or
+# floating point decimals to print. Treat them separately.
+set(SPECIAL_CASES "FM905.f" "FM907.f")
+set(Source ${SPECIAL_CASES})
+set(FP_IGNOREWHITESPACE ON)
+llvm_singlesource()
+set(Source)
+
+# Group 2:
+# Generic case. Make sure to exclude the special cases which have already been
+# added as part of Group 1.
 file(GLOB Source CONFIGURE_DEPENDS *.f)
+foreach (SPECIAL_CASE ${SPECIAL_CASES})
+  list(FILTER Source EXCLUDE REGEX ${SPECIAL_CASE})
+endforeach()
 
 # Test 509 requires this flag in more recent versions of GCC.
 # If this flag is not supported, the test should be excluded.
@@ -46,6 +62,7 @@ else()
 endif()
 
 set(FP_TOLERANCE 1.0e-11) # set by the most sensitive numerical test
+set(FP_IGNOREWHITESPACE OFF)
 llvm_singlesource()
 
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
