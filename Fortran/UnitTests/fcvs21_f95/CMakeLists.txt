@@ -50,6 +50,11 @@ set(SPECIAL_CASES "FM905.f" "FM907.f")
 set(Source ${SPECIAL_CASES})
 if (FCVS_ALLOW_FLEXIBLE_OUTPUT)
   set(FP_IGNOREWHITESPACE ON)
+
+  # FM905 needs a higher relative tolerance than the rest. The reference output
+  # contains 2.5E-11, but gfortran (reasonably) prints 2.50000003E-11. Both
+  # should be accepted.
+  set(FP_TOLERANCE 1.0e-7)
 endif()
 llvm_singlesource()
 set(Source)
