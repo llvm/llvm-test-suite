@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cltypes.h"
 
 #include "clamav.h"
@@ -202,8 +203,15 @@ int cli_bitset_set(bitset_t *bs, unsigned long bit_offset);
 int cli_bitset_test(bitset_t *bs, unsigned long bit_offset);
 
 #if WORDS_BIGENDIAN == 0
-#define cli_readint32(buff) (*(const int32_t *)(buff))
-#define cli_writeint32(offset, value) (*(uint32_t *)(offset)=(uint32_t)(value))
+static inline int32_t cli_readint32(const char *buff) {
+  int32_t ret;
+  memcpy(&ret, buff, sizeof(ret));
+  return ret;
+}
+
+static inline void cli_writeint32(char *offset, uint32_t value) {
+  memcpy(offset, &value, sizeof(value));
+}
 #else
 static inline int32_t cli_readint32(const char *buff)
 {
