@@ -35,6 +35,14 @@ file(GLOB TestRequiresFNoTrappingMath CONFIGURE_DEPENDS
   compare-fp-3.c
 )
 
+if(TEST_SUITE_PROFILE_GENERATE OR TEST_SUITE_PROFILE_USE)
+  file(GLOB UnsupportedWithPGO CONFIGURE_DEPENDS
+    # Fails to compile when compiling with instrumentation
+    compare-fp-3.c
+  )
+  list(APPEND TestsToSkip ${UnsupportedWithPGO})
+endif()
+
 ##
 ## Architecture-specific Test Blacklists
 ##
