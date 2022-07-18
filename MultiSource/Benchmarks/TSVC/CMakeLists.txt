@@ -1,3 +1,8 @@
+
+# Expect exact numeric results. However, the libc printf implementation emits
+# 'E' in scientific notation, while the reference output contains 'e'.
+set(FP_ABSTOLERANCE 0.0)
+
 add_subdirectory(ControlFlow-dbl)
 add_subdirectory(ControlFlow-flt)
 add_subdirectory(ControlLoops-dbl)
