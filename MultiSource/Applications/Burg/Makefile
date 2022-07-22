@@ -2,7 +2,7 @@ LEVEL = ../../..
 
 PROG     = burg
 CPPFLAGS = -DDEBUG
-CFLAGS  += -std=gnu89
+CFLAGS  += -std=gnu89 -Wno-int-conversion
 LDFLAGS  = -lstdc++
 
 STDIN_FILENAME = $(PROJ_SRC_DIR)/sample.gr

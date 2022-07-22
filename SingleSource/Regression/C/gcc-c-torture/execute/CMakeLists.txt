@@ -1,7 +1,7 @@
 add_subdirectory(ieee)
 
 # GCC C Torture Suite is conventionally run without warnings
-list(APPEND CFLAGS -Wno-implicit-int -Wno-implicit-function-declaration -w)
+list(APPEND CFLAGS -Wno-implicit-int -Wno-int-conversion -Wno-implicit-function-declaration -w)
 
 set(TestsToSkip)
 

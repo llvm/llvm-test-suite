@@ -1,3 +1,4 @@
+list(APPEND CFLAGS -Wno-int-conversion)
 list(APPEND LDFLAGS -lm)
 if(LARGE_PROBLEM_SIZE)
   set(RUN_OPTIONS -i 400)

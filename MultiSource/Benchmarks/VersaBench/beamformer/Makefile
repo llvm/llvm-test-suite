@@ -1,6 +1,6 @@
 LEVEL = ../../../..
 LDFLAGS += -lm
-CFLAGS += -DFP_ABSTOLERANCE=1e-5
+CFLAGS += -DFP_ABSTOLERANCE=1e-5 -Wno-int-conversion
 
 PROG     = beamformer
 ifdef LARGE_PROBLEM_SIZE
