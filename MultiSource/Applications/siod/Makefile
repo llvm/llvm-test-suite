@@ -1,7 +1,7 @@
 LEVEL = ../../..
 PROG     = siod
 CPPFLAGS = -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN -Dunix
-CFLAGS += -Wno-implicit-function-declaration -Wno-implicit-int
+CFLAGS += -Wno-implicit-function-declaration -Wno-implicit-int -Wno-int-conversion
 LDFLAGS  = -lm $(TOOLLINKOPTS)
 
 RUN_OPTIONS = -v1 $(PROJ_SRC_DIR)/test.scm
