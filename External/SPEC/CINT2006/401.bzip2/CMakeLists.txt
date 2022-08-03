@@ -21,5 +21,7 @@ test_input(ref data/all/input/input.program 280 input.program.out)
 test_input(ref data/ref/input/text.html 280 text.html.out)
 test_input(ref data/all/input/input.combined 200 input.combined.out)
 
+
+list(APPEND CFLAGS -Wno-int-conversion)
 llvm_test_executable(401.bzip2 ${Source})
 llvm_test_data_spec_default(401.bzip2)
