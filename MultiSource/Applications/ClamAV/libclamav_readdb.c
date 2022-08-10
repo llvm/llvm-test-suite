@@ -1142,7 +1142,7 @@ static int cli_loaddbdir_l(const char *dirname, struct cl_engine **engine, unsig
     	}
     }
 
-    qsort(dents, ndents, sizeof(struct dirent), dirent_compare);
+    qsort(dents, ndents, sizeof(struct dirent), (int (*)(const void *, const void *))dirent_compare);
 
     for (i=0; i<ndents; i++) {
     	dent = &dents[i];
