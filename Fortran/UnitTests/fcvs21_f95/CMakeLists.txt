@@ -12,6 +12,9 @@
 # Thread model: posix
 # gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
 #
+# Reference results for tests 905 and 907 generated with flang ~15.0.0 on
+# Ubuntu 20.04 (aarch64-unknown-linux-gnu).
+#
 # See additional comments in `driver_run` script should reference
 # results ever need to be updated.
 #
@@ -33,19 +36,23 @@
 # clean-up fort.* files otherwise one of the tests will fail
 llvm_test_prepare(rm -f %S/fort.*)
 
+# Different compilers or different compiler options may produce slightly
+# different but still valid outputs for some of these tests. By default, we will
+# check that the outputs match the reference outputs exactly. However, when this
+# option is set, we will check less strictly.
+option(FCVS_ALLOW_FLEXIBLE_OUTPUT "Don't match the output of FCVS tests exactly")
+
 # Group 1:
 # Tests 905 and 907 use list-directed output, for which the standard allows some
 # flexibility, e.g., with regards to how many white space characters or
 # floating point decimals to print. Treat them separately.
-# FIXME: Reenable these tests after moving the buildbots from using
-# flang-to-external-fc to using flang-new.
 set(SPECIAL_CASES "FM905.f" "FM907.f")
-if (NOT CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
-  set(Source ${SPECIAL_CASES})
+set(Source ${SPECIAL_CASES})
+if (FCVS_ALLOW_FLEXIBLE_OUTPUT)
   set(FP_IGNOREWHITESPACE ON)
-  llvm_singlesource()
-  set(Source)
 endif()
+llvm_singlesource()
+set(Source)
 
 # Group 2:
 # Generic case. Make sure to exclude the special cases which have already been
