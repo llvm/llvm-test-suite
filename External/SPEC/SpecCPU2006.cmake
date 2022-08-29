@@ -54,10 +54,7 @@ if(TEST_SUITE_SPEC2006_ROOT)
     list(APPEND CPPFLAGS -DSPEC_CPU_LP64)
   endif()
 
-  if(TARGET_OS STREQUAL "Darwin")
-    # Work around built in -Werror=implicit-function-declaration default on iOS
-    list(APPEND CPPFLAGS -Wno-implicit-function-declaration)
-  endif()
+  list(APPEND CFLAGS -Wno-implicit-function-declaration)
 
   macro(cpu2006_subdir BENCHMARK)
     set(BENCHMARK_DIR ${TEST_SUITE_SPEC2006_ROOT}/benchspec/CPU2006/${BENCHMARK})
