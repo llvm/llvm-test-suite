@@ -33,4 +33,5 @@ test_input(train 1)
 test_input(ref 38)
 
 llvm_test_executable(444.namd ${Source})
+set_property(TARGET 444.namd PROPERTY CXX_STANDARD 14)
 llvm_test_data_spec_default(444.namd)

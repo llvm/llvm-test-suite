@@ -149,4 +149,5 @@ speccpu2017_add_executable(
   frontend/renderfrontend.cpp
   spec_qsort/spec_qsort.c
 )
+set_property(TARGET ${PROG} PROPERTY CXX_STANDARD 14)
 speccpu2017_prepare_rundir()

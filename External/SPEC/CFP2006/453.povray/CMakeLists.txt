@@ -30,6 +30,7 @@ test_input(train 0.00005)
 test_input(ref 0.00005)
 
 llvm_test_executable(453.povray ${Source})
+set_property(TARGET 453.povray PROPERTY CXX_STANDARD 14)
 llvm_test_data_spec(453.povray
   data/test/output
   data/train/output

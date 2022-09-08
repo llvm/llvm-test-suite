@@ -41,4 +41,5 @@ speccpu2017_run_test(
 
 speccpu2017_verify_output(RELATIVE_TOLERANCE 0.00001 ABSOLUTE_TOLERANCE 0.000001)
 speccpu2017_add_executable()
+set_property(TARGET ${PROG} PROPERTY CXX_STANDARD 14)
 speccpu2017_prepare_rundir()
