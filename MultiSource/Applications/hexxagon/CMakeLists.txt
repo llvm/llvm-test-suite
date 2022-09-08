@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 14)
 set(RUN_OPTIONS < input)
 llvm_multisource(hexxagon)
 target_include_directories(hexxagon PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 14)
 list(APPEND CPPFLAGS -I${CMAKE_CURRENT_SOURCE_DIR} -DYYDEBUG=1)
 set(RUN_OPTIONS -f test  -o -v -s kcc inputs/f3.k inputs/f2.k inputs/f1.k)
 set(HASH_PROGRAM_OUTPUT 1)
