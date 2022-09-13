@@ -32,3 +32,6 @@
 
 # Specialization constant
 /SYCL/SpecConstants/ @intel/dpcpp-tools-reviewers
+
+# invoke_simd
+/SYCL/InvokeSimd/ @rolandschulz @kbobrovs
