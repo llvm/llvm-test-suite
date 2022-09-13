@@ -7,3 +7,4 @@
 # This file should only contain add_subdirectory(...) one for each test
 # directory
 add_subdirectory(UnitTests)
+add_subdirectory(SNAP)

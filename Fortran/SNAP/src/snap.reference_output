@@ -1,0 +1,25 @@
+   *WARNING: INPUT_CHECK: MULTISWP reset to 0 for serial           
+
+   *WARNING: INPUT_CHECK: NSTEPS reset to 1 for static calc        
+
+          keyword Iteration Monitor
+********************************************************************************
+ ********************
+  Outer   1
+    1    Dfmxo= 9.3095E+00    No. Inners=   50
+ ********************
+  Outer   2
+    2    Dfmxo= 2.9000E+01    No. Inners=   39
+ ********************
+  Outer   3
+    3    Dfmxo= 1.3260E-01    No. Inners=   31
+ ********************
+  Outer   4
+    4    Dfmxo= 3.4390E-03    No. Inners=   21
+
+  No. Outers=   4    No. Inners=  141
+
+********************************************************************************
+
+ Success! Done in a SNAP!
+exit 0
