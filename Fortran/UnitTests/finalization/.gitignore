@@ -1,0 +1,4 @@
+# Configure the file below into the source tree with CMake so that the
+# testing infrastructure can find it.
+
+specification_expression_finalization.reference_output

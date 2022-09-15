@@ -1,0 +1,2 @@
+@MAYBE_LLVM_ERROR_STOP_PREFIX@ERROR STOP@MAYBE_LLVM_ERROR_STOP_COLON@ finalize: intentional error termination to verify finalization
+exit 1

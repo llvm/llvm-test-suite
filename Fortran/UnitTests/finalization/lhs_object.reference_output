@@ -1,0 +1,2 @@
+Pass: finalizes a non-allocatable object on the LHS of an intrinsic assignment
+exit 0
