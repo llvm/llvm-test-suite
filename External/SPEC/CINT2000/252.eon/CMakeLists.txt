@@ -5,6 +5,8 @@ endif()
 list(APPEND CXXFLAGS -fno-exceptions -Wno-deprecated -fpermissive)
 list(APPEND LDFLAGS -lm)
 
+set(CMAKE_CXX_STANDARD 14)
+
 include_directories(${BENCHMARK_DIR}/src)
 
 # There's more sourcefiles in the directory than necessary so enumerate the ones

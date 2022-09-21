@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -Wno-implicit-int)
 
 macro(test_input run_type input outfile)
   llvm_test_run(RUN_TYPE ${run_type}
