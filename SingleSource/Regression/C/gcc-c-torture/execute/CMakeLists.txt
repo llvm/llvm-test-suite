@@ -136,6 +136,10 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # Clang at -O0 does not enable -finstrument-functions
   # (https://bugs.llvm.org/show_bug.cgi?id=49143)
   eeprof-1.c
+
+  # Size of array element is not a multiple of its alignment.
+  pr36093.c
+  pr43783.c
 )
 list(APPEND TestsToSkip ${UnsupportedTests})
 
