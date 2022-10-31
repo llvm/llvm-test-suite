@@ -193,12 +193,6 @@ file(GLOB TestRequiresLibM CONFIGURE_DEPENDS
   complex-5.c  # -lm needed on FreeBSD
 )
 
-# Tests that require newnlib Nano IO (--undefined=_printf_float ldflag)
-file(GLOB TestRequiresNanoIO CONFIGURE_DEPENDS
-  920501-8.c
-  930513-1.c
-)
-
 ##
 ## Architecture-specific Test Blacklists
 ##
@@ -367,10 +361,6 @@ foreach(File ${TestFiles})
 
   if(${File} IN_LIST TestRequiresFWrapV)
     list(APPEND MaybeCFlags "-fwrapv")
-  endif()
-
-  if(${File} IN_LIST TestRequiresNanoIO)
-    list(APPEND MaybeLDFlags "-Wl,-u,_printf_float")
   endif()
 
   # Add Test Target

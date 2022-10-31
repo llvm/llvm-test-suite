@@ -32,12 +32,12 @@
 /*  contains the eigenvalues for each of the matrixes.                  */
 /*                                                                      */
 /************************************************************************/
+#include <stdio.h>
+#include <string.h>
 #include "main.h"
 #include "QRfact.h"
 #include "Triang.h"
 #include "Jacobi.h"
-#include <stdio.h>
-#include <string.h>
 Matrix A,Q,U;
 
 int comp(const double *a,const double *b)

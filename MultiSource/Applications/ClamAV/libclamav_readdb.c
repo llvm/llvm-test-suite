@@ -1069,7 +1069,7 @@ static int dirent_compare(const struct dirent *a, const struct dirent *b) {
 	int ret = strcmp(a->d_name, b->d_name);
 	if (ret != 0)
 		return ret;
-#ifdef _AIX
+#if defined(_AIX) || (defined(__sun__) && defined(__svr4__))
        struct stat a_stat;
        struct stat b_stat;
        stat(a->d_name, &a_stat);

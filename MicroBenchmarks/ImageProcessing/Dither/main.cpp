@@ -69,7 +69,7 @@ void BENCHMARK_ORDERED_DITHER(benchmark::State &state) {
   int height = state.range(0);
   int width = state.range(0);
   int m = state.range(1);
-  int n = pow(m, 2);
+  int n = pow((double)m, 2);
   int *outputImage = (int *)malloc(sizeof(int) * height * width);
   int *temp = (int *)malloc(sizeof(int) * height * width);
 

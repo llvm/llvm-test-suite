@@ -333,7 +333,7 @@ static int execute_target_process(char * const argv[]) {
   if (g_target_data_size_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_DATA, g_target_data_size_limit);
   }
-#if !defined(__APPLE__)
+#if defined(RLIMIT_RSS) && !defined(__APPLE__)
   // On Apple platforms, RLIMIT_RSS is mapped to RLIMIT_AS and setting RLIMIT_AS
   // to a value smaller than the current virtual memory size will fail, This is
   // incompatible with the current usage in timeit and can cause issues on
@@ -352,9 +352,11 @@ static int execute_target_process(char * const argv[]) {
   if (g_target_file_count_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_NOFILE, g_target_file_count_limit);
   }
+#ifdef RLIMIT_NPROC
   if (g_target_subprocess_count_limit != ~(rlim_t) 0) {
     set_resource_limit(RLIMIT_NPROC, g_target_subprocess_count_limit);
   }
+#endif
 
   /* Honor the desired target execute directory. */
   if (g_target_exec_directory) {

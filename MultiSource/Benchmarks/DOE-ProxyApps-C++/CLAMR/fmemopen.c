@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-#if !defined(__linux__) && !defined(__NetBSD__)
+#if !defined(__linux__) && !defined(__NetBSD__) && !(defined(__sun__) && defined(__svr4__))
 
 #include <stdio.h>
 #include <stdlib.h>
