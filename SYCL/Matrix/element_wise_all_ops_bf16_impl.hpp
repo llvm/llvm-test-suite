@@ -53,7 +53,7 @@ void matrix_verify_add(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
            const auto sg_starty = global_idy - spmd_item.get_local_id(1);
 
            ext::oneapi::sub_group sg = spmd_item.get_sub_group();
-           joint_matrix<T, TM, TK> sub_a(sg);
+           joint_matrix<T, use::a, TM, TK> sub_a(sg);
 
            joint_matrix_fill(sg, sub_a, make_bf16(5.0));
 

@@ -47,12 +47,12 @@ void matrix_sum_rows(queue q, big_matrix<T, M, N> &B, nd_range<2> &r) {
 
            ext::oneapi::sub_group sg = spmd_item.get_sub_group();
 
-           joint_matrix<T, TK, TN, matrix_layout::packed_b> sub_b(sg);
+           joint_matrix<T, use::b, TK, TN, layout::packed> sub_b(sg);
 
            joint_matrix_load(sg, sub_b,
                              accB.get_pointer() + (global_idx * (TK / 4) * N) +
                                  sg_starty / SG_SZ * TN * 4,
-                             N, matrix_layout::packed_b);
+                             N);
            // calculate sum of rows in sum_rows_v[8], there are 8 rows in sub_b
            // (tK/4)
            int32_t sum_local_rows[M] = {0}; // 8 local rows, M total
