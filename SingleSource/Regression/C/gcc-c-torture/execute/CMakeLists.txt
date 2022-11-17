@@ -245,6 +245,19 @@ if(ARCH MATCHES "Mips")
   list(APPEND TestsToSkip ${MipsTestsToSkip})
 endif()
 
+# LoongArch Test Blacklist
+if(ARCH MATCHES "LoongArch")
+  file(GLOB LoongArchTestsToSkip CONFIGURE_DEPENDS
+    # No backend support for __builtin_longjmp/__builtin_setjmp
+    built-in-setjmp.c
+    pr84521.c
+    # Triggers "return address can be determined only for current frame"
+    20030323-1.c
+  )
+
+  list(APPEND TestsToSkip ${LoongArchTestsToSkip})
+endif()
+
 # RISC-V Test Blacklist
 if(ARCH MATCHES "riscv")
   file(GLOB RISCVTestsToSkip CONFIGURE_DEPENDS
