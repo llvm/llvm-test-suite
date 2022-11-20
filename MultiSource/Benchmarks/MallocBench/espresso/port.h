@@ -5,19 +5,6 @@
 #define volatile
 #endif
 
-#ifdef _IBMR2
-#define _BSD
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE		/* Argh!  IBM strikes again */
-#endif
-#ifndef _ALL_SOURCE
-#define _ALL_SOURCE		/* Argh!  IBM strikes again */
-#endif
-#ifndef _ANSI_C_SOURCE
-#define _ANSI_C_SOURCE		/* Argh!  IBM strikes again */
-#endif
-#endif
-
 /*
  * int32 should be defined as the most economical sized integer capable of
  * holding a 32 bit quantity

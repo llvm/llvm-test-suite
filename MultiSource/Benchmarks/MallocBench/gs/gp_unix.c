@@ -23,6 +23,12 @@ copies.  */
 #include "gx.h"
 #include <time.h>
 #include <sys/time.h>
+#if _AIX && !defined(_ALL_SOURCE)
+struct timezone {
+	int tz_minuteswest;
+	int tz_dsttime;
+};
+#endif
 
 /* Do platform-dependent initialization */
 void

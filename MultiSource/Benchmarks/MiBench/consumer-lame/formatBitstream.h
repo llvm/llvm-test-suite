@@ -24,6 +24,11 @@
 #define MAX_GRANULES 2
 #endif
 
+#if _AIX && !defined(_ALL_SOURCE)
+typedef unsigned int   u_int;
+typedef unsigned short u_short;
+#endif
+
 /*
   This is the prototype for the function pointer you must
   provide to write bits to the bitstream. It should write

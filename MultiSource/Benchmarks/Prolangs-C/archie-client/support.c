@@ -4,6 +4,7 @@
  * For copying and distribution information, please see the file
  * <copyright.h>.
  *
+ * V1.2.3 - 06/18/20 (sw)  - add IBM AIX fix
  * v1.2.2 - 11/19/91 (mmt) - added MSDOS & OS2 stuff
  * v1.2.1 - 09/23/91 (gf)  - made it use regex.h---much nicer
  * v1.2.0 - 09/17/91 (bpk) - added BULL & USG stuff, thanks to Jim Sillas
@@ -42,6 +43,11 @@
 #  include <netdb.h>
 # endif
 # if !defined(MSDOS) || defined(OS2)
+// The header <sys/file.h> implicitly uses 'ushort', which is an
+// unknown type name to AIX when '_ALL_SOURCE' is not defined.
+#  if _AIX && !defined(_ALL_SOURCE)
+    typedef unsigned short ushort;
+#  endif
 #  include <sys/file.h>
 #  include <sys/param.h>
 # endif

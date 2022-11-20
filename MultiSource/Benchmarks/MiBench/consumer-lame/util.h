@@ -125,6 +125,13 @@ typedef struct  bit_stream_struc {
 
 #include "l3side.h"
 
+#if _AIX && !defined(_ALL_SOURCE)
+typedef unsigned char  u_char;
+typedef unsigned int   u_int;
+typedef unsigned short u_short;
+typedef unsigned long  u_long;
+#endif
+
 /***********************************************************************
 *
 *  Global Variable External Declarations

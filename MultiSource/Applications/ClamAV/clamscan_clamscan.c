@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	int ds, dms, ret;
 	double mb;
 	struct timeval t1, t2;
-#ifndef C_WINDOWS
+#if !defined(C_WINDOWS) && (!defined(_AIX) || defined(_ALL_SOURCE))
 	struct timezone tz;
 #endif
 	struct optstruct *opt;
@@ -208,7 +208,9 @@ int main(int argc, char **argv)
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
     }
-#endif	
+#endif
+#endif
+#if defined(C_WINDOWS) || (defined(_AIX) && !defined(_ALL_SOURCE))
     gettimeofday(&t1, NULL);
 #else
     gettimeofday(&t1, &tz);
@@ -217,7 +219,7 @@ int main(int argc, char **argv)
     ret = scanmanager(opt);
 
     if(!opt_check(opt, "disable-summary") && !opt_check(opt, "no-summary")) {
-#ifdef C_WINDOWS
+#if defined(C_WINDOWS) || (defined(_AIX) && !defined(_ALL_SOURCE))
 	gettimeofday(&t2, NULL);
 #else
 	gettimeofday(&t2, &tz);
