@@ -22,8 +22,12 @@ set(RUN_OPTIONS --debug --exclude-dir .svn --verbose -d%S/dbdir -r ${INPUT})
 if(TARGET_OS STREQUAL "Darwin")
   list(APPEND CPPFLAGS -DC_DARWIN)
 endif()
+# ClamAV utilizes functions from <netdb.h>. However, since _XOPEN_SOURCE=700 is
+# defined globally on AIX, it prevents us from having access to some of the
+# functions that are required within ClamAV. Thus, _XOPEN_SOURCE=600 is defined
+# explicitly for AIX to resolve this issue.
 if(TARGET_OS STREQUAL "AIX")
-  list(APPEND CPPFLAGS -DC_AIX)
+  list(APPEND CPPFLAGS -DC_AIX -D_XOPEN_SOURCE=600)
 endif()
 if(TARGET_OS STREQUAL "IRIX")
   list(APPEND CPPFLAGS -DC_IRIX)

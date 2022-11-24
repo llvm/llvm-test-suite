@@ -24,6 +24,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef C_WINDOWS
+// This header is required to prevent build failures coming from
+// -Wimplicit-function-declaration with the strcasecmp function.
+// The failures were first seen on AIX.
+#include <strings.h>
+#endif
 #include <ctype.h>
 
 #include "cfgparser.h"

@@ -26,6 +26,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+// This header is required to prevent build failures coming from
+// -Wimplicit-function-declaration with the strcasecmp function.
+// The failures were first seen on AIX.
+#ifndef C_WINDOWS
+#include <strings.h>
+#endif
 #include "cltypes.h"
 
 #include "clamav.h"

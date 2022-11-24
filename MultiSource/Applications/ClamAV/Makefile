@@ -72,8 +72,12 @@ include $(LEVEL)/Makefile.config
 ifeq ($(TARGET_OS),Darwin)
    CPPFLAGS += -DC_DARWIN
 endif
+# ClamAV utilizes functions from <netdb.h>. However, since _XOPEN_SOURCE=700 is
+# defined globally on AIX, it prevents us from having access to some of the
+# functions that are required within ClamAV. Thus, _XOPEN_SOURCE=600 is defined
+# explicitly for AIX to resolve this issue.
 ifeq ($(TARGET_OS),AIX)
-   CPPFLAGS += -DC_AIX
+   CPPFLAGS += -DC_AIX -D_XOPEN_SOURCE=600
 endif
 ifeq ($(TARGET_OS), IRIX)
    CPPFLAGS += -DC_IRIX
