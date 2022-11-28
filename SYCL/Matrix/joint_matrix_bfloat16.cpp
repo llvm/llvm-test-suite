@@ -12,7 +12,7 @@
 // RUN: %GPU_RUN_PLACEHOLDER %t.out
 
 #include <iostream>
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 using namespace sycl;
 using namespace sycl::ext::oneapi::experimental::matrix;

@@ -1,8 +1,51 @@
+#include <algorithm>
+#include <chrono>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <limits>
+#include <random>
+#include <err.h>
+#include <errno.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/auxv.h>
+#include <sys/mman.h>
+#include <sys/signal.h>
+#include <sys/syscall.h>
+
 #define TM 8
 #define TN SG_SZ
 #define TK 16
 
 #define BF16_EPSILON 0.00781250
+
+#define fatal_error(msg, ...) err(1, "[FAIL]\t" msg, ##__VA_ARGS__)
+#define XFEATURE_XTILECFG 17
+#define XFEATURE_XTILEDATA 18
+#define XFEATURE_MASK_XTILECFG (1 << XFEATURE_XTILECFG)
+#define XFEATURE_MASK_XTILEDATA (1 << XFEATURE_XTILEDATA)
+#define XFEATURE_MASK_XTILE (XFEATURE_MASK_XTILECFG | XFEATURE_MASK_XTILEDATA)
+
+#define ARCH_GET_XCOMP_PERM 0x1022
+#define ARCH_REQ_XCOMP_PERM 0x1023
+static void request_perm_xtile_data() {
+  unsigned long bitmask;
+  long rc;
+
+  rc = syscall(SYS_arch_prctl, ARCH_REQ_XCOMP_PERM, XFEATURE_XTILEDATA);
+  if (rc)
+    fatal_error("XTILE_DATA request failed: %ld", rc);
+
+  rc = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_PERM, &bitmask);
+  if (rc)
+    fatal_error("prctl(ARCH_GET_XCOMP_PERM) error: %ld", rc);
+
+  if (bitmask & XFEATURE_MASK_XTILE)
+    printf("ARCH_REQ_XCOMP_PERM XTILE_DATA successful.\n");
+}
 
 template <typename T, size_t NUM_ROWS, size_t NUM_COLS> struct big_matrix {
 private:
@@ -116,6 +159,7 @@ void matrix_multiply_ref(int *A_mem, int *B_mem, int *C_mem, int M, int N,
 }
 
 int main() {
+	request_perm_xtile_data();
   for (int i = 0; i < MATRIX_M; i++) {
     for (int j = 0; j < MATRIX_K; j++) {
       // bfloat16 is created using unsigned short since conversion from float to
