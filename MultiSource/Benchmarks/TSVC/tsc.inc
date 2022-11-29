@@ -3760,14 +3760,14 @@ int s318( int inc)
 	for (int nl = 0; nl < ntimes/2; nl++) {
 		k = 0;
 		index = 0;
-		max = abs(a[0]);
+		max = FABS(a[0]);
 		k += inc;
 		for (int i = 1; i < LEN; i++) {
-			if (abs(a[k]) <= max) {
+			if (FABS(a[k]) <= max) {
 				goto L5;
 			}
 			index = i;
-			max = abs(a[k]);
+			max = FABS(a[k]);
 L5:
 			k += inc;
 		}
@@ -3971,10 +3971,10 @@ int s3113()
 
 	TYPE max;
 	for (int nl = 0; nl < ntimes*4; nl++) {
-		max = abs(a[0]);
+		max = FABS(a[0]);
 		for (int i = 0; i < LEN; i++) {
-			if ((abs(a[i])) > max) {
-				max = abs(a[i]);
+			if ((FABS(a[i])) > max) {
+				max = FABS(a[i]);
 			}
 		}
 		dummy(a, b, c, d, e, aa, bb, cc, max);
