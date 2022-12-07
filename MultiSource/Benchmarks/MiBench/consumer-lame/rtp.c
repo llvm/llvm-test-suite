@@ -4,7 +4,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#if __has_include(<alloca.h>)
 #include <alloca.h>
+#endif
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>

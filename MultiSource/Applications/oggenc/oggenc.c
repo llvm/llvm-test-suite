@@ -8,7 +8,9 @@
  * Portions from Vorbize, (c) Kenneth Arnold <kcarnold@yahoo.com>
  * and libvorbis examples, (c) Monty <monty@xiph.org>
  */
+#if __has_include(<alloca.h>)
 #include <alloca.h>
+#endif
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
