@@ -181,7 +181,7 @@ foreach (_file IN LISTS ldecod_SourceNames)
 endforeach ()
 llvm_add_host_executable(ldecod_${SUFFIX}-host
   ldecod_${SUFFIX} ${ldecod_Sources}
-  CPPFLAGS -I "${SRC_DIR}/ldecod_src/inc" -DSPEC
+  CPPFLAGS -I "${SRC_DIR}/ldecod_src/inc" -DSPEC -fcommon
   LDFLAGS -lm
 )
 
