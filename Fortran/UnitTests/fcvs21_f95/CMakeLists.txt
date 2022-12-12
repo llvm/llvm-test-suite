@@ -33,6 +33,8 @@
 # explicit acknowledgement of what has been changed. Please
 # amend README file if you modify the tests.
 
+include(CheckFortranCompilerFlag)
+
 # clean-up fort.* files otherwise one of the tests will fail
 llvm_test_prepare(rm -f %S/fort.*)
 
