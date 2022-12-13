@@ -2,15 +2,9 @@ cmake_minimum_required(VERSION 3.13.4)
 
 include(CheckSymbolExists)
 
+option(TEST_SUITE_FORTRAN "Enable Fortran test suite" OFF)
 
 project(test-suite C CXX)
-
-if(${TEST_SUITE_SUBDIRS} MATCHES "Fortran")
-  set(TEST_SUITE_FORTRAN_default ON)
-else()
-  set(TEST_SUITE_FORTRAN_default OFF)
-endif()
-option(TEST_SUITE_FORTRAN "Enable Fortran test suite" ${TEST_SUITE_FORTRAN_default})
 
 if(TEST_SUITE_FORTRAN)
   enable_language(Fortran)
