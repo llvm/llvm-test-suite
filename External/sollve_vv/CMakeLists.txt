@@ -146,7 +146,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     5.0/target/test_target_uses_allocators_high_bw.c
     5.0/target/test_target_uses_allocators_large_cap.c
     5.0/target/test_target_uses_allocators_low_lat.c
-    5.0/target/test_target_uses_allocators_pteam.c
     5.0/target/test_target_uses_allocators_thread.c
     5.0/target_data/test_target_data_use_device_addr.c
     5.0/target_data/test_target_data_use_device_ptr.c
@@ -157,7 +156,6 @@ set(TEST_SUITE_SOLLVEVV_EXPECT_PASS
     5.0/target_teams_distribute_parallel_for_simd/test_target_teams_distribute_parallel_for_simd_atomic.c
     5.0/target_update/test_target_update_mapper_to_discontiguous.c
     5.0/task/test_parallel_for_reduction_task.c
-    5.0/task/test_parallel_for_reduction_task_device.c
     5.0/task/test_task_depend_mutexinoutset.c
     5.0/task/test_task_detach.c
     5.0/task/test_task_in_reduction.c
