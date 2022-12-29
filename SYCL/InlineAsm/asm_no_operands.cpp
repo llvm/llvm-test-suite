@@ -27,7 +27,7 @@ int main() {
     // Executing kernel
     cgh.parallel_for<no_operands_kernel>(NumOfWorkItems,
                                          [=](sycl::id<1> WIid)
-                                             [[intel::reqd_sub_group_size(8)]] {
+                                             [[intel::reqd_sub_group_size(16)]] {
 #if defined(__SYCL_DEVICE_ONLY__)
                                                asm("barrier");
 #endif
