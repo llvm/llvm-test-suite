@@ -7,6 +7,7 @@ endif ()
 speccpu2017_benchmark(RATE)
 
 speccpu2017_add_include_dirs(spec_qsort)
+add_compile_options(-fno-strict-aliasing)
 
 ## test ########################################################################
 
