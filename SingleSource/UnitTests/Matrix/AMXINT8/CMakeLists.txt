@@ -1,0 +1,5 @@
+list(APPEND CPPFLAGS -I ${CMAKE_SOURCE_DIR}/${MATRIX_MAIN_DIR})
+list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS "-march=sapphirerapids")
+list(APPEND CFLAGS -fms-extensions)
+llvm_singlesource(PREFIX "Matrix-AMXINT8-")

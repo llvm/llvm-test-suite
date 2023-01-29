@@ -1,0 +1,10 @@
+set(MATRIX_MAIN_DIR SingleSource/UnitTests/Matrix)
+
+if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  if(ARCH STREQUAL "x86")
+    if(X86CPU_ARCH STREQUAL "skylake-avx512")
+      add_subdirectory(AMXINT8)
+    endif()
+  endif()
+endif()
+llvm_singlesource(PREFIX "Matrix-")
