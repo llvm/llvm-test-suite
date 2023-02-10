@@ -269,7 +269,7 @@ macro(speccpu2017_validate_image _imgfile _cmpfile _outfile)
     get_filename_component(_ext "${_imgfile}" EXT)
     llvm_test_verify(
       cd "${RUN_${_carg_RUN_TYPE}_DIR_REL}" &&
-      "%S/${VALIDATOR}" ${_carg_UNPARSED_ARGUMENTS}
+      ${TEST_SUITE_RUN_UNDER} "%S/${VALIDATOR}" ${_carg_UNPARSED_ARGUMENTS}
         "${_imgfile}" "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/${_cmpfile}"
         > ${RUN_${_carg_RUN_TYPE}_DIR_REL}/${_outfile}
       RUN_TYPE ${_carg_RUN_TYPE}
