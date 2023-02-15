@@ -154,7 +154,7 @@ def add_geomean_row(metrics, data, dataout):
 def filter_failed(data, key='Exec'):
     return data.loc[data[key] == "pass"]
 
-def filter_short(data, key='Exec_Time', threshold=0.6):
+def filter_short(data, threshold, key='Exec_Time'):
     return data.loc[data[key] >= threshold]
 
 def filter_same_hash(data, key='hash'):
@@ -293,8 +293,9 @@ def main():
     parser.add_argument('--diff', action='store_true', dest='show_diff')
     parser.add_argument('--absolute-diff', action='store_true',
                         help='Use an absolute instead of a relative difference')
-    parser.add_argument('--filter-short', action='store_true',
-                        dest='filter_short')
+    parser.add_argument('--filter-short', nargs='?',
+                        dest='filter_short', default=None,
+                        help="Filter benchmarks with execution times less than N seconds (default 1.0s)")
     parser.add_argument('--no-filter-failed', action='store_false',
                         dest='filter_failed', default=True)
     parser.add_argument('--filter-hash', action='store_true',
@@ -321,6 +322,24 @@ def main():
 
     if config.show_diff is None:
         config.show_diff = len(config.files) > 1
+
+    # If only --filter-short is provided, i.e. its optional argument is
+    # omitted, we default to threshold of 1 second to filter out apps and
+    # results with a execution time less than that.
+    filter_short_threshold = 1.0
+
+    # If the optional argument to --filter-short is omitted, we need to take
+    # care of this case and command line:
+    #     --filter-short FILE [FILE ...]
+    # I.e., we need to recognise that FILE is not the optional argument to
+    # --filter-short. The way we do this, is to try converting the option value
+    # to a float, and if that fails, we insert it back into the files list (in
+    # the first position).
+    if config.filter_short is not None:
+        try:
+            filter_short_threshold = float(config.filter_short)
+        except:
+            config.files.insert(0, config.filter_short)
 
     # Read inputs
     files = config.files
@@ -373,7 +392,7 @@ def main():
         newdata = newdata.drop('Exec', 1)
         data = newdata
     if config.filter_short:
-        newdata = filter_short(data, metric)
+        newdata = filter_short(data, filter_short_threshold, metric)
         print_filter_stats("Short Running", data, newdata)
         data = newdata
     if config.filter_hash and 'hash' in data.columns and \
