@@ -140,6 +140,10 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # Size of array element is not a multiple of its alignment.
   pr36093.c
   pr43783.c
+
+  # Uses an incorrect method to prevent tailcalls which clang at -O1 or above
+  # can see through and tail call regardless.
+  frame-address.c
 )
 list(APPEND TestsToSkip ${UnsupportedTests})
 
