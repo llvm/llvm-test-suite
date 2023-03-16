@@ -142,7 +142,8 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   pr43783.c
 
   # Uses an incorrect method to prevent tailcalls which clang at -O1 or above
-  # can see through and tail call regardless.
+  # can see through and tail call regardless. Also the callee compares
+  # pointers to different objects, which is undefined behaviour.
   frame-address.c
 )
 list(APPEND TestsToSkip ${UnsupportedTests})
