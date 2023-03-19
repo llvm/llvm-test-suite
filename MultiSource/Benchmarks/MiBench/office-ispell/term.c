@@ -76,8 +76,9 @@ static char Rcs_Id[] =
 #include "msgs.h"
 #include <signal.h>
 
-#if defined(__GLIBC__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__) || (defined(__sun__) && defined(__svr4__))
-/* Use termios under at least glibc */
+#if defined(__GLIBC__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
+    defined(__OpenBSD__) || defined(__APPLE__) || \
+    (defined(__sun__) && defined(__svr4__))
 #include <termios.h>
 #define USE_TERMIOS
 #ifndef USG

@@ -49,7 +49,9 @@
 
 #include "misc.h"
 #include <sys/types.h>
+#ifndef CLOCK_NO_TIMING
 #include <sys/timeb.h>
+#endif
 
 typedef enum {
   clock_BACKTRACK,
@@ -61,7 +63,9 @@ typedef enum {
   clock_TYPESIZE
 } CLOCK_CLOCKS;
 
+#ifndef CLOCK_NO_TIMING
 typedef struct timeb CLOCK_TMS;
+#endif
 
 void   clock_Init(void);
 void   clock_InitCounter(CLOCK_CLOCKS);

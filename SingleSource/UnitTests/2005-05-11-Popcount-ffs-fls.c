@@ -79,6 +79,11 @@ int ntz8(unsigned x) {
 #define ffsl ffs64
 #endif
 
+/* XXX */
+#if defined(__OpenBSD__)
+#define ffsl ffs
+#endif
+
 int i;
 int main(void) {
   long long l;

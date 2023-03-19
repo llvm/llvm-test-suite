@@ -1,4 +1,7 @@
-add_subdirectory(JM)
+if(NOT TARGET_OS STREQUAL "OpenBSD")
+  add_subdirectory(JM)
+endif()
+
 add_subdirectory(SIBsim4)
 add_subdirectory(aha)
 add_subdirectory(d)

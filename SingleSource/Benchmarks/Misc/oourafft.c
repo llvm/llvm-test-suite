@@ -2,7 +2,9 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(_AIX) // memalign
+/* memalign */
+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
+    !defined(__OpenBSD__) && !defined(_AIX)
 #include <malloc.h>
 #endif
 
@@ -37,7 +39,9 @@ int main()
   t_overhead = t_end - t_start;
 
   /* Prepare aux data */
-#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(_AIX) /* Darwin always 16-byte aligns malloc data */
+  /* Darwin always 16-byte aligns malloc data */
+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
+    !defined(__OpenBSD__) && !defined(_AIX)
   ip = memalign(16, sqrt(N)*sizeof(int));
   w  = memalign(16, 2*N*5/4*sizeof(double));
 #else
@@ -47,7 +51,9 @@ int main()
   makewt(N >> 1, ip, w);
   
   /* Allocate buffers */
-#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(_AIX) /* Darwin always 16-byte aligns malloc data */
+  /* Darwin always 16-byte aligns malloc data */
+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
+    !defined(__OpenBSD__) && !defined(_AIX)
   ref = memalign(16, 2*N*sizeof(double));
   cmp = memalign(16, 2*N*sizeof(double));
   src = memalign(16, 2*N*sizeof(double));
@@ -187,8 +193,6 @@ void cdft(int n, int isgn, double *a, int *ip, double *w)
 }
 
 /* -------- initializing routines -------- */
-
-#include <math.h>
 
 void makewt(int nw, int *ip, double *w)
 {

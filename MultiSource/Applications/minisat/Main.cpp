@@ -65,7 +65,7 @@ static inline int memReadStat(int field)
 static inline uint64_t memUsed() { return (uint64_t)memReadStat(0) * (uint64_t)getpagesize(); }
 
 
-#elif defined(__FreeBSD__) || defined(__NetBSD__)
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 static inline uint64_t memUsed(void) {
     struct rusage ru;
     getrusage(RUSAGE_SELF, &ru);
