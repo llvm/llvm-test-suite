@@ -37,6 +37,13 @@ def _getCodeSize(context):
                     name = values[0]
                     val = int(values[1])
                     metrics['size.%s' % name] = val
+                    # The text size output here comes from llvm-size.
+                    # Darwin and GNU produce differently-formatted output.
+                    # Check that we have exactly one of the valid outputs.
+                    assert not ('size.__text' in metrics and
+                                'size..text' in metrics), """Both 'size.__text'
+                                and 'size..text' present in metrics.
+                                Only one of them should exist."""
                 except ValueError:
                     logging.info("Ignoring malformed output line: %s", line)
 
