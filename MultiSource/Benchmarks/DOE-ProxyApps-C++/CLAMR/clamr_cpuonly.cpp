@@ -626,7 +626,7 @@ extern "C" void do_calc(void)
 
       //  Get overall program timing.
       double elapsed_time = cpu_timer_stop(tstart);
-      
+
       #ifdef MEMORY
       long long mem_used = memstats_memused();
       if (mem_used > 0) {
@@ -669,7 +669,7 @@ extern "C" void do_calc(void)
       fclose(fp);
       exit(0);
    }  //  Complete final output.
-   
+
 } // end do_calc
 
 const int CRUX_CLAMR_VERSION = 101;
