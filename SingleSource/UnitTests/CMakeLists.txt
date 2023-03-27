@@ -7,6 +7,7 @@ add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
+add_subdirectory(X86)
 
 list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int)
 
