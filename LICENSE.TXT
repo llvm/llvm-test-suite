@@ -306,6 +306,8 @@ Rodinia:            llvm-test/MultiSource/Benchmarks/Rodinia
 Rodinia:            llvm-test/MultiSource/Benchmarks/Rodinia
 Rodinia:            llvm-test/MultiSource/Benchmarks/Rodinia
 gcc-c-torture:      llvm-test/SingleSource/Regression/C/gcc-c-torture/execute
+gfortran            llvm-test/Fortran/gfortran/regression
+                    llvm-test/Fortran/gfortran/torture
 
 ==============================================================================
 Legacy LLVM License (ttps://llvm.org/docs/DeveloperPolicy.html#legacy):
