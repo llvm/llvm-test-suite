@@ -1845,6 +1845,41 @@ file(GLOB Failing CONFIGURE_DEPENDS
   # anyway so the test-suite passes by default on AArch64.
   entry_23.f
   findloc_8.f90
+
+  # These tests have race conditions with other tests that cause them to
+  # occasionally fail when run in parallel. Every test in each group listed
+  # below has a race condition with at least one other test in the group.
+
+  # <group> Tests read/write/replace/delete file named 'tmp.dat'
+  pr88169_1.f90
+  pr88169_2.f90
+  pr88169_3.f90
+  list_read_6.f90
+  # </group>
+
+  # <group>
+  write_rewind_1.f
+  write_rewind_2.f
+  # </group>
+
+  # <group> Tests read/delete/append file named 'foo'
+  append_1.f90
+  large_unit_2.f90
+  open_access_append_1.f90
+  open_status_1.f90
+  # </group>
+
+  # <group> Tests create/replace file named 'test.dat'
+  direct_io_12.f90
+  endfile.f90
+  eof_4.f90
+  implied_do_io_1.f90
+  list_read_7.f90
+  namelist_76.f90
+  read_eof_8.f90
+  read_eof_all.f90
+  streamio_18.f90
+  # </group>
 )
 
 list(APPEND UnsupportedTests "${Unsupported}")
