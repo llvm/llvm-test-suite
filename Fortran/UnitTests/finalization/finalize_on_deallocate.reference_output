@@ -1,0 +1,2 @@
+Pass: finalizes an object upon explicit deallocation
+exit 0
