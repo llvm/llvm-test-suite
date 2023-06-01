@@ -3,24 +3,81 @@
 
 import spec
 
-class SPEC2000_253_perlbmk(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '253.perlbmk'
 
-    train_input_set = ['all/input/cpu2000_mhonarc.rc', 'all/input/lib', 'all/input/lenums', 'all/input/benums', 'train/input/dictionary', 'all/input/diffmail.pl', 'all/input/perfect.pl', 'train/input/scrabbl.pl', 'train/input/scrabbl.in']
-    train_output_set = ['train/output/2.350.15.24.23.150.out', 'train/output/b.3.out', 'train/output/scrabbl.out']
-    train_args = ['-Ilib diffmail.pl 2 350 15 24 23 150 > 253.perlbmk.diffmail.out 2> 253.perlbmk.diffmail.err', '-Ilib perfect.pl b 3 > 253.perlbmk.perfect.out 2> 253.perlbmk.perfect.err', '-Ilib scrabbl.pl < scrabbl.in > 253.perlbmk.scrabbl.out 2> 253.perlbmk.scrabbl.err']
-    train_cmp_cmds = ['diff 253.perlbmk.diffmail.out 2.350.15.24.23.150.out --strip-trailing-cr > 253.perlbmk.diffmail.cmp', 'diff 253.perlbmk.perfect.out b.3.out --strip-trailing-cr > 253.perlbmk.perfect.cmp', 'diff 253.perlbmk.scrabbl.out scrabbl.out --strip-trailing-cr > 253.perlbmk.scrabbl.cmp']
-    ref_input_set = ['all/input/cpu2000_mhonarc.rc', 'all/input/lib', 'all/input/lenums', 'all/input/benums', 'all/input/diffmail.pl', 'ref/input/makerand.pl', 'all/input/perfect.pl', 'ref/input/splitmail.pl']
-    ref_output_set = ['ref/output/2.550.15.24.23.100.out', 'ref/output/makerand.out', 'ref/output/b.3.m.4.out', 'ref/output/850.5.19.18.1500.out', 'ref/output/704.12.26.16.836.out', 'ref/output/535.13.25.24.1091.out', 'ref/output/957.12.23.26.1014.out']
-    ref_args = ['-Ilib diffmail.pl 2 550 15 24 23 100 > 253.perlbmk.diffmail.out 2> 253.perlbmk.diffmail.err', '-Ilib makerand.pl > 253.perlbmk.makerand.out 2> 253.perlbmk.makerand.err', '-Ilib perfect.pl b 3 m 4 > 253.perlbmk.perfect.out 2> 253.perlbmk.perfect.err', '-Ilib splitmail.pl 850 5 19 18 1500 > 253.perlbmk.splitmail1.out 2> 253.perlbmk.splitmail1.err', '-Ilib splitmail.pl 704 12 26 16 836 > 253.perlbmk.splitmail2.out 2> 253.perlbmk.splitmail2.err', '-Ilib splitmail.pl 535 13 25 24 1091 > 253.perlbmk.splitmail3.out 2> 253.perlbmk.splitmail3.err', '-Ilib splitmail.pl 957 12 23 26 1014 > 253.perlbmk.splitmail4.out 2> 253.perlbmk.splitmail4.err']
-    ref_cmp_cmds = ['diff 253.perlbmk.diffmail.out 2.550.15.24.23.100.out --strip-trailing-cr > 253.perlbmk.diffmail.cmp', 'diff 253.perlbmk.makerand.out makerand.out --strip-trailing-cr > 253.perlbmk.makerand.cmp', 'diff 253.perlbmk.perfect.out b.3.m.4.out --strip-trailing-cr > 253.perlbmk.perfect.cmp', 'diff 253.perlbmk.splitmail1.out 850.5.19.18.1500.out --strip-trailing-cr > 253.perlbmk.splitmail1.cmp', 'diff 253.perlbmk.splitmail2.out 704.12.26.16.836.out --strip-trailing-cr > 253.perlbmk.splitmail2.cmp', 'diff 253.perlbmk.splitmail3.out 535.13.25.24.1091.out --strip-trailing-cr > 253.perlbmk.splitmail3.cmp', 'diff 253.perlbmk.splitmail4.out 957.12.23.26.1014.out --strip-trailing-cr > 253.perlbmk.splitmail4.cmp']
+class SPEC2000_253_perlbmk(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "253.perlbmk"
+
+    train_input_set = [
+        "all/input/cpu2000_mhonarc.rc",
+        "all/input/lib",
+        "all/input/lenums",
+        "all/input/benums",
+        "train/input/dictionary",
+        "all/input/diffmail.pl",
+        "all/input/perfect.pl",
+        "train/input/scrabbl.pl",
+        "train/input/scrabbl.in",
+    ]
+    train_output_set = [
+        "train/output/2.350.15.24.23.150.out",
+        "train/output/b.3.out",
+        "train/output/scrabbl.out",
+    ]
+    train_args = [
+        "-Ilib diffmail.pl 2 350 15 24 23 150 > 253.perlbmk.diffmail.out 2> 253.perlbmk.diffmail.err",
+        "-Ilib perfect.pl b 3 > 253.perlbmk.perfect.out 2> 253.perlbmk.perfect.err",
+        "-Ilib scrabbl.pl < scrabbl.in > 253.perlbmk.scrabbl.out 2> 253.perlbmk.scrabbl.err",
+    ]
+    train_cmp_cmds = [
+        "diff 253.perlbmk.diffmail.out 2.350.15.24.23.150.out --strip-trailing-cr > 253.perlbmk.diffmail.cmp",
+        "diff 253.perlbmk.perfect.out b.3.out --strip-trailing-cr > 253.perlbmk.perfect.cmp",
+        "diff 253.perlbmk.scrabbl.out scrabbl.out --strip-trailing-cr > 253.perlbmk.scrabbl.cmp",
+    ]
+    ref_input_set = [
+        "all/input/cpu2000_mhonarc.rc",
+        "all/input/lib",
+        "all/input/lenums",
+        "all/input/benums",
+        "all/input/diffmail.pl",
+        "ref/input/makerand.pl",
+        "all/input/perfect.pl",
+        "ref/input/splitmail.pl",
+    ]
+    ref_output_set = [
+        "ref/output/2.550.15.24.23.100.out",
+        "ref/output/makerand.out",
+        "ref/output/b.3.m.4.out",
+        "ref/output/850.5.19.18.1500.out",
+        "ref/output/704.12.26.16.836.out",
+        "ref/output/535.13.25.24.1091.out",
+        "ref/output/957.12.23.26.1014.out",
+    ]
+    ref_args = [
+        "-Ilib diffmail.pl 2 550 15 24 23 100 > 253.perlbmk.diffmail.out 2> 253.perlbmk.diffmail.err",
+        "-Ilib makerand.pl > 253.perlbmk.makerand.out 2> 253.perlbmk.makerand.err",
+        "-Ilib perfect.pl b 3 m 4 > 253.perlbmk.perfect.out 2> 253.perlbmk.perfect.err",
+        "-Ilib splitmail.pl 850 5 19 18 1500 > 253.perlbmk.splitmail1.out 2> 253.perlbmk.splitmail1.err",
+        "-Ilib splitmail.pl 704 12 26 16 836 > 253.perlbmk.splitmail2.out 2> 253.perlbmk.splitmail2.err",
+        "-Ilib splitmail.pl 535 13 25 24 1091 > 253.perlbmk.splitmail3.out 2> 253.perlbmk.splitmail3.err",
+        "-Ilib splitmail.pl 957 12 23 26 1014 > 253.perlbmk.splitmail4.out 2> 253.perlbmk.splitmail4.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 253.perlbmk.diffmail.out 2.550.15.24.23.100.out --strip-trailing-cr > 253.perlbmk.diffmail.cmp",
+        "diff 253.perlbmk.makerand.out makerand.out --strip-trailing-cr > 253.perlbmk.makerand.cmp",
+        "diff 253.perlbmk.perfect.out b.3.m.4.out --strip-trailing-cr > 253.perlbmk.perfect.cmp",
+        "diff 253.perlbmk.splitmail1.out 850.5.19.18.1500.out --strip-trailing-cr > 253.perlbmk.splitmail1.cmp",
+        "diff 253.perlbmk.splitmail2.out 704.12.26.16.836.out --strip-trailing-cr > 253.perlbmk.splitmail2.cmp",
+        "diff 253.perlbmk.splitmail3.out 535.13.25.24.1091.out --strip-trailing-cr > 253.perlbmk.splitmail3.cmp",
+        "diff 253.perlbmk.splitmail4.out 957.12.23.26.1014.out --strip-trailing-cr > 253.perlbmk.splitmail4.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_253_perlbmk
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

@@ -3,24 +3,38 @@
 
 import spec
 
-class SPEC2006_450_soplex(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '450.soplex'
 
-    train_input_set = ['train/input/train.mps', 'train/input/pds-20.mps']
-    train_output_set = ['train/output/pds-20.mps.out', 'train/output/train.out']
-    train_args = ['-s1 -e -m5000 pds-20.mps > 450.soplex.pds-20.out 2> 450.soplex.pds-20.err', '-m1200 train.mps > 450.soplex.train.out 2> 450.soplex.train.err']
-    train_cmp_cmds = ['fpcmp -a 1.0e-5 -r 20 450.soplex.pds-20.out pds-20.mps.out > 450.soplex.pds-20.cmp', 'fpcmp -a 1.0e-5 -r 20 450.soplex.train.out train.out > 450.soplex.train.cmp']
-    ref_input_set = ['ref/input/ref.mps', 'ref/input/pds-50.mps']
-    ref_output_set = ['ref/output/pds-50.mps.out', 'ref/output/ref.out']
-    ref_args = ['-s1 -e -m45000 pds-50.mps > 450.soplex.pds-50.out 2> 450.soplex.pds-50.err', '-m3500 ref.mps > 450.soplex.ref.out 2> 450.soplex.ref.err']
-    ref_cmp_cmds = ['fpcmp -a 1.0e-5 -r 0.02 450.soplex.pds-50.out pds-50.mps.out > 450.soplex.pds-50.cmp', 'fpcmp -a 1.0e-5 -r 0.02 450.soplex.ref.out ref.out > 450.soplex.ref.cmp']
+class SPEC2006_450_soplex(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "450.soplex"
+
+    train_input_set = ["train/input/train.mps", "train/input/pds-20.mps"]
+    train_output_set = ["train/output/pds-20.mps.out", "train/output/train.out"]
+    train_args = [
+        "-s1 -e -m5000 pds-20.mps > 450.soplex.pds-20.out 2> 450.soplex.pds-20.err",
+        "-m1200 train.mps > 450.soplex.train.out 2> 450.soplex.train.err",
+    ]
+    train_cmp_cmds = [
+        "fpcmp -a 1.0e-5 -r 20 450.soplex.pds-20.out pds-20.mps.out > 450.soplex.pds-20.cmp",
+        "fpcmp -a 1.0e-5 -r 20 450.soplex.train.out train.out > 450.soplex.train.cmp",
+    ]
+    ref_input_set = ["ref/input/ref.mps", "ref/input/pds-50.mps"]
+    ref_output_set = ["ref/output/pds-50.mps.out", "ref/output/ref.out"]
+    ref_args = [
+        "-s1 -e -m45000 pds-50.mps > 450.soplex.pds-50.out 2> 450.soplex.pds-50.err",
+        "-m3500 ref.mps > 450.soplex.ref.out 2> 450.soplex.ref.err",
+    ]
+    ref_cmp_cmds = [
+        "fpcmp -a 1.0e-5 -r 0.02 450.soplex.pds-50.out pds-50.mps.out > 450.soplex.pds-50.cmp",
+        "fpcmp -a 1.0e-5 -r 0.02 450.soplex.ref.out ref.out > 450.soplex.ref.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_450_soplex
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

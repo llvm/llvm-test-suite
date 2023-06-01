@@ -1,6 +1,9 @@
 """Parser for .test files"""
-from lit.TestRunner import parseIntegratedTestScriptCommands, \
-        getDefaultSubstitutions, applySubstitutions
+from lit.TestRunner import (
+    parseIntegratedTestScriptCommands,
+    getDefaultSubstitutions,
+    applySubstitutions,
+)
 from litsupport import shellcommand
 import logging
 
@@ -10,7 +13,7 @@ def _parseShellCommand(script, ln):
     ln = ln.rstrip()
 
     # Collapse lines with trailing '\\'.
-    if script and script[-1][-1] == '\\':
+    if script and script[-1][-1] == "\\":
         script[-1] = script[-1][:-1] + ln
     else:
         script.append(ln)
@@ -28,23 +31,31 @@ def parse(context, filename):
     metricscripts = {}
     # Note that we keep both "RUN" and "RUN:" in the list to stay compatible
     # with older lit versions.
-    keywords = ['PREPARE:', 'PREPARE', 'RUN:', 'RUN', 'VERIFY:', 'VERIFY',
-                'METRIC:', 'METRIC']
-    for line_number, command_type, ln in \
-            parseIntegratedTestScriptCommands(filename, keywords):
-        if command_type.startswith('PREPARE'):
+    keywords = [
+        "PREPARE:",
+        "PREPARE",
+        "RUN:",
+        "RUN",
+        "VERIFY:",
+        "VERIFY",
+        "METRIC:",
+        "METRIC",
+    ]
+    for line_number, command_type, ln in parseIntegratedTestScriptCommands(
+        filename, keywords
+    ):
+        if command_type.startswith("PREPARE"):
             _parseShellCommand(preparescript, ln)
-        elif command_type.startswith('RUN'):
+        elif command_type.startswith("RUN"):
             _parseShellCommand(runscript, ln)
-        elif command_type.startswith('VERIFY'):
+        elif command_type.startswith("VERIFY"):
             _parseShellCommand(verifyscript, ln)
-        elif command_type.startswith('METRIC'):
-            metric, ln = ln.split(':', 1)
+        elif command_type.startswith("METRIC"):
+            metric, ln = ln.split(":", 1)
             metricscript = metricscripts.setdefault(metric.strip(), list())
             _parseShellCommand(metricscript, ln)
         else:
-            raise ValueError("unknown script command type: %r" % (
-                             command_type,))
+            raise ValueError("unknown script command type: %r" % (command_type,))
 
     # Verify the script contains a run line.
     if runscript == []:
@@ -52,20 +63,23 @@ def parse(context, filename):
 
     # Check for unterminated run lines.
     for script in preparescript, runscript, verifyscript:
-        if script and script[-1][-1] == '\\':
-            raise ValueError("Test has unterminated RUN/VERIFY lines " +
-                             "(ending with '\\')")
+        if script and script[-1][-1] == "\\":
+            raise ValueError(
+                "Test has unterminated RUN/VERIFY lines " + "(ending with '\\')"
+            )
 
     # Apply the usual lit substitutions (%s, %S, %p, %T, ...)
     outfile = context.tmpBase + ".out"
-    substitutions = getDefaultSubstitutions(context.test, context.tmpDir,
-                                            context.tmpBase)
-    substitutions += [('%o', outfile)]
+    substitutions = getDefaultSubstitutions(
+        context.test, context.tmpDir, context.tmpBase
+    )
+    substitutions += [("%o", outfile)]
     preparescript = applySubstitutions(preparescript, substitutions)
     runscript = applySubstitutions(runscript, substitutions)
     verifyscript = applySubstitutions(verifyscript, substitutions)
-    metricscripts = {k: applySubstitutions(v, substitutions)
-                     for k, v in metricscripts.items()}
+    metricscripts = {
+        k: applySubstitutions(v, substitutions) for k, v in metricscripts.items()
+    }
 
     # Put things into the context
     context.parsed_preparescript = preparescript

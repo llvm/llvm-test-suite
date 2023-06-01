@@ -27,14 +27,16 @@ class Simple(nt.TestModule):
         # below). If no '.status' result is reported, the test is assumed to
         # have passed.
         return [
-            TestSamples('nts.LNT/Examples/Simple.compile', [1.0]),
-            TestSamples('nts.LNT/Examples/Simple.exec', [1.0]),
-            TestSamples('nts.LNT/Examples/Simple.exec.status', [FAIL])]
+            TestSamples("nts.LNT/Examples/Simple.compile", [1.0]),
+            TestSamples("nts.LNT/Examples/Simple.exec", [1.0]),
+            TestSamples("nts.LNT/Examples/Simple.exec.status", [FAIL]),
+        ]
+
 
 # This is the only required entry point to the module.
 test_class = Simple
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

@@ -3,24 +3,37 @@
 
 import spec
 
-class SPEC2006_483_xalancbmk(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '483.xalancbmk'
 
-    train_input_set = ['train/input/train.xsd', 'train/input/train.lst', 'train/input/allbooks.xml', 'train/input/xalanc.xsl']
-    train_output_set = ['train/output/train.out']
-    train_args = ['-v allbooks.xml xalanc.xsl > 483.xalancbmk.allbooks.out 2> 483.xalancbmk.allbooks.err']
-    train_cmp_cmds = ['diff 483.xalancbmk.allbooks.out train.out --strip-trailing-cr > 483.xalancbmk.allbooks.cmp']
-    ref_input_set = ['ref/input/t5.xml', 'ref/input/xalanc.xsl', 'ref/input/100mb.xsd']
-    ref_output_set = ['ref/output/ref.out']
-    ref_args = ['-v t5.xml xalanc.xsl > 483.xalancbmk.t5.out 2> 483.xalancbmk.t5.err']
-    ref_cmp_cmds = ['diff 483.xalancbmk.t5.out ref.out --strip-trailing-cr > 483.xalancbmk.t5.cmp']
+class SPEC2006_483_xalancbmk(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "483.xalancbmk"
+
+    train_input_set = [
+        "train/input/train.xsd",
+        "train/input/train.lst",
+        "train/input/allbooks.xml",
+        "train/input/xalanc.xsl",
+    ]
+    train_output_set = ["train/output/train.out"]
+    train_args = [
+        "-v allbooks.xml xalanc.xsl > 483.xalancbmk.allbooks.out 2> 483.xalancbmk.allbooks.err"
+    ]
+    train_cmp_cmds = [
+        "diff 483.xalancbmk.allbooks.out train.out --strip-trailing-cr > 483.xalancbmk.allbooks.cmp"
+    ]
+    ref_input_set = ["ref/input/t5.xml", "ref/input/xalanc.xsl", "ref/input/100mb.xsd"]
+    ref_output_set = ["ref/output/ref.out"]
+    ref_args = ["-v t5.xml xalanc.xsl > 483.xalancbmk.t5.out 2> 483.xalancbmk.t5.err"]
+    ref_cmp_cmds = [
+        "diff 483.xalancbmk.t5.out ref.out --strip-trailing-cr > 483.xalancbmk.t5.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_483_xalancbmk
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

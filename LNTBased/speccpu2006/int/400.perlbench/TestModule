@@ -3,24 +3,70 @@
 
 import spec
 
-class SPEC2006_400_perlbench(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '400.perlbench'
 
-    train_input_set = ['all/input/cpu2006_mhonarc.rc', 'all/input/lib', 'all/input/rules', 'train/input/scrabbl.in', 'train/input/dictionary', 'all/input/diffmail.pl', 'train/input/perfect.pl', 'train/input/scrabbl.pl', 'all/input/splitmail.pl']
-    train_output_set = ['train/output/diffmail.2.550.15.24.23.100.out', 'train/output/perfect.b.3.out', 'train/output/scrabbl.out', 'train/output/splitmail.535.13.25.24.1091.out']
-    train_args = ['-Ilib diffmail.pl 2 550 15 24 23 100 > 400.perlbench.diffmail.out 2> 400.perlbench.diffmail.err', '-Ilib perfect.pl b 3 > 400.perlbench.perfect.out 2> 400.perlbench.perfect.err', '-Ilib scrabbl.pl < scrabbl.in > 400.perlbench.scrabbl.out 2> 400.perlbench.scrabbl.err', '-Ilib splitmail.pl 535 13 25 24 1091 > 400.perlbench.splitmail.out 2> 400.perlbench.splitmail.err']
-    train_cmp_cmds = ['diff 400.perlbench.diffmail.out diffmail.2.550.15.24.23.100.out --strip-trailing-cr > 400.perlbench.diffmail.cmp', 'diff 400.perlbench.perfect.out perfect.b.3.out --strip-trailing-cr > 400.perlbench.perfect.cmp', 'diff 400.perlbench.scrabbl.out scrabbl.out --strip-trailing-cr > 400.perlbench.scrabbl.cmp', 'diff 400.perlbench.splitmail.out splitmail.535.13.25.24.1091.out --strip-trailing-cr > 400.perlbench.splitmail.cmp']
-    ref_input_set = ['all/input/cpu2006_mhonarc.rc', 'all/input/lib', 'all/input/rules', 'ref/input/checkspam.pl', 'all/input/diffmail.pl', 'all/input/splitmail.pl']
-    ref_output_set = ['ref/output/checkspam.2500.5.25.11.150.1.1.1.1.out', 'ref/output/diffmail.4.800.10.17.19.300.out', 'ref/output/splitmail.1600.12.26.16.4500.out']
-    ref_args = ['-Ilib checkspam.pl 2500 5 25 11 150 1 1 1 1 > 400.perlbench.checkspam.out 2> 400.perlbench.checkspam.err', '-Ilib diffmail.pl 4 800 10 17 19 300 > 400.perlbench.diffmail.out 2> 400.perlbench.diffmail.err', '-Ilib splitmail.pl 1600 12 26 16 4500 > 400.perlbench.splitmail.out 2> 400.perlbench.splitmail.err']
-    ref_cmp_cmds = ['diff 400.perlbench.checkspam.out checkspam.2500.5.25.11.150.1.1.1.1.out --strip-trailing-cr > 400.perlbench.checkspam.cmp', 'diff 400.perlbench.diffmail.out diffmail.4.800.10.17.19.300.out --strip-trailing-cr > 400.perlbench.diffmail.cmp', 'diff 400.perlbench.splitmail.out splitmail.1600.12.26.16.4500.out --strip-trailing-cr > 400.perlbench.splitmail.cmp']
+class SPEC2006_400_perlbench(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "400.perlbench"
+
+    train_input_set = [
+        "all/input/cpu2006_mhonarc.rc",
+        "all/input/lib",
+        "all/input/rules",
+        "train/input/scrabbl.in",
+        "train/input/dictionary",
+        "all/input/diffmail.pl",
+        "train/input/perfect.pl",
+        "train/input/scrabbl.pl",
+        "all/input/splitmail.pl",
+    ]
+    train_output_set = [
+        "train/output/diffmail.2.550.15.24.23.100.out",
+        "train/output/perfect.b.3.out",
+        "train/output/scrabbl.out",
+        "train/output/splitmail.535.13.25.24.1091.out",
+    ]
+    train_args = [
+        "-Ilib diffmail.pl 2 550 15 24 23 100 > 400.perlbench.diffmail.out 2> 400.perlbench.diffmail.err",
+        "-Ilib perfect.pl b 3 > 400.perlbench.perfect.out 2> 400.perlbench.perfect.err",
+        "-Ilib scrabbl.pl < scrabbl.in > 400.perlbench.scrabbl.out 2> 400.perlbench.scrabbl.err",
+        "-Ilib splitmail.pl 535 13 25 24 1091 > 400.perlbench.splitmail.out 2> 400.perlbench.splitmail.err",
+    ]
+    train_cmp_cmds = [
+        "diff 400.perlbench.diffmail.out diffmail.2.550.15.24.23.100.out --strip-trailing-cr > 400.perlbench.diffmail.cmp",
+        "diff 400.perlbench.perfect.out perfect.b.3.out --strip-trailing-cr > 400.perlbench.perfect.cmp",
+        "diff 400.perlbench.scrabbl.out scrabbl.out --strip-trailing-cr > 400.perlbench.scrabbl.cmp",
+        "diff 400.perlbench.splitmail.out splitmail.535.13.25.24.1091.out --strip-trailing-cr > 400.perlbench.splitmail.cmp",
+    ]
+    ref_input_set = [
+        "all/input/cpu2006_mhonarc.rc",
+        "all/input/lib",
+        "all/input/rules",
+        "ref/input/checkspam.pl",
+        "all/input/diffmail.pl",
+        "all/input/splitmail.pl",
+    ]
+    ref_output_set = [
+        "ref/output/checkspam.2500.5.25.11.150.1.1.1.1.out",
+        "ref/output/diffmail.4.800.10.17.19.300.out",
+        "ref/output/splitmail.1600.12.26.16.4500.out",
+    ]
+    ref_args = [
+        "-Ilib checkspam.pl 2500 5 25 11 150 1 1 1 1 > 400.perlbench.checkspam.out 2> 400.perlbench.checkspam.err",
+        "-Ilib diffmail.pl 4 800 10 17 19 300 > 400.perlbench.diffmail.out 2> 400.perlbench.diffmail.err",
+        "-Ilib splitmail.pl 1600 12 26 16 4500 > 400.perlbench.splitmail.out 2> 400.perlbench.splitmail.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 400.perlbench.checkspam.out checkspam.2500.5.25.11.150.1.1.1.1.out --strip-trailing-cr > 400.perlbench.checkspam.cmp",
+        "diff 400.perlbench.diffmail.out diffmail.4.800.10.17.19.300.out --strip-trailing-cr > 400.perlbench.diffmail.cmp",
+        "diff 400.perlbench.splitmail.out splitmail.1600.12.26.16.4500.out --strip-trailing-cr > 400.perlbench.splitmail.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_400_perlbench
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

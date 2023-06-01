@@ -3,24 +3,52 @@
 
 import spec
 
-class SPEC2000_176_gcc(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '176.gcc'
 
-    train_input_set = ['train/input/cp-decl.i']
-    train_output_set = ['train/output/cp-decl.s']
-    train_args = ['cp-decl.i -o - > 176.gcc.cp-decl.out 2> 176.gcc.cp-decl.err']
-    train_cmp_cmds = ['diff 176.gcc.cp-decl.out cp-decl.s --strip-trailing-cr > 176.gcc.cp-decl.cmp']
-    ref_input_set = ['ref/input/166.i', 'ref/input/200.i', 'ref/input/expr.i', 'ref/input/integrate.i', 'ref/input/scilab.i']
-    ref_output_set = ['ref/output/166.s', 'ref/output/200.s', 'ref/output/expr.s', 'ref/output/integrate.s', 'ref/output/scilab.s']
-    ref_args = ['166.i -o - > 176.gcc.166.out 2> 176.gcc.166.err', '200.i -o - > 176.gcc.200.out 2> 176.gcc.200.err', 'expr.i -o - > 176.gcc.expr.out 2> 176.gcc.expr.err', 'integrate.i -o - > 176.gcc.integrate.out 2> 176.gcc.integrate.err', 'scilab.i -o - > 176.gcc.scilab.out 2> 176.gcc.scilab.err']
-    ref_cmp_cmds = ['diff 176.gcc.166.out 166.s --strip-trailing-cr > 176.gcc.166.cmp', 'diff 176.gcc.200.out 200.s --strip-trailing-cr > 176.gcc.200.cmp', 'diff 176.gcc.expr.out expr.s --strip-trailing-cr > 176.gcc.expr.cmp', 'diff 176.gcc.integrate.out integrate.s --strip-trailing-cr > 176.gcc.integrate.cmp', 'diff 176.gcc.scilab.out scilab.s --strip-trailing-cr > 176.gcc.scilab.cmp']
+class SPEC2000_176_gcc(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "176.gcc"
+
+    train_input_set = ["train/input/cp-decl.i"]
+    train_output_set = ["train/output/cp-decl.s"]
+    train_args = ["cp-decl.i -o - > 176.gcc.cp-decl.out 2> 176.gcc.cp-decl.err"]
+    train_cmp_cmds = [
+        "diff 176.gcc.cp-decl.out cp-decl.s --strip-trailing-cr > 176.gcc.cp-decl.cmp"
+    ]
+    ref_input_set = [
+        "ref/input/166.i",
+        "ref/input/200.i",
+        "ref/input/expr.i",
+        "ref/input/integrate.i",
+        "ref/input/scilab.i",
+    ]
+    ref_output_set = [
+        "ref/output/166.s",
+        "ref/output/200.s",
+        "ref/output/expr.s",
+        "ref/output/integrate.s",
+        "ref/output/scilab.s",
+    ]
+    ref_args = [
+        "166.i -o - > 176.gcc.166.out 2> 176.gcc.166.err",
+        "200.i -o - > 176.gcc.200.out 2> 176.gcc.200.err",
+        "expr.i -o - > 176.gcc.expr.out 2> 176.gcc.expr.err",
+        "integrate.i -o - > 176.gcc.integrate.out 2> 176.gcc.integrate.err",
+        "scilab.i -o - > 176.gcc.scilab.out 2> 176.gcc.scilab.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 176.gcc.166.out 166.s --strip-trailing-cr > 176.gcc.166.cmp",
+        "diff 176.gcc.200.out 200.s --strip-trailing-cr > 176.gcc.200.cmp",
+        "diff 176.gcc.expr.out expr.s --strip-trailing-cr > 176.gcc.expr.cmp",
+        "diff 176.gcc.integrate.out integrate.s --strip-trailing-cr > 176.gcc.integrate.cmp",
+        "diff 176.gcc.scilab.out scilab.s --strip-trailing-cr > 176.gcc.scilab.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_176_gcc
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

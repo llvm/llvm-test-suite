@@ -3,24 +3,68 @@
 
 import spec
 
-class SPEC2000_252_eon(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '252.eon'
 
-    train_input_set = ['train/input/chair.camera', 'train/input/chair.control.cook', 'train/input/chair.control.kajiya', 'train/input/chair.control.rushmeier', 'train/input/chair.surfaces', 'train/input/eon.dat', 'train/input/materials', 'train/input/spectra.dat']
-    train_output_set = ['train/output/pixels_out.cook', 'train/output/pixels_out.kajiya', 'train/output/pixels_out.rushmeier']
-    train_args = ['chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook > 252.eon.cook.out 2> 252.eon.cook.err', 'chair.control.kajiya chair.camera chair.surfaces chair.kajiya.ppm ppm pixels_out.kajiya > 252.eon.kajiya.out 2> 252.eon.kajiya.err', 'chair.control.rushmeier chair.camera chair.surfaces chair.rushmeier.ppm ppm pixels_out.rushmeier > 252.eon.rushmeier.out 2> 252.eon.rushmeier.err']
-    train_cmp_cmds = ['fpcmp -a 0.005 pixels_out.cook pixels_out.cook > 252.eon.cook.cmp', 'fpcmp -a 0.005 pixels_out.kajiya pixels_out.kajiya > 252.eon.kajiya.cmp', 'fpcmp -a 0.005 pixels_out.rushmeier pixels_out.rushmeier > 252.eon.rushmeier.cmp']
-    ref_input_set = ['ref/input/chair.camera', 'ref/input/chair.control.cook', 'ref/input/chair.control.kajiya', 'ref/input/chair.control.rushmeier', 'ref/input/chair.surfaces', 'ref/input/eon.dat', 'ref/input/materials', 'ref/input/spectra.dat']
-    ref_output_set = ['ref/output/pixels_out.cook', 'ref/output/pixels_out.kajiya', 'ref/output/pixels_out.rushmeier']
-    ref_args = ['chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook > 252.eon.cook.out 2> 252.eon.cook.err', 'chair.control.kajiya chair.camera chair.surfaces chair.kajiya.ppm ppm pixels_out.kajiya > 252.eon.kajiya.out 2> 252.eon.kajiya.err', 'chair.control.rushmeier chair.camera chair.surfaces chair.rushmeier.ppm ppm pixels_out.rushmeier > 252.eon.rushmeier.out 2> 252.eon.rushmeier.err']
-    ref_cmp_cmds = ['fpcmp -a 0.005 pixels_out.cook pixels_out.cook > 252.eon.cook.cmp', 'fpcmp -a 0.005 pixels_out.kajiya pixels_out.kajiya > 252.eon.kajiya.cmp', 'fpcmp -a 0.005 pixels_out.rushmeier pixels_out.rushmeier > 252.eon.rushmeier.cmp']
+class SPEC2000_252_eon(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "252.eon"
+
+    train_input_set = [
+        "train/input/chair.camera",
+        "train/input/chair.control.cook",
+        "train/input/chair.control.kajiya",
+        "train/input/chair.control.rushmeier",
+        "train/input/chair.surfaces",
+        "train/input/eon.dat",
+        "train/input/materials",
+        "train/input/spectra.dat",
+    ]
+    train_output_set = [
+        "train/output/pixels_out.cook",
+        "train/output/pixels_out.kajiya",
+        "train/output/pixels_out.rushmeier",
+    ]
+    train_args = [
+        "chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook > 252.eon.cook.out 2> 252.eon.cook.err",
+        "chair.control.kajiya chair.camera chair.surfaces chair.kajiya.ppm ppm pixels_out.kajiya > 252.eon.kajiya.out 2> 252.eon.kajiya.err",
+        "chair.control.rushmeier chair.camera chair.surfaces chair.rushmeier.ppm ppm pixels_out.rushmeier > 252.eon.rushmeier.out 2> 252.eon.rushmeier.err",
+    ]
+    train_cmp_cmds = [
+        "fpcmp -a 0.005 pixels_out.cook pixels_out.cook > 252.eon.cook.cmp",
+        "fpcmp -a 0.005 pixels_out.kajiya pixels_out.kajiya > 252.eon.kajiya.cmp",
+        "fpcmp -a 0.005 pixels_out.rushmeier pixels_out.rushmeier > 252.eon.rushmeier.cmp",
+    ]
+    ref_input_set = [
+        "ref/input/chair.camera",
+        "ref/input/chair.control.cook",
+        "ref/input/chair.control.kajiya",
+        "ref/input/chair.control.rushmeier",
+        "ref/input/chair.surfaces",
+        "ref/input/eon.dat",
+        "ref/input/materials",
+        "ref/input/spectra.dat",
+    ]
+    ref_output_set = [
+        "ref/output/pixels_out.cook",
+        "ref/output/pixels_out.kajiya",
+        "ref/output/pixels_out.rushmeier",
+    ]
+    ref_args = [
+        "chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook > 252.eon.cook.out 2> 252.eon.cook.err",
+        "chair.control.kajiya chair.camera chair.surfaces chair.kajiya.ppm ppm pixels_out.kajiya > 252.eon.kajiya.out 2> 252.eon.kajiya.err",
+        "chair.control.rushmeier chair.camera chair.surfaces chair.rushmeier.ppm ppm pixels_out.rushmeier > 252.eon.rushmeier.out 2> 252.eon.rushmeier.err",
+    ]
+    ref_cmp_cmds = [
+        "fpcmp -a 0.005 pixels_out.cook pixels_out.cook > 252.eon.cook.cmp",
+        "fpcmp -a 0.005 pixels_out.kajiya pixels_out.kajiya > 252.eon.kajiya.cmp",
+        "fpcmp -a 0.005 pixels_out.rushmeier pixels_out.rushmeier > 252.eon.rushmeier.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_252_eon
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

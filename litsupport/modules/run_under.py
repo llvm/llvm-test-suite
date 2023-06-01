@@ -8,11 +8,13 @@ def mutateCommandLine(context, commandline):
     cmd = shellcommand.parse(commandline)
     run_under_cmd = shellcommand.parse(context.config.run_under)
 
-    if run_under_cmd.stdin is not None or \
-       run_under_cmd.stdout is not None or \
-       run_under_cmd.stderr is not None or \
-       run_under_cmd.workdir is not None or \
-       run_under_cmd.envvars:
+    if (
+        run_under_cmd.stdin is not None
+        or run_under_cmd.stdout is not None
+        or run_under_cmd.stderr is not None
+        or run_under_cmd.workdir is not None
+        or run_under_cmd.envvars
+    ):
         raise Exception("invalid run_under argument!")
 
     cmd.wrap(run_under_cmd.executable, run_under_cmd.arguments)
@@ -23,5 +25,6 @@ def mutateCommandLine(context, commandline):
 def mutatePlan(context, plan):
     run_under = context.config.run_under
     if run_under:
-        plan.runscript = testplan.mutateScript(context, plan.runscript,
-                                               mutateCommandLine)
+        plan.runscript = testplan.mutateScript(
+            context, plan.runscript, mutateCommandLine
+        )

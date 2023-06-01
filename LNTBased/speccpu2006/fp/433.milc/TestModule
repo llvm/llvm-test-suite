@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2006_433_milc(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '433.milc'
 
-    train_input_set = ['train/input/su3imp.in']
-    train_output_set = ['train/output/su3imp.out']
-    train_args = ['< su3imp.in > 433.milc.su3imp.out 2> 433.milc.su3imp.err']
-    train_cmp_cmds = ['fpcmp -r 0.0001 -a 0.0000002 433.milc.su3imp.out su3imp.out > 433.milc.su3imp.cmp']
-    ref_input_set = ['ref/input/su3imp.in']
-    ref_output_set = ['ref/output/su3imp.out']
-    ref_args = ['< su3imp.in > 433.milc.su3imp.out 2> 433.milc.su3imp.err']
-    ref_cmp_cmds = ['fpcmp -r 0.0001 -a 0.0000002 433.milc.su3imp.out su3imp.out > 433.milc.su3imp.cmp']
+class SPEC2006_433_milc(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "433.milc"
+
+    train_input_set = ["train/input/su3imp.in"]
+    train_output_set = ["train/output/su3imp.out"]
+    train_args = ["< su3imp.in > 433.milc.su3imp.out 2> 433.milc.su3imp.err"]
+    train_cmp_cmds = [
+        "fpcmp -r 0.0001 -a 0.0000002 433.milc.su3imp.out su3imp.out > 433.milc.su3imp.cmp"
+    ]
+    ref_input_set = ["ref/input/su3imp.in"]
+    ref_output_set = ["ref/output/su3imp.out"]
+    ref_args = ["< su3imp.in > 433.milc.su3imp.out 2> 433.milc.su3imp.err"]
+    ref_cmp_cmds = [
+        "fpcmp -r 0.0001 -a 0.0000002 433.milc.su3imp.out su3imp.out > 433.milc.su3imp.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_433_milc
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

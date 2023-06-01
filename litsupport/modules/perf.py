@@ -9,12 +9,17 @@ def _mutateCommandLine(context, commandline):
     context.profilefile = context.tmpBase + ".perf_data"
     # Storing profile file in context allows other modules to be aware of it.
     cmd = shellcommand.parse(commandline)
-    cmd.wrap('perf', [
-        'record',
-        '-e', context.config.perf_profile_events,
-        '-o', context.profilefile,
-        '--'
-    ])
+    cmd.wrap(
+        "perf",
+        [
+            "record",
+            "-e",
+            context.config.perf_profile_events,
+            "-o",
+            context.profilefile,
+            "--",
+        ],
+    )
     if cmd.stdout is None:
         cmd.stdout = "/dev/null"
     else:
@@ -29,9 +34,7 @@ def _mutateCommandLine(context, commandline):
 def mutatePlan(context, plan):
     script = context.parsed_runscript
     if context.config.run_under:
-        script = testplan.mutateScript(context, script,
-                                       run_under.mutateCommandLine)
+        script = testplan.mutateScript(context, script, run_under.mutateCommandLine)
     script = testplan.mutateScript(context, script, _mutateCommandLine)
     plan.profilescript += script
-    plan.metric_collectors.append(
-        lambda context: {'profile': context.profilefile})
+    plan.metric_collectors.append(lambda context: {"profile": context.profilefile})

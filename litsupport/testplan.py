@@ -15,6 +15,7 @@ class TestPlan(object):
     metricscripts and are executed in this order.
     metric_collectors contains a list of functions executed after the scripts
     finished."""
+
     def __init__(self):
         self.runscript = []
         self.verifyscript = []
@@ -58,8 +59,13 @@ def _executeScript(context, script, scriptBaseName, useExternalSh=True):
         executeFunc = lit.TestRunner.executeScriptInternal
 
     logging.info("\n".join(script))
-    res = executeFunc(context.test, context.litConfig,
-                      context.tmpBase + "_" + scriptBaseName, script, execdir)
+    res = executeFunc(
+        context.test,
+        context.litConfig,
+        context.tmpBase + "_" + scriptBaseName,
+        script,
+        execdir,
+    )
     # The executeScript() functions return lit.Test.Result in some error
     # conditions instead of the normal tuples. Having different return types is
     # really annoying so we transform it back to the usual tuple.
@@ -121,13 +127,15 @@ def _executePlan(context, plan):
                 litvalue = lit.Test.toMetricValue(value)
                 context.result_metrics[metric] = litvalue
         except Exception as e:
-            logging.error("Could not collect metric with %s", metric_collector,
-                          exc_info=e)
+            logging.error(
+                "Could not collect metric with %s", metric_collector, exc_info=e
+            )
 
     # Execute the METRIC: part of the test.
     for metric, metricscript in plan.metricscripts.items():
-        out, err, exitCode, timeoutInfo = _executeScript(context, metricscript,
-                                                         "metric")
+        out, err, exitCode, timeoutInfo = _executeScript(
+            context, metricscript, "metric"
+        )
         if exitCode != 0:
             logging.warning("Metric script for '%s' failed", metric)
             continue
@@ -135,8 +143,9 @@ def _executePlan(context, plan):
             value = lit.Test.toMetricValue(float(out))
             context.result_metrics[metric] = value
         except ValueError:
-            logging.warning("Metric reported for '%s' is not a float: '%s'",
-                            metric, out)
+            logging.warning(
+                "Metric reported for '%s' is not a float: '%s'", metric, out
+            )
 
     return lit.Test.PASS
 
@@ -182,6 +191,7 @@ class TestContext:
     For example this can be used by modules modifying the commandline with
     extra instrumentation/measurement wrappers to pass the filenames of the
     results to a final data collection step."""
+
     def __init__(self, test, litConfig, tmpDir, tmpBase):
         self.test = test
         self.config = test.config

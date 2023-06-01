@@ -3,24 +3,26 @@
 
 import spec
 
+
 class SPEC2006_447_dealII(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '447.dealII'
+    year = "2006"
+    category = "fp"
+    benchmark = "447.dealII"
 
     train_input_set = []
-    train_output_set = ['train/output/log']
-    train_args = ['10 > 447.dealII.10.out 2> 447.dealII.10.err']
-    train_cmp_cmds = ['fpcmp -a .0000001 447.dealII.10.out log > 447.dealII.10.cmp']
+    train_output_set = ["train/output/log"]
+    train_args = ["10 > 447.dealII.10.out 2> 447.dealII.10.err"]
+    train_cmp_cmds = ["fpcmp -a .0000001 447.dealII.10.out log > 447.dealII.10.cmp"]
     ref_input_set = []
-    ref_output_set = ['ref/output/log']
-    ref_args = ['23 > 447.dealII.23.out 2> 447.dealII.23.err']
-    ref_cmp_cmds = ['fpcmp -a .0000001 447.dealII.23.out log > 447.dealII.23.cmp']
+    ref_output_set = ["ref/output/log"]
+    ref_args = ["23 > 447.dealII.23.out 2> 447.dealII.23.err"]
+    ref_cmp_cmds = ["fpcmp -a .0000001 447.dealII.23.out log > 447.dealII.23.cmp"]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_447_dealII
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

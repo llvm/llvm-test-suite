@@ -4,29 +4,168 @@
 import os, shutil
 import spec
 
-class SPEC2006_482_sphinx3(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '482.sphinx3'
 
-    train_input_set = ['all/input/model', 'train/input/beams.dat', 'train/input/an406-fcaw-b.le.raw', 'train/input/an407-fcaw-b.le.raw', 'train/input/an408-fcaw-b.le.raw', 'train/input/an409-fcaw-b.le.raw', 'train/input/an410-fcaw-b.le.raw', 'train/input/args.an4']
-    train_output_set = ['train/output/an4.log']
-    train_args = ['ctlfile . args.an4 > 482.sphinx3.an4.out 2> 482.sphinx3.an4.err']
-    train_cmp_cmds = ['sed -i bak "s/\\.le//g" 482.sphinx3.an4.out ; sed -i bak "s,[^ ]*/\\([^/]*\\.c\\),\\1," 482.sphinx3.an4.out; fpcmp -r .001 482.sphinx3.an4.out an4.log > 482.sphinx3.an4.cmp']
-    ref_input_set = ['all/input/model', 'ref/input/beams.dat', 'ref/input/an391-mjwl-b.le.raw', 'ref/input/an400-miry-b.le.raw', 'ref/input/an419-fjlp-b.le.raw', 'ref/input/an428-fvap-b.le.raw', 'ref/input/an437-mjgm-b.le.raw', 'ref/input/cen1-fjlp-b.le.raw', 'ref/input/cen2-fjlp-b.le.raw', 'ref/input/cen3-fjlp-b.le.raw', 'ref/input/cen4-fjlp-b.le.raw', 'ref/input/cen5-fjlp-b.le.raw', 'ref/input/cen6-fjlp-b.le.raw', 'ref/input/cen7-fjlp-b.le.raw', 'ref/input/cen8-fjlp-b.le.raw', 'ref/input/an392-mjwl-b.le.raw', 'ref/input/an401-mdms2-b.le.raw', 'ref/input/an420-fjlp-b.le.raw', 'ref/input/an429-fvap-b.le.raw', 'ref/input/an438-mjgm-b.le.raw', 'ref/input/cen1-fvap-b.le.raw', 'ref/input/cen2-fvap-b.le.raw', 'ref/input/cen3-fvap-b.le.raw', 'ref/input/cen4-fvap-b.le.raw', 'ref/input/cen5-fvap-b.le.raw', 'ref/input/cen6-fvap-b.le.raw', 'ref/input/cen7-fvap-b.le.raw', 'ref/input/cen8-fvap-b.le.raw', 'ref/input/an393-mjwl-b.le.raw', 'ref/input/an402-mdms2-b.le.raw', 'ref/input/an421-menk-b.le.raw', 'ref/input/an430-fvap-b.le.raw', 'ref/input/an439-mjgm-b.le.raw', 'ref/input/cen1-marh-b.le.raw', 'ref/input/cen2-marh-b.le.raw', 'ref/input/cen3-marh-b.le.raw', 'ref/input/cen4-marh-b.le.raw', 'ref/input/cen5-marh-b.le.raw', 'ref/input/cen6-marh-b.le.raw', 'ref/input/cen7-marh-b.le.raw', 'ref/input/cen8-marh-b.le.raw', 'ref/input/an394-mjwl-b.le.raw', 'ref/input/an403-mdms2-b.le.raw', 'ref/input/an422-menk-b.le.raw', 'ref/input/an431-marh-b.le.raw', 'ref/input/an440-mjgm-b.le.raw', 'ref/input/cen1-mdms2-b.le.raw', 'ref/input/cen2-mdms2-b.le.raw', 'ref/input/cen3-mdms2-b.le.raw', 'ref/input/cen4-mdms2-b.le.raw', 'ref/input/cen5-mdms2-b.le.raw', 'ref/input/cen6-mdms2-b.le.raw', 'ref/input/cen7-mdms2-b.le.raw', 'ref/input/cen8-mdms2-b.le.raw', 'ref/input/an395-mjwl-b.le.raw', 'ref/input/an404-mdms2-b.le.raw', 'ref/input/an423-menk-b.le.raw', 'ref/input/an432-marh-b.le.raw', 'ref/input/an441-mmxg-b.le.raw', 'ref/input/cen1-menk-b.le.raw', 'ref/input/cen2-menk-b.le.raw', 'ref/input/cen3-menk-b.le.raw', 'ref/input/cen4-menk-b.le.raw', 'ref/input/cen5-menk-b.le.raw', 'ref/input/cen6-menk-b.le.raw', 'ref/input/cen7-menk-b.le.raw', 'ref/input/cen8-menk-b.le.raw', 'ref/input/an396-miry-b.le.raw', 'ref/input/an405-mdms2-b.le.raw', 'ref/input/an424-menk-b.le.raw', 'ref/input/an433-marh-b.le.raw', 'ref/input/an442-mmxg-b.le.raw', 'ref/input/cen1-miry-b.le.raw', 'ref/input/cen2-miry-b.le.raw', 'ref/input/cen3-miry-b.le.raw', 'ref/input/cen4-miry-b.le.raw', 'ref/input/cen5-miry-b.le.raw', 'ref/input/cen6-miry-b.le.raw', 'ref/input/cen7-miry-b.le.raw', 'ref/input/cen8-miry-b.le.raw', 'ref/input/an397-miry-b.le.raw', 'ref/input/an416-fjlp-b.le.raw', 'ref/input/an425-menk-b.le.raw', 'ref/input/an434-marh-b.le.raw', 'ref/input/an443-mmxg-b.le.raw', 'ref/input/cen1-mjgm-b.le.raw', 'ref/input/cen2-mjgm-b.le.raw', 'ref/input/cen3-mjgm-b.le.raw', 'ref/input/cen4-mjgm-b.le.raw', 'ref/input/cen5-mjgm-b.le.raw', 'ref/input/cen6-mjgm-b.le.raw', 'ref/input/cen7-mjgm-b.le.raw', 'ref/input/cen8-mjgm-b.le.raw', 'ref/input/an398-miry-b.le.raw', 'ref/input/an417-fjlp-b.le.raw', 'ref/input/an426-fvap-b.le.raw', 'ref/input/an435-marh-b.le.raw', 'ref/input/an444-mmxg-b.le.raw', 'ref/input/cen1-mjwl-b.le.raw', 'ref/input/cen2-mjwl-b.le.raw', 'ref/input/cen3-mjwl-b.le.raw', 'ref/input/cen4-mjwl-b.le.raw', 'ref/input/cen5-mjwl-b.le.raw', 'ref/input/cen6-mjwl-b.le.raw', 'ref/input/cen7-mjwl-b.le.raw', 'ref/input/cen8-mjwl-b.le.raw', 'ref/input/an399-miry-b.le.raw', 'ref/input/an418-fjlp-b.le.raw', 'ref/input/an427-fvap-b.le.raw', 'ref/input/an436-mjgm-b.le.raw', 'ref/input/an445-mmxg-b.le.raw', 'ref/input/cen1-mmxg-b.le.raw', 'ref/input/cen2-mmxg-b.le.raw', 'ref/input/cen3-mmxg-b.le.raw', 'ref/input/cen4-mmxg-b.le.raw', 'ref/input/cen5-mmxg-b.le.raw', 'ref/input/cen6-mmxg-b.le.raw', 'ref/input/cen7-mmxg-b.le.raw', 'ref/input/cen8-mmxg-b.le.raw', 'ref/input/args.an4']
-    ref_output_set = ['ref/output/an4.log']
-    ref_args = ['ctlfile . args.an4 > 482.sphinx3.an4.out 2> 482.sphinx3.an4.err']
-    ref_cmp_cmds = ['sed -i bak "s/\\.le//g" 482.sphinx3.an4.out ; sed -i bak "s,[^ ]*/\\([^/]*\\.c\\),\\1," 482.sphinx3.an4.out; fpcmp -r .001 482.sphinx3.an4.out an4.log > 482.sphinx3.an4.cmp']
+class SPEC2006_482_sphinx3(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "482.sphinx3"
+
+    train_input_set = [
+        "all/input/model",
+        "train/input/beams.dat",
+        "train/input/an406-fcaw-b.le.raw",
+        "train/input/an407-fcaw-b.le.raw",
+        "train/input/an408-fcaw-b.le.raw",
+        "train/input/an409-fcaw-b.le.raw",
+        "train/input/an410-fcaw-b.le.raw",
+        "train/input/args.an4",
+    ]
+    train_output_set = ["train/output/an4.log"]
+    train_args = ["ctlfile . args.an4 > 482.sphinx3.an4.out 2> 482.sphinx3.an4.err"]
+    train_cmp_cmds = [
+        'sed -i bak "s/\\.le//g" 482.sphinx3.an4.out ; sed -i bak "s,[^ ]*/\\([^/]*\\.c\\),\\1," 482.sphinx3.an4.out; fpcmp -r .001 482.sphinx3.an4.out an4.log > 482.sphinx3.an4.cmp'
+    ]
+    ref_input_set = [
+        "all/input/model",
+        "ref/input/beams.dat",
+        "ref/input/an391-mjwl-b.le.raw",
+        "ref/input/an400-miry-b.le.raw",
+        "ref/input/an419-fjlp-b.le.raw",
+        "ref/input/an428-fvap-b.le.raw",
+        "ref/input/an437-mjgm-b.le.raw",
+        "ref/input/cen1-fjlp-b.le.raw",
+        "ref/input/cen2-fjlp-b.le.raw",
+        "ref/input/cen3-fjlp-b.le.raw",
+        "ref/input/cen4-fjlp-b.le.raw",
+        "ref/input/cen5-fjlp-b.le.raw",
+        "ref/input/cen6-fjlp-b.le.raw",
+        "ref/input/cen7-fjlp-b.le.raw",
+        "ref/input/cen8-fjlp-b.le.raw",
+        "ref/input/an392-mjwl-b.le.raw",
+        "ref/input/an401-mdms2-b.le.raw",
+        "ref/input/an420-fjlp-b.le.raw",
+        "ref/input/an429-fvap-b.le.raw",
+        "ref/input/an438-mjgm-b.le.raw",
+        "ref/input/cen1-fvap-b.le.raw",
+        "ref/input/cen2-fvap-b.le.raw",
+        "ref/input/cen3-fvap-b.le.raw",
+        "ref/input/cen4-fvap-b.le.raw",
+        "ref/input/cen5-fvap-b.le.raw",
+        "ref/input/cen6-fvap-b.le.raw",
+        "ref/input/cen7-fvap-b.le.raw",
+        "ref/input/cen8-fvap-b.le.raw",
+        "ref/input/an393-mjwl-b.le.raw",
+        "ref/input/an402-mdms2-b.le.raw",
+        "ref/input/an421-menk-b.le.raw",
+        "ref/input/an430-fvap-b.le.raw",
+        "ref/input/an439-mjgm-b.le.raw",
+        "ref/input/cen1-marh-b.le.raw",
+        "ref/input/cen2-marh-b.le.raw",
+        "ref/input/cen3-marh-b.le.raw",
+        "ref/input/cen4-marh-b.le.raw",
+        "ref/input/cen5-marh-b.le.raw",
+        "ref/input/cen6-marh-b.le.raw",
+        "ref/input/cen7-marh-b.le.raw",
+        "ref/input/cen8-marh-b.le.raw",
+        "ref/input/an394-mjwl-b.le.raw",
+        "ref/input/an403-mdms2-b.le.raw",
+        "ref/input/an422-menk-b.le.raw",
+        "ref/input/an431-marh-b.le.raw",
+        "ref/input/an440-mjgm-b.le.raw",
+        "ref/input/cen1-mdms2-b.le.raw",
+        "ref/input/cen2-mdms2-b.le.raw",
+        "ref/input/cen3-mdms2-b.le.raw",
+        "ref/input/cen4-mdms2-b.le.raw",
+        "ref/input/cen5-mdms2-b.le.raw",
+        "ref/input/cen6-mdms2-b.le.raw",
+        "ref/input/cen7-mdms2-b.le.raw",
+        "ref/input/cen8-mdms2-b.le.raw",
+        "ref/input/an395-mjwl-b.le.raw",
+        "ref/input/an404-mdms2-b.le.raw",
+        "ref/input/an423-menk-b.le.raw",
+        "ref/input/an432-marh-b.le.raw",
+        "ref/input/an441-mmxg-b.le.raw",
+        "ref/input/cen1-menk-b.le.raw",
+        "ref/input/cen2-menk-b.le.raw",
+        "ref/input/cen3-menk-b.le.raw",
+        "ref/input/cen4-menk-b.le.raw",
+        "ref/input/cen5-menk-b.le.raw",
+        "ref/input/cen6-menk-b.le.raw",
+        "ref/input/cen7-menk-b.le.raw",
+        "ref/input/cen8-menk-b.le.raw",
+        "ref/input/an396-miry-b.le.raw",
+        "ref/input/an405-mdms2-b.le.raw",
+        "ref/input/an424-menk-b.le.raw",
+        "ref/input/an433-marh-b.le.raw",
+        "ref/input/an442-mmxg-b.le.raw",
+        "ref/input/cen1-miry-b.le.raw",
+        "ref/input/cen2-miry-b.le.raw",
+        "ref/input/cen3-miry-b.le.raw",
+        "ref/input/cen4-miry-b.le.raw",
+        "ref/input/cen5-miry-b.le.raw",
+        "ref/input/cen6-miry-b.le.raw",
+        "ref/input/cen7-miry-b.le.raw",
+        "ref/input/cen8-miry-b.le.raw",
+        "ref/input/an397-miry-b.le.raw",
+        "ref/input/an416-fjlp-b.le.raw",
+        "ref/input/an425-menk-b.le.raw",
+        "ref/input/an434-marh-b.le.raw",
+        "ref/input/an443-mmxg-b.le.raw",
+        "ref/input/cen1-mjgm-b.le.raw",
+        "ref/input/cen2-mjgm-b.le.raw",
+        "ref/input/cen3-mjgm-b.le.raw",
+        "ref/input/cen4-mjgm-b.le.raw",
+        "ref/input/cen5-mjgm-b.le.raw",
+        "ref/input/cen6-mjgm-b.le.raw",
+        "ref/input/cen7-mjgm-b.le.raw",
+        "ref/input/cen8-mjgm-b.le.raw",
+        "ref/input/an398-miry-b.le.raw",
+        "ref/input/an417-fjlp-b.le.raw",
+        "ref/input/an426-fvap-b.le.raw",
+        "ref/input/an435-marh-b.le.raw",
+        "ref/input/an444-mmxg-b.le.raw",
+        "ref/input/cen1-mjwl-b.le.raw",
+        "ref/input/cen2-mjwl-b.le.raw",
+        "ref/input/cen3-mjwl-b.le.raw",
+        "ref/input/cen4-mjwl-b.le.raw",
+        "ref/input/cen5-mjwl-b.le.raw",
+        "ref/input/cen6-mjwl-b.le.raw",
+        "ref/input/cen7-mjwl-b.le.raw",
+        "ref/input/cen8-mjwl-b.le.raw",
+        "ref/input/an399-miry-b.le.raw",
+        "ref/input/an418-fjlp-b.le.raw",
+        "ref/input/an427-fvap-b.le.raw",
+        "ref/input/an436-mjgm-b.le.raw",
+        "ref/input/an445-mmxg-b.le.raw",
+        "ref/input/cen1-mmxg-b.le.raw",
+        "ref/input/cen2-mmxg-b.le.raw",
+        "ref/input/cen3-mmxg-b.le.raw",
+        "ref/input/cen4-mmxg-b.le.raw",
+        "ref/input/cen5-mmxg-b.le.raw",
+        "ref/input/cen6-mmxg-b.le.raw",
+        "ref/input/cen7-mmxg-b.le.raw",
+        "ref/input/cen8-mmxg-b.le.raw",
+        "ref/input/args.an4",
+    ]
+    ref_output_set = ["ref/output/an4.log"]
+    ref_args = ["ctlfile . args.an4 > 482.sphinx3.an4.out 2> 482.sphinx3.an4.err"]
+    ref_cmp_cmds = [
+        'sed -i bak "s/\\.le//g" 482.sphinx3.an4.out ; sed -i bak "s,[^ ]*/\\([^/]*\\.c\\),\\1," 482.sphinx3.an4.out; fpcmp -r .001 482.sphinx3.an4.out an4.log > 482.sphinx3.an4.cmp'
+    ]
 
     def copy_input_set(self, dest_dir, size):
         spec.TestModule.copy_input_set(self, dest_dir, size)
         # FIXME: this currently only supports little endian!
-        shutil.copy(os.path.join(self.SRCROOT, size, 'ctlfile.little-endian'), os.path.join(dest_dir, 'ctlfile'))
+        shutil.copy(
+            os.path.join(self.SRCROOT, size, "ctlfile.little-endian"),
+            os.path.join(dest_dir, "ctlfile"),
+        )
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_482_sphinx3
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

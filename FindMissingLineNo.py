@@ -3,13 +3,14 @@
 import os
 import sys
 
-DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".dbg.ml"
-OPT_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".dbg.opt.ml"
-NATIVE_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".native.dbg.ml"
-NATIVE_OPT_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".native.dbg.opt.ml"
-XFAIL_FILE=sys.argv[2] + "/lineinfo.xfail"
+DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".dbg.ml"
+OPT_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".dbg.opt.ml"
+NATIVE_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".native.dbg.ml"
+NATIVE_OPT_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".native.dbg.opt.ml"
+XFAIL_FILE = sys.argv[2] + "/lineinfo.xfail"
 
-REPORT_FILE="Output/" + sys.argv[1] + ".dbg.missing_lines.report.txt"
+REPORT_FILE = "Output/" + sys.argv[1] + ".dbg.missing_lines.report.txt"
+
 
 def read_inputfile(filename, dict):
     f = open(filename, "r")
@@ -23,6 +24,7 @@ def read_inputfile(filename, dict):
         dict[columns[0]] = s
     f.close()
     return
+
 
 dbg_lines = {}
 read_inputfile(DBG_OUTPUT_FILE, dbg_lines)

@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2006_458_sjeng(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '458.sjeng'
 
-    train_input_set = ['train/input/train.txt']
-    train_output_set = ['train/output/train.out']
-    train_args = ['train.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err']
-    train_cmp_cmds = ['diff 458.sjeng.input1.out train.out --strip-trailing-cr > 458.sjeng.input1.cmp']
-    ref_input_set = ['ref/input/ref.txt']
-    ref_output_set = ['ref/output/ref.out']
-    ref_args = ['ref.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err']
-    ref_cmp_cmds = ['diff 458.sjeng.input1.out ref.out --strip-trailing-cr > 458.sjeng.input1.cmp']
+class SPEC2006_458_sjeng(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "458.sjeng"
+
+    train_input_set = ["train/input/train.txt"]
+    train_output_set = ["train/output/train.out"]
+    train_args = ["train.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err"]
+    train_cmp_cmds = [
+        "diff 458.sjeng.input1.out train.out --strip-trailing-cr > 458.sjeng.input1.cmp"
+    ]
+    ref_input_set = ["ref/input/ref.txt"]
+    ref_output_set = ["ref/output/ref.out"]
+    ref_args = ["ref.txt > 458.sjeng.input1.out 2> 458.sjeng.input1.err"]
+    ref_cmp_cmds = [
+        "diff 458.sjeng.input1.out ref.out --strip-trailing-cr > 458.sjeng.input1.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_458_sjeng
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

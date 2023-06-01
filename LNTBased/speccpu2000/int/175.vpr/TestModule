@@ -3,24 +3,40 @@
 
 import spec
 
-class SPEC2000_175_vpr(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '175.vpr'
 
-    train_input_set = ['train/input/net.in', 'train/input/arch.in', 'train/input/place.in']
-    train_output_set = ['train/output/place_log.out']
-    train_args = ['net.in arch.in place.in dum.out -nodisp -place_only -init_t 5 -exit_t 0.005 -alpha_t 0.9412 -inner_num 2 > 175.vpr.place.out 2> 175.vpr.place.err', 'net.in arch.in place.in route.out -nodisp -route_only -route_chan_width 15 -pres_fac_mult 2 -acc_fac 1 -first_iter_pres_fac 4 -initial_pres_fac 8 > 175.vpr.route.out 2> 175.vpr.route.err']
-    train_cmp_cmds = ['diff 175.vpr.place.out place_log.out --strip-trailing-cr > 175.vpr.place.cmp']
-    ref_input_set = ['ref/input/net.in', 'ref/input/arch.in', 'ref/input/place.in']
-    ref_output_set = ['ref/output/place_log.out']
-    ref_args = ['net.in arch.in place.in dum.out -nodisp -place_only -init_t 5 -exit_t 0.005 -alpha_t 0.9412 -inner_num 2 > 175.vpr.place.out 2> 175.vpr.place.err', 'net.in arch.in place.in route.out -nodisp -route_only -route_chan_width 15 -pres_fac_mult 2 -acc_fac 1 -first_iter_pres_fac 4 -initial_pres_fac 8 > 175.vpr.route.out 2> 175.vpr.route.err']
-    ref_cmp_cmds = ['diff 175.vpr.place.out place_log.out --strip-trailing-cr > 175.vpr.place.cmp']
+class SPEC2000_175_vpr(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "175.vpr"
+
+    train_input_set = [
+        "train/input/net.in",
+        "train/input/arch.in",
+        "train/input/place.in",
+    ]
+    train_output_set = ["train/output/place_log.out"]
+    train_args = [
+        "net.in arch.in place.in dum.out -nodisp -place_only -init_t 5 -exit_t 0.005 -alpha_t 0.9412 -inner_num 2 > 175.vpr.place.out 2> 175.vpr.place.err",
+        "net.in arch.in place.in route.out -nodisp -route_only -route_chan_width 15 -pres_fac_mult 2 -acc_fac 1 -first_iter_pres_fac 4 -initial_pres_fac 8 > 175.vpr.route.out 2> 175.vpr.route.err",
+    ]
+    train_cmp_cmds = [
+        "diff 175.vpr.place.out place_log.out --strip-trailing-cr > 175.vpr.place.cmp"
+    ]
+    ref_input_set = ["ref/input/net.in", "ref/input/arch.in", "ref/input/place.in"]
+    ref_output_set = ["ref/output/place_log.out"]
+    ref_args = [
+        "net.in arch.in place.in dum.out -nodisp -place_only -init_t 5 -exit_t 0.005 -alpha_t 0.9412 -inner_num 2 > 175.vpr.place.out 2> 175.vpr.place.err",
+        "net.in arch.in place.in route.out -nodisp -route_only -route_chan_width 15 -pres_fac_mult 2 -acc_fac 1 -first_iter_pres_fac 4 -initial_pres_fac 8 > 175.vpr.route.out 2> 175.vpr.route.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 175.vpr.place.out place_log.out --strip-trailing-cr > 175.vpr.place.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_175_vpr
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

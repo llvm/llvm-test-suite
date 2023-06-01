@@ -3,24 +3,46 @@
 
 import spec
 
-class SPEC2000_256_bzip2(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '256.bzip2'
 
-    train_input_set = ['train/input/input.compressed']
-    train_output_set = ['train/output/input.compressed.out']
-    train_args = ['input.compressed 8 > 256.bzip2.compressed.out 2> 256.bzip2.compressed.err']
-    train_cmp_cmds = ['diff 256.bzip2.compressed.out input.compressed.out --strip-trailing-cr > 256.bzip2.compressed.cmp']
-    ref_input_set = ['ref/input/input.graphic', 'ref/input/input.program', 'ref/input/input.source']
-    ref_output_set = ['ref/output/input.graphic.out', 'ref/output/input.program.out', 'ref/output/input.source.out']
-    ref_args = ['input.graphic 58 > 256.bzip2.graphic.out 2> 256.bzip2.graphic.err', 'input.program 58 > 256.bzip2.program.out 2> 256.bzip2.program.err', 'input.source 58 > 256.bzip2.source.out 2> 256.bzip2.source.err']
-    ref_cmp_cmds = ['diff 256.bzip2.graphic.out input.graphic.out --strip-trailing-cr > 256.bzip2.graphic.cmp', 'diff 256.bzip2.program.out input.program.out --strip-trailing-cr > 256.bzip2.program.cmp', 'diff 256.bzip2.source.out input.source.out --strip-trailing-cr > 256.bzip2.source.cmp']
+class SPEC2000_256_bzip2(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "256.bzip2"
+
+    train_input_set = ["train/input/input.compressed"]
+    train_output_set = ["train/output/input.compressed.out"]
+    train_args = [
+        "input.compressed 8 > 256.bzip2.compressed.out 2> 256.bzip2.compressed.err"
+    ]
+    train_cmp_cmds = [
+        "diff 256.bzip2.compressed.out input.compressed.out --strip-trailing-cr > 256.bzip2.compressed.cmp"
+    ]
+    ref_input_set = [
+        "ref/input/input.graphic",
+        "ref/input/input.program",
+        "ref/input/input.source",
+    ]
+    ref_output_set = [
+        "ref/output/input.graphic.out",
+        "ref/output/input.program.out",
+        "ref/output/input.source.out",
+    ]
+    ref_args = [
+        "input.graphic 58 > 256.bzip2.graphic.out 2> 256.bzip2.graphic.err",
+        "input.program 58 > 256.bzip2.program.out 2> 256.bzip2.program.err",
+        "input.source 58 > 256.bzip2.source.out 2> 256.bzip2.source.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 256.bzip2.graphic.out input.graphic.out --strip-trailing-cr > 256.bzip2.graphic.cmp",
+        "diff 256.bzip2.program.out input.program.out --strip-trailing-cr > 256.bzip2.program.cmp",
+        "diff 256.bzip2.source.out input.source.out --strip-trailing-cr > 256.bzip2.source.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_256_bzip2
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()
