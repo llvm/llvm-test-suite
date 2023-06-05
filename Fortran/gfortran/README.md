@@ -13,8 +13,8 @@ generally check the compiler's error/warning messages and, in some cases,
 optimization logs. The _execute_ tests are end-to-end tests that check the
 behavior of the binary produced by the compiler.
 
-Currently, only the _execute_ tests are supported in both `regression` and
-`torture`.
+Currently, only the _execute_ tests are supported in `regression`. Both 
+`compile` and `execute` tests have been enabled in `torture`.
 
 Of the supported tests, a number of tests have been disabled. There are four
 categories of such tests:
@@ -42,7 +42,12 @@ remain.
 
 ### _Compile_ tests ###
 
-These tests are currently not supported.
+The _compile_ tests are "built" when the whole test suite is built at which 
+time a compilation log is saved. At testing time, the log is checked to 
+determine whether the test should pass or fail. If the test is expected to pass,
+but the compilation log contains errors, the test will be deemed to have failed
+and vice versa. The _compile_ test are supported in `torture`, but not in
+`regression`.
 
 
 ### _Execute tests_ ###
