@@ -104,14 +104,6 @@ file(GLOB Skipped CONFIGURE_DEPENDS
 
   # error: '[SYM]' is not a known intrinsic procedure
   specifics.f90
-
-  # --------------------------------------------------------------------------
-  #
-  # These tests are skipped because they generate the same module as other
-  # tests in this directory and create non-deterministic conflicts when building
-  # in parallel.
-
-  module_init_1.f90  # Conflicts with function_module_1.f90
 )
 
 # These tests are disabled because they fail at runtime when they should pass.

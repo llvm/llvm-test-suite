@@ -239,10 +239,11 @@ endfunction()
 
 function(gfortran_execute_test File)
   cmake_parse_arguments(GFORTRAN "" "PREFIX" "FFLAGS;LDFLAGS;DEPFILES" ${ARGN})
-  # There are a few tests with duplicate filenames, and CMake wants all target
-  # names to be unique, so we add a disambiguator to the target name. The
+  # There are a few tests - in different directories - with duplicate filenames.
+  # CMake requires all target names to be unique, so we add a disambiguator. The
   # disambiguator uses the path of the file relative to the top-level directory
-  # containing all the tests from the gfortran test suite.
+  # containing all the tests from the gfortran test suite to ensure that
+  # targets in different directories will have distinct names.
 
   # The ${File} argument is guaranteed to be the absolute path to the source
   # file.
@@ -260,19 +261,38 @@ function(gfortran_execute_test File)
   # tests.
   string(REPLACE "." "_" Name "${Name}")
 
-  set(_target "${GFORTRAN_PREFIX}-${Name}")
+  set(test_target "${GFORTRAN_PREFIX}-${Name}")
+  set(working_dir_name "${test_target}.wd")
+  set(working_dir "${CMAKE_CURRENT_BINARY_DIR}/${working_dir_name}")
 
+  # Several tests in the suite build modules with the same name at build-time.
+  # Others create/write/read files with the same name at test-time. In either
+  # case, these are race conditions which can lead to non-deterministic failures
+  # at build and/or test time. To work around this, have each test run in its
+  # own directory.
+  #
+  # This directory is also used as module directory at build-time.
+  #
+  # It may be "cleaner" to have separate directories - one that serves as the
+  # module directory and the other as the working directory, but that is
+  # probably unnecessary.
+  file(MAKE_DIRECTORY ${working_dir})
+
+  # Parse the dg-options annotations in the file and add it to DG_FFLAGS.
   gfortran_dg_options_fflags(DG_FFLAGS ${File})
 
-  # Add any flags that were requested
+  # Add any flags that were requested.
   list(APPEND FFLAGS ${DG_FFLAGS} ${GFORTRAN_FFLAGS})
   list(APPEND LDFLAGS ${GFORTRAN_LDFLAGS})
 
-  llvm_test_executable_no_test(${_target} ${File} ${GFORTRAN_DEPFILES})
-  llvm_test_run()
+  llvm_test_executable_no_test(${test_target} ${File} ${GFORTRAN_DEPFILES})
+  llvm_test_run(WORKDIR "%S/${working_dir_name}")
+  llvm_add_test_for_target(${test_target})
 
-  llvm_add_test_for_target(${_target})
-  target_include_directories(${_target} PRIVATE ${ISO_FORTRAN_C_HEADER_DIR})
+  target_include_directories(${test_target}
+    PRIVATE ${ISO_FORTRAN_C_HEADER_DIR} ${working_dir})
+  set_target_properties(${test_target} PROPERTIES
+    Fortran_MODULE_DIRECTORY ${working_dir})
 
   # This is a workaround because cmake does not currently recognize the .f03
   # and .f08 extensions. A patch to fix cmake has been accepted and the fix
@@ -292,8 +312,8 @@ function(gfortran_execute_test File)
 
   # NOTE: This should be removed when the -flang-experimental-exec flag is no
   # longer needed.
-  target_link_options(${_target} PRIVATE -flang-experimental-exec)
-  set_target_properties(${_target} PROPERTIES LINKER_LANGUAGE Fortran)
+  target_link_options(${test_target} PRIVATE -flang-experimental-exec)
+  set_target_properties(${test_target} PROPERTIES LINKER_LANGUAGE Fortran)
 endfunction()
 
 add_subdirectory(regression)
