@@ -59,10 +59,6 @@ fail to build for the reasons described above. The *failing* tests do build.
 
 ### Usage ###
 
-As of 18-Apr-2023, the `-flang-experimental-exec` flag may need to be used when
-configuring and compiling these tests. This can be passed to `cmake` via
-`CMAKE_Fortran_FLAGS`.
-
 By default, the *unsupported*, *unimplemented*, *skipped*, and *failing* tests
 are not run. The intention is that all tests in the test suite should pass by
 default.
@@ -91,7 +87,6 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_COMPILER=/path/to/clang \
       -DCMAKE_CXX_COMPILER=/path/to/clang++ \
       -DCMAKE_Fortran_COMPILER=/path/to/flang-new \
-      -DCMAKE_Fortran_FLAGS=-flang-experimental-exec \
       -DTEST_SUITE_FORTRAN=On \
       -DTEST_SUITE_SUBDIRS=Fortran \
       -DTEST_SUITE_FORTRAN_ISO_C_HEADER_DIR=/path/to/dir/containing/header \

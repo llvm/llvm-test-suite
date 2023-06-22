@@ -90,8 +90,6 @@ function(add_tests UnsupportedTests UnimplementedTests SkippedTests FailingTests
 
   file(WRITE ${DummySrc} "program test\nend program test")
   add_executable(${Dummy} ${DummySrc})
-  # At some point, the -flang-experimental-exec flag will be removed.
-  target_link_options(${Dummy} PUBLIC "-flang-experimental-exec")
 
   # All the "compile" tests in the gfortran torture tests are expected to
   # pass. Since diagnostics are only saved on failure, the diagnostics

@@ -59,7 +59,6 @@ a command similar to the following can be used from within test-suite-build:
 ``` shell
 cmake -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_Fortran_COMPILER:FILEPATH=/home/users/<you>/llvm-project/build/bin/flang-new \
-  -DCMAKE_Fortran_FLAGS=-flang-experimental-exec \
   -DTEST_SUITE_FORTRAN:BOOL=On \
   -DTEST_SUITE_SUBDIRS=Fortran/UnitTests/finalization \
   ../test-suite

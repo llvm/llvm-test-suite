@@ -6,15 +6,6 @@ include(CheckFortranCompilerFlag)
 # support for the flag is added, this should be removed.
 remove_definitions(-w)
 
-# If the test suite was configured by adding -flang-experimental-exec, remove
-# that flag from the default compilation flags. It is only needed at link-time
-# anyway, and for that it is explicitly added to those targets that need it.
-#
-# NOTE: This should be removed once the -flang-experimental-exec flag is no
-# longer needed.
-string(REPLACE "-flang-experimental-exec" "" TMP_FFLAGS "${CMAKE_Fortran_FLAGS}")
-set(CMAKE_Fortran_FLAGS "${TMP_FFLAGS}")
-
 # This option is added because as of 2023/03/20, several tests in this
 # directory have been disabled. Some of them exercise unsupported non-standard
 # extensions, others trigger a "not yet implemented" assertion while some cause
@@ -310,9 +301,6 @@ function(gfortran_execute_test File)
     endif()
   endforeach()
 
-  # NOTE: This should be removed when the -flang-experimental-exec flag is no
-  # longer needed.
-  target_link_options(${test_target} PRIVATE -flang-experimental-exec)
   set_target_properties(${test_target} PROPERTIES LINKER_LANGUAGE Fortran)
 endfunction()
 
