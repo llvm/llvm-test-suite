@@ -146,17 +146,5 @@ function(add_tests UnsupportedTests UnimplementedTests SkippedTests FailingTests
   endforeach()
 endfunction()
 
-# These tests are disabled because they fail, when they should pass.
-file(GLOB Failing CONFIGURE_DEPENDS
-  # For this, gfortran issues a warning while flang fails to compile. This is
-  # potentially an "unsupported" test if the reason for this difference in
-  # is because the standard allows for implementation-dependent behavior.
-  pr37236.f
-)
-
-list(APPEND UnsupportedTests "")
-list(APPEND UnimplementedTests "")
-list(APPEND SkippedTests "")
-list(APPEND FailingTests "${Failing}")
-
-add_tests("${UnsupportedTests}" "${UnimplementedTests}" "${SkippedTests}" "${FailingTests}")
+set(TESTS)
+gfortran_populate_tests(TESTS)

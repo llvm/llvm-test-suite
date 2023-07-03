@@ -179,6 +179,29 @@ set(FLANG_ERRORING_FFLAGS
   -Wzerotrip
 )
 
+macro(gfortran_populate_tests TESTS)
+  string(REPLACE "${CMAKE_SOURCE_DIR}/" "" DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+  message(STATUS "Adding directory ${DIR}")
+
+  set(UNSUPPORTED "")
+  set(UNIMPLEMENTED "")
+  set(SKIPPED "")
+  set(FAILING "")
+
+  # This will provide the lists of unsupported, unimplemented, skipped and
+  # failing files.
+  include(${CMAKE_CURRENT_SOURCE_DIR}/DisabledFiles.cmake)
+
+  list(APPEND UNSUPPORTED ${UNSUPPORTED_FILES})
+  list(APPEND UNIMPLEMENTED ${UNIMPLEMENTED_FILES})
+  list(APPEND SKIPPED ${SKIPPED_FILES})
+  list(APPEND FAILING ${FAILING_FILES})
+
+  # The TESTS variable is expected to be set before the macro is called.
+  add_tests(
+    "${UNSUPPORTED}" "${UNIMPLEMENTED}" "${SKIPPED}" "${FAILING}")
+endmacro()
+
 set(HEADER_SEARCH_PATH "${TEST_SUITE_FORTRAN_ISO_C_HEADER_DIR}")
 if (NOT HEADER_SEARCH_PATH)
   get_filename_component(Fortran_BINDIR ${CMAKE_Fortran_COMPILER} DIRECTORY)

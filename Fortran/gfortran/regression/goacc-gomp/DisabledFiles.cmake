@@ -6,7 +6,14 @@
 #
 #===------------------------------------------------------------------------===#
 
-message(STATUS "Adding directory Fortran/gfortran/regression/prof")
+# There are currently no unsupported files.
+set(UNSUPPORTED_FILES "")
 
-# The tests in this directory seem to check profiling. For now, there is nothing
-# useful that we can do with it.
+# There are currently no unimplemented files.
+set(UNIMPLEMENTED_FILES "")
+
+# There are currently no skipped files.
+set(SKIPPED_FILES "")
+
+# There are currently no failing files.
+set(FAILING_FILES "")

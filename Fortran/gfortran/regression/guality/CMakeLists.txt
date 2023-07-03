@@ -6,5 +6,7 @@
 #
 #===------------------------------------------------------------------------===#
 
+message(STATUS "Adding directory Fortran/gfortran/regression/guality")
+
 # The tests in this directory seem to check the interaction of the compiler with
 # gdb. It is not clear how we can test that - or if we even want to.
