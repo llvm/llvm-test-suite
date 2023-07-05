@@ -8,3 +8,6 @@
 
 set(TESTS)
 gfortran_populate_tests(TESTS)
+gfortran_add_execute_tests_from("${TESTS}")
+# TODO: Enable the "compile" tests.
+# gfortran_add_compile_tests_from("${TESTS}")

@@ -6,6 +6,13 @@
 #
 #===------------------------------------------------------------------------===#
 
+message(STATUS "Adding directory Fortran/gfortran/torture")
+
+# PREFIX_EXECUTE and PREFIX_COMPILE are used in gfortran_add_execute_test and
+# gfortran_add_compile_test respectively.
+set(PREFIX_EXECUTE "gfortran-torture-execute")
+set(PREFIX_COMPILE "gfortran-torture-compile")
+
 add_subdirectory(compile)
 add_subdirectory(execute)
 
