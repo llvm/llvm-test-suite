@@ -41,7 +41,16 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # single subroutine foo that is called in pr41576_1.f90. Obviously, the dg
   # directive is in the wrong place and it ought to be fixed.
   pr41576_0.f90
+
+  # This requires a module globalvar_mod which is defined in pr47839_0.f90.
+  # But there is no explicit dependency declared between the two files, so
+  # the test obviously fails.
+  pr47839_1.f90
 )
 
-# There are currently no failing files.
-set(FAILING_FILES "")
+# These tests fail when they are expected to pass.
+file(GLOB FAILING_FILES CONFIGURE_DEPENDS
+  # These files fail to compile when compilation is expected to succeed.
+  pr47839_1.f90
+  bind-c-char_0.f90
+)

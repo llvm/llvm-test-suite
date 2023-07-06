@@ -15,7 +15,15 @@ set(UNIMPLEMENTED_FILES "")
 # There are currently no skipped files.
 set(SKIPPED_FILES "")
 
-# These tests fail at runtime.
+# These tests fail when they are expected to pass.
 file(GLOB FAILING_FILES CONFIGURE_DEPENDS
+  # These tests fail at runtime.
   pr60510.f
+
+  # These tests fail to compile when compilation is expected to succeed.
+  pr90681.f
+  pr97761.f90
+  pr99746.f90
+  vect-8.f90
+  vect-8-epilogue.F90
 )

@@ -12,10 +12,12 @@ set(UNSUPPORTED_FILES "")
 # These tests trigger "not yet implemented" assertions in flang.
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: support for polymorphic types
+  alloc_comp_2.f90
   poly_run_3.f90
 
   # unimplemented: coarray allocation
   allocate_errgmsg.f90
+  array_temporary.f90
   get_array.f90
   lock_2.f90
   move_alloc_1.f90
@@ -28,6 +30,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: coarray in procedure interface
   dummy_1.f90
+  dummy_2.f90
   poly_run_1.f90
   pr107441-caf.f90
   ptr_comp_1.f08
@@ -35,6 +38,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   scalar_alloc_1.f90
 
   # unimplemented: intrinsic: '[SYM]'
+  array_temporary-1.f90
   coindexed_1.f90
   collectives_1.f90
   collectives_2.f90
@@ -124,6 +128,24 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: '[SYM]' is a non-ALLOCATABLE coarray and must have an explicit
   # coshape
   poly_run_2.f90
+
+  # --------------------------------------------------------------------------
+  #
+  # These tests are skipped because they are intended to be additional sources
+  # for codimension2.f90. Because of the way the test-suite is setup, it
+  # tries to compile all the files - even those that do not have a do-compile
+  # directive. These files are intended to be compiled together with
+  # codimension2.f90 because they use a module that is created by the former.
+  # If compiled separately, they do not find the module and fail to compile.
+  codimension_2a.f90
+  codimension_2b.f90
+
+  # --------------------------------------------------------------------------
+  #
+  # This is a multi-file test, but cannot find the additional sources
+  # codimension_2a.f90 and codimension_2b.f90. This is almost certainly a bug
+  # in the build files in llvm-test-suite/Fortran/gfortran.
+  codimension_2.f90
 )
 
 # These tests fail at runtime when they should pass.

@@ -20,6 +20,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   argument-association-assumed-rank-6.f90
   argument-association-assumed-rank-7.f90
   argument-association-assumed-rank-8.f90
+  c535a-1.f90
   cf-out-descriptor-6.f90
   contiguous-1.f90
   contiguous-2.f90
@@ -51,6 +52,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr103390-7.f90
   pr103390-8.f90
   pr103390-9.f90
+
+  # unimplemented: support for polymorphic types
+  c407a-1.f90
+  c407b-1.f90
+
+  # unimplemented: procedure pointer arguments
+  removed-restrictions-2.f90
+  removed-restrictions-4.f90
 )
 
 # These tests are skipped because they trigger internal compiler errors.
@@ -127,5 +136,12 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   section-1p.f90
 )
 
-# There are currently no failing files.
-set(FAILING_FILES "")
+# These tests fail when they are expected to pass.
+file(GLOB FAILING_FILES CONFIGURE_DEPENDS
+  # These files are expected to compile, but fail to do so.
+  c535b-1.f90
+
+  # These files are expected to fail to compile, but succeed instead.
+  c516.f90
+  c524a.f90
+)
