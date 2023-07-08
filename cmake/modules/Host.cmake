@@ -1,4 +1,10 @@
-set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
+
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT TEST_SUITE_HOST_CC)
+  set(TEST_SUITE_HOST_CC "clang" CACHE STRING "C compiler targetting the host")
+else()
+  set(TEST_SUITE_HOST_CC "cc" CACHE STRING "C compiler targetting the host")
+endif()
+
 mark_as_advanced(TEST_SUITE_HOST_CC)
 
 function(llvm_add_host_executable targetname exename)
@@ -21,6 +27,11 @@ function(llvm_add_host_executable targetname exename)
 
     list(APPEND _objs ${_objfile})
   endforeach ()
+
+  # Append ".exe" to the executable name on Windows
+  if(WIN32)
+    set(exename "${exename}.exe")
+  endif()
 
   add_custom_command(OUTPUT ${exename}
     COMMAND ${TEST_SUITE_HOST_CC} ${_objs}
