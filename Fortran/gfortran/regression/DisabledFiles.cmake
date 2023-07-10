@@ -1971,6 +1971,12 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # --------------------------------------------------------------------------
   #
+  # These tests are skipped because REAL(10) is not supported on AAch64.
+
+  pr91497.f90
+
+  # --------------------------------------------------------------------------
+  #
   # These are skipped almost certainly because of a bug in the way multi-file
   # compile tests are built by the test-suite. This almost certainly has nothing
   # to do with flang, but they will be skipped until the test suite build
