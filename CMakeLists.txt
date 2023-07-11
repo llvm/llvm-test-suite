@@ -37,6 +37,10 @@ if(TEST_SUITE_FORTRAN)
     mark_as_advanced(CLEAR CMAKE_Fortran_COMPILER)
 endif()
 
+if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND CMAKE_C_SIMULATE_ID MATCHES "MSVC")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /FIstdio.h")
+endif()
+
 # The files in cmake/caches often want to pass along additional flags to select
 # the target architecture. Note that you should still use
 # CMAKE_OSX_ARCHITECTURES and CMAKE_C_COMPILER_TARGET where possible.
@@ -299,6 +303,12 @@ mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
 mark_as_advanced(TEST_SUITE_LIT)
 
 add_subdirectory(tools)
+
+# Turn on ignore whitespacing on WIN32 to avoid line-ending mismatch
+if(TARGET_OS STREQUAL "Windows")
+  set(FP_IGNOREWHITESPACE ON)
+endif()
+
 # Shortcut for the path to the fpcmp executable
 set(FPCMP fpcmp-target)
 if (TEST_SUITE_USER_MODE_EMULATION)

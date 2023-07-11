@@ -65,8 +65,8 @@ function(llvm_test_executable_no_test target)
 
   if(TEST_SUITE_LLVM_SIZE)
     add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<TARGET_FILE:${target}>
-      > $<TARGET_FILE:${target}>.size)
+      COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<SHELL_PATH:$<TARGET_FILE:${target}>>
+      > $<SHELL_PATH:$<TARGET_FILE:${target}>>.size)
   endif()
 endfunction()
 
