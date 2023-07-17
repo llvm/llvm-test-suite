@@ -342,6 +342,10 @@ function(gfortran_add_compile_test expect_error main others fflags ldflags)
   # other diagnostics, it will be empty.
   set(out ${target}.out)
 
+  # Add the CMake-wide environment variable CMAKE_Fortran_FLAGS
+  # CMake escapes spaces. To really get a space (between arguments) use a ;
+  string(REPLACE " " ";" fflags ${fflags} ";" ${CMAKE_Fortran_FLAGS})
+
   add_custom_command(
     OUTPUT ${out}
     COMMAND ${CMAKE_COMMAND}
