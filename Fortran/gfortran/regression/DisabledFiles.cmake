@@ -2317,6 +2317,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   binding_label_tests_29.f90
   binding_label_tests_34.f90
   block_3.f90
+  blockdata_4.f90
   blockdata_5.f90
   blockdata_6.f90
   bounds_check_18.f90
