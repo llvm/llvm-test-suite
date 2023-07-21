@@ -98,6 +98,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   is_contiguous_2.f90
   pr103366.f90
   pr84088.f90
+  pr88932.f90
   pr92277.f90
   pr95828.f90
   select_rank_5.f90
@@ -153,6 +154,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_39.f90
   proc_ptr_42.f90
   proc_ptr_43.f90
+  proc_ptr_45.f90
   proc_ptr_5.f90
   proc_ptr_51.f90
   proc_ptr_comp_10.f90
@@ -235,6 +237,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   allocate_derived_2.f90
   allocate_derived_3.f90
   allocate_with_mold_2.f90
+  allocate_with_mold_4.f90
   allocate_with_source_18.f03
   allocate_with_source_13.f03
   allocate_with_source_14.f03
@@ -722,6 +725,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   class_optional_1.f90
   class_optional_2.f90
   coarray_41.f90
+  submodule_26.f08
 
   # unimplemented: coarray reference
   coarray_lib_comm_1.f90
@@ -1411,6 +1415,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   whole_file_14.f90
   winapi.f90
   zero_array_components_1.f90
+
+  # These tests attempt to print the value of the private component of a C_PTR.
+  init_flag_17.f90
+  c_ptr_tests_16.f90
 
   # error: 'fir.convert' op invalid type conversion
   achar_4.f90
@@ -2288,12 +2296,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   allocate_error_2.f90
   allocate_error_4.f90
   argument_checking_14.f90
-  argument_checking_19.f90
+  argument_checking_19.f90   # warning instead of error
   argument_checking_20.f90
   argument_checking_22.f90
   argument_checking_24.f90
   argument_checking_2.f90
-  argument_checking_4.f90
   arith_divide.f
   arith_divide_no_check.f
   arithmetic_overflow_1.f90
@@ -2459,7 +2466,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   modulo_check.f90
   move_alloc_17.f90
   mvbits_9.f90
-  namelist_2.f90
   namelist_34.f90
   namelist_35.f90
   namelist_3.f90
@@ -2519,7 +2525,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   private_type_4.f90
   private_type_9.f90
   proc_decl_11.f90
-  proc_decl_26.f90
   proc_decl_4.f90
   protected_3.f90
   ptr-func-2.f90
@@ -2631,9 +2636,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   hollerith5.f90
   hollerith_legacy.f90
   imag_1.f
-  import7.f90
-  include_10.f
-  include_11.f
   include_12.f
   initialization_29.f90
   intent_out_11.f90
@@ -2668,14 +2670,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr83113.f90
   pr84957.f90
   pr88228.f90
-  pr88932.f90
   pr91650_2.f90
   pr91945.f90
   pr95090.f90
-  pr95500.f90
   pr95689.f90
   print_fmt_3.f
-  proc_ptr_45.f90
   public_private_module_4.f90
   quad_1.f90
   recursive_interface_1.f90
@@ -2685,15 +2684,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   specifics_2.f90
   stop_2.f
   submodule_24.f08
-  submodule_26.f08
-  transfer_null_1.f90
   unused_artificial_dummies_1.f90
   wdate-time.F90
   whole_file_10.f90
   whole_file_29.f90
   whole_file_31.f90
-  whole_file_9.f90
-  widechar_10.f90
   zero_sized_12.f90
 
   # This test has a #illegal preprocessor directive. I think this is expected to
