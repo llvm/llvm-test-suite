@@ -50,9 +50,6 @@ macro(create_hip_tests)
     get_version(RocmVersion ${RocmDir})
     message(STATUS "Found ROCm ${RocmVersion}")
     list(APPEND ROCM_PATHS ${RocmDir})
-    add_library(amdhip64-${RocmVersion} SHARED IMPORTED)
-    set_property(TARGET amdhip64-${RocmVersion} PROPERTY IMPORTED_LOCATION
-      ${RocmDir}/lib/libamdhip64.so)
   endforeach(RocmDir)
 
   if(NOT ROCM_PATHS)
@@ -67,17 +64,15 @@ macro(create_hip_tests)
     COMMENT "Run all simple HIP tests")
 
   if(NOT AMDGPU_ARCHS)
-    list(APPEND AMDGPU_ARCHS "gfx906;gfx908")
+    list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100")
   endif()
 
   foreach(_RocmPath ${ROCM_PATHS})
     get_version(_RocmVersion ${_RocmPath})
     set(_HIP_Suffix "hip-${_RocmVersion}")
     # Set up HIP test flags
-    set(_HIP_CPPFLAGS -D__HIP_ROCclr__ -xhip --hip-device-lib-path=${_RocmPath}/amdgcn/bitcode
-                      -I${_RocmPath}/include)
-    set(_HIP_LDFLAGS -L${_RocmPath}/lib -lamdhip64)
-    set(_HIP_Libs amdhip64-${RocmVersion})
+    set(_HIP_CPPFLAGS --rocm-path=${_RocmPath})
+    set(_HIP_LDFLAGS --rocm-path=${_RocmPath} --hip-link -rtlib=compiler-rt -frtlib-add-rpath)
 
     # Unset these for each iteration of rocm path.
     set(_ArchFlags)
