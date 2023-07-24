@@ -76,6 +76,7 @@ be passed to `cmake`:
 - `TEST_SUITE_FORTRAN_FORCE_UNIMPLEMENTED_TESTS`: Enable only the *unimplemented* tests.
 - `TEST_SUITE_FORTRAN_FORCE_SKIPPED_TESTS`: Enable only the *skipped* tests.
 - `TEST_SUITE_FORTRAN_FORCE_FAILING_TESTS`: Enable only the *failing* tests.
+- `TEST_SUITE_FORTRAN_FEATURES`: see the features section below
 
 Some of the tests require the `ISO_Fortran_binding.h` header file. `cmake` will
 look for this file in the `include` directory of the `flang` installation
@@ -107,6 +108,18 @@ The tests can be run as shown from the `llvm-test-suite` build directory:
 It may be necessary to set the `NO_STOP_MESSAGE` environment variable to
 avoid tests failures in `llvm-test-suite/Fortran/UnitTests/fcvs21_f95`. These
 are unrelated to the gfortran tests here.
+
+
+### Testing non-standard features/flags
+
+Additional denylists for a particular feature can be included by creating
+DisabledFilesFEATURE.cmake files (in the same format as those for the default
+denylists), and adding FEATURE to `TEST_SUITE_FORTRAN_FEATURES`. Additional
+compiler flags can be added using `CMAKE_Fortran_FLAGS`.
+
+For example, to test HLFIR one could use
+`CMAKE_Fortran_Flags=-flang-experimental-hlfir` and
+`TEST_SUITE_FORTRAN_FEATURES=HLFIR`.
 
 
 ### Notes for developers/maintainers ###

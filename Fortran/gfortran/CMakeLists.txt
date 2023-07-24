@@ -260,6 +260,30 @@ macro(gfortran_populate_tests TESTS)
   list(APPEND SKIPPED ${SKIPPED_FILES})
   list(APPEND FAILING ${FAILING_FILES})
 
+  # do the same for any requested feature extentions
+  foreach(feature ${TEST_SUITE_FORTRAN_FEATURES})
+    set(UNSUPPORTED_FILES "")
+    set(UNIMPLEMENTED_FILES "")
+    set(SKIPPED_FILES "")
+    set(FAILING_FILES "")
+    include(${CMAKE_CURRENT_SOURCE_DIR}/DisabledFiles${feature}.cmake)
+    list(APPEND UNSUPPORTED ${UNSUPPORTED_FILES})
+    list(APPEND UNIMPLEMENTED ${UNIMPLEMENTED_FILES})
+    list(APPEND SKIPPED ${SKIPPED_FILES})
+    list(APPEND FAILING ${FAILING_FILES})
+
+    # enable any tests that now pass for this feature
+    set(SUPPORTED_FILES "")
+    set(IMPLEMENTED_FILES "")
+    set(UNSKIPPED_FILES "")
+    set(PASSING_FILES "")
+    include(${CMAKE_CURRENT_SOURCE_DIR}/EnabledFiles${feature}.cmake)
+    list(REMOVE_ITEM UNSUPPORTED ${SUPPORTED_FILES})
+    list(REMOVE_ITEM UNIMPLEMENTED ${IMPLEMENTED_FILES})
+    list(REMOVE_ITEM SKIPPED ${UNSKIPPED_FILES})
+    list(REMOVE_ITEM FAILING ${PASSING_FILES})
+  endforeach()
+
   # The TESTS variable is expected to be set before the macro is called.
   gfortran_find_test_files(
     "${UNSUPPORTED}" "${UNIMPLEMENTED}" "${SKIPPED}" "${FAILING}" "${TESTS}")
