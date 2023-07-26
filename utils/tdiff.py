@@ -81,7 +81,7 @@ def parse(text):
 def query_ninja(targets, cwd):
     # Query ninja for a node in its build dependency tree.
     proc = subprocess.Popen(
-        ["ninja", "-t", "query"] + targets,
+        ["ninja", "-t", "query", *set(targets)],
         cwd=cwd,
         stdout=subprocess.PIPE,
         universal_newlines=True,
