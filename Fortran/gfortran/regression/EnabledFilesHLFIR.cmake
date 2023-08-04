@@ -9,7 +9,6 @@
 # These are files which are skipped by default (see DisabledFiles.cmake) but
 # are fixed by this feature
 file(GLOB UNSKIPPED_FILES CONFIGURE_DEPENDS
-  achar_4.f90
   char_cast_2.f90
   deferred_character_8.f90
   dependency_23.f90
