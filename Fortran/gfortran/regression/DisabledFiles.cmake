@@ -59,6 +59,64 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # This test emits diagnostics in JSON format and checks the resulting JSON
   # diagnostic output.
   diagnostic-format-json-1.F90
+
+  # "automatic" attribute extension not supported in parser
+  auto_in_equiv_3.f90
+  auto_in_equiv_7.f90
+  # "static" attribute extension not supported in parser
+  auto_in_equiv_6.f90
+  # BESJ0 intrinsic function extension not supported
+  bessel_2.f90
+  # COMPLEX intrinsic function extension not supported (standard is CMPLX)
+  boz_complex_2.f90
+  # BOZ not allowed in FLOAT intrinsic function extension (which is supported) -- would be easy to add
+  boz_float_2.f90
+  # THIS_IMAGE(DISTANCE=), NUM_IMAGES(DISTANCE=), and NUM_IMAGES(FAILED=) extensions not supported
+  coarray_this_image_1.f90
+  coarray_this_image_2.f90
+  # f18 requires extension Cray pointee to be a sequence type if derived
+  cray_pointers_11.f90
+  # Unimplemented in extension: assumed-size Cray pointee
+  cray_pointers_6.f90
+  # Unimplemented in extension: Cray pointer to function
+  cray_pointers_9.f90
+  # DEC "typed" bit intrinsics: BBTEST, BITEST, FLOATI, FLOATJ, BIEOR, &c.
+  dec_intrinsic_ints.f90
+  # COTAN extension intrinsic
+  dec_math_4.f90
+  # DEC old-style PARAMETER statement without parentheses
+  dec_parameter_3.f90
+  # TYPE statement as a synonym for PRINT
+  dec_type_print.f90
+  # Unsupported extension intrinsic procedures for POSIX APIs (chdir, symlnk, getpid, &c)
+  g77_intrinsics_sub.f
+  noreturn-3.f90
+  # Unsupported: assignment of Hollerith to numeric (b = 4habcd), Hollerith in DATA for numeric, &c.
+  hollerith5.f90
+  hollerith_legacy.f90
+  # Unsupported REALPART and IMAGPART extension intrinsic functions
+  imag_1.f
+  initialization_29.f90
+  # Unsupported ETIME intrinsic procedure
+  intrinsic_8.f90
+  # Unsupported SIGNAL intrinsic procedure
+  intrinsic_signal.f90
+  # Unsupported directive !GCC$ attributes NO_ARG_CHECK :: buf   leads to semantic errors
+  no_arg_check_1.f90
+  no_arg_check_2.f90
+  # Unsupported directive syntax  !dir$ unroll(2)
+  pr88148.f90
+  pr91496.f90
+  # Unsupported extension: using .NOT., .OR., &c. on INTEGER
+  pr88228.f90
+  # Unsupported extension: BOZ output list item
+  pr91650_2.f90
+  # Unsupoorted extension: PRINT NAMELIST_NAME
+  print_fmt_3.f
+  # Unsupported extension intrinsic functions DACOSH, ZCOS, &c.
+  specifics_2.f90
+  # Unsupported predefined macro: __TIMESTAMP__
+  wdate-time.F90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -1416,10 +1474,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   winapi.f90
   zero_array_components_1.f90
 
-  # These tests attempt to print the value of the private component of a C_PTR.
-  init_flag_17.f90
-  c_ptr_tests_16.f90
-
   # error: 'fir.convert' op invalid type conversion
   achar_4.f90
   char_cast_2.f90
@@ -2285,411 +2339,539 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   # Compilation of these tests is expected to fail, but it succeeds instead.
 
+  # Tests that exercise gfortran's ability to set -std=f95 and then see errors on newer features
   abstract_type_1.f90
-  achar_3.f90
-  achar_5.f90
   alloc_comp_constraint_7.f90
   alloc_comp_std.f90
   allocatable_scalar_2.f90
-  allocate_alloc_opt_11.f90
   allocate_alloc_opt_5.f90
-  allocate_error_2.f90
-  allocate_error_4.f90
   argument_checking_14.f90
-  argument_checking_19.f90   # warning instead of error
-  argument_checking_20.f90
-  argument_checking_22.f90
-  argument_checking_24.f90
   argument_checking_2.f90
-  arith_divide.f
-  arith_divide_no_check.f
-  arithmetic_overflow_1.f90
-  array_constructor_28.f03
   array_constructor_38.f90
   array_constructor_type_13.f90
-  array_constructor_type_18.f03
   associate_2.f95
-  associate_50.f90
-  associated_3.f90
-  associated_target_1.f90
   asynchronous_2.f90
-  auto_char_len_4.f90
-  bessel_3.f90
-  bessel_5_redux.f90
-  bind_c_array_params.f03
-  bind_c_bool_1.f90
-  bind_c_contiguous.f90
-  bind_c_usage_28.f90
-  binding_label_tests_20.f90
-  binding_label_tests_29.f90
-  binding_label_tests_34.f90
   block_3.f90
-  blockdata_4.f90
   blockdata_5.f90
   blockdata_6.f90
-  bounds_check_18.f90
-  bounds_check_array_ctor_3.f90
-  bounds_check_array_ctor_5.f90
-  bounds_temporaries_1.f90
   boz_10.f90
   boz_7.f90
-  btest_1.f90
   byte_1.f90
-  byte_4.f90
-  c_funloc_tests_5.f03
-  c_kind_int128_test1.f03
-  c_loc_test_19.f90
-  c_loc_test_21.f90
-  c_loc_tests_10.f03
-  c_loc_tests_11.f03
-  c_loc_tests_4.f03
-  c_ptr_tests_13.f03
-  c_sizeof_2.f90
-  c_sizeof_6.f90
-  char_length_1.f90
-  coarray_5.f90
-  coarray_collectives_2.f90
-  common_13.f90
-  common_15.f90
   common_19.f90
-  common_20.f90
-  common_7.f90
-  common_8.f90
   common_9.f90
-  compiler-directive_2.f
-  complex_intrinsic_2.f90
-  complex_intrinsic_4.f90
-  complex_intrinsic_6.f90
-  constant_shape.f90
   constructor_4.f90
   constructor_7.f90
-  contains_empty_1.f03
-  contains.f90
-  contiguous_2.f90
-  continuation_2.f90
-  cray_pointers_3.f90
-  cray_pointers_4.f90
-  d_lines_4.f
-  data_inquiry_ref.f90
-  data_substring.f90
-  dec_d_lines_3.f
-  dec_loc_rval_3.f03
-  dec_structure_24.f90
-  dec_structure_26.f90
-  dec_structure_27.f90
-  default_initialization_1.f90
-  directive_unroll_5.f90
-  do_4.f
-  do_check_13.f90
-  do_check_16.f90
-  do_check_19.f90
-  do_check_5.f90
-  do_subscript_6.f90
-  dollar_sym_1.f90
-  dollar_sym_3.f
   dup_save_2.f90
-  elemental_args_check_2.f90
-  elemental_args_check_4.f90
-  entry_22.f90
-  entry_dummy_ref_1.f90
-  enum_8.f90
   equiv_constraint_1.f90
   equiv_constraint_2.f90
-  equiv_constraint_9.f90
-  equiv_pure.f90
-  error_recovery_4.f90
-  error_stop_4.f90
-  exit_5.f03
-  extends_10.f03
-  fimplicit_none_1.f90
-  finalize_2.f03
   finalize_6.f90
-  finalize_9.f90
   fmt_error_8.f
-  fmt_f_default_field_width_3.f90
   fmt_g0_3.f08
-  fmt_g_default_field_width_3.f90
-  fmt_i_default_field_width_3.f90
-  func_decl_3.f90
-  generic_26.f90
-  host_assoc_types_1.f90
-  iall_iany_iparity_2.f90
-  ichar_1.f90
-  implicit_14.f90
   implied_shape_2.f90
   import2.f90
-  include_6.f90
   initialization_13.f90
   initialization_16.f90
-  initialization_17.f90
-  initialization_20.f90
-  initialization_24.f90
   initialization_30.f90
   initialization_4.f90
   inquire_iolength.f90
-  int_conv_2.f90
-  integer_exponentiation_4.f90
   interface_15.f90
-  interface_21.f90
-  interface_30.f90
-  interface_33.f90
-  interface_46.f90
-  interface_7.f90
   interface_abstract_2.f90
-  internal_dummy_1.f90
   intrinsic_param_1.f90
-  intrinsic_short-long.f90
   intrinsic_std_1.f90
-  intrinsic_std_5.f03
-  invalid_contains_1.f90
-  invalid_contains_2.f90
-  invalid_name.f90
-  invalid_procedure_name.f90
   io_constraints_10.f90
   io_constraints_11.f90
-  io_constraints_12.f90
   iostat_3.f90
-  iso_c_binding_compiler_2.f90
-  iso_c_binding_param_1.f90
-  iso_fortran_env_4.f90
-  iso_fortran_env_6.f90
-  line_length_5.f90
-  line_length_6.f90
-  line_length_8.f90
-  line_length_9.f90
   logint_2.f
-  masklr_3.f90
   minmax_char_2.f90
-  module_private_1.f90
   module_procedure_double_colon_2.f90
-  module_procedure_double_colon_3.f90
-  modulo_check.f90
-  move_alloc_17.f90
-  mvbits_9.f90
   namelist_34.f90
   namelist_35.f90
   namelist_3.f90
   namelist_5.f90
   namelist_63.f90
-  namelist_98.f90
   namelist_assumed_char.f90
-  nearest_5.f90
-  negative_unit_check.f90
   newunit_2.f90
-  norm2_4.f90
-  oldstyle_2.f90
-  parameter_array_init_6.f90
-  parity_3.f90
   pointer_assign_6.f90
   pointer_intent_2.f90
   pointer_remapping_1.f90
-  pointer_remapping_2.f03
-  pointer_target_2.f90
-  pr103259.f90
-  pr104210.f90
   pr107423.f90
-  pr16433.f
-  pr19936_1.f90
-  pr32601.f03
-  pr35031.f90
-  pr43996.f90
-  pr58027.f90
-  pr70070.f90
-  pr70853.f90
-  pr71799.f90
-  pr71859.f90
-  pr77460.f90
   pr77978_1.f90
-  pr77978_2.f90
-  pr84734.f90
-  pr86045.f90
-  pr88328.f90
-  pr90290.f90
-  pr91564.f90
-  pr91714.f90
-  pr92993.f90
-  pr93604.f90
   pr95373_1.f90
-  pr95373_2.f90
-  pr95611.f90
-  pr95614_1.f90
-  pr95614_2.f90
-  pr95880.f90
-  pr95882_3.f90
-  pr95882_4.f90
-  present_1.f90
   private_type_10.f90
   private_type_12.f90
   private_type_1.f90
   private_type_2.f90
   private_type_4.f90
   private_type_9.f90
-  proc_decl_11.f90
   proc_decl_4.f90
   protected_3.f90
-  ptr-func-2.f90
-  pure_formal_2.f90
-  random_seed_1.f90
-  random_seed_4.f90
-  rank_2.f90
-  rank_3.f90
-  recursive_check_1.f
-  recursive_check_2.f90
-  recursive_check_3.f90
-  recursive_parameter_1.f90
-  reshape_source_size_1.f90
-  return_1.f90
-  save_4.f90
   selected_char_kind_3.f90
-  size_kind_3.f90
   spread_init_expr_2.f90
-  spread_size_limit_2.f90
-  statement_function_3.f
-  stfunc_2.f90
-  stfunc_3.f90
-  string_1_lp64.f90
-  string_2.f90
-  string_3.f90
-  string_3_lp64.f90
   structure_constructor_9.f90
-  submodule_21.f08
-  substr_10.f90
   system_clock_2.f90
-  tab_continuation.f
-  type_decl_1.f90
-  type_decl_2.f90
-  typebound_proc_3.f03
-  use_28.f90
-  use_29.f90
   use_6.f90
   used_before_typed_4.f90
   value_2.f90
-  value_5.f90
   volatile2.f90
-  warn_conversion.f90
   warning-directive-2.F90
   warnings_are_errors_1.f90
-  weak-3.f90
+
+  # -std=f2003 tests to detect Fortran 2008 features
+  bessel_3.f90
+  bind_c_array_params.f03
+  bind_c_bool_1.f90
+  binding_label_tests_20.f90
+  c_funloc_tests_5.f03
+  c_kind_int128_test1.f03
+  c_loc_test_19.f90
+  c_loc_test_21.f90
+  c_loc_tests_10.f03
+  c_loc_tests_4.f03
+  c_sizeof_2.f90
+  char_length_1.f90
+  coarray_5.f90
+  common_20.f90
+  complex_intrinsic_4.f90
+  complex_intrinsic_6.f90
+  contains_empty_1.f03
+  contains.f90
+  contiguous_2.f90
+  finalize_2.f03
+  generic_26.f90
+  iall_iany_iparity_2.f90
+  intrinsic_std_5.f03
+  io_constraints_12.f90
+  module_procedure_double_colon_3.f90
+  norm2_4.f90
+  parity_3.f90
+  pointer_remapping_2.f03
+  pointer_target_2.f90
+  pr95373_2.f90
+  ptr-func-2.f90
+  pure_formal_2.f90
+  rank_2.f90
+  type_decl_2.f90
+  typebound_proc_3.f03
+
+  # -std=f2008 tests to detect Fortran 2018 features
+  bind_c_usage_28.f90
+  c_loc_tests_11.f03
+  coarray_collectives_2.f90
+  implicit_14.f90
+  pr90290.f90
+  pr91564.f90
+  rank_3.f90
+
+  # Tests that use -std=... to enable checks that no longer apply in modern Fortran.
+  # Module variable with derived type default initialization requires explicit SAVE
+  default_initialization_1.f90
+  save_4.f90
+  # ERROR STOP in pure procedure
+  error_stop_4.f90
+  # EXIT outside DO
+  exit_5.f03
+  # New features in ISO_FORTRAN_ENV & ISO_C_BINDING
+  iso_c_binding_compiler_2.f90
+  iso_c_binding_param_1.f90
+  iso_fortran_env_6.f90
+
+  # Tests that are not errors, and compile just fine with flang
+  constant_shape.f90
+  continuation_2.f90
+  equiv_pure.f90 # gfortran's error is inappropriate for this test
+  finalize_9.f90
+  func_decl_3.f90
+  initialization_20.f90
+  initialization_24.f90
+  interface_7.f90
+  intrinsic_short-long.f90
+  parameter_array_init_6.f90
+  pr19936_1.f90 # ac-do-variables are their own entities
+  pr35031.f90 # ENTRY in ELEMENTAL
+  pr43996.f90
+  pr70070.f90
+  pr70853.f90
+  pr71799.f90
+  pr88328.f90
+  recursive_check_1.f # RECURSIVE is now default
+  recursive_check_2.f90
+  string_1_lp64.f90
+  substr_10.f90
+
+  # Tests that are errors in gfortran but for which we emit adequate warnings; might need to use -pedantic to see them
+  achar_3.f90
+  achar_5.f90
+  argument_checking_19.f90
+  argument_checking_20.f90
+  argument_checking_22.f90
+  argument_checking_24.f90
+  arith_divide.f
+  arith_divide_no_check.f
+  arithmetic_overflow_1.f90
+  array_constructor_type_18.f03
+  associate_50.f90
+  associated_3.f90
+  bessel_5_redux.f90
+  bounds_temporaries_1.f90
+  dec_loc_rval_3.f03
+  do_4.f
+  do_check_5.f90
+  do_subscript_6.f90
+  dollar_sym_1.f90
+  dollar_sym_3.f
+  entry_22.f90
+  enum_8.f90
+  error_recovery_4.f90
+  fmt_f_default_field_width_3.f90
+  fmt_g_default_field_width_3.f90
+  fmt_i_default_field_width_3.f90
+  ichar_1.f90
+  int_conv_2.f90
+  integer_exponentiation_4.f90
+  interface_21.f90
+  interface_30.f90
+  interface_33.f90
+  interface_46.f90
+  invalid_contains_1.f90
+  invalid_contains_2.f90
+  invalid_procedure_name.f90 # but maybe should be error instead of warning, as in all other compilers
+  iso_fortran_env_4.f90
+  nearest_5.f90
+  pr103259.f90
+  pr16433.f
+  pr58027.f90
+  pr77460.f90
+  pr77978_2.f90
+  pr84734.f90
+  pr86045.f90
+  pr91714.f90
+  pr92993.f90
+  pr95611.f90
+  pr95614_1.f90
+  pr95614_2.f90
+  pr95882_3.f90
+  pr95882_4.f90
+  recursive_check_3.f90
+  return_1.f90
+  size_kind_3.f90
+  string_2.f90
+  string_3.f90
+  string_3_lp64.f90
+  warn_conversion.f90
   whole_file_1.f90
   whole_file_2.f90
+
+  # Tests that would be errors if we supported options to enable checks
+  dec_structure_24.f90
+  dec_structure_26.f90
+  dec_structure_27.f90
+  fimplicit_none_1.f90
+  line_length_5.f90
+  module_private_1.f90
+  spread_size_limit_2.f90
+
+  # Tests of options that need to be in the test configuration
+  include_6.f90
+
+  # Missed errors (though not required by a numbered standard constraint)
+  # ALLOCATE(entity, stat=something in entity)
+  allocate_alloc_opt_11.f90
+  # Same object appears more than once in ALLOCATE
+  allocate_error_2.f90
+  allocate_error_4.f90
+  # Character length mismatch between definition and external in same file
+  auto_char_len_4.f90
+  # Non-conformable array operands -- needs symbolic evaluation to see
+  bounds_check_18.f90
+  # BTEST position argument checking
+  btest_1.f90
+  # Not catching EQUIVALENCE of default-initialized derived type object with object in COMMON
+  equiv_constraint_9.f90
+  # MASKL argument checking
+  masklr_3.f90
+  # MODULO(x,0) argument checking
+  modulo_check.f90
+  # MOVE_ALLOC with overlapping arguments
+  move_alloc_17.f90
+  # MVBITS argument checking
+  mvbits_9.f90
+  # INQUIRE(UNIT=-1, ...)
+  negative_unit_check.f90
+  # Small RANDOM_SEED(GET=/PUT=) arrays
+  random_seed_1.f90
+  random_seed_4.f90
+  # RESHAPE(SOURCE=) array is too small
+  reshape_source_size_1.f90
+
+  # Extensions, intentionally not errors, but should maybe elicit a portability warning
+  # BIND(C,NAME=) name same as module
+  binding_label_tests_29.f90
+  # BIND(C,NAME=) names are case sensitive in f18
+  binding_label_tests_34.f90
+  # COMMON block name clashes with local entity
+  common_7.f90
+  common_8.f90
+  # No option needed to enable Cray pointers
+  cray_pointers_3.f90
+  # D lines default to comments, no need to use option to make that happen
+  d_lines_4.f
+  dec_d_lines_3.f
+  # Complex components (%RE and %IM) and substrings are allowed in DATA statements (need to document extension)
+  data_inquiry_ref.f90
+  data_substring.f90
+  # ELEMENTAL subprograms may not have dummy procedures
+  elemental_args_check_2.f90
+  elemental_args_check_4.f90
+  # Construct labels can conflict with local names
+  host_assoc_types_1.f90
+  # Names with leading underscores
+  invalid_name.f90
+  # Long lines in free form source
+  line_length_6.f90
+  line_length_8.f90
+  line_length_9.f90
+  # NAMELIST before declaration of object in group
+  namelist_98.f90
+  # BOZ in structure constructor
+  pr93604.f90
+  # USE'd module name used as local entity
+  pr95880.f90
+  use_28.f90
+  # Forward reference to procedure name in PROCEDURE(...)
+  proc_decl_11.f90
+  # Statement function with argument or result with rank > 0
+  statement_function_3.f
+  # Useless SUBMODULE
+  submodule_21.f08
+  # Initial tab in fixed form means five leading blanks
+  tab_continuation.f
+  # DOUBLE COMPLEX
+  type_decl_1.f90
+
+  # gfortran warnings and optional errors that we miss & should fix
+  # "bytea" statement for "byte a"
+  byte_4.f90
+  # DO index variable modified in call to internal procedure
+  do_check_13.f90
+  do_check_16.f90
+
+  # Not relevant to f18
+  # Tests "!GCC$ attributes stdcall, fastcall::test"
+  compiler-directive_2.f
+  # unsupported COMPLEX extension intrinsic function
+  complex_intrinsic_2.f90
+  # !GCC$ unroll
+  directive_unroll_5.f90
+  # Tests "!GCC$ attributes weak :: x"
+  weak-3.f90
+
+  # Probable bugs
+  # ["a", "ab"]
+  array_constructor_28.f03
+  bounds_check_array_ctor_3.f90
+  bounds_check_array_ctor_5.f90
+  # ASSOCIATED(p,(t))
+  associated_target_1.f90
+  # BIND(C) dummy argument can't be CONTIGUOUS pointer
+  bind_c_contiguous.f90
+  # C_PTR's component should be private so C_PTR structure constructor doesn't work
+  c_ptr_tests_13.f03
+  # C_SIZEOF() argument must be an interoperable type
+  c_sizeof_6.f90
+  # Automatic CHARACTER can't be in COMMON
+  common_13.f90
+  # External should not have same name as COMMON
+  common_15.f90
+  # Cray pointee must not be in COMMON or EQUIVALENCE
+  cray_pointers_4.f90
+  # Not catching lack of label actual argument for alternate return dummy
+  do_check_19.f90
+  # Not catching use of ENTRY-only dummy argument in a specification expression
+  entry_dummy_ref_1.f90
+  # Parent component of extended derived type with PRIVATE default must be PRIVATE
+  extends_10.f03
+  # Further declarations after an initialization that are incompatible with it
+  initialization_17.f90
+  # Old-style initializer on declaration of dummy argument
+  oldstyle_2.f90
+  # Function result may not be a coarray
+  pr104210.f90
+  # Should ensure that C_PTR component is private and warn on attempt to PRINT it
+  pr32601.f03
+  # ABS(S) after CALL S(1)
+  pr71859.f90
+  # PRESENT() argument must be a whole dummy argument name, not subobject
+  present_1.f90
+  # integer, parameter :: dp = kind(1.0_dp)
+  recursive_parameter_1.f90
+  # Statement function cannot be a dummy argument
+  stfunc_2.f90
+  # Statement function argument implicit type doesn't match later explicit type
+  stfunc_3.f90
+  # Valid parser failure, could have better error recovery
+  use_29.f90
+  # Assumed-length CHARACTER cannot be VALUE
+  value_5.f90
+  # No return type mismatch warning
   whole_file_34.f90
+  # No interface mismatch warning on call to implicit interface expecting alternate returns
   whole_file_3.f90
+  # Out-of-range \U characters -- do we even support?
   widechar_1.f90
+
+  # Test configuration problems
+  # Needs to be compiled as class_4[abc].f03 due to modules -- then compiles
+  class_4b.f03
+  class_4c.f03
+  # Needs to be compiled as class_45[abc].f03 due to modules -- then compiles
+  class_45b.f03
+  # Needs to be compiled as coarray_29_[12].f90 due to modules -- then hits NYI in lowering "coarray in procedure interface"
+  coarray_29_2.f90
+  # Needs to be compiled as coarray_35{,a}.f90 -- then hits NYI in lowering "intrinsic: this_image"
+  coarray_35a.f90
+  # Needs to be compiled with "-ed" or whatever flang-new uses to enable D lines (Fortran::common::LanguageFeature::OldDebugLines); GNU uses "-fd-lines-as-code"
+  dec_d_lines_1.f
+  d_lines_2.f
+  # Needs -fxor-operator
+  dec_logical_xor_2.f90
+  # Needs to be compiled as Fortran/gfortran/regression/namelist_83{,_2}.f90 due to modules -- then compiles
+  namelist_83_2.f90
+  # Needs to be compiled as Fortran/gfortran/regression/pr77420_[34].f90 due to modules -- then compiles
+  pr77420_4.f90
+  # Needs to be compiled as Fortran/gfortran/regression/public_private_module_[34].f90
+  public_private_module_4.f90
+  # Needs to be a "*.f" file or be compiled with option that forces fixed form
+  restricted_expression_1.f90
+  # Needs to be compiled as Fortran/gfortran/regression/whole_file_2[89].f90 due to modules -- then compiles
+  whole_file_29.f90
+  # Needs to be compiled as Fortran/gfortran/regression/whole_file_3[01].f90 due to modules -- then compiles
+  whole_file_31.f90
+
+  # Compiler bugs that should be fixed
+  # D lines confuse continuation line detection
+  d_lines_3.f
+  # "LLVM ERROR: not implemented"
+  forall_17.f90
+  # "0include" not recognized as INCLUDE line with 0 in column 6
+  include_12.f
+  # .../FIRBuilder.cpp:379: mlir::Value fir::FirOpBuilder::createConvert(mlir::Location, mlir::Type, mlir::Value): Assertion `!fir::isa_derived(toTy)' failed.
+  pr68227.f90
+  # Invalid specification expression: reference to impure function 'iargc' -- might as well consider it to be pure
+  pr71085.f90
+  # No explicit type declared for 'f'
+  pr91945.f90
+  # error: No explicit type declared for 'arg4'
+  unused_artificial_dummies_1.f90
+
+  # Valid errors
+  # Valid out-of-bounds subscript errors, are warnings in gfortran
+  bounds_check_3.f90
+  # Valid errors about mismatching actual/dummy character lengths; are warnings in gfortran
+  char_length_3.f90
+  # Valid error: 'x' may not be a local variable in a pure subprogram  because: 'x' is polymorphic in a pure subprogram
+  class_49.f90
+  class_74.f90
+  # Valid error: Coindexed polymorphic object may not be associated with a polymorphic dummy argument 'x='
+  class_dummy_4.f03
+  # Valid error: 'atom=' argument must be a scalar coarray or coindexed object for intrinsic 'atomic_ref'
+  coarray_atomic_6.f90
+  # Valid error: The event-variable must be a coarray
+  coarray_event_1.f08
+  # Valid error: ALLOCATABLE coarray '...' may not be associated with INTENT(OUT) dummy argument '...='
+  coarray_lib_token_2.f90
+  intent_out_11.f90
+  # Valid error "The type of 'n' has already been implicitly declared" on   "implicit NONE; integer :: a(n); integer (kind=1), intent(in) :: n"
+  directive_unroll_1.f90
+  directive_unroll_2.f90
+  directive_unroll_3.f90
+  directive_unroll_4.f90
+  # Valid error: A sequence type must have at least one component
+  dtio_36.f90
+  # Valid error: Result of ENTRY is not compatible with result of containing function
+  entry_17.f90
+  # Just bad syntax:   READ ('(') // 'A)', var  -- note transposed ) and final quote
+  fmt_read_3.f90
+  # Valid error: Label '99' is in a construct that prevents its use as a branch target here
+  goto_8.f90
+  # These tests attempt to print the value of the private component of a C_PTR.
+  init_flag_17.f90
+  c_ptr_tests_16.f90
+  # Valid error: Generic 'ambiguous' may not have specific procedures 'f' and 'f' as their interfaces are not distinguishable
+  interface_1.f90
+  # Valid error: Generic 'generic' may not have specific procedures 'foo' and 'bar' as their interfaces are not distinguishable
+  interface_8.f90
+  # Valid error: Dimension 1 of left-hand side has extent 2, but right-hand side has extent 3
+  iso_fortran_env_7.f90
+  # Valid error: Invalid specification expression: reference to local entity '...'
+  pr101026.f
+  pr101267.f90
+  pr78061.f
+  pr79315.f90
+  pr95090.f90
+  # Valid error: An array component of an interoperable type must have at least one element
+  pr105954.f90
+  # Bogus error: 'dcdx' is not a callable procedure
+  pr41011.f
+  # Valid error: Must have INTEGER type, but is REAL(4)   on implicit real-valued DO indices being used as subscripts
+  pr41928.f90
+  # Valid error: DATA statement initializations affect 'i(1_8,2_8)' more than once
+  pr49540-2.f90
+  # Valid error: A variable with BIND(C) attribute may only appear in the specification part of a module
+  pr67900.f90
+  # Valid error: Label '1000' is not distinct
+  pr69554-1.F90
+  pr69554-2.F90
+  # Valid error: Subscript value (3) is out of range on dimension 1 in reference to a constant array value
+  pr71935.f90
+  # Valid error: Return type of function 'c' does not match return type of the corresponding interface body
+  pr83113.f90
+  # Valid error: 'v' is already declared in this scoping unit
+  pr84957.f90
+  # Valid error: Procedure 'foo' is recursively defined.  Procedures in the cycle: 'foo', 'r1'
+  recursive_interface_1.f90
+  recursive_interface_2.f90
+  # Valid error: Actual argument associated with POINTER dummy argument 'thenode=' must also be POINTER unless INTENT(IN)
+  select_type_30.f03
+  # Valid error: INTEGER stop code must be of default kind
+  stop_2.f
+  # Valid error: 'bar' is a MODULE procedure which must be declared within a MODULE or SUBMODULE
+  submodule_24.f08
+  # Valid error: Implicit declaration of function 'bifac' has a different result type than in previous declaration
+  whole_file_10.f90
+  # Valid error: Values in array constructor must have the same declared type when no explicit type appears
+  zero_sized_12.f90
+
+  # Not yet implemented in evaluate / semantics
+  # IMAGE_INDEX not (yet) an intrinsic function
+  coarray_11.f90
+  pr104330.f90
+  # ATOMIC_ADD is not (yet) a known intrinsic procedure
+  coarray_atomic_4.f90
+  coarray_atomic_5.f90
+  # CO_REDUCE is not (yet) a known intrinsic procedure
+  coarray_collectives_11.f90
+  coarray_collectives_15.f90
+  coarray_collectives_16.f90
+  # Unsupported in folding: erfc_scaled(real(kind=4)) cannot be folded on host
+  erfc_scaled_2.f90
+  # Can't fold MERGE of derived types
+  merge_init_expr_2.f90
+  # asin(real(kind=16)) cannot be folded on host
+  quad_1.f90
+
+  # Unclear; may be bogus error on actual non-coarray arg to dummy coarray, may be bad test
+  coarray_args_2.f90
+  coarray_lib_token_1.f90
+  coarray_lib_token_4.f90
+  # Unclear: conflict between ancestor module type name and submodule name: '...' is already declared in this scoping unit
+  pr95689.f90
 
   # ---------------------------------------------------------------------------
   #
   # These are "compile" tests which fail to compile, though compilation is
   # expected to succeed.
-
-  auto_in_equiv_3.f90
-  auto_in_equiv_6.f90
-  auto_in_equiv_7.f90
-  bessel_2.f90
-  bounds_check_3.f90
-  boz_complex_2.f90
-  boz_float_2.f90
-  char_length_3.f90
-  class_45b.f03
-  class_49.f90
-  class_4b.f03
-  class_4c.f03
-  class_74.f90
-  class_dummy_4.f03
-  coarray_11.f90
-  coarray_29_2.f90
-  coarray_35a.f90
-  coarray_args_2.f90
-  coarray_atomic_4.f90
-  coarray_atomic_5.f90
-  coarray_atomic_6.f90
-  coarray_collectives_11.f90
-  coarray_collectives_15.f90
-  coarray_collectives_16.f90
-  coarray_event_1.f08
-  coarray_lib_token_1.f90
-  coarray_lib_token_2.f90
-  coarray_lib_token_4.f90
-  coarray_this_image_1.f90
-  coarray_this_image_2.f90
-  cray_pointers_11.f90
-  cray_pointers_6.f90
-  cray_pointers_9.f90
-  d_lines_2.f
-  dec_d_lines_1.f
-  dec_intrinsic_ints.f90
-  dec_logical_xor_2.f90
-  dec_math_4.f90
-  dec_parameter_3.f90
-  dec_type_print.f90
-  directive_unroll_1.f90
-  directive_unroll_2.f90
-  directive_unroll_3.f90
-  directive_unroll_4.f90
-  d_lines_3.f
-  dtio_36.f90
-  entry_17.f90
-  erfc_scaled_2.f90
-  fmt_read_3.f90
-  forall_17.f90
-  g77_intrinsics_sub.f
-  goto_8.f90
-  hollerith5.f90
-  hollerith_legacy.f90
-  imag_1.f
-  include_12.f
-  initialization_29.f90
-  intent_out_11.f90
-  interface_1.f90
-  interface_8.f90
-  intrinsic_8.f90
-  intrinsic_signal.f90
-  iso_fortran_env_7.f90
-  merge_init_expr_2.f90
-  namelist_83_2.f90
-  no_arg_check_1.f90
-  no_arg_check_2.f90
-  noreturn-3.f90
-  pr88148.f90
-  pr91496.f90
-  pr101026.f
-  pr101267.f90
-  pr104330.f90
-  pr105954.f90
-  pr41011.f
-  pr41928.f90
-  pr49540-2.f90
-  pr67900.f90
-  pr68227.f90
-  pr69554-1.F90
-  pr69554-2.F90
-  pr71085.f90
-  pr71935.f90
-  pr77420_4.f90
-  pr78061.f
-  pr79315.f90
-  pr83113.f90
-  pr84957.f90
-  pr88228.f90
-  pr91650_2.f90
-  pr91945.f90
-  pr95090.f90
-  pr95689.f90
-  print_fmt_3.f
-  public_private_module_4.f90
-  quad_1.f90
-  recursive_interface_1.f90
-  recursive_interface_2.f90
-  restricted_expression_1.f90
-  select_type_30.f03
-  specifics_2.f90
-  stop_2.f
-  submodule_24.f08
-  unused_artificial_dummies_1.f90
-  wdate-time.F90
-  whole_file_10.f90
-  whole_file_29.f90
-  whole_file_31.f90
-  zero_sized_12.f90
+  blockdata_4.f90
+  internal_dummy_1.f90
 
   # This test has a #illegal preprocessor directive. I think this is expected to
   # raise a warning in gfortran, but flang raises an error and fails to compile
