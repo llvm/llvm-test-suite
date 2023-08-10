@@ -1,20 +1,23 @@
 /**
- * correlation.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* correlation.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
 
 /* Include polybench common header. */
-#include "../../utilities/polybench.h"
+#include <polybench.h>
 
 /* Include benchmark-specific header. */
-/* Default data type is double, default size is 4000. */
 #include "correlation.h"
 
 
@@ -23,16 +26,17 @@ static
 void init_array (int m,
 		 int n,
 		 DATA_TYPE *float_n,
-		 DATA_TYPE POLYBENCH_2D(data,M,N,m,n))
+		 DATA_TYPE POLYBENCH_2D(data,N,M,n,m))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *float_n = 1.2;
+  *float_n = (DATA_TYPE)N;
 
-  for (i = 0; i < m; i++)
-    for (j = 0; j < n; j++)
-      data[i][j] = ((DATA_TYPE) i*j) / M;
+  for (i = 0; i < N; i++)
+    for (j = 0; j < M; j++)
+      data[i][j] = (DATA_TYPE)(i*j)/M + i;
+
 }
 
 
@@ -40,7 +44,7 @@ void init_array (int m,
    Can be used also to check the correctness of the output. */
 static
 void print_array(int m,
-		 DATA_TYPE POLYBENCH_2D(symmat,M,M,m,m))
+		 DATA_TYPE POLYBENCH_2D(corr,M,M,m,m))
 
 {
   int i, j;
@@ -48,7 +52,7 @@ void print_array(int m,
 
   for (i = 0; i < m; i++) {
     for (j = 0; j < m; j++) {
-      print_element(symmat[i][j], j*16, printmat);
+      print_element(corr[i][j], j*16, printmat);
     }
     fputs(printmat, stderr);
   }
@@ -61,62 +65,60 @@ void print_array(int m,
 static
 void kernel_correlation(int m, int n,
 			DATA_TYPE float_n,
-			DATA_TYPE POLYBENCH_2D(data,M,N,m,n),
-			DATA_TYPE POLYBENCH_2D(symmat,M,M,m,m),
+			DATA_TYPE POLYBENCH_2D(data,N,M,n,m),
+			DATA_TYPE POLYBENCH_2D(corr,M,M,m,m),
 			DATA_TYPE POLYBENCH_1D(mean,M,m),
 			DATA_TYPE POLYBENCH_1D(stddev,M,m))
 {
-  int i, j, j1, j2;
+  int i, j, k;
 
-  DATA_TYPE eps = 0.1f;
+  DATA_TYPE eps = SCALAR_VAL(0.1);
 
-#define sqrt_of_array_cell(x,j) sqrt(x[j])
 
 #pragma scop
-  /* Determine mean of column vectors of input data matrix */
   for (j = 0; j < _PB_M; j++)
     {
-      mean[j] = 0.0;
+      mean[j] = SCALAR_VAL(0.0);
       for (i = 0; i < _PB_N; i++)
 	mean[j] += data[i][j];
       mean[j] /= float_n;
     }
 
-  /* Determine standard deviations of column vectors of data matrix. */
-  for (j = 0; j < _PB_M; j++)
+
+   for (j = 0; j < _PB_M; j++)
     {
-      stddev[j] = 0.0;
+      stddev[j] = SCALAR_VAL(0.0);
       for (i = 0; i < _PB_N; i++)
-	stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
+        stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
       stddev[j] /= float_n;
-      stddev[j] = sqrt_of_array_cell(stddev, j);
+      stddev[j] = SQRT_FUN(stddev[j]);
       /* The following in an inelegant but usual way to handle
-	 near-zero std. dev. values, which below would cause a zero-
-	 divide. */
-      stddev[j] = stddev[j] <= eps ? 1.0 : stddev[j];
+         near-zero std. dev. values, which below would cause a zero-
+         divide. */
+      stddev[j] = stddev[j] <= eps ? SCALAR_VAL(1.0) : stddev[j];
     }
 
   /* Center and reduce the column vectors. */
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_M; j++)
       {
-	data[i][j] -= mean[j];
-	data[i][j] /= sqrt(float_n) * stddev[j];
+        data[i][j] -= mean[j];
+        data[i][j] /= SQRT_FUN(float_n) * stddev[j];
       }
 
   /* Calculate the m * m correlation matrix. */
-  for (j1 = 0; j1 < _PB_M-1; j1++)
+  for (i = 0; i < _PB_M-1; i++)
     {
-      symmat[j1][j1] = 1.0;
-      for (j2 = j1+1; j2 < _PB_M; j2++)
-	{
-	  symmat[j1][j2] = 0.0;
-	  for (i = 0; i < _PB_N; i++)
-	    symmat[j1][j2] += (data[i][j1] * data[i][j2]);
-	  symmat[j2][j1] = symmat[j1][j2];
-	}
+      corr[i][i] = SCALAR_VAL(1.0);
+      for (j = i+1; j < _PB_M; j++)
+        {
+          corr[i][j] = SCALAR_VAL(0.0);
+          for (k = 0; k < _PB_N; k++)
+            corr[i][j] += (data[k][i] * data[k][j]);
+          corr[j][i] = corr[i][j];
+        }
     }
-  symmat[_PB_M-1][_PB_M-1] = 1.0;
+  corr[_PB_M-1][_PB_M-1] = SCALAR_VAL(1.0);
 #pragma endscop
 
 }
@@ -128,62 +130,61 @@ void kernel_correlation(int m, int n,
 static void
 kernel_correlation_StrictFP(int m, int n,
                             DATA_TYPE float_n,
-                            DATA_TYPE POLYBENCH_2D(data,M,N,m,n),
-                            DATA_TYPE POLYBENCH_2D(symmat,M,M,m,m),
+                            DATA_TYPE POLYBENCH_2D(data,N,M,n,m),
+                            DATA_TYPE POLYBENCH_2D(corr,M,M,m,m),
                             DATA_TYPE POLYBENCH_1D(mean,M,m),
                             DATA_TYPE POLYBENCH_1D(stddev,M,m))
 {
 #pragma STDC FP_CONTRACT OFF
-  int i, j, j1, j2;
+  int i, j, k;
 
-  DATA_TYPE eps = 0.1f;
+  DATA_TYPE eps = SCALAR_VAL(0.1);
 
-#define sqrt_of_array_cell(x,j) sqrt(x[j])
 
   /* Determine mean of column vectors of input data matrix */
   for (j = 0; j < _PB_M; j++)
     {
-      mean[j] = 0.0;
+      mean[j] = SCALAR_VAL(0.0);
       for (i = 0; i < _PB_N; i++)
 	mean[j] += data[i][j];
       mean[j] /= float_n;
     }
 
   /* Determine standard deviations of column vectors of data matrix. */
-  for (j = 0; j < _PB_M; j++)
+   for (j = 0; j < _PB_M; j++)
     {
-      stddev[j] = 0.0;
+      stddev[j] = SCALAR_VAL(0.0);
       for (i = 0; i < _PB_N; i++)
-	stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
+        stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
       stddev[j] /= float_n;
-      stddev[j] = sqrt_of_array_cell(stddev, j);
+      stddev[j] = SQRT_FUN(stddev[j]);
       /* The following in an inelegant but usual way to handle
-	 near-zero std. dev. values, which below would cause a zero-
-	 divide. */
-      stddev[j] = stddev[j] <= eps ? 1.0 : stddev[j];
+         near-zero std. dev. values, which below would cause a zero-
+         divide. */
+      stddev[j] = stddev[j] <= eps ? SCALAR_VAL(1.0) : stddev[j];
     }
 
   /* Center and reduce the column vectors. */
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_M; j++)
       {
-	data[i][j] -= mean[j];
-	data[i][j] /= sqrt(float_n) * stddev[j];
+        data[i][j] -= mean[j];
+        data[i][j] /= SQRT_FUN(float_n) * stddev[j];
       }
 
   /* Calculate the m * m correlation matrix. */
-  for (j1 = 0; j1 < _PB_M-1; j1++)
+  for (i = 0; i < _PB_M-1; i++)
     {
-      symmat[j1][j1] = 1.0;
-      for (j2 = j1+1; j2 < _PB_M; j2++)
-	{
-	  symmat[j1][j2] = 0.0;
-	  for (i = 0; i < _PB_N; i++)
-	    symmat[j1][j2] += (data[i][j1] * data[i][j2]);
-	  symmat[j2][j1] = symmat[j1][j2];
-	}
+      corr[i][i] = SCALAR_VAL(1.0);
+      for (j = i+1; j < _PB_M; j++)
+        {
+          corr[i][j] = SCALAR_VAL(0.0);
+          for (k = 0; k < _PB_N; k++)
+            corr[i][j] += (data[k][i] * data[k][j]);
+          corr[j][i] = corr[i][j];
+        }
     }
-  symmat[_PB_M-1][_PB_M-1] = 1.0;
+  corr[_PB_M-1][_PB_M-1] = SCALAR_VAL(1.0);
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
@@ -221,9 +222,9 @@ int main(int argc, char** argv)
   /* Variable declaration/allocation. */
   DATA_TYPE float_n;
   POLYBENCH_2D_ARRAY_DECL(data,DATA_TYPE,M,N,m,n);
-  POLYBENCH_2D_ARRAY_DECL(symmat,DATA_TYPE,M,M,m,m);
+  POLYBENCH_2D_ARRAY_DECL(corr,DATA_TYPE,M,M,m,m);
 #if !FMA_DISABLED
-  POLYBENCH_2D_ARRAY_DECL(symmat_StrictFP,DATA_TYPE,M,M,m,m);
+  POLYBENCH_2D_ARRAY_DECL(corr_StrictFP,DATA_TYPE,M,M,m,m);
 #endif
   POLYBENCH_1D_ARRAY_DECL(mean,DATA_TYPE,M,m);
   POLYBENCH_1D_ARRAY_DECL(stddev,DATA_TYPE,M,m);
@@ -237,7 +238,7 @@ int main(int argc, char** argv)
   /* Run kernel. */
   kernel_correlation (m, n, float_n,
 		      POLYBENCH_ARRAY(data),
-		      POLYBENCH_ARRAY(symmat),
+		      POLYBENCH_ARRAY(corr),
 		      POLYBENCH_ARRAY(mean),
 		      POLYBENCH_ARRAY(stddev));
 
@@ -248,27 +249,27 @@ int main(int argc, char** argv)
 #if FMA_DISABLED
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(symmat)));
+  polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(corr)));
 #else
   init_array (m, n, &float_n, POLYBENCH_ARRAY(data));
   kernel_correlation (m, n, float_n,
 		      POLYBENCH_ARRAY(data),
-		      POLYBENCH_ARRAY(symmat_StrictFP),
+		      POLYBENCH_ARRAY(corr_StrictFP),
 		      POLYBENCH_ARRAY(mean),
 		      POLYBENCH_ARRAY(stddev));
-  if (!check_FP(m, POLYBENCH_ARRAY(symmat), POLYBENCH_ARRAY(symmat_StrictFP)))
+  if (!check_FP(m, POLYBENCH_ARRAY(corr), POLYBENCH_ARRAY(corr_StrictFP)))
     return 1;
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(symmat_StrictFP)));
+  polybench_prevent_dce(print_array(m, POLYBENCH_ARRAY(corr_StrictFP)));
 #endif
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(data);
-  POLYBENCH_FREE_ARRAY(symmat);
+  POLYBENCH_FREE_ARRAY(corr);
 #if !FMA_DISABLED
-  POLYBENCH_FREE_ARRAY(symmat_StrictFP);
+  POLYBENCH_FREE_ARRAY(corr_StrictFP);
 #endif
   POLYBENCH_FREE_ARRAY(mean);
   POLYBENCH_FREE_ARRAY(stddev);
