@@ -5,7 +5,7 @@
 ## Contact: <pouchet@cse.ohio-state.edu>
 ##
 ## Started on  Sat Oct 29 00:03:48 2011 Louis-Noel Pouchet
-## Last update Sat Oct 29 01:16:34 2011 Louis-Noel Pouchet
+## Last update Fri Apr 22 15:39:13 2016 Louis-Noel Pouchet
 ##
 
 ## Maximal variance accepted between the 3 median runs for performance results.
@@ -54,8 +54,8 @@ compute_mean_exec_time()
     fi;
     compvar=`echo "$variance $VARIANCE_ACCEPTED" | awk '{ if ($1 < $2) print "ok"; else print "error"; }'`;
     if [ "$compvar" = "error" ]; then
-	$ECHO_CMD "\033[31m[WARNING]\033[0m Variance is above thresold, unsafe performance measurement";
-	$ECHO_CMD "        => max deviation=$variance%, tolerance=$VARIANCE_ACCEPTED%";
+	echo "[WARNING] Variance is above thresold, unsafe performance measurement";
+	echo "        => max deviation=$variance%, tolerance=$VARIANCE_ACCEPTED%";
 	WARNING_VARIANCE="$WARNING_VARIANCE\n$benchcomputed: max deviation=$variance%, tolerance=$VARIANCE_ACCEPTED%";
     else
 	echo "[INFO] Maximal deviation from arithmetic mean of 3 average runs: $variance%";
@@ -65,7 +65,7 @@ compute_mean_exec_time()
 }
 
 echo "[INFO] Running 5 times $1..."
-echo "[INFO] Maximal variance authorized on 3 average runs: $VARIANCE_ACCEPTED%)...";
+echo "[INFO] Maximal variance authorized on 3 average runs: $VARIANCE_ACCEPTED%...";
 
 $1 > ____tempfile.data.polybench;
 $1 >> ____tempfile.data.polybench;
