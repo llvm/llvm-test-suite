@@ -1,10 +1,14 @@
 /**
- * gemver.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* gemver.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -32,29 +36,33 @@ void init_array (int n,
 #if !FMA_DISABLED
 		 DATA_TYPE POLYBENCH_1D(w_StrictFP,N,n),
 #endif
+		 DATA_TYPE POLYBENCH_1D(x,N,n),
 		 DATA_TYPE POLYBENCH_1D(y,N,n),
 		 DATA_TYPE POLYBENCH_1D(z,N,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *alpha = 43532;
-  *beta = 12313;
+  *alpha = 1.5;
+  *beta = 1.2;
+
+  DATA_TYPE fn = (DATA_TYPE)n;
 
   for (i = 0; i < n; i++)
     {
       u1[i] = i;
-      u2[i] = (i+1)/n/2.0;
-      v1[i] = (i+1)/n/4.0;
-      v2[i] = (i+1)/n/6.0;
-      y[i] = (i+1)/n/8.0;
-      z[i] = (i+1)/n/9.0;
+      u2[i] = ((i+1)/fn)/2.0;
+      v1[i] = ((i+1)/fn)/4.0;
+      v2[i] = ((i+1)/fn)/6.0;
+      y[i] = ((i+1)/fn)/8.0;
+      z[i] = ((i+1)/fn)/9.0;
+      x[i] = 0.0;
       w[i] = 0.0;
 #if !FMA_DISABLED
       w_StrictFP[i] = 0.0;
 #endif
       for (j = 0; j < n; j++)
-	A[i][j] = ((DATA_TYPE) i*j) / n;
+        A[i][j] = (DATA_TYPE) (i*j % n) / n;
     }
 }
 
@@ -66,10 +74,15 @@ void print_array(int n,
 		 DATA_TYPE POLYBENCH_1D(w,N,n))
 {
   int i;
+
+  POLYBENCH_DUMP_START;
+  POLYBENCH_DUMP_BEGIN("w");
   for (i = 0; i < n; i++) {
-    fprintf (stderr, DATA_PRINTF_MODIFIER, w[i]);
-    if (i % 20 == 0) fprintf (stderr, "\n");
+    if (i % 20 == 0) fprintf (POLYBENCH_DUMP_TARGET, "\n");
+    fprintf (POLYBENCH_DUMP_TARGET, DATA_PRINTF_MODIFIER, w[i]);
   }
+  POLYBENCH_DUMP_END("w");
+  POLYBENCH_DUMP_FINISH;
 }
 
 
@@ -80,7 +93,6 @@ void kernel_gemver(int n,
 		   DATA_TYPE alpha,
 		   DATA_TYPE beta,
 		   DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
-		   DATA_TYPE POLYBENCH_2D(A_tmp,N,N,n,n),
 		   DATA_TYPE POLYBENCH_1D(u1,N,n),
 		   DATA_TYPE POLYBENCH_1D(v1,N,n),
 		   DATA_TYPE POLYBENCH_1D(u2,N,n),
@@ -96,20 +108,18 @@ void kernel_gemver(int n,
 
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      A_tmp[i][j] = A[i][j] + u1[i] * v1[j] + u2[i] * v2[j];
+      A[i][j] = A[i][j] + u1[i] * v1[j] + u2[i] * v2[j];
 
-  for (i = 0; i < _PB_N; i++) {
-    x[i] = 0.0;
+  for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      x[i] = x[i] + beta * A_tmp[j][i] * y[j];
-  }
+      x[i] = x[i] + beta * A[j][i] * y[j];
 
   for (i = 0; i < _PB_N; i++)
     x[i] = x[i] + z[i];
 
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      w[i] = w[i] +  alpha * A_tmp[i][j] * x[j];
+      w[i] = w[i] +  alpha * A[i][j] * x[j];
 
 #pragma endscop
 }
@@ -123,7 +133,6 @@ void kernel_gemver_StrictFP(int n,
                             DATA_TYPE alpha,
                             DATA_TYPE beta,
                             DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
-                            DATA_TYPE POLYBENCH_2D(A_tmp,N,N,n,n),
                             DATA_TYPE POLYBENCH_1D(u1,N,n),
                             DATA_TYPE POLYBENCH_1D(v1,N,n),
                             DATA_TYPE POLYBENCH_1D(u2,N,n),
@@ -138,20 +147,18 @@ void kernel_gemver_StrictFP(int n,
 
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      A_tmp[i][j] = A[i][j] + u1[i] * v1[j] + u2[i] * v2[j];
+      A[i][j] = A[i][j] + u1[i] * v1[j] + u2[i] * v2[j];
 
-  for (i = 0; i < _PB_N; i++) {
-    x[i] = 0.0;
+  for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      x[i] = x[i] + beta * A_tmp[j][i] * y[j];
-  }
+      x[i] = x[i] + beta * A[j][i] * y[j];
 
   for (i = 0; i < _PB_N; i++)
     x[i] = x[i] + z[i];
 
   for (i = 0; i < _PB_N; i++)
     for (j = 0; j < _PB_N; j++)
-      w[i] = w[i] +  alpha * A_tmp[i][j] * x[j];
+      w[i] = w[i] +  alpha * A[i][j] * x[j];
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
@@ -187,7 +194,6 @@ int main(int argc, char** argv)
   DATA_TYPE alpha;
   DATA_TYPE beta;
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
-  POLYBENCH_2D_ARRAY_DECL(A_tmp, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(u1, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(v1, DATA_TYPE, N, n);
   POLYBENCH_1D_ARRAY_DECL(u2, DATA_TYPE, N, n);
@@ -212,6 +218,7 @@ int main(int argc, char** argv)
 #if !FMA_DISABLED
 	      POLYBENCH_ARRAY(w_StrictFP),
 #endif
+	      POLYBENCH_ARRAY(x),
 	      POLYBENCH_ARRAY(y),
 	      POLYBENCH_ARRAY(z));
 
@@ -221,7 +228,6 @@ int main(int argc, char** argv)
   /* Run kernel. */
   kernel_gemver (n, alpha, beta,
 		 POLYBENCH_ARRAY(A),
-		 POLYBENCH_ARRAY(A_tmp),
 		 POLYBENCH_ARRAY(u1),
 		 POLYBENCH_ARRAY(v1),
 		 POLYBENCH_ARRAY(u2),
@@ -242,7 +248,6 @@ int main(int argc, char** argv)
 #else
   kernel_gemver_StrictFP(n, alpha, beta,
                          POLYBENCH_ARRAY(A),
-                         POLYBENCH_ARRAY(A_tmp),
                          POLYBENCH_ARRAY(u1),
                          POLYBENCH_ARRAY(v1),
                          POLYBENCH_ARRAY(u2),
@@ -261,7 +266,6 @@ int main(int argc, char** argv)
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
-  POLYBENCH_FREE_ARRAY(A_tmp);
   POLYBENCH_FREE_ARRAY(u1);
   POLYBENCH_FREE_ARRAY(v1);
   POLYBENCH_FREE_ARRAY(u2);
