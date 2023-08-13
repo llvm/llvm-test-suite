@@ -1,10 +1,14 @@
 /**
- * gesummv.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* gesummv.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -14,7 +18,6 @@
 #include <polybench.h>
 
 /* Include benchmark-specific header. */
-/* Default data type is double, default size is 4000. */
 #include "gesummv.h"
 
 
@@ -30,14 +33,14 @@ void init_array(int n,
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *alpha = 43532;
-  *beta = 12313;
+  *alpha = 1.5;
+  *beta = 1.2;
   for (i = 0; i < n; i++)
     {
-      x[i] = ((DATA_TYPE) i) / n;
+      x[i] = (DATA_TYPE)( i % n) / n;
       for (j = 0; j < n; j++) {
-	A[i][j] = ((DATA_TYPE) i*j) / n;
-	B[i][j] = ((DATA_TYPE) i*j) / n;
+	A[i][j] = (DATA_TYPE) ((i*j+1) % n) / n;
+	B[i][j] = (DATA_TYPE) ((i*j+2) % n) / n;
       }
     }
 }
@@ -77,8 +80,8 @@ void kernel_gesummv(int n,
 #pragma scop
   for (i = 0; i < _PB_N; i++)
     {
-      tmp[i] = 0;
-      y[i] = 0;
+      tmp[i] = SCALAR_VAL(0.0);
+      y[i] = SCALAR_VAL(0.0);
       for (j = 0; j < _PB_N; j++)
 	{
 	  tmp[i] = A[i][j] * x[j] + tmp[i];
@@ -109,8 +112,8 @@ void kernel_gesummv_StrictFP(int n,
 
   for (i = 0; i < _PB_N; i++)
     {
-      tmp[i] = 0;
-      y[i] = 0;
+      tmp[i] = SCALAR_VAL(0.0);
+      y[i] = SCALAR_VAL(0.0);
       for (j = 0; j < _PB_N; j++)
 	{
 	  tmp[i] = A[i][j] * x[j] + tmp[i];
