@@ -1,10 +1,14 @@
 /**
- * symm.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* symm.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -14,52 +18,54 @@
 #include <polybench.h>
 
 /* Include benchmark-specific header. */
-/* Default data type is double, default size is 4000. */
 #include "symm.h"
 
 
 /* Array initialization. */
 static
-void init_array(int ni, int nj,
+void init_array(int m, int n,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
-		DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj),
+		DATA_TYPE POLYBENCH_2D(C,M,N,m,n),
 #if !FMA_DISABLED
-		DATA_TYPE POLYBENCH_2D(C_StrictFP,NI,NJ,ni,nj),
+		DATA_TYPE POLYBENCH_2D(C_StrictFP,M,N,m,n),
 #endif
-		DATA_TYPE POLYBENCH_2D(A,NJ,NJ,nj,nj),
-		DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+		DATA_TYPE POLYBENCH_2D(A,M,M,m,m),
+		DATA_TYPE POLYBENCH_2D(B,M,N,m,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *alpha = 32412;
-  *beta = 2123;
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < nj; j++) {
+  *alpha = 1.5;
+  *beta = 1.2;
+  for (i = 0; i < m; i++)
+    for (j = 0; j < n; j++) {
 #if !FMA_DISABLED
       C_StrictFP[i][j] =
 #endif
-	      C[i][j] = ((DATA_TYPE) i*j) / ni;
-      B[i][j] = ((DATA_TYPE) i*j) / ni;
+      C[i][j] = (DATA_TYPE) ((i+j) % 100) / m;
+      B[i][j] = (DATA_TYPE) ((n+i-j) % 100) / m;
     }
-  for (i = 0; i < nj; i++)
-    for (j = 0; j < nj; j++)
-      A[i][j] = ((DATA_TYPE) i*j) / ni;
+  for (i = 0; i < m; i++) {
+    for (j = 0; j <=i; j++)
+      A[i][j] = (DATA_TYPE) ((i+j) % 100) / m;
+    for (j = i+1; j < m; j++)
+      A[i][j] = -999; //regions of arrays that should not be used
+  }
 }
 
 
 /* DCE code. Must scan the entire live-out data.
    Can be used also to check the correctness of the output. */
 static
-void print_array(int ni, int nj,
-		 DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj))
+void print_array(int m, int n,
+		 DATA_TYPE POLYBENCH_2D(C,M,N,m,n))
 {
   int i, j;
-  char *printmat = malloc(nj*16 + 1); printmat[nj*16] = 0;
+  char *printmat = malloc(n*16 + 1); printmat[n*16] = 0;
 
-  for (i = 0; i < ni; i++) {
-    for (j = 0; j < nj; j++)
+  for (i = 0; i < m; i++) {
+    for (j = 0; j < n; j++)
       print_element(C[i][j], j*16, printmat);
     fputs(printmat, stderr);
   }
@@ -70,29 +76,35 @@ void print_array(int ni, int nj,
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
 static
-void kernel_symm(int ni, int nj,
+void kernel_symm(int m, int n,
 		 DATA_TYPE alpha,
 		 DATA_TYPE beta,
-		 DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj),
-		 DATA_TYPE POLYBENCH_2D(A,NJ,NJ,nj,nj),
-		 DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+		 DATA_TYPE POLYBENCH_2D(C,M,N,m,n),
+		 DATA_TYPE POLYBENCH_2D(A,M,M,m,m),
+		 DATA_TYPE POLYBENCH_2D(B,M,N,m,n))
 {
   int i, j, k;
-  DATA_TYPE acc;
+  DATA_TYPE temp2;
 
+//BLAS PARAMS
+//SIDE = 'L'
+//UPLO = 'L'
+// =>  Form  C := alpha*A*B + beta*C
+// A is MxM
+// B is MxN
+// C is MxN
+//note that due to Fortran array layout, the code below more closely resembles upper triangular case in BLAS
 #pragma scop
-  /*  C := alpha*A*B + beta*C, A is symetric */
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NJ; j++)
+   for (i = 0; i < _PB_M; i++)
+      for (j = 0; j < _PB_N; j++ )
       {
-	acc = 0;
-	for (k = 0; k < j - 1; k++)
-	  {
-	    C[k][j] += alpha * A[k][i] * B[i][j];
-	    acc += B[k][j] * A[k][i];
-	  }
-	C[i][j] = beta * C[i][j] + alpha * A[i][i] * B[i][j] + alpha * acc;
-      }
+        temp2 = 0;
+        for (k = 0; k < i; k++) {
+           C[k][j] += alpha*B[i][j] * A[i][k];
+           temp2 += B[k][j] * A[i][k];
+        }
+        C[i][j] = beta * C[i][j] + alpha*B[i][j] * A[i][i] + alpha * temp2;
+     }
 #pragma endscop
 
 }
@@ -102,29 +114,35 @@ void kernel_symm(int ni, int nj,
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
 static
-void kernel_symm_StrictFP(int ni, int nj,
-                          DATA_TYPE alpha,
-                          DATA_TYPE beta,
-                          DATA_TYPE POLYBENCH_2D(C,NI,NJ,ni,nj),
-                          DATA_TYPE POLYBENCH_2D(A,NJ,NJ,nj,nj),
-                          DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+void kernel_symm(int m, int n,
+		 DATA_TYPE alpha,
+		 DATA_TYPE beta,
+		 DATA_TYPE POLYBENCH_2D(C,M,N,m,n),
+		 DATA_TYPE POLYBENCH_2D(A,M,M,m,m),
+		 DATA_TYPE POLYBENCH_2D(B,M,N,m,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j, k;
-  DATA_TYPE acc;
+  DATA_TYPE temp2;
 
-  /*  C := alpha*A*B + beta*C, A is symetric */
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NJ; j++)
+//BLAS PARAMS
+//SIDE = 'L'
+//UPLO = 'L'
+// =>  Form  C := alpha*A*B + beta*C
+// A is MxM
+// B is MxN
+// C is MxN
+//note that due to Fortran array layout, the code below more closely resembles upper triangular case in BLAS
+   for (i = 0; i < _PB_M; i++)
+      for (j = 0; j < _PB_N; j++ )
       {
-	acc = 0;
-	for (k = 0; k < j - 1; k++)
-	  {
-	    C[k][j] += alpha * A[k][i] * B[i][j];
-	    acc += B[k][j] * A[k][i];
-	  }
-	C[i][j] = beta * C[i][j] + alpha * A[i][i] * B[i][j] + alpha * acc;
-      }
+        temp2 = 0;
+        for (k = 0; k < i; k++) {
+           C[k][j] += alpha*B[i][j] * A[i][k];
+           temp2 += B[k][j] * A[i][k];
+        }
+        C[i][j] = beta * C[i][j] + alpha*B[i][j] * A[i][i] + alpha * temp2;
+     }
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
@@ -156,21 +174,21 @@ check_FP(int ni, int nj,
 int main(int argc, char** argv)
 {
   /* Retrieve problem size. */
-  int ni = NI;
-  int nj = NJ;
+  int m = M;
+  int n = N;
 
   /* Variable declaration/allocation. */
   DATA_TYPE alpha;
   DATA_TYPE beta;
-  POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,NI,NJ,ni,nj);
+  POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,M,N,m,n);
 #if !FMA_DISABLED
-  POLYBENCH_2D_ARRAY_DECL(C_StrictFP,DATA_TYPE,NI,NJ,ni,nj);
+  POLYBENCH_2D_ARRAY_DECL(C_StrictFP,DATA_TYPE,M,N,m,n);
 #endif
-  POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,NJ,NJ,nj,nj);
-  POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,NI,NJ,ni,nj);
+  POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,M,M,m,m);
+  POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,M,N,m,n);
 
   /* Initialize array(s). */
-  init_array (ni, nj, &alpha, &beta,
+  init_array (m, n, &alpha, &beta,
 	      POLYBENCH_ARRAY(C),
 #if !FMA_DISABLED
 	      POLYBENCH_ARRAY(C_StrictFP),
@@ -182,7 +200,7 @@ int main(int argc, char** argv)
   polybench_start_instruments;
 
   /* Run kernel. */
-  kernel_symm (ni, nj,
+  kernel_symm (m, n,
 	       alpha, beta,
 	       POLYBENCH_ARRAY(C),
 	       POLYBENCH_ARRAY(A),
@@ -195,19 +213,19 @@ int main(int argc, char** argv)
 #if FMA_DISABLED
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, nj, POLYBENCH_ARRAY(C)));
+  polybench_prevent_dce(print_array(m, n, POLYBENCH_ARRAY(C)));
 #else
-  kernel_symm_StrictFP(ni, nj,
+  kernel_symm_StrictFP(m, n,
                        alpha, beta,
                        POLYBENCH_ARRAY(C_StrictFP),
                        POLYBENCH_ARRAY(A),
                        POLYBENCH_ARRAY(B));
-  if (!check_FP(ni, nj, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
+  if (!check_FP(m, n, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
     return 1;
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, nj, POLYBENCH_ARRAY(C_StrictFP)));
+  polybench_prevent_dce(print_array(m, n, POLYBENCH_ARRAY(C_StrictFP)));
 #endif
 
   /* Be clean. */
