@@ -1,10 +1,14 @@
 /**
- * gemm.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* gemm.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -33,20 +37,20 @@ void init_array(int ni, int nj, int nk,
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *alpha = 32412;
-  *beta = 2123;
+ *alpha = 1.5;
+  *beta = 1.2;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nj; j++)
 #if !FMA_DISABLED
       C_StrictFP[i][j] =
 #endif
-	      C[i][j] = ((DATA_TYPE) i*j) / ni;
+	      C[i][j] = (DATA_TYPE) ((i*j+1) % ni) / ni;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nk; j++)
-      A[i][j] = ((DATA_TYPE) i*j) / ni;
+      A[i][j] = (DATA_TYPE) (i*(j+1) % nk) / nk;
   for (i = 0; i < nk; i++)
     for (j = 0; j < nj; j++)
-      B[i][j] = ((DATA_TYPE) i*j) / ni;
+      B[i][j] = (DATA_TYPE) (i*(j+2) % nj) / nj;
 }
 
 
@@ -80,15 +84,22 @@ void kernel_gemm(int ni, int nj, int nk,
 {
   int i, j, k;
 
+//BLAS PARAMS
+//TRANSA = 'N'
+//TRANSB = 'N'
+// => Form C := alpha*A*B + beta*C,
+//A is NIxNK
+//B is NKxNJ
+//C is NIxNJ
 #pragma scop
-  /* C := alpha*A*B + beta*C */
-  for (i = 0; i < _PB_NI; i++)
+  for (i = 0; i < _PB_NI; i++) {
     for (j = 0; j < _PB_NJ; j++)
-      {
 	C[i][j] *= beta;
-	for (k = 0; k < _PB_NK; ++k)
+    for (k = 0; k < _PB_NK; k++) {
+       for (j = 0; j < _PB_NJ; j++)
 	  C[i][j] += alpha * A[i][k] * B[k][j];
-      }
+    }
+  }
 #pragma endscop
 
 }
@@ -108,26 +119,33 @@ void kernel_gemm_StrictFP(int ni, int nj, int nk,
 #pragma STDC FP_CONTRACT OFF
   int i, j, k;
 
-  /* C := alpha*A*B + beta*C */
-  for (i = 0; i < _PB_NI; i++)
+//BLAS PARAMS
+//TRANSA = 'N'
+//TRANSB = 'N'
+// => Form C := alpha*A*B + beta*C,
+//A is NIxNK
+//B is NKxNJ
+//C is NIxNJ
+  for (i = 0; i < _PB_NI; i++) {
     for (j = 0; j < _PB_NJ; j++)
-      {
 	C[i][j] *= beta;
-	for (k = 0; k < _PB_NK; ++k)
+    for (k = 0; k < _PB_NK; k++) {
+       for (j = 0; j < _PB_NJ; j++)
 	  C[i][j] += alpha * A[i][k] * B[k][j];
-      }
+    }
+  }
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
 static inline int
-check_FP(int ni, int nk,
-         DATA_TYPE POLYBENCH_2D(A,NI,NK,ni,nk),
-         DATA_TYPE POLYBENCH_2D(B,NI,NK,ni,nk)) {
+check_FP(int ni, int nj,
+         DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
+         DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj)) {
   int i, j;
   double AbsTolerance = FP_ABSTOLERANCE;
   for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NK; j++)
+    for (j = 0; j < _PB_NJ; j++)
       {
         double V1 = A[i][j];
         double V2 = B[i][j];
@@ -194,7 +212,7 @@ int main(int argc, char** argv)
                        POLYBENCH_ARRAY(C_StrictFP),
                        POLYBENCH_ARRAY(A),
                        POLYBENCH_ARRAY(B));
-  if (!check_FP(ni, nk, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
+  if (!check_FP(ni, nj, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
     return 1;
 
   /* Prevent dead-code elimination. All live-out data must be printed
