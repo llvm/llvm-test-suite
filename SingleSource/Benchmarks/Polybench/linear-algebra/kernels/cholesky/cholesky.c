@@ -1,10 +1,14 @@
 /**
- * cholesky.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* cholesky.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -21,7 +25,6 @@
 /* Array initialization. */
 static
 void init_array(int n,
-		DATA_TYPE POLYBENCH_1D(p,N,n),
 		DATA_TYPE POLYBENCH_2D(A,N,N,n,n)
 #if !FMA_DISABLED
                 , DATA_TYPE POLYBENCH_2D(A_StrictFP,N,N,n,n)
@@ -30,27 +33,44 @@ void init_array(int n,
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
-  /*
-  LLVM: This change ensures we do not calculate nan values, which are
-        formatted differently on different platforms and which may also
-        be optimized unexpectedly.
-  Original code:
+
   for (i = 0; i < n; i++)
     {
-      p[i] = 1.0 / n;
-      for (j = 0; j < n; j++)
-        A[i][j] = 1.0 / n;
-     }
-  */
-  for (i = 0; i < n; i++)
-    {
-      p[i] = i + n;
-      for (j = 0; j < n; j++)
+      for (j = 0; j <= i; j++)
 #if !FMA_DISABLED
-        A_StrictFP[i][j] = 
+  A_StrictFP[i][j] = 
 #endif
-		A[i][j] = j + n;
+	A[i][j] = (DATA_TYPE)(-j % n) / n + 1;
+      for (j = i+1; j < n; j++) {
+#if !FMA_DISABLED
+  A_StrictFP[i][j] =
+#endif
+	A[i][j] = 0;
+      }
+#if !FMA_DISABLED
+      A_StrictFP[i][i] =
+#endif
+      A[i][i] = 1;
     }
+
+  /* Make the matrix positive semi-definite. */
+  int r,s,t;
+  POLYBENCH_2D_ARRAY_DECL(B, DATA_TYPE, N, N, n, n);
+  for (r = 0; r < n; ++r)
+    for (s = 0; s < n; ++s)
+      (POLYBENCH_ARRAY(B))[r][s] = 0;
+  for (t = 0; t < n; ++t)
+    for (r = 0; r < n; ++r)
+      for (s = 0; s < n; ++s)
+	(POLYBENCH_ARRAY(B))[r][s] += A[r][t] * A[s][t];
+    for (r = 0; r < n; ++r)
+      for (s = 0; s < n; ++s)
+#if !FMA_DISABLED
+  A_StrictFP[r][s] =
+#endif
+	A[r][s] = (POLYBENCH_ARRAY(B))[r][s];
+  POLYBENCH_FREE_ARRAY(B);
+
 }
 
 
@@ -77,34 +97,25 @@ void print_array(int n,
    including the call and return. */
 static
 void kernel_cholesky(int n,
-		     DATA_TYPE POLYBENCH_1D(p,N,n),
 		     DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
 {
   int i, j, k;
 
-  DATA_TYPE x;
 
 #pragma scop
-for (i = 0; i < _PB_N; ++i)
-  {
-   /*
-      LLVM: This change ensures we do not calculate nan values, which are
-            formatted differently on different platforms and which may also
-            be optimized unexpectedly.    
-      Original line:      
-            x = A[i][i];      
-    */      
-    x = A[i][i] * n;
-    for (j = 0; j <= i - 1; ++j)
-      x = x - A[i][j] * A[i][j];
-    p[i] = 1.0 / sqrt(x);
-    for (j = i + 1; j < _PB_N; ++j)
-      {
-	x = A[i][j];
-	for (k = 0; k <= i - 1; ++k)
-	  x = x - A[j][k] * A[i][k];
-	A[j][i] = x * p[i];
-      }
+  for (i = 0; i < _PB_N; i++) {
+     //j<i
+     for (j = 0; j < i; j++) {
+        for (k = 0; k < j; k++) {
+           A[i][j] -= A[i][k] * A[j][k];
+        }
+        A[i][j] /= A[j][j];
+     }
+     // i==j case
+     for (k = 0; k < i; k++) {
+        A[i][i] -= A[i][k] * A[i][k];
+     }
+     A[i][i] = SQRT_FUN(A[i][i]);
   }
 #pragma endscop
 
@@ -116,34 +127,24 @@ for (i = 0; i < _PB_N; ++i)
 // In this case, the test runs with the option -ffp-contract=off
 static
 void kernel_cholesky_StrictFP(int n,
-                              DATA_TYPE POLYBENCH_1D(p,N,n),
                               DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j, k;
 
-  DATA_TYPE x;
-
-for (i = 0; i < _PB_N; ++i)
-  {
-   /*
-      LLVM: This change ensures we do not calculate nan values, which are
-            formatted differently on different platforms and which may also
-            be optimized unexpectedly.    
-      Original line:      
-            x = A[i][i];      
-    */      
-    x = A[i][i] * n;
-    for (j = 0; j <= i - 1; ++j)
-      x = x - A[i][j] * A[i][j];
-    p[i] = 1.0 / sqrt(x);
-    for (j = i + 1; j < _PB_N; ++j)
-      {
-	x = A[i][j];
-	for (k = 0; k <= i - 1; ++k)
-	  x = x - A[j][k] * A[i][k];
-	A[j][i] = x * p[i];
-      }
+  for (i = 0; i < _PB_N; i++) {
+     //j<i
+     for (j = 0; j < i; j++) {
+        for (k = 0; k < j; k++) {
+           A[i][j] -= A[i][k] * A[j][k];
+        }
+        A[i][j] /= A[j][j];
+     }
+     // i==j case
+     for (k = 0; k < i; k++) {
+        A[i][i] -= A[i][k] * A[i][k];
+     }
+     A[i][i] = SQRT_FUN(A[i][i]);
   }
 }
 
@@ -179,14 +180,13 @@ int main(int argc, char** argv)
 
   /* Variable declaration/allocation. */
   POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
-  POLYBENCH_1D_ARRAY_DECL(p, DATA_TYPE, N, n);
 #if !FMA_DISABLED
   POLYBENCH_2D_ARRAY_DECL(A_StrictFP, DATA_TYPE, N, N, n, n);
 #endif
 
 
   /* Initialize array(s). */
-  init_array (n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A)
+  init_array (n, POLYBENCH_ARRAY(A)
 #if !FMA_DISABLED
               , POLYBENCH_ARRAY(A_StrictFP)
 #endif
@@ -196,7 +196,7 @@ int main(int argc, char** argv)
   polybench_start_instruments;
 
   /* Run kernel. */
-  kernel_cholesky (n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A));
+  kernel_cholesky (n, POLYBENCH_ARRAY(A));
 
   /* Stop and print timer. */
   polybench_stop_instruments;
@@ -207,7 +207,7 @@ int main(int argc, char** argv)
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
 #else
-  kernel_cholesky_StrictFP(n, POLYBENCH_ARRAY(p), POLYBENCH_ARRAY(A_StrictFP));
+  kernel_cholesky_StrictFP(n, POLYBENCH_ARRAY(A_StrictFP));
   if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
     return 1;
 
@@ -221,7 +221,6 @@ int main(int argc, char** argv)
 #if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(A_StrictFP);
 #endif
-  POLYBENCH_FREE_ARRAY(p);
 
   return 0;
 }
