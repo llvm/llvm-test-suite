@@ -1,10 +1,14 @@
 /**
- * syr2k.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* syr2k.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -20,46 +24,47 @@
 
 /* Array initialization. */
 static
-void init_array(int ni, int nj,
+void init_array(int n, int m,
 		DATA_TYPE *alpha,
 		DATA_TYPE *beta,
-		DATA_TYPE POLYBENCH_2D(C,NI,NI,ni,ni),
+		DATA_TYPE POLYBENCH_2D(C,N,N,n,n),
 #if !FMA_DISABLED
-		DATA_TYPE POLYBENCH_2D(C_StrictFP,NI,NI,ni,ni),
+		DATA_TYPE POLYBENCH_2D(C_StrictFP,N,N,n,n),
 #endif
-		DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
-		DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+		DATA_TYPE POLYBENCH_2D(A,N,M,n,m),
+		DATA_TYPE POLYBENCH_2D(B,N,M,n,m))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
-  *alpha = 32412;
-  *beta = 2123;
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < nj; j++) {
-      A[i][j] = ((DATA_TYPE) i*j) / ni;
-      B[i][j] = ((DATA_TYPE) i*j) / ni;
+  *alpha = 1.5;
+  *beta = 1.2;
+  for (i = 0; i < n; i++)
+    for (j = 0; j < m; j++) {
+      A[i][j] = (DATA_TYPE) ((i*j+1)%n) / n;
+      B[i][j] = (DATA_TYPE) ((i*j+2)%m) / m;
     }
-  for (i = 0; i < ni; i++)
-    for (j = 0; j < ni; j++)
+  for (i = 0; i < n; i++)
+    for (j = 0; j < n; j++) {
 #if !FMA_DISABLED
       C_StrictFP[i][j] =
 #endif
-	      C[i][j] = ((DATA_TYPE) i*j) / ni;
+	    C[i][j] = (DATA_TYPE) ((i*j+3)%n) / m;
+	  }
 }
 
 
 /* DCE code. Must scan the entire live-out data.
    Can be used also to check the correctness of the output. */
 static
-void print_array(int ni,
-		 DATA_TYPE POLYBENCH_2D(C,NI,NI,ni,ni))
+void print_array(int n,
+		 DATA_TYPE POLYBENCH_2D(C,N,N,n,n))
 {
   int i, j;
-  char *printmat = malloc(ni*16 + 1); printmat[ni*16] = 0;
+  char *printmat = malloc(n*16 + 1); printmat[n*16] = 0;
 
-  for (i = 0; i < ni; i++) {
-    for (j = 0; j < ni; j++)
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++)
       print_element(C[i][j], j*16, printmat);
     fputs(printmat, stderr);
   }
@@ -70,27 +75,31 @@ void print_array(int ni,
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
 static
-void kernel_syr2k(int ni, int nj,
+void kernel_syr2k(int n, int m,
 		  DATA_TYPE alpha,
 		  DATA_TYPE beta,
-		  DATA_TYPE POLYBENCH_2D(C,NI,NI,ni,ni),
-		  DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
-		  DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+		  DATA_TYPE POLYBENCH_2D(C,N,N,n,n),
+		  DATA_TYPE POLYBENCH_2D(A,N,M,n,m),
+		  DATA_TYPE POLYBENCH_2D(B,N,M,n,m))
 {
   int i, j, k;
 
+//BLAS PARAMS
+//UPLO  = 'L'
+//TRANS = 'N'
+//A is NxM
+//B is NxM
+//C is NxN
 #pragma scop
-  /*    C := alpha*A*B' + alpha*B*A' + beta*C */
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NI; j++)
+  for (i = 0; i < _PB_N; i++) {
+    for (j = 0; j <= i; j++)
       C[i][j] *= beta;
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NI; j++)
-      for (k = 0; k < _PB_NJ; k++)
+    for (k = 0; k < _PB_M; k++)
+      for (j = 0; j <= i; j++)
 	{
-	  C[i][j] += alpha * A[i][k] * B[j][k];
-	  C[i][j] += alpha * B[i][k] * A[j][k];
+	  C[i][j] += A[j][k]*alpha*B[i][k] + B[j][k]*alpha*A[i][k];
 	}
+  }
 #pragma endscop
 
 }
@@ -100,39 +109,43 @@ void kernel_syr2k(int ni, int nj,
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
 static void
-kernel_syr2k_StrictFP(int ni, int nj,
+kernel_syr2k_StrictFP(int n, int m,
                       DATA_TYPE alpha,
                       DATA_TYPE beta,
-                      DATA_TYPE POLYBENCH_2D(C,NI,NI,ni,ni),
-                      DATA_TYPE POLYBENCH_2D(A,NI,NJ,ni,nj),
-                      DATA_TYPE POLYBENCH_2D(B,NI,NJ,ni,nj))
+                      DATA_TYPE POLYBENCH_2D(C,N,N,n,n),
+                      DATA_TYPE POLYBENCH_2D(A,N,M,n,m),
+                      DATA_TYPE POLYBENCH_2D(B,N,M,n,m))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j, k;
 
-  /*    C := alpha*A*B' + alpha*B*A' + beta*C */
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NI; j++)
+ //BLAS PARAMS
+//UPLO  = 'L'
+//TRANS = 'N'
+//A is NxM
+//B is NxM
+//C is NxN
+  for (i = 0; i < _PB_N; i++) {
+    for (j = 0; j <= i; j++)
       C[i][j] *= beta;
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NI; j++)
-      for (k = 0; k < _PB_NJ; k++)
+    for (k = 0; k < _PB_M; k++)
+      for (j = 0; j <= i; j++)
 	{
-	  C[i][j] += alpha * A[i][k] * B[j][k];
-	  C[i][j] += alpha * B[i][k] * A[j][k];
+	  C[i][j] += A[j][k]*alpha*B[i][k] + B[j][k]*alpha*A[i][k];
 	}
+  }
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
 static inline int
 check_FP(int ni,
-         DATA_TYPE POLYBENCH_2D(A,NI,NI,ni,ni),
-         DATA_TYPE POLYBENCH_2D(B,NI,NI,ni,ni)) {
+         DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+         DATA_TYPE POLYBENCH_2D(B,N,N,n,n)) {
   int i, j;
   double AbsTolerance = FP_ABSTOLERANCE;
-  for (i = 0; i < _PB_NI; i++)
-    for (j = 0; j < _PB_NI; j++)
+  for (i = 0; i < N; i++)
+    for (j = 0; j < N; j++)
       {
         double V1 = A[i][j];
         double V2 = B[i][j];
@@ -152,21 +165,21 @@ check_FP(int ni,
 int main(int argc, char** argv)
 {
   /* Retrieve problem size. */
-  int ni = NI;
-  int nj = NJ;
+  int n = N;
+  int m = M;
 
   /* Variable declaration/allocation. */
   DATA_TYPE alpha;
   DATA_TYPE beta;
-  POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,NI,NI,ni,ni);
+  POLYBENCH_2D_ARRAY_DECL(C,DATA_TYPE,N,N,n,n);
 #if !FMA_DISABLED
-  POLYBENCH_2D_ARRAY_DECL(C_StrictFP,DATA_TYPE,NI,NI,ni,ni);
+  POLYBENCH_2D_ARRAY_DECL(C_StrictFP,DATA_TYPE,N,N,n,n);
 #endif
-  POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,NI,NJ,ni,nj);
-  POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,NI,NJ,ni,nj);
+  POLYBENCH_2D_ARRAY_DECL(A,DATA_TYPE,N,M,n,m);
+  POLYBENCH_2D_ARRAY_DECL(B,DATA_TYPE,N,M,n,m);
 
   /* Initialize array(s). */
-  init_array (ni, nj, &alpha, &beta,
+  init_array (n, m, &alpha, &beta,
 	      POLYBENCH_ARRAY(C),
 #if !FMA_DISABLED
 	      POLYBENCH_ARRAY(C_StrictFP),
@@ -178,7 +191,7 @@ int main(int argc, char** argv)
   polybench_start_instruments;
 
   /* Run kernel. */
-  kernel_syr2k (ni, nj,
+  kernel_syr2k (n, m,
 		alpha, beta,
 		POLYBENCH_ARRAY(C),
 		POLYBENCH_ARRAY(A),
@@ -191,20 +204,20 @@ int main(int argc, char** argv)
 #if FMA_DISABLED
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, POLYBENCH_ARRAY(C)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(C)));
 #else
-  kernel_syr2k_StrictFP(ni, nj,
+  kernel_syr2k_StrictFP(n, m,
                         alpha, beta,
                         POLYBENCH_ARRAY(C_StrictFP),
                         POLYBENCH_ARRAY(A),
                         POLYBENCH_ARRAY(B));
 
-  if (!check_FP(ni, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
+  if (!check_FP(n, POLYBENCH_ARRAY(C), POLYBENCH_ARRAY(C_StrictFP)))
     return 1;
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, POLYBENCH_ARRAY(C_StrictFP)));
+  polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(C_StrictFP)));
 #endif
 
   /* Be clean. */
