@@ -18,7 +18,4 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # (hlfir+omp): Fortran::lower::genThreadprivateOp assertion failure
   a.22.1.f90
-
-  # (hlfir+omp): "the thread private operation not created" assertion failure
-  a.32.1.f90
 )
