@@ -446,6 +446,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   crayptr1.f90
   crayptr2.f90
   map-alloc-comp-1.f90
+  pr107214-6.f90
+  pr107214-3.f90
   pr33439.f90
   pr44036-3.f90
   pr78866-2.f90
