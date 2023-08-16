@@ -108,13 +108,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   workshare2.f90
   workshare3.f90
 
-  # unimplemented: Reduction in OpenMP parallel construct
-  pr45172.f90
-  pr48794.f90
-  pr48611.f90
-  pr48794-2.f90
-  reduction2.f90
-
   # unimplemented: Array references as atomic update variable
   pr62131.f90
 
