@@ -2349,6 +2349,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   argument_checking_2.f90
   array_constructor_38.f90
   array_constructor_type_13.f90
+  assign_3.f90
   associate_2.f95
   asynchronous_2.f90
   block_3.f90
