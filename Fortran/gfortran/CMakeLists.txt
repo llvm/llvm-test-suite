@@ -63,11 +63,22 @@ set(TEST_SUITE_FORTRAN_ISO_C_HEADER_DIR "" CACHE STRING
 # be because they are currently unsupported and might eventually be supported
 # or because they are GCC-specific and will never be supported.
 set(FLANG_ERRORING_FFLAGS
+  max-completely-peel-loop-nest-depth=1
   -fallow-invalid-boz
+  -fcheck-array-temporaries
+  -fcheck=bounds
+  -fcheck=do
+  -fcheck=recursion
+  -fcoarray=lib
   -fdec
   -fdec-format-defaults
   -fdec-static
   -fdec-structure
+  -frecord-marker=4
+  -fbounds-check
+  -fcheck-bounds
+  -fcheck=all
+  -fcheck=bits
   # Not sure if the -fdefault-* options will be supported. Maybe in a different
   # form in which case, this will have to be modified to accommodate those.
   -fdefault-real-10
@@ -91,7 +102,11 @@ set(FLANG_ERRORING_FFLAGS
   -fdump-tree-profile-estimate
   -fdump-tree-reassoc1
   -fdump-tree-vect-details
+  -fexpensive-optimizations
   -ff2c
+  -ffree-line-length-none
+  -ffrontend-optimize
+  -fgcse
   -finline-matmul-limit=0
   -finline-matmul-limit=10
   -finline-matmul-limit=100
@@ -102,19 +117,35 @@ set(FLANG_ERRORING_FFLAGS
   -fipa-cp-clone
   -fipa-pta
   -fipa-reference
+  -fmodulo-sched
+  -fno-align-commons
+  -fno-asynchronous-unwind-tables
+  -fno-backtrace
+  -fno-bounds-check
+  -fno-check-array-temporaries
   -fno-dec
+  -fno-f2c
+  -fno-frontend-optimize
   -fno-guess-branch-probability
+  -fno-inline
   -fno-ipa-cp
   -fno-ipa-modref
   -fno-ipa-sra
   -fno-pad-source
+  -fno-range-check
+  -fno-realloc-lhs
+  -fno-sign-zero
   -fno-tree-ccp
   -fno-tree-forwprop
   -fno-tree-fre
   -fno-tree-loop-optimize
   -fno-tree-loop-vectorize
   -fpad-source
+  -fpeel-loops
+  -frecursive
+  -fsanitize=undefined
   -fset-g77-defaults
+  -fshort-enums
   -ftest-forall-temp
   -ftree-loop-distribution
   -ftree-loop-vectorize
@@ -123,6 +154,8 @@ set(FLANG_ERRORING_FFLAGS
   -ftree-tail-merge
   -ftree-vectorize
   -ftree-vrp
+  -funroll-loops
+  -fwrapv
   -mdalign
   -mdejagnu-cpu=power4
   -mfpmath=387
@@ -134,6 +167,7 @@ set(FLANG_ERRORING_FFLAGS
   -Os
   # At some point, if we ever support explicit standard flags, some of these
   # should be removed.
+  -pedantic-errors
   -std=gnu
   -std=legacy
   -std=f95
@@ -183,6 +217,8 @@ set(FLANG_ERRORING_FFLAGS
   -Wunused-parameter
   -Wunused-variable
   -Wzerotrip
+  -w
+  --param
 )
 
 # Find all the Fortran files in the current source directory that may be test
