@@ -1,10 +1,14 @@
 /**
- * floyd-warshall.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* floyd-warshall.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -27,8 +31,11 @@ void init_array (int n,
   int i, j;
 
   for (i = 0; i < n; i++)
-    for (j = 0; j < n; j++)
-      path[i][j] = ((DATA_TYPE) (i+1)*(j+1)) / n;
+    for (j = 0; j < n; j++) {
+      path[i][j] = i*j%7+1;
+      if ((i+j)%13 == 0 || (i+j)%7==0 || (i+j)%11 == 0)
+         path[i][j] = 999;
+    }
 }
 
 
