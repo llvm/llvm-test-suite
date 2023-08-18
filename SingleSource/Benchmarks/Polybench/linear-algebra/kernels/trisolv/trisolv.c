@@ -1,10 +1,14 @@
 /**
- * trisolv.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* trisolv.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -21,36 +25,25 @@
 /* Array initialization. */
 static
 void init_array(int n,
-		DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+		DATA_TYPE POLYBENCH_2D(L,N,N,n,n),
 		DATA_TYPE POLYBENCH_1D(x,N,n),
 #if !FMA_DISABLED
 		DATA_TYPE POLYBENCH_1D(x_StrictFP,N,n),
 #endif
-		DATA_TYPE POLYBENCH_1D(c,N,n))
+		DATA_TYPE POLYBENCH_1D(b,N,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
-  /*
-  LLVM: This change ensures we do not calculate nan values, which are
-        formatted differently on different platforms and which may also
-        be optimized unexpectedly.
-  Original code:
+
   for (i = 0; i < n; i++)
     {
-      c[i] = x[i] = ((DATA_TYPE) i) / n;
-      for (j = 0; j < n; j++)
-	      A[i][j] = ((DATA_TYPE) i*j) / n;
-    }
-  */
-  for (i = 0; i < n; i++)
-    {
-      c[i] =
 #if !FMA_DISABLED
-	      x_StrictFP[i] = 
+      x_StrictFP[i] =
 #endif
-	      x[i] = ((DATA_TYPE) i+n) / n;
-      for (j = 0; j < n; j++)
-      	A[i][j] = ((DATA_TYPE) i*j+n) / n;
+      x[i] = - 999;
+      b[i] =  i ;
+      for (j = 0; j <= i; j++)
+	L[i][j] = (DATA_TYPE) (i+n-j+1)*2/n;
     }
 }
 
@@ -76,19 +69,19 @@ void print_array(int n,
    including the call and return. */
 static
 void kernel_trisolv(int n,
-		    DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+		    DATA_TYPE POLYBENCH_2D(L,N,N,n,n),
 		    DATA_TYPE POLYBENCH_1D(x,N,n),
-		    DATA_TYPE POLYBENCH_1D(c,N,n))
+		    DATA_TYPE POLYBENCH_1D(b,N,n))
 {
   int i, j;
 
 #pragma scop
   for (i = 0; i < _PB_N; i++)
     {
-      x[i] = c[i];
-      for (j = 0; j <= i - 1; j++)
-        x[i] = x[i] - A[i][j] * x[j];
-      x[i] = x[i] / A[i][i];
+      x[i] = b[i];
+      for (j = 0; j <i; j++)
+        x[i] -= L[i][j] * x[j];
+      x[i] = x[i] / L[i][i];
     }
 #pragma endscop
 
@@ -100,19 +93,19 @@ void kernel_trisolv(int n,
 // In this case, the test runs with the option -ffp-contract=off
 static void
 kernel_trisolv_StrictFP(int n,
-                        DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
+                        DATA_TYPE POLYBENCH_2D(L,N,N,n,n),
                         DATA_TYPE POLYBENCH_1D(x,N,n),
-                        DATA_TYPE POLYBENCH_1D(c,N,n))
+                        DATA_TYPE POLYBENCH_1D(b,N,n))
 {
 #pragma STDC FP_CONTRACT OFF
   int i, j;
 
   for (i = 0; i < _PB_N; i++)
     {
-      x[i] = c[i];
-      for (j = 0; j <= i - 1; j++)
-        x[i] = x[i] - A[i][j] * x[j];
-      x[i] = x[i] / A[i][i];
+      x[i] = b[i];
+      for (j = 0; j <i; j++)
+        x[i] -= L[i][j] * x[j];
+      x[i] = x[i] / L[i][i];
     }
 }
 
@@ -146,26 +139,26 @@ int main(int argc, char** argv)
   int n = N;
 
   /* Variable declaration/allocation. */
-  POLYBENCH_2D_ARRAY_DECL(A, DATA_TYPE, N, N, n, n);
+  POLYBENCH_2D_ARRAY_DECL(L, DATA_TYPE, N, N, n, n);
   POLYBENCH_1D_ARRAY_DECL(x, DATA_TYPE, N, n);
 #if !FMA_DISABLED
   POLYBENCH_1D_ARRAY_DECL(x_StrictFP, DATA_TYPE, N, n);
 #endif
-  POLYBENCH_1D_ARRAY_DECL(c, DATA_TYPE, N, n);
+  POLYBENCH_1D_ARRAY_DECL(b, DATA_TYPE, N, n);
 
 
   /* Initialize array(s). */
-  init_array (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x),
+  init_array (n, POLYBENCH_ARRAY(L), POLYBENCH_ARRAY(x),
 #if !FMA_DISABLED
               POLYBENCH_ARRAY(x_StrictFP),
 #endif
-	      POLYBENCH_ARRAY(c));
+	      POLYBENCH_ARRAY(b));
 
   /* Start timer. */
   polybench_start_instruments;
 
   /* Run kernel. */
-  kernel_trisolv (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x), POLYBENCH_ARRAY(c));
+  kernel_trisolv (n, POLYBENCH_ARRAY(L), POLYBENCH_ARRAY(x), POLYBENCH_ARRAY(b));
 
   /* Stop and print timer. */
   polybench_stop_instruments;
@@ -176,7 +169,7 @@ int main(int argc, char** argv)
      by the function call in argument. */
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(x)));
 #else
-  kernel_trisolv (n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(c));
+  kernel_trisolv (n, POLYBENCH_ARRAY(L), POLYBENCH_ARRAY(x_StrictFP), POLYBENCH_ARRAY(b));
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
@@ -184,12 +177,12 @@ int main(int argc, char** argv)
 #endif
 
   /* Be clean. */
-  POLYBENCH_FREE_ARRAY(A);
+  POLYBENCH_FREE_ARRAY(L);
   POLYBENCH_FREE_ARRAY(x);
 #if !FMA_DISABLED
   POLYBENCH_FREE_ARRAY(x_StrictFP);
 #endif
-  POLYBENCH_FREE_ARRAY(c);
+  POLYBENCH_FREE_ARRAY(b);
 
   return 0;
 }
