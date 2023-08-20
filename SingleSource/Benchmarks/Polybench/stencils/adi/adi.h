@@ -1,54 +1,80 @@
 /**
- * adi.h: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
-#ifndef ADI_H
-# define ADI_H
+#ifndef _ADI_H
+# define _ADI_H
 
-/* Default to STANDARD_DATASET. */
-# if !defined(MINI_DATASET) && !defined(SMALL_DATASET) && !defined(LARGE_DATASET) && !defined(EXTRALARGE_DATASET)
-#  define STANDARD_DATASET
+/* Default to LARGE_DATASET. */
+# if !defined(MINI_DATASET) && !defined(SMALL_DATASET) && !defined(MEDIUM_DATASET) && !defined(LARGE_DATASET) && !defined(EXTRALARGE_DATASET)
+#  define LARGE_DATASET
 # endif
 
-/* Do not define anything if the user manually defines the size. */
-# if !defined(TSTEPS) && ! defined(N)
-/* Define the possible dataset sizes. */
+# if !defined(TSTEPS) && !defined(N)
+/* Define sample dataset sizes. */
 #  ifdef MINI_DATASET
-#   define TSTEPS 2
-#   define N 32
+#   define TSTEPS 20
+#   define N 20
 #  endif
 
 #  ifdef SMALL_DATASET
-#   define TSTEPS 10
-#   define N 500
+#   define TSTEPS 40
+#   define N 60
 #  endif
 
-#  ifdef STANDARD_DATASET /* Default if unspecified. */
-#   define TSTEPS 50
-#   define N 1024
+#  ifdef MEDIUM_DATASET
+#   define TSTEPS 100
+#   define N 200
 #  endif
 
 #  ifdef LARGE_DATASET
-#   define TSTEPS 50
-#   define N 2000
+#   define TSTEPS 500
+#   define N 1000
 #  endif
 
 #  ifdef EXTRALARGE_DATASET
-#   define TSTEPS 100
-#   define N 4000
+#   define TSTEPS 1000
+#   define N 2000
 #  endif
-# endif /* !N */
+
+
+#endif /* !(TSTEPS N) */
 
 # define _PB_TSTEPS POLYBENCH_LOOP_BOUND(TSTEPS,tsteps)
 # define _PB_N POLYBENCH_LOOP_BOUND(N,n)
 
-# ifndef DATA_TYPE
-#  define DATA_TYPE double
-#  define DATA_PRINTF_MODIFIER "%0.2lf "
+
+/* Default data type */
+# if !defined(DATA_TYPE_IS_INT) && !defined(DATA_TYPE_IS_FLOAT) && !defined(DATA_TYPE_IS_DOUBLE)
+#  define DATA_TYPE_IS_DOUBLE
 # endif
 
+#ifdef DATA_TYPE_IS_INT
+#  define DATA_TYPE int
+#  define DATA_PRINTF_MODIFIER "%d "
+#endif
 
-#endif /* !ADI */
+#ifdef DATA_TYPE_IS_FLOAT
+#  define DATA_TYPE float
+#  define DATA_PRINTF_MODIFIER "%0.2f "
+#  define SCALAR_VAL(x) x##f
+#  define SQRT_FUN(x) sqrtf(x)
+#  define EXP_FUN(x) expf(x)
+#  define POW_FUN(x,y) powf(x,y)
+# endif
+
+#ifdef DATA_TYPE_IS_DOUBLE
+#  define DATA_TYPE double
+#  define DATA_PRINTF_MODIFIER "%0.2lf "
+#  define SCALAR_VAL(x) x
+#  define SQRT_FUN(x) sqrt(x)
+#  define EXP_FUN(x) exp(x)
+#  define POW_FUN(x,y) pow(x,y)
+# endif
+
+#endif /* !_ADI_H */
