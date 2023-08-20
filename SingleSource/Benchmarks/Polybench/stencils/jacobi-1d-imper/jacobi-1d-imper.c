@@ -1,10 +1,14 @@
 /**
- * jacobi-1d-imper.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* jacobi-1d.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -60,15 +64,15 @@ void kernel_jacobi_1d_imper(int tsteps,
 			    DATA_TYPE POLYBENCH_1D(A,N,n),
 			    DATA_TYPE POLYBENCH_1D(B,N,n))
 {
-  int t, i, j;
+  int t, i;
 
 #pragma scop
   for (t = 0; t < _PB_TSTEPS; t++)
     {
       for (i = 1; i < _PB_N - 1; i++)
 	B[i] = 0.33333 * (A[i-1] + A[i] + A[i + 1]);
-      for (j = 1; j < _PB_N - 1; j++)
-	A[j] = B[j];
+      for (i = 1; i < _PB_N - 1; i++)
+	A[i] = 0.33333 * (B[i-1] + B[i] + B[i + 1]);
     }
 #pragma endscop
 
@@ -85,14 +89,14 @@ kernel_jacobi_1d_imper_StrictFP(int tsteps,
                                 DATA_TYPE POLYBENCH_1D(B,N,n))
 {
   #pragma STDC FP_CONTRACT OFF
-  int t, i, j;
+  int t, i;
 
   for (t = 0; t < _PB_TSTEPS; t++)
     {
       for (i = 1; i < _PB_N - 1; i++)
 	B[i] = 0.33333 * (A[i-1] + A[i] + A[i + 1]);
-      for (j = 1; j < _PB_N - 1; j++)
-	A[j] = B[j];
+      for (i = 1; i < _PB_N - 1; i++)
+	A[i] = 0.33333 * (B[i-1] + B[i] + B[i + 1]);
     }
 }
 
@@ -153,7 +157,7 @@ int main(int argc, char** argv)
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
 #else
   init_array (n, POLYBENCH_ARRAY(A_StrictFP), POLYBENCH_ARRAY(B));
-  kernel_jacobi_1d_imper (tsteps, n, POLYBENCH_ARRAY(A_StrictFP),
+  kernel_jacobi_1d_imper_StrictFP (tsteps, n, POLYBENCH_ARRAY(A_StrictFP),
                           POLYBENCH_ARRAY(B));
   if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
     return 1;
@@ -165,6 +169,9 @@ int main(int argc, char** argv)
 
   /* Be clean. */
   POLYBENCH_FREE_ARRAY(A);
+#if !FMA_DISABLED
+  POLYBENCH_FREE_ARRAY(A_StrictFP);
+#endif
   POLYBENCH_FREE_ARRAY(B);
 
   return 0;
