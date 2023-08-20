@@ -1,10 +1,14 @@
 /**
- * seidel-2d.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* seidel-2d.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -66,7 +70,7 @@ void kernel_seidel_2d(int tsteps,
       for (j = 1; j <= _PB_N - 2; j++)
 	A[i][j] = (A[i-1][j-1] + A[i-1][j] + A[i-1][j+1]
 		   + A[i][j-1] + A[i][j] + A[i][j+1]
-		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/9.0;
+		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/SCALAR_VAL(9.0);
 #pragma endscop
 
 }
@@ -88,7 +92,7 @@ kernel_seidel_2d_StrictFP(int tsteps,
       for (j = 1; j <= _PB_N - 2; j++)
 	A[i][j] = (A[i-1][j-1] + A[i-1][j] + A[i-1][j+1]
 		   + A[i][j-1] + A[i][j] + A[i][j+1]
-		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/9.0;
+		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/SCALAR_VAL(9.0);
 }
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
@@ -149,7 +153,7 @@ int main(int argc, char** argv)
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
 #else
   init_array (n, POLYBENCH_ARRAY(A_StrictFP));
-  kernel_seidel_2d (tsteps, n, POLYBENCH_ARRAY(A_StrictFP));
+  kernel_seidel_2d_StrictFP (tsteps, n, POLYBENCH_ARRAY(A_StrictFP));
 
   if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
     return 1;
