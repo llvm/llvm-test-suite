@@ -2028,7 +2028,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they cause flang to hang - possibly in an
   # infinite loop.
 
-  goto_5.f90
   pr49540-1.f90 # Only on AArch64
 
   # --------------------------------------------------------------------------
