@@ -2,7 +2,7 @@
 # Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../../../..
-PARALLEL_DIRS = cholesky durbin dynprog gramschmidt lu ludcmp trisolv
+PARALLEL_DIRS = cholesky durbin gramschmidt lu ludcmp trisolv
 
 # LLVM: We removed the benchmark ludcmp. This change ensures we do not
 # calculate nan values, which are formatted differently on different platforms
