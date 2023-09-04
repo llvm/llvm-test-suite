@@ -19,7 +19,7 @@
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 20x1000. */
-#include "jacobi-2d-imper.h"
+#include "jacobi-2d.h"
 
 
 /* Array initialization. */
@@ -62,7 +62,7 @@ void print_array(int n,
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
 static
-void kernel_jacobi_2d_imper(int tsteps,
+void kernel_jacobi_2d(int tsteps,
 			    int n,
 			    DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
 			    DATA_TYPE POLYBENCH_2D(B,N,N,n,n))
@@ -88,7 +88,7 @@ void kernel_jacobi_2d_imper(int tsteps,
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
 static void
-kernel_jacobi_2d_imper_StrictFP(int tsteps,
+kernel_jacobi_2d_StrictFP(int tsteps,
                                 int n,
                                 DATA_TYPE POLYBENCH_2D(A,N,N,n,n),
                                 DATA_TYPE POLYBENCH_2D(B,N,N,n,n))
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
   polybench_start_instruments;
 
   /* Run kernel. */
-  kernel_jacobi_2d_imper (tsteps, n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(B));
+  kernel_jacobi_2d (tsteps, n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(B));
 
   /* Stop and print timer. */
   polybench_stop_instruments;
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
 #else
   init_array (n, POLYBENCH_ARRAY(A_StrictFP), POLYBENCH_ARRAY(B));
-  kernel_jacobi_2d_imper_StrictFP(tsteps, n, POLYBENCH_ARRAY(A_StrictFP),
+  kernel_jacobi_2d_StrictFP(tsteps, n, POLYBENCH_ARRAY(A_StrictFP),
                                   POLYBENCH_ARRAY(B));
   if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
     return 1;

@@ -1,7 +1,7 @@
 LEVEL = ../../../../..
 
 POLYBENCH_UTILS = SingleSource/Benchmarks/Polybench/utilities 
-PROG          = jacobi-2d-imper
+PROG          = jacobi-2d
 CFLAGS        += -I $(PROJ_SRC_ROOT)/$(POLYBENCH_UTILS) -DPOLYBENCH_DUMP_ARRAYS -DFP_ABSTOLERANCE=1e-5
 
 ifdef SMALL_PROBLEM_SIZE

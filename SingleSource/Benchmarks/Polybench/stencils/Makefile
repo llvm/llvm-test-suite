@@ -3,7 +3,7 @@
 
 LEVEL = ../../../..
 PARALLEL_DIRS = adi fdtd-2d jacobi-1d \
-		jacobi-2d-imper seidel-2d
+		jacobi-2d seidel-2d
 
 include $(LEVEL)/Makefile.config
 include $(LEVEL)/Makefile.programs
