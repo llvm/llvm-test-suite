@@ -1,6 +1,5 @@
 add_subdirectory(adi)
 add_subdirectory(fdtd-2d)
-add_subdirectory(fdtd-apml)
 add_subdirectory(jacobi-1d-imper)
 add_subdirectory(jacobi-2d-imper)
 add_subdirectory(seidel-2d)
