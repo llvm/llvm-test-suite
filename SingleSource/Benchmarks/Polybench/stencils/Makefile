@@ -2,7 +2,7 @@
 # Makefile:  Build all subdirectories automatically
 
 LEVEL = ../../../..
-PARALLEL_DIRS = adi fdtd-2d jacobi-1d-imper \
+PARALLEL_DIRS = adi fdtd-2d jacobi-1d \
 		jacobi-2d-imper seidel-2d
 
 include $(LEVEL)/Makefile.config
