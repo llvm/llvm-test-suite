@@ -467,7 +467,7 @@ function (add_sollvevv LANG)
 
     llvm_test_executable(${_name} "${TEST_SUITE_SOLLVEVV_ROOT}/tests/${_file}")
     target_include_directories(${_name} PRIVATE "${_includedir}")
-    target_link_libraries(${_name} PUBLIC OpenMP::OpenMP_${_lang} m)
+    target_link_libraries(${_name} PUBLIC OpenMP::OpenMP_${_lang})
 
     # Add -fopenmp to linker command line; for some reason this is not done by target_link_libraries.
     target_link_options(${_name} PRIVATE ${OpenMP_${LANG}_FLAGS})
