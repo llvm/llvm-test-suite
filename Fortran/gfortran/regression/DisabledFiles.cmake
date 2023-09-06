@@ -1624,7 +1624,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they result in a compile error. This may
   # be the result of them exercising unsupported extensions that are not
   # supported in flang or some other reason. If there are multiple errors
-  # in a single file, each unique error message will be provided.
+  # in a single file, each distinct error message will be provided.
 
   # error: Entity in ALLOCATE statement must have the ALLOCATABLE or POINTER
   # attribute
@@ -1637,7 +1637,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: The left-hand side of a pointer assignment is not definable
   PR100094.f90
-  associate_42.f90
 
   # error: Assumed-rank array cannot be forwarded to '[var]=' argument
   PR100906.f90
@@ -1686,10 +1685,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   assumed_type_13.f90
   bind-c-contiguous-3.f90
   bind-c-intent-out.f90
-
-  # error: '[SYM]' may not appear in NULLIFY because '[SYM2]' is an INTENT(IN)
-  # dummy argument
-  pointer_intent_1.f90
 
   # error: Assumed type argument requires an explicit interface
   assumed_type_2a.f90
@@ -2840,6 +2835,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   whole_file_10.f90
   # Valid error: Values in array constructor must have the same declared type when no explicit type appears
   zero_sized_12.f90
+  # Valid errors: attempts to modify pointer component of INTENT(IN) argument
+  pointer_intent_1.f90
+  # Valid error: ASSOCIATE entities are not pointers
+  associate_42.f90
 
   # Not yet implemented in evaluate / semantics
   # IMAGE_INDEX not (yet) an intrinsic function
