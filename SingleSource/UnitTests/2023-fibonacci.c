@@ -1,11 +1,9 @@
-#include <stdint.h>
-
-uint32_t fib(uint32_t n) {
-	uint32_t a = 0;
-	uint32_t b = 1;
-	uint32_t c = 1;
+int fib(int n) {
+	int a = 0;
+	int b = 1;
+	int c = 1;
 	while (n != 0) {
-		uint32_t tmp = c;
+		int tmp = c;
 		c = a + b;
 		a = b;
 		b = c;
