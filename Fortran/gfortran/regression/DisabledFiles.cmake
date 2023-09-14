@@ -2102,8 +2102,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   continuation_13.f90
   continuation_1.f90
   cr_lf.f90
-  cray_pointers_10.f90
-  cray_pointers_5.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
   cshift_large_1.f90

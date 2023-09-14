@@ -70,6 +70,7 @@ set(FLANG_ERRORING_FFLAGS
   -fcheck=do
   -fcheck=recursion
   -fcoarray=lib
+  -fcray-pointer
   -fdec
   -fdec-format-defaults
   -fdec-static
@@ -135,6 +136,7 @@ set(FLANG_ERRORING_FFLAGS
   -fno-range-check
   -fno-realloc-lhs
   -fno-sign-zero
+  -fno-strict-aliasing
   -fno-tree-ccp
   -fno-tree-forwprop
   -fno-tree-fre
