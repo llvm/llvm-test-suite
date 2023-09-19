@@ -2322,6 +2322,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   write_check.f90
   zero_sized_1.f90
 
+  # ---------------------------------------------------------------------------
+  #
+  # This test fails with optimizations enabled, but succeeds when compiled
+  # without optimizations.
+  inline_transpose_1.f90
+
   # These tests fail at runtime on AArch64 (but pass on x86). Disable them
   # anyway so the test-suite passes by default on AArch64.
   entry_23.f
