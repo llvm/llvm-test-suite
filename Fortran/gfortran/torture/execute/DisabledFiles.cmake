@@ -64,6 +64,15 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   data_3.f90
   elemental.f90
   forall_7.f90
+
+  # This file creates a string of length 10 and populates it with the name of
+  # the executable obtained from getarg(). The way the test suite is built,
+  # the executable name of the test is larger than 10 characters causing the
+  # test to fail when optimizations are enabled. This test could be re-enabled
+  # if the build system is tweaked to special case this and generate an
+  # executable whose name is 10 characters or less.
+  getarg_1.f90
+
   intrinsic_fraction_exponent.f90
   intrinsic_nearest.f90
   intrinsic_sr_kind.f90
