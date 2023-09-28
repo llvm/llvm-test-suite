@@ -38,7 +38,7 @@ function (add_hecbench LANG)
     return ()
   endif ()
 
-  file(GLOB_RECURSE _tests_sources RELATIVE "${TEST_SUITE_HECBENCH_ROOT}" "${TEST_SUITE_HECBENCH_ROOT}/*/*.cpp" )
+  file(GLOB_RECURSE _tests_sources RELATIVE "${TEST_SUITE_HECBENCH_ROOT}/src" "${TEST_SUITE_HECBENCH_ROOT}/src/*/*.cpp" )
   foreach (_file IN LISTS _tests_sources)
     get_filename_component(_directory "${_file}" DIRECTORY)
     set(_name "hecbench-${_directory}")
@@ -79,7 +79,7 @@ function (add_hecbench LANG)
     )
 
     # Define the path to the benchmark directory
-    set(BENCHMARK_DIR "${TEST_SUITE_HECBENCH_ROOT}/${_directory}")
+    set(BENCHMARK_DIR "${TEST_SUITE_HECBENCH_ROOT}/src/${_directory}")
 
     # Find the Makefile in the benchmark directory
     file(GLOB MAKEFILE_PATH "${BENCHMARK_DIR}/Makefile")
@@ -114,9 +114,9 @@ function (add_hecbench LANG)
       message(STATUS "Makefile not found in ${BENCHMARK_DIR}.")
     endif()
 
-    set(_includedir "${TEST_SUITE_HECBENCH_ROOT}${CFLAGS_INCLUDE}" )
+    set(_includedir "${TEST_SUITE_HECBENCH_ROOT}/src/${CFLAGS_INCLUDE}" )
 
-    llvm_test_executable(${_name} "${TEST_SUITE_HECBENCH_ROOT}/${_file}")
+    llvm_test_executable(${_name} "${TEST_SUITE_HECBENCH_ROOT}/src/${_file}")
     target_include_directories(${_name} PRIVATE ${_includedir})
     target_link_libraries(${_name} PUBLIC OpenMP::OpenMP_${_lang})
 
@@ -125,10 +125,10 @@ function (add_hecbench LANG)
     target_link_options(${_name} PRIVATE ${OpenMP_${LANG}_FLAGS})
 
     # CMake's find_package(OpenMP) currently does not not introspect flags necessary for offloading.
-    target_compile_options(${_name} PUBLIC ${TEST_SUITE_HECBENCH_OFFLOADING_FLAGS})
-    target_link_options(${_name} PUBLIC ${TEST_SUITE_HECBENCH_OFFLOADING_LDFLAGS})
+    target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_FLAGS})
+    target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_LDFLAGS})
 
-    # message(STATUS "Compilation command for ${_includedir}${CFLAGS_INCLUDE}")
+    message(STATUS "Compilation command for ${OpenMP_${LANG}_FLAGS} ${_includedir} ${CFLAGS_INCLUDE}")
   endforeach ()
 endfunction ()
 
