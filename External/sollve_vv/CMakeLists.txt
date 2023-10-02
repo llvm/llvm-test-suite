@@ -3,14 +3,32 @@
 
 include(External)
 
-option(TEST_SUITE_SOLLVEVV_FORCE_ALL "Execute all SOLLVE V&V tests, even those known to be unsupported by Clang" OFF)
+option(TEST_SUITE_FORCE_ALL "Execute all SOLLVE V&V tests, even those known to be unsupported by Clang" OFF)
 
-set(TEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
-set(TEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_CFLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
-set(INTEL_TEST_SUITE_SOLLVEVV_EXPECT_PASS)
+set(ALL_LIST_OPTIONS
+	AMD_WHITELIST
+	AMD_RUNTIME_BLACKLIST
+	AMD_COMPILER_BLACKLIST
+	NVIDIA_WHITELIST
+	NVIDIA_RUNTIME_BLACKLIST
+	NVIDIA_COMPILER_BLACKLIST
+	INTEL_WHITELIST
+	INTEL_RUNTIME_BLACKLIST
+	INTEL_COMPILER_BLACKLIST
+)
 
-set(AMD_TEST_SUITE_SOLLVEVV_EXPECT_PASS
+set(CHOOSEN_LISTS)
+
+set(INTEL_WHITELIST)
+
+set(INTEL_RUNTIME_BLACKLIST)
+
+set(INTEL_COMPILER_BLACKLIST)
+
+set(AMD_WHITELIST
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -323,113 +341,114 @@ set(AMD_TEST_SUITE_SOLLVEVV_EXPECT_PASS
   5.1/tile/test_tile.c
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
-
+)
   ######## Running Too Long 4 ###############
   #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
   #5.0/target_requires/test_target_requires_atomic_default_mem_order_acq_rel.c
   #5.0/target_requires/test_target_requires_atomic_default_mem_order_relaxed.c
   #5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
 
-  ######## Runtime Error #############
-  #5.0/loop/test_loop_bind_device.c
-  #5.0/loop/test_loop_nested_device.c
-  #5.0/master_taskloop/test_master_taskloop_device.c
-  #5.0/master_taskloop_simd/test_master_taskloop_simd_device.c
-  #5.0/parallel_master/test_parallel_master_device.c
-  #5.0/parallel_master_taskloop/test_parallel_master_taskloop_device.c
-  #5.0/parallel_master_taskloop_simd/test_parallel_master_taskloop_simd_device.c
-  #5.0/requires/test_requires_unified_shared_memory.c
-  #5.0/requires/test_requires_unified_shared_memory_heap.c
-  #5.0/requires/test_requires_unified_shared_memory_heap_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_heap_map.c
-  #5.0/requires/test_requires_unified_shared_memory_omp_target_alloc.c
-  #5.0/requires/test_requires_unified_shared_memory_omp_target_alloc_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_stack.c
-  #5.0/requires/test_requires_unified_shared_memory_stack_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_stack_map.c
-  #5.0/requires/test_requires_unified_shared_memory_static.c
-  #5.0/requires/test_requires_unified_shared_memory_static_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_static_map.c
-  #5.0/target/test_target_task_depend_mutexinoutset.c
-  #5.0/target/test_target_uses_allocators_const.c
-  #5.0/target_update/test_target_update_from_discontiguous.c
-  #5.0/target_update/test_target_update_mapper_from_discontiguous.c
-  #5.0/target_update/test_target_update_mapper_to_discontiguous.c
-  #5.0/target_update/test_target_update_to_discontiguous.c
-  #5.0/task/test_task_affinity_device.c
-  #5.1/env_var/test_omp_num_teams_env_2.c
-  #5.1/env_var/test_omp_places_env_ll_caches.c
-  #5.1/env_var/test_omp_places_env_numa_domains.c
-  #5.1/env_var/test_omp_teams_thread_limit_env_2.c
-  #5.1/order/test_taskloop_simd_order_reproducible_device.c
-  #5.1/order/test_taskloop_simd_order_unconstrained_device.c
-  #5.1/target/test_target_defaultmap_present_scalar.c
-  #5.1/target/test_target_memcpy_async_no_obj.c
-  #5.1/target/test_target_memcpy_rect_async_no_obj.c
-  #5.2/metadirective/test_metadirective_otherwise.c
-
-  #######Compiler Error  56 #########
-  #4.5/application_kernels/qmcpack_target_static_lib.c
-  #4.5/target_enter_data/test_target_enter_data_classes_inheritance.cpp
-  #4.5/target_enter_exit_data/test_target_enter_exit_data_classes_complex.cpp
-  #4.5/target_enter_exit_data/test_target_enter_exit_data_classes_simple.cpp
-  #5.0/allocate/test_allocate_allocator.c
-  #5.0/allocate/test_allocate_on_device.c
-  #5.0/application_kernels/declare_target_base_and_derived_class.cpp
-  #5.0/application_kernels/declare_target_base_class.cpp
-  #5.0/declare_target/test_declare_target_device_type_nohost1.c
-  #5.0/declare_target/test_declare_target_nested_functions.c
-  #5.0/depobj/test_depobj_depend_update_destroy.cpp
-  #5.0/requires/test_requires_dynamic_allocators.c
-  #5.0/requires/test_requires_reverse_offload.c
-  #5.0/target/test_target_allocate.c
-  #5.0/target/test_target_device.c 
-  #5.0/target/test_target_uses_allocators_cgroup.c
-  #5.0/target/test_target_uses_allocators_large_cap.c
-  #5.0/target_loop/test_target_loop_teams_distribute.cpp
-  #5.0/task/test_parallel_for_reduction_task_device.c
-  #5.0/task/test_task_in_reduction_device.c
-  #5.0/taskgroup/test_taskgroup_task_reduction_device.c
-  #5.0/taskloop/test_taskloop_in_reduction_device.c
-  #5.0/taskloop_simd/test_taskloop_simd_in_reduction_device.c
-  #5.1/allocate/test_allocate_allocator_align.c
-  #5.1/allocate/test_omp_target_aligned_alloc_device.c
-  #5.1/allocate/test_target_aligned_calloc.c
-  #5.1/allocate/test_target_calloc.c
-  #5.1/assume/test_assume_absent.c
-  #5.1/assume/test_assume_contains.c
-  #5.1/assume/test_assume_holds.c
-  #5.1/assume/test_assume_no_openmp.c
-  #5.1/assume/test_assume_no_openmp_routines.c
-  #5.1/assume/test_assume_no_parallelism.c
-  #5.1/flush/test_flush_seq_cst.c
-  #5.1/metadirective/test_metadirective_target_device.c
-  #5.1/metadirective/test_metadirective_target_device_kind.c
-  #5.1/metadirective/test_metadirective_target_device_kind_any.c
-  #5.1/metadirective/test_metadirective_target_device_num.c
-  #5.1/order/test_parallel_for_order_unconstrained.c
-  #5.1/requires/test_target_is_accessible_with_usm.c
-  #5.1/scope/test_scope_construct.c
-  #5.1/scope/test_scope_nowait_construct.c
-  #5.1/scope/test_scope_private_construct.c
-  #5.1/scope/test_scope_reduction_construct.c
-  #5.1/target/test_target_is_accessible.c
-  #5.1/target/test_target_map_iterators.c
-  #5.1/target_update/test_target_update_iterator.c
-  #5.2/declare_mapper/test_declare_mapper_iterator.c
-  #5.2/declare_target/test_declare_target_enter.c
-  #5.2/declare_target/test_declare_target_enter_device_type_any.c
-  #5.2/declare_target/test_declare_target_enter_device_type_host.c
-  #5.2/declare_target/test_declare_target_enter_device_type_nohost.c
-  #5.2/declare_target/test_declare_target_enter_device_type_nohost1.c
-  #5.2/ordered/test_ordered_doacross.c
-  #5.2/ordered/test_ordered_doacross_omp_cur_iteration.c
-  #5.2/scope/test_scope_allocate_construct.c
-  #5.2/scope/test_scope_firstprivate_construct.c
-  #5.2/target_enter_data/test_target_enter_data_map.c
+set(AMD_RUNTIME_BLACKLIST
+  5.0/loop/test_loop_bind_device.c
+  5.0/loop/test_loop_nested_device.c
+  5.0/master_taskloop/test_master_taskloop_device.c
+  5.0/master_taskloop_simd/test_master_taskloop_simd_device.c
+  5.0/parallel_master/test_parallel_master_device.c
+  5.0/parallel_master_taskloop/test_parallel_master_taskloop_device.c
+  5.0/parallel_master_taskloop_simd/test_parallel_master_taskloop_simd_device.c
+  5.0/requires/test_requires_unified_shared_memory.c
+  5.0/requires/test_requires_unified_shared_memory_heap.c
+  5.0/requires/test_requires_unified_shared_memory_heap_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_heap_map.c
+  5.0/requires/test_requires_unified_shared_memory_omp_target_alloc.c
+  5.0/requires/test_requires_unified_shared_memory_omp_target_alloc_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_stack.c
+  5.0/requires/test_requires_unified_shared_memory_stack_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_stack_map.c
+  5.0/requires/test_requires_unified_shared_memory_static.c
+  5.0/requires/test_requires_unified_shared_memory_static_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_static_map.c
+  5.0/target/test_target_task_depend_mutexinoutset.c
+  5.0/target/test_target_uses_allocators_const.c
+  5.0/target_update/test_target_update_from_discontiguous.c
+  5.0/target_update/test_target_update_mapper_from_discontiguous.c
+  5.0/target_update/test_target_update_mapper_to_discontiguous.c
+  5.0/target_update/test_target_update_to_discontiguous.c
+  5.0/task/test_task_affinity_device.c
+  5.1/env_var/test_omp_num_teams_env_2.c
+  5.1/env_var/test_omp_places_env_ll_caches.c
+  5.1/env_var/test_omp_places_env_numa_domains.c
+  5.1/env_var/test_omp_teams_thread_limit_env_2.c
+  5.1/order/test_taskloop_simd_order_reproducible_device.c
+  5.1/order/test_taskloop_simd_order_unconstrained_device.c
+  5.1/target/test_target_defaultmap_present_scalar.c
+  5.1/target/test_target_memcpy_async_no_obj.c
+  5.1/target/test_target_memcpy_rect_async_no_obj.c
+  5.2/metadirective/test_metadirective_otherwise.c
 )
 
-set(NVIDIA_TEST_SUITE_SOLLVEVV_EXPECT_PASS
+set(AMD_COMPILER_BLACKLIST
+  4.5/application_kernels/qmcpack_target_static_lib.c
+  4.5/target_enter_data/test_target_enter_data_classes_inheritance.cpp
+  4.5/target_enter_exit_data/test_target_enter_exit_data_classes_complex.cpp
+  4.5/target_enter_exit_data/test_target_enter_exit_data_classes_simple.cpp
+  5.0/allocate/test_allocate_allocator.c
+  5.0/allocate/test_allocate_on_device.c
+  5.0/application_kernels/declare_target_base_and_derived_class.cpp
+  5.0/application_kernels/declare_target_base_class.cpp
+  5.0/declare_target/test_declare_target_device_type_nohost1.c
+  5.0/declare_target/test_declare_target_nested_functions.c
+  5.0/depobj/test_depobj_depend_update_destroy.cpp
+  5.0/requires/test_requires_dynamic_allocators.c
+  5.0/requires/test_requires_reverse_offload.c
+  5.0/target/test_target_allocate.c
+  5.0/target/test_target_device.c 
+  5.0/target/test_target_uses_allocators_cgroup.c
+  5.0/target/test_target_uses_allocators_large_cap.c
+  5.0/target_loop/test_target_loop_teams_distribute.cpp
+  5.0/task/test_parallel_for_reduction_task_device.c
+  5.0/task/test_task_in_reduction_device.c
+  5.0/taskgroup/test_taskgroup_task_reduction_device.c
+  5.0/taskloop/test_taskloop_in_reduction_device.c
+  5.0/taskloop_simd/test_taskloop_simd_in_reduction_device.c
+  5.1/allocate/test_allocate_allocator_align.c
+  5.1/allocate/test_omp_target_aligned_alloc_device.c
+  5.1/allocate/test_target_aligned_calloc.c
+  5.1/allocate/test_target_calloc.c
+  5.1/assume/test_assume_absent.c
+  5.1/assume/test_assume_contains.c
+  5.1/assume/test_assume_holds.c
+  5.1/assume/test_assume_no_openmp.c
+  5.1/assume/test_assume_no_openmp_routines.c
+  5.1/assume/test_assume_no_parallelism.c
+  5.1/flush/test_flush_seq_cst.c
+  5.1/metadirective/test_metadirective_target_device.c
+  5.1/metadirective/test_metadirective_target_device_kind.c
+  5.1/metadirective/test_metadirective_target_device_kind_any.c
+  5.1/metadirective/test_metadirective_target_device_num.c
+  5.1/order/test_parallel_for_order_unconstrained.c
+  5.1/requires/test_target_is_accessible_with_usm.c
+  5.1/scope/test_scope_construct.c
+  5.1/scope/test_scope_nowait_construct.c
+  5.1/scope/test_scope_private_construct.c
+  5.1/scope/test_scope_reduction_construct.c
+  5.1/target/test_target_is_accessible.c
+  5.1/target/test_target_map_iterators.c
+  5.1/target_update/test_target_update_iterator.c
+  5.2/declare_mapper/test_declare_mapper_iterator.c
+  5.2/declare_target/test_declare_target_enter.c
+  5.2/declare_target/test_declare_target_enter_device_type_any.c
+  5.2/declare_target/test_declare_target_enter_device_type_host.c
+  5.2/declare_target/test_declare_target_enter_device_type_nohost.c
+  5.2/declare_target/test_declare_target_enter_device_type_nohost1.c
+  5.2/ordered/test_ordered_doacross.c
+  5.2/ordered/test_ordered_doacross_omp_cur_iteration.c
+  5.2/scope/test_scope_allocate_construct.c
+  5.2/scope/test_scope_firstprivate_construct.c
+  5.2/target_enter_data/test_target_enter_data_map.c
+)
+
+set(NVIDIA_WHITELIST
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -754,101 +773,103 @@ set(NVIDIA_TEST_SUITE_SOLLVEVV_EXPECT_PASS
   5.2/metadirective/test_metadirective_otherwise.c
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
-
-  #########RUNTIME FAILS 32 TESTS FAILED######################
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_no_modifier.c
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_target_modifier.c
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_num_threads.c
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_thread_limit.c
-  #5.0/loop/test_loop_bind_device.c
-  #5.0/loop/test_loop_nested_device.c
-  #5.0/requires/test_requires_unified_shared_memory.c
-  #5.0/requires/test_requires_unified_shared_memory_heap.c
-  #5.0/requires/test_requires_unified_shared_memory_heap_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_heap_map.c
-  #5.0/requires/test_requires_unified_shared_memory_omp_target_alloc.c
-  #5.0/requires/test_requires_unified_shared_memory_omp_target_alloc_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_stack.c
-  #5.0/requires/test_requires_unified_shared_memory_stack_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_stack_map.c
-  #5.0/requires/test_requires_unified_shared_memory_static.c
-  #5.0/requires/test_requires_unified_shared_memory_static_is_device_ptr.c
-  #5.0/requires/test_requires_unified_shared_memory_static_map.c
-  #5.0/target/test_target_defaultmap_firstprivate.c
-  #5.0/target/test_target_uses_allocators_const.c
-  #5.0/target_update/test_target_update_from_discontiguous.c
-  #5.0/target_update/test_target_update_mapper_from_discontiguous.c
-  #5.0/target_update/test_target_update_mapper_to_discontiguous.c
-  #5.0/target_update/test_target_update_to_discontiguous.c
-  #5.0/taskwait/test_taskwait_depend.c
-  #5.0/teams_loop/test_target_teams_loop_firstprivate.c
-  #5.0/teams_loop/test_target_teams_loop_private.c
-  #5.1/env_var/test_omp_num_teams_env_2.c
-  #5.1/env_var/test_omp_places_env_ll_caches.c
-  #5.1/env_var/test_omp_places_env_numa_domains.c
-  #5.1/env_var/test_omp_teams_thread_limit_env_2.c
-  #5.1/target/test_target_declare_indirect.c
-  #5.1/target/test_target_defaultmap_present.c
-  #5.1/target/test_target_defaultmap_present_scalar.c
-  #5.1/target/test_target_memcpy_async_depobj.c
-  #5.1/target/test_target_memcpy_async_no_obj.c
-
-  ##########COMPILATION ERRORS 50 tests failed#################
-  #5.0/allocate/test_allocate_allocator.c
-  #5.0/allocate/test_allocate_on_device.c
-  #5.0/allocate/test_allocate_allocator.c #cmake only error
-  #5.0/declare_target/test_declare_target_device_type_nohost1.c
-  #5.0/declare_target/test_declare_target_nested_functions.c
-  #5.0/requires/test_requires_dynamic_allocators.c
-  #5.0/requires/test_requires_reverse_offload.c
-  #5.0/target/test_target_allocate.c
-  #5.0/target/test_target_device.c
-  #5.0/target_requires/test_target_requires_atomic_default_mem_order_acq_rel.c
-  #5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
-  #5.0/task/test_parallel_for_reduction_task_device.c
-  #5.0/task/test_task_affinity_device.c
-  #5.0/task/test_task_in_reduction_device.c
-  #5.0/taskgroup/test_taskgroup_task_reduction_device.c
-  #5.0/taskloop/test_taskloop_in_reduction_device.c
-  #5.0/taskloop_simd/test_taskloop_simd_in_reduction_device.c
-  #5.1/allocate/test_aligned_calloc.c
-  #5.1/allocate/test_omp_target_aligned_alloc_device.c
-  #5.1/allocate/test_target_aligned_calloc.c
-  #5.1/allocate/test_target_calloc.c
-  #5.1/assume/test_assume_absent.c
-  #5.1/assume/test_assume_contains.c
-  #5.1/assume/test_assume_holds.c
-  #5.1/assume/test_assume_no_openmp.c
-  #5.1/assume/test_assume_no_openmp_routines.c
-  #5.1/assume/test_assume_no_parallelism.c
-  #5.1/flush/test_flush_seq_cst.c
-  #5.1/metadirective/test_metadirective_target_device.c
-  #5.1/metadirective/test_metadirective_target_device_kind.c
-  #5.1/metadirective/test_metadirective_target_device_kind_any.c
-  #5.1/metadirective/test_metadirective_target_device_num.c
-  #5.1/requires/test_target_is_accessible_with_usm.c
-  #5.1/scope/test_scope_construct.c
-  #5.1/scope/test_scope_nowait_construct.c
-  #5.1/scope/test_scope_private_construct.c
-  #5.1/scope/test_scope_reduction_construct.c
-  #5.1/target/test_target_is_accessible.c
-  #5.1/target/test_target_map_iterators.c
-  #5.1/target_update/test_target_update_iterator.c
-  #5.2/declare_mapper/test_declare_mapper_iterator.c
-  #5.2/declare_target/test_declare_target_enter.c
-  #5.2/declare_target/test_declare_target_enter_device_type_any.c
-  #5.2/declare_target/test_declare_target_enter_device_type_host.c
-  #5.2/declare_target/test_declare_target_enter_device_type_nohost.c
-  #5.2/declare_target/test_declare_target_enter_device_type_nohost1.c
-  #5.2/ordered/test_ordered_doacross.c
-  #5.2/ordered/test_ordered_doacross_omp_cur_iteration.c
-  #5.2/scope/test_scope_allocate_construct.c
-  #5.2/scope/test_scope_firstprivate_construct.c
-  #5.2/target_enter_data/test_target_enter_data_map.c
 )
 
-function (add_sollvevv LANG WHITE_LIST_CHOOSEN)
+set(NVIDIA_RUNTIME_BLACKLIST
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_no_modifier.c
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_target_modifier.c
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_num_threads.c
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_thread_limit.c
+  5.0/loop/test_loop_bind_device.c
+  5.0/loop/test_loop_nested_device.c
+  5.0/requires/test_requires_unified_shared_memory.c
+  5.0/requires/test_requires_unified_shared_memory_heap.c
+  5.0/requires/test_requires_unified_shared_memory_heap_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_heap_map.c
+  5.0/requires/test_requires_unified_shared_memory_omp_target_alloc.c
+  5.0/requires/test_requires_unified_shared_memory_omp_target_alloc_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_stack.c
+  5.0/requires/test_requires_unified_shared_memory_stack_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_stack_map.c
+  5.0/requires/test_requires_unified_shared_memory_static.c
+  5.0/requires/test_requires_unified_shared_memory_static_is_device_ptr.c
+  5.0/requires/test_requires_unified_shared_memory_static_map.c
+  5.0/target/test_target_defaultmap_firstprivate.c
+  5.0/target/test_target_uses_allocators_const.c
+  5.0/target_update/test_target_update_from_discontiguous.c
+  5.0/target_update/test_target_update_mapper_from_discontiguous.c
+  5.0/target_update/test_target_update_mapper_to_discontiguous.c
+  5.0/target_update/test_target_update_to_discontiguous.c
+  5.0/taskwait/test_taskwait_depend.c
+  5.0/teams_loop/test_target_teams_loop_firstprivate.c
+  5.0/teams_loop/test_target_teams_loop_private.c
+  5.1/env_var/test_omp_num_teams_env_2.c
+  5.1/env_var/test_omp_places_env_ll_caches.c
+  5.1/env_var/test_omp_places_env_numa_domains.c
+  5.1/env_var/test_omp_teams_thread_limit_env_2.c
+  5.1/target/test_target_declare_indirect.c
+  5.1/target/test_target_defaultmap_present.c
+  5.1/target/test_target_defaultmap_present_scalar.c
+  5.1/target/test_target_memcpy_async_depobj.c
+  5.1/target/test_target_memcpy_async_no_obj.c
+)
+
+set(NVIDIA_COMPILER_BLACKLIST
+  5.0/allocate/test_allocate_allocator.c
+  5.0/allocate/test_allocate_on_device.c
+  5.0/allocate/test_allocate_allocator.c
+  5.0/declare_target/test_declare_target_device_type_nohost1.c
+  5.0/declare_target/test_declare_target_nested_functions.c
+  5.0/requires/test_requires_dynamic_allocators.c
+  5.0/requires/test_requires_reverse_offload.c
+  5.0/target/test_target_allocate.c
+  5.0/target/test_target_device.c
+  5.0/target_requires/test_target_requires_atomic_default_mem_order_acq_rel.c
+  5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
+  5.0/task/test_parallel_for_reduction_task_device.c
+  5.0/task/test_task_affinity_device.c
+  5.0/task/test_task_in_reduction_device.c
+  5.0/taskgroup/test_taskgroup_task_reduction_device.c
+  5.0/taskloop/test_taskloop_in_reduction_device.c
+  5.0/taskloop_simd/test_taskloop_simd_in_reduction_device.c
+  5.1/allocate/test_aligned_calloc.c
+  5.1/allocate/test_omp_target_aligned_alloc_device.c
+  5.1/allocate/test_target_aligned_calloc.c
+  5.1/allocate/test_target_calloc.c
+  5.1/assume/test_assume_absent.c
+  5.1/assume/test_assume_contains.c
+  5.1/assume/test_assume_holds.c
+  5.1/assume/test_assume_no_openmp.c
+  5.1/assume/test_assume_no_openmp_routines.c
+  5.1/assume/test_assume_no_parallelism.c
+  5.1/flush/test_flush_seq_cst.c
+  5.1/metadirective/test_metadirective_target_device.c
+  5.1/metadirective/test_metadirective_target_device_kind.c
+  5.1/metadirective/test_metadirective_target_device_kind_any.c
+  5.1/metadirective/test_metadirective_target_device_num.c
+  5.1/requires/test_target_is_accessible_with_usm.c
+  5.1/scope/test_scope_construct.c
+  5.1/scope/test_scope_nowait_construct.c
+  5.1/scope/test_scope_private_construct.c
+  5.1/scope/test_scope_reduction_construct.c
+  5.1/target/test_target_is_accessible.c
+  5.1/target/test_target_map_iterators.c
+  5.1/target_update/test_target_update_iterator.c
+  5.2/declare_mapper/test_declare_mapper_iterator.c
+  5.2/declare_target/test_declare_target_enter.c
+  5.2/declare_target/test_declare_target_enter_device_type_any.c
+  5.2/declare_target/test_declare_target_enter_device_type_host.c
+  5.2/declare_target/test_declare_target_enter_device_type_nohost.c
+  5.2/declare_target/test_declare_target_enter_device_type_nohost1.c
+  5.2/ordered/test_ordered_doacross.c
+  5.2/ordered/test_ordered_doacross_omp_cur_iteration.c
+  5.2/scope/test_scope_allocate_construct.c
+  5.2/scope/test_scope_firstprivate_construct.c
+  5.2/target_enter_data/test_target_enter_data_map.c
+)
+
+function (add_sollvevv LANG)
   set(_includedir "${TEST_SUITE_SOLLVEVV_ROOT}/ompvv" )
 
   if (NOT OPENMP_${LANG}_FOUND)
@@ -878,7 +899,7 @@ function (add_sollvevv LANG WHITE_LIST_CHOOSEN)
     string(REPLACE "." "" _directory "${_directory}")
     set(_name "omptargetvv-${_basename}-${_directory}-${_ext}")
 
-    if (NOT TEST_SUITE_SOLLVEVV_FORCE_ALL AND NOT "${_file}" IN_LIST ${WHITE_LIST_CHOOSEN})
+    if (NOT TEST_SUITE_SOLLVEVV_FORCE_ALL AND NOT "${_file}" IN_LIST CHOOSEN_LISTS)
       message(STATUS "Skipping SOLLVE V&V test ${_file}")
       continue ()
     endif ()
@@ -909,21 +930,53 @@ if(TEST_SUITE_SOLLVEVV_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
     return()
   endif()
 
+  list(REMOVE_DUPLICATES SYSTEM_GPU)
+  foreach(list_option ${SYSTEM_GPU})
+	  message(STATUS ${list_option})
+	  if(list_option IN_LIST ALL_LIST_OPTIONS)
+		 if(list_option STREQUAL "AMD_WHITELIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${AMD_WHITELIST})
+			message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "AMD_RUNTIME_BLACKLIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL") 
+			list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_BLACKLIST})
+			message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "AMD_COMPILER_BLACKLIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_BLACKLIST})
+                        message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "NVIDIA_WHITELIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_WHITELIST})
+                        message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "NVIDIA_RUNTIME_BLACKLIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_BLACKLIST})
+                        message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "NVIDIA_COMPILER_BLACKLIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_BLACKLIST})
+                        message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "INTEL_WHITELIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${INTEL_WHITELIST})
+			message(STATUS "adding  ${list_option}")
+		endif()
+		if(list_option STREQUAL "INTEL_RUNTIME_BLACKLIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_BLACKLIST})
+			message(STATUS "adding ${list_option}")
+		endif()
+		if(list_option STREQUAL "INTEL_COMPILER_BLACKLIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
+			list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_BLACKLIST})
+			message(STATUS "adding ${list_option}")
+		endif()
+	  endif()
+  endforeach()
+  list(REMOVE_DUPLICATES CHOOSEN_LISTS)
+
   foreach (_lang in C CXX)
     if(CMAKE_${_lang}_COMPILER)
-	if(SYSTEM_GPU)
-	    if(SYSTEM_GPU STREQUAL "nvidia" OR SYSTEM_GPU STREQUAL "NVIDIA")
-	        add_sollvevv(${_lang} NVIDIA_TEST_SUITE_SOLLVEVV_EXPECT_PASS)
-  	    elseif(SYSTEM_GPU STREQUAL "amd" OR SYSTEM_GPU STREQUAL "AMD")
-		add_sollvevv(${_lang} AMD_TEST_SUITE_SOLLVEVV_EXPECT_PASS)
-  	    elseif(SYSTEM_GPU STREQUAL "intel" OR SYSTEM_GPU STREQUAL "INTEL")
-    		add_sollvevv(${_lang} INTEL_TEST_SUITE_SOLLVEVV_EXPECT_PASS)
-  	    else()
-		message("Currently have whitelists for nvidia, amd intel gpus")
-	    endif()
-     	else()
-	    message("Please declare what target gpu, AMD, NVIDIA, or INTEL")
-    	endif()
+	    add_sollvevv(${_lang})
     endif()
   endforeach ()
 endif ()
