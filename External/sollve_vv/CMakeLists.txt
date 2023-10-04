@@ -9,26 +9,35 @@ set(TEST_SUITE_OFFLOADING_CFLAGS --offload-arch=native CACHE STRING "Compiler ar
 set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
 set(ALL_LIST_OPTIONS
-	AMD_WHITELIST
-	AMD_RUNTIME_BLACKLIST
-	AMD_COMPILER_BLACKLIST
-	NVIDIA_WHITELIST
-	NVIDIA_RUNTIME_BLACKLIST
-	NVIDIA_COMPILER_BLACKLIST
-	INTEL_WHITELIST
-	INTEL_RUNTIME_BLACKLIST
-	INTEL_COMPILER_BLACKLIST
+	AMD_GREENLIST
+	AMD_RUNTIME_REDLIST
+	AMD_COMPILER_REDLIST
+	NVIDIA_GREENLIST
+	NVIDIA_RUNTIME_REDLIST
+	NVIDIA_COMPILER_REDLIST
+	INTEL_GREENLIST
+	INTEL_RUNTIME_REDLIST
+	INTEL_COMPILER_REDLIST
+	REGRESSION_GREENLIST
+	REGRESSION_RUNTIME_REDLIST
+	REGRESSION_COMPILER_REDLIST
+	AMD_REDLIST
+	NVIDIA_REDLIST
+	INTEL_REDLIST
+	REGRESSION_REDLIST
 )
 
 set(CHOOSEN_LISTS)
 
-set(INTEL_WHITELIST)
+set(INTEL_GREENLIST)
+set(INTEL_RUNTIME_REDLIST)
+set(INTEL_COMPILER_REDLIST)
 
-set(INTEL_RUNTIME_BLACKLIST)
+set(REGRESSION_GREENLIST)
+set(REGRESSION_RUNTIME_REDLIST)
+set(REGRESSION_COMPILER_REDLIST)
 
-set(INTEL_COMPILER_BLACKLIST)
-
-set(AMD_WHITELIST
+set(AMD_GREENLIST
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -348,7 +357,7 @@ set(AMD_WHITELIST
   #5.0/target_requires/test_target_requires_atomic_default_mem_order_relaxed.c
   #5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
 
-set(AMD_RUNTIME_BLACKLIST
+set(AMD_RUNTIME_REDLIST
   5.0/loop/test_loop_bind_device.c
   5.0/loop/test_loop_nested_device.c
   5.0/master_taskloop/test_master_taskloop_device.c
@@ -387,7 +396,7 @@ set(AMD_RUNTIME_BLACKLIST
   5.2/metadirective/test_metadirective_otherwise.c
 )
 
-set(AMD_COMPILER_BLACKLIST
+set(AMD_COMPILER_REDLIST
   4.5/application_kernels/qmcpack_target_static_lib.c
   4.5/target_enter_data/test_target_enter_data_classes_inheritance.cpp
   4.5/target_enter_exit_data/test_target_enter_exit_data_classes_complex.cpp
@@ -448,7 +457,7 @@ set(AMD_COMPILER_BLACKLIST
   5.2/target_enter_data/test_target_enter_data_map.c
 )
 
-set(NVIDIA_WHITELIST
+set(NVIDIA_GREENLIST
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -775,7 +784,7 @@ set(NVIDIA_WHITELIST
   5.2/runtime_calls/test_omp_in_explicit_task.c
 )
 
-set(NVIDIA_RUNTIME_BLACKLIST
+set(NVIDIA_RUNTIME_REDLIST
   4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_no_modifier.c
   4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
   4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_target_modifier.c
@@ -815,7 +824,7 @@ set(NVIDIA_RUNTIME_BLACKLIST
   5.1/target/test_target_memcpy_async_no_obj.c
 )
 
-set(NVIDIA_COMPILER_BLACKLIST
+set(NVIDIA_COMPILER_REDLIST
   5.0/allocate/test_allocate_allocator.c
   5.0/allocate/test_allocate_on_device.c
   5.0/allocate/test_allocate_allocator.c
@@ -899,7 +908,7 @@ function (add_sollvevv LANG)
     string(REPLACE "." "" _directory "${_directory}")
     set(_name "omptargetvv-${_basename}-${_directory}-${_ext}")
 
-    if (NOT TEST_SUITE_SOLLVEVV_FORCE_ALL AND NOT "${_file}" IN_LIST CHOOSEN_LISTS)
+    if (NOT TEST_SUITE_FORCE_ALL AND NOT "${_file}" IN_LIST CHOOSEN_LISTS)
       message(STATUS "Skipping SOLLVE V&V test ${_file}")
       continue ()
     endif ()
@@ -914,8 +923,8 @@ function (add_sollvevv LANG)
     target_link_options(${_name} PRIVATE ${OpenMP_${LANG}_FLAGS})
 
     # CMake's find_package(OpenMP) currently does not not introspect flags necessary for offloading.
-    target_compile_options(${_name} PUBLIC ${TEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS})
-    target_link_options(${_name} PUBLIC ${TEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS})
+    target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_CFLAGS})
+    target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_LDFLAGS})
   endforeach ()
 endfunction ()
 
@@ -932,44 +941,55 @@ if(TEST_SUITE_SOLLVEVV_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
 
   list(REMOVE_DUPLICATES SYSTEM_GPU)
   foreach(list_option ${SYSTEM_GPU})
-	  message(STATUS ${list_option})
 	  if(list_option IN_LIST ALL_LIST_OPTIONS)
-		 if(list_option STREQUAL "AMD_WHITELIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${AMD_WHITELIST})
-			message(STATUS "adding ${list_option}")
+		  if(list_option STREQUAL "AMD_GREENLIST")
+			list(APPEND CHOOSEN_LISTS ${AMD_GREENLIST})
+			message(STATUS "adding AMD_GREENLIST")
 		endif()
-		if(list_option STREQUAL "AMD_RUNTIME_BLACKLIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL") 
-			list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_BLACKLIST})
-			message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "AMD_RUNTIME_REDLIST" OR list_option STREQUAL "AMD_REDLIST") 
+			list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_REDLIST})
+			message(STATUS "adding AMD_RUNTIME_REDLIST")
 		endif()
-		if(list_option STREQUAL "AMD_COMPILER_BLACKLIST" OR list_option STREQUAL "AMD_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_BLACKLIST})
-                        message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "AMD_COMPILER_REDLIST" OR list_option STREQUAL "AMD_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_REDLIST})
+			message(STATUS "adding AMD_COMPILER_REDLIST")
 		endif()
-		if(list_option STREQUAL "NVIDIA_WHITELIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA_WHITELIST})
-                        message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "NVIDIA_GREENLIST")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_GREENLIST})
+			message(STATUS "adding NVIDIA_GREENLIST")
 		endif()
-		if(list_option STREQUAL "NVIDIA_RUNTIME_BLACKLIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_BLACKLIST})
-                        message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "NVIDIA_RUNTIME_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_REDLIST})
+			message(STATUS "adding NVIDIA_RUNTIME_REDLIST")
 		endif()
-		if(list_option STREQUAL "NVIDIA_COMPILER_BLACKLIST" OR list_option STREQUAL "NVIDIA_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_BLACKLIST})
-                        message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "NVIDIA_COMPILER_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_REDLIST})
+			message(STATUS "adding NVIDIA_COMPILER_REDLIST")
 		endif()
-		if(list_option STREQUAL "INTEL_WHITELIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${INTEL_WHITELIST})
-			message(STATUS "adding  ${list_option}")
+		if(list_option STREQUAL "INTEL_GREENLIST")
+			list(APPEND CHOOSEN_LISTS ${INTEL_GREENLIST})
+			message(STATUS "adding  INTEL_GREENLIST")
 		endif()
-		if(list_option STREQUAL "INTEL_RUNTIME_BLACKLIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_BLACKLIST})
-			message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "INTEL_RUNTIME_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_REDLIST})
+			message(STATUS "adding INTEL_RUNTIME_REDLIST")
 		endif()
-		if(list_option STREQUAL "INTEL_COMPILER_BLACKLIST" OR list_option STREQUAL "INTEL_ALL" OR list_option STREQUAL "ALL")
-			list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_BLACKLIST})
-			message(STATUS "adding ${list_option}")
+		if(list_option STREQUAL "INTEL_COMPILER_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_REDLIST})
+			message(STATUS "adding INTEL_COMPILER_REDLIST")
 		endif()
+		if(list_option STREQUAL "REGRESSION_GREENLIST")
+			list(APPEND CHOOSEN_LISTS ${REGRESSION_GREENLIST})
+			message(STATUS "adding  REGRESSION_GREENLIST")
+		endif()
+		if(list_option STREQUAL "REGRESSION_RUNTIME_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${REGRESSION_RUNTIME_REDLIST})
+			message(STATUS "adding REGRESSION_RUNTIME_REDLIST")
+                endif()
+		if(list_option STREQUAL "REGRESSION_COMPILER_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
+			list(APPEND CHOOSEN_LISTS ${REGRESSION_COMPILER_REDLIST})
+			message(STATUS "adding REGRESSION_COMPILER_REDLIST")
+                endif()
 	  endif()
   endforeach()
   list(REMOVE_DUPLICATES CHOOSEN_LISTS)
