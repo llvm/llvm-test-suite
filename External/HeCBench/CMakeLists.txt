@@ -5,8 +5,8 @@ include(External)
 
 option(TEST_SUITE_HECBENCH_FORCE_ALL "Execute all HeCBench tests, even those known to be unsupported by Clang" OFF)
 
-set(TEST_SUITE_HECBENCH_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
-set(TEST_SUITE_HECBENCH_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
 set(TEST_SUITE_HECBENCH_EXPECT_PASS
     ace-omp/main.cpp
@@ -31,8 +31,6 @@ set(TEST_SUITE_HECBENCH_EXPECT_PASS
 )
 
 function (add_hecbench LANG)
-  set(_includedir "${TEST_SUITE_HECBENCH_ROOT}" )
-
   if (NOT OPENMP_${LANG}_FOUND)
     message(FATAL_ERROR "OpenMP for ${LANG} not found")
     return ()
@@ -105,14 +103,13 @@ function (add_hecbench LANG)
         # Format the extracted CFLAGS include part as -I<directory>
         set(CFLAGS_INCLUDE "/${CFLAGS_INCLUDE}")
 
-        # Print the formatted CFLAGS include part
-        # message(STATUS "${CFLAGS_INCLUDE}")
       else()
         message(STATUS "CFLAGS not found in Makefile.")
       endif()
     else()
       message(STATUS "Makefile not found in ${BENCHMARK_DIR}.")
     endif()
+
 
     set(_includedir "${TEST_SUITE_HECBENCH_ROOT}/src/${CFLAGS_INCLUDE}" )
 
@@ -128,7 +125,6 @@ function (add_hecbench LANG)
     target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_FLAGS})
     target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_LDFLAGS})
 
-    message(STATUS "Compilation command for ${OpenMP_${LANG}_FLAGS} ${_includedir} ${CFLAGS_INCLUDE}")
   endforeach ()
 endfunction ()
 
