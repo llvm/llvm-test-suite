@@ -5,7 +5,7 @@ include(External)
 
 option(TEST_SUITE_FORCE_ALL "Execute all SOLLVE V&V tests, even those known to be unsupported by Clang" OFF)
 
-set(TEST_SUITE_OFFLOADING_CFLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
 set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
 set(ALL_LIST_OPTIONS
@@ -923,7 +923,7 @@ function (add_sollvevv LANG)
     target_link_options(${_name} PRIVATE ${OpenMP_${LANG}_FLAGS})
 
     # CMake's find_package(OpenMP) currently does not not introspect flags necessary for offloading.
-    target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_CFLAGS})
+    target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_FLAGS})
     target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_LDFLAGS})
   endforeach ()
 endfunction ()
