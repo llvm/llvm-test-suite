@@ -411,7 +411,7 @@ function(gfortran_add_compile_test expect_error main others fflags ldflags)
   add_custom_command(
     OUTPUT ${out}
     COMMAND ${CMAKE_COMMAND}
-    -DCMD="${CMAKE_Fortran_COMPILER};-c;${fflags};${ldflags};${others};${main}"
+    -DCMD="${CMAKE_Fortran_COMPILER_LAUNCHER};${CMAKE_Fortran_COMPILER};-c;${fflags};${ldflags};${others};${main}"
     -DALWAYS_SAVE_DIAGS=OFF
     -DWORKING_DIRECTORY=${working_dir}
     -DOUTPUT_FILE=${out}
