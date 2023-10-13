@@ -2167,7 +2167,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   io_real_boz.f90
   iostat_4.f90
   iostat_5.f90
-  is_contiguous_3.f90
   large_real_kind_1.f90
   large_unit_1.f90
   list_directed_large.f90
@@ -2496,6 +2495,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   recursive_check_2.f90
   string_1_lp64.f90
   substr_10.f90
+
+  # Tests that expect nonconformant IS_CONTIGUOUS answers with zero size arrays.
+  is_contiguous_1.f90
+  is_contiguous_3.f90
 
   # Tests that are errors in gfortran but for which we emit adequate warnings; might need to use -pedantic to see them
   achar_3.f90
