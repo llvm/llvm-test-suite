@@ -20,7 +20,7 @@ def _mutateCommandLine(context, commandline):
     args = ["--limit-core", "0"]
     args += ["--limit-cpu", "7200"]
     args += ["--timeout", "7200"]
-    args += ["--limit-file-size", "104857600"]
+    args += ["--limit-file-size", "209715200"]
     args += ["--limit-rss-size", "838860800"]
     workdir = cmd.workdir
     if not config.traditional_output:

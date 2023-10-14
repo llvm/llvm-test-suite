@@ -1,10 +1,14 @@
 /**
- * polybench.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* polybench.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,6 +21,14 @@
 #include <math.h>
 #ifdef _OPENMP
 # include <omp.h>
+#endif
+
+#if defined(POLYBENCH_PAPI)
+# undef POLYBENCH_PAPI
+# include "polybench.h"
+# define POLYBENCH_PAPI
+#else
+# include "polybench.h"
 #endif
 
 /* By default, collect PAPI counters on thread 0. */
@@ -46,6 +58,21 @@ double polybench_program_total_flops = 0;
 
 #endif
 
+/*
+ * Allocation table, to enable inter-array padding. All data allocated
+ * with polybench_alloc_data should be freed with polybench_free_data.
+ *
+ */
+#define NB_INITIAL_TABLE_ENTRIES 512
+struct polybench_data_ptrs
+{
+  void** user_view;
+  void** real_ptr;
+  int nb_entries;
+  int nb_avail_entries;
+};
+static struct polybench_data_ptrs* _polybench_alloc_table = NULL;
+static size_t polybench_inter_array_padding_sz = 0;
 
 /* Timer code (gettimeofday). */
 double polybench_t_start, polybench_t_end;
@@ -55,7 +82,7 @@ unsigned long long int polybench_c_start, polybench_c_end;
 static
 double rtclock()
 {
-#ifdef POLYBENCH_TIME
+#if defined(POLYBENCH_TIME) || defined(POLYBENCH_GFLOPS)
     struct timeval Tp;
     int stat;
     stat = gettimeofday (&Tp, NULL);
@@ -89,7 +116,7 @@ void polybench_flush_cache()
   int i;
   double tmp = 0.0;
 #ifdef _OPENMP
-#pragma omp parallel for
+#pragma omp parallel for reduction(+:tmp) private(i)
 #endif
   for (i = 0; i < cs; i++)
     tmp += flush[i];
@@ -145,8 +172,13 @@ void test_fail(char *file, int line, char *call, int retval)
   else
     {
       char errstring[PAPI_MAX_STR_LEN];
+      // PAPI 5.4.3 has changed the API for PAPI_perror.
+      #if defined (PAPI_VERSION) && ((PAPI_VERSION_MAJOR(PAPI_VERSION) == 5 && PAPI_VERSION_MINOR(PAPI_VERSION) >= 4) || PAPI_VERSION_MAJOR(PAPI_VERSION) > 5)
+      fprintf (stdout, "Error in %s: %s\n", call, PAPI_strerror(retval));
+      #else
       PAPI_perror (retval, errstring, PAPI_MAX_STR_LEN);
       fprintf (stdout,"Error in %s: %s\n", call, errstring);
+      #endif
     }
   fprintf (stdout,"\n");
   if (PAPI_is_initialized ())
@@ -356,14 +388,14 @@ void polybench_timer_stop()
 void polybench_timer_print()
 {
 #ifdef POLYBENCH_GFLOPS
-      if  (__polybench_program_total_flops == 0)
+      if  (polybench_program_total_flops == 0)
 	{
 	  printf ("[PolyBench][WARNING] Program flops not defined, use polybench_set_program_flops(value)\n");
 	  printf ("%0.6lf\n", polybench_t_end - polybench_t_start);
 	}
       else
 	printf ("%0.2lf\n",
-		(__polybench_program_total_flops /
+		(polybench_program_total_flops /
 		 (double)(polybench_t_end - polybench_t_start)) / 1000000000);
 #else
 # ifndef POLYBENCH_CYCLE_ACCURATE_TIMER
@@ -374,25 +406,160 @@ void polybench_timer_print()
 #endif
 }
 
+/*
+ * These functions are used only if the user defines a specific
+ * inter-array padding. It grows a global structure,
+ * _polybench_alloc_table, which keeps track of the data allocated via
+ * polybench_alloc_data (on which inter-array padding is applied), so
+ * that the original, non-shifted pointer can be recovered when
+ * calling polybench_free_data.
+ *
+ */
+#ifdef POLYBENCH_ENABLE_INTARRAY_PAD
+static
+void grow_alloc_table()
+{
+  if (_polybench_alloc_table == NULL ||
+      (_polybench_alloc_table->nb_entries % NB_INITIAL_TABLE_ENTRIES) != 0 ||
+      _polybench_alloc_table->nb_avail_entries != 0)
+    {
+      /* Should never happen if the API is properly used. */
+      fprintf (stderr, "[ERROR] Inter-array padding requires to use polybench_alloc_data and polybench_free_data\n");
+      exit (1);
+    }
+  size_t sz = _polybench_alloc_table->nb_entries;
+  sz += NB_INITIAL_TABLE_ENTRIES;
+  _polybench_alloc_table->user_view =
+    realloc (_polybench_alloc_table->user_view, sz * sizeof(void*));
+  assert(_polybench_alloc_table->user_view != NULL);
+  _polybench_alloc_table->real_ptr =
+    realloc (_polybench_alloc_table->real_ptr, sz * sizeof(void*));
+  assert(_polybench_alloc_table->real_ptr != NULL);
+  _polybench_alloc_table->nb_avail_entries = NB_INITIAL_TABLE_ENTRIES;
+}
+
+static
+void* register_padded_pointer(void* ptr, size_t orig_sz, size_t padded_sz)
+{
+  if (_polybench_alloc_table == NULL)
+    {
+      fprintf (stderr, "[ERROR] Inter-array padding requires to use polybench_alloc_data and polybench_free_data\n");
+      exit (1);
+    }
+  if (_polybench_alloc_table->nb_avail_entries == 0)
+    grow_alloc_table ();
+  int id = _polybench_alloc_table->nb_entries++;
+  _polybench_alloc_table->real_ptr[id] = ptr;
+  _polybench_alloc_table->user_view[id] = ptr + (padded_sz - orig_sz);
+
+  return _polybench_alloc_table->user_view[id];
+}
 
 
 static
-void *
-xmalloc (size_t num)
+void
+free_data_from_alloc_table (void* ptr)
 {
-  void* new = NULL;
-  int ret = posix_memalign (&new, 32, num);
-  if (! new || ret)
+  if (_polybench_alloc_table != NULL && _polybench_alloc_table->nb_entries > 0)
+    {
+      int i;
+      for (i = 0; i < _polybench_alloc_table->nb_entries; ++i)
+	if (_polybench_alloc_table->user_view[i] == ptr ||
+	    _polybench_alloc_table->real_ptr[i] == ptr)
+	  break;
+      if (i != _polybench_alloc_table->nb_entries)
+	{
+	  free (_polybench_alloc_table->real_ptr[i]);
+	  for (; i < _polybench_alloc_table->nb_entries - 1; ++i)
+	    {
+	      _polybench_alloc_table->user_view[i] =
+		_polybench_alloc_table->user_view[i + 1];
+	      _polybench_alloc_table->real_ptr[i] =
+		_polybench_alloc_table->real_ptr[i + 1];
+	    }
+	  _polybench_alloc_table->nb_entries--;
+	  _polybench_alloc_table->nb_avail_entries++;
+	  if (_polybench_alloc_table->nb_entries == 0)
+	    {
+	      free (_polybench_alloc_table->user_view);
+	      free (_polybench_alloc_table->real_ptr);
+	      free (_polybench_alloc_table);
+	      _polybench_alloc_table = NULL;
+	    }
+	}
+    }
+}
+
+static
+void check_alloc_table_state()
+{
+  if (_polybench_alloc_table == NULL)
+    {
+      _polybench_alloc_table = (struct polybench_data_ptrs*)
+	malloc (sizeof(struct polybench_data_ptrs));
+      assert(_polybench_alloc_table != NULL);
+      _polybench_alloc_table->user_view =
+	(void**) malloc (sizeof(void*) * NB_INITIAL_TABLE_ENTRIES);
+      assert(_polybench_alloc_table->user_view != NULL);
+      _polybench_alloc_table->real_ptr =
+	(void**) malloc (sizeof(void*) * NB_INITIAL_TABLE_ENTRIES);
+      assert(_polybench_alloc_table->real_ptr != NULL);
+      _polybench_alloc_table->nb_entries = 0;
+      _polybench_alloc_table->nb_avail_entries = NB_INITIAL_TABLE_ENTRIES;
+    }
+}
+
+#endif // !POLYBENCH_ENABLE_INTARRAY_PAD
+
+
+static
+void*
+xmalloc(size_t alloc_sz)
+{
+  void* ret = NULL;
+  /* By default, post-pad the arrays. Safe behavior, but likely useless. */
+  polybench_inter_array_padding_sz += POLYBENCH_INTER_ARRAY_PADDING_FACTOR;
+  size_t padded_sz = alloc_sz + polybench_inter_array_padding_sz;
+  int err = posix_memalign (&ret, 4096, padded_sz);
+  if (! ret || err)
     {
       fprintf (stderr, "[PolyBench] posix_memalign: cannot allocate memory");
       exit (1);
     }
-  return new;
+  /* Safeguard: this is invoked only if polybench.c has been compiled
+     with inter-array padding support from polybench.h. If so, move
+     the starting address of the allocation and return it to the
+     user. The original pointer is registered in an allocation table
+     internal to polybench.c. Data must then be freed using
+     polybench_free_data, which will inspect the allocation table to
+     free the original pointer.*/
+#ifdef POLYBENCH_ENABLE_INTARRAY_PAD
+  /* This moves the 'ret' pointer by (padded_sz - alloc_sz) positions, and
+  registers it in the lookup table for future free using
+  polybench_free_data. */
+  ret = register_padded_pointer(ret, alloc_sz, padded_sz);
+#endif
+
+  return ret;
+}
+
+
+void polybench_free_data(void* ptr)
+{
+#ifdef POLYBENCH_ENABLE_INTARRAY_PAD
+  free_data_from_alloc_table (ptr);
+#else
+  free (ptr);
+#endif
 }
 
 
 void* polybench_alloc_data(unsigned long long int n, int elt_size)
 {
+#ifdef POLYBENCH_ENABLE_INTARRAY_PAD
+  check_alloc_table_state ();
+#endif
+
   /// FIXME: detect overflow!
   size_t val = n;
   val *= elt_size;
