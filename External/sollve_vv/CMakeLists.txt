@@ -881,7 +881,7 @@ set(NVIDIA_COMPILER_REDLIST
 function (add_sollvevv LANG)
   set(_includedir "${TEST_SUITE_SOLLVEVV_ROOT}/ompvv" )
 
-  if (NOT OPENMP_${LANG}_FOUND)
+  if (NOT OpenMP_${LANG}_FOUND)
     message(FATAL_ERROR "OpenMP for ${LANG} not found")
     return ()
   endif ()
@@ -932,7 +932,7 @@ endfunction ()
 llvm_externals_find(TEST_SUITE_SOLLVEVV_ROOT "sollve_vv" "OpenMP Offloading Validation & Verification Suite")
 
 if(TEST_SUITE_SOLLVEVV_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
-  if(OPENMP_FOUND)
+  if(OpenMP_FOUND)
     message(STATUS "Adding OpenMP Offloading Validiation & Verification")
   else()
     message(STATUS "NOT using OpenMP Validiation & Verification because OpenMP was not found")
