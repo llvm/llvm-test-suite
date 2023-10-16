@@ -9,22 +9,22 @@ set(TEST_SUITE_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arg
 set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
 set(ALL_LIST_OPTIONS
-	AMD
-	AMD_RUNTIME_REDLIST
-	AMD_COMPILER_REDLIST
-	NVIDIA
-	NVIDIA_RUNTIME_REDLIST
-	NVIDIA_COMPILER_REDLIST
-	INTEL
-	INTEL_RUNTIME_REDLIST
-	INTEL_COMPILER_REDLIST
-	REGRESSION
-	REGRESSION_RUNTIME_REDLIST
-	REGRESSION_COMPILER_REDLIST
-	AMD_REDLIST
-	NVIDIA_REDLIST
-	INTEL_REDLIST
-	REGRESSION_REDLIST
+  AMD
+  AMD_RUNTIME_REDLIST
+  AMD_COMPILER_REDLIST
+  NVIDIA
+  NVIDIA_RUNTIME_REDLIST
+  NVIDIA_COMPILER_REDLIST
+  INTEL
+  INTEL_RUNTIME_REDLIST
+  INTEL_COMPILER_REDLIST
+  REGRESSION
+  REGRESSION_RUNTIME_REDLIST
+  REGRESSION_COMPILER_REDLIST
+  AMD_REDLIST
+  NVIDIA_REDLIST
+  INTEL_REDLIST
+  REGRESSION_REDLIST
 )
 
 set(CHOOSEN_LISTS)
@@ -941,65 +941,65 @@ if(TEST_SUITE_SOLLVEVV_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
 
   list(REMOVE_DUPLICATES SYSTEM_GPU)
   foreach(list_option ${SYSTEM_GPU})
-	  string(TOUPPER ${list_option} list_option)
-	  if(list_option IN_LIST ALL_LIST_OPTIONS)
-		  if(list_option STREQUAL "AMD")
-			list(APPEND CHOOSEN_LISTS ${AMD})
-			message(STATUS "adding AMD")
-		endif()
-		if(list_option STREQUAL "AMD_RUNTIME_REDLIST" OR list_option STREQUAL "AMD_REDLIST") 
-			list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_REDLIST})
-			message(STATUS "adding AMD_RUNTIME_REDLIST")
-		endif()
-		if(list_option STREQUAL "AMD_COMPILER_REDLIST" OR list_option STREQUAL "AMD_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_REDLIST})
-			message(STATUS "adding AMD_COMPILER_REDLIST")
-		endif()
-		if(list_option STREQUAL "NVIDIA")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA})
-			message(STATUS "adding NVIDIA")
-		endif()
-		if(list_option STREQUAL "NVIDIA_RUNTIME_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_REDLIST})
-			message(STATUS "adding NVIDIA_RUNTIME_REDLIST")
-		endif()
-		if(list_option STREQUAL "NVIDIA_COMPILER_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_REDLIST})
-			message(STATUS "adding NVIDIA_COMPILER_REDLIST")
-		endif()
-		if(list_option STREQUAL "INTEL")
-			list(APPEND CHOOSEN_LISTS ${INTEL})
-			message(STATUS "adding  INTEL")
-		endif()
-		if(list_option STREQUAL "INTEL_RUNTIME_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_REDLIST})
-			message(STATUS "adding INTEL_RUNTIME_REDLIST")
-		endif()
-		if(list_option STREQUAL "INTEL_COMPILER_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_REDLIST})
-			message(STATUS "adding INTEL_COMPILER_REDLIST")
-		endif()
-		if(list_option STREQUAL "REGRESSION")
-			list(APPEND CHOOSEN_LISTS ${REGRESSION})
-			message(STATUS "adding  REGRESSION")
-		endif()
-		if(list_option STREQUAL "REGRESSION_RUNTIME_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${REGRESSION_RUNTIME_REDLIST})
-			message(STATUS "adding REGRESSION_RUNTIME_REDLIST")
-                endif()
-		if(list_option STREQUAL "REGRESSION_COMPILER_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
-			list(APPEND CHOOSEN_LISTS ${REGRESSION_COMPILER_REDLIST})
-			message(STATUS "adding REGRESSION_COMPILER_REDLIST")
-                endif()
-	  else()
-		message(STATUS "Option is unrecognized (${list_option})")
-	  endif()
+    string(TOUPPER ${list_option} list_option)
+    if(list_option IN_LIST ALL_LIST_OPTIONS)
+      if(list_option STREQUAL "AMD")
+        list(APPEND CHOOSEN_LISTS ${AMD})
+        message(STATUS "adding AMD")
+      endif()
+      if(list_option STREQUAL "AMD_RUNTIME_REDLIST" OR list_option STREQUAL "AMD_REDLIST") 
+        list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_REDLIST})
+        message(STATUS "adding AMD_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "AMD_COMPILER_REDLIST" OR list_option STREQUAL "AMD_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_REDLIST})
+        message(STATUS "adding AMD_COMPILER_REDLIST")
+      endif()
+      if(list_option STREQUAL "NVIDIA")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA})
+        message(STATUS "adding NVIDIA")
+      endif()
+      if(list_option STREQUAL "NVIDIA_RUNTIME_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_REDLIST})
+        message(STATUS "adding NVIDIA_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "NVIDIA_COMPILER_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_REDLIST})
+        message(STATUS "adding NVIDIA_COMPILER_REDLIST")
+      endif()
+      if(list_option STREQUAL "INTEL")
+        list(APPEND CHOOSEN_LISTS ${INTEL})
+        message(STATUS "adding INTEL")
+      endif()
+      if(list_option STREQUAL "INTEL_RUNTIME_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_REDLIST})
+        message(STATUS "adding INTEL_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "INTEL_COMPILER_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_REDLIST})
+        message(STATUS "adding INTEL_COMPILER_REDLIST")
+      endif()
+      if(list_option STREQUAL "REGRESSION")
+        list(APPEND CHOOSEN_LISTS ${REGRESSION})
+        message(STATUS "adding REGRESSION")
+      endif()
+      if(list_option STREQUAL "REGRESSION_RUNTIME_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${REGRESSION_RUNTIME_REDLIST})
+        message(STATUS "adding REGRESSION_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "REGRESSION_COMPILER_REDLIST" OR list_option STREQUAL "REGRESSION_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${REGRESSION_COMPILER_REDLIST})
+        message(STATUS "adding REGRESSION_COMPILER_REDLIST")
+      endif()
+    else()
+      message(STATUS "Option is unrecognized (${list_option})")
+    endif()
   endforeach()
   list(REMOVE_DUPLICATES CHOOSEN_LISTS)
 
   foreach (_lang in C CXX)
     if(CMAKE_${_lang}_COMPILER)
-	    add_sollvevv(${_lang})
+      add_sollvevv(${_lang})
     endif()
   endforeach ()
 endif ()
