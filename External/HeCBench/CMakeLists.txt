@@ -31,7 +31,7 @@ set(TEST_SUITE_HECBENCH_EXPECT_PASS
 )
 
 function (add_hecbench LANG)
-  if (NOT OPENMP_${LANG}_FOUND)
+  if (NOT OpenMP_${LANG}_FOUND)
     message(FATAL_ERROR "OpenMP for ${LANG} not found")
     return ()
   endif ()
@@ -131,7 +131,7 @@ endfunction ()
 
 llvm_externals_find(TEST_SUITE_HECBENCH_ROOT "hecbench" "HeCBench")
 if (TEST_SUITE_HECBENCH_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
-  if (OPENMP_FOUND)
+  if (OpenMP_FOUND)
     message(STATUS "Adding HeCBench")
   else ()
     message(STATUS "NOT using HeCBench because OpenMP was not found")
