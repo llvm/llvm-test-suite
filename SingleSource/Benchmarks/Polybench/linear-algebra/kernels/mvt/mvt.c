@@ -1,10 +1,14 @@
 /**
- * mvt.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* mvt.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -39,15 +43,15 @@ void init_array(int n,
 #if !FMA_DISABLED
       x1_StrictFP[i] =
 #endif
-	      x1[i] = ((DATA_TYPE) i) / n;
+	      x1[i] = (DATA_TYPE) (i % n) / n;
 #if !FMA_DISABLED
       x2_StrictFP[i] =
 #endif
-	      x2[i] = ((DATA_TYPE) i + 1) / n;
-      y_1[i] = ((DATA_TYPE) i + 3) / n;
-      y_2[i] = ((DATA_TYPE) i + 4) / n;
+	      x2[i] = (DATA_TYPE) ((i + 1) % n) / n;
+      y_1[i] = (DATA_TYPE) ((i + 3) % n) / n;
+      y_2[i] = (DATA_TYPE) ((i + 4) % n) / n;
       for (j = 0; j < n; j++)
-	A[i][j] = ((DATA_TYPE) i*j) / N;
+	A[i][j] = (DATA_TYPE) (i*j % n) / n;
     }
 }
 
