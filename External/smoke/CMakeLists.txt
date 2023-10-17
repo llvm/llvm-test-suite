@@ -30,7 +30,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     bugz-50967-c
     bugz-50968
     CanonNE
-    check_smoke.sh
     clang-262701
     clang-273738
     clang-273739
@@ -187,7 +186,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     reduction_teams
     reduction_teams_distribute_parallel
     requires_usm
-    rocmaster_check_smoke.sh
     schedule
     simd
     simple_ctor
@@ -262,7 +260,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     bugz-50967-c
     bugz-50968
     CanonNE
-    check_smoke.sh
     clang-262701
     clang-273738
     clang-273739
@@ -412,7 +409,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     reduction_team
     reduction_teams
     reduction_teams_distribute_parallel
-    rocmaster_check_smoke.sh
     schedule
     simd
     simple_ctor
