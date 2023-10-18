@@ -24,19 +24,19 @@ $ cd /path/to/llvm-test-suit
 $ mkdir build
 $ cd build
 $ cmake -GNinja  -DTEST_SUITE_FORTRAN=ON                               \
-   -DTEST_SUITE_BENCHMARKING_ONLY=OFF
-   -DTEST_SUITE_RUN_BENCHMARKS=ON
-   -DTEST_SUITE_COLLECT_STATS=OFF
-   -DTEST_SUITE_SUBDIRS="External/OpenACC_VV"
-   -DCMAKE_BUILD_TYPE=Release
-   -DTEST_SUITE_OpenACCVV_ROOT=/path/to/OpenACCV-V-master
-   -DTEST_SUITE_COLLECT_CODE_SIZE=OFF
-   -DTEST_SUITE_LIT=${HOME}/path/to/llvm-project/build/bin/llvm-lit
-   -DCMAKE_C_COMPILER=${HOME}/install/llvm/bin/clang
-   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm/bin/clang++
-   -DCMAKE_Fortran_COMPILER=${HOME}/install/llvm/bin/flang
-   -DTEST_SUITE_OpenACC_OFFLOADING_FLAGS="-fopenacc;-fopenmp-targets=amdgcn-amd-amdhsa;-Xopenmp-target=amdgcn-amd-amdhsa;-march=gfx906;"
-   -DTEST_SUITE_OpenACC_OFFLOADING_LDFLAGS="-fopenacc;-fopenmp-targets=amdgcn-amd-amdhsa;-Xopenmp-target=amdgcn-amd-amdhsa;-march=gfx906;"
+   -DTEST_SUITE_BENCHMARKING_ONLY=OFF                                  \
+   -DTEST_SUITE_RUN_BENCHMARKS=ON                                      \
+   -DTEST_SUITE_COLLECT_STATS=OFF                                      \
+   -DTEST_SUITE_SUBDIRS="External/OpenACC_VV"                          \
+   -DCMAKE_BUILD_TYPE=Release                                          \
+   -DTEST_SUITE_OpenACCVV_ROOT=/path/to/OpenACCV-V-master              \
+   -DTEST_SUITE_COLLECT_CODE_SIZE=OFF                                  \
+   -DTEST_SUITE_LIT=${HOME}/path/to/llvm-project/build/bin/llvm-lit    \
+   -DCMAKE_C_COMPILER=${HOME}/install/llvm/bin/clang                   \
+   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm/bin/clang++               \
+   -DCMAKE_Fortran_COMPILER=${HOME}/install/llvm/bin/flang             \
+   -DTEST_SUITE_OpenACC_OFFLOADING_FLAGS="-fopenacc;-lm;-foffload='-lm';"  \
+   -DTEST_SUITE_OpenACC_OFFLOADING_LDFLAGS="-fopenacc;-lm;-foffload='-lm';" \
    ../ 
 
 To make:
