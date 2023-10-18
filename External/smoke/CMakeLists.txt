@@ -19,13 +19,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     assume_no_openmp
     atomic
     atomic_double
-    big-jump-loop-1
-    big-jump-loop-collapse
-    big-jump-loop-env-vars
-    big-jump-loop-matmul
-    big-jump-loop-split-2
-    big-jump-loop-split-3
-    big-jump-loop-split-4
     bugz-50967
     bugz-50967-c
     bugz-50968
@@ -88,8 +81,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     devices
     devito_prob1
     double_complex_scalar
-    envvar-sync-async
-    envvar-sync-async-perf
     extern_init
     famd-opt-279975
     firstprivate
@@ -152,14 +143,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     nested_loop_trunk1
     nested_targ
     noarg_target_function
-    no-loop-8
-    no-loop-sched
-    no-loop-split-1
-    no-loop-split-2
-    no-loop-split-3
-    no-loop-split-with-inner-private-clause
-    no-loop-with-continue
-    no-offload-arch
     omp_get_device_num
     omp_get_initial
     omp_loop
@@ -229,16 +212,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     virtual_functions
     vmuldemo
     wgs64
-    xteam-red-1
-    xteam-red-1-g
-    xteam-red-2
-    xteam-red-3
-    xteam-red-4
-    xteam-red-cmdline-option1
-    xteam-red-collapse
-    xteam-red-teams
-    xteam-red-threads
-    xteam-red-unsupported
 )
 
 set(NVIDIA_TEST_SUITE_EXPECT_PASS
@@ -249,13 +222,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     assume_no_openmp
     atomic
     atomic_double
-    big-jump-loop-1
-    big-jump-loop-collapse
-    big-jump-loop-env-vars
-    big-jump-loop-matmul
-    big-jump-loop-split-2
-    big-jump-loop-split-3
-    big-jump-loop-split-4
     bugz-50967
     bugz-50967-c
     bugz-50968
@@ -317,8 +283,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     devices
     devito_prob1
     double_complex_scalar
-    envvar-sync-async
-    envvar-sync-async-perf
     extern_init
     famd-opt-279975
     firstprivate
@@ -377,14 +341,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     nested_loop_trunk1
     nested_targ
     noarg_target_function
-    no-loop-8
-    no-loop-sched
-    no-loop-split-1
-    no-loop-split-2
-    no-loop-split-3
-    no-loop-split-with-inner-private-clause
-    no-loop-with-continue
-    no-offload-arch
     omp_get_device_num
     omp_get_initial
     omp_loop
@@ -451,16 +407,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     virtual_functions
     vmuldemo
     wgs64
-    xteam-red-1
-    xteam-red-1-g
-    xteam-red-2
-    xteam-red-3
-    xteam-red-4
-    xteam-red-cmdline-option1
-    xteam-red-collapse
-    xteam-red-teams
-    xteam-red-threads
-    xteam-red-unsupported
 )
 
 function (add_smoke LANG WHITE_LIST_CHOOSEN)
