@@ -241,6 +241,12 @@ include(TestSuite)
 include(SingleMultiSource)
 # Needs by External/sollve_vv.
 find_package(OpenMP)
+# Needs by External/OpenACC_VV 
+if(${CMAKE_VERSION} VERSION_LESS 3.25)
+    message(STATUS "The cmake version must be at least 3.25 to perform OpenACC tests")
+else()
+   find_package(OpenACC)
+endif()
 # Fortran Helper Modules
 if(TEST_SUITE_FORTRAN)
   include(Fortran)
