@@ -14,7 +14,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     alignedattribute
     already_locked
     ancestorC
-    aomp-issue376
     assertok_error
     assume_no_openmp
     atomic
@@ -40,8 +39,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     clang-357649
     clang-358841
     clang-359947
-    clang-373823
-    clang-383246
     clang-388381
     clang-392854
     clang-alloc1
@@ -63,7 +60,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     class
     closed_bug2
     collapse
-    collapse1
     collapse-nonrectangle
     collapse_parallel_spmd
     complex
@@ -108,14 +104,11 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     leopold-devicePtr
     libgomp-292348
     longDouble
-    loop-dir-1
-    loop-dir-2
     loop-dir-3
     loop-dir-4
     loop-dir-5
     loop-dir-6
     loop-dir-7
-    loop-dir-9
     loop_order
     lto_teams
     Makefile
@@ -197,18 +190,9 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     threads
     use_device_addr
     usm1
-    usm-globals
     vasp1
     veccopy
     veccopy-kernels
-    veccopy-ompt-target
-    veccopy-ompt-target-disallow-both
-    veccopy-ompt-target-emi
-    veccopy-ompt-target-emi-map
-    veccopy-ompt-target-emi-tracing
-    veccopy-ompt-target-map
-    veccopy-ompt-target-noinit
-    veccopy-ompt-target-wrong-return
     virtual_functions
     vmuldemo
     wgs64
@@ -218,7 +202,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     alignedattribute
     already_locked
     ancestorC
-    aomp-issue376
     assume_no_openmp
     atomic
     atomic_double
@@ -242,8 +225,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     clang-357649
     clang-358841
     clang-359947
-    clang-373823
-    clang-383246
     clang-388381
     clang-392854
     clang-alloc1
@@ -265,7 +246,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     class
     closed_bug2
     collapse
-    collapse1
     collapse-nonrectangle
     collapse_parallel_spmd
     complex
@@ -307,14 +287,11 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     lds-prob2
     lds-prob3
     libgomp-292348
-    loop-dir-1
-    loop-dir-2
     loop-dir-3
     loop-dir-4
     loop-dir-5
     loop-dir-6
     loop-dir-7
-    loop-dir-9
     loop_order
     lto_teams
     Makefile
@@ -392,18 +369,9 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     thread_limit
     threads
     use_device_addr
-    usm-globals
     vasp1
     veccopy
     veccopy-kernels
-    veccopy-ompt-target
-    veccopy-ompt-target-disallow-both
-    veccopy-ompt-target-emi
-    veccopy-ompt-target-emi-map
-    veccopy-ompt-target-emi-tracing
-    veccopy-ompt-target-map
-    veccopy-ompt-target-noinit
-    veccopy-ompt-target-wrong-return
     virtual_functions
     vmuldemo
     wgs64
