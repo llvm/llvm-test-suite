@@ -1,6 +1,7 @@
 add_subdirectory(CUDA)
 add_subdirectory(HIP)
 add_subdirectory(HMMER)
+add_subdirectory(HeCBench)
 add_subdirectory(Nurbs)
 add_subdirectory(Povray)
 add_subdirectory(SPEC)
