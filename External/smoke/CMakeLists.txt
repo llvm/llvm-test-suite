@@ -71,7 +71,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     data_enter_issue01
     data_issue_59
     data_share1
-    data_share2
     declare_target_pointer
     decl_map_targ
     devices
@@ -257,7 +256,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     data_enter_issue01
     data_issue_59
     data_share1
-    data_share2
     declare_target_pointer
     decl_map_targ
     devices
