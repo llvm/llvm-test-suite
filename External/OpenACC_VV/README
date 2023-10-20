@@ -41,7 +41,7 @@ $ cmake -GNinja  -DTEST_SUITE_FORTRAN=ON                               \
 
 To make:
 $ LD_LIBRARY_PATH=${HOME}/install/llvm-project/release/lib 
-$ ninja -k 0 check
+$ ninja check
 
 To run:
 The test results are saved in the reule file
