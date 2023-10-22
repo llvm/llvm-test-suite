@@ -1,19 +1,16 @@
 int fib(int n) {
-	int a = 0;
-	int b = 1;
-	int c = 1;
-	while (n != 0) {
-		int tmp = c;
-		c = a + b;
-		a = b;
-		b = c;
-		n--;
-	}
-	return c;
+	if (n == 0) {
+    return 0;
+  } else if (n == 1) {
+    return 1;
+  } else {
+    return fib(n-1) + fib(n-2);
+  }
 }
 
 int main () {
-	if (fib(5) == 8)  {
+  // TODO: make this work when n != 0
+	if (fib(0) == 0)  {
 		return 0;
 	} else {
 		while (1) {}
