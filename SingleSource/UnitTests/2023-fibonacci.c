@@ -16,6 +16,6 @@ int main () {
 	if (fib(5) == 8)  {
 		return 0;
 	} else {
-		return 0/0;
+		while (1) {}
 	}
 }
