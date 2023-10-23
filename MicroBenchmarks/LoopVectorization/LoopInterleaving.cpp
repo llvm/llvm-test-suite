@@ -1,6 +1,6 @@
 // This program tests performance impact of Interleaving Count with varying loop
-// iteration count for different types of loop, such as loops with or
-// without reduction inside it, loops with different vectorization widths.
+// iteration count for different types of loops, such as loops with or
+// without reductions inside it, loops with different vectorization widths.
 #include <iostream>
 #include <memory>
 #include <random>
@@ -28,25 +28,48 @@ static void init_data(unsigned N) {
   }
 }
 
-static void __attribute__((noinline)) loopWithVW4IC1(int Iterations) {
+/* Loops without Reduction with different vectorization configurations */
+
+static int __attribute__((noinline)) loopWithoutVecHint(int Iterations) {
+  for (int J = 0; J < Iterations; J++) {
+    A[J] = B[J] + C[J];
+  }
+  return 0;
+}
+
+static int __attribute__((noinline)) loopWithVW4IC1(int Iterations) {
 #pragma clang loop vectorize_width(4) interleave(disable)
   for (int J = 0; J < Iterations; J++) {
     A[J] = B[J] + C[J];
   }
+  return 0;
 }
 
-static void __attribute__((noinline)) loopWithVW4IC2(int Iterations) {
+static int __attribute__((noinline)) loopWithVW4IC2(int Iterations) {
 #pragma clang loop vectorize_width(4) interleave_count(2)
   for (int J = 0; J < Iterations; J++) {
     A[J] = B[J] + C[J];
   }
+  return 0;
 }
 
-static void __attribute__((noinline)) loopWithVW4IC4(int Iterations) {
+static int __attribute__((noinline)) loopWithVW4IC4(int Iterations) {
 #pragma clang loop vectorize_width(4) interleave_count(4)
   for (int J = 0; J < Iterations; J++) {
     A[J] = B[J] + C[J];
   }
+  return 0;
+}
+
+/* Loops with Reduction with different vectorization configurations */
+
+static int __attribute__((noinline))
+loopWithReductionWithoutVecHint(int Iterations) {
+  unsigned sum = 0;
+  for (int J = 0; J < Iterations; J++) {
+    sum += A[J];
+  }
+  return sum;
 }
 
 static int __attribute__((noinline))
@@ -110,23 +133,8 @@ loopWithReductionWithVW1IC4(int Iterations) {
 }
 
 static void __attribute__((always_inline))
-benchForLoopInterleaveThreshold(benchmark::State &state, void (*Fn)(int),
-                                int Iterations) {
-  std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(),
-                                             std::numeric_limits<int>::max());
-  init_data(ELEMENTS);
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(A);
-    benchmark::DoNotOptimize(B);
-    benchmark::DoNotOptimize(C);
-    benchmark::ClobberMemory();
-    Fn(Iterations);
-  }
-}
-
-static void __attribute__((always_inline))
-benchForWithReductionLoopInterleaveThreshold(benchmark::State &state,
-                                             int (*Fn)(int), int Iterations) {
+benchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
+                         int Iterations) {
   std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(),
                                              std::numeric_limits<int>::max());
   init_data(ELEMENTS);
@@ -139,47 +147,63 @@ benchForWithReductionLoopInterleaveThreshold(benchmark::State &state,
   }
 }
 
+// We are evaluating 2 types of loops for different vectorization configurations
+// 1) Loops without reductions
+// 2) Loops with reductions
+// For each, we are evaluating the following vectorization configurations of
+// vectorization width (VW), interleaving count (IC):
+// 1) automatically selected by the compiler
+// 2) VW=4, IC=1
+// 3) VW=4, IC=2
+// 4) VW=4, IC=4
+// 5) VW=1, IC=1
+// 6) VW=1, IC=2
+// 7) VW=1, IC=4
+// Of these, configurations 5-7 are skipped for loop type 1).
 #define ADD_BENCHMARK(Itr)                                                     \
+  void benchWithoutVecHintForTC##Itr(benchmark::State &state) {                \
+    benchForLoopInterleaving(state, &loopWithoutVecHint, Itr);                 \
+  }                                                                            \
+  BENCHMARK(benchWithoutVecHintForTC##Itr);                                    \
   void benchForIC1VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaveThreshold(state, &loopWithVW4IC1, Itr);              \
+    benchForLoopInterleaving(state, &loopWithVW4IC1, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC1VW4LoopTC##Itr);                                        \
   void benchForIC2VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaveThreshold(state, &loopWithVW4IC2, Itr);              \
+    benchForLoopInterleaving(state, &loopWithVW4IC2, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC2VW4LoopTC##Itr);                                        \
   void benchForIC4VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaveThreshold(state, &loopWithVW4IC4, Itr);              \
+    benchForLoopInterleaving(state, &loopWithVW4IC4, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC4VW4LoopTC##Itr);                                        \
+  void benchForLoopWithReductionWithoutVecHintTC##Itr(                         \
+      benchmark::State &state) {                                               \
+    benchForLoopInterleaving(state, &loopWithReductionWithoutVecHint, Itr);    \
+  }                                                                            \
+  BENCHMARK(benchForLoopWithReductionWithoutVecHintTC##Itr);                   \
   void benchForIC1VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW4IC1, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC1, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC1VW4LoopWithReductionTC##Itr);                           \
   void benchForIC2VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW4IC2, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC2, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC2VW4LoopWithReductionTC##Itr);                           \
   void benchForIC4VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW4IC4, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC4, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC4VW4LoopWithReductionTC##Itr);                           \
   void benchForIC1VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW1IC1, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC1, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC1VW1LoopWithReductionTC##Itr);                           \
   void benchForIC2VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW1IC2, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC2, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC2VW1LoopWithReductionTC##Itr);                           \
   void benchForIC4VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForWithReductionLoopInterleaveThreshold(                              \
-        state, &loopWithReductionWithVW1IC4, Itr);                             \
+    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC4, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC4VW1LoopWithReductionTC##Itr);
 
