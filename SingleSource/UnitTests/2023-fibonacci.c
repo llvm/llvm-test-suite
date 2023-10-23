@@ -9,8 +9,7 @@ int fib(int n) {
 }
 
 int main () {
-  // TODO: make this work when n != 0
-	if (fib(0) == 0)  {
+	if (fib(6) == 8)  {
 		return 0;
 	} else {
 		while (1) {}
