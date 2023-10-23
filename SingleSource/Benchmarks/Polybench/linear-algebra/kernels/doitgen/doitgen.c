@@ -1,10 +1,14 @@
 /**
- * doitgen.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* doitgen.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -36,10 +40,10 @@ void init_array(int nr, int nq, int np,
 #if !FMA_DISABLED
 	A_StrictFP[i][j][k] =
 #endif
-	       	A[i][j][k] = ((DATA_TYPE) i*j + k) / np;
+	       	A[i][j][k] = (DATA_TYPE) ((i*j + k)%np) / np;
   for (i = 0; i < np; i++)
     for (j = 0; j < np; j++)
-      C4[i][j] = ((DATA_TYPE) i*j) / np;
+      C4[i][j] = (DATA_TYPE) (i*j % np) / np;
 }
 
 
@@ -64,11 +68,10 @@ void print_array(int nr, int nq, int np,
 
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
-static
 void kernel_doitgen(int nr, int nq, int np,
 		    DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
 		    DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
-		    DATA_TYPE POLYBENCH_3D(sum,NR,NQ,NP,nr,nq,np))
+		    DATA_TYPE POLYBENCH_1D(sum,NP,np))
 {
   int r, q, p, s;
 
@@ -76,12 +79,12 @@ void kernel_doitgen(int nr, int nq, int np,
   for (r = 0; r < _PB_NR; r++)
     for (q = 0; q < _PB_NQ; q++)  {
       for (p = 0; p < _PB_NP; p++)  {
-	sum[r][q][p] = 0;
+	sum[p] = SCALAR_VAL(0.0);
 	for (s = 0; s < _PB_NP; s++)
-	  sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
+	  sum[p] += A[r][q][s] * C4[s][p];
       }
-      for (p = 0; p < _PB_NR; p++)
-	A[r][q][p] = sum[r][q][p];
+      for (p = 0; p < _PB_NP; p++)
+	A[r][q][p] = sum[p];
     }
 #pragma endscop
 
@@ -91,11 +94,10 @@ void kernel_doitgen(int nr, int nq, int np,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
-static
 void kernel_doitgen_StrictFP(int nr, int nq, int np,
-                             DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
-                             DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
-                             DATA_TYPE POLYBENCH_3D(sum,NR,NQ,NP,nr,nq,np))
+		    DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
+		    DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
+		    DATA_TYPE POLYBENCH_1D(sum,NP,np))
 {
 #pragma STDC FP_CONTRACT OFF
   int r, q, p, s;
@@ -103,12 +105,12 @@ void kernel_doitgen_StrictFP(int nr, int nq, int np,
   for (r = 0; r < _PB_NR; r++)
     for (q = 0; q < _PB_NQ; q++)  {
       for (p = 0; p < _PB_NP; p++)  {
-	sum[r][q][p] = 0;
+	sum[p] = SCALAR_VAL(0.0);
 	for (s = 0; s < _PB_NP; s++)
-	  sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
+	  sum[p] += A[r][q][s] * C4[s][p];
       }
-      for (p = 0; p < _PB_NR; p++)
-	A[r][q][p] = sum[r][q][p];
+      for (p = 0; p < _PB_NP; p++)
+	A[r][q][p] = sum[p];
     }
 }
 
@@ -150,7 +152,7 @@ int main(int argc, char** argv)
 #if !FMA_DISABLED
   POLYBENCH_3D_ARRAY_DECL(A_StrictFP,DATA_TYPE,NR,NQ,NP,nr,nq,np);
 #endif
-  POLYBENCH_3D_ARRAY_DECL(sum,DATA_TYPE,NR,NQ,NP,nr,nq,np);
+  POLYBENCH_1D_ARRAY_DECL(sum,DATA_TYPE,NP,np);
   POLYBENCH_2D_ARRAY_DECL(C4,DATA_TYPE,NP,NP,np,np);
 
   /* Initialize array(s). */

@@ -70,6 +70,7 @@ set(FLANG_ERRORING_FFLAGS
   -fcheck=do
   -fcheck=recursion
   -fcoarray=lib
+  -fcray-pointer
   -fdec
   -fdec-format-defaults
   -fdec-static
@@ -135,6 +136,7 @@ set(FLANG_ERRORING_FFLAGS
   -fno-range-check
   -fno-realloc-lhs
   -fno-sign-zero
+  -fno-strict-aliasing
   -fno-tree-ccp
   -fno-tree-forwprop
   -fno-tree-fre
@@ -409,7 +411,7 @@ function(gfortran_add_compile_test expect_error main others fflags ldflags)
   add_custom_command(
     OUTPUT ${out}
     COMMAND ${CMAKE_COMMAND}
-    -DCMD="${CMAKE_Fortran_COMPILER};-c;${fflags};${ldflags};${others};${main}"
+    -DCMD="${CMAKE_Fortran_COMPILER_LAUNCHER};${CMAKE_Fortran_COMPILER};-c;${fflags};${ldflags};${others};${main}"
     -DALWAYS_SAVE_DIAGS=OFF
     -DWORKING_DIRECTORY=${working_dir}
     -DOUTPUT_FILE=${out}

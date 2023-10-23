@@ -1,10 +1,14 @@
 /**
- * lu.c: This file is part of the PolyBench/C 3.2 test suite.
+ * This version is stamped on May 10, 2016
  *
+ * Contact:
+ *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
+ *   Tomofumi Yuki <tomofumi.yuki.fr>
  *
- * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+/* lu.c: this file is part of PolyBench/C */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -27,8 +31,31 @@ void init_array (int n,
   int i, j;
 
   for (i = 0; i < n; i++)
-    for (j = 0; j < n; j++)
-      A[i][j] = ((DATA_TYPE) (i+1)*(j+1)) / n;
+    {
+      for (j = 0; j <= i; j++)
+	A[i][j] = (DATA_TYPE)(-j % n) / n + 1;
+      for (j = i+1; j < n; j++) {
+	A[i][j] = 0;
+      }
+      A[i][i] = 1;
+    }
+
+  /* Make the matrix positive semi-definite. */
+  /* not necessary for LU, but using same code as cholesky */
+  int r,s,t;
+  POLYBENCH_2D_ARRAY_DECL(B, DATA_TYPE, N, N, n, n);
+  for (r = 0; r < n; ++r)
+    for (s = 0; s < n; ++s)
+      (POLYBENCH_ARRAY(B))[r][s] = 0;
+  for (t = 0; t < n; ++t)
+    for (r = 0; r < n; ++r)
+      for (s = 0; s < n; ++s)
+	(POLYBENCH_ARRAY(B))[r][s] += A[r][t] * A[s][t];
+    for (r = 0; r < n; ++r)
+      for (s = 0; s < n; ++s)
+	A[r][s] = (POLYBENCH_ARRAY(B))[r][s];
+  POLYBENCH_FREE_ARRAY(B);
+
 }
 
 
@@ -60,24 +87,20 @@ void kernel_lu(int n,
   int i, j, k;
 
 #pragma scop
-  for (k = 0; k < _PB_N; k++)
-    {
-      for (j = k + 1; j < _PB_N; j++)
-	A[k][j] = A[k][j] / A[k][k];
-      for(i = k + 1; i < _PB_N; i++)
-  /*
-  LLVM: This change ensures we do not calculate nan values, which are
-        formatted differently on different platforms and which may also
-        be optimized unexpectedly.
-  Original code:
-  	for (j = k + 1; j < _PB_N; j++)
-  	  A[i][j] = A[i][j] - A[i][k] * A[k][j];
-  */
-	for (j = k + 1; j < _PB_N; j++)
-	  A[i][j] = A[i][j] + A[i][k] * A[k][j];
+  for (i = 0; i < _PB_N; i++) {
+    for (j = 0; j <i; j++) {
+       for (k = 0; k < j; k++) {
+          A[i][j] -= A[i][k] * A[k][j];
+       }
+        A[i][j] /= A[j][j];
     }
+   for (j = i; j < _PB_N; j++) {
+       for (k = 0; k < i; k++) {
+          A[i][j] -= A[i][k] * A[k][j];
+       }
+    }
+  }
 #pragma endscop
-
 }
 
 #if !FMA_DISABLED
@@ -91,22 +114,19 @@ kernel_lu_StrictFP(int n,
 #pragma STDC FP_CONTRACT OFF
   int i, j, k;
 
-  for (k = 0; k < _PB_N; k++)
-    {
-      for (j = k + 1; j < _PB_N; j++)
-	A[k][j] = A[k][j] / A[k][k];
-      for(i = k + 1; i < _PB_N; i++)
-  /*
-  LLVM: This change ensures we do not calculate nan values, which are
-        formatted differently on different platforms and which may also
-        be optimized unexpectedly.
-  Original code:
-  	for (j = k + 1; j < _PB_N; j++)
-  	  A[i][j] = A[i][j] - A[i][k] * A[k][j];
-  */
-	for (j = k + 1; j < _PB_N; j++)
-	  A[i][j] = A[i][j] + A[i][k] * A[k][j];
+  for (i = 0; i < _PB_N; i++) {
+    for (j = 0; j <i; j++) {
+       for (k = 0; k < j; k++) {
+          A[i][j] -= A[i][k] * A[k][j];
+       }
+        A[i][j] /= A[j][j];
     }
+   for (j = i; j < _PB_N; j++) {
+       for (k = 0; k < i; k++) {
+          A[i][j] -= A[i][k] * A[k][j];
+       }
+    }
+  }
 }
 
 static inline int
@@ -163,7 +183,7 @@ int main(int argc, char** argv)
   polybench_prevent_dce(print_array(n, POLYBENCH_ARRAY(A)));
 #else
   init_array (n, POLYBENCH_ARRAY(A_StrictFP));
-  kernel_lu (n, POLYBENCH_ARRAY(A_StrictFP));
+  kernel_lu_StrictFP (n, POLYBENCH_ARRAY(A_StrictFP));
   if (!check_FP(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_StrictFP)))
     return 1;
 

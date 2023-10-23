@@ -1624,7 +1624,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they result in a compile error. This may
   # be the result of them exercising unsupported extensions that are not
   # supported in flang or some other reason. If there are multiple errors
-  # in a single file, each unique error message will be provided.
+  # in a single file, each distinct error message will be provided.
 
   # error: Entity in ALLOCATE statement must have the ALLOCATABLE or POINTER
   # attribute
@@ -1637,7 +1637,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: The left-hand side of a pointer assignment is not definable
   PR100094.f90
-  associate_42.f90
 
   # error: Assumed-rank array cannot be forwarded to '[var]=' argument
   PR100906.f90
@@ -1686,10 +1685,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   assumed_type_13.f90
   bind-c-contiguous-3.f90
   bind-c-intent-out.f90
-
-  # error: '[SYM]' may not appear in NULLIFY because '[SYM2]' is an INTENT(IN)
-  # dummy argument
-  pointer_intent_1.f90
 
   # error: Assumed type argument requires an explicit interface
   assumed_type_2a.f90
@@ -2028,7 +2023,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they cause flang to hang - possibly in an
   # infinite loop.
 
-  goto_5.f90
   pr49540-1.f90 # Only on AArch64
 
   # --------------------------------------------------------------------------
@@ -2108,8 +2102,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   continuation_13.f90
   continuation_1.f90
   cr_lf.f90
-  cray_pointers_10.f90
-  cray_pointers_5.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
   cshift_large_1.f90
@@ -2175,7 +2167,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   io_real_boz.f90
   iostat_4.f90
   iostat_5.f90
-  is_contiguous_3.f90
   large_real_kind_1.f90
   large_unit_1.f90
   list_directed_large.f90
@@ -2329,6 +2320,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   widechar_intrinsics_8.f90
   write_check.f90
   zero_sized_1.f90
+
+  # ---------------------------------------------------------------------------
+  #
+  # This test fails with optimizations enabled, but succeeds when compiled
+  # without optimizations.
+  inline_transpose_1.f90
 
   # These tests fail at runtime on AArch64 (but pass on x86). Disable them
   # anyway so the test-suite passes by default on AArch64.
@@ -2498,6 +2495,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   recursive_check_2.f90
   string_1_lp64.f90
   substr_10.f90
+
+  # Tests that expect nonconformant IS_CONTIGUOUS answers with zero size arrays.
+  is_contiguous_1.f90
+  is_contiguous_3.f90
 
   # Tests that are errors in gfortran but for which we emit adequate warnings; might need to use -pedantic to see them
   achar_3.f90
@@ -2841,6 +2842,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   whole_file_10.f90
   # Valid error: Values in array constructor must have the same declared type when no explicit type appears
   zero_sized_12.f90
+  # Valid errors: attempts to modify pointer component of INTENT(IN) argument
+  pointer_intent_1.f90
+  # Valid error: ASSOCIATE entities are not pointers
+  associate_42.f90
 
   # Not yet implemented in evaluate / semantics
   # IMAGE_INDEX not (yet) an intrinsic function

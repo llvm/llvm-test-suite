@@ -23,11 +23,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: BIND(C) INTENT(OUT) allocatable deallocation in HLFIR
   bind_c_procs_3.f90
 
-  # unimplemented: character conversion in HLFIR
-  widechar_2.f90
-  widechar_7.f90
-  widechar_intrinsics_10.f90
-
   # unimplemented: pointer assignment inside FORALL
   dependency_19.f90
   forall_3.f90

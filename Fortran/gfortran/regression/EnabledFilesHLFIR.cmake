@@ -28,6 +28,7 @@ file(GLOB PASSING_FILES CONFIGURE_DEPENDS
   elemental_dependency_6.f90
   forall_12.f90
   forall_17.f90
+  inline_transpose_1.f90
   internal_pack_3.f90
   missing_optional_dummy_6.f90
   mvbits_4.f90
