@@ -1,8 +1,9 @@
 list(APPEND LDFLAGS -lm)
 
-if(ARCH STREQUAL "AArch64")
-  # On AArch64 and for C/C++ the new behavior is to flip 'fpp-contract' to
-  # 'on'. This breaks floating point comparison of results.
+if(ARCH STREQUAL "AArch64" OR ARCH STREQUAL "LoongArch")
+  # On AArch64/LoongArch and for C/C++ the new behavior is to flip
+  # '-ffp-contract' to 'on'. This breaks floating point comparison
+  # of results.
   # Turn off the flag so that the result image matches the reference
   # output.
   list(APPEND CXXFLAGS -ffp-contract=off)
