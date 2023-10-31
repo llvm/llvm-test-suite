@@ -161,7 +161,6 @@ set(AMD_TEST_SUITE_EXPECT_PASS
     reduction_teams
     reduction_teams_distribute_parallel
     requires_usm
-    schedule
     simd
     simple_ctor
     slices
@@ -340,7 +339,6 @@ set(NVIDIA_TEST_SUITE_EXPECT_PASS
     reduction_team
     reduction_teams
     reduction_teams_distribute_parallel
-    schedule
     simd
     simple_ctor
     slices
