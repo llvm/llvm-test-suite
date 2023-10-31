@@ -202,12 +202,6 @@ void parseInput(const int argc, char** argv)
     #ifdef PACKAGE_VERSION
     strcpy(progVers, PACKAGE_VERSION);
    #endif
-    //	Reconstruct command line argument as a string.
-    char progCL[256];       //  Complete program command line.
-    strcpy(progCL, argv[0]);
-    for (int i = 1; i < argc; i++)
-    {   strcat(progCL, " ");
-        strcat(progCL, argv[i]); }
     
     //  Set variables to defaults, which may be overridden by CLI.
     verbose                 = false;
