@@ -2500,6 +2500,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   is_contiguous_1.f90
   is_contiguous_3.f90
 
+  # Flang allows a redundant 'contiguous' attribute on scalars and on arrays
+  # that are simply contiguous (not pointers or assumed-shape/rank).
+  contiguous_6.f90
+  contiguous_9.f90
+  pr95503.f90
+
   # Tests that are errors in gfortran but for which we emit adequate warnings; might need to use -pedantic to see them
   achar_3.f90
   achar_5.f90
