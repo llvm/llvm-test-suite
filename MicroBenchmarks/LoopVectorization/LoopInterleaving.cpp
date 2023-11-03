@@ -28,112 +28,8 @@ static void init_data(unsigned N) {
   }
 }
 
-/* Loops without Reduction with different vectorization configurations */
-
-static int __attribute__((noinline)) loopWithoutVecHint(int Iterations) {
-  for (int J = 0; J < Iterations; J++) {
-    A[J] = B[J] + C[J];
-  }
-  return 0;
-}
-
-static int __attribute__((noinline)) loopWithVW4IC1(int Iterations) {
-#pragma clang loop vectorize_width(4) interleave(disable)
-  for (int J = 0; J < Iterations; J++) {
-    A[J] = B[J] + C[J];
-  }
-  return 0;
-}
-
-static int __attribute__((noinline)) loopWithVW4IC2(int Iterations) {
-#pragma clang loop vectorize_width(4) interleave_count(2)
-  for (int J = 0; J < Iterations; J++) {
-    A[J] = B[J] + C[J];
-  }
-  return 0;
-}
-
-static int __attribute__((noinline)) loopWithVW4IC4(int Iterations) {
-#pragma clang loop vectorize_width(4) interleave_count(4)
-  for (int J = 0; J < Iterations; J++) {
-    A[J] = B[J] + C[J];
-  }
-  return 0;
-}
-
-/* Loops with Reduction with different vectorization configurations */
-
-static int __attribute__((noinline))
-loopWithReductionWithoutVecHint(int Iterations) {
-  unsigned sum = 0;
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW4IC1(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(4) interleave(disable)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW4IC2(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(4) interleave_count(2)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW4IC4(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(4) interleave_count(4)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW1IC1(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(1) interleave_count(1)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW1IC2(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(1) interleave_count(2)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
-static int __attribute__((noinline))
-loopWithReductionWithVW1IC4(int Iterations) {
-  unsigned sum = 0;
-#pragma clang loop vectorize_width(1) interleave_count(4)
-  for (int J = 0; J < Iterations; J++) {
-    sum += A[J];
-  }
-  return sum;
-}
-
 static void __attribute__((always_inline))
-benchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
+runBenchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
                          int Iterations) {
   std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(),
                                              std::numeric_limits<int>::max());
@@ -146,6 +42,47 @@ benchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
     g_sum += Fn(Iterations);
   }
 }
+
+#define STRINGIFY(a) #a 
+
+/* Loops without Reduction with different vectorization configurations */
+
+static int __attribute__((noinline)) loopWithoutVecHint(int Iterations) {
+  for (int J = 0; J < Iterations; J++) {
+    A[J] = B[J] + C[J];
+  }
+  return 0;
+}
+
+#define loopWithoutReduction(vw, ic) \
+  static int __attribute__((noinline)) loopWithVW##vw##IC##ic(int Iterations) { \
+    _Pragma( STRINGIFY(clang loop vectorize_width(vw) interleave_count(ic)) ) \
+    for (int J = 0; J < Iterations; J++) { \
+      A[J] = B[J] + C[J]; \
+    } \
+    return 0; \
+  }
+
+/* Loops with Reduction with different vectorization configurations */
+
+static int __attribute__((noinline))
+loopWithReductionWithoutVecHint(int Iterations) {
+  unsigned sum = 0;
+  for (int J = 0; J < Iterations; J++) {
+    sum += A[J];
+  }
+  return sum;
+}
+
+#define loopWithReduction(vw, ic) \
+  static int __attribute__((noinline)) loopWithReductionWithVW##vw##IC##ic(int Iterations) { \
+    unsigned sum = 0; \
+    _Pragma( STRINGIFY(clang loop vectorize_width(vw) interleave_count(ic)) ) \
+    for (int J = 0; J < Iterations; J++) { \
+      sum += A[J]; \
+    } \
+    return sum; \
+  }
 
 // We are evaluating 2 types of loops for different vectorization configurations
 // 1) Loops without reductions
@@ -160,50 +97,61 @@ benchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
 // 6) VW=1, IC=2
 // 7) VW=1, IC=4
 // Of these, configurations 5-7 are skipped for loop type 1).
+// Creating a function for each of the above configurations:
+loopWithoutReduction(4,1);
+loopWithoutReduction(4,2);
+loopWithoutReduction(4,4);
+loopWithReduction(4,1);
+loopWithReduction(4,2);
+loopWithReduction(4,4);
+loopWithReduction(1,1);
+loopWithReduction(1,2);
+loopWithReduction(1,4);
+
 #define ADD_BENCHMARK(Itr)                                                     \
   void benchWithoutVecHintForTC##Itr(benchmark::State &state) {                \
-    benchForLoopInterleaving(state, &loopWithoutVecHint, Itr);                 \
+    runBenchForLoopInterleaving(state, &loopWithoutVecHint, Itr);                 \
   }                                                                            \
   BENCHMARK(benchWithoutVecHintForTC##Itr);                                    \
   void benchForIC1VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaving(state, &loopWithVW4IC1, Itr);                     \
+    runBenchForLoopInterleaving(state, &loopWithVW4IC1, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC1VW4LoopTC##Itr);                                        \
   void benchForIC2VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaving(state, &loopWithVW4IC2, Itr);                     \
+    runBenchForLoopInterleaving(state, &loopWithVW4IC2, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC2VW4LoopTC##Itr);                                        \
   void benchForIC4VW4LoopTC##Itr(benchmark::State &state) {                    \
-    benchForLoopInterleaving(state, &loopWithVW4IC4, Itr);                     \
+    runBenchForLoopInterleaving(state, &loopWithVW4IC4, Itr);                     \
   }                                                                            \
   BENCHMARK(benchForIC4VW4LoopTC##Itr);                                        \
   void benchForLoopWithReductionWithoutVecHintTC##Itr(                         \
       benchmark::State &state) {                                               \
-    benchForLoopInterleaving(state, &loopWithReductionWithoutVecHint, Itr);    \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithoutVecHint, Itr);    \
   }                                                                            \
   BENCHMARK(benchForLoopWithReductionWithoutVecHintTC##Itr);                   \
   void benchForIC1VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC1, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW4IC1, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC1VW4LoopWithReductionTC##Itr);                           \
   void benchForIC2VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC2, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW4IC2, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC2VW4LoopWithReductionTC##Itr);                           \
   void benchForIC4VW4LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW4IC4, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW4IC4, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC4VW4LoopWithReductionTC##Itr);                           \
   void benchForIC1VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC1, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW1IC1, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC1VW1LoopWithReductionTC##Itr);                           \
   void benchForIC2VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC2, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW1IC2, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC2VW1LoopWithReductionTC##Itr);                           \
   void benchForIC4VW1LoopWithReductionTC##Itr(benchmark::State &state) {       \
-    benchForLoopInterleaving(state, &loopWithReductionWithVW1IC4, Itr);        \
+    runBenchForLoopInterleaving(state, &loopWithReductionWithVW1IC4, Itr);        \
   }                                                                            \
   BENCHMARK(benchForIC4VW1LoopWithReductionTC##Itr);
 
