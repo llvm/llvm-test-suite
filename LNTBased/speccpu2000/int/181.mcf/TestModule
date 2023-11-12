@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2000_181_mcf(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '181.mcf'
 
-    train_input_set = ['train/input/inp.in']
-    train_output_set = ['train/output/inp.out']
-    train_args = ['inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err']
-    train_cmp_cmds = ['diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp']
-    ref_input_set = ['ref/input/inp.in']
-    ref_output_set = ['ref/output/inp.out']
-    ref_args = ['inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err']
-    ref_cmp_cmds = ['diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp']
+class SPEC2000_181_mcf(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "181.mcf"
+
+    train_input_set = ["train/input/inp.in"]
+    train_output_set = ["train/output/inp.out"]
+    train_args = ["inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err"]
+    train_cmp_cmds = [
+        "diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp"
+    ]
+    ref_input_set = ["ref/input/inp.in"]
+    ref_output_set = ["ref/output/inp.out"]
+    ref_args = ["inp.in > 181.mcf.inp.out 2> 181.mcf.inp.err"]
+    ref_cmp_cmds = [
+        "diff 181.mcf.inp.out inp.out --strip-trailing-cr > 181.mcf.inp.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_181_mcf
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

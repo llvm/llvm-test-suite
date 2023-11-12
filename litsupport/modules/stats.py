@@ -29,7 +29,7 @@ def _getStats(context):
     dir = os.path.dirname(context.test.getFilePath())
     for path, subdirs, files in os.walk(dir):
         for file in files:
-            if file.endswith('.stats') and file.startswith(prefix):
+            if file.endswith(".stats") and file.startswith(prefix):
                 fullpath = os.path.join(path, file)
                 _mergeStats(stats, fullpath)
 

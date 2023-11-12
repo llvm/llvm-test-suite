@@ -3,3 +3,5 @@
 /test-suite-externals
 *.pyc
 /build*
+.cache
+.vscode

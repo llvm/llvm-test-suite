@@ -549,16 +549,16 @@ static void BM_PIC_2D_RAW(benchmark::State& state) {
 
       for (Index_type ip=0 ; ip< state.range(0) ; ip++ ) {
          Index_type i1, j1, i2, j2;
-         i1 = (Index_type) p[ip][0];
-         j1 = (Index_type) p[ip][1];
+         i1 = (Index_type) (long long) p[ip][0];
+         j1 = (Index_type) (long long) p[ip][1];
          i1 &= 64-1;
          j1 &= 64-1;
          p[ip][2] += b[j1][i1];
          p[ip][3] += c[j1][i1];
          p[ip][0] += p[ip][2];
          p[ip][1] += p[ip][3];
-         i2 = (Index_type) p[ip][0];
-         j2 = (Index_type) p[ip][1];
+         i2 = (Index_type) (long long) p[ip][0];
+         j2 = (Index_type) (long long) p[ip][1];
          i2 = ( i2 & 64-1 ) ;
          j2 = ( j2 & 64-1 ) ;
          p[ip][0] += y[i2+32];
@@ -631,8 +631,8 @@ static void BM_PIC_1D_RAW(benchmark::State& state) {
          xx[k] = 0.0;
          ix[k] = (Index_type) grd[k];
          xi[k] = (Real_type) ix[k];
-         ex1[k] = ex[ ix[k] - 1 ];
-         dex1[k] = dex[ ix[k] - 1 ];
+         ex1[k] = ix[k] ? ex[ ix[k] - 1 ] : 0;
+         dex1[k] = ix[k] ? dex[ ix[k] - 1 ] : 0;
       }
 
       for (Index_type k=0 ; k< state.range(0) ; k++ ) {

@@ -3,24 +3,90 @@
 
 import spec
 
-class SPEC2006_445_gobmk(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '445.gobmk'
 
-    train_input_set = ['all/input/games', 'all/input/golois', 'train/input/arb.tst', 'train/input/arend.tst', 'train/input/arion.tst', 'train/input/atari_atari.tst', 'train/input/blunder.tst', 'train/input/buzco.tst', 'train/input/nicklas2.tst', 'train/input/nicklas4.tst']
-    train_output_set = ['train/output/arb.out', 'train/output/arend.out', 'train/output/arion.out', 'train/output/atari_atari.out', 'train/output/blunder.out', 'train/output/buzco.out', 'train/output/nicklas2.out', 'train/output/nicklas4.out']
-    train_args = ['--quiet --mode gtp < arb.tst > 445.gobmk.arb.out 2> 445.gobmk.arb.err', '--quiet --mode gtp < arend.tst > 445.gobmk.arend.out 2> 445.gobmk.arend.err', '--quiet --mode gtp < arion.tst > 445.gobmk.arion.out 2> 445.gobmk.arion.err', '--quiet --mode gtp < atari_atari.tst > 445.gobmk.atari_atari.out 2> 445.gobmk.atari_atari.err', '--quiet --mode gtp < blunder.tst > 445.gobmk.blunder.out 2> 445.gobmk.blunder.err', '--quiet --mode gtp < buzco.tst > 445.gobmk.buzco.out 2> 445.gobmk.buzco.err', '--quiet --mode gtp < nicklas2.tst > 445.gobmk.nicklas2.out 2> 445.gobmk.nicklas2.err', '--quiet --mode gtp < nicklas4.tst > 445.gobmk.nicklas4.out 2> 445.gobmk.nicklas4.err']
-    train_cmp_cmds = ['diff 445.gobmk.arb.out arb.out --strip-trailing-cr > 445.gobmk.arb.cmp', 'diff 445.gobmk.arend.out arend.out --strip-trailing-cr > 445.gobmk.arend.cmp', 'diff 445.gobmk.arion.out arion.out --strip-trailing-cr > 445.gobmk.arion.cmp', 'diff 445.gobmk.atari_atari.out atari_atari.out --strip-trailing-cr > 445.gobmk.atari_atari.cmp', 'diff 445.gobmk.blunder.out blunder.out --strip-trailing-cr > 445.gobmk.blunder.cmp', 'diff 445.gobmk.buzco.out buzco.out --strip-trailing-cr > 445.gobmk.buzco.cmp', 'diff 445.gobmk.nicklas2.out nicklas2.out --strip-trailing-cr > 445.gobmk.nicklas2.cmp', 'diff 445.gobmk.nicklas4.out nicklas4.out --strip-trailing-cr > 445.gobmk.nicklas4.cmp']
-    ref_input_set = ['all/input/games', 'all/input/golois', 'ref/input/13x13.tst', 'ref/input/nngs.tst', 'ref/input/score2.tst', 'ref/input/trevorc.tst', 'ref/input/trevord.tst']
-    ref_output_set = ['ref/output/13x13.out', 'ref/output/nngs.out', 'ref/output/score2.out', 'ref/output/trevorc.out', 'ref/output/trevord.out']
-    ref_args = ['--quiet --mode gtp < 13x13.tst > 445.gobmk.13x13.out 2> 445.gobmk.13x13.err', '--quiet --mode gtp < nngs.tst > 445.gobmk.nngs.out 2> 445.gobmk.nngs.err', '--quiet --mode gtp < score2.tst > 445.gobmk.score2.out 2> 445.gobmk.score2.err', '--quiet --mode gtp < trevorc.tst > 445.gobmk.trevorc.out 2> 445.gobmk.trevorc.err', '--quiet --mode gtp < trevord.tst > 445.gobmk.trevord.out 2> 445.gobmk.trevord.err']
-    ref_cmp_cmds = ['diff 445.gobmk.13x13.out 13x13.out --strip-trailing-cr > 445.gobmk.13x13.cmp', 'diff 445.gobmk.nngs.out nngs.out --strip-trailing-cr > 445.gobmk.nngs.cmp', 'diff 445.gobmk.score2.out score2.out --strip-trailing-cr > 445.gobmk.score2.cmp', 'diff 445.gobmk.trevorc.out trevorc.out --strip-trailing-cr > 445.gobmk.trevorc.cmp', 'diff 445.gobmk.trevord.out trevord.out --strip-trailing-cr > 445.gobmk.trevord.cmp']
+class SPEC2006_445_gobmk(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "445.gobmk"
+
+    train_input_set = [
+        "all/input/games",
+        "all/input/golois",
+        "train/input/arb.tst",
+        "train/input/arend.tst",
+        "train/input/arion.tst",
+        "train/input/atari_atari.tst",
+        "train/input/blunder.tst",
+        "train/input/buzco.tst",
+        "train/input/nicklas2.tst",
+        "train/input/nicklas4.tst",
+    ]
+    train_output_set = [
+        "train/output/arb.out",
+        "train/output/arend.out",
+        "train/output/arion.out",
+        "train/output/atari_atari.out",
+        "train/output/blunder.out",
+        "train/output/buzco.out",
+        "train/output/nicklas2.out",
+        "train/output/nicklas4.out",
+    ]
+    train_args = [
+        "--quiet --mode gtp < arb.tst > 445.gobmk.arb.out 2> 445.gobmk.arb.err",
+        "--quiet --mode gtp < arend.tst > 445.gobmk.arend.out 2> 445.gobmk.arend.err",
+        "--quiet --mode gtp < arion.tst > 445.gobmk.arion.out 2> 445.gobmk.arion.err",
+        "--quiet --mode gtp < atari_atari.tst > 445.gobmk.atari_atari.out 2> 445.gobmk.atari_atari.err",
+        "--quiet --mode gtp < blunder.tst > 445.gobmk.blunder.out 2> 445.gobmk.blunder.err",
+        "--quiet --mode gtp < buzco.tst > 445.gobmk.buzco.out 2> 445.gobmk.buzco.err",
+        "--quiet --mode gtp < nicklas2.tst > 445.gobmk.nicklas2.out 2> 445.gobmk.nicklas2.err",
+        "--quiet --mode gtp < nicklas4.tst > 445.gobmk.nicklas4.out 2> 445.gobmk.nicklas4.err",
+    ]
+    train_cmp_cmds = [
+        "diff 445.gobmk.arb.out arb.out --strip-trailing-cr > 445.gobmk.arb.cmp",
+        "diff 445.gobmk.arend.out arend.out --strip-trailing-cr > 445.gobmk.arend.cmp",
+        "diff 445.gobmk.arion.out arion.out --strip-trailing-cr > 445.gobmk.arion.cmp",
+        "diff 445.gobmk.atari_atari.out atari_atari.out --strip-trailing-cr > 445.gobmk.atari_atari.cmp",
+        "diff 445.gobmk.blunder.out blunder.out --strip-trailing-cr > 445.gobmk.blunder.cmp",
+        "diff 445.gobmk.buzco.out buzco.out --strip-trailing-cr > 445.gobmk.buzco.cmp",
+        "diff 445.gobmk.nicklas2.out nicklas2.out --strip-trailing-cr > 445.gobmk.nicklas2.cmp",
+        "diff 445.gobmk.nicklas4.out nicklas4.out --strip-trailing-cr > 445.gobmk.nicklas4.cmp",
+    ]
+    ref_input_set = [
+        "all/input/games",
+        "all/input/golois",
+        "ref/input/13x13.tst",
+        "ref/input/nngs.tst",
+        "ref/input/score2.tst",
+        "ref/input/trevorc.tst",
+        "ref/input/trevord.tst",
+    ]
+    ref_output_set = [
+        "ref/output/13x13.out",
+        "ref/output/nngs.out",
+        "ref/output/score2.out",
+        "ref/output/trevorc.out",
+        "ref/output/trevord.out",
+    ]
+    ref_args = [
+        "--quiet --mode gtp < 13x13.tst > 445.gobmk.13x13.out 2> 445.gobmk.13x13.err",
+        "--quiet --mode gtp < nngs.tst > 445.gobmk.nngs.out 2> 445.gobmk.nngs.err",
+        "--quiet --mode gtp < score2.tst > 445.gobmk.score2.out 2> 445.gobmk.score2.err",
+        "--quiet --mode gtp < trevorc.tst > 445.gobmk.trevorc.out 2> 445.gobmk.trevorc.err",
+        "--quiet --mode gtp < trevord.tst > 445.gobmk.trevord.out 2> 445.gobmk.trevord.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 445.gobmk.13x13.out 13x13.out --strip-trailing-cr > 445.gobmk.13x13.cmp",
+        "diff 445.gobmk.nngs.out nngs.out --strip-trailing-cr > 445.gobmk.nngs.cmp",
+        "diff 445.gobmk.score2.out score2.out --strip-trailing-cr > 445.gobmk.score2.cmp",
+        "diff 445.gobmk.trevorc.out trevorc.out --strip-trailing-cr > 445.gobmk.trevorc.cmp",
+        "diff 445.gobmk.trevord.out trevord.out --strip-trailing-cr > 445.gobmk.trevord.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_445_gobmk
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

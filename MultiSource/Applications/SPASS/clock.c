@@ -53,7 +53,9 @@
 /**************************************************************/
 
 float      clock_Akku[clock_TYPESIZE];
+#ifndef CLOCK_NO_TIMING
 CLOCK_TMS  clock_Counters[clock_TYPESIZE];
+#endif
 
 #ifdef WIN
 float      clock_Ping;

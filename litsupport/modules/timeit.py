@@ -38,8 +38,10 @@ def _mutateCommandLine(context, commandline):
             cmd.stderr = None
     else:
         if cmd.stdout is not None or cmd.stderr is not None:
-            raise Exception("Separate stdout/stderr redirection not " +
-                            "possible with traditional output")
+            raise Exception(
+                "Separate stdout/stderr redirection not "
+                + "possible with traditional output"
+            )
         outfile = context.tmpBase + ".out"
         args += ["--append-exitstatus"]
         args += ["--redirect-output", outfile]
@@ -68,7 +70,7 @@ def _mutateScript(context, script):
     return testplan.mutateScript(context, script, _mutateCommandLine)
 
 
-def _collectTime(context, timefiles, metric_name='exec_time'):
+def _collectTime(context, timefiles, metric_name="exec_time"):
     time = 0.0
     for timefile in timefiles:
         filecontent = context.read_result_file(context, timefile)
@@ -96,8 +98,8 @@ def getUserTime(filename):
 def getUserTimeFromContents(contents):
     from_bytes = lambda s: s.decode("utf-8") if type(s) == bytes else s
     lines = [from_bytes(l) for l in contents.splitlines()]
-    line = [line for line in lines if line.startswith('user')]
+    line = [line for line in lines if line.startswith("user")]
     assert len(line) == 1
 
-    m = re.match(r'user\s+([0-9.]+)', line[0])
+    m = re.match(r"user\s+([0-9.]+)", line[0])
     return float(m.group(1))

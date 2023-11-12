@@ -3,25 +3,29 @@
 import re
 import optparse
 
+
 def main():
-    parser = optparse.OptionParser("""\
+    parser = optparse.OptionParser(
+        """\
 usage: %prog [options] <path>
 
 Reads the file at the given path and extracts any "program times" as used by the
-LLVM test-suite Makefiles.""")
-    opts,args = parser.parse_args()
+LLVM test-suite Makefiles."""
+    )
+    opts, args = parser.parse_args()
     if len(args) != 1:
-        parser.error('invalid number of arguments')
-       
+        parser.error("invalid number of arguments")
+
     file = open(args[0])
     try:
-       re_pattern = re.compile(r"program ([0-9]+\.[0-9]+)")
+        re_pattern = re.compile(r"program ([0-9]+\.[0-9]+)")
 
-       data = file.read()
-       for match in re_pattern.finditer(data):
-          print match.group(1)
+        data = file.read()
+        for match in re_pattern.finditer(data):
+            print(match.group(1))
     finally:
-       file.close()
+        file.close()
 
-if __name__ == '__main__':
-   main()
+
+if __name__ == "__main__":
+    main()

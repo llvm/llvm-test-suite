@@ -3,24 +3,52 @@
 
 import spec
 
-class SPEC2000_164_gzip(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '164.gzip'
 
-    train_input_set = ['train/input/input.combined']
-    train_output_set = ['train/output/input.combined.out']
-    train_args = ['input.combined 32 > 164.gzip.combined.out 2> 164.gzip.combined.err']
-    train_cmp_cmds = ['diff 164.gzip.combined.out input.combined.out --strip-trailing-cr > 164.gzip.combined.cmp']
-    ref_input_set = ['ref/input/input.graphic', 'ref/input/input.log', 'ref/input/input.program', 'ref/input/input.random', 'ref/input/input.source']
-    ref_output_set = ['ref/output/input.graphic.out', 'ref/output/input.log.out', 'ref/output/input.program.out', 'ref/output/input.random.out', 'ref/output/input.source.out']
-    ref_args = ['input.graphic 60 > 164.gzip.graphic.out 2> 164.gzip.graphic.err', 'input.log 60 > 164.gzip.log.out 2> 164.gzip.log.err', 'input.program 60 > 164.gzip.program.out 2> 164.gzip.program.err', 'input.random 60 > 164.gzip.random.out 2> 164.gzip.random.err', 'input.source 60 > 164.gzip.source.out 2> 164.gzip.source.err']
-    ref_cmp_cmds = ['diff 164.gzip.graphic.out input.graphic.out --strip-trailing-cr > 164.gzip.graphic.cmp', 'diff 164.gzip.log.out input.log.out --strip-trailing-cr > 164.gzip.log.cmp', 'diff 164.gzip.program.out input.program.out --strip-trailing-cr > 164.gzip.program.cmp', 'diff 164.gzip.random.out input.random.out --strip-trailing-cr > 164.gzip.random.cmp', 'diff 164.gzip.source.out input.source.out --strip-trailing-cr > 164.gzip.source.cmp']
+class SPEC2000_164_gzip(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "164.gzip"
+
+    train_input_set = ["train/input/input.combined"]
+    train_output_set = ["train/output/input.combined.out"]
+    train_args = ["input.combined 32 > 164.gzip.combined.out 2> 164.gzip.combined.err"]
+    train_cmp_cmds = [
+        "diff 164.gzip.combined.out input.combined.out --strip-trailing-cr > 164.gzip.combined.cmp"
+    ]
+    ref_input_set = [
+        "ref/input/input.graphic",
+        "ref/input/input.log",
+        "ref/input/input.program",
+        "ref/input/input.random",
+        "ref/input/input.source",
+    ]
+    ref_output_set = [
+        "ref/output/input.graphic.out",
+        "ref/output/input.log.out",
+        "ref/output/input.program.out",
+        "ref/output/input.random.out",
+        "ref/output/input.source.out",
+    ]
+    ref_args = [
+        "input.graphic 60 > 164.gzip.graphic.out 2> 164.gzip.graphic.err",
+        "input.log 60 > 164.gzip.log.out 2> 164.gzip.log.err",
+        "input.program 60 > 164.gzip.program.out 2> 164.gzip.program.err",
+        "input.random 60 > 164.gzip.random.out 2> 164.gzip.random.err",
+        "input.source 60 > 164.gzip.source.out 2> 164.gzip.source.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 164.gzip.graphic.out input.graphic.out --strip-trailing-cr > 164.gzip.graphic.cmp",
+        "diff 164.gzip.log.out input.log.out --strip-trailing-cr > 164.gzip.log.cmp",
+        "diff 164.gzip.program.out input.program.out --strip-trailing-cr > 164.gzip.program.cmp",
+        "diff 164.gzip.random.out input.random.out --strip-trailing-cr > 164.gzip.random.cmp",
+        "diff 164.gzip.source.out input.source.out --strip-trailing-cr > 164.gzip.source.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_164_gzip
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

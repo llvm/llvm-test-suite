@@ -4,38 +4,62 @@
 import os, shutil
 import spec
 
-class SPEC2000_255_vortex(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '255.vortex'
 
-    train_input_set = ['train/input/lendian.rnv', 'train/input/lendian.wnv', 'train/input/persons.250', 'train/input/lendian.raw']
-    train_output_set = ['train/output/vortex.out']
-    train_args = ['lendian.raw > 255.vortex.lendian.out 2> 255.vortex.lendian.err']
-    train_cmp_cmds = ['diff vortex.out-expected vortex.out > 255.vortex.lendian.cmp']
-    ref_input_set = ['ref/input/lendian.rnv', 'ref/input/lendian.wnv', 'ref/input/persons.1k', 'ref/input/lendian1.raw', 'ref/input/lendian2.raw', 'ref/input/lendian3.raw']
-    ref_output_set = ['ref/output/vortex1.out', 'ref/output/vortex2.out', 'ref/output/vortex3.out']
-    ref_args = ['lendian1.raw > 255.vortex.lendian1.out 2> 255.vortex.lendian1.err', 'lendian2.raw > 255.vortex.lendian2.out 2> 255.vortex.lendian2.err', 'lendian3.raw > 255.vortex.lendian3.out 2> 255.vortex.lendian3.err']
-    ref_cmp_cmds = ['diff vortex1.out.expected vortex1.out > 255.vortex.lendian1.cmp',
-                    'diff vortex2.out.expected vortex2.out > 255.vortex.lendian2.cmp',
-                    'diff vortex3.out.expected vortex3.out > 255.vortex.lendian3.cmp']
+class SPEC2000_255_vortex(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "255.vortex"
+
+    train_input_set = [
+        "train/input/lendian.rnv",
+        "train/input/lendian.wnv",
+        "train/input/persons.250",
+        "train/input/lendian.raw",
+    ]
+    train_output_set = ["train/output/vortex.out"]
+    train_args = ["lendian.raw > 255.vortex.lendian.out 2> 255.vortex.lendian.err"]
+    train_cmp_cmds = ["diff vortex.out-expected vortex.out > 255.vortex.lendian.cmp"]
+    ref_input_set = [
+        "ref/input/lendian.rnv",
+        "ref/input/lendian.wnv",
+        "ref/input/persons.1k",
+        "ref/input/lendian1.raw",
+        "ref/input/lendian2.raw",
+        "ref/input/lendian3.raw",
+    ]
+    ref_output_set = [
+        "ref/output/vortex1.out",
+        "ref/output/vortex2.out",
+        "ref/output/vortex3.out",
+    ]
+    ref_args = [
+        "lendian1.raw > 255.vortex.lendian1.out 2> 255.vortex.lendian1.err",
+        "lendian2.raw > 255.vortex.lendian2.out 2> 255.vortex.lendian2.err",
+        "lendian3.raw > 255.vortex.lendian3.out 2> 255.vortex.lendian3.err",
+    ]
+    ref_cmp_cmds = [
+        "diff vortex1.out.expected vortex1.out > 255.vortex.lendian1.cmp",
+        "diff vortex2.out.expected vortex2.out > 255.vortex.lendian2.cmp",
+        "diff vortex3.out.expected vortex3.out > 255.vortex.lendian3.cmp",
+    ]
 
     # We need to rename the files for the expected output because the test
     # generate its output under the same names.
     def copy_output_set(self, dest_dir, size):
-        if size == 'train':
+        if size == "train":
             output_set = self.train_output_set
         else:
             output_set = self.ref_output_set
 
         for f in output_set:
-            filename = os.path.basename(f) + '.expected'
+            filename = os.path.basename(f) + ".expected"
             shutil.copy(os.path.join(self.datadir, f), os.path.join(dest_dir, filename))
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_255_vortex
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

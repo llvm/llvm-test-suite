@@ -3,24 +3,70 @@
 
 import spec
 
-class SPEC2006_401_bzip2(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '401.bzip2'
 
-    train_input_set = ['train/input/byoudoin.jpg', 'all/input/input.combined', 'all/input/input.program']
-    train_output_set = ['train/output/byoudoin.jpg.out', 'train/output/input.combined.out', 'train/output/input.program.out']
-    train_args = ['byoudoin.jpg 5 > 401.bzip2.byoudoin.out 2> 401.bzip2.byoudoin.err', 'input.combined 80 > 401.bzip2.combined.out 2> 401.bzip2.combined.err', 'input.program 10 > 401.bzip2.program.out 2> 401.bzip2.program.err']
-    train_cmp_cmds = ['diff 401.bzip2.byoudoin.out byoudoin.jpg.out --strip-trailing-cr > 401.bzip2.byoudoin.cmp', 'diff 401.bzip2.combined.out input.combined.out --strip-trailing-cr > 401.bzip2.combined.cmp', 'diff 401.bzip2.program.out input.program.out --strip-trailing-cr > 401.bzip2.program.cmp']
-    ref_input_set = ['ref/input/chicken.jpg', 'all/input/input.combined', 'ref/input/text.html', 'ref/input/liberty.jpg', 'all/input/input.program', 'ref/input/input.source']
-    ref_output_set = ['ref/output/chicken.jpg.out', 'ref/output/input.combined.out', 'ref/output/text.html.out', 'ref/output/liberty.jpg.out', 'ref/output/input.program.out', 'ref/output/input.source.out']
-    ref_args = ['chicken.jpg 30 > 401.bzip2.chicken.out 2> 401.bzip2.chicken.err', 'input.combined 200 > 401.bzip2.combined.out 2> 401.bzip2.combined.err', 'text.html 280 > 401.bzip2.html.out 2> 401.bzip2.html.err', 'liberty.jpg 30 > 401.bzip2.liberty.out 2> 401.bzip2.liberty.err', 'input.program 280 > 401.bzip2.program.out 2> 401.bzip2.program.err', 'input.source 280 > 401.bzip2.source.out 2> 401.bzip2.source.err']
-    ref_cmp_cmds = ['diff 401.bzip2.chicken.out chicken.jpg.out --strip-trailing-cr > 401.bzip2.chicken.cmp', 'diff 401.bzip2.combined.out input.combined.out --strip-trailing-cr > 401.bzip2.combined.cmp', 'diff 401.bzip2.html.out text.html.out --strip-trailing-cr > 401.bzip2.html.cmp', 'diff 401.bzip2.liberty.out liberty.jpg.out --strip-trailing-cr > 401.bzip2.liberty.cmp', 'diff 401.bzip2.program.out input.program.out --strip-trailing-cr > 401.bzip2.program.cmp', 'diff 401.bzip2.source.out input.source.out --strip-trailing-cr > 401.bzip2.source.cmp']
+class SPEC2006_401_bzip2(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "401.bzip2"
+
+    train_input_set = [
+        "train/input/byoudoin.jpg",
+        "all/input/input.combined",
+        "all/input/input.program",
+    ]
+    train_output_set = [
+        "train/output/byoudoin.jpg.out",
+        "train/output/input.combined.out",
+        "train/output/input.program.out",
+    ]
+    train_args = [
+        "byoudoin.jpg 5 > 401.bzip2.byoudoin.out 2> 401.bzip2.byoudoin.err",
+        "input.combined 80 > 401.bzip2.combined.out 2> 401.bzip2.combined.err",
+        "input.program 10 > 401.bzip2.program.out 2> 401.bzip2.program.err",
+    ]
+    train_cmp_cmds = [
+        "diff 401.bzip2.byoudoin.out byoudoin.jpg.out --strip-trailing-cr > 401.bzip2.byoudoin.cmp",
+        "diff 401.bzip2.combined.out input.combined.out --strip-trailing-cr > 401.bzip2.combined.cmp",
+        "diff 401.bzip2.program.out input.program.out --strip-trailing-cr > 401.bzip2.program.cmp",
+    ]
+    ref_input_set = [
+        "ref/input/chicken.jpg",
+        "all/input/input.combined",
+        "ref/input/text.html",
+        "ref/input/liberty.jpg",
+        "all/input/input.program",
+        "ref/input/input.source",
+    ]
+    ref_output_set = [
+        "ref/output/chicken.jpg.out",
+        "ref/output/input.combined.out",
+        "ref/output/text.html.out",
+        "ref/output/liberty.jpg.out",
+        "ref/output/input.program.out",
+        "ref/output/input.source.out",
+    ]
+    ref_args = [
+        "chicken.jpg 30 > 401.bzip2.chicken.out 2> 401.bzip2.chicken.err",
+        "input.combined 200 > 401.bzip2.combined.out 2> 401.bzip2.combined.err",
+        "text.html 280 > 401.bzip2.html.out 2> 401.bzip2.html.err",
+        "liberty.jpg 30 > 401.bzip2.liberty.out 2> 401.bzip2.liberty.err",
+        "input.program 280 > 401.bzip2.program.out 2> 401.bzip2.program.err",
+        "input.source 280 > 401.bzip2.source.out 2> 401.bzip2.source.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 401.bzip2.chicken.out chicken.jpg.out --strip-trailing-cr > 401.bzip2.chicken.cmp",
+        "diff 401.bzip2.combined.out input.combined.out --strip-trailing-cr > 401.bzip2.combined.cmp",
+        "diff 401.bzip2.html.out text.html.out --strip-trailing-cr > 401.bzip2.html.cmp",
+        "diff 401.bzip2.liberty.out liberty.jpg.out --strip-trailing-cr > 401.bzip2.liberty.cmp",
+        "diff 401.bzip2.program.out input.program.out --strip-trailing-cr > 401.bzip2.program.cmp",
+        "diff 401.bzip2.source.out input.source.out --strip-trailing-cr > 401.bzip2.source.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_401_bzip2
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

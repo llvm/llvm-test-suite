@@ -4,13 +4,14 @@ from __future__ import print_function
 import os
 import sys
 
-DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".dbg.out"
-OPT_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".dbg.opt.out"
-LOG_FILE="Output/" + sys.argv[1] + ".log"
-NATIVE_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".native.dbg.out"
-NATIVE_OPT_DBG_OUTPUT_FILE="Output/" + sys.argv[1] + ".native.dbg.opt.out"
-NATIVE_LOG_FILE="Output/" + sys.argv[1] + ".native.log"
-REPORT_FILE="Output/" + sys.argv[1] + ".dbg.report.txt"
+DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".dbg.out"
+OPT_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".dbg.opt.out"
+LOG_FILE = "Output/" + sys.argv[1] + ".log"
+NATIVE_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".native.dbg.out"
+NATIVE_OPT_DBG_OUTPUT_FILE = "Output/" + sys.argv[1] + ".native.dbg.opt.out"
+NATIVE_LOG_FILE = "Output/" + sys.argv[1] + ".native.log"
+REPORT_FILE = "Output/" + sys.argv[1] + ".dbg.report.txt"
+
 
 class BreakPoint:
     def __init__(self, bp_name):
@@ -44,12 +45,12 @@ class BreakPoint:
 
     def recordArgument(self, arg_name, value):
         self.values[arg_name] = value
-        
+
     def __repr__(self):
         print(self.name)
         for k, v in self.values.items():
             print(k, "=", v)
-        return ''
+        return ""
 
     def compare_args(self, other, file):
         myitems = self.values.items()
@@ -77,8 +78,9 @@ class BreakPoint:
         pfile.write(txt)
         for e in items:
             pfile.write(e)
-            pfile.write(' ')
-        pfile.write('\n')
+            pfile.write(" ")
+        pfile.write("\n")
+
 
 def read_input(filename, dict):
     f = open(filename, "r")
@@ -98,6 +100,7 @@ def read_input(filename, dict):
             bp.recordArgument(c[3], c[4])
     return
 
+
 f1_breakpoints = {}
 read_input(DBG_OUTPUT_FILE, f1_breakpoints)
 f1_items = f1_breakpoints.items()
@@ -105,7 +108,7 @@ f1_items = f1_breakpoints.items()
 f2_breakpoints = {}
 read_input(OPT_DBG_OUTPUT_FILE, f2_breakpoints)
 f2_items = f2_breakpoints.items()
-    
+
 f = open(LOG_FILE, "w")
 f.write("Log output\n")
 for id, bp in f2_items:
@@ -113,7 +116,7 @@ for id, bp in f2_items:
     if bp1 is None:
         bp.setMissing()
     else:
-        bp1.compare_args(bp,f)
+        bp1.compare_args(bp, f)
 f.close()
 
 nf1_breakpoints = {}
@@ -123,14 +126,14 @@ nf1_items = nf1_breakpoints.items()
 nf2_breakpoints = {}
 read_input(NATIVE_OPT_DBG_OUTPUT_FILE, nf2_breakpoints)
 nf2_items = nf2_breakpoints.items()
-    
+
 nfl = open(NATIVE_LOG_FILE, "w")
 for id, bp in nf2_items:
     bp1 = nf1_breakpoints.get(id)
     if bp1 is None:
         bp.setMissing()
     else:
-        bp1.compare_args(bp,nfl)
+        bp1.compare_args(bp, nfl)
 nfl.close()
 
 f1_arg_count = 0
@@ -156,34 +159,34 @@ for nf1_item in nf1_items:
     nf1_missing_arg_count = nf1_missing_arg_count + bp.getMissingArgCount()
 
 rf = open(REPORT_FILE, "w")
-rf.write("---------------------------------------------------------------\n");
+rf.write("---------------------------------------------------------------\n")
 rf.write(">>> ========= '")
 rf.write(sys.argv[1])
 rf.write("'")
 rf.write(" Program\n")
-rf.write("---------------------------------------------------------------\n\n");
-rf.write("GCC Total Arguments: ") 
+rf.write("---------------------------------------------------------------\n\n")
+rf.write("GCC Total Arguments: ")
 rf.write(str(nf1_arg_count))
 rf.write("\n")
-rf.write("GCC Matching Arguments: ") 
+rf.write("GCC Matching Arguments: ")
 rf.write(str(nf1_matching_arg_count))
 rf.write("\n")
-rf.write("GCC Not Matching Arguments: ") 
+rf.write("GCC Not Matching Arguments: ")
 rf.write(str(nf1_notmatching_arg_count))
 rf.write("\n")
-rf.write("GCC Missing Arguments: ") 
+rf.write("GCC Missing Arguments: ")
 rf.write(str(nf1_missing_arg_count))
 rf.write("\n")
-rf.write("LLVM Total Arguments: ") 
+rf.write("LLVM Total Arguments: ")
 rf.write(str(f1_arg_count))
 rf.write("\n")
-rf.write("LLVM Matching Arguments: ") 
+rf.write("LLVM Matching Arguments: ")
 rf.write(str(f1_matching_arg_count))
 rf.write("\n")
-rf.write("LLVM Not Matching Arguments: ") 
+rf.write("LLVM Not Matching Arguments: ")
 rf.write(str(f1_notmatching_arg_count))
 rf.write("\n")
-rf.write("LLVM Missing Arguments: ") 
+rf.write("LLVM Missing Arguments: ")
 rf.write(str(f1_missing_arg_count))
 rf.write("\n")
 rf.close()

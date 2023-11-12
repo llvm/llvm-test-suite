@@ -271,8 +271,8 @@ int main(int argc, char **argv) {
    mesh->parallel_output("CPU:  setup time               time was",cpu_time_main_setup, 0, "s");
    #endif 
 
-   long long mem_used = memstats_memused();
    #ifdef MEMORY
+   long long mem_used = memstats_memused();
    if (mem_used > 0) {
       mesh->parallel_output("Memory used      in startup ",mem_used, 0, "kB");
       mesh->parallel_output("Memory peak      in startup ",memstats_mempeak(), 0, "kB");
@@ -626,9 +626,9 @@ extern "C" void do_calc(void)
 
       //  Get overall program timing.
       double elapsed_time = cpu_timer_stop(tstart);
-      
-      long long mem_used = memstats_memused();
+
       #ifdef MEMORY
+      long long mem_used = memstats_memused();
       if (mem_used > 0) {
          printf("Memory used      %lld kB\n",mem_used);
          printf("Memory peak      %lld kB\n",memstats_mempeak());
@@ -669,7 +669,7 @@ extern "C" void do_calc(void)
       fclose(fp);
       exit(0);
    }  //  Complete final output.
-   
+
 } // end do_calc
 
 const int CRUX_CLAMR_VERSION = 101;

@@ -3,24 +3,32 @@
 
 import spec
 
-class SPEC2000_197_parser(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '197.parser'
 
-    train_input_set = ['all/input/2.1.dict', 'all/input/words', 'train/input/train.in']
-    train_output_set = ['train/output/train.out']
-    train_args = ['< train.in 2.1.dict -batch > 197.parser.train.out 2> 197.parser.train.err']
-    train_cmp_cmds = ['diff 197.parser.train.out train.out --strip-trailing-cr > 197.parser.train.cmp']
-    ref_input_set = ['all/input/2.1.dict', 'all/input/words', 'ref/input/ref.in']
-    ref_output_set = ['ref/output/ref.out']
-    ref_args = ['< ref.in 2.1.dict -batch > 197.parser.ref.out 2> 197.parser.ref.err']
-    ref_cmp_cmds = ['diff 197.parser.ref.out ref.out --strip-trailing-cr > 197.parser.ref.cmp']
+class SPEC2000_197_parser(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "197.parser"
+
+    train_input_set = ["all/input/2.1.dict", "all/input/words", "train/input/train.in"]
+    train_output_set = ["train/output/train.out"]
+    train_args = [
+        "< train.in 2.1.dict -batch > 197.parser.train.out 2> 197.parser.train.err"
+    ]
+    train_cmp_cmds = [
+        "diff 197.parser.train.out train.out --strip-trailing-cr > 197.parser.train.cmp"
+    ]
+    ref_input_set = ["all/input/2.1.dict", "all/input/words", "ref/input/ref.in"]
+    ref_output_set = ["ref/output/ref.out"]
+    ref_args = ["< ref.in 2.1.dict -batch > 197.parser.ref.out 2> 197.parser.ref.err"]
+    ref_cmp_cmds = [
+        "diff 197.parser.ref.out ref.out --strip-trailing-cr > 197.parser.ref.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_197_parser
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

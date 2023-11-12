@@ -25,6 +25,6 @@ def mutatePlan(context, plan):
 
     # Run profdata merge at the end
     profdatafile = context.executable + ".profdata"
-    args = ['merge', '-output=%s' % profdatafile] + context.profilefiles
+    args = ["merge", "-output=%s" % profdatafile] + context.profilefiles
     mergecmd = shellcommand.ShellCommand(context.config.llvm_profdata, args)
     plan.profilescript += [mergecmd.toCommandline()]

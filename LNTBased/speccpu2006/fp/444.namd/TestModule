@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2006_444_namd(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '444.namd'
 
-    train_input_set = ['all/input/namd.input']
-    train_output_set = ['train/output/namd.out']
-    train_args = ['--input namd.input --iterations 1 --output namd.out > 444.namd.namd.out 2> 444.namd.namd.err']
-    train_cmp_cmds = ['fpcmp -a 0.00001 namd.out namd.out > 444.namd.namd.cmp']
-    ref_input_set = ['all/input/namd.input']
-    ref_output_set = ['ref/output/namd.out']
-    ref_args = ['--input namd.input --iterations 38 --output namd.out > 444.namd.namd.out 2> 444.namd.namd.err']
-    ref_cmp_cmds = ['fpcmp -a 0.00001 namd.out namd.out > 444.namd.namd.cmp']
+class SPEC2006_444_namd(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "444.namd"
+
+    train_input_set = ["all/input/namd.input"]
+    train_output_set = ["train/output/namd.out"]
+    train_args = [
+        "--input namd.input --iterations 1 --output namd.out > 444.namd.namd.out 2> 444.namd.namd.err"
+    ]
+    train_cmp_cmds = ["fpcmp -a 0.00001 namd.out namd.out > 444.namd.namd.cmp"]
+    ref_input_set = ["all/input/namd.input"]
+    ref_output_set = ["ref/output/namd.out"]
+    ref_args = [
+        "--input namd.input --iterations 38 --output namd.out > 444.namd.namd.out 2> 444.namd.namd.err"
+    ]
+    ref_cmp_cmds = ["fpcmp -a 0.00001 namd.out namd.out > 444.namd.namd.cmp"]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_444_namd
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

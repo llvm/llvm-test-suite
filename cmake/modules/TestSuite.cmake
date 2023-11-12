@@ -49,6 +49,7 @@ function(llvm_test_executable_no_test target)
   append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
   append_target_flags(COMPILE_FLAGS ${target} ${CPPFLAGS})
   append_target_flags(COMPILE_FLAGS ${target} ${CXXFLAGS})
+  append_target_flags(COMPILE_FLAGS ${target} ${FFLAGS})
   # Note that we cannot use target_link_libraries() here because that one
   # only interprets inputs starting with '-' as flags.
   append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})
@@ -70,9 +71,9 @@ function(llvm_test_executable_no_test target)
 endfunction()
 
 # Creates a new executable build target. Use this instead of `add_executable`.
-# It applies CFLAGS, CPPFLAGS, CXXFLAGS and LDFLAGS. Creates a .test file if
-# necessary, registers the target with the TEST_SUITE_TARGETS list and makes
-# sure we build the required dependencies for compiletime measurements
+# It applies CFLAGS, CPPFLAGS, CXXFLAGS, FFLAGS and LDFLAGS. Creates a .test
+# file if necessary, registers the target with the TEST_SUITE_TARGETS list and
+# makes sure we build the required dependencies for compiletime measurements
 # and support the TEST_SUITE_PROFILE_USE mode.
 function(llvm_test_executable target)
   llvm_test_executable_no_test(${target} ${ARGN})
@@ -89,6 +90,7 @@ function(llvm_test_library target)
   append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
   append_target_flags(COMPILE_FLAGS ${target} ${CPPFLAGS})
   append_target_flags(COMPILE_FLAGS ${target} ${CXXFLAGS})
+  append_target_flags(COMPILE_FLAGS ${target} ${FFLAGS})
   # Note that we cannot use target_link_libraries() here because that one
   # only interprets inputs starting with '-' as flags.
   append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})

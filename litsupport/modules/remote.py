@@ -9,8 +9,11 @@ import subprocess
 
 def _wrap_command(context, command):
     escaped_command = command.replace("'", "'\\''")
-    return "%s %s '%s'" % (context.config.remote_client,
-                           context.config.remote_host, escaped_command)
+    return "%s %s '%s'" % (
+        context.config.remote_client,
+        context.config.remote_host,
+        escaped_command,
+    )
 
 
 def _mutateCommandline(context, commandline):
@@ -20,6 +23,7 @@ def _mutateCommandline(context, commandline):
 def _mutateScript(context, script):
     def mutate(context, command):
         return _mutateCommandline(context, command)
+
     return testplan.mutateScript(context, script, mutate)
 
 
@@ -33,8 +37,7 @@ def remote_read_result_file(context, path):
 def mutatePlan(context, plan):
     plan.preparescript = _mutateScript(context, plan.preparescript)
     # We need the temporary directory to exist on the remote as well.
-    command = _wrap_command(context,
-                            "mkdir -p '%s'" % os.path.dirname(context.tmpBase))
+    command = _wrap_command(context, "mkdir -p '%s'" % os.path.dirname(context.tmpBase))
     plan.preparescript.insert(0, command)
     plan.runscript = _mutateScript(context, plan.runscript)
     plan.verifyscript = _mutateScript(context, plan.verifyscript)

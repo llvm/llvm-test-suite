@@ -3,24 +3,32 @@
 
 import spec
 
-class SPEC2006_470_lbm(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '470.lbm'
 
-    train_input_set = ['train/input/100_100_130_cf_b.of']
-    train_output_set = ['train/output/lbm.out']
-    train_args = ['300 reference.dat 0 1 100_100_130_cf_b.of > 470.lbm.train.out 2> 470.lbm.train.err']
-    train_cmp_cmds = ['fpcmp -a 0.0000001 470.lbm.train.out lbm.out > 470.lbm.train.cmp']
-    ref_input_set = ['ref/input/100_100_130_ldc.of']
-    ref_output_set = ['ref/output/lbm.out']
-    ref_args = ['3000 reference.dat 0 0 100_100_130_ldc.of > 470.lbm.ref.out 2> 470.lbm.ref.err']
-    ref_cmp_cmds = ['fpcmp -a 0.0000001 470.lbm.ref.out lbm.out > 470.lbm.ref.cmp']
+class SPEC2006_470_lbm(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "470.lbm"
+
+    train_input_set = ["train/input/100_100_130_cf_b.of"]
+    train_output_set = ["train/output/lbm.out"]
+    train_args = [
+        "300 reference.dat 0 1 100_100_130_cf_b.of > 470.lbm.train.out 2> 470.lbm.train.err"
+    ]
+    train_cmp_cmds = [
+        "fpcmp -a 0.0000001 470.lbm.train.out lbm.out > 470.lbm.train.cmp"
+    ]
+    ref_input_set = ["ref/input/100_100_130_ldc.of"]
+    ref_output_set = ["ref/output/lbm.out"]
+    ref_args = [
+        "3000 reference.dat 0 0 100_100_130_ldc.of > 470.lbm.ref.out 2> 470.lbm.ref.err"
+    ]
+    ref_cmp_cmds = ["fpcmp -a 0.0000001 470.lbm.ref.out lbm.out > 470.lbm.ref.cmp"]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_470_lbm
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

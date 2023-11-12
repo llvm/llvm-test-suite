@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2006_471_omnetpp(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '471.omnetpp'
 
-    train_input_set = ['train/input/omnetpp.ini']
-    train_output_set = ['train/output/omnetpp.log']
-    train_args = ['omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err']
-    train_cmp_cmds = ['diff 471.omnetpp.input1.out omnetpp.log --strip-trailing-cr > 471.omnetpp.input1.cmp']
-    ref_input_set = ['ref/input/omnetpp.ini']
-    ref_output_set = ['ref/output/omnetpp.log']
-    ref_args = ['omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err']
-    ref_cmp_cmds = ['fpcmp -a 0.000001 -r 0.00001 471.omnetpp.input1.out omnetpp.log > 471.omnetpp.input1.cmp']
+class SPEC2006_471_omnetpp(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "471.omnetpp"
+
+    train_input_set = ["train/input/omnetpp.ini"]
+    train_output_set = ["train/output/omnetpp.log"]
+    train_args = ["omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err"]
+    train_cmp_cmds = [
+        "diff 471.omnetpp.input1.out omnetpp.log --strip-trailing-cr > 471.omnetpp.input1.cmp"
+    ]
+    ref_input_set = ["ref/input/omnetpp.ini"]
+    ref_output_set = ["ref/output/omnetpp.log"]
+    ref_args = ["omnetpp.ini > 471.omnetpp.input1.out 2> 471.omnetpp.input1.err"]
+    ref_cmp_cmds = [
+        "fpcmp -a 0.000001 -r 0.00001 471.omnetpp.input1.out omnetpp.log > 471.omnetpp.input1.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_471_omnetpp
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

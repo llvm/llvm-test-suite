@@ -6,26 +6,31 @@ import platform
 
 
 def compute(context):
-    if hasattr(context, 'executable_hash'):
+    if hasattr(context, "executable_hash"):
         return
     executable = context.executable
     try:
         # Darwin's and Solaris' "strip" don't support these arguments.
-        if platform.system() != 'Darwin' and platform.system() != 'SunOS':
-            stripped_executable = executable + '.stripped'
-            testplan.check_call([context.config.strip_tool,
-                                 '--remove-section=.comment',
-                                 "--remove-section='.note*'",
-                                 '-o', stripped_executable,
-                                 executable])
+        if platform.system() != "Darwin" and platform.system() != "SunOS":
+            stripped_executable = executable + ".stripped"
+            testplan.check_call(
+                [
+                    context.config.strip_tool,
+                    "--remove-section=.comment",
+                    "--remove-section='.note*'",
+                    "-o",
+                    stripped_executable,
+                    executable,
+                ]
+            )
             executable = stripped_executable
 
         h = hashlib.md5()
-        h.update(open(executable, 'rb').read())
+        h.update(open(executable, "rb").read())
         context.executable_hash = h.hexdigest()
     except Exception:
-        logging.info('Could not calculate hash for %s' % executable)
-        context.executable_hash = ''
+        logging.info("Could not calculate hash for %s" % executable)
+        context.executable_hash = ""
 
 
 def same_as_previous(context):
@@ -47,7 +52,7 @@ def same_as_previous(context):
 
 def _getHash(context):
     compute(context)
-    return {'hash': context.executable_hash}
+    return {"hash": context.executable_hash}
 
 
 def mutatePlan(context, plan):

@@ -3,24 +3,40 @@
 
 import spec
 
-class SPEC2000_300_twolf(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '300.twolf'
 
-    train_input_set = ['train/input/train.blk', 'train/input/train.cel', 'train/input/train.par', 'train/input/train.net']
-    train_output_set = ['train/output/train.stdout']
-    train_args = ['train > 300.twolf.train.out 2> 300.twolf.train.err']
-    train_cmp_cmds = ['diff 300.twolf.train.out train.stdout --strip-trailing-cr > 300.twolf.train.cmp']
-    ref_input_set = ['ref/input/ref.blk', 'ref/input/ref.cel', 'ref/input/ref.par', 'ref/input/ref.net']
-    ref_output_set = ['ref/output/ref.stdout']
-    ref_args = ['ref > 300.twolf.ref.out 2> 300.twolf.ref.err']
-    ref_cmp_cmds = ['diff 300.twolf.ref.out ref.stdout --strip-trailing-cr > 300.twolf.ref.cmp']
+class SPEC2000_300_twolf(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "300.twolf"
+
+    train_input_set = [
+        "train/input/train.blk",
+        "train/input/train.cel",
+        "train/input/train.par",
+        "train/input/train.net",
+    ]
+    train_output_set = ["train/output/train.stdout"]
+    train_args = ["train > 300.twolf.train.out 2> 300.twolf.train.err"]
+    train_cmp_cmds = [
+        "diff 300.twolf.train.out train.stdout --strip-trailing-cr > 300.twolf.train.cmp"
+    ]
+    ref_input_set = [
+        "ref/input/ref.blk",
+        "ref/input/ref.cel",
+        "ref/input/ref.par",
+        "ref/input/ref.net",
+    ]
+    ref_output_set = ["ref/output/ref.stdout"]
+    ref_args = ["ref > 300.twolf.ref.out 2> 300.twolf.ref.err"]
+    ref_cmp_cmds = [
+        "diff 300.twolf.ref.out ref.stdout --strip-trailing-cr > 300.twolf.ref.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_300_twolf
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

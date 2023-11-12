@@ -55,7 +55,11 @@ set(LLVM_CODESIGNING_IDENTITY "" CACHE STRING
 add_definitions(-DNDEBUG)
 option(TEST_SUITE_SUPPRESS_WARNINGS "Suppress all warnings" ON)
 if(${TEST_SUITE_SUPPRESS_WARNINGS})
-  add_definitions(-w)
+  if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
+    # NOTE: ATM (18/8/23) LLVM Flang does not support the -w flag.
+    # FIXME: Don't use add_definitions to add compiler flags
+    add_definitions(-w)
+  endif()
 endif()
 
 # We want reproducible builds, so using __DATE__ and __TIME__ is bad

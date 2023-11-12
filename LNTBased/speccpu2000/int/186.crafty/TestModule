@@ -3,24 +3,30 @@
 
 import spec
 
-class SPEC2000_186_crafty(spec.TestModule):
-    year = '2000'
-    category = 'int'
-    benchmark = '186.crafty'
 
-    train_input_set = ['train/input/crafty.in']
-    train_output_set = ['train/output/crafty.out']
-    train_args = ['< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err']
-    train_cmp_cmds = ['diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp']
-    ref_input_set = ['ref/input/crafty.in']
-    ref_output_set = ['ref/output/crafty.out']
-    ref_args = ['< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err']
-    ref_cmp_cmds = ['diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp']
+class SPEC2000_186_crafty(spec.TestModule):
+    year = "2000"
+    category = "int"
+    benchmark = "186.crafty"
+
+    train_input_set = ["train/input/crafty.in"]
+    train_output_set = ["train/output/crafty.out"]
+    train_args = ["< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err"]
+    train_cmp_cmds = [
+        "diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp"
+    ]
+    ref_input_set = ["ref/input/crafty.in"]
+    ref_output_set = ["ref/output/crafty.out"]
+    ref_args = ["< crafty.in > 186.crafty.crafty.out 2> 186.crafty.crafty.err"]
+    ref_cmp_cmds = [
+        "diff 186.crafty.crafty.out crafty.out --strip-trailing-cr > 186.crafty.crafty.cmp"
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2000_186_crafty
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

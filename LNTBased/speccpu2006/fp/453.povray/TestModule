@@ -3,24 +3,114 @@
 
 import spec
 
-class SPEC2006_453_povray(spec.TestModule):
-    year = '2006'
-    category = 'fp'
-    benchmark = '453.povray'
 
-    train_input_set = ['train/input/SPEC-benchmark-train.pov', 'all/input/arrays.inc', 'all/input/consts.inc', 'all/input/debug.inc', 'all/input/glass.inc', 'all/input/logo.inc', 'all/input/povlogo.ttf', 'all/input/screen.inc', 'all/input/shapes_old.inc', 'all/input/stage1.inc', 'all/input/stdinc.inc', 'all/input/stones1.inc', 'all/input/sunpos.inc', 'all/input/transforms.inc', 'all/input/chars.inc', 'all/input/crystal.ttf', 'all/input/finish.inc', 'all/input/glass_old.inc', 'all/input/math.inc', 'all/input/rad_def.inc', 'all/input/shapes.inc', 'all/input/shapesq.inc', 'all/input/stars.inc', 'all/input/stoneold.inc', 'all/input/stones2.inc', 'all/input/textures.inc', 'all/input/woodmaps.inc', 'all/input/colors.inc', 'all/input/cyrvetic.ttf', 'all/input/functions.inc', 'all/input/golds.inc', 'all/input/metals.inc', 'all/input/rand.inc', 'all/input/shapes2.inc', 'all/input/skies.inc', 'all/input/stdcam.inc', 'all/input/stones.inc', 'all/input/strings.inc', 'all/input/timrom.ttf', 'all/input/woods.inc', 'train/input/SPEC-benchmark-train.ini']
-    train_output_set = ['train/output/SPEC-benchmark.log']
-    train_args = ['SPEC-benchmark-train.ini > 453.povray.train.out 2> 453.povray.train.err']
-    train_cmp_cmds = ['diff SPEC-benchmark.log SPEC-benchmark.log > 453.povray.train.cmp']
-    ref_input_set = ['ref/input/SPEC-benchmark-ref.pov', 'all/input/arrays.inc', 'all/input/consts.inc', 'all/input/debug.inc', 'all/input/glass.inc', 'all/input/logo.inc', 'all/input/povlogo.ttf', 'all/input/screen.inc', 'all/input/shapes_old.inc', 'all/input/stage1.inc', 'all/input/stdinc.inc', 'all/input/stones1.inc', 'all/input/sunpos.inc', 'all/input/transforms.inc', 'all/input/chars.inc', 'all/input/crystal.ttf', 'all/input/finish.inc', 'all/input/glass_old.inc', 'all/input/math.inc', 'all/input/rad_def.inc', 'all/input/shapes.inc', 'all/input/shapesq.inc', 'all/input/stars.inc', 'all/input/stoneold.inc', 'all/input/stones2.inc', 'all/input/textures.inc', 'all/input/woodmaps.inc', 'all/input/colors.inc', 'all/input/cyrvetic.ttf', 'all/input/functions.inc', 'all/input/golds.inc', 'all/input/metals.inc', 'all/input/rand.inc', 'all/input/shapes2.inc', 'all/input/skies.inc', 'all/input/stdcam.inc', 'all/input/stones.inc', 'all/input/strings.inc', 'all/input/timrom.ttf', 'all/input/woods.inc', 'ref/input/SPEC-benchmark-ref.ini']
-    ref_output_set = ['ref/output/SPEC-benchmark.log']
-    ref_args = ['SPEC-benchmark-ref.ini > 453.povray.ref.out 2> 453.povray.ref.err']
-    ref_cmp_cmds = ['diff SPEC-benchmark.log SPEC-benchmark.log > 453.povray.ref.cmp']
+class SPEC2006_453_povray(spec.TestModule):
+    year = "2006"
+    category = "fp"
+    benchmark = "453.povray"
+
+    train_input_set = [
+        "train/input/SPEC-benchmark-train.pov",
+        "all/input/arrays.inc",
+        "all/input/consts.inc",
+        "all/input/debug.inc",
+        "all/input/glass.inc",
+        "all/input/logo.inc",
+        "all/input/povlogo.ttf",
+        "all/input/screen.inc",
+        "all/input/shapes_old.inc",
+        "all/input/stage1.inc",
+        "all/input/stdinc.inc",
+        "all/input/stones1.inc",
+        "all/input/sunpos.inc",
+        "all/input/transforms.inc",
+        "all/input/chars.inc",
+        "all/input/crystal.ttf",
+        "all/input/finish.inc",
+        "all/input/glass_old.inc",
+        "all/input/math.inc",
+        "all/input/rad_def.inc",
+        "all/input/shapes.inc",
+        "all/input/shapesq.inc",
+        "all/input/stars.inc",
+        "all/input/stoneold.inc",
+        "all/input/stones2.inc",
+        "all/input/textures.inc",
+        "all/input/woodmaps.inc",
+        "all/input/colors.inc",
+        "all/input/cyrvetic.ttf",
+        "all/input/functions.inc",
+        "all/input/golds.inc",
+        "all/input/metals.inc",
+        "all/input/rand.inc",
+        "all/input/shapes2.inc",
+        "all/input/skies.inc",
+        "all/input/stdcam.inc",
+        "all/input/stones.inc",
+        "all/input/strings.inc",
+        "all/input/timrom.ttf",
+        "all/input/woods.inc",
+        "train/input/SPEC-benchmark-train.ini",
+    ]
+    train_output_set = ["train/output/SPEC-benchmark.log"]
+    train_args = [
+        "SPEC-benchmark-train.ini > 453.povray.train.out 2> 453.povray.train.err"
+    ]
+    train_cmp_cmds = [
+        "diff SPEC-benchmark.log SPEC-benchmark.log > 453.povray.train.cmp"
+    ]
+    ref_input_set = [
+        "ref/input/SPEC-benchmark-ref.pov",
+        "all/input/arrays.inc",
+        "all/input/consts.inc",
+        "all/input/debug.inc",
+        "all/input/glass.inc",
+        "all/input/logo.inc",
+        "all/input/povlogo.ttf",
+        "all/input/screen.inc",
+        "all/input/shapes_old.inc",
+        "all/input/stage1.inc",
+        "all/input/stdinc.inc",
+        "all/input/stones1.inc",
+        "all/input/sunpos.inc",
+        "all/input/transforms.inc",
+        "all/input/chars.inc",
+        "all/input/crystal.ttf",
+        "all/input/finish.inc",
+        "all/input/glass_old.inc",
+        "all/input/math.inc",
+        "all/input/rad_def.inc",
+        "all/input/shapes.inc",
+        "all/input/shapesq.inc",
+        "all/input/stars.inc",
+        "all/input/stoneold.inc",
+        "all/input/stones2.inc",
+        "all/input/textures.inc",
+        "all/input/woodmaps.inc",
+        "all/input/colors.inc",
+        "all/input/cyrvetic.ttf",
+        "all/input/functions.inc",
+        "all/input/golds.inc",
+        "all/input/metals.inc",
+        "all/input/rand.inc",
+        "all/input/shapes2.inc",
+        "all/input/skies.inc",
+        "all/input/stdcam.inc",
+        "all/input/stones.inc",
+        "all/input/strings.inc",
+        "all/input/timrom.ttf",
+        "all/input/woods.inc",
+        "ref/input/SPEC-benchmark-ref.ini",
+    ]
+    ref_output_set = ["ref/output/SPEC-benchmark.log"]
+    ref_args = ["SPEC-benchmark-ref.ini > 453.povray.ref.out 2> 453.povray.ref.err"]
+    ref_cmp_cmds = ["diff SPEC-benchmark.log SPEC-benchmark.log > 453.povray.ref.cmp"]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_453_povray
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

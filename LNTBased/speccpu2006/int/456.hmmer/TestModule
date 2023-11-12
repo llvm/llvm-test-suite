@@ -3,24 +3,36 @@
 
 import spec
 
-class SPEC2006_456_hmmer(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '456.hmmer'
 
-    train_input_set = ['train/input/leng100.hmm']
-    train_output_set = ['train/output/leng100.out']
-    train_args = ['--fixed 0 --mean 325 --num 5000 --sd 200 --seed 0 leng100.hmm > 456.hmmer.leng100.out 2> 456.hmmer.leng100.err']
-    train_cmp_cmds = ['diff 456.hmmer.leng100.out leng100.out --strip-trailing-cr > 456.hmmer.leng100.cmp']
-    ref_input_set = ['ref/input/nph3.hmm', 'ref/input/swiss41', 'ref/input/retro.hmm']
-    ref_output_set = ['ref/output/nph3.out', 'ref/output/retro.out']
-    ref_args = ['nph3.hmm swiss41 > 456.hmmer.nph3.out 2> 456.hmmer.nph3.err', '--fixed 0 --mean 500 --num 500000 --sd 350 --seed 0 retro.hmm > 456.hmmer.retro.out 2> 456.hmmer.retro.err']
-    ref_cmp_cmds = ['diff 456.hmmer.nph3.out nph3.out --strip-trailing-cr > 456.hmmer.nph3.cmp', 'diff 456.hmmer.retro.out retro.out --strip-trailing-cr > 456.hmmer.retro.cmp']
+class SPEC2006_456_hmmer(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "456.hmmer"
+
+    train_input_set = ["train/input/leng100.hmm"]
+    train_output_set = ["train/output/leng100.out"]
+    train_args = [
+        "--fixed 0 --mean 325 --num 5000 --sd 200 --seed 0 leng100.hmm > 456.hmmer.leng100.out 2> 456.hmmer.leng100.err"
+    ]
+    train_cmp_cmds = [
+        "diff 456.hmmer.leng100.out leng100.out --strip-trailing-cr > 456.hmmer.leng100.cmp"
+    ]
+    ref_input_set = ["ref/input/nph3.hmm", "ref/input/swiss41", "ref/input/retro.hmm"]
+    ref_output_set = ["ref/output/nph3.out", "ref/output/retro.out"]
+    ref_args = [
+        "nph3.hmm swiss41 > 456.hmmer.nph3.out 2> 456.hmmer.nph3.err",
+        "--fixed 0 --mean 500 --num 500000 --sd 350 --seed 0 retro.hmm > 456.hmmer.retro.out 2> 456.hmmer.retro.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 456.hmmer.nph3.out nph3.out --strip-trailing-cr > 456.hmmer.nph3.cmp",
+        "diff 456.hmmer.retro.out retro.out --strip-trailing-cr > 456.hmmer.retro.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_456_hmmer
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()

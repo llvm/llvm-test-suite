@@ -3,24 +3,48 @@
 
 import spec
 
-class SPEC2006_473_astar(spec.TestModule):
-    year = '2006'
-    category = 'int'
-    benchmark = '473.astar'
 
-    train_input_set = ['train/input/rivers.bin', 'train/input/BigLakes1024.bin', 'train/input/BigLakes1024.cfg', 'train/input/rivers1.cfg']
-    train_output_set = ['train/output/BigLakes1024.out', 'train/output/rivers1.out']
-    train_args = ['BigLakes1024.cfg > 473.astar.BigLakes1024.out 2> 473.astar.BigLakes1024.err', 'rivers1.cfg > 473.astar.rivers1.out 2> 473.astar.rivers1.err']
-    train_cmp_cmds = ['diff 473.astar.BigLakes1024.out BigLakes1024.out --strip-trailing-cr > 473.astar.BigLakes1024.cmp', 'diff 473.astar.rivers1.out rivers1.out --strip-trailing-cr > 473.astar.rivers1.cmp']
-    ref_input_set = ['ref/input/rivers.bin', 'ref/input/BigLakes2048.bin', 'ref/input/BigLakes2048.cfg', 'ref/input/rivers.cfg']
-    ref_output_set = ['ref/output/BigLakes2048.out', 'ref/output/rivers.out']
-    ref_args = ['BigLakes2048.cfg > 473.astar.BigLakes2048.out 2> 473.astar.BigLakes2048.err', 'rivers.cfg > 473.astar.rivers.out 2> 473.astar.rivers.err']
-    ref_cmp_cmds = ['diff 473.astar.BigLakes2048.out BigLakes2048.out --strip-trailing-cr > 473.astar.BigLakes2048.cmp', 'diff 473.astar.rivers.out rivers.out --strip-trailing-cr > 473.astar.rivers.cmp']
+class SPEC2006_473_astar(spec.TestModule):
+    year = "2006"
+    category = "int"
+    benchmark = "473.astar"
+
+    train_input_set = [
+        "train/input/rivers.bin",
+        "train/input/BigLakes1024.bin",
+        "train/input/BigLakes1024.cfg",
+        "train/input/rivers1.cfg",
+    ]
+    train_output_set = ["train/output/BigLakes1024.out", "train/output/rivers1.out"]
+    train_args = [
+        "BigLakes1024.cfg > 473.astar.BigLakes1024.out 2> 473.astar.BigLakes1024.err",
+        "rivers1.cfg > 473.astar.rivers1.out 2> 473.astar.rivers1.err",
+    ]
+    train_cmp_cmds = [
+        "diff 473.astar.BigLakes1024.out BigLakes1024.out --strip-trailing-cr > 473.astar.BigLakes1024.cmp",
+        "diff 473.astar.rivers1.out rivers1.out --strip-trailing-cr > 473.astar.rivers1.cmp",
+    ]
+    ref_input_set = [
+        "ref/input/rivers.bin",
+        "ref/input/BigLakes2048.bin",
+        "ref/input/BigLakes2048.cfg",
+        "ref/input/rivers.cfg",
+    ]
+    ref_output_set = ["ref/output/BigLakes2048.out", "ref/output/rivers.out"]
+    ref_args = [
+        "BigLakes2048.cfg > 473.astar.BigLakes2048.out 2> 473.astar.BigLakes2048.err",
+        "rivers.cfg > 473.astar.rivers.out 2> 473.astar.rivers.err",
+    ]
+    ref_cmp_cmds = [
+        "diff 473.astar.BigLakes2048.out BigLakes2048.out --strip-trailing-cr > 473.astar.BigLakes2048.cmp",
+        "diff 473.astar.rivers.out rivers.out --strip-trailing-cr > 473.astar.rivers.cmp",
+    ]
+
 
 # This is the only required entry point to the module.
 test_class = SPEC2006_473_astar
 
 # This is not required, but allows users with LNT in the environment (required
 # for initial imports to work) to execute this test directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_class().main()
