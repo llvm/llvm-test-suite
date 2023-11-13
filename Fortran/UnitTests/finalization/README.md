@@ -52,7 +52,7 @@ llvm-project           # llvm-project/llvm source code
 
 Flang is built in the `build` subdirectory.
 The test-suite-build directory is created by the user
-and is initially empty until running CMake for the teset-suite.
+and is initially empty until running CMake for the test-suite.
 To configure, build and run the tests once llvm/flang has been built,
 a command similar to the following can be used from within test-suite-build:
 
@@ -61,7 +61,7 @@ cmake -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_Fortran_COMPILER:FILEPATH=/home/users/<you>/llvm-project/build/bin/flang-new \
   -DTEST_SUITE_FORTRAN:BOOL=On \
   -DTEST_SUITE_SUBDIRS=Fortran/UnitTests/finalization \
-  ../test-suite
+  ../llvm-test-suite
 make -j 4
 ../build/bin/llvm-lit Fortran/UnitTests/finalization
 ```
