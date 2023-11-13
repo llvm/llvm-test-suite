@@ -947,6 +947,17 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   large_real_kind_form_io_1.f90
   norm2_3.f90
   pr96711.f90
+
+  # unimplemented: calling character elemental function with
+  # non constant character length (HLFIR regression).
+  array_temporaries_3.f90
+  pure_byref_1.f90
+
+  # unimplemented: pointer assignments inside FORALL (HLFIR
+  # regression)
+  dependency_19.f90
+  forall_3.f90
+  pr49698.f90
 )
 
 # These tests are skipped because they cannot be compiled. Unlike the
@@ -2927,4 +2938,23 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # _OPENMP/_OPENACC directives while gfortran does.
   openacc-define-3.f90
   openmp-define-3.f90
+
+  # Tests looking for runtime errors (e.g., bound checks). Correctly
+  # caught by flang runtime when it is used for array assignments.
+  all_bounds_1.f90
+  bounds_check_12.f90
+  bounds_check_array_ctor_4.f90
+  bounds_check_fail_3.f90
+  maxloc_bounds_1.f90
+  maxloc_bounds_2.f90
+  maxloc_bounds_3.f90
+  maxloc_bounds_4.f90
+  maxloc_bounds_5.f90
+  maxloc_bounds_7.f90
+  maxloc_bounds_8.f90
+  pack_bounds_1.f90
+  spread_bounds_1.f90
+
+  # Bad test, assigning an 11 elements array to a 12 elements array.
+  transfer_array_intrinsic_4.f90
 )
