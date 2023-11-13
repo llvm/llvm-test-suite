@@ -1,0 +1,20 @@
+Checking rounding
+Checking float
+  towardzero
+  tonearest
+  upward
+  downward
+  towardzero (dynamic)
+  tonearest (dynamic)
+  upward (dynamic)
+  downward (dynamic)
+Checking double
+  towardzero
+  tonearest
+  upward
+  downward
+  towardzero (dynamic)
+  tonearest (dynamic)
+  upward (dynamic)
+  downward (dynamic)
+exit 0
