@@ -3,7 +3,7 @@
 
 extern void abort (void);
 
-#include "../gcc.c-torture/execute/builtins/chk.h"
+#include "../gcc-c-torture/execute/builtins/chk.h"
 
 extern char *mallocminus1(int size) __attribute__((alloc_size(-1))); /* { dg-warning ".alloc_size. attribute argument value .-1. exceeds the number of function parameters 1" } */
 extern char *malloc0(int size) __attribute__((alloc_size(0))); /* { dg-warning ".alloc_size. attribute argument value .0. does not refer to a function parameter" } */

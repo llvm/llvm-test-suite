@@ -6,7 +6,7 @@
 
 extern void abort (void);
 
-#include "../gcc.c-torture/execute/builtins/chk.h"
+#include "../gcc-c-torture/execute/builtins/chk.h"
 
 #define va_list    __builtin_va_list
 #define va_start   __builtin_va_start

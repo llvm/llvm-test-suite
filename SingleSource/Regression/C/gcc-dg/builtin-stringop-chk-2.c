@@ -5,7 +5,7 @@
 /* { dg-do compile } */
 /* { dg-options "-O2 -ftrack-macro-expansion=0" } */
 
-#include "../gcc.c-torture/execute/builtins/chk.h"
+#include "../gcc-c-torture/execute/builtins/chk.h"
 
 void *bar (int);
 extern void *malloc (__SIZE_TYPE__);

@@ -5,7 +5,7 @@
 
 extern void abort (void);
 
-#include "../gcc.c-torture/execute/builtins/chk.h"
+#include "../gcc-c-torture/execute/builtins/chk.h"
 
 char buf1[20];
 char *q;
