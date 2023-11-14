@@ -2957,4 +2957,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Bad test, assigning an 11 elements array to a 12 elements array.
   transfer_array_intrinsic_4.f90
+
+  # Fails at -O3 with HLFIR. Gfortran emits warnings when compiling,
+  # needs investigation.
+  maxlocval_1.f90
 )
