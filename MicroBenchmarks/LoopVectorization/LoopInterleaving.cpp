@@ -57,6 +57,7 @@ runBenchForLoopInterleaving(benchmark::State &state, int (*Fn)(int),
 // Loops without Reduction with different vectorization configurations
 
 static int __attribute__((noinline)) loopNoReductionAutoVec(int Iterations) {
+  #pragma clang loop unroll(disable)
   for (int J = 0; J < Iterations; J++) {
     A[J] = B[J] + C[J];
   }
@@ -64,6 +65,7 @@ static int __attribute__((noinline)) loopNoReductionAutoVec(int Iterations) {
 }
 
 static int __attribute__((noinline)) bigLoopNoReductionAutoVec(int Iterations) {
+  #pragma clang loop unroll(disable)
   for (int J = 0; J < Iterations; J++) {
     A[J] = B[J] + C[J];
     D[J]++;
@@ -100,6 +102,7 @@ static int __attribute__((noinline)) bigLoopNoReductionAutoVec(int Iterations) {
 
 static int __attribute__((noinline)) loopWithReductionAutoVec(int Iterations) {
   unsigned sum = 0;
+  #pragma clang loop unroll(disable)
   for (int J = 0; J < Iterations; J++) {
     sum += A[J];
   }
@@ -109,6 +112,7 @@ static int __attribute__((noinline)) loopWithReductionAutoVec(int Iterations) {
 static int __attribute__((noinline))
 bigLoopWithReductionAutoVec(int Iterations) {
   unsigned sum = 0;
+  #pragma clang loop unroll(disable)
   for (int J = 0; J < Iterations; J++) {
     sum += A[J];
     D[J]++;
