@@ -144,12 +144,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   PR96727.f90
   PR96728.f90
   PR97046.f90
-  assumed_rank_11.f90
   assumed_rank_12.f90
   assumed_rank_18.f90
   assumed_rank_19.f90
   assumed_rank_20.f90
-  assumed_rank_5.f90
   assumed_type_9.f90
   bind-c-contiguous-2.f90
   interface_49.f90
@@ -165,7 +163,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: ASYNCHRONOUS in procedure interface
   assumed_rank_13.f90
-  asynchronous_3.f03
 
   # unimplemented: assumed type in actual argument
   altreturn_10.f90
@@ -175,7 +172,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   block_11.f90
   c_f_pointer_tests_3.f90
   c_funloc_tests_7.f90
-  compiler-directive_1.f90
   dec_structure_15.f90
   dummy_procedure_7.f90
   elemental_dependency_4.f90
@@ -206,7 +202,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_27.f90
   proc_ptr_28.f90
   proc_ptr_3.f90
-  proc_ptr_30.f90
   proc_ptr_31.f90
   proc_ptr_34.f90
   proc_ptr_39.f90
@@ -221,8 +216,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_result_3.f90
   recursive_check_4.f03
   recursive_check_5.f03
-  recursive_check_6.f03
-  stmt_func_1.f90
   warn_unused_function_3.f90
 
   # unimplemented: procedure pointer arguments
@@ -245,7 +238,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   deferred_type_proc_pointer_1.f90
   deferred_type_proc_pointer_2.f90
   pr82253.f90
-  proc_ptr_24.f90
   proc_ptr_48.f90
   proc_ptr_comp_1.f90
   proc_ptr_comp_11.f90
@@ -259,8 +251,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_comp_27.f90
   proc_ptr_comp_28.f90
   proc_ptr_comp_29.f90
-  proc_ptr_comp_32.f90
-  proc_ptr_comp_33.f90
   proc_ptr_comp_34.f90
   proc_ptr_comp_40.f90
   proc_ptr_comp_44.f90
@@ -273,9 +263,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: procedure pointer results
   pointer_check_5.f90
-  pr39695_1.f90
   pr63797.f90
-  pr78739.f90
   proc_ptr_12.f90
   proc_ptr_41.f90
   proc_ptr_49.f90
@@ -290,12 +278,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   alloc_comp_deep_copy_1.f03
   allocate_alloc_opt_12.f90
   allocate_alloc_opt_13.f90
-  allocate_alloc_opt_8.f90
   allocate_class_4.f90
   allocate_derived_2.f90
   allocate_derived_3.f90
   allocate_with_mold_2.f90
-  allocate_with_mold_4.f90
   allocate_with_source_18.f03
   allocate_with_source_13.f03
   allocate_with_source_14.f03
@@ -320,17 +306,13 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   associated_target_4.f90
   assumed_type_10.f90
   assumed_type_11.f90
-  assumed_type_16.f90
   assumed_type_17.f90
   assumed_type_1.f90
   assumed_type_2.f90
-  assumed_type_4.f90
-  assumed_type_7.f90
   auto_dealloc_1.f90
   auto_dealloc_2.f90
   bind_c_array_params_2.f90
   c_assoc_5.f90
-  c_f_pointer_tests_5.f90
   character_workout_1.f90
   character_workout_4.f90
   class_1.f03
@@ -354,7 +336,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   class_34.f90
   class_35.f90
   class_37.f03
-  class_3.f03
   class_41.f03
   class_42.f03
   class_44.f03
@@ -363,7 +344,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   class_48.f90
   class_46.f03
   class_51.f90
-  class_52.f90
   class_54.f90
   class_6.f03
   class_62.f90
@@ -394,7 +374,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   class_array_14.f90
   class_array_17.f90
   class_array_18.f90
-  class_array_19.f90
   class_array_2.f03
   class_array_20.f03
   class_array_22.f03
@@ -436,14 +415,12 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   dependency_56.f90
   dependency_57.f90
   dependency_60.f90
-  der_io_5.f90
   derived_init_6.f90
   do_check_15.f90
   dtio_20.f03
   dtio_23.f90
   dtio_29.f03
   dtio_35.f90
-  dummy_procedure_4.f90
   dynamic_dispatch_10.f03
   elemental_function_5.f90
   elemental_optional_args_5.f03
@@ -485,7 +462,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pointer_intent_4.f90
   pr100551.f90
   pr100949.f90
-  pr105501.f90
   pr108010.f90
   pr109209.f90
   pr42051.f03
@@ -504,7 +480,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr87992.f90
   pr88379.f90
   pr93473.f90
-  pr93601.f90
   pr94397.F90
   pr95687.f90
   pr95829.f90
@@ -518,9 +493,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_comp_50.f90
   proc_ptr_comp_pass_3.f90
   proc_ptr_comp_pass_6.f90
-  ptr_func_assign_2.f08
-  realloc_on_assign_20.f90
-  realloc_on_assign_21.f90
   realloc_on_assign_27.f08
   realloc_on_assign_31.f90
   same_type_as_2.f03
@@ -530,7 +502,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   select_type_13.f03
   select_type_14.f03
   select_type_16.f03
-  select_type_17.f03
   select_type_18.f03
   select_type_19.f03
   select_type_2.f03
@@ -596,7 +567,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   typebound_operator_1.f03
   typebound_operator_5.f03
   typebound_proc_14.f03
-  typebound_proc_15.f03
   typebound_proc_16.f03
   typebound_proc_17.f03
   typebound_proc_18.f03
@@ -636,20 +606,12 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: BIND (C) internal procedure.
   ISO_Fortran_binding_19.f90
-  PR93308.f90
   array_reference_3.f90
-  bind_c_char_2.f90
-  bind_c_char_3.f90
-  bind_c_char_4.f90
-  bind_c_char_5.f90
   internal_dummy_4.f08
 
   # unimplemented: BIND(C) internal procedures:
   bind-c-char-descr.f90
-  bind_c_usage_11.f03
   bind_c_usage_9.f03
-  init_flag_16.f03
-  null_actual_2.f90
 
   # unimplemented: BIND(C) module variable linkage
   bind_c_dts.f90
@@ -659,7 +621,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   bind_c_usage_25.f90
   binding_label_tests_10.f03
   binding_label_tests_13.f03
-  binding_label_tests_7.f03
   c_kind_tests_2.f03
   global_vars_c_init.f90
   kind_tests_2.f03
@@ -670,25 +631,13 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   sizeof_3.f90
 
   # unimplemented: character array expression temp with dynamic length.
-  actual_array_constructor_2.f90
-  array_constructor_17.f90
-  associate_35.f90
-  assumed_charlen_arg_1.f90
-  assumed_charlen_sharing.f90
-  char_cons_len.f90
   char_length_13.f90
-  char_length_23.f90
-  char_length_7.f90
   char_result_13.f90
-  deferred_character_36.f90
   mapping_3.f90
   pr77506.f90
-  pr91862.f90
-  transfer_resolve_1.f90
 
   # unimplemented: allocatable component in structure constructor
   alloc_comp_constructor_7.f90
-  alloc_comp_init_expr.f03
   structure_constructor_17.f90
 
   # unimplemented: allocatable components in derived type assignment
@@ -698,55 +647,24 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   realloc_on_assign_16a.f90
 
   # unimplemented: gather rhs LEN parameters in assignment to allocatable
-  allocate_assumed_charlen_4.f90
   allocate_error_5.f90
-  associate_58.f90
-  bounds_check_22.f90
   char_length_20.f90
   char_length_21.f90
-  deferred_character_1.f90
-  deferred_character_14.f90
-  deferred_character_2.f90
-  deferred_character_21.f90
-  deferred_character_22.f90
-  deferred_character_27.f90
-  deferred_character_34.f90
-  deferred_character_4.f90
-  deferred_character_7.f90
-  dependency_50.f90
-  dependency_51.f90
   elemental_function_3.f90
   elemental_function_2.f90
-  realloc_on_assign_14.f90
   widechar_11.f90
 
   # unimplemented: passing dynamically optional argument to elemental procedures
-  bounds_check_9.f90
-  bounds_check_fail_2.f90
-  elemental_optional_args_1.f90
-  elemental_optional_args_2.f90
-  elemental_optional_args_3.f90
-  elemental_optional_args_4.f90
   elemental_optional_args_6.f90
-  elemental_optional_args_7.f90
-  generic_31.f90
-  optional_absent_2.f90
-  pr95446.f90
 
   # unimplemented: io-control-spec contains a reference to a non-integer,
   # non-scalar, or non-variable
-  assign_8.f90
-  fmt_nonchar_3.f90
-  typebound_proc_29.f90
-  write_invalid_format.f90
 
   # unimplemented: BOZ
   boz_bge.f90
-  boz_8.f90
   nan_4.f90
 
   # unimplemented: coarray address
-  coarray_38.f90
   coarray_39.f90
   coarray_dependency_1.f90
 
@@ -762,7 +680,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_alloc_with_implicit_sync_2.f90
   coarray_lib_alloc_1.f90
   coarray_lib_token_3.f90
-  coarray_lock_4.f90
   coarray_lock_7.f90
   coarray_poly_4.f90
 
@@ -773,7 +690,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_37.f90
   coarray_45.f90
   coarray_allocate_4.f08
-  coarray_class_2.f90
   coarray_lib_move_alloc_1.f90
   coarray_lib_this_image_1.f90
   coarray_lib_this_image_2.f90
@@ -789,7 +705,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_lib_comm_1.f90
 
   # unimplemented: co_max
-  coarray_collectives_3.f90
   coarray_collectives_4.f90
   coarray_collectives_5.f90
   coarray_collectives_6.f90
@@ -797,14 +712,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: CriticalConstruct implementation
   coarray_2.f90
   coarray_critical_1.f90
-
-  # unimplemented: LOCK runtime
-  coarray_lock_1.f90
-  coarray_lock_2.f90
-  coarray_lock_6.f90
-
-  # unimplemented: SYNC ALL runtime
-  coarray_9.f90
 
   # unimplemented: SYNC IMAGES
   pr71706.f90
@@ -836,8 +743,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: intrinsic: min and max for CHARACTER
   minmax_char_1.f90
-  widechar_intrinsics_9.f90
-  zero_length_2.f90
 
   # unimplemented: intrinsic: num_images
   coarray_allocate_1.f90
@@ -872,11 +777,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: %VAL() intrinsic for arguments
   c_by_val_1.f
-  c_by_val_2.f90
   c_by_val_3.f90
-  c_by_val_4.f
-  c_by_val_5.f90
-  pointer_check_12.f90
 
   # unimplemented: parameterized derived types
   dec_type_print_2.f03
@@ -894,13 +795,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pdt_31.f03
 
   # unimplemented: derived type components with non default lower bounds
-  structure_constructor_1.f03
   vax_structure_1.f90
-  whole_file_11.f90
 
   # unimplemented: derived type specification expression is neither constant nor
   # a length type parameter
-  pr95882_1.f90
 
   # unimplemented: asynchronous transfers not implemented in runtime
   asynchronous_5.f03
@@ -930,21 +828,11 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: VOLATILE in procedure interface
   volatile12.f90
-  volatile8.f90
-
-  # unimplemented: assignment to pointer result of function reference
-  ptr-func-3.f90
-  ptr_func_assign_5.f08
-
-  # unimplemented: deep copy on allocatable members
-  alloc_comp_auto_array_3.f90
 
   # unimplemented: no math runtime available for '[SYM]'
-  large_integer_kind_2.f90
   large_real_kind_2.F90
   large_real_kind_3.F90
   large_real_kind_3.F90
-  large_real_kind_form_io_1.f90
   norm2_3.f90
   pr96711.f90
 
@@ -976,20 +864,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   #
 
   # error: Unexpected typeless constant value
-  actual_array_constructor_1.f90
   actual_array_offset_1.f90
-  actual_pointer_function_1.f90
-  aliasing_dummy_1.f90
-  aliasing_dummy_4.f90
-  allocatable_function_10.f90
-  allocatable_function_9.f90
-  allocatable_scalar_10.f90
   allocatable_scalar_13.f90
-  allocatable_scalar_3.f90
-  allocatable_scalar_9.f90
-  allocate_alloc_opt_6.f90
   allocate_class_3.f90
-  allocate_derived_5.f90
   allocate_error_6.f90
   allocate_with_mold_1.f90
   allocate_with_mold_3.f90
@@ -997,76 +874,35 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   allocate_with_source_16.f90
   allocate_with_source_22.f03
   allocate_with_source_23.f03
-  allocate_with_source_24.f90
   allocate_with_source_5.f90
   allocate_with_source_6.f90
   allocate_with_source_7.f08
-  allocate_with_source_9.f08
-  alloc_comp_assign_10.f90
-  alloc_comp_assign_11.f90
   alloc_comp_assign_12.f03
   alloc_comp_assign_13.f08
   alloc_comp_assign_14.f08
-  alloc_comp_assign_15.f03
   alloc_comp_assign_16.f03
-  alloc_comp_assign_1.f90
   alloc_comp_assign_2.f90
   alloc_comp_assign_3.f90
   alloc_comp_assign_4.f90
   alloc_comp_assign_5.f90
-  alloc_comp_assign_6.f90
-  alloc_comp_assign_7.f90
-  alloc_comp_assign_8.f90
-  alloc_comp_assign_9.f90
-  alloc_comp_auto_array_1.f90
-  alloc_comp_auto_array_2.f90
-  alloc_comp_basics_1.f90
-  alloc_comp_basics_2.f90
-  alloc_comp_basics_5.f90
-  alloc_comp_bounds_1.f90
   alloc_comp_class_1.f90
   alloc_comp_class_3.f03
   alloc_comp_class_4.f03
   alloc_comp_class_5.f03
   alloc_comp_constructor_1.f90
-  alloc_comp_constructor_2.f90
   alloc_comp_constructor_3.f90
   alloc_comp_constructor_4.f90
-  alloc_comp_constructor_5.f90
-  alloc_comp_constructor_6.f90
   alloc_comp_deep_copy_2.f03
   alloc_comp_deep_copy_3.f03
-  alloc_comp_default_init_1.f90
-  alloc_comp_default_init_2.f90
   alloc_comp_initializer_1.f90
   alloc_comp_initializer_4.f03
-  alloc_comp_misc_1.f90
   alloc_comp_optional_1.f90
   alloc_comp_result_1.f90
-  alloc_comp_result_3.f90
-  alloc_comp_scalar_1.f90
-  alloc_comp_transformational_1.f90
-  alloc_deferred_comp_1.f90
-  array_constructor_32.f90
-  array_constructor_type_14.f03
-  array_constructor_type_8.f03
-  arrayio_11.f90
-  arrayio_derived_1.f90
-  array_memcpy_5.f90
   array_reference_2.f90
-  assign_func_dtcomp_1.f90
-  associate_1.f03
-  associate_24.f90
-  associate_27.f90
   associate_28.f90
   associate_32.f03
-  associate_38.f90
-  associate_43.f90
   associate_46.f90
-  associate_47.f90
   associate_60.f90
-  associate_9.f03
-  associated_target_3.f90
   associated_target_6.f03
   associated_target_7.f90
   assumed_rank_21.f90
@@ -1080,12 +916,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   binding_label_tests_16.f03
   binding_label_tests_33.f90
   block_13.f08
-  blockdata_11.f90
-  bound_1.f90
-  bound_5.f90
-  bounds_check_17.f90
-  bounds_check_5.f90
-  bounds_check_8.f90
   c_char_tests_2.f03
   c_char_tests_3.f90
   c_f_pointer_shape_tests_5.f90
@@ -1096,15 +926,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   c_funloc_tests.f03
   c_funptr_1.f90
   c_funptr_1_mod.f90
-  char4-subscript.f90
-  character_array_constructor_1.f90
-  char_array_structure_constructor.f90
-  char_assign_1.f90
-  char_length_15.f90
-  char_pointer_comp_assign.f90
-  char_result_5.f90
-  char_result_6.f90
-  char_type_len.f90
   c_kind_int128_test2.f03
   c_kind_params.f90
   class_19.f03
@@ -1152,8 +973,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   coarray_ptr_comp_2.f08
   coarray_send_by_ref_1.f08
   com_block_driver.f90
-  constructor_2.f90
-  contained_module_proc_1.f90
   c_ptr_tests_10.f03
   c_ptr_tests_14.f90
   c_ptr_tests_19.f90
@@ -1161,55 +980,21 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   c_ptr_tests_8.f03
   c_ptr_tests_9.f03
   c_ptr_tests.f03
-  cshift_2.f90
-  cshift_nan_1.f90
   c_sizeof_1.f90
   c_sizeof_5.f90
   c_size_t_test.f03
-  data_derived_1.f90
-  data_stmt_pointer.f90
   dec_init_2.f90
-  dec_structure_18.f90
-  dec_structure_1.f90
-  dec_structure_2.f90
-  dec_structure_25.f90
-  dec_structure_3.f90
-  dec_structure_4.f90
-  default_initialization_5.f90
   deferred_character_10.f90
   deferred_character_11.f90
-  deferred_character_12.f90
   deferred_character_13.f90
   deferred_character_23.f90
-  deferred_character_25.f90
   deferred_character_28.f90
-  deferred_character_3.f90
   deferred_character_5.f90
-  deferred_character_6.f90
   deferred_type_component_1.f90
   deferred_type_component_2.f90
   deferred_type_component_3.f90
-  dependency_22.f90
-  dependency_23.f90
-  dependency_24.f90
-  dependency_39.f90
-  dependency_55.f90
-  der_array_1.f90
-  der_array_io_1.f90
-  der_array_io_2.f90
-  derived_comp_array_ref_1.f90
-  derived_comp_array_ref_2.f90
-  derived_comp_array_ref_3.f90
-  derived_comp_array_ref_4.f90
-  derived_comp_array_ref_7.f90
-  derived_constructor_comps_1.f90
-  derived_constructor_comps_4.f90
   derived_constructor_comps_5.f90
   derived_constructor_comps_6.f90
-  derived_constructor_comps_7.f90
-  derived_external_function_1.f90
-  derived_init_3.f90
-  derived_init_5.f90
   der_ptr_component_2.f90
   dtio_10.f90
   dtio_12.f90
@@ -1233,8 +1018,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   dtio_3.f90
   dtio_4.f90
   dtio_7.f90
-  dtio_8.f90
-  dtio_9.f90
   dynamic_dispatch_11.f03
   dynamic_dispatch_4.f03
   dynamic_dispatch_5.f03
@@ -1242,55 +1025,22 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   dynamic_dispatch_7.f03
   dynamic_dispatch_8.f03
   dynamic_dispatch_9.f03
-  elemental_assignment_1.f90
   elemental_dependency_5.f90
-  elemental_dependency_6.f90
   elemental_subroutine_10.f90
   elemental_subroutine_11.f90
-  elemental_subroutine_2.f90
-  elemental_subroutine_3.f90
-  entry_13.f90
-  entry_16.f90
-  equiv_constraint_4.f90
   extends_4.f03
   finalize_13.f90
-  finalize_17.f90
-  finalize_25.f90
   finalize_31.f90
   finalize_33.f90
   finalize_36.f90
   finalize_38.f90
   finalize_38a.f90
-  finalize_50.f90
   finalize_52.f90
   fmt_nonchar_2.f90
-  forall_1.f90
-  func_assign_3.f90
-  func_derived_1.f90
-  func_derived_2.f90
-  func_derived_3.f90
-  func_derived_4.f90
-  func_result_6.f90
-  function_kinds_1.f90
-  generic_15.f90
   generic_23.f03
-  implied_do_io_1.f90
-  import4.f90
-  import.f90
   init_flag_15.f03
   inline_matmul_1.f90
-  inline_matmul_9.f90
-  inquiry_type_ref_5.f90
   intent_optimize_10.f90
-  intent_out_14.f90
-  interface_assignment_2.f90
-  internal_pack_13.f90
-  internal_pack_14.f90
-  internal_pack_1.f90
-  internal_pack_8.f90
-  intrinsic_pack_1.f90
-  intrinsic_spread_1.f90
-  intrinsic_unpack_1.f90
   iso_c_binding_rename_2.f03
   ISO_Fortran_binding_10.f90
   ISO_Fortran_binding_11.f90
@@ -1304,81 +1054,32 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   logical_temp_io_kind8.f90
   module_procedure_6.f90
   module_read_2.f90
-  move_alloc_15.f90
-  move_alloc_16.f90
-  move_alloc_4.f90
-  multiple_allocation_2.f90
-  mvbits_7.f90
-  mvbits_8.f90
-  namelist_14.f90
-  namelist_52.f90
-  namelist_54.f90
-  namelist_55.f90
-  namelist_58.f90
-  namelist_60.f90
-  namelist_66.f90
-  namelist_69.f90
-  namelist_70.f90
-  namelist_71.f90
-  namelist_77.f90
-  namelist_79.f90
-  namelist_82.f90
-  namelist_85.f90
-  nested_allocatables_1.f90
-  nested_modules_3.f90
   null_9.f90
-  nullify_3.f90
   optional_class_1.f90
-  overload_1.f90
-  parameter_array_init_8.f90
   pdt_11.f03
   pdt_12.f03
-  pdt_13.f03
-  pdt_14.f03
   pdt_27.f03
   pdt_28.f03
-  pointer_array_11.f90
-  pointer_array_1.f90
-  pointer_array_3.f90
   pointer_array_4.f90
-  pointer_array_6.f90
-  pointer_array_7.f90
-  pointer_array_component_1.f90
-  pointer_assign_14.f90
-  pointer_assign_15.f90
-  pointer_check_11.f90
-  pointer_init_1.f90
   pointer_init_8.f90
   pointer_remapping_10.f90
   PR100132.f90
   PR100136.f90
   PR100911.f90
-  pr100950.f90
-  pr105205.f90
   pr106731.f90
   pr106918.f90
   pr107872.f90
-  pr16938.f90
-  pr17612.f90
-  pr18392.f90
-  pr19928-2.f90
   pr32627.f03
   pr35983.f90
   pr43808.f90
   pr43866.f90
   pr47008.f03
-  pr55086_aliasing_dummy_4_tfat.f90
   pr62125.f90
   pr64230.f90
-  pr65504.f90
-  pr69955.f90
   pr71764.f90
   pr84155.f90
-  pr84523.f90
-  pr86322_3.f90
   pr88611.f90
   pr92050.f90
-  pr93685_1.f90
   pr99602b.f90
   print_c_kinds.f90
   proc_decl_17.f90
@@ -1396,60 +1097,27 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   read_dir.f90
   realloc_on_assign_16.f90
   realloc_on_assign_17.f90
-  realloc_on_assign_23.f90
-  realloc_on_assign_28.f90
   realloc_on_assign_2.f03
-  realloc_on_assign_32.f90
-  realloc_on_assign_3.f03
-  realloc_on_assign_9.f90
-  recursive_alloc_comp_1.f08
-  recursive_alloc_comp_2.f08
-  recursive_alloc_comp_3.f08
-  recursive_alloc_comp_4.f08
-  recursive_check_16.f90
   repack_arrays_1.f90
-  reshape.f90
-  reshape_transpose_1.f90
-  reshape_zerosize_3.f90
   same_type_as_3.f03
   select_type_15.f03
   select_type_36.f03
   select_type_43.f90
-  simplify_cshift_1.f90
-  sizeof.f90
-  spread_scalar_source.f90
-  spread_simplify_1.f90
-  structure_constructor_14.f90
-  structure_constructor_2.f03
   submodule_18.f08
-  submodule_32.f08
   submodule_6.f08
-  submodule_7.f08
-  subref_array_pointer_1.f90
-  subref_array_pointer_2.f90
-  subref_array_pointer_4.f90
-  substr_alloc_string_comp_1.f90
-  transfer_assumed_size_1.f90
   transfer_simplify_10.f90
-  transfer_simplify_1.f90
-  transfer_simplify_2.f90
-  trim_optimize_5.f90
   typebound_assignment_5a.f03
   typebound_assignment_6.f03
   typebound_assignment_7.f90
   typebound_call_10.f03
-  typebound_call_13.f03
   typebound_call_17.f03
   typebound_call_18.f03
   typebound_call_19.f03
-  typebound_call_1.f03
   typebound_call_20.f03
   typebound_call_2.f03
   typebound_call_3.f03
-  typebound_call_6.f03
   typebound_generic_3.f03
   typebound_generic_4.f03
-  typebound_generic_5.f03
   typebound_generic_6.f03
   typebound_generic_9.f03
   typebound_operator_12.f03
@@ -1474,39 +1142,17 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   unlimited_polymorphic_25.f90
   unlimited_polymorphic_26.f90
   unlimited_polymorphic_29.f90
-  use_24.f90
   use_27.f90
-  used_dummy_types_1.f90
-  value_1.f90
   value_tests_f03.f90
-  where_2.f90
-  whole_file_13.f90
-  whole_file_14.f90
   winapi.f90
-  zero_array_components_1.f90
 
   # error: 'fir.convert' op invalid type conversion
-  achar_4.f90
-  char_cast_2.f90
   c_char_tests_4.f90
   c_char_tests_5.f90
-  widechar_6.f90
   widechar_intrinsics_2.f90
   widechar_intrinsics_3.f90
   widechar_intrinsics_6.f90
   widechar_intrinsics_7.f90
-  widechar_select_1.f90
-
-  # error: 'llvm.mlir.constant' op expected array type of 4294967300 i8 elements
-  # for the string constant:
-  string_1.f90
-
-  # error: pointer not a MutableBoxValue:
-  associated_7.f90
-
-  # error: symbol is not mapped to any IR value:
-  array_constructor_21.f90
-  where_operator_assign_2.f90
 
   # error: a function must have a type
   proc_decl_9.f90
@@ -1514,16 +1160,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: not a constant derived type expression
   allocate_with_source_10.f08
   allocate_with_source_11.f08
-  arrayio_12.f90
-  associate_25.f90
-  associated_4.f90
-  associated_target_5.f03
-  automatic_default_init_1.f90
-  char_component_initializer_1.f90
-  char_component_initializer_2.f90
-  char_length_8.f90
-  charlen_15.f90
-  charlen_16.f90
   class_9.f03
   class_allocate_10.f03
   class_allocate_7.f03
@@ -1532,11 +1168,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   class_array_4.f03
   class_to_type_2.f90
   coarray_42.f90
-  constructor_3.f90
-  dec_structure_6.f90
-  default_initialization_3.f90
-  default_initialization_4.f90
-  deferred_character_26.f90
   defined_assignment_1.f90
   defined_assignment_10.f90
   defined_assignment_11.f90
@@ -1545,90 +1176,33 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   defined_assignment_4.f90
   defined_assignment_5.f90
   defined_assignment_9.f90
-  dependency_25.f90
-  der_array_io_3.f90
-  derived_init_1.f90
-  derived_init_2.f90
-  derived_init_4.f90
-  derived_pointer_recursion_2.f90
   dtio_22.f90
   dynamic_dispatch_1.f03
   dynamic_dispatch_12.f90
   dynamic_dispatch_2.f03
   dynamic_dispatch_3.f03
-  extends_1.f03
-  extends_16.f90
-  extends_3.f03
   finalize_15.f90
   finalize_29.f08
   finalize_39.f90
-  finalize_40.f90
   finalize_41.f90
   finalize_42.f90
-  finalize_43.f90
-  finalize_44.f90
   finalize_45.f90
   finalize_46.f90
-  finalize_47.f90
-  finalize_48.f90
-  forall_19.f90
   init_flag_10.f90
-  initialization_11.f90
-  initialization_19.f90
-  initialization_27.f90
-  inquiry_type_ref_1.f08
-  intent_out_13.f90
-  intent_out_2.f90
-  intent_out_5.f90
-  interface_assignment_1.f90
-  internal_pack_10.f90
-  internal_pack_6a.f90
-  intrinsic_pack_5.f90
-  intrinsic_pack_6.f90
   move_alloc_10.f90
   move_alloc_6.f90
-  namelist_13.f90
-  namelist_15.f90
   namelist_40.f90
   namelist_47.f90
-  namelist_64.f90
-  namelist_78.f90
-  namelist_96.f90
-  no-automatic.f90
-  optional_assumed_charlen_2.f90
-  pointer_array_component_2.f90
-  pointer_assign_10.f90
   pointer_assign_11.f90
   pointer_assign_8.f90
   pointer_assign_9.f90
-  pointer_init_3.f90
-  pr19926.f90
-  pr51434.f90
   pr68078.f90
   pr69739.f90
-  pr78290.f90
-  pr83864.f90
-  pr85786.f90
-  result_default_init_1.f90
-  structure_constructor_5.f03
   submodule_1.f08
-  submodule_2.f08
   temporary_3.f90
   transfer_class_2.f90
   typebound_call_32.f90
   typebound_operator_15.f90
-
-  # error: unemittable constant value
-  namelist_utf8.f90
-
-  # error: cannot be converted to LLVM IR: missing
-  # `LLVMTranslationDialectInterface` registration for dialect for op: func.func
-  leadz_trailz_1.f90
-  leadz_trailz_2.f90
-
-  # error: failed to legalize operation 'math.ctlz' that was explicitly marked
-  # illegal
-  leadz_trailz_3.f90
 
   # --------------------------------------------------------------------------
   #
@@ -1695,7 +1269,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # a scope with IMPLICIT NONE(EXTERNAL)
   assumed_type_13.f90
   bind-c-contiguous-3.f90
-  bind-c-intent-out.f90
 
   # error: Assumed type argument requires an explicit interface
   assumed_type_2a.f90
@@ -1750,10 +1323,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   fmt_en_rn.f90
   fmt_en_ru.f90
   fmt_en_rz.f90
-  fmt_f0_2.f90
-  fmt_f0_3.f90
   fmt_g0_6.f08
-  fmt_g0_7.f08
   fmt_pf.f90
   interface_12.f90
   result_in_spec_1.f90
@@ -1813,9 +1383,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   dec_io_5.f90
   dec_io_6.f90
 
-  # error: cannot process subprogram that was already processed
-  binding_label_tests_12.f03
-
   # error: Value of named constant cannot be computed as a constant value
   array_initializer_1.f90
   pr83874.f90
@@ -1867,20 +1434,13 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # interface
   getenv_1.f90
 
-  # error: Cannot use-associate 'x'; it is already declared in this scope
-  iso_fortran_env_3.f90
-
   # error: Must be a constant value
-  matmul_17.f90
-  matmul_8.f03
   pr67140.f90
   pr89077.f90
   substr_simplify.f90
   transfer_simplify_12.f90
-  zero_sized_9.f90
 
   # error: COMMON block was not lowered before its usage
-  common_18.f90
   test_common_binding_labels.f03
 
   # error: Subscript 3 is greater than upper bound 2 for dimension 1 of array
@@ -1899,7 +1459,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: '[SYM]' not found in module 'iso_fortran_env'
   overload_3.f90
-  pr66311.f90
   proc_ptr_comp_6.f90
   proc_ptr_comp_pass_2.f90
   quad_2.f90
@@ -1909,9 +1468,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   team_form_1.f90
   team_number_1.f90
   unlimited_polymorphic_31.f03
-
-  # error: VOLATILE attribute was already specified
-  volatile10.f90
 
   # error: 'mask=' argument has unacceptable rank 0
   pdt_20.f03
@@ -1947,10 +1503,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   unf_io_convert_2.f90
   unf_io_convert_3.f90
 
-  # error: Implicit declaration of function has a different result type than in
-  # previous declaration
-  recursive_check_14.f90
-
   # error: Result of pure function may not have an impure FINAL subroutine
   finalize_51.f90
 
@@ -1977,15 +1529,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # of an object file.
   save_6.f90
   shape_9.f90
-
-  # These tests seem to hang at runtime. Not sure if this indicates a problem
-  # with flang or with the tests themselves.
-  #
-  # FIXME: This should be checked and this comment should either be updated to
-  # reflect what the actual problem is with the tests or the tests should be
-  # removed from this list.
-  namelist_42.f90
-  namelist_43.f90
 
   # --------------------------------------------------------------------------
   #
@@ -2024,17 +1567,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   c_f_pointer_logical.f03
   c_f_pointer_shape_tests_2.f03
   c_f_pointer_shape_tests_4.f03
-  deferred_character_8.f90
   equiv_7.f90
   iso_c_binding_rename_1.f03
   test_only_clause.f90
-
-  # --------------------------------------------------------------------------
-  #
-  # These tests are skipped because they cause flang to hang - possibly in an
-  # infinite loop.
-
-  pr49540-1.f90 # Only on AArch64
 
   # --------------------------------------------------------------------------
   #

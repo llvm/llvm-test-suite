@@ -14,9 +14,6 @@ set(UNSUPPORTED_FILES "")
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: allocatable components in derived type assignment
   pr93777.f90
-
-  # unimplemented: gather rhs LEN parameters in assignment to allocatable
-  deferred_character_25.f90
 )
 
 # There are currently no skipped files.

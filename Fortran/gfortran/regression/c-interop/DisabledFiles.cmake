@@ -43,15 +43,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   ff-descriptor-5.f90
   ff-descriptor-6.f90
   ff-descriptor-7.f90
-  pr103390-1.f90
-  pr103390-2.f90
-  pr103390-3.f90
-  pr103390-4.f90
-  pr103390-5.f90
-  pr103390-6.f90
-  pr103390-7.f90
-  pr103390-8.f90
-  pr103390-9.f90
 
   # unimplemented: support for polymorphic types
   c407a-1.f90
@@ -95,10 +86,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   fc-out-descriptor-3.f90
   fc-out-descriptor-4.f90
   fc-out-descriptor-7.f90
-  ff-descriptor-1.f90
   ff-descriptor-2.f90
-  ff-descriptor-3.f90
-  ff-descriptor-4.f90
   optional.f90
   rank-class.f90
   section-2.f90

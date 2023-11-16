@@ -79,7 +79,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   collectives_3.f90
   get_to_indexed_array_1.f90
   lib_realloc_1.f90
-  pr93671.f90
   ptr_comp_3.f08
   scalar_alloc_2.f90
 
