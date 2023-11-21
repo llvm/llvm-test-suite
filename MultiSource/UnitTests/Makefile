@@ -2,7 +2,7 @@
 
 LEVEL = ../..
 
-PARALLEL_DIRS = C++11
+PARALLEL_DIRS = C++11 Float
 
 # Add special tests for Mips
 ifeq ($(ARCH),Mips)
