@@ -222,7 +222,9 @@ function(gcc_torture_dg_options_cflags Variable DG_DO DG_SRC File)
 
   # Remove any flags that will make clang error
   if (DG_CFLAGS)
-    list(REMOVE_ITEM DG_CFLAGS ${CLANG_ERRORING_CFLAGS})
+    foreach(ERROR_CFLAG ${CLANG_ERRORING_CFLAGS})
+      list(FILTER DG_CFLAGS EXCLUDE REGEX "^${ERROR_CFLAG}.*")
+    endforeach()
   endif()
 
   # Set the parent scope variable
