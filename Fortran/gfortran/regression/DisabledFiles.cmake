@@ -2413,6 +2413,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   private_type_4.f90
   private_type_9.f90
   proc_decl_4.f90
+  proc_ptr_37.f90 # https://github.com/llvm/llvm-project/issues/73215
+  proc_ptr_46.f90 # https://github.com/llvm/llvm-project/issues/73215
   protected_3.f90
   selected_char_kind_3.f90
   spread_init_expr_2.f90
