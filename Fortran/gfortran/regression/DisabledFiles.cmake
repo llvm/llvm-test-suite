@@ -1993,6 +1993,77 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # ---------------------------------------------------------------------------
   #
+  # These tests are expected to fail at runtime, but pass instead.
+  #
+  allocate_error_1.f90
+  bounds_check_7.f90
+  bounds_check_10.f90
+  all_bounds_1.f90
+  bounds_check_12.f90
+  bounds_check_array_ctor_1.f90
+  bounds_check_array_ctor_2.f90
+  bounds_check_array_ctor_4.f90
+  bounds_check_array_ctor_6.f90
+  bounds_check_array_ctor_7.f90
+  bounds_check_array_ctor_8.f90
+  bounds_check_fail_3.f90
+  bounds_check_fail_4.f90
+  bounds_check_strlen_1.f90
+  bounds_check_strlen_2.f90
+  bounds_check_strlen_3.f90
+  bounds_check_strlen_4.f90
+  bounds_check_strlen_5.f90
+  bounds_check_strlen_7.f90
+  char_bounds_check_fail_1.f90
+  char_pointer_assign_4.f90
+  char_pointer_assign_5.f90
+  cshift_bounds_2.f90
+  deallocate_error_1.f90
+  deallocate_error_2.f90
+  do_check_2.f90
+  do_check_3.f90
+  do_check_4.f90
+  do_check_11.f90
+  do_check_12.f90
+  endfile_4.f90
+  fmt_g0_2.f08
+  inline_sum_bounds_check_1.f90
+  inline_sum_bounds_check_2.f90
+  io_real_boz2.f90
+  io_real_boz_4.f90
+  io_real_boz_5.f90
+  matmul_bounds_2.f90
+  matmul_bounds_3.f90
+  matmul_bounds_4.f90
+  matmul_bounds_5.f90
+  matmul_bounds_8.f90
+  matmul_bounds_10.f90
+  maxloc_bounds_1.f90
+  maxloc_bounds_2.f90
+  maxloc_bounds_3.f90
+  maxloc_bounds_4.f90
+  maxloc_bounds_5.f90
+  maxloc_bounds_7.f90
+  maxloc_bounds_8.f90
+  merge_char_3.f90
+  no_unit_error_1.f90
+  pack_bounds_1.f90
+  pointer_check_10.f90
+  pointer_remapping_6.f08
+  pr96436_6.f90
+  pr96436_7.f90
+  pr96436_8.f90
+  pr96436_9.f90
+  pr96436_10.f90
+  recursive_check_9.f90
+  recursive_check_11.f90
+  recursive_check_13.f90
+  spread_bounds_1.f90
+  transpose_2.f90
+  unpack_bounds_1.f90
+
+  # ---------------------------------------------------------------------------
+  #
   # This test fails with optimizations enabled, but succeeds when compiled
   # without optimizations.
   inline_transpose_1.f90
@@ -2600,33 +2671,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # _OPENMP/_OPENACC directives while gfortran does.
   openacc-define-3.f90
   openmp-define-3.f90
-
-  # Tests looking for runtime errors (e.g., bound checks). Correctly
-  # caught by flang runtime.
-  allocate_error_6.f90
-  allocate_with_source_22.f03
-  allocate_with_source_23.f03
-  all_bounds_1.f90
-  associate_32.f03
-  bounds_check_12.f90
-  bounds_check_array_ctor_4.f90
-  bounds_check_fail_3.f90
-  cshift_bounds_3.f90
-  cshift_bounds_4.f90
-  dim_sum_1.f90
-  dim_sum_2.f90
-  dim_sum_3.f90
-  inline_matmul_1.f90
-  maxloc_bounds_1.f90
-  maxloc_bounds_2.f90
-  maxloc_bounds_3.f90
-  maxloc_bounds_4.f90
-  maxloc_bounds_5.f90
-  maxloc_bounds_7.f90
-  maxloc_bounds_8.f90
-  pack_bounds_1.f90
-  ptr_func_assign_1.f08
-  spread_bounds_1.f90
 
   # Bad test, assigning an 11 elements array to a 12 elements array.
   transfer_array_intrinsic_4.f90

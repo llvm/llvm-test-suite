@@ -530,8 +530,9 @@ endfunction()
 # Setup an "execute" test. In the case of multi-file tests, MAIN will be the
 # main file. For multi-file tests, OTHERS will be the remaining files needed by
 # the test. FFLAGS are additional compiler flags needed by the test. LDFLAGS
-# are the other linker flags needed by the test.
-function(gfortran_add_execute_test main others fflags ldflags)
+# are the other linker flags needed by the test. If EXPECT_ERROR evaluates to
+# true, the test is expected to fail.
+function(gfortran_add_execute_test expect_error main others fflags ldflags)
   # PREFIX_EXECUTE will have been defined in the subdirectory from which this
   # function is called.
   gfortran_unique_target_name("${PREFIX_EXECUTE}" "${main}" target)
@@ -540,6 +541,20 @@ function(gfortran_add_execute_test main others fflags ldflags)
 
   llvm_test_executable_no_test(${target} ${main} ${others})
   llvm_test_run(WORKDIR "%S/${working_dir_name}")
+  # FIXME: All we need is to negate the exit code. LLVM's not utility can do
+  # this, but if it is not already installed on the system, it will have to be
+  # obtained from LLVM's build directory. It is not clear that we can rely on
+  # this when running the test suite.
+  if (WIN32)
+    # Probably need to check %errorlevel% here.
+    message(FATAL_ERROR "Verification not implemented on Windows.")
+  else ()
+    if (expect_error)
+      llvm_test_verify(${TESTCMD} $? -ne 0)
+    else ()
+      llvm_test_verify(${TESTCMD} $? -eq 0)
+    endif ()
+  endif ()
   llvm_add_test_for_target(${target})
 
   target_include_directories(${target}
@@ -576,6 +591,9 @@ function(gfortran_add_execute_tests_from tests)
   cmake_parse_arguments(GFORTRAN "" "" "FFLAGS;LDFLAGS" ${ARGN})
 
   foreach(file ${tests})
+    # Whether this test is expected to pass or fail.
+    set(expect_error OFF)
+
     # The file containing the "run" directive will be the main file.
     set(main "")
 
@@ -611,13 +629,15 @@ function(gfortran_add_execute_tests_from tests)
         separate_arguments(file_fflags UNIX_COMMAND ${CMAKE_MATCH_2})
         list(REMOVE_ITEM file_fflags ${FLANG_ERRORING_FFLAGS})
         list(APPEND fflags ${file_fflags})
+      elseif (line MATCHES "[{][ ]*dg-shouldfail[ ]+(.*)[}]")
+        set(expect_error ON)
       endif()
     endforeach()
 
     # Since any dependent files could also be processed by this function, there
     # is no guarantee that main will have been set.
     if (main)
-      gfortran_add_execute_test(${main} "${others}" "${fflags}" "${ldflags}")
+      gfortran_add_execute_test(${expect_error} ${main} "${others}" "${fflags}" "${ldflags}")
     endif()
   endforeach()
 endfunction()
@@ -632,7 +652,7 @@ function(gfortran_add_execute_tests tests)
   list(APPEND ldflags ${GFORTRAN_LDFLAGS})
 
   foreach(file ${tests})
-    gfortran_add_execute_test(${file} "" "${fflags}" "${ldflags}")
+    gfortran_add_execute_test(OFF ${file} "" "${fflags}" "${ldflags}")
   endforeach()
 endfunction()
 
