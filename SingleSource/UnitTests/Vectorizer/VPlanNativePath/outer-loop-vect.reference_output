@@ -1,0 +1,5 @@
+Checking matrix-multiplication
+Checking loop with auxiliary IV
+Checking loop with indirect memory accesses
+Checking triple-loop-nest
+exit 0
