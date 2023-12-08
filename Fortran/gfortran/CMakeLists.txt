@@ -445,7 +445,7 @@ function(gfortran_add_compile_test expect_error main others fflags ldflags)
   if (expect_error)
     # Since we don't check for any particular error, we expect "some" error.
     # In that case, the compiler's diagnostic output will be non-empty.
-    llvm_test_verify(${TESTCMD} -s %S/${out})
+    llvm_test_verify(%b/not ${DIFFPROG} %S/${relpath}/${EMPTY_FILE} %S/${out})
   else ()
     llvm_test_verify(${DIFFPROG} %S/${relpath}/${EMPTY_FILE} %S/${out})
   endif ()
@@ -658,22 +658,10 @@ get_filename_component(ISO_FORTRAN_C_HEADER_DIR
 # otherwise.
 set(DIFFPROG)
 if (WIN32)
-  # Windows support has been disabled earlier anyway, but at some point, we
-  # should find a way to check if a file is non-empty on windows.
-  message(FATAL_ERROR "No way to check file size in Windows.")
   find_program(DIFFPROG
     NAMES fc.exe
     REQUIRED)
 else ()
-  # FIXME: For the moment, check if a file is not empty, by using the test
-  # command/shell built-in on *nix. But it is not clear that all systems will
-  # have this. What we really need is to invert the result of DIFFPROG. LLVM has
-  # a not utility that will do just this. But it needs LLVM's build directory
-  # to be present unless it is installed on the system already. It is not clear
-  # if we can depend on this.
-  find_program(TESTCMD
-    NAMES test
-    REQUIRED)
   find_program(DIFFPROG
     NAMES diff cmp
     REQUIRED)
