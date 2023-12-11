@@ -47,7 +47,7 @@ set(SUPPORTED_GPU_CUDA_12_0
   sm_60 sm_61 sm_62
   sm_70 sm_72 sm_75
   sm_80 sm_86 sm_87 sm_89
-  sm_90
+  sm_90 sm_90a
 )
 set(SUPPORTED_GPU_CUDA_12_1 ${SUPPORTED_GPU_CUDA_12_0})
 set(SUPPORTED_GPU_CUDA_12_2 ${SUPPORTED_GPU_CUDA_12_1})
@@ -349,7 +349,8 @@ macro(create_cuda_tests)
         # Tell clang to use libc++
         # We also need to add compiler's include path for cxxabi.h
         get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
-        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++/v1 -DSTDLIB_VERSION=2017)
+        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++/v1
+            -DSTDLIB_VERSION=2017 -D_ALLOW_UNSUPPORTED_LIBCPP)
         set(_Stdlib_LDFLAGS  -stdlib=libc++)
         set(_Stdlib_Libs libcxx)
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-libc++")
