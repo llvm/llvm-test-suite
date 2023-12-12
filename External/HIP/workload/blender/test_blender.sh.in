@@ -1,0 +1,148 @@
+#!/bin/bash
+
+TEST_SUITE_HIP_ROOT=${TEST_SUITE_HIP_ROOT:-"@TEST_SUITE_HIP_ROOT@"}
+perf_thresh=${HIP_BLENDER_TEST_PERF_THRESH:-5}
+
+export CCC_OVERRIDE_OPTIONS=${HIP_BLENDER_TEST_CCC_OVERRIDE_OPTIONS:-"+-v"}
+
+export HIP_CLANG_PATH=${HIP_CLANG_PATH:-"@HIP_CLANG_PATH@"}
+export HIPCC_VERBOSE=${HIPCC_VERBOSE:-7}
+
+blender_options=${HIP_BLENDER_TEST_OPTIONS:-"-F PNG --debug-cycles -- --cycles-device HIP"}
+blender_dir=${HIP_BLENDER_TEST_BIN_DIR:-"$TEST_SUITE_HIP_ROOT/blender"}
+scene_dir=${HIP_BLENDER_TEST_SCENES_DIR:-"$TEST_SUITE_HIP_ROOT/Blender_Scenes"}
+log_dir=${HIP_BLENDER_TEST_LOG_DIR:-"$scene_dir/logs"}
+work_dir=${HIP_BLENDER_TEST_WORK_DIR:-.}
+summary_file="summary.txt"
+
+# Declare clang_hash as a global variable
+clang_hash=""
+
+get_clang_hash() {
+  clang_version_output=$($HIP_CLANG_PATH/clang -v 2>&1)
+  clang_hash=$(echo "$clang_version_output" | grep -oP '(?<=llvm-project )\w{8}')
+  echo "$clang_hash"
+}
+
+get_blender_version() {
+  blender_version_output=$($blender_dir/blender -v 2>&1)
+  blender_version=$(echo "$blender_version_output" | grep -oP 'Blender \K[0-9]+\.[0-9]+')
+  echo "$blender_version"
+}
+
+# disable pre-built kernels and enable local kernel build
+check_and_rename_lib() {
+  blender_version=$(get_blender_version)
+  major_minor_version=${blender_version}
+  lib_dir="$blender_dir/$major_minor_version/scripts/addons/cycles/lib"
+  if [[ -d "$lib_dir" ]]; then
+    mv "$lib_dir" "${lib_dir}.orig"
+  fi
+}
+
+log_kernel_compilation_time() {
+  blender_output=$1
+  kernel_compilation_time=$(sed -n 's/.*Kernel compilation finished in \([0-9]*\.[0-9]*\)s\./\1/p' $blender_output)
+  echo "Collected kernel compilation time: $kernel_compilation_time s"
+  if [[ ! -z "$kernel_compilation_time" ]]; then
+      mkdir -p "$log_dir"
+      kernel_log_file="$log_dir/kernel_compilation_time.log"
+    python3 log_data.py --data "$kernel_compilation_time" --label "$clang_hash" --log-file "$kernel_log_file"
+  fi
+}
+
+render() {
+  scene=$1
+  out_file=${scene##*/}
+  frame=${2:-1}
+  out_file_full=${out_file}_$(printf "%03d" $frame).png
+  input=$scene_dir/${scene}.blend
+  output=$scene_dir/out/${out_file}_
+  log_file="$log_dir/${out_file}.log"
+  mkdir -p "$log_dir"
+  echo "Render $input"
+
+  blender_output=$(mktemp)
+  timeout 300 $blender_dir/blender -b $input -o ${output}### -f $frame $blender_options 2>&1 | tee $blender_output
+  blender_return_code=${PIPESTATUS[0]}
+
+  average_time=$(grep -P "^\s*Path Tracing\s+\d+\.\d+\s+\d+\.\d+" $blender_output | awk '{print $4}')
+
+  log_kernel_compilation_time $blender_output
+
+  compare_output=$(mktemp)
+  timeout 300 python3 compare_image.py --image $scene_dir/out/${out_file_full} --ref $scene_dir/ref/${out_file_full} 2>&1 | tee $compare_output
+  compare_return_code=${PIPESTATUS[0]}
+
+  ssim=$(grep "SSIM Index:" $compare_output | awk '{print $3}')
+  mse=$(grep "MSE Value:" $compare_output | awk '{print $3}')
+  
+  previous_average=""
+  percentage_difference=""
+  perf_regress=0
+
+  if [[ ! -z "$average_time" && "$average_time" != "0" ]]; then
+    log_output=$(python3 log_data.py --data "$average_time" --label "$clang_hash" --log-file "$log_file")
+
+    previous_average=$(echo "$log_output" | grep -oP '(?<=Average of the last 10 non-zero data points: )[^ ]+')
+    percentage_difference=$(echo "$log_output" | grep -oP '(?<=Percentage difference from current data: )[^%]+')
+    percentage_difference=${percentage_difference:-0}
+
+    if (( $(echo "$percentage_difference > $perf_thresh" | bc -l) )); then
+      perf_regress=1
+    fi
+  fi
+
+  echo "$scene $frame $blender_return_code $compare_return_code $perf_regress $average_time $previous_average $percentage_difference $ssim $mse" >> $summary_file
+
+  if [[ $blender_return_code -ne 0 || $compare_return_code -ne 0 || $perf_regress -eq 1 ]]; then
+    return 1
+  fi
+  return 0
+}
+
+run() {
+  cd $work_dir
+  echo "Begin Blender test."
+  hip_dir="$TEST_SUITE_HIP_ROOT"
+  if [[ ! -e "$hip_dir" ]]; then
+    echo "TEST_SUITE_HIP_ROOT=$TEST_SUITE_HIP_ROOT does not exist"
+    exit -1
+  fi
+  echo "TEST_SUITE_HIP_ROOT=$TEST_SUITE_HIP_ROOT"
+  if [[ ! -e "$blender_dir/blender" || ! -e "$scene_dir/scenes.txt" ]]; then
+    echo "Skip HIP Blender test since no blender or test scenes found."
+    echo "To set up HIP Blender test, download or build Blender from https://www.blender.org and install to External/hip/blender directory, and download Blender demo scenes and save to External/hip/Blender_scenes directory. Create a scenes.txt file under the Blender_scenes directory, with each line containing a scene file name and a frame number to render."
+    exit -1
+  fi
+
+  rm -rf ~/.cache/cycles
+  echo "Scene Frame Blender_Return_Code Compare_Return_Code Perf_Regress Average_Time Previous_Average Percentage_Difference SSIM MSE" > $summary_file
+
+  check_and_rename_lib
+
+  clang_hash=$(get_clang_hash)
+
+  all_passed=true
+
+  while IFS=' ' read -r scene frame; do
+    if [[ -z "$scene" || "$scene" == \#* ]]; then
+      continue
+    fi
+    if ! render "$scene" "$frame"; then
+      all_passed=false
+    fi
+  done < "$scene_dir/scenes.txt"
+
+  echo "HIP test summary:"
+  cat $summary_file
+
+  if $all_passed; then
+    echo "Blender test passes."
+  else
+    echo "Blender test fails."
+    return 1
+  fi
+}
+
+run
