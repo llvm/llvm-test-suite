@@ -135,6 +135,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   PR100029.f90
   PR100097.f90
   PR100098.f90
+  PR100911.f90
   PR100915.f90
   PR93963.f90
   PR94022.f90
@@ -149,6 +150,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   assumed_rank_18.f90
   assumed_rank_19.f90
   assumed_rank_20.f90
+  assumed_rank_21.f90
   assumed_rank_5.f90
   assumed_type_9.f90
   bind-c-contiguous-2.f90
@@ -162,13 +164,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   select_rank_5.f90
   sizeof_4.f90
   sizeof_6.f90
+  unlimited_polymorphic_1.f03
 
   # unimplemented: ASYNCHRONOUS in procedure interface
   assumed_rank_13.f90
   asynchronous_3.f03
 
   # unimplemented: assumed type in actual argument
-  altreturn_10.f90
+  altreturn_10.f90 # bad Fortran, warnings are correct
 
   # unimplemented: procedure pointers
   associated_target_8.f90
@@ -249,11 +252,16 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_48.f90
   proc_ptr_comp_1.f90
   proc_ptr_comp_11.f90
+  proc_ptr_comp_12.f90
+  proc_ptr_comp_15.f90
+  proc_ptr_comp_16.f90
+  proc_ptr_comp_17.f90
   proc_ptr_comp_13.f90
   proc_ptr_comp_14.f90
   proc_ptr_comp_18.f90
   proc_ptr_comp_19.f90
   proc_ptr_comp_21.f90
+  proc_ptr_comp_23.f90
   proc_ptr_comp_24.f90
   proc_ptr_comp_26.f90
   proc_ptr_comp_27.f90
@@ -262,14 +270,21 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_comp_32.f90
   proc_ptr_comp_33.f90
   proc_ptr_comp_34.f90
+  proc_ptr_comp_4.f90
   proc_ptr_comp_40.f90
   proc_ptr_comp_44.f90
-  proc_ptr_comp_4.f90
+  proc_ptr_comp_47.f90
   proc_ptr_comp_5.f90
   proc_ptr_comp_51.f90
   proc_ptr_comp_52.f90
   proc_ptr_comp_7.f90
+  proc_ptr_comp_pass_1.f90
+  proc_ptr_comp_pass_5.f90
   structure_constructor_11.f90
+  typebound_call_19.f03
+  typebound_call_20.f03
+  typebound_operator_9.f03
+  typebound_proc_27.f03
 
   # unimplemented: procedure pointer results
   pointer_check_5.f90
@@ -442,6 +457,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   dtio_20.f03
   dtio_23.f90
   dtio_29.f03
+  dtio_33.f90
   dtio_35.f90
   dummy_procedure_4.f90
   dynamic_dispatch_10.f03
@@ -519,6 +535,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_comp_pass_3.f90
   proc_ptr_comp_pass_6.f90
   ptr_func_assign_2.f08
+  ptr_func_assign_3.f08
   realloc_on_assign_20.f90
   realloc_on_assign_21.f90
   realloc_on_assign_27.f08
@@ -687,9 +704,42 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   transfer_resolve_1.f90
 
   # unimplemented: allocatable component in structure constructor
+  allocatable_scalar_13.f90
+  alloc_comp_assign_13.f08
+  alloc_comp_assign_14.f08
+  alloc_comp_assign_2.f90
+  alloc_comp_assign_3.f90
+  alloc_comp_assign_4.f90
+  alloc_comp_assign_5.f90
+  alloc_comp_class_3.f03
+  alloc_comp_class_4.f03
+  alloc_comp_constructor_1.f90
+  alloc_comp_constructor_2.f90
+  alloc_comp_constructor_3.f90
+  alloc_comp_constructor_4.f90
   alloc_comp_constructor_7.f90
+  alloc_comp_deep_copy_2.f03
+  alloc_comp_deep_copy_3.f03
+  alloc_comp_initializer_1.f90
+  alloc_comp_initializer_4.f03
   alloc_comp_init_expr.f03
+  alloc_comp_optional_1.f90
+  alloc_comp_result_1.f90
+  array_reference_2.f90
+  associate_60.f90
+  block_13.f08
+  class_result_9.f90
+  deferred_type_component_1.f90
+  deferred_type_component_2.f90
+  derived_constructor_comps_5.f90
+  derived_constructor_comps_6.f90
+  extends_4.f03
+  null_9.f90
+  pr43808.f90
+  realloc_on_assign_16.f90
+  realloc_on_assign_17.f90
   structure_constructor_17.f90
+  typebound_operator_13.f03
 
   # unimplemented: allocatable components in derived type assignment
   alloc_comp_result_2.f90
@@ -736,6 +786,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: io-control-spec contains a reference to a non-integer,
   # non-scalar, or non-variable
   assign_8.f90
+  fmt_nonchar_2.f90
   fmt_nonchar_3.f90
   typebound_proc_29.f90
   write_invalid_format.f90
@@ -857,9 +908,18 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: intrinsic: this_image
   coarray_40.f90
   coarray_43.f90
+  coarray_allocate_10.f08
+  coarray_allocate_7.f08
+  coarray_allocate_8.f08
+  coarray_allocate_9.f08
+  coarray_alloc_comp_1.f08
+  coarray_alloc_comp_2.f08
   coarray_collectives_18.f90
   coarray_fail_18.f90
   coarray_fail_st.f90
+  coarray_ptr_comp_1.f08
+  coarray_ptr_comp_2.f08
+  coarray_send_by_ref_1.f08
   coarray_stat_2.f90
   coarray_stat_function.f90
   coarray_stat_whitespace.f90
@@ -882,10 +942,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   dec_type_print_2.f03
   pdt_1.f03
   pdt_10.f03
+  pdt_11.f03
+  pdt_12.f03
   pdt_15.f03
   pdt_19.f03
   pdt_22.f03
   pdt_25.f03
+  pdt_27.f03
+  pdt_28.f03
   pdt_7.f03
   pdt_9.f03
   pr95826.f90
@@ -958,155 +1022,27 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   dependency_19.f90
   forall_3.f90
   pr49698.f90
-)
 
-# These tests are skipped because they cannot be compiled. Unlike the
-# UnimplementedTests list, they do not fail with a "not yet implemented"
-# assertion. The root cause for the failure could very well be one of those,
-# but with the specific failure mode that is observed, it is not clear what
-# missing feature is causing the compile-failure for these tests.
-# If any of these tests use features that will never be supported, they should
-# be moved to the UnsupportedTests list. If the cause of the failure of any
-# tests in this list is addressed, they should be removed from here.
-#
-file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
-  # --------------------------------------------------------------------------
-  #
-  # These tests are skipped because they trigger internal compiler errors.
-  #
-
-  # error: Unexpected typeless constant value
-  actual_array_constructor_1.f90
+  # These tests are NYI: support for polymorphic types; when polymorphic
+  # type support is enabled by option, they pass.  Delete these when
+  # polymorphic types are enabled by default.
   actual_array_offset_1.f90
-  actual_pointer_function_1.f90
-  aliasing_dummy_1.f90
-  aliasing_dummy_4.f90
-  allocatable_function_10.f90
-  allocatable_function_9.f90
-  allocatable_scalar_10.f90
-  allocatable_scalar_13.f90
-  allocatable_scalar_3.f90
-  allocatable_scalar_9.f90
-  allocate_alloc_opt_6.f90
   allocate_class_3.f90
-  allocate_derived_5.f90
-  allocate_error_6.f90
   allocate_with_mold_1.f90
   allocate_with_mold_3.f90
   allocate_with_source_15.f03
   allocate_with_source_16.f90
-  allocate_with_source_22.f03
-  allocate_with_source_23.f03
-  allocate_with_source_24.f90
   allocate_with_source_5.f90
   allocate_with_source_6.f90
   allocate_with_source_7.f08
-  allocate_with_source_9.f08
-  alloc_comp_assign_10.f90
-  alloc_comp_assign_11.f90
   alloc_comp_assign_12.f03
-  alloc_comp_assign_13.f08
-  alloc_comp_assign_14.f08
-  alloc_comp_assign_15.f03
   alloc_comp_assign_16.f03
-  alloc_comp_assign_1.f90
-  alloc_comp_assign_2.f90
-  alloc_comp_assign_3.f90
-  alloc_comp_assign_4.f90
-  alloc_comp_assign_5.f90
-  alloc_comp_assign_6.f90
-  alloc_comp_assign_7.f90
-  alloc_comp_assign_8.f90
-  alloc_comp_assign_9.f90
-  alloc_comp_auto_array_1.f90
-  alloc_comp_auto_array_2.f90
-  alloc_comp_basics_1.f90
-  alloc_comp_basics_2.f90
-  alloc_comp_basics_5.f90
-  alloc_comp_bounds_1.f90
   alloc_comp_class_1.f90
-  alloc_comp_class_3.f03
-  alloc_comp_class_4.f03
   alloc_comp_class_5.f03
-  alloc_comp_constructor_1.f90
-  alloc_comp_constructor_2.f90
-  alloc_comp_constructor_3.f90
-  alloc_comp_constructor_4.f90
-  alloc_comp_constructor_5.f90
-  alloc_comp_constructor_6.f90
-  alloc_comp_deep_copy_2.f03
-  alloc_comp_deep_copy_3.f03
-  alloc_comp_default_init_1.f90
-  alloc_comp_default_init_2.f90
-  alloc_comp_initializer_1.f90
-  alloc_comp_initializer_4.f03
-  alloc_comp_misc_1.f90
-  alloc_comp_optional_1.f90
-  alloc_comp_result_1.f90
-  alloc_comp_result_3.f90
-  alloc_comp_scalar_1.f90
-  alloc_comp_transformational_1.f90
-  alloc_deferred_comp_1.f90
-  array_constructor_32.f90
-  array_constructor_type_14.f03
-  array_constructor_type_8.f03
-  arrayio_11.f90
-  arrayio_derived_1.f90
-  array_memcpy_5.f90
-  array_reference_2.f90
-  assign_func_dtcomp_1.f90
-  associate_1.f03
-  associate_24.f90
-  associate_27.f90
   associate_28.f90
-  associate_32.f03
-  associate_38.f90
-  associate_43.f90
   associate_46.f90
-  associate_47.f90
-  associate_60.f90
-  associate_9.f03
-  associated_target_3.f90
   associated_target_6.f03
   associated_target_7.f90
-  assumed_rank_21.f90
-  bind_c_coms.f90
-  bind_c_dts_2.f03
-  bind_c_usage_10.f03
-  bind_c_usage_16.f03
-  bind_c_usage_24.f90
-  bind_c_usage_33.f90
-  binding_c_table_15_1.f03
-  binding_label_tests_16.f03
-  binding_label_tests_33.f90
-  block_13.f08
-  blockdata_11.f90
-  bound_1.f90
-  bound_5.f90
-  bounds_check_17.f90
-  bounds_check_5.f90
-  bounds_check_8.f90
-  c_char_tests_2.f03
-  c_char_tests_3.f90
-  c_f_pointer_shape_tests_5.f90
-  c_f_pointer_tests_4.f90
-  c_f_pointer_tests.f90
-  c_funloc_tests_3.f03
-  c_funloc_tests_4.f03
-  c_funloc_tests.f03
-  c_funptr_1.f90
-  c_funptr_1_mod.f90
-  char4-subscript.f90
-  character_array_constructor_1.f90
-  char_array_structure_constructor.f90
-  char_assign_1.f90
-  char_length_15.f90
-  char_pointer_comp_assign.f90
-  char_result_5.f90
-  char_result_6.f90
-  char_type_len.f90
-  c_kind_int128_test2.f03
-  c_kind_params.f90
   class_19.f03
   class_25.f03
   class_40.f03
@@ -1124,117 +1060,29 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   class_array_23.f03
   class_array_7.f03
   class_array_9.f03
-  class_assign_4.f90
   class_defined_operator_1.f03
   class_defined_operator_2.f03
   class_dummy_2.f03
   class_result_10.f90
   class_result_1.f03
-  class_result_9.f90
   class_to_type_3.f03
-  c_loc_test_20.f90
-  c_loc_test.f90
-  c_loc_tests_2.f03
-  coarray_allocate_10.f08
-  coarray_allocate_6.f08
-  coarray_allocate_7.f08
-  coarray_allocate_8.f08
-  coarray_allocate_9.f08
-  coarray_alloc_comp_1.f08
-  coarray_alloc_comp_2.f08
-  coarray_alloc_comp_3.f08
-  coarray_alloc_comp_6.f08
-  coarray_alloc_comp_7.f08
-  coarray_alloc_comp_8.f08
-  coarray_lib_alloc_4.f90
-  coarray_poly_9.f90
-  coarray_ptr_comp_1.f08
-  coarray_ptr_comp_2.f08
-  coarray_send_by_ref_1.f08
-  com_block_driver.f90
-  constructor_2.f90
-  contained_module_proc_1.f90
-  c_ptr_tests_10.f03
-  c_ptr_tests_14.f90
-  c_ptr_tests_19.f90
-  c_ptr_tests_7.f03
-  c_ptr_tests_8.f03
-  c_ptr_tests_9.f03
-  c_ptr_tests.f03
-  cshift_2.f90
-  cshift_nan_1.f90
-  c_sizeof_1.f90
-  c_sizeof_5.f90
-  c_size_t_test.f03
-  data_derived_1.f90
-  data_stmt_pointer.f90
-  dec_init_2.f90
-  dec_structure_18.f90
-  dec_structure_1.f90
-  dec_structure_2.f90
-  dec_structure_25.f90
-  dec_structure_3.f90
-  dec_structure_4.f90
-  default_initialization_5.f90
-  deferred_character_10.f90
   deferred_character_11.f90
-  deferred_character_12.f90
   deferred_character_13.f90
   deferred_character_23.f90
-  deferred_character_25.f90
   deferred_character_28.f90
-  deferred_character_3.f90
   deferred_character_5.f90
-  deferred_character_6.f90
-  deferred_type_component_1.f90
-  deferred_type_component_2.f90
   deferred_type_component_3.f90
-  dependency_22.f90
-  dependency_23.f90
-  dependency_24.f90
-  dependency_39.f90
-  dependency_55.f90
-  der_array_1.f90
-  der_array_io_1.f90
-  der_array_io_2.f90
-  derived_comp_array_ref_1.f90
-  derived_comp_array_ref_2.f90
-  derived_comp_array_ref_3.f90
-  derived_comp_array_ref_4.f90
-  derived_comp_array_ref_7.f90
-  derived_constructor_comps_1.f90
-  derived_constructor_comps_4.f90
-  derived_constructor_comps_5.f90
-  derived_constructor_comps_6.f90
-  derived_constructor_comps_7.f90
-  derived_external_function_1.f90
-  derived_init_3.f90
-  derived_init_5.f90
   der_ptr_component_2.f90
-  dtio_10.f90
   dtio_12.f90
-  dtio_14.f90
-  dtio_15.f90
-  dtio_16.f90
   dtio_17.f90
   dtio_19.f90
   dtio_1.f90
-  dtio_24.f90
-  dtio_25.f90
-  dtio_26.f03
   dtio_27.f90
   dtio_28.f03
   dtio_2.f90
-  dtio_30.f03
   dtio_31.f03
   dtio_32.f03
-  dtio_33.f90
   dtio_34.f90
-  dtio_3.f90
-  dtio_4.f90
-  dtio_7.f90
-  dtio_8.f90
-  dtio_9.f90
   dynamic_dispatch_11.f03
   dynamic_dispatch_4.f03
   dynamic_dispatch_5.f03
@@ -1242,234 +1090,62 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   dynamic_dispatch_7.f03
   dynamic_dispatch_8.f03
   dynamic_dispatch_9.f03
-  elemental_assignment_1.f90
   elemental_dependency_5.f90
-  elemental_dependency_6.f90
   elemental_subroutine_10.f90
   elemental_subroutine_11.f90
-  elemental_subroutine_2.f90
-  elemental_subroutine_3.f90
-  entry_13.f90
-  entry_16.f90
-  equiv_constraint_4.f90
-  extends_4.f03
   finalize_13.f90
-  finalize_17.f90
-  finalize_25.f90
   finalize_31.f90
   finalize_33.f90
   finalize_36.f90
   finalize_38.f90
-  finalize_38a.f90
-  finalize_50.f90
   finalize_52.f90
-  fmt_nonchar_2.f90
-  forall_1.f90
-  func_assign_3.f90
-  func_derived_1.f90
-  func_derived_2.f90
-  func_derived_3.f90
-  func_derived_4.f90
-  func_result_6.f90
-  function_kinds_1.f90
-  generic_15.f90
   generic_23.f03
-  implied_do_io_1.f90
-  import4.f90
-  import.f90
-  init_flag_15.f03
-  inline_matmul_1.f90
-  inline_matmul_9.f90
-  inquiry_type_ref_5.f90
   intent_optimize_10.f90
-  intent_out_14.f90
-  interface_assignment_2.f90
-  internal_pack_13.f90
-  internal_pack_14.f90
-  internal_pack_1.f90
-  internal_pack_8.f90
-  intrinsic_pack_1.f90
-  intrinsic_spread_1.f90
-  intrinsic_unpack_1.f90
-  iso_c_binding_rename_2.f03
-  ISO_Fortran_binding_10.f90
-  ISO_Fortran_binding_11.f90
-  ISO_Fortran_binding_12.f90
-  ISO_Fortran_binding_18.f90
-  ISO_Fortran_binding_5.f90
-  ISO_Fortran_binding_7.f90
-  ISO_Fortran_binding_8.f90
-  iso_fortran_binding_uint8_array.f90
-  logical_temp_io.f90
-  logical_temp_io_kind8.f90
   module_procedure_6.f90
   module_read_2.f90
-  move_alloc_15.f90
-  move_alloc_16.f90
-  move_alloc_4.f90
-  multiple_allocation_2.f90
-  mvbits_7.f90
-  mvbits_8.f90
-  namelist_14.f90
-  namelist_52.f90
-  namelist_54.f90
-  namelist_55.f90
-  namelist_58.f90
-  namelist_60.f90
-  namelist_66.f90
-  namelist_69.f90
-  namelist_70.f90
-  namelist_71.f90
-  namelist_77.f90
-  namelist_79.f90
-  namelist_82.f90
-  namelist_85.f90
-  nested_allocatables_1.f90
-  nested_modules_3.f90
-  null_9.f90
-  nullify_3.f90
   optional_class_1.f90
-  overload_1.f90
-  parameter_array_init_8.f90
-  pdt_11.f03
-  pdt_12.f03
-  pdt_13.f03
-  pdt_14.f03
-  pdt_27.f03
-  pdt_28.f03
-  pointer_array_11.f90
-  pointer_array_1.f90
-  pointer_array_3.f90
   pointer_array_4.f90
-  pointer_array_6.f90
-  pointer_array_7.f90
-  pointer_array_component_1.f90
-  pointer_assign_14.f90
-  pointer_assign_15.f90
-  pointer_check_11.f90
-  pointer_init_1.f90
   pointer_init_8.f90
-  pointer_remapping_10.f90
   PR100132.f90
   PR100136.f90
-  PR100911.f90
-  pr100950.f90
-  pr105205.f90
   pr106731.f90
-  pr106918.f90
   pr107872.f90
-  pr16938.f90
-  pr17612.f90
-  pr18392.f90
-  pr19928-2.f90
-  pr32627.f03
-  pr35983.f90
-  pr43808.f90
-  pr43866.f90
-  pr47008.f03
-  pr55086_aliasing_dummy_4_tfat.f90
   pr62125.f90
   pr64230.f90
-  pr65504.f90
-  pr69955.f90
-  pr71764.f90
   pr84155.f90
-  pr84523.f90
-  pr86322_3.f90
-  pr88611.f90
-  pr92050.f90
-  pr93685_1.f90
   pr99602b.f90
-  print_c_kinds.f90
-  proc_decl_17.f90
-  proc_decl_2.f90
-  proc_ptr_comp_12.f90
-  proc_ptr_comp_15.f90
-  proc_ptr_comp_16.f90
-  proc_ptr_comp_17.f90
-  proc_ptr_comp_23.f90
-  proc_ptr_comp_47.f90
-  proc_ptr_comp_pass_1.f90
-  proc_ptr_comp_pass_5.f90
-  ptr_func_assign_1.f08
-  ptr_func_assign_3.f08
-  read_dir.f90
-  realloc_on_assign_16.f90
-  realloc_on_assign_17.f90
-  realloc_on_assign_23.f90
-  realloc_on_assign_28.f90
-  realloc_on_assign_2.f03
-  realloc_on_assign_32.f90
-  realloc_on_assign_3.f03
-  realloc_on_assign_9.f90
-  recursive_alloc_comp_1.f08
-  recursive_alloc_comp_2.f08
-  recursive_alloc_comp_3.f08
-  recursive_alloc_comp_4.f08
-  recursive_check_16.f90
-  repack_arrays_1.f90
-  reshape.f90
-  reshape_transpose_1.f90
-  reshape_zerosize_3.f90
   same_type_as_3.f03
   select_type_15.f03
   select_type_36.f03
   select_type_43.f90
-  simplify_cshift_1.f90
-  sizeof.f90
-  spread_scalar_source.f90
-  spread_simplify_1.f90
-  structure_constructor_14.f90
-  structure_constructor_2.f03
   submodule_18.f08
-  submodule_32.f08
   submodule_6.f08
-  submodule_7.f08
-  subref_array_pointer_1.f90
-  subref_array_pointer_2.f90
-  subref_array_pointer_4.f90
-  substr_alloc_string_comp_1.f90
-  transfer_assumed_size_1.f90
-  transfer_simplify_10.f90
-  transfer_simplify_1.f90
-  transfer_simplify_2.f90
-  trim_optimize_5.f90
   typebound_assignment_5a.f03
   typebound_assignment_6.f03
   typebound_assignment_7.f90
   typebound_call_10.f03
-  typebound_call_13.f03
   typebound_call_17.f03
   typebound_call_18.f03
-  typebound_call_19.f03
-  typebound_call_1.f03
-  typebound_call_20.f03
   typebound_call_2.f03
   typebound_call_3.f03
-  typebound_call_6.f03
   typebound_generic_3.f03
   typebound_generic_4.f03
-  typebound_generic_5.f03
   typebound_generic_6.f03
   typebound_generic_9.f03
   typebound_operator_12.f03
-  typebound_operator_13.f03
   typebound_operator_20.f90
   typebound_operator_21.f03
   typebound_operator_3.f03
   typebound_operator_6.f03
   typebound_operator_7.f03
   typebound_operator_8.f03
-  typebound_operator_9.f03
   typebound_proc_20.f90
   typebound_proc_23.f90
-  typebound_proc_27.f03
   typebound_proc_35.f90
   typebound_proc_36.f90
   type_to_class_4.f03
   unlimited_polymorphic_18.f90
   unlimited_polymorphic_19.f90
-  unlimited_polymorphic_1.f03
   unlimited_polymorphic_23.f90
   unlimited_polymorphic_25.f90
   unlimited_polymorphic_26.f90
@@ -1477,13 +1153,108 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   use_24.f90
   use_27.f90
   used_dummy_types_1.f90
-  value_1.f90
+)
+
+# These tests are skipped because they cannot be compiled. Unlike the
+# UnimplementedTests list, they do not fail with a "not yet implemented"
+# assertion. The root cause for the failure could very well be one of those,
+# but with the specific failure mode that is observed, it is not clear what
+# missing feature is causing the compile-failure for these tests.
+# If any of these tests use features that will never be supported, they should
+# be moved to the UnsupportedTests list. If the cause of the failure of any
+# tests in this list is addressed, they should be removed from here.
+#
+file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
+  # --------------------------------------------------------------------------
+  #
+  # These tests are skipped because they trigger internal compiler errors.
+  #
+
+  # These still crash with flang-new when compiling in this test
+  # environment, but are usually successful when run manually.
+  ISO_Fortran_binding_8.f90
+  ISO_Fortran_binding_12.f90
+  binding_c_table_15_1.f03
+  binding_label_tests_16.f03
+  binding_label_tests_33.f90
+  bind_c_coms.f90
+  bind_c_dts_2.f03
+  bind_c_usage_10.f03
+  bind_c_usage_16.f03
+  bind_c_usage_24.f90
+  bind_c_usage_33.f90
+  com_block_driver.f90
+  c_char_tests_2.f03
+  c_funloc_tests.f03
+  c_funloc_tests_3.f03
+  c_funloc_tests_4.f03
+  c_f_pointer_shape_tests_5.f90
+  c_f_pointer_tests.f90
+  c_f_pointer_tests_4.f90
+  c_kind_int128_test2.f03
+  c_loc_test.f90
+  c_loc_tests_2.f03
+  c_loc_test_20.f90
+  c_ptr_tests.f03
+  c_ptr_tests_14.f90
+  c_ptr_tests_19.f90
+  c_ptr_tests_7.f03
+  c_ptr_tests_8.f03
+  c_sizeof_1.f90
+  c_sizeof_5.f90
+  c_size_t_test.f03
+  deferred_character_10.f90
+  iso_c_binding_rename_2.f03
+  iso_fortran_binding_uint8_array.f90
+  logical_temp_io.f90
+  logical_temp_io_kind8.f90
+  pointer_remapping_10.f90
+  pr32627.f03
+  pr35983.f90
+  pr43866.f90
+  pr47008.f03
+  pr71764.f90
+  pr88611.f90
+  print_c_kinds.f90
+  proc_decl_17.f90
+  proc_decl_2.f90
+  repack_arrays_1.f90
+  transfer_simplify_10.f90
   value_tests_f03.f90
+
+  # lowering bugs (reported)
+  realloc_on_assign_2.f03
   where_2.f90
-  whole_file_13.f90
-  whole_file_14.f90
-  winapi.f90
-  zero_array_components_1.f90
+  c_char_tests.f03
+
+  # Categorize and debug further
+  bounds_check_17.f90 # needs -fcheck=bounds
+  c_char_tests_3.f90 # runtime segfault
+  c_funptr_1.f90 # needs "win32_types" module
+  c_funptr_1_mod.f90 # needs "win32_types" module
+  c_kind_params.f90 # runtime failure detected in test
+  class_assign_4.f90 # NYI: vector subscripted polymorphic in HLFIR
+  coarray_allocate_6.f08 # NYI: allocation of coarray
+  coarray_alloc_comp_3.f08 # NYI: allocation of coarray
+  coarray_alloc_comp_6.f08 # NYI: lowering coarray reference
+  coarray_alloc_comp_7.f08 # NYI: lowering coarray reference
+  coarray_alloc_comp_8.f08 # NYI: lowering coarray reference
+  coarray_lib_alloc_4.f90 # NYI: allocation of coarray
+  coarray_poly_9.f90 # NYI: allocation of coarray
+  c_ptr_tests_10.f03 # valid compilation error on print of c_null_ptr (?)
+  c_ptr_tests_9.f03 # valid compilation error on print of c_null_ptr (?)
+  dec_init_2.f90 # needs -finit-derived -finit-integer=42 &c.
+  finalize_38a.f90 # test reports errors, but I think gfortran is wrong
+  init_flag_15.f03 # needs -finit-derived -finit-integer
+  ISO_Fortran_binding_10.f90 # test reports failure at runtime
+  ISO_Fortran_binding_11.f90 # test reports failure at runtime
+  ISO_Fortran_binding_18.f90 # runtime abort
+  ISO_Fortran_binding_5.f90 # test reports failure at runtime
+  ISO_Fortran_binding_7.f90 # test reports failure at runtime
+  pointer_check_11.f90 # runtime segfault
+  pr106918.f90 # NYI: dynamic character length in struct constr
+  pr92050.f90 # needs -fcheck=all
+  winapi.f90 # needs -lkernel32 and target *-*-cygwin*
 
   # error: 'fir.convert' op invalid type conversion
   achar_4.f90
@@ -2080,38 +1851,17 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # will never pass with flang (if they use unsupported extensions for instance),
   # they should be added to the Unsupported list.
 
-  Wall.f90
-  Wno-all.f90
-  abort_shouldfail.f90
-  achar_6.F90
-  advance_5.f90
-  advance_6.f90
-  aliasing_dummy_5.f90
-  allocate_alloc_opt_15.f90
-  allocate_alloc_opt_3.f90
-  allocate_deferred_char_scalar_1.f03
-  allocate_zerosize_3.f
-  arrayio_1.f90
-  arrayio_3.f90
-  arrayio_5.f90
-  arrayio_6.f90
-  assign_2.f90
-  auto_save_2.f90
-  backslash_2.f90
-  backslash_3.f
-  backspace_2.f
-  backspace_6.f
-  bessel_7.f90
-  bounds_check_19.f90
-  boz_15.f90
-  c_char_tests.f03
-  char4_iunit_1.f03
-  char4_iunit_2.f03
-  check_bits_1.f90
-  check_bits_2.f90
-  continuation_12.f90
-  continuation_13.f90
-  continuation_1.f90
+  # Tests that fail because they should fail
+  abort_shouldfail.f90 # works, calls abort(), crashes
+  assign_2.f90 # j=5; goto j
+
+  # require further analysis
+  Wall.f90 # no warning for missing & on continuation line in char constant
+  Wno-all.f90 # no warning for missing & on continuation line in char constant
+  auto_save_2.f90 # requires -fno-automatic -finit-local-zero
+  bessel_7.f90 # unclear
+  check_bits_1.f90 # requires -fcheck=bits to catch ISHFTC runtime error
+  check_bits_2.f90 # requires -fcheck=bits to catch ISHFTC runtime error
   cr_lf.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
@@ -2737,8 +2487,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   whole_file_34.f90
   # No interface mismatch warning on call to implicit interface expecting alternate returns
   whole_file_3.f90
-  # Out-of-range \U characters -- do we even support?
-  widechar_1.f90
 
   # Test configuration problems
   # Needs to be compiled as class_4[abc].f03 due to modules -- then compiles
@@ -2943,10 +2691,15 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Tests looking for runtime errors (e.g., bound checks). Correctly
   # caught by flang runtime when it is used for array assignments.
+  allocate_error_6.f90
+  allocate_with_source_22.f03
+  allocate_with_source_23.f03
   all_bounds_1.f90
+  associate_32.f03
   bounds_check_12.f90
   bounds_check_array_ctor_4.f90
   bounds_check_fail_3.f90
+  inline_matmul_1.f90
   maxloc_bounds_1.f90
   maxloc_bounds_2.f90
   maxloc_bounds_3.f90
@@ -2955,6 +2708,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   maxloc_bounds_7.f90
   maxloc_bounds_8.f90
   pack_bounds_1.f90
+  ptr_func_assign_1.f08
   spread_bounds_1.f90
 
   # Bad test, assigning an 11 elements array to a 12 elements array.
@@ -2963,4 +2717,63 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Fails at -O3 with HLFIR. Gfortran emits warnings when compiling,
   # needs investigation.
   maxlocval_1.f90
+
+  # Fails at runtime with a valid I/O error due to INQUIRE(IOLENGTH=n)
+  # being used on a derived type with defined unformatted output.
+  dtio_16.f90
+
+  # Fail at runtime due to dependence on gfortran's specific IOSTAT
+  # error code numbers or IOMSG error message texts.
+  dtio_10.f90
+  dtio_15.f90
+  dtio_24.f90
+  dtio_26.f03
+
+  # Depends on gfortran's exact NAMELIST output spacing.
+  dtio_25.f90
+
+  # Bad test that expects the result of TRIM() to have a leading space
+  dtio_14.f90
+
+  # Bad tests that expect IOMSG to be defined by a defined I/O subroutine
+  # even when IOSTAT=0, violating F'23 12.6.4.8.3 paragraph 4:
+  # "If the defined input/output procedure returns a nonzero value for the iostat
+  # argument, the procedure shall also return an explanatory message in the iomsg
+  # argument. Otherwise, the procedure shall not change the value of the
+  # iomsg argument."
+  dtio_3.f90
+  dtio_4.f90
+
+  # Valid test, but the expected output is incorrect (gfortran inserts
+  # spaces that must not be there; F'23 13.10.4 p1).
+  dtio_30.f03
+
+  # A bad test that expects child input to span records
+  dtio_7.f90
+
+  # Unimplemented extension: reading a directory as a stream
+  read_dir.f90
+
+  # Unimplemented extension: \u and \U Unicode escape sequences
+  achar_6.F90
+  widechar_1.f90
+
+  # Unimplemented extension: \b backslash escapes in FORMAT statements
+  backslash_3.f
+
+  # Depends on gfortran's exact ALLOCATE(ERRMSG=) wording
+  allocate_alloc_opt_15.f90
+  allocate_alloc_opt_3.f90
+
+  # Depends on gfortran's incorrect return of EOR (-2) on internal
+  # WRITE record overflow
+  arrayio_3.f90
+
+  # Depends on gfortran's incorrect return of EOF (-1) on internal
+  # WRITE array overflow
+  arrayio_5.f90
+
+  # Depends on gfortran's spacing of list-directed output
+  char4_iunit_1.f03
+  char4_iunit_2.f03
 )
