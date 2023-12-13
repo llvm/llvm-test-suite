@@ -13,19 +13,25 @@
 #define _CLASSIFY_LDOUBLE_H_
 
 #include "check-helper.h"
+#include "fformat.h"
 #include <float.h>
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef long double ldouble;
+
+#define VAL_FORMAT "%Lg"
+#define GET_VALUE(x) (*(long double *)x)
 
 // The type long double does not have definite representation, it may be mapped
-// to various float types. So instead of preparing bit patterns, rely on builtin
-// functions and macro definitions provided by the compiler.
-
+// to various floating-point types. In general case value tables are build using
+// builtin functions and macro definitions provided by the compiler.
+#ifdef __LDBL_HAS_QUIET_NAN__
 long double LongDoubleSNaNValues[4];
 long double LongDoubleQNaNValues[4];
+#endif
 #ifdef __LDBL_HAS_INFINITY__
 long double LongDoubleInfValues[2];
 #endif
@@ -34,10 +40,6 @@ long double LongDoubleZeroValues[] = { 0.0L, -0.0L };
 long double LongDoubleDenormValues[2];
 #endif
 long double LongDoubleNormalValues[6];
-
-#define FLOAT_FORMAT "Lg"
-#define VAL_FORMAT   FLOAT_FORMAT
-#define FLOAT_TYPE   long double
 
 void prepare_ldouble_tables() {
   LongDoubleQNaNValues[0] = __builtin_nanl("");
@@ -68,64 +70,136 @@ void prepare_ldouble_tables() {
 }
 
 int test_ldouble() {
-  for (unsigned i = 0; i < DimOf(LongDoubleQNaNValues); i++) {
-    long double X = LongDoubleQNaNValues[i];
-    CHECK_VALUE(__builtin_isnan(X), X);
-    CHECK_VALUE(!__builtin_isinf(X), X);
-    CHECK_VALUE(!__builtin_isfinite(X), X);
-    CHECK_VALUE(!__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, X);
+#ifdef __LDBL_HAS_QUIET_NAN__
+  for (unsigned i = 0; i < DimOf(LongDoubleQNaNValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleQNaNValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(__builtin_isnan(X), P);
+    CHECK_VALUE(!__builtin_issignaling(X), P);
+    CHECK_VALUE(!__builtin_isinf(X), P);
+    CHECK_VALUE(!__builtin_isfinite(X), P);
+    CHECK_VALUE(!__builtin_isnormal(X), P);
+    CHECK_VALUE(!__builtin_issubnormal(X), P);
+    CHECK_VALUE(!__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, P);
   }
-  for (unsigned i = 0; i < DimOf(LongDoubleSNaNValues); i++) {
-    long double X = LongDoubleSNaNValues[i];
-    CHECK_VALUE(__builtin_isnan(X), X);
-    CHECK_VALUE(!__builtin_isinf(X), X);
-    CHECK_VALUE(!__builtin_isfinite(X), X);
-    CHECK_VALUE(!__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, X);
-  }
-#ifdef __LDBL_HAS_INFINITY__
-  for (unsigned i = 0; i < DimOf(LongDoubleInfValues); i++) {
-    long double X = LongDoubleInfValues[i];
-    CHECK_VALUE(!__builtin_isnan(X), X);
-    CHECK_VALUE(__builtin_isinf(X), X);
-    CHECK_VALUE(!__builtin_isfinite(X), X);
-    CHECK_VALUE(!__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 1, X);
+  for (unsigned i = 0; i < DimOf(LongDoubleSNaNValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleSNaNValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(__builtin_isnan(X), P);
+    CHECK_VALUE(__builtin_issignaling(X), P);
+    CHECK_VALUE(!__builtin_isinf(X), P);
+    CHECK_VALUE(!__builtin_isfinite(X), P);
+    CHECK_VALUE(!__builtin_isnormal(X), P);
+    CHECK_VALUE(!__builtin_issubnormal(X), P);
+    CHECK_VALUE(!__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, P);
   }
 #endif
-  for (unsigned i = 0; i < DimOf(LongDoubleZeroValues); i++) {
-    long double X = LongDoubleZeroValues[i];
-    CHECK_VALUE(!__builtin_isnan(X), X);
-    CHECK_VALUE(!__builtin_isinf(X), X);
-    CHECK_VALUE(__builtin_isfinite(X), X);
-    CHECK_VALUE(!__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 4, X);
+#ifdef __LDBL_HAS_INFINITY__
+  for (unsigned i = 0; i < DimOf(LongDoubleInfValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleInfValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(!__builtin_isnan(X), P);
+    CHECK_VALUE(!__builtin_issignaling(X), P);
+    CHECK_VALUE(__builtin_isinf(X), P);
+    CHECK_VALUE(!__builtin_isfinite(X), P);
+    CHECK_VALUE(!__builtin_isnormal(X), P);
+    CHECK_VALUE(!__builtin_issubnormal(X), P);
+    CHECK_VALUE(!__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 1, P);
+  }
+#endif
+  for (unsigned i = 0; i < DimOf(LongDoubleZeroValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleZeroValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(!__builtin_isnan(X), P);
+    CHECK_VALUE(!__builtin_issignaling(X), P);
+    CHECK_VALUE(!__builtin_isinf(X), P);
+    CHECK_VALUE(__builtin_isfinite(X), P);
+    CHECK_VALUE(!__builtin_isnormal(X), P);
+    CHECK_VALUE(!__builtin_issubnormal(X), P);
+    CHECK_VALUE(__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 4, P);
   }
 #ifdef __LDBL_HAS_DENORM__
-  for (unsigned i = 0; i < DimOf(LongDoubleDenormValues); i++) {
-     long double X = LongDoubleDenormValues[i];
-    CHECK_VALUE(!__builtin_isnan(X), X);
-    CHECK_VALUE(!__builtin_isinf(X), X);
-    CHECK_VALUE(__builtin_isfinite(X), X);
-    CHECK_VALUE(!__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 3, X);
+  for (unsigned i = 0; i < DimOf(LongDoubleDenormValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleDenormValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(!__builtin_isnan(X), P);
+    CHECK_VALUE(!__builtin_issignaling(X), P);
+    CHECK_VALUE(!__builtin_isinf(X), P);
+    CHECK_VALUE(__builtin_isfinite(X), P);
+    CHECK_VALUE(!__builtin_isnormal(X), P);
+    CHECK_VALUE(__builtin_issubnormal(X), P);
+    CHECK_VALUE(!__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 3, P);
   }
 #endif
-  for (unsigned i = 0; i < DimOf(LongDoubleNormalValues); i++) {
-    long double X = LongDoubleNormalValues[i];
-    CHECK_VALUE(!__builtin_isnan(X), X);
-    CHECK_VALUE(!__builtin_isinf(X), X);
-    CHECK_VALUE(__builtin_isfinite(X), X);
-    CHECK_VALUE(__builtin_isnormal(X), X);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 2, X);
+  for (unsigned i = 0; i < DimOf(LongDoubleNormalValues); ++i) {
+    uint64_t *P = (uint64_t *)(LongDoubleNormalValues + i);
+    long double X = *(long double *)P;
+    CHECK_VALUE(!__builtin_isnan(X), P);
+    CHECK_VALUE(!__builtin_issignaling(X), P);
+    CHECK_VALUE(!__builtin_isinf(X), P);
+    CHECK_VALUE(__builtin_isfinite(X), P);
+    CHECK_VALUE(__builtin_isnormal(X), P);
+    CHECK_VALUE(!__builtin_issubnormal(X), P);
+    CHECK_VALUE(!__builtin_iszero(X), P);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 2, P);
   }
 
   return 0;
 }
 
-#undef FLOAT_FORMAT
+#define FLOAT_TYPE ldouble
+#include "gen_isfpclass_funcs.h"
+
+void test_isfpclass_ldouble() {
+  for (unsigned i = 0; i < DimOf(LongDoubleZeroValues); ++i) {
+    long double X = *(long double *)(LongDoubleZeroValues + i);
+    if (__builtin_signbit(X))
+      test_fcNegZero_ldouble(X);
+    else
+      test_fcPosZero_ldouble(X);
+  }
+#ifdef __LDBL_HAS_DENORM__
+  for (unsigned i = 0; i < DimOf(LongDoubleDenormValues); ++i) {
+    long double X = *(long double *)(LongDoubleDenormValues + i);
+    if (X < 0)
+      test_fcNegSubnormal_ldouble(X);
+    else
+      test_fcPosSubnormal_ldouble(X);
+  }
+#endif
+  for (unsigned i = 0; i < DimOf(LongDoubleNormalValues); ++i) {
+    long double X = *(long double *)(LongDoubleNormalValues + i);
+    if (X < 0)
+      test_fcNegNormal_ldouble(X);
+    else
+      test_fcPosNormal_ldouble(X);
+  }
+#ifdef __LDBL_HAS_INFINITY__
+  for (unsigned i = 0; i < DimOf(LongDoubleInfValues); ++i) {
+    long double X = *(long double *)(LongDoubleInfValues + i);
+    if (X > 0)
+      test_fcPosInf_ldouble(X);
+    else
+      test_fcNegInf_ldouble(X);
+  }
+#endif
+  for (unsigned i = 0; i < DimOf(LongDoubleQNaNValues); ++i) {
+    long double X = *(long double *)(LongDoubleQNaNValues + i);
+    test_fcQNan_ldouble(X);
+  }
+  for (unsigned i = 0; i < DimOf(LongDoubleSNaNValues); ++i) {
+    long double X = *(long double *)(LongDoubleSNaNValues + i);
+    test_fcSNan_ldouble(X);
+  }
+}
+
 #undef VAL_FORMAT
+#undef GET_VALUE
 #undef FLOAT_TYPE
 
 #endif
