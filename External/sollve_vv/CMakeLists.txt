@@ -12,30 +12,22 @@ set(ALL_LIST_OPTIONS
   AMD
   AMD_RUNTIME_REDLIST
   AMD_COMPILER_REDLIST
-  NVIDIA
-  NVIDIA_RUNTIME_REDLIST
-  NVIDIA_COMPILER_REDLIST
+  AMD_REDLIST
   INTEL
   INTEL_RUNTIME_REDLIST
   INTEL_COMPILER_REDLIST
+  INTEL_REDLIST
+  NVIDIA
+  NVIDIA_RUNTIME_REDLIST
+  NVIDIA_COMPILER_REDLIST
+  NVIDIA_REDLIST
   REGRESSION
   REGRESSION_RUNTIME_REDLIST
   REGRESSION_COMPILER_REDLIST
-  AMD_REDLIST
-  NVIDIA_REDLIST
-  INTEL_REDLIST
   REGRESSION_REDLIST
 )
 
 set(CHOOSEN_LISTS)
-
-set(INTEL)
-set(INTEL_RUNTIME_REDLIST)
-set(INTEL_COMPILER_REDLIST)
-
-set(REGRESSION)
-set(REGRESSION_RUNTIME_REDLIST)
-set(REGRESSION_COMPILER_REDLIST)
 
 set(AMD
   4.5/application_kernels/alpaka_complex_template.cpp
@@ -351,13 +343,9 @@ set(AMD
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
 )
-  ######## Running Too Long 4 ###############
-  #4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
-  #5.0/target_requires/test_target_requires_atomic_default_mem_order_acq_rel.c
-  #5.0/target_requires/test_target_requires_atomic_default_mem_order_relaxed.c
-  #5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
 
 set(AMD_RUNTIME_REDLIST
+  4.5/target_teams_distribute_parallel_for/test_target_teams_distribute_parallel_for_if_parallel_modifier.c
   5.0/loop/test_loop_bind_device.c
   5.0/loop/test_loop_nested_device.c
   5.0/master_taskloop/test_master_taskloop_device.c
@@ -379,6 +367,9 @@ set(AMD_RUNTIME_REDLIST
   5.0/requires/test_requires_unified_shared_memory_static_map.c
   5.0/target/test_target_task_depend_mutexinoutset.c
   5.0/target/test_target_uses_allocators_const.c
+  5.0/target_requires/test_target_requires_atomic_default_mem_order_acq_rel.c
+  5.0/target_requires/test_target_requires_atomic_default_mem_order_relaxed.c
+  5.0/target_requires/test_target_requires_atomic_default_mem_order_seq_cst.c
   5.0/target_update/test_target_update_from_discontiguous.c
   5.0/target_update/test_target_update_mapper_from_discontiguous.c
   5.0/target_update/test_target_update_mapper_to_discontiguous.c
@@ -456,6 +447,10 @@ set(AMD_COMPILER_REDLIST
   5.2/scope/test_scope_firstprivate_construct.c
   5.2/target_enter_data/test_target_enter_data_map.c
 )
+
+set(INTEL)
+set(INTEL_RUNTIME_REDLIST)
+set(INTEL_COMPILER_REDLIST)
 
 set(NVIDIA
   4.5/application_kernels/alpaka_complex_template.cpp
@@ -729,11 +724,6 @@ set(NVIDIA
   5.1/allocate/test_omp_alloctrait_key.c
   5.1/assume/test_assumes_contains.c
   5.1/assume/test_begin_end_assumes_contains.c
-  5.1/atomic/test_atomic_compare.c
-  5.1/atomic/test_atomic_compare_device.c
-  5.1/atomic/test_atomic_fail_acquire.c
-  5.1/atomic/test_atomic_fail_relaxed.c
-  5.1/atomic/test_atomic_fail_seq_cst.c
   5.1/cpp_attribute_specifier/test_cpp_attribute_specifier.cpp
   5.1/declare_variant/test_begin_end_declare_variant.c
   5.1/default/test_default_firstprivate_parallel.c
@@ -813,6 +803,11 @@ set(NVIDIA_RUNTIME_REDLIST
   5.0/taskwait/test_taskwait_depend.c
   5.0/teams_loop/test_target_teams_loop_firstprivate.c
   5.0/teams_loop/test_target_teams_loop_private.c
+  5.1/atomic/test_atomic_compare.c
+  5.1/atomic/test_atomic_compare_device.c
+  5.1/atomic/test_atomic_fail_acquire.c
+  5.1/atomic/test_atomic_fail_relaxed.c
+  5.1/atomic/test_atomic_fail_seq_cst.c
   5.1/env_var/test_omp_num_teams_env_2.c
   5.1/env_var/test_omp_places_env_ll_caches.c
   5.1/env_var/test_omp_places_env_numa_domains.c
@@ -877,6 +872,10 @@ set(NVIDIA_COMPILER_REDLIST
   5.2/scope/test_scope_firstprivate_construct.c
   5.2/target_enter_data/test_target_enter_data_map.c
 )
+
+set(REGRESSION)
+set(REGRESSION_RUNTIME_REDLIST)
+set(REGRESSION_COMPILER_REDLIST)
 
 function (add_sollvevv LANG)
   set(_includedir "${TEST_SUITE_SOLLVEVV_ROOT}/ompvv" )
