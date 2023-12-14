@@ -62,4 +62,24 @@
      ((m) & F64_MANTISSA_MASK))
 #define F64_NORMAL(s, e, m) F64_MAKE((s), F64_EXP(e), (m))
 
+
+#define F80_SIGN_BIT        0x0000000000008000ULL
+#define F80_EXP_MASK        0x0000000000007FFFULL
+#define F80_INTEGER_BIT     0x8000000000000000ULL
+#define F80_FRACTIONAL_MASK 0x7FFFFFFFFFFFFFFFULL
+#define F80_MANTISSA_MSB    0x4000000000000000ULL
+#define F80_QNAN_BIT        F80_MANTISSA_MSB
+#define F80_PAYLOAD_MASK    (F80_FRACTIONAL_MASK & ~F80_QNAN_BIT)
+#define F80_SIGN_SHIFT      15
+#define F80_EXP_BIAS        16383
+#define F80_EXP_MIN         (-16382)
+#define F80_EXP_MAX         16383
+#define F80_EXP(e)          ((uint64_t)(e) + F80_EXP_BIAS)
+#define F80_MANTISSA(b1, b2, b3)                                               \
+    (((b1) ? F80_MANTISSA_MSB : 0) |                                           \
+     ((b2) ? (F80_MANTISSA_MSB >> 1) : 0) |                                    \
+     ((b3) ? (F80_MANTISSA_MSB >> 2) : 0))
+#define F80_MAKE(s, e, m)   (m), (e) | ((s) ? F80_SIGN_BIT : 0)
+#define F80_NORMAL(s, e, m) F80_MAKE((s), F80_EXP(e), F80_INTEGER_BIT | (m))
+
 #endif

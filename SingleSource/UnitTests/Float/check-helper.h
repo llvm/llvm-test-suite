@@ -15,46 +15,38 @@
 
 #define DimOf(x) (sizeof(x) / sizeof(x[0]))
 
+// Prints bits of a floating-point value, specified by the parameter 'value'.
+// 'value' may an integer or a pointer to integer, the exact meaning is
+// determined by macros VAL_FORMAT and GET_VALUE.
+//
+// Requires the following macros to be defined:
+//
+//     VAL_FORMAT - printf format specifier, like "%d" or "%llx %llx", which
+//                  should be used to print the value represented by the
+//                  argument 'value'.
+//     GET_VALUE  - a macro that extracts the value or values for printing
+//                  the 'value'.
+//
+#define PRINT_VALUE(value) printf(VAL_FORMAT, GET_VALUE(value));
+
 // Checks if condition 'cond' is true for the 'value'.
 //
-// Requires the following macros to be defined:
+// The argument 'value' is a pointer to the bits representing the tested
+// floating-point value. It does not participate in checks and is used only for
+// printing the tested value in diagnostics. Actual value to print is obtained
+// using macro 'GET_VALUE'.
 //
-//     VAL_FORMAT - printf format specifier without %, like "d" or "llx", which
-//                  should be used to print 'value'.
+// Macros required to be defined are same as for PRINT_VALUE.
 //
 #define CHECK_VALUE(cond, value)                                               \
-    do {                                                                       \
-      if (!(cond)) {                                                           \
-        printf("Check '%s' in file '%s' at line %d "                           \
-               "failed for the value '%" VAL_FORMAT "'\n",                     \
-               #cond, __FILE__, __LINE__, (value));                            \
-        exit(-1);                                                              \
-      }                                                                        \
-    } while(0)
+  do {                                                                         \
+    if (!(cond)) {                                                             \
+      printf("Check '%s' in file '%s' at line %d failed for the value '",      \
+             #cond, __FILE__, __LINE__);                                       \
+      PRINT_VALUE(value);                                                      \
+      printf("'\n");                                                           \
+      exit(-1);                                                                \
+    }                                                                          \
+  } while (0)
 
-// Checks if floating point 'value' is equal to the value 'expected' which is an
-// integer that represents bits of floating point number.
-//
-// Requires the following macros to be defined:
-//
-//     INT_FORMAT   - printf format specifier without %, like "d" or "llx",
-//                    which should be used to print 'expected'.
-//     FLOAT_FORMAT - printf format specifier without % to print 'value'.
-//     INT_TYPE     - type of 'expected'.
-//     FLOAT_TYPE   - type of 'value'.
-//
-#define CHECK_EQ(value, expected)                                              \
-    do {                                                                       \
-      union {                                                                  \
-        INT_TYPE i;                                                            \
-        FLOAT_TYPE f;                                                          \
-      } u;                                                                     \
-      u.i = (value);                                                           \
-      if (u.f != (expected)) {                                                 \
-         printf("Check in file '%s' at line %d failed: "                       \
-                "'%" INT_FORMAT "' != '%" FLOAT_FORMAT "'\n",                  \
-                __FILE__, __LINE__, (INT_TYPE)(value), (expected));            \
-        exit(-1);                                                              \
-      }                                                                        \
-    } while(0)
 #endif

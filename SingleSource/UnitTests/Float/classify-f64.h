@@ -19,12 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-#define INT_FORMAT   PRIx64
-#define FLOAT_FORMAT "g"
-#define VAL_FORMAT   INT_FORMAT
-#define INT_TYPE     uint64_t
-#define FLOAT_TYPE   double
+#define VAL_FORMAT "%" PRIx64
+#define GET_VALUE(x) (*(uint64_t *)x)
 
 uint64_t DoubleQNaNValues[] = {
     F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | F64_PAYLOAD_MASK),
@@ -37,8 +33,7 @@ uint64_t DoubleQNaNValues[] = {
     F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0002000000000000ULL),
 
     F64_MAKE(0, F64_EXP_MASK, F64_QNAN_BIT | 0x0000000000000001ULL),
-    F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0000000000000002ULL)
-};
+    F64_MAKE(1, F64_EXP_MASK, F64_QNAN_BIT | 0x0000000000000002ULL)};
 
 uint64_t DoubleSNaNValues[] = {
     F64_MAKE(0, F64_EXP_MASK, F64_PAYLOAD_MASK),
@@ -48,17 +43,16 @@ uint64_t DoubleSNaNValues[] = {
     F64_MAKE(1, F64_EXP_MASK, 0x0002000000000000ULL),
 
     F64_MAKE(0, F64_EXP_MASK, 0x0000000000000001ULL),
-    F64_MAKE(1, F64_EXP_MASK, 0x0000000000000002ULL)
-};
+    F64_MAKE(1, F64_EXP_MASK, 0x0000000000000002ULL)};
 
 uint64_t DoubleInfValues[] = {
-    F64_MAKE(0, F64_EXP_MASK, 0),    // +Inf
-    F64_MAKE(1, F64_EXP_MASK, 0)     // -Inf
+    F64_MAKE(0, F64_EXP_MASK, 0), // +Inf
+    F64_MAKE(1, F64_EXP_MASK, 0)  // -Inf
 };
 
 uint64_t DoubleZeroValues[] = {
-    F64_MAKE(0, 0, 0),    // +0.0
-    F64_MAKE(1, 0, 0)     // -0.0
+    F64_MAKE(0, 0, 0), // +0.0
+    F64_MAKE(1, 0, 0)  // -0.0
 };
 
 uint64_t DoubleDenormValues[] = {
@@ -101,99 +95,130 @@ uint64_t DoubleNormalValues[] = {
 };
 
 int test_double() {
-  CHECK_EQ(F64_NORMAL(0,  0, 0), 1.0);
-  CHECK_EQ(F64_NORMAL(0,  0, F64_MANTISSA(1, 0, 0)), 1.5);
-  CHECK_EQ(F64_NORMAL(0,  0, F64_MANTISSA(0, 1, 0)), 1.25);
-  CHECK_EQ(F64_NORMAL(0,  0, F64_MANTISSA(0, 0, 1)), 1.125);
-  CHECK_EQ(F64_NORMAL(0, -1, 0), 0.5);
-  CHECK_EQ(F64_NORMAL(0, -2, 0), 0.25);
-  CHECK_EQ(F64_NORMAL(0, -3, 0), 0.125);
-  CHECK_EQ(F64_NORMAL(0, 1, 0), 2.0);
-  CHECK_EQ(F64_NORMAL(0, 1, F64_MANTISSA(1, 0, 0)), 3.0);
-
-  CHECK_EQ(F64_NORMAL(1,  0, 0), -1.0);
-  CHECK_EQ(F64_NORMAL(1,  0, F64_MANTISSA(1, 0, 0)), -1.5);
-  CHECK_EQ(F64_NORMAL(1,  0, F64_MANTISSA(0, 1, 0)), -1.25);
-  CHECK_EQ(F64_NORMAL(1,  0, F64_MANTISSA(0, 0, 1)), -1.125);
-  CHECK_EQ(F64_NORMAL(1, -1, 0), -0.5);
-  CHECK_EQ(F64_NORMAL(1, -2, 0), -0.25);
-  CHECK_EQ(F64_NORMAL(1, -3, 0), -0.125);
-  CHECK_EQ(F64_NORMAL(1, 1, 0), -2.0);
-  CHECK_EQ(F64_NORMAL(1, 1, F64_MANTISSA(1, 0, 0)), -3.0);
-
-  CHECK_EQ(F64_NORMAL(0, F64_EXP_MIN, 0), 2.2250738585072014e-308);
-  CHECK_EQ(F64_NORMAL(1, F64_EXP_MIN, 0), -2.2250738585072014e-308);
-  CHECK_EQ(F64_NORMAL(0, F64_EXP_MAX, F64_MANTISSA_MASK), 1.7976931348623157e+308);
-  CHECK_EQ(F64_NORMAL(1, F64_EXP_MAX, F64_MANTISSA_MASK), -1.7976931348623157e+308);
-
   for (unsigned i = 0; i < DimOf(DoubleQNaNValues); i++) {
     uint64_t *IPtr = DoubleQNaNValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(__builtin_isnan(X), IX);
-    CHECK_VALUE(!__builtin_isinf(X), IX);
-    CHECK_VALUE(!__builtin_isfinite(X), IX);
-    CHECK_VALUE(!__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IX);
+    CHECK_VALUE(__builtin_isnan(X), IPtr);
+    CHECK_VALUE(!__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(!__builtin_isinf(X), IPtr);
+    CHECK_VALUE(!__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(!__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IPtr);
   }
   for (unsigned i = 0; i < DimOf(DoubleSNaNValues); i++) {
     uint64_t *IPtr = DoubleSNaNValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(__builtin_isnan(X), IX);
-    CHECK_VALUE(!__builtin_isinf(X), IX);
-    CHECK_VALUE(!__builtin_isfinite(X), IX);
-    CHECK_VALUE(!__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IX);
+    CHECK_VALUE(__builtin_isnan(X), IPtr);
+    CHECK_VALUE(__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(!__builtin_isinf(X), IPtr);
+    CHECK_VALUE(!__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(!__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 0, IPtr);
   }
   for (unsigned i = 0; i < DimOf(DoubleInfValues); i++) {
     uint64_t *IPtr = DoubleInfValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(!__builtin_isnan(X), IX);
-    CHECK_VALUE(__builtin_isinf(X), IX);
-    CHECK_VALUE(!__builtin_isfinite(X), IX);
-    CHECK_VALUE(!__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 1, IX);
+    CHECK_VALUE(!__builtin_isnan(X), IPtr);
+    CHECK_VALUE(!__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(__builtin_isinf(X), IPtr);
+    CHECK_VALUE(!__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(!__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 1, IPtr);
   }
   for (unsigned i = 0; i < DimOf(DoubleZeroValues); i++) {
     uint64_t *IPtr = DoubleZeroValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(!__builtin_isnan(X), IX);
-    CHECK_VALUE(!__builtin_isinf(X), IX);
-    CHECK_VALUE(__builtin_isfinite(X), IX);
-    CHECK_VALUE(!__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 4, IX);
+    CHECK_VALUE(!__builtin_isnan(X), IPtr);
+    CHECK_VALUE(!__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(!__builtin_isinf(X), IPtr);
+    CHECK_VALUE(__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(!__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 4, IPtr);
   }
   for (unsigned i = 0; i < DimOf(DoubleDenormValues); i++) {
     uint64_t *IPtr = DoubleDenormValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(!__builtin_isnan(X), IX);
-    CHECK_VALUE(!__builtin_isinf(X), IX);
-    CHECK_VALUE(__builtin_isfinite(X), IX);
-    CHECK_VALUE(!__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 3, IX);
+    CHECK_VALUE(!__builtin_isnan(X), IPtr);
+    CHECK_VALUE(!__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(!__builtin_isinf(X), IPtr);
+    CHECK_VALUE(__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(!__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 3, IPtr);
   }
   for (unsigned i = 0; i < DimOf(DoubleNormalValues); i++) {
     uint64_t *IPtr = DoubleNormalValues + i;
-    uint64_t IX = *IPtr;
     double X = *(double *)IPtr;
-    CHECK_VALUE(!__builtin_isnan(X), IX);
-    CHECK_VALUE(!__builtin_isinf(X), IX);
-    CHECK_VALUE(__builtin_isfinite(X), IX);
-    CHECK_VALUE(__builtin_isnormal(X), IX);
-    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 2, IX);
+    CHECK_VALUE(!__builtin_isnan(X), IPtr);
+    CHECK_VALUE(!__builtin_issignaling(X), IPtr);
+    CHECK_VALUE(!__builtin_isinf(X), IPtr);
+    CHECK_VALUE(__builtin_isfinite(X), IPtr);
+    CHECK_VALUE(__builtin_isnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_issubnormal(X), IPtr);
+    CHECK_VALUE(!__builtin_iszero(X), IPtr);
+    CHECK_VALUE(__builtin_fpclassify(0, 1, 2, 3, 4, X) == 2, IPtr);
   }
 
   return 0;
 }
 
-#undef INT_FORMAT
-#undef FLOAT_FORMAT
+#define FLOAT_TYPE double
+#include "gen_isfpclass_funcs.h"
+
+void test_isfpclass_double() {
+  for (unsigned i = 0; i < DimOf(DoubleZeroValues); i++) {
+    double X = *(double *)(DoubleZeroValues + i);
+    if (__builtin_signbit(X) == 0)
+      test_fcPosZero_double(X);
+    else
+      test_fcNegZero_double(X);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleDenormValues); i++) {
+    double X = *(double *)(DoubleDenormValues + i);
+    if (X < 0)
+      test_fcNegSubnormal_double(X);
+    else
+      test_fcPosSubnormal_double(X);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleNormalValues); i++) {
+    double X = *(double *)(DoubleNormalValues + i);
+    if (X < 0)
+      test_fcNegNormal_double(X);
+    else
+      test_fcPosNormal_double(X);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleInfValues); i++) {
+    double X = *(double *)(DoubleInfValues + i);
+    if (X > 0)
+      test_fcPosInf_double(X);
+    else
+      test_fcNegInf_double(X);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleQNaNValues); i++) {
+    double X = *(double *)(DoubleQNaNValues + i);
+    test_fcQNan_double(X);
+  }
+  for (unsigned i = 0; i < DimOf(DoubleSNaNValues); i++) {
+    double X = *(double *)(DoubleSNaNValues + i);
+    test_fcSNan_double(X);
+  }
+  test_fcPosInf_double(__builtin_inf());
+  test_fcNegInf_double(-__builtin_inf());
+  test_fcPosZero_double(0.0);
+  test_fcNegZero_double(-0.0);
+}
+
 #undef VAL_FORMAT
-#undef INT_TYPE
+#undef GET_VALUE
 #undef FLOAT_TYPE
 
 #endif
