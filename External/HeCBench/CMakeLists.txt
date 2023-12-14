@@ -8,7 +8,24 @@ option(TEST_SUITE_HECBENCH_FORCE_ALL "Execute all HeCBench tests, even those kno
 set(TEST_SUITE_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading")
 set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
-set(TEST_SUITE_HECBENCH_EXPECT_PASS
+set(ALL_LIST_OPTIONS
+  AMD
+  AMD_RUNTIME_REDLIST
+  AMD_COMPILER_REDLIST
+  AMD_REDLIST
+  INTEL
+  INTEL_RUNTIME_REDLIST
+  INTEL_COMPILER_REDLIST
+  INTEL_REDLIST
+  NVIDIA
+  NVIDIA_RUNTIME_REDLIST
+  NVIDIA_COMPILER_REDLIST
+  NVIDIA_REDLIST
+)
+
+set(CHOOSEN_LISTS)
+
+set(NVIDIA
     ace-omp/main.cpp
     1
     
@@ -29,6 +46,36 @@ set(TEST_SUITE_HECBENCH_EXPECT_PASS
     1
     1
 )
+set(NVIDIA_RUNTIME_REDLIST)
+set(NVIDIA_COMPILER_REDLIST)
+
+set(AMD
+    ace-omp/main.cpp
+    1
+
+    adam-omp/main.cpp
+    1
+    1
+    1
+
+    aidw-omp/main.cpp
+    1
+    1
+    1
+
+    aobench-omp/ao.cpp
+    1
+
+    atan2-omp/main.cpp
+    1
+    1
+)
+set(AMD_RUNTIME_REDLIST)
+set(AMD_COMPILER_REDLIST)
+
+set(INTEL)
+set(INTEL_RUNTIME_REDLIST)
+set(INTEL_COMPILER_REDLIST)
 
 function (add_hecbench LANG)
   if (NOT OpenMP_${LANG}_FOUND)
@@ -41,7 +88,7 @@ function (add_hecbench LANG)
     get_filename_component(_directory "${_file}" DIRECTORY)
     set(_name "hecbench-${_directory}")
 
-    if (NOT TEST_SUITE_HECBENCH_FORCE_ALL AND NOT "${_file}" IN_LIST TEST_SUITE_HECBENCH_EXPECT_PASS)
+    if (NOT TEST_SUITE_HECBENCH_FORCE_ALL AND NOT "${_file}" IN_LIST CHOOSEN_LISTS)
       message(STATUS "Skipping HeCBench Benchmark ${_file}")
       continue ()
     endif ()
@@ -138,9 +185,56 @@ if (TEST_SUITE_HECBENCH_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
     return ()
   endif ()
 
+  list(REMOVE_DUPLICATES SYSTEM_GPU)
+  foreach(list_option ${SYSTEM_GPU})
+    string(TOUPPER ${list_option} list_option)
+    if(list_option IN_LIST ALL_LIST_OPTIONS)
+      if(list_option STREQUAL "AMD")
+        list(APPEND CHOOSEN_LISTS ${AMD})
+        message(STATUS "adding AMD")
+      endif()
+      if(list_option STREQUAL "AMD_RUNTIME_REDLIST" OR list_option STREQUAL "AMD_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${AMD_RUNTIME_REDLIST})
+        message(STATUS "adding AMD_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "AMD_COMPILER_REDLIST" OR list_option STREQUAL "AMD_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${AMD_COMPILER_REDLIST})
+        message(STATUS "adding AMD_COMPILER_REDLIST")
+      endif()
+      if(list_option STREQUAL "NVIDIA")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA})
+        message(STATUS "adding NVIDIA")
+      endif()
+      if(list_option STREQUAL "NVIDIA_RUNTIME_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA_RUNTIME_REDLIST})
+        message(STATUS "adding NVIDIA_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "NVIDIA_COMPILER_REDLIST" OR list_option STREQUAL "NVIDIA_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${NVIDIA_COMPILER_REDLIST})
+        message(STATUS "adding NVIDIA_COMPILER_REDLIST")
+      endif()
+      if(list_option STREQUAL "INTEL")
+        list(APPEND CHOOSEN_LISTS ${INTEL})
+        message(STATUS "adding INTEL")
+      endif()
+      if(list_option STREQUAL "INTEL_RUNTIME_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${INTEL_RUNTIME_REDLIST})
+        message(STATUS "adding INTEL_RUNTIME_REDLIST")
+      endif()
+      if(list_option STREQUAL "INTEL_COMPILER_REDLIST" OR list_option STREQUAL "INTEL_REDLIST")
+        list(APPEND CHOOSEN_LISTS ${INTEL_COMPILER_REDLIST})
+        message(STATUS "adding INTEL_COMPILER_REDLIST")
+      endif()
+    else()
+      message(STATUS "Option is unrecognized (${list_option})")
+    endif()
+  endforeach()
+  list(REMOVE_DUPLICATES CHOOSEN_LISTS)
+
   foreach (_lang in CXX)
     if (CMAKE_${_lang}_COMPILER)
       add_hecbench(${_lang})
     endif()
   endforeach ()
 endif ()
+
