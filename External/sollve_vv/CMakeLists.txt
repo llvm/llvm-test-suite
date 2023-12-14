@@ -293,11 +293,6 @@ set(AMD
   5.1/allocate/test_omp_alloctrait_key.c
   5.1/assume/test_assumes_contains.c
   5.1/assume/test_begin_end_assumes_contains.c
-  5.1/atomic/test_atomic_compare.c
-  5.1/atomic/test_atomic_compare_device.c
-  5.1/atomic/test_atomic_fail_acquire.c
-  5.1/atomic/test_atomic_fail_relaxed.c
-  5.1/atomic/test_atomic_fail_seq_cst.c
   5.1/cpp_attribute_specifier/test_cpp_attribute_specifier.cpp
   5.1/declare_variant/test_begin_end_declare_variant.c
   5.1/default/test_default_firstprivate_parallel.c
@@ -375,6 +370,11 @@ set(AMD_RUNTIME_REDLIST
   5.0/target_update/test_target_update_mapper_to_discontiguous.c
   5.0/target_update/test_target_update_to_discontiguous.c
   5.0/task/test_task_affinity_device.c
+  5.1/atomic/test_atomic_compare.c
+  5.1/atomic/test_atomic_compare_device.c
+  5.1/atomic/test_atomic_fail_acquire.c
+  5.1/atomic/test_atomic_fail_relaxed.c
+  5.1/atomic/test_atomic_fail_seq_cst.c
   5.1/env_var/test_omp_num_teams_env_2.c
   5.1/env_var/test_omp_places_env_ll_caches.c
   5.1/env_var/test_omp_places_env_numa_domains.c
