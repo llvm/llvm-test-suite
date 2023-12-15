@@ -178,4 +178,9 @@ if(TARGET_OS STREQUAL "Linux")
   find_package(Intl REQUIRED)
   target_link_libraries(clamscan ${Intl_LIBRARIES})
 endif()
+# zlib fails to build with correctly defined target OS macros.
+# (https://github.com/madler/zlib/pull/895)
+# Disable the compiler extension to workaround the build failure until a zlib
+# source update with the fix.
+target_compile_options(clamscan PRIVATE -fno-define-target-os-macros)
 llvm_test_data(clamscan ${INPUT} dbdir)
