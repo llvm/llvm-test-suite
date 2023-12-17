@@ -10,7 +10,7 @@ The CMakeLists.txt contains internal greenlists and redlists that the user
 must declare which options to use with SYSTEM_GPU. The user is able to
 declare multiple lists to use.
 
-here is am example for all of the options for amd:
+here are all of the options:
 -amd (this is the greenlist that contains tests that passes)
 -amd_runtime_redlist
 -amd_compiler_redlist
