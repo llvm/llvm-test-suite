@@ -28,7 +28,7 @@ set(CHOOSEN_LISTS)
 set(NVIDIA
     ace-omp/main.cpp
     1
-    
+
     adam-omp/main.cpp
     1
     1
@@ -46,6 +46,7 @@ set(NVIDIA
     1
     1
 )
+
 set(NVIDIA_RUNTIME_REDLIST)
 set(NVIDIA_COMPILER_REDLIST)
 
@@ -93,7 +94,7 @@ function (add_hecbench LANG)
       continue ()
     endif ()
 
-    list(FIND TEST_SUITE_HECBENCH_EXPECT_PASS "${_file}" _index)
+    list(FIND CHOOSEN_LISTS  "${_file}" _index)
     if (${_index} EQUAL -1)
       message(STATUS "Skipping HeCBench Benchmark ${_file}")
       continue ()
@@ -102,7 +103,7 @@ function (add_hecbench LANG)
     set(_args_for_benchmark "")
     set(IN_DIRECTORY FALSE)
 
-    foreach(item IN LISTS TEST_SUITE_HECBENCH_EXPECT_PASS)
+    foreach(item IN LISTS CHOOSEN_LISTS)
       if(item MATCHES ".*-omp.*")
         
         if(IN_DIRECTORY)
@@ -156,7 +157,6 @@ function (add_hecbench LANG)
     else()
       message(STATUS "Makefile not found in ${BENCHMARK_DIR}.")
     endif()
-
 
     set(_includedir "${TEST_SUITE_HECBENCH_ROOT}/src/${CFLAGS_INCLUDE}" )
 
@@ -229,7 +229,7 @@ if (TEST_SUITE_HECBENCH_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
       message(STATUS "Option is unrecognized (${list_option})")
     endif()
   endforeach()
-  list(REMOVE_DUPLICATES CHOOSEN_LISTS)
+  #list(REMOVE_DUPLICATES CHOOSEN_LISTS)
 
   foreach (_lang in CXX)
     if (CMAKE_${_lang}_COMPILER)
