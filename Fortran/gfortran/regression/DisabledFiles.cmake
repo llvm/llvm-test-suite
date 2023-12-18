@@ -316,6 +316,8 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   allocate_with_source_14.f03
   allocate_with_source_17.f03
   allocate_with_source_21.f03
+  allocate_with_source_22.f03
+  allocate_with_source_23.f03
   allocate_with_source_25.f90
   allocate_with_source_8.f08
   associate_18.f08
@@ -534,6 +536,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   proc_ptr_comp_50.f90
   proc_ptr_comp_pass_3.f90
   proc_ptr_comp_pass_6.f90
+  ptr_func_assign_1.f08
   ptr_func_assign_2.f08
   ptr_func_assign_3.f08
   realloc_on_assign_20.f90
@@ -1869,6 +1872,23 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   Wall.f90 # no warning for missing & on continuation line in char constant
   Wno-all.f90 # no warning for missing & on continuation line in char constant
   bessel_7.f90 # unclear
+  bounds_check_10.f90
+  bounds_check_7.f90
+  bounds_check_array_ctor_1.f90
+  bounds_check_array_ctor_2.f90
+  bounds_check_array_ctor_6.f90
+  bounds_check_array_ctor_7.f90
+  bounds_check_array_ctor_8.f90
+  bounds_check_fail_4.f90
+  bounds_check_strlen_1.f90
+  bounds_check_strlen_2.f90
+  bounds_check_strlen_3.f90
+  bounds_check_strlen_4.f90
+  bounds_check_strlen_5.f90
+  bounds_check_strlen_7.f90
+  char_bounds_check_fail_1.f90
+  char_pointer_assign_4.f90
+  char_pointer_assign_5.f90
   check_bits_1.f90 # requires -fcheck=bits to catch ISHFTC runtime error
   check_bits_2.f90 # requires -fcheck=bits to catch ISHFTC runtime error
   internal_dummy_2.f08 # causes flang-new to crash llvm-project/issues/76927
@@ -1877,10 +1897,16 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   dollar_edit_descriptor_4.f # TODO: (i3,$) format shouldn't advance record when looping
   list_read_11.f90 # more CR character shenanigans
   matmul_5.f90
+  matmul_bounds_10.f90
   matmul_bounds_11.f90
   matmul_bounds_13.f90
   matmul_bounds_15.f
   matmul_bounds_16.f
+  matmul_bounds_2.f90
+  matmul_bounds_3.f90
+  matmul_bounds_4.f90
+  matmul_bounds_5.f90
+  matmul_bounds_8.f90
   matmul_bounds_7.f90
   matmul_bounds_9.f90
   maxloc_2.f90
@@ -1890,6 +1916,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   maxlocval_2.f90
   maxlocval_4.f90
   merge_bits_2.F90
+  merge_char_3.f90
   minloc_1.f90
   minlocval_1.f90
   minlocval_4.f90
@@ -1929,6 +1956,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr96436_3.f90
   pr96436_4.f90
   pr96436_5.f90
+  pr96436_6.f90
+  pr96436_7.f90
+  pr96436_8.f90
+  pr96436_9.f90
+  pr96436_10.f90
   promotion_3.f90
   promotion_4.f90
   promotion.f90
@@ -1960,7 +1992,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   real8-4.f90
   real_const_3.f90
   realloc_on_assign_11.f90
+  recursive_check_11.f90
+  recursive_check_13.f90
   recursive_check_7.f90
+  recursive_check_9.f90
   repeat_1.f90
   reshape_order_1.f90
   reshape_order_2.f90
@@ -1974,10 +2009,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   streamio_17.f90
   streamio_4.f90
   system_clock_3.f08
+  transpose_2.f90
   unf_io_convert_4.f90
   unf_read_corrupted_1.f90
   unf_short_record_1.f90
   unformatted_subrecord_1.f90
+  unpack_bounds_1.f90
   unpack_bounds_2.f90
   unpack_bounds_3.f90
   utf8_1.f03
@@ -1990,77 +2027,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   widechar_intrinsics_8.f90
   write_check.f90
   zero_sized_1.f90
-
-  # ---------------------------------------------------------------------------
-  #
-  # These tests are expected to fail at runtime, but pass instead.
-  #
-  allocate_error_1.f90
-  bounds_check_7.f90
-  bounds_check_10.f90
-  all_bounds_1.f90
-  bounds_check_12.f90
-  bounds_check_array_ctor_1.f90
-  bounds_check_array_ctor_2.f90
-  bounds_check_array_ctor_4.f90
-  bounds_check_array_ctor_6.f90
-  bounds_check_array_ctor_7.f90
-  bounds_check_array_ctor_8.f90
-  bounds_check_fail_3.f90
-  bounds_check_fail_4.f90
-  bounds_check_strlen_1.f90
-  bounds_check_strlen_2.f90
-  bounds_check_strlen_3.f90
-  bounds_check_strlen_4.f90
-  bounds_check_strlen_5.f90
-  bounds_check_strlen_7.f90
-  char_bounds_check_fail_1.f90
-  char_pointer_assign_4.f90
-  char_pointer_assign_5.f90
-  cshift_bounds_2.f90
-  deallocate_error_1.f90
-  deallocate_error_2.f90
-  do_check_2.f90
-  do_check_3.f90
-  do_check_4.f90
-  do_check_11.f90
-  do_check_12.f90
-  endfile_4.f90
-  fmt_g0_2.f08
-  inline_sum_bounds_check_1.f90
-  inline_sum_bounds_check_2.f90
-  io_real_boz2.f90
-  io_real_boz_4.f90
-  io_real_boz_5.f90
-  matmul_bounds_2.f90
-  matmul_bounds_3.f90
-  matmul_bounds_4.f90
-  matmul_bounds_5.f90
-  matmul_bounds_8.f90
-  matmul_bounds_10.f90
-  maxloc_bounds_1.f90
-  maxloc_bounds_2.f90
-  maxloc_bounds_3.f90
-  maxloc_bounds_4.f90
-  maxloc_bounds_5.f90
-  maxloc_bounds_7.f90
-  maxloc_bounds_8.f90
-  merge_char_3.f90
-  no_unit_error_1.f90
-  pack_bounds_1.f90
-  pointer_check_10.f90
-  pointer_remapping_6.f08
-  pr96436_6.f90
-  pr96436_7.f90
-  pr96436_8.f90
-  pr96436_9.f90
-  pr96436_10.f90
-  recursive_check_9.f90
-  recursive_check_11.f90
-  recursive_check_13.f90
-  spread_bounds_1.f90
-  transpose_2.f90
-  unpack_bounds_1.f90
 
   # ---------------------------------------------------------------------------
   #

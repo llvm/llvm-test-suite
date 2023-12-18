@@ -68,6 +68,7 @@ set(FLANG_ERRORING_FFLAGS
   -fcheck-array-temporaries
   -fcheck=bounds
   -fcheck=do
+  -fcheck=mem
   -fcheck=recursion
   -fcoarray=lib
   -fcray-pointer
@@ -540,18 +541,12 @@ function(gfortran_add_execute_test expect_error main others fflags ldflags)
   get_filename_component(working_dir_name "${working_dir}" NAME)
 
   llvm_test_executable_no_test(${target} ${main} ${others})
-
-  if (WIN32)
-    # Probably need to check %errorlevel% here.
-    message(FATAL_ERROR "Verification not implemented on Windows.")
+  if (expect_error)
+    llvm_test_run(
+      EXECUTABLE "%b/not --crash %S/${target}"
+      WORKDIR "%S/${working_dir_name}")
   else ()
-    if (expect_error)
-      llvm_test_run(
-        EXECUTABLE "%b/not --crash ${target}"
-        WORKDIR "%S/${working_dir_name}")
-    else ()
-      llvm_test_run(WORKDIR "%S/${working_dir_name}")
-    endif ()
+    llvm_test_run(WORKDIR "%S/${working_dir_name}")
   endif ()
   llvm_add_test_for_target(${target})
 
