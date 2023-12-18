@@ -28,20 +28,16 @@ set(CHOOSEN_LISTS)
 set(NVIDIA
     ace-omp/main.cpp
     1
-    
     adam-omp/main.cpp
     1
     1
     1
-
     aidw-omp/main.cpp 
     1
     1 
     1
-
     aobench-omp/ao.cpp
     1
-
     atan2-omp/main.cpp
     1
     1
@@ -52,20 +48,16 @@ set(NVIDIA_COMPILER_REDLIST)
 set(AMD
     ace-omp/main.cpp
     1
-
     adam-omp/main.cpp
     1
     1
     1
-
     aidw-omp/main.cpp
     1
     1
     1
-
     aobench-omp/ao.cpp
     1
-
     atan2-omp/main.cpp
     1
     1
@@ -93,7 +85,7 @@ function (add_hecbench LANG)
       continue ()
     endif ()
 
-    list(FIND TEST_SUITE_HECBENCH_EXPECT_PASS "${_file}" _index)
+    list(FIND CHOOSEN_LISTS  "${_file}" _index)
     if (${_index} EQUAL -1)
       message(STATUS "Skipping HeCBench Benchmark ${_file}")
       continue ()
@@ -102,7 +94,7 @@ function (add_hecbench LANG)
     set(_args_for_benchmark "")
     set(IN_DIRECTORY FALSE)
 
-    foreach(item IN LISTS TEST_SUITE_HECBENCH_EXPECT_PASS)
+    foreach(item IN LISTS CHOOSEN_LISTS)
       if(item MATCHES ".*-omp.*")
         
         if(IN_DIRECTORY)
@@ -157,6 +149,7 @@ function (add_hecbench LANG)
       message(STATUS "Makefile not found in ${BENCHMARK_DIR}.")
     endif()
 
+    message([STATUS] ${_name})
 
     set(_includedir "${TEST_SUITE_HECBENCH_ROOT}/src/${CFLAGS_INCLUDE}" )
 
