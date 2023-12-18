@@ -18,6 +18,25 @@ OpenMP V&V suite, compile and run them. That is, running llvm-lit
 (or "make check") will require a compatible accelerator on the running
 machine.
 
+The CMakeLists.txt contains internal greenlists and redlists that the user
+must declare which options to use with SYSTEM_GPU. The user is able to 
+declare multiple lists to use.
+
+here are all of the options:
+-amd (this is the greenlist that contains tests that passes)
+-amd_runtime_redlist
+-amd_compiler_redlist
+-amd_redlist(this is the combination of both runtime and compiler redlists)
+-nvidia (this is the greenlist that contains tests that passes)
+-nvidia_runtime_redlist
+-nvidia_compiler_redlist
+-nvidia_redlist(this is the combination of both runtime and compiler redlists)
+-intel (this is the greenlist that contains tests that passes)
+-intel_runtime_redlist
+-intel_compiler_redlist
+-intel_redlist(this is the combination of both runtime and compiler redlists)
+
+
 OpenMP support is autodetected by CMake, but clang requires additional
 flags to enable offloading. An example run is:
 
@@ -29,6 +48,7 @@ $ cmake ../llvm-test-suite -GNinja -DCMAKE_BUILD_TYPE=Release           \
   -DTEST_SUITE_SUBDIRS=External/sollve_vv                               \
   -DTEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
   -DTEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70;-lopenmptarget \
+  -DSYSTEM_GPU="amd\;amd_runtime_redlist" \
   -DTEST_SUITE_LIT_FLAGS=-svj1
 
 $ LD_LIBRARY_PATH=${HOME}/install/llvm-project/release/lib ninja check

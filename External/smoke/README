@@ -1,9 +1,10 @@
-HeCBench
-https://github.com/zjin-lcf/HeCBench
+smoke
+https://github.com/ROCm/aomp
 
-This directory contains a CMakeLists.txt for the HeCBench so it can be built as part
-of the LLVM test-suite. Its sources are not part of the test-suite but
-have to be fetched separately from https://github.com/zjin-lcf/HeCBench.
+This directory contains a CMakeLists.txt for the aomp benchmark with 
+the smoke test that is built as part of the LLVM test-suite.
+Its sources are not part of the test-suite but
+have to be fetched separately from https://github.com/ROCm/aomp
 
 The CMakeLists.txt contains internal greenlists and redlists that the user
 must declare which options to use with SYSTEM_GPU. The user is able to
@@ -27,12 +28,12 @@ An example run is:
 
 $ cmake ../llvm-test-suite \
   -GNinja -DCMAKE_BUILD_TYPE=Release           \
-  -DTEST_SUITE_HECBENCH_ROOT=${HOME}/src/HeCBench                    \
+  -DTEST_SUITE_SMOKE_ROOT=${HOME}/src/aomp                    \
   -DTEST_SUITE_LIT=${HOME}/build/llvm-project/release/bin/llvm-lit      \
   -DCMAKE_C_COMPILER=${HOME}/install/llvm-project/release/bin/clang     \
   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm-project/release/bin/clang++ \
-  -DTEST_SUITE_SUBDIRS=External/HeCBench                              \
-  -DTEST_SUITE__OFFLOADING_CFLAGS=--offload-arch=native \
+  -DTEST_SUITE_SUBDIRS=External/smoke                              \
+  -DTEST_SUITE_OFFLOADING_CFLAGS=--offload-arch=native \
   -DTEST_SUITE_OFFLOADING_LDFLAGS=--offload-arch=native;-lopenmptarget \
   -DSYSTEM_GPU="amd\;amd_runtime_redlist" \
   -DTEST_SUITE_LIT_FLAGS=-svj1
