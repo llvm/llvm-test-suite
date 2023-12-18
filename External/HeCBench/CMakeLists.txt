@@ -28,16 +28,20 @@ set(CHOOSEN_LISTS)
 set(NVIDIA
     ace-omp/main.cpp
     1
+
     adam-omp/main.cpp
     1
     1
     1
+
     aidw-omp/main.cpp 
     1
     1 
     1
+
     aobench-omp/ao.cpp
     1
+
     atan2-omp/main.cpp
     1
     1
@@ -48,16 +52,20 @@ set(NVIDIA_COMPILER_REDLIST)
 set(AMD
     ace-omp/main.cpp
     1
+
     adam-omp/main.cpp
     1
     1
     1
+
     aidw-omp/main.cpp
     1
     1
     1
+
     aobench-omp/ao.cpp
     1
+
     atan2-omp/main.cpp
     1
     1
@@ -148,8 +156,6 @@ function (add_hecbench LANG)
     else()
       message(STATUS "Makefile not found in ${BENCHMARK_DIR}.")
     endif()
-
-    message([STATUS] ${_name})
 
     set(_includedir "${TEST_SUITE_HECBENCH_ROOT}/src/${CFLAGS_INCLUDE}" )
 
