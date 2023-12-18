@@ -540,19 +540,17 @@ function(gfortran_add_execute_test expect_error main others fflags ldflags)
   get_filename_component(working_dir_name "${working_dir}" NAME)
 
   llvm_test_executable_no_test(${target} ${main} ${others})
-  llvm_test_run(WORKDIR "%S/${working_dir_name}")
-  # FIXME: All we need is to negate the exit code. LLVM's not utility can do
-  # this, but if it is not already installed on the system, it will have to be
-  # obtained from LLVM's build directory. It is not clear that we can rely on
-  # this when running the test suite.
+
   if (WIN32)
     # Probably need to check %errorlevel% here.
     message(FATAL_ERROR "Verification not implemented on Windows.")
   else ()
     if (expect_error)
-      llvm_test_verify(${TESTCMD} $? -ne 0)
+      llvm_test_run(
+        EXECUTABLE "%b/not --crash ${target}"
+        WORKDIR "%S/${working_dir_name}")
     else ()
-      llvm_test_verify(${TESTCMD} $? -eq 0)
+      llvm_test_run(WORKDIR "%S/${working_dir_name}")
     endif ()
   endif ()
   llvm_add_test_for_target(${target})
