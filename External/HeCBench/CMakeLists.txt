@@ -46,6 +46,7 @@ set(NVIDIA
     1
     1
 )
+
 set(NVIDIA_RUNTIME_REDLIST)
 set(NVIDIA_COMPILER_REDLIST)
 
@@ -228,7 +229,7 @@ if (TEST_SUITE_HECBENCH_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
       message(STATUS "Option is unrecognized (${list_option})")
     endif()
   endforeach()
-  list(REMOVE_DUPLICATES CHOOSEN_LISTS)
+  #list(REMOVE_DUPLICATES CHOOSEN_LISTS)
 
   foreach (_lang in CXX)
     if (CMAKE_${_lang}_COMPILER)
