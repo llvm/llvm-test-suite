@@ -82,7 +82,8 @@ endif()
 # Skip some tests that currently fail with flang on AArch64 when using libpgmath.
 # FIXME: Reenable these tests after libpgmath is fixed or after we no longer
 # depend on it.
-if (CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang" AND ARCH STREQUAL "AArch64")
+if (CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang"
+    AND (ARCH STREQUAL "AArch64" OR TARGET_OS STREQUAL "Windows"))
   # Regex because the GLOB returns the full path to each file
   list(FILTER Source EXCLUDE REGEX "FM813\.f$")
   list(FILTER Source EXCLUDE REGEX "FM815\.f$")
@@ -94,7 +95,9 @@ if (CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang" AND ARCH STREQUAL "AArch64")
 endif()
 
 set(FP_TOLERANCE 1.0e-11) # set by the most sensitive numerical test
-set(FP_IGNOREWHITESPACE OFF)
+if (NOT TARGET_OS STREQUAL "Windows")
+  set(FP_IGNOREWHITESPACE OFF)
+endif()
 llvm_singlesource()
 
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
