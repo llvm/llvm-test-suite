@@ -181,6 +181,7 @@ file(GLOB TestRequiresFWrapV CONFIGURE_DEPENDS
   20040409-1.c
   20040409-2.c
   20040409-3.c
+  950704-1.c
 )
 
 # Tests that require -Wno-return-type
