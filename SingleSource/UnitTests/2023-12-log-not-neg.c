@@ -1,8 +1,8 @@
 int main()
 {
-    int v1 = 1;
-    int v2 = 0;
-    if (v1 ^ v2) {
+    int v1 = 9;
+    int v2 = !v1;
+    if (v2 == 1) {
         while (1){}
     }
 
