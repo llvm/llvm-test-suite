@@ -4,7 +4,7 @@ int main()
     //needs to not be multiples of 2, otherwise SHL is invoked instead.
     int v2 = -5;
     int result = v1/v2; 
-    if (result == 6) {
+    if (result == -6) {
         while (1){}
     }
 

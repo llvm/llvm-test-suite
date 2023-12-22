@@ -1,8 +1,10 @@
 int main()
 {
-    int v1 = 1;
-    int v2 = 0;
-    if (v1 ^ v2) {
+    int v1 = 9;
+    int v2 = 12;
+    int v3 = v1 ^ v2;
+    // 1001 ^ 1100 = 0101
+    if (v3 == 5) {
         while (1){}
     }
 
