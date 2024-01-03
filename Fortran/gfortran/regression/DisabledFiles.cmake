@@ -1226,6 +1226,8 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   realloc_on_assign_2.f03
   where_2.f90
   c_char_tests.f03
+  goto_2.f90 # goto 10 when 10 END IF fails
+  masklr_2.F90
 
   # Categorize and debug further
   bounds_check_17.f90 # needs -fcheck=bounds
@@ -1243,9 +1245,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   coarray_poly_9.f90 # NYI: allocation of coarray
   c_ptr_tests_10.f03 # valid compilation error on print of c_null_ptr (?)
   c_ptr_tests_9.f03 # valid compilation error on print of c_null_ptr (?)
-  dec_init_2.f90 # needs -finit-derived -finit-integer=42 &c.
   finalize_38a.f90 # test reports errors, but I think gfortran is wrong
-  init_flag_15.f03 # needs -finit-derived -finit-integer
   ISO_Fortran_binding_10.f90 # test reports failure at runtime
   ISO_Fortran_binding_11.f90 # test reports failure at runtime
   ISO_Fortran_binding_18.f90 # runtime abort
@@ -1851,90 +1851,30 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # will never pass with flang (if they use unsupported extensions for instance),
   # they should be added to the Unsupported list.
 
-  # Tests that fail because they should fail
+  # Tests that "fail" because they should fail
   abort_shouldfail.f90 # works, calls abort(), crashes
   assign_2.f90 # j=5; goto j
+  endfile_3.f90 # WRITE after ENDFILE
+  eoshift_bounds_1.f90 # SHIFT of 1 on dimension with extent 0
+  error_format.f90 # READ from empty file hits EOF
+  error_stop_1.f08 # ERROR STOP stops program
+  stop_shouldfail.f90 # STOP stops program
+  fmt_error_4.f90 # bad 'Q' edit descriptor in FORMAT
+  fmt_error_5.f90 # bad 'Q' edit descriptor in FORMAT
+  inline_matmul_15.f90 # incompatible MATMUL argument shapes
+  internal_write_1.f90 # internal WRITE array overrun
+  large_unit_1.f90 # UNIT number 68719476746 is out of range
 
   # require further analysis
   Wall.f90 # no warning for missing & on continuation line in char constant
   Wno-all.f90 # no warning for missing & on continuation line in char constant
-  auto_save_2.f90 # requires -fno-automatic -finit-local-zero
   bessel_7.f90 # unclear
   check_bits_1.f90 # requires -fcheck=bits to catch ISHFTC runtime error
   check_bits_2.f90 # requires -fcheck=bits to catch ISHFTC runtime error
-  cr_lf.f90
-  cshift_bounds_3.f90
-  cshift_bounds_4.f90
-  cshift_large_1.f90
-  data_char_1.f90
-  data_char_3.f90
-  deallocate_alloc_opt_3.f90
-  deallocate_stat_2.f90
-  deallocate_stat.f90
-  dependency_45.f90
-  dim_sum_1.f90
-  dim_sum_2.f90
-  dim_sum_3.f90
-  direct_io_7.f90
-  do_check_1.f90
-  dollar_edit_descriptor_4.f
-  elemental_dependency_1.f90
-  endfile_3.f90
-  eoshift_bounds_1.f90
-  eoshift_large_1.f90
-  error_format.f90
-  error_stop_1.f08
-  f2003_io_5.f03
-  findloc_6.f90
-  fmt_error_4.f90
-  fmt_error_5.f90
-  fmt_f_default_field_width_1.f90
-  fmt_f_default_field_width_2.f90
-  fmt_g0_1.f08
-  fmt_g_default_field_width_1.f90
-  fmt_g_default_field_width_2.f90
-  fmt_g.f
-  fmt_i_default_field_width_1.f90
-  fmt_i_default_field_width_2.f90
-  fmt_l.f90
-  fmt_zero_width.f90
-  fold_nearest.f90
-  forall_12.f90
-  goto_2.f90
-  hollerith8.f90
-  init_flag_1.f90
-  init_flag_2.f90
-  init_flag_3.f90
-  init_flag_4.f90
-  init_flag_5.f90
-  init_flag_6.f90
-  init_flag_7.f90
-  init_flag_9.f90
-  inline_matmul_15.f90
-  inquire_13.f90
-  inquire_15.f90
-  inquire_5.f90
-  inquire_9.f90
-  inquire_internal.f90
-  inquire_recl_f2018.f90
-  inquire_size.f90
-  integer_exponentiation_2.f90
-  internal_dummy_2.f08
-  internal_pack_3.f90
-  internal_write_1.f90
-  intrinsic_std_4.f90
-  io_err_1.f90
-  io_real_boz_3.f90
-  io_real_boz.f90
-  iostat_4.f90
-  iostat_5.f90
-  large_real_kind_1.f90
-  large_unit_1.f90
-  list_directed_large.f90
-  list_read_11.f90
-  list_read_4.f90
-  literal_character_constant_1_z.F
-  masklr_2.F90
+  cr_lf.f90 # shenanigans with CR characters
+  do_check_1.f90 # zero-valued DO loop step; needs -fcheck=do
+  dollar_edit_descriptor_4.f # TODO: (i3,$) format shouldn't advance record when looping
+  list_read_11.f90 # more CR character shenanigans
   matmul_5.f90
   matmul_bounds_11.f90
   matmul_bounds_13.f90
@@ -1965,54 +1905,23 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   multiple_allocation_1.f90
   multiple_allocation_3.f90
   mvbits_4.f90
-  namelist_18.f90
-  namelist_19.f90
-  namelist_21.f90
-  namelist_22.f90
-  namelist_24.f90
-  namelist_37.f90
-  namelist_38.f90
-  namelist_41.f90
-  namelist_51.f90
-  namelist_56.f90
-  namelist_57.f90
-  namelist_61.f90
-  namelist_65.f90
-  namelist_72.f
-  namelist_73.f90
-  namelist_80.f90
-  namelist_81.f90
-  namelist_84.f90
   namelist_87.f90
-  namelist_89.f90
-  namelist_97.f90
-  namelist_char_only.f90
-  nan_2.f90
-  nearest_1.f90
-  nearest_3.f90
-  negative_unit.f
-  negative_unit_int8.f
+  nan_2.f90 # depend on MIN/MAX(1.,NaN) folding to 1.; f18 & Intel return NaN.
+  negative_unit_int8.f # depends on 64-bit unit numbers or something?
   no_range_check_1.f90
-  norm2_1.f90
-  nosigned_zero_2.f90
-  open_access_append_2.f90
-  open_errors_2.f90
-  open_errors_3.f90
-  open_negative_unit_1.f90
-  open_new_segv.f90
-  open_status_2.f90
-  pad_source_3.f
-  pad_source_4.f
-  pad_source_5.f
-  pointer_check_6.f90
+  nosigned_zero_2.f90 # only works with a -fno-sign-zero option
+  open_access_append_2.f90 # expects warning for OPEN(ACCESS='APPEND'), gets one
+  open_errors_2.f90 # expects runtime error, gets one
+  open_errors_3.f90 # same file open on multiple units - valid in F'2018?
+  open_new_segv.f90 # should fail at runtime, and does
+  open_status_2.f90 # TODO: support OPEN(STATUS='UNKNOWN')?  research
+  pad_source_3.f # depends on -fno-pad-source option
+  pad_source_4.f # depends on -ffixed-line-length-none option
+  pad_source_5.f # depends on -ffixed-line-length-0 option
+  pointer_check_6.f90 # depends on -fcheck=pointer
   pr12884.f
-  pr17285.f90
   pr17286.f90
-  pr17706.f90
-  pr18210.f90
-  pr19657.f
-  pr47757-3.f90
-  pr47878.f90
+  pr17706.f90 # depends on -fno-sign-zero option
   pr50069_1.f90
   pr59700.f90
   pr71523_2.f90
@@ -2059,7 +1968,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   round_3.f08
   selected_kind_1.f90
   short_circuiting_3.f90
-  stop_shouldfail.f90
   streamio_11.f90
   streamio_13.f90
   streamio_17.f90
@@ -2137,6 +2045,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   interface_abstract_2.f90
   intrinsic_param_1.f90
   intrinsic_std_1.f90
+  intrinsic_std_4.f90
   io_constraints_10.f90
   io_constraints_11.f90
   iostat_3.f90
@@ -2284,6 +2193,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   associated_3.f90
   bessel_5_redux.f90
   bounds_temporaries_1.f90
+  data_char_1.f90
   dec_loc_rval_3.f03
   do_4.f
   do_check_5.f90
@@ -2682,6 +2592,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # could be that the flag is not being passed correctly to flang in the test
   # suite's build system, or that flang does not support the flag.
   line_length_1.f
+  literal_character_constant_1_z.F
 
   # In these tests, the -fopenmp and -fopenacc flags are either not being passed
   # correctly to flang while building the tests, or flag does not define the
@@ -2690,7 +2601,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   openmp-define-3.f90
 
   # Tests looking for runtime errors (e.g., bound checks). Correctly
-  # caught by flang runtime when it is used for array assignments.
+  # caught by flang runtime.
   allocate_error_6.f90
   allocate_with_source_22.f03
   allocate_with_source_23.f03
@@ -2699,6 +2610,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bounds_check_12.f90
   bounds_check_array_ctor_4.f90
   bounds_check_fail_3.f90
+  cshift_bounds_3.f90
+  cshift_bounds_4.f90
+  dim_sum_1.f90
+  dim_sum_2.f90
+  dim_sum_3.f90
   inline_matmul_1.f90
   maxloc_bounds_1.f90
   maxloc_bounds_2.f90
@@ -2714,6 +2630,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Bad test, assigning an 11 elements array to a 12 elements array.
   transfer_array_intrinsic_4.f90
 
+  # Bad test; reads 0.D99999 from a file; every other Fortran works
+  io_err_1.f90
+
   # Fails at -O3 with HLFIR. Gfortran emits warnings when compiling,
   # needs investigation.
   maxlocval_1.f90
@@ -2722,15 +2641,34 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # being used on a derived type with defined unformatted output.
   dtio_16.f90
 
-  # Fail at runtime due to dependence on gfortran's specific IOSTAT
-  # error code numbers or IOMSG error message texts.
+  # Fail at runtime due to dependence on gfortran's specific IOSTAT=
+  # error code numbers or IOMSG= error message texts.
+  direct_io_7.f90
   dtio_10.f90
   dtio_15.f90
   dtio_24.f90
   dtio_26.f03
+  iostat_4.f90
+  namelist_89.f90
+  namelist_97.f90
 
-  # Depends on gfortran's exact NAMELIST output spacing.
+  # Depends on gfortran's exact NAMELIST output spacing and record advances
   dtio_25.f90
+  namelist_18.f90
+  namelist_19.f90
+  namelist_38.f90
+  namelist_57.f90
+  namelist_65.f90
+  namelist_84.f90
+  pr18210.f90
+
+  # Bad test that expects partial NAMELIST input into a character array to
+  # blank-fill the remaining elements.
+  namelist_56.f90
+
+  # Bad test that expects truncated NAMELIST input groups to be treated as
+  # END= conditions rather than ERR= conditions (like every other Fortran).
+  namelist_81.f90
 
   # Bad test that expects the result of TRIM() to have a leading space
   dtio_14.f90
@@ -2761,9 +2699,14 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Unimplemented extension: \b backslash escapes in FORMAT statements
   backslash_3.f
 
-  # Depends on gfortran's exact ALLOCATE(ERRMSG=) wording
+  # Depends on gfortran's exact (DE)ALLOCATE(ERRMSG=) wording
   allocate_alloc_opt_15.f90
   allocate_alloc_opt_3.f90
+  deallocate_alloc_opt_3.f90
+  deallocate_stat_2.f90
+
+  # Depends on gfortran's exact non-zero (DE)ALLOCATE(STAT=) codes
+  deallocate_stat.f90
 
   # Depends on gfortran's incorrect return of EOR (-2) on internal
   # WRITE record overflow
@@ -2773,7 +2716,60 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # WRITE array overflow
   arrayio_5.f90
 
-  # Depends on gfortran's spacing of list-directed output
+  # Depends on gfortran's implementation of list-directed & G0 output
   char4_iunit_1.f03
   char4_iunit_2.f03
+  f2003_io_5.f03
+  fmt_f_default_field_width_1.f90
+  fmt_f_default_field_width_2.f90
+  fmt_g0_1.f08
+  fmt_g_default_field_width_1.f90
+  fmt_g_default_field_width_2.f90
+  fmt_i_default_field_width_1.f90
+  fmt_i_default_field_width_2.f90
+  fmt_l.f90
+  fmt_zero_width.f90
+  list_directed_large.f90
+
+  # Depends on gfortran padding Hollerith with blanks up to even 32-bit words.
+  # gfortran & nvfortran do so; ifort/ifx, NAG, and f18 pad with zeroes; XLF
+  # doesn't pad at all.
+  hollerith8.f90
+
+  # Depends on gfortran returning a nonstandard "UNSPECIFIED" result for
+  # INQUIRE(..., POSITION=).
+  inquire_5.f90
+
+  # Depends on gfortran's specific maximum sequential unformatted record size.
+  inquire_recl_f2018.f90
+
+  # gfortran interprets INQUIRE(-1, ..., IOSTAT=) as a failed attempt to
+  # inquire a child unit created for defined I/O to an internal unit, even
+  # when it is not; f18 treats it as a nonexistent external unit.
+  # Other compilers vary.
+  inquire_internal.f90
+
+  # gfortran expects FLUSH(unconnected unit) to be a runtime error;
+  # all other Fortran compilers, and (debatably) the standard, allow it.
+  iostat_5.f90
+
+  # Depends on gfortran emitting "Infinity" for formatted output;
+  # some compilers, including f18, emit "Inf".
+  large_real_kind_1.f90
+
+  # Require -finit-local-zero or similar.
+  dec_init_2.f90 # needs -finit-derived -finit-integer=42 &c.
+  init_flag_15.f03 # needs -finit-derived -finit-integer
+  auto_save_2.f90 # requires -fno-automatic -finit-local-zero
+  init_flag_1.f90 # needs -finit-local-zero
+  init_flag_2.f90
+  init_flag_3.f90
+  init_flag_4.f90
+  init_flag_5.f90
+  init_flag_6.f90
+  init_flag_7.f90
+  init_flag_9.f90
+
+  # Requires -ffloat-store
+  nearest_1.f90
 )
