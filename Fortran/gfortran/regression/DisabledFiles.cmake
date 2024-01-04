@@ -1871,6 +1871,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bessel_7.f90 # unclear
   check_bits_1.f90 # requires -fcheck=bits to catch ISHFTC runtime error
   check_bits_2.f90 # requires -fcheck=bits to catch ISHFTC runtime error
+  internal_dummy_2.f08 # causes flang-new to crash llvm-project/issues/76927
   cr_lf.f90 # shenanigans with CR characters
   do_check_1.f90 # zero-valued DO loop step; needs -fcheck=do
   dollar_edit_descriptor_4.f # TODO: (i3,$) format shouldn't advance record when looping
