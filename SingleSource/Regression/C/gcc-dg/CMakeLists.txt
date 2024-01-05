@@ -2876,6 +2876,18 @@ file (GLOB TestRequiresFFixedPoint CONFIGURE_DEPENDS
   pr103248.c
 )
 
+# Tests that use varargs on segmented stacks, and are not supported by
+# the platform
+if(ARCH MATCHES "x86" OR ARCH MATCHES "arm")
+  file(GLOB UnsupportedTests CONFIGURE_DEPENDS
+    split-6.c
+    split-3.c
+    pr85388-5.c
+    pr85388-3.c
+  )
+endif()
+
+list(APPEND TestsToSkip ${UnsupportedTests})
 
 ##
 ## Test target setup
