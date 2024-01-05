@@ -40,4 +40,12 @@ else()
   llvm_add_host_executable(build-timeit timeit timeit.c)
 endif()
 
-add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+# FIXME: the iOS buildbots can't build this since it uses `std::system`, but
+# since we don't support Fortram on the iOS bots and this utility is only used
+# by Fortran tests, it effectively "reverts to green", without entirely
+# reverting the patch.
+#
+# See: https://github.com/llvm/llvm-project/issues/77137
+if(TEST_SUITE_FORTRAN)
+  add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+endif()
