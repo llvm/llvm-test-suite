@@ -2426,6 +2426,14 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   pr86979.c
   pr88676.c
   
+  # These tests require effective target `sync_int_128_runtime`. But
+  # infact, there is no backend in GCC that provides this target
+  # requirement, therefore we should always skip them.
+  atomic-compare-exchange-5.c
+  atomic-load-5.c
+  atomic-store-5.c
+  atomic-store-6.c
+  atomic-op-5.c
 )
 
 list(APPEND TestsToSkip ${UnsupportedTests})
