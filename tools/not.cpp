@@ -17,6 +17,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <spawn.h>
+#include <wait.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -24,7 +26,11 @@
 #include <windows.h>
 #endif
 
-int main(int argc, const char **argv) {
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+int main(int argc, char* const* argv) {
   bool expectCrash = false;
 
   ++argv;
@@ -49,13 +55,22 @@ int main(int argc, const char **argv) {
   if (argc == 0)
     return 1;
 
+  int result;
+#if !defined(TARGET_OS_IPHONE)
   std::stringstream ss;
   ss << argv[0];
   for (int i = 1; i < argc; ++i)
     ss << " " << argv[i];
   std::string cmd = ss.str();
-
-  int result = std::system(cmd.c_str());
+  result = std::system(cmd.c_str());
+#else
+  char* const* environ = NULL;
+  pid_t pid;
+  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ))
+    return EXIT_FAILURE;
+  if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
+    return EXIT_FAILURE;
+#endif
   int retcode = 0;
   int signal = 0;
 
