@@ -10,7 +10,7 @@ long
 test0 (long arg)
 {
   register long var asm (REG1);
-  asm ("blah %0 %1" : "+&r" (var) : "r" (arg));
+  asm (ASM0 " %0, %1" : "+&r" (var) : "r" (arg));
   return var;
 }
 
@@ -18,7 +18,15 @@ long
 test1 (long arg0, long arg1)
 {
   register long var asm (REG1);
-  asm ("blah %0, %1, %2" : "=&r" (var) : "r" (arg0), "0" (arg1));
+  asm (ASM1
+#if defined (__i386__)
+       " %0, 0(%1,%2)"
+#elif defined (__s390__)
+       " %0, %1, 0(%2)"
+#else
+       " %0, %1, %2"
+#endif
+       : "=&r" (var) : "r" (arg0), "0" (arg1));
   return var + arg1;
 }
 
@@ -27,7 +35,7 @@ test2 (void)
 {
   register long var1 asm (REG1);
   register long var2 asm (REG1);
-  asm ("blah %0 %1" : "=&r" (var1) : "0" (var2));
+  asm (ASM0 " %0, %1" : "=&r" (var1) : "0" (var2));
   return var1;
 }
 
@@ -37,7 +45,7 @@ test3 (void)
   register long var1 asm (REG1);
   register long var2 asm (REG2);
   long var3;
-  asm ("blah %0 %1" : "=&r" (var1), "=r" (var3) : "1" (var2));
+  asm (ASM0 " %0, %1" : "=&r" (var1), "=r" (var3) : "1" (var2));
   return var1 + var3;
 }
 
@@ -47,6 +55,6 @@ test4 (void)
   register long var1 asm (REG1);
   register long var2 asm (REG2);
   register long var3 asm (REG2);
-  asm ("blah %0 %1" : "=&r" (var1), "=r" (var2) : "1" (var3));
+  asm (ASM0 " %0, %1" : "=&r" (var1), "=r" (var2) : "1" (var3));
   return var1;
 }

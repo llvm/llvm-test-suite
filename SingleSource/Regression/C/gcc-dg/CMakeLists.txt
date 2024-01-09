@@ -2434,6 +2434,22 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   atomic-store-5.c
   atomic-store-6.c
   atomic-op-5.c
+
+  # Clang doesn't support the `p` asm constraint
+  pr58805.c
+
+  # This test uses inline assembly, but doesn't restrict itself to a
+  # specific backend. Unlike GCC, Clangs `asm` implementation cares
+  # about the actual instruction inside the quotes, so we would have
+  # to port it to every possible backend.
+  pr43564.c
+
+  # We don't support the GNU BitInt decimal type
+  bitint-10.c
+
+  # Attempt to declare a global register variable
+  pr34351.c
+  pr57104.c
 )
 
 list(APPEND TestsToSkip ${UnsupportedTests})
