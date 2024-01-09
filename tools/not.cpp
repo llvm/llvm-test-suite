@@ -17,8 +17,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <spawn.h>
-#include <wait.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -27,6 +25,8 @@
 #endif
 
 #ifdef __APPLE__
+#include <spawn.h>
+#include <wait.h>
 #include <TargetConditionals.h>
 #endif
 
@@ -64,9 +64,8 @@ int main(int argc, char* const* argv) {
   std::string cmd = ss.str();
   result = std::system(cmd.c_str());
 #else
-  char* const* environ = NULL;
   pid_t pid;
-  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ))
+  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, NULL))
     return EXIT_FAILURE;
   if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
     return EXIT_FAILURE;
