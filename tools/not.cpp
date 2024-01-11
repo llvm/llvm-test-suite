@@ -26,7 +26,7 @@
 
 #ifdef __APPLE__
 #include <spawn.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include <TargetConditionals.h>
 #endif
 
