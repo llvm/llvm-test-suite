@@ -13,11 +13,16 @@
 
 #include <errno.h>
 #include <signal.h>
+
+#if _WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
 
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <sys/wait.h>
+#endif
 
 /* Enumeration for our exit status codes. */
 enum ExitCode {
@@ -52,7 +57,12 @@ static int g_posix_mode = 0;
 static int g_timeout_in_seconds = 0;
 
 /* \brief If non-zero, the PID of the process being monitored. */
+#ifndef _WIN32
 static pid_t g_monitored_pid = 0;
+#else
+static DWORD g_monitored_pid = 0;
+static HANDLE g_monitored_phandle = INVALID_HANDLE_VALUE;
+#endif
 
 /* \brief If non-zero, the path to attempt to chdir() to before executing the
  * target. */
@@ -73,6 +83,12 @@ static const char *g_target_redirect_stderr = 0;
 
 /* \brief If non-zero, append exit status at end of output file. */
 static int g_append_exitstats = 0;
+
+#ifdef _WIN32
+/* \brief If platform does not define rlim_t type, then define it as int. */
+typedef int rlim_t;
+
+#endif
 
 /* @name Resource Limit Variables */
 /* @{ */
@@ -104,11 +120,25 @@ static rlim_t g_target_subprocess_count_limit = ~(rlim_t) 0;
 /* @} */
 
 static double sample_wall_time(void) {
+#ifndef _WIN32
   struct timeval t;
   gettimeofday(&t, NULL);
-  return (double) t.tv_sec + t.tv_usec * 1.e-6;
+  return (double)t.tv_sec + t.tv_usec * 1.e-6;
+#else
+  /* frequency init below is not thread-safe. Consider using a mutex if
+   * sample_wall_time is required to be thread-safe in future. */
+  static LARGE_INTEGER frequency = {0};
+  if (frequency.QuadPart == 0)
+    QueryPerformanceFrequency(&frequency);
+  LARGE_INTEGER timeval;
+  QueryPerformanceCounter(&timeval);
+  return (double)timeval.QuadPart / frequency.QuadPart;
+#endif
 }
 
+static int streq(const char *a, const char *b) { return strcmp(a, b) == 0; }
+
+#ifndef _WIN32
 static void terminate_handler(int signal) {
   /* If we are monitoring a process, kill its process group and assume we will
    * complete normally.
@@ -140,13 +170,90 @@ static void timeout_handler(int signal) {
   kill(-g_monitored_pid, SIGKILL);
 }
 
-static int monitor_child_process(pid_t pid, double start_time) {
-  double real_time, user_time, sys_time;
-  struct rusage usage;
-  int res, status;
+#define set_resource_limit(resource, value)                                    \
+  set_resource_limit_actual(#resource, resource, value)
+static void set_resource_limit_actual(const char *resource_name, int resource,
+                                      rlim_t value) {
+  /* Get the current limit. */
+  struct rlimit current;
+  getrlimit(resource, &current);
 
-  /* Record the PID we are monitoring, for use in the signal handlers. */
-  g_monitored_pid = pid;
+  /* Set the limits to as close as requested, assuming we are not super-user. */
+  struct rlimit requested;
+  requested.rlim_cur = requested.rlim_max =
+      (value < current.rlim_max) ? value : current.rlim_max;
+  if (setrlimit(resource, &requested) < 0) {
+    fprintf(stderr, "%s: warning: unable to set limit for %s (to {%lu, %lu})\n",
+            g_program_name, resource_name, (unsigned long)requested.rlim_cur,
+            (unsigned long)requested.rlim_max);
+  }
+}
+#else
+
+/* Windows-specific implementation of fopen. */
+static FILE *windows_fopen(const char *filename, const char *mode) {
+  FILE *file;
+  if (fopen_s(&file, filename, mode))
+    return NULL;
+  return file;
+}
+#define fopen(filename, mode) windows_fopen(filename, mode)
+
+static HANDLE g_outfile_handle = INVALID_HANDLE_VALUE;
+static HANDLE g_job_handle = INVALID_HANDLE_VALUE;
+
+/* Exit status global variable. */
+static int exit_status = 0;
+
+/* Kill process group function. */
+void kill_process_group(DWORD groupId) {
+  GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, groupId);
+}
+
+/* Control handler function. */
+BOOL WINAPI ctrl_handler(DWORD fdw_ctrl_type) {
+  switch (fdw_ctrl_type) {
+  case CTRL_C_EVENT:
+  case CTRL_CLOSE_EVENT:
+  case CTRL_BREAK_EVENT:
+  case CTRL_LOGOFF_EVENT:
+  case CTRL_SHUTDOWN_EVENT:
+    exit_status = 1;
+    kill_process_group(g_monitored_pid);
+    return FALSE;
+  default:
+    return FALSE;
+  }
+}
+
+/* Timer callback function. */
+VOID CALLBACK timer_callback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
+  exit_status = 2;
+  kill_process_group(g_monitored_pid);
+}
+
+LPSTR create_process_commandline(char *const argv[]) {
+  /* Convert argv to CreateProcess style commandline. */
+  char *command_line = malloc(1);
+  command_line[0] = '\0';
+  int argc = 0;
+  while (argv[argc] != NULL) {
+    int size = strlen(command_line) + strlen(argv[argc]) + 2;
+    command_line = realloc(command_line, size);
+    strcat_s(command_line, size, argv[argc]);
+    strcat_s(command_line, size, " ");
+    argc++;
+  }
+  command_line[strlen(command_line) - 1] = '\0';
+  return command_line;
+}
+#endif
+
+static int monitor_child_process(double start_time) {
+  double real_time, user_time, sys_time;
+  int res, status;
+#ifndef _WIN32
+  struct rusage usage;
 
   /* If we are running with a timeout, set up an alarm now. */
   if (g_timeout_in_seconds) {
@@ -159,7 +266,7 @@ static int monitor_child_process(pid_t pid, double start_time) {
 
   /* Wait for the process to terminate. */
   do {
-    res = waitpid(pid, &status, 0);
+    res = waitpid(g_monitored_pid, &status, 0);
   } while (res < 0 && errno == EINTR);
   if (res < 0) {
     perror("waitpid");
@@ -170,7 +277,7 @@ static int monitor_child_process(pid_t pid, double start_time) {
   real_time = sample_wall_time() - start_time;
 
   /* Just in case, kill the child process group. */
-  kill(-pid, SIGKILL);
+  kill(-g_monitored_pid, SIGKILL);
 
   /* Collect the other resource data on the children. */
   if (getrusage(RUSAGE_CHILDREN, &usage) < 0) {
@@ -195,8 +302,89 @@ static int monitor_child_process(pid_t pid, double start_time) {
     exit_status = EXITCODE_MONITORING_FAILURE;
   }
 
-  // If we are not using a summary file, report the information as /usr/bin/time
-  // would.
+#else
+
+  /* If we are running with a timeout, set up an alarm now. */
+  HANDLE timer_handle = INVALID_HANDLE_VALUE;
+  HANDLE timer_queue_handle = INVALID_HANDLE_VALUE;
+  if (g_timeout_in_seconds) {
+    /* Create a timer queue and then create a timer that fires after
+     * g_timeout_in_seconds seconds. */
+    timer_queue_handle = CreateTimerQueue();
+    if (timer_queue_handle == NULL) {
+      fprintf(stderr, "Failed to create timer queue!\n");
+      return 1;
+    }
+
+    if (!CreateTimerQueueTimer(&timer_handle, timer_queue_handle,
+                               timer_callback, NULL,
+                               g_timeout_in_seconds * 1000, 0, 0)) {
+      fprintf(stderr, "Failed to create timer!\n");
+      return 1;
+    }
+  }
+
+  /* Wait for the child process to finish, or the timer to fire. */
+  WaitForSingleObject(g_monitored_phandle, INFINITE);
+
+  /* Just in case, kill the child process group. */
+  kill_process_group(g_monitored_pid);
+
+  /* Record the real elapsed time as soon as we can. */
+  real_time = sample_wall_time() - start_time;
+
+  /* Check if process finished cleanly */
+  DWORD exit_code;
+  if (!GetExitCodeProcess(g_monitored_phandle, &exit_code)) {
+    fprintf(stderr, "Failed to get exit code!\n");
+  }
+
+  /* If the process was signalled, report a more interesting status. */
+  if (!exit_status) {
+    if (exit_status == 1) {
+      fprintf(stderr, "%s: error: child terminated by signal %d\n",
+              g_program_name, exit_status);
+
+      /* Propagate the signalled status to the caller. */
+      exit_status = EXITCODE_CHILD_SIGNALLED;
+    } else if (exit_status == 2) {
+      fprintf(stderr, "%s: error: child terminated by signal %d\n",
+              g_program_name, exit_status);
+      exit_status = EXITCODE_CHILD_SIGNALLED;
+    }
+  }
+  
+  /* Set exit_status to 1 if process was not signalled, but it returned
+   * non-zero exit code. */
+  if(!exit_status && exit_code == 1)
+    exit_status = 1;
+
+  /* Clean up the timer and timer queue. */
+  if (g_timeout_in_seconds) {
+    if (timer_handle)
+      DeleteTimerQueueTimer(timer_queue_handle, timer_handle, NULL);
+    if (timer_queue_handle)
+      DeleteTimerQueue(timer_queue_handle);
+  }
+
+  /* Query the job object information. */
+  JOBOBJECT_BASIC_ACCOUNTING_INFORMATION accountingInfo;
+  if (QueryInformationJobObject(
+          g_job_handle, JobObjectBasicAccountingInformation, &accountingInfo,
+          sizeof(JOBOBJECT_BASIC_ACCOUNTING_INFORMATION), NULL)) {
+    user_time = (double)accountingInfo.TotalUserTime.QuadPart / 10000.0;
+    sys_time = (double)accountingInfo.TotalKernelTime.QuadPart / 10000.0;
+  } else {
+    fprintf(stderr, "Failed to query job object information! Error code: %u\n",
+            GetLastError());
+    exit_status = EXITCODE_MONITORING_FAILURE;
+    return exit_status;
+  }
+
+#endif
+
+  /* If we are not using a summary file, report the information as 
+   * /usr/bin/time would. */
   if (!g_summary_file) {
     if (g_posix_mode) {
       fprintf(stderr, "real %12.4f\nuser %12.4f\nsys  %12.4f\n",
@@ -219,7 +407,10 @@ static int monitor_child_process(pid_t pid, double start_time) {
     fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
     fclose(fp);
   }
-
+#ifdef _WIN32
+  if (g_outfile_handle != INVALID_HANDLE_VALUE)
+    CloseHandle(g_outfile_handle);
+#endif
   if (g_append_exitstats && g_target_program) {
     FILE *fp_stdout = fopen(g_target_redirect_stdout, "a");
     if (!fp_stdout) {
@@ -235,30 +426,178 @@ static int monitor_child_process(pid_t pid, double start_time) {
   return exit_status;
 }
 
-#define set_resource_limit(resource, value) \
-  set_resource_limit_actual(#resource, resource, value)
-static void set_resource_limit_actual(const char *resource_name, int resource,
-                                      rlim_t value) {
-  /* Get the current limit. */
-  struct rlimit current;
-  getrlimit(resource, &current);
+static int execute_target_process(char *const argv[]) {
+#if _WIN32
+  SECURITY_ATTRIBUTES sec_attr;
+  sec_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
+  sec_attr.bInheritHandle = TRUE;
+  sec_attr.lpSecurityDescriptor = NULL;
 
-  /* Set the limits to as close as requested, assuming we are not super-user. */
-  struct rlimit requested;
-  requested.rlim_cur = requested.rlim_max = \
-    (value < current.rlim_max) ? value : current.rlim_max;
-  if (setrlimit(resource, &requested) < 0) {
-    fprintf(stderr, "%s: warning: unable to set limit for %s (to {%lu, %lu})\n",
-            g_program_name, resource_name, (unsigned long) requested.rlim_cur,
-            (unsigned long) requested.rlim_max);
+  STARTUPINFO sec_info;
+  memset(&sec_info, 0, sizeof(STARTUPINFO));
+  sec_info.cb = sizeof(STARTUPINFO);
+  sec_info.dwFlags |= STARTF_USESTDHANDLES;
+  sec_info.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+  sec_info.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+  sec_info.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+
+  /* Set up the input file handle for the child process. */
+  if (g_target_redirect_input) {
+    HANDLE input_file_handle =
+        CreateFile(g_target_redirect_input, GENERIC_READ, 0, &sec_attr,
+                   OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (input_file_handle == INVALID_HANDLE_VALUE) {
+      perror("CreateFile failed for redirected input");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+    sec_info.hStdInput = input_file_handle;
   }
-}
 
-static int streq(const char *a, const char *b) {
-  return strcmp(a, b) == 0;
-}
+  /* Set up the output file handle for the child process. */
+  if (g_target_redirect_stdout) {
+    HANDLE output_file_handle =
+        CreateFile(g_target_redirect_stdout, GENERIC_WRITE, 0, &sec_attr,
+                   CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (output_file_handle == INVALID_HANDLE_VALUE) {
+      perror("CreateFile failed for redirected output");
+      return EXITCODE_MONITORING_FAILURE;
+    }
+    sec_info.hStdOutput = output_file_handle;
+    g_outfile_handle = output_file_handle;
+  }
 
-static int execute_target_process(char * const argv[]) {
+  /* Set up the error file handle for the child process. */
+  if (g_target_redirect_stderr) {
+    if (!streq(g_target_redirect_stdout, g_target_redirect_stderr)) {
+
+      HANDLE error_file_handle =
+          CreateFile(g_target_redirect_stderr, GENERIC_WRITE, 0, &sec_attr,
+                     CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+      if (error_file_handle == INVALID_HANDLE_VALUE) {
+        perror("CreateFile failed for redirected error");
+        return EXITCODE_MONITORING_FAILURE;
+      }
+      sec_info.hStdError = error_file_handle;
+    } else
+      sec_info.hStdError = sec_info.hStdOutput;
+  }
+
+  /* Create a job object to manage the child process resources. */
+  g_job_handle = CreateJobObject(NULL, NULL);
+  if (g_job_handle == NULL) {
+    printf("Failed to create the Job Object. Error code: %lu\n",
+           GetLastError());
+    return 1;
+  }
+
+  /* Configure the job object to set a CPU time limit. */
+  if (g_target_cpu_limit != ~(rlim_t)0) {
+    JOBOBJECT_BASIC_LIMIT_INFORMATION basicInfo;
+    ZeroMemory(&basicInfo, sizeof(JOBOBJECT_BASIC_LIMIT_INFORMATION));
+    basicInfo.LimitFlags = JOB_OBJECT_LIMIT_JOB_TIME;
+
+    /* Convert the seconds to 100-nanosecond intervals. */
+    basicInfo.PerJobUserTimeLimit.QuadPart = g_target_cpu_limit * 10000000;
+
+    if (!SetInformationJobObject(g_job_handle, JobObjectBasicLimitInformation,
+                                 &basicInfo,
+                                 sizeof(JOBOBJECT_BASIC_LIMIT_INFORMATION))) {
+      fprintf(stderr,
+              "Failed to set basic limit information for the job object! Error "
+              "code: %u\n",
+              GetLastError());
+      CloseHandle(g_job_handle);
+      return EXITCODE_EXEC_FAILURE;
+    }
+  }
+
+  /* Configure the job object to set a active process limit. */
+  if (g_target_subprocess_count_limit != ~(rlim_t)0) {
+    JOBOBJECT_EXTENDED_LIMIT_INFORMATION ext_limit_info;
+    ZeroMemory(&ext_limit_info, sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+    ext_limit_info.BasicLimitInformation.LimitFlags =
+        JOB_OBJECT_LIMIT_ACTIVE_PROCESS;
+    ext_limit_info.BasicLimitInformation.ActiveProcessLimit =
+        g_target_subprocess_count_limit;
+
+    if (!SetInformationJobObject(
+            g_job_handle, JobObjectExtendedLimitInformation, &ext_limit_info,
+            sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION))) {
+      fprintf(stderr,
+              "Failed to set the Job Object information. Error code: %lu\n",
+              GetLastError());
+      CloseHandle(g_job_handle);
+      return EXITCODE_EXEC_FAILURE;
+    }
+  }
+
+  if (g_target_stack_size_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-stack-size unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  if (g_target_data_size_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-data-size unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  if (g_target_rss_size_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-rss-size unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  if (g_target_file_size_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-file-size unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  if (g_target_core_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-core unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  if (g_target_file_count_limit != ~(rlim_t)0) {
+    fprintf(stderr, "Setting --limit-file-count unsupported on Windows \n");
+    return EXITCODE_EXEC_FAILURE;
+  }
+
+  /* Honor the desired target execute directory. */
+  if (g_target_exec_directory) {
+    if (SetCurrentDirectory(g_target_exec_directory) == 0) {
+      perror("chdir");
+      return EXITCODE_EXEC_FAILURE;
+    }
+  }
+
+  /* Set up the control handler to terminate the child process. */
+  if (!SetConsoleCtrlHandler(ctrl_handler, TRUE)) {
+    perror("chdir");
+    return EXITCODE_EXEC_FAILURE;
+  }
+  
+  PROCESS_INFORMATION proc_info = {0};
+
+  /* Create the child process. */
+  if (!CreateProcess(NULL, create_process_commandline(argv), NULL, NULL, TRUE,
+                     CREATE_NEW_PROCESS_GROUP, NULL, NULL, &sec_info,
+                     &proc_info)) {
+    fprintf(stderr, "Failed to create process. Error code: %lu\n",
+            GetLastError());
+    return EXITCODE_EXEC_FAILURE;
+  }
+
+  /* Assign the child process to the job object. */
+  if (!AssignProcessToJobObject(g_job_handle, proc_info.hProcess)) {
+    fprintf(
+        stderr,
+        "Failed to assign child process to the job object. Error code: %lu\n",
+        GetLastError());
+    TerminateProcess(proc_info.hProcess, 1);
+    CloseHandle(proc_info.hProcess);
+    CloseHandle(proc_info.hThread);
+    return EXITCODE_EXEC_FAILURE;
+  }
+
+  /* Record the ID and HANDLE of the process we are monitoring. */
+  g_monitored_pid = proc_info.dwProcessId;
+  g_monitored_phandle = proc_info.hProcess;
+#else
+
   /* Create a new process group for pid, and the process tree it may spawn. We
    * do this, because later on we might want to kill pid _and_ all processes
    * spawned by it and its descendants.
@@ -376,12 +715,13 @@ static int execute_target_process(char * const argv[]) {
   }
 
   return EXITCODE_EXEC_FAILURE;
+#endif
 }
 
 static int execute(char * const argv[]) {
   double start_time;
-  pid_t pid;
 
+#ifndef _WIN32
   /* Set up signal handlers so we can terminate the monitored process(es) on
    * SIGINT or SIGTERM. */
   signal(SIGINT, terminate_handler);
@@ -389,9 +729,13 @@ static int execute(char * const argv[]) {
 
   /* Set up a signal handler to terminate the process on timeout. */
   signal(SIGALRM, timeout_handler);
+#endif
 
   start_time = sample_wall_time();
 
+#ifndef _WIN32
+  pid_t pid;
+  
   /* Fork the child process. */
   pid = fork();
   if (pid < 0) {
@@ -406,8 +750,16 @@ static int execute(char * const argv[]) {
     return execute_target_process(argv);
   }
 
+  /* Record the PID we are monitoring. */
+  g_monitored_pid = pid;
+#else
+
+  /* If running on windows, do not return after creating process. */
+  execute_target_process(argv);
+#endif
+
   /* Otherwise, we are in the context of the monitoring process. */
-  return monitor_child_process(pid, start_time);
+  return monitor_child_process(start_time);
 }
 
 static void usage(int is_error) {
