@@ -149,6 +149,9 @@ if(PROJECT_NAME STREQUAL "test-suite")
 			snap.reference_output
 		)
 		set(DIFFPROG_BASE %b/${FPCMP})
+		if(FP_IGNOREWHITESPACE)
+		  set(DIFFPROG_BASE "${DIFFPROG_BASE} -i")
+		endif()
 		set(FP_TOL_SUFFIX "-r ${FP_TOLERANCE}")
 		set(FP_ABSTOL_SUFFIX "-a ${FP_ABSTOLERANCE}")
 		set(DIFFPROG
