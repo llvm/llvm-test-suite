@@ -1,0 +1,49 @@
+Running quads
+image width = 400 height = 400
+block size = (16, 16) grid size = (25, 25)
+Start rendering by GPU.
+Done.
+quads_gpu.ppm and quads_ref.ppm are the same.
+Running earth
+image width = 400 height = 225
+block size = (16, 16) grid size = (25, 15)
+Start rendering by GPU.
+Done.
+earth_gpu.ppm and earth_ref.ppm are the same.
+Running two_spheres
+image width = 400 height = 225
+block size = (16, 16) grid size = (25, 15)
+Start rendering by GPU.
+Done.
+two_spheres_gpu.ppm and two_spheres_ref.ppm are the same.
+Running two_perlin_spheres
+image width = 400 height = 225
+block size = (16, 16) grid size = (25, 15)
+Start rendering by GPU.
+Done.
+two_perlin_spheres_gpu.ppm and two_perlin_spheres_ref.ppm are the same.
+Running simple_light
+image width = 400 height = 225
+block size = (16, 16) grid size = (25, 15)
+Start rendering by GPU.
+Done.
+simple_light_gpu.ppm and simple_light_ref.ppm are the same.
+Running random_spheres
+image width = 400 height = 225
+block size = (16, 16) grid size = (25, 15)
+Start rendering by GPU.
+Done.
+random_spheres_gpu.ppm and random_spheres_ref.ppm are the same.
+Running cornell_box
+image width = 600 height = 600
+block size = (16, 16) grid size = (38, 38)
+Start rendering by GPU.
+Done.
+cornell_box_gpu.ppm and cornell_box_ref.ppm are the same.
+Running cornell_smoke
+image width = 600 height = 600
+block size = (16, 16) grid size = (38, 38)
+Start rendering by GPU.
+Done.
+cornell_smoke_gpu.ppm and cornell_smoke_ref.ppm are the same.
+exit 0
