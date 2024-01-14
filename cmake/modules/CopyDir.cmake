@@ -16,10 +16,17 @@ function(llvm_copy target to from)
   )
 endfunction()
 
+# On Windows create_symlink requires special permissions. Use copy_if_different instead.
+if(CMAKE_HOST_WIN32)
+  set(_link_or_copy copy_if_different)
+else()
+  set(_link_or_copy create_symlink)
+endif()
+
 function(llvm_create_symlink target to from)
   add_custom_command(
     TARGET ${target} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E create_symlink ${from} ${to}
+    COMMAND ${CMAKE_COMMAND} -E ${_link_or_copy} ${from} ${to}
   )
 endfunction()
 
