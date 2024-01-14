@@ -56,7 +56,8 @@ def _mutateCommandLine(context, commandline):
         args += ["--redirect-input", stdin]
         cmd.stdin = None
     else:
-        args += ["--redirect-input", "/dev/null"] if os.name != 'nt' else []
+        if os.name != 'nt':
+            args += ["--redirect-input", "/dev/null"]
     if workdir is not None:
         args += ["--chdir", workdir]
         cmd.workdir = None
