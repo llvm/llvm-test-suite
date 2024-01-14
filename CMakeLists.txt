@@ -241,6 +241,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
   endif()
 endif()
 
+include(HandleCompilerRT)
+
 include(TestSuite)
 include(SingleMultiSource)
 # Needs by External/sollve_vv.
