@@ -24,7 +24,7 @@ test1 (long arg0, long arg1)
 #elif defined (__s390__)
        " %0, %1, 0(%2)"
 #else
-       " %0, %1, %2"
+       " %0, 0(%1,%2)"
 #endif
        : "=&r" (var) : "r" (arg0), "0" (arg1));
   return var + arg1;

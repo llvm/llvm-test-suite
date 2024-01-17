@@ -27,5 +27,5 @@
 # define REG1 "rax"
 # define REG2 "rdx"
 # define ASM0 "mov"
-# define ASM1 "add"
+# define ASM1 "mov"
 #endif

@@ -19,7 +19,7 @@
 # define ASM "lmg"
 #elif defined (__x86_64__)
 # define REG "rax"
-# define ASM "add"
+# define ASM "mov"
 #endif
 
 long
@@ -33,7 +33,7 @@ bug (long arg)
 #elif defined (__s390__)
        " %0, %1, 0(%2)"
 #else
-       " %0, %1, %2"
+       " %0, 0(%1,%2)"
 #endif
        : "=&r" (output) : "r" (input), "0" (input));
   return output;
