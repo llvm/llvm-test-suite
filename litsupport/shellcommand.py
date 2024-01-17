@@ -88,6 +88,8 @@ def parse(commandline):
     and will throw an exception if the commandline uses unsupported features.
     """
     result = ShellCommand()
+    if os.name == 'nt':
+        commandline = commandline.replace("\\", "/")
     tokens = shlex.split(commandline)
     i = 0
     first_word = True

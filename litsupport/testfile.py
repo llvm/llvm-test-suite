@@ -7,6 +7,8 @@ from lit.TestRunner import (
 from litsupport import shellcommand
 import logging
 
+import os
+import shlex
 
 def _parseShellCommand(script, ln):
     # Trim trailing whitespace.
@@ -18,6 +20,15 @@ def _parseShellCommand(script, ln):
     else:
         script.append(ln)
 
+def clean_verify_command_for_windows(command_str):
+    """Prepares a command string for execution in Windows command line by
+    formatting paths and arguments.""" 
+    # Replace backslashes with forward slashes and split into tokens
+    tokens = shlex.split(command_str.replace("\\", "/"))
+    # Enclose each token in double quotes and convert slashes back
+    tokens_quoted = ['"{}"'.format(token.replace('/', '\\')) for token in tokens]
+    # Join the tokens into a single command string and return
+    return ' '.join(tokens_quoted)
 
 def parse(context, filename):
     """Parse a .test file as used in the llvm test-suite.
@@ -77,6 +88,9 @@ def parse(context, filename):
     preparescript = applySubstitutions(preparescript, substitutions)
     runscript = applySubstitutions(runscript, substitutions)
     verifyscript = applySubstitutions(verifyscript, substitutions)
+    if os.name == 'nt':
+        verifyscript = [clean_verify_command_for_windows(cmd) for cmd in verifyscript]
+
     metricscripts = {
         k: applySubstitutions(v, substitutions) for k, v in metricscripts.items()
     }

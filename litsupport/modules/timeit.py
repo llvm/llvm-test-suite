@@ -5,7 +5,7 @@ import re
 
 
 def _mutateCommandLine(context, commandline):
-    timefile = context.tmpBase + ".time"
+    timefile = os.path.normpath(context.tmpBase + ".time")
     config = context.config
     cmd = shellcommand.parse(commandline)
 
@@ -16,24 +16,28 @@ def _mutateCommandLine(context, commandline):
         timeit_name = "timeit"
     else:
         timeit_name = "timeit-target"
-    timeit = "%s/tools/%s" % (config.test_source_root, timeit_name)
-    args = ["--limit-core", "0"]
-    args += ["--limit-cpu", "7200"]
-    args += ["--timeout", "7200"]
-    args += ["--limit-file-size", "209715200"]
-    args += ["--limit-rss-size", "838860800"]
-    workdir = cmd.workdir
+
+    timeit = os.path.normpath("%s/tools/%s" % (config.test_source_root, timeit_name))
+    args = ["--timeout", "7200"]
+    if os.name != 'nt':
+        args += ["--limit-core", "0"]
+        args += ["--limit-cpu", "7200"]
+        args += ["--limit-file-size", "209715200"]
+        args += ["--limit-rss-size", "838860800"]
+
+    workdir = os.path.normpath(cmd.workdir) if cmd.workdir is not None else None
+
     if not config.traditional_output:
         stdout = cmd.stdout
         if cmd.stdout is not None:
             if not os.path.isabs(stdout) and workdir is not None:
-                stdout = os.path.join(workdir, stdout)
+                stdout = os.path.join(workdir, os.path.normpath(stdout))
             args += ["--redirect-stdout", stdout]
             cmd.stdout = None
         stderr = cmd.stderr
         if stderr is not None:
             if not os.path.isabs(stderr) and workdir is not None:
-                stderr = os.path.join(workdir, stderr)
+                stderr = os.path.join(workdir, os.path.normpath(stderr))
             args += ["--redirect-stderr", stderr]
             cmd.stderr = None
     else:
@@ -42,17 +46,18 @@ def _mutateCommandLine(context, commandline):
                 "Separate stdout/stderr redirection not "
                 + "possible with traditional output"
             )
-        outfile = context.tmpBase + ".out"
+        outfile = os.path.normpath(context.tmpBase + ".out")
         args += ["--append-exitstatus"]
         args += ["--redirect-output", outfile]
     stdin = cmd.stdin
     if stdin is not None:
         if not os.path.isabs(stdin) and workdir is not None:
-            stdin = os.path.join(workdir, stdin)
+            stdin = os.path.join(workdir, os.path.normpath(stdin))
         args += ["--redirect-input", stdin]
         cmd.stdin = None
     else:
-        args += ["--redirect-input", "/dev/null"]
+        if os.name != 'nt':
+            args += ["--redirect-input", "/dev/null"]
     if workdir is not None:
         args += ["--chdir", workdir]
         cmd.workdir = None
