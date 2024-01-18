@@ -686,6 +686,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   public_private_module_2.f90
   sizeof_3.f90
 
+  # unimplemented: dynamic character length in structure constructor
+  alloc_comp_assign_13.f08
+  alloc_comp_assign_14.f08
+  array_reference_2.f90
+  block_13.f08
+  deferred_type_component_1.f90
+  deferred_type_component_2.f90
+
   # unimplemented: character array expression temp with dynamic length.
   actual_array_constructor_2.f90
   array_constructor_17.f90
@@ -702,44 +710,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr77506.f90
   pr91862.f90
   transfer_resolve_1.f90
-
-  # unimplemented: allocatable component in structure constructor
-  allocatable_scalar_13.f90
-  alloc_comp_assign_13.f08
-  alloc_comp_assign_14.f08
-  alloc_comp_assign_2.f90
-  alloc_comp_assign_3.f90
-  alloc_comp_assign_4.f90
-  alloc_comp_assign_5.f90
-  alloc_comp_class_3.f03
-  alloc_comp_class_4.f03
-  alloc_comp_constructor_1.f90
-  alloc_comp_constructor_2.f90
-  alloc_comp_constructor_3.f90
-  alloc_comp_constructor_4.f90
-  alloc_comp_constructor_7.f90
-  alloc_comp_deep_copy_2.f03
-  alloc_comp_deep_copy_3.f03
-  alloc_comp_initializer_1.f90
-  alloc_comp_initializer_4.f03
-  alloc_comp_init_expr.f03
-  alloc_comp_optional_1.f90
-  alloc_comp_result_1.f90
-  array_reference_2.f90
-  associate_60.f90
-  block_13.f08
-  class_result_9.f90
-  deferred_type_component_1.f90
-  deferred_type_component_2.f90
-  derived_constructor_comps_5.f90
-  derived_constructor_comps_6.f90
-  extends_4.f03
-  null_9.f90
-  pr43808.f90
-  realloc_on_assign_16.f90
-  realloc_on_assign_17.f90
-  structure_constructor_17.f90
-  typebound_operator_13.f03
 
   # unimplemented: allocatable components in derived type assignment
   alloc_comp_result_2.f90
@@ -1028,6 +998,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # polymorphic types are enabled by default.
   actual_array_offset_1.f90
   allocate_class_3.f90
+  allocate_class_4.f90
   allocate_with_mold_1.f90
   allocate_with_mold_3.f90
   allocate_with_source_15.f03
@@ -1038,9 +1009,11 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   alloc_comp_assign_12.f03
   alloc_comp_assign_16.f03
   alloc_comp_class_1.f90
+  alloc_comp_class_4.f03
   alloc_comp_class_5.f03
   associate_28.f90
   associate_46.f90
+  associate_60.f90
   associated_target_6.f03
   associated_target_7.f90
   class_19.f03
@@ -1063,6 +1036,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   class_defined_operator_1.f03
   class_defined_operator_2.f03
   class_dummy_2.f03
+  class_result_9.f90
   class_result_10.f90
   class_result_1.f03
   class_to_type_3.f03
@@ -1133,6 +1107,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   typebound_generic_6.f03
   typebound_generic_9.f03
   typebound_operator_12.f03
+  typebound_operator_13.f03
   typebound_operator_20.f90
   typebound_operator_21.f03
   typebound_operator_3.f03
