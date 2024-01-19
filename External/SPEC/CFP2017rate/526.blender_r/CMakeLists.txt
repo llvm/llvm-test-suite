@@ -14,6 +14,18 @@ add_definitions(
   -DWITH_HEADLESS
   -DHAVE_UNSIGNED_CHAR
 )
+
+if(APPLE)
+  # Building Blender breaks with -fdefine-target-os-macros, add flag to disable
+  # it as workaround.
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag(-fno-define-target-os-macros
+                        COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+  if (COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+    add_compile_options(-fno-define-target-os-macros)
+  endif()
+endif()
+
 add_compile_options(-funsigned-char)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-D__BOOL_DEFINED>)
 speccpu2017_add_include_dirs(

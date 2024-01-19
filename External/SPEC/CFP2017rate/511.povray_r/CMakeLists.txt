@@ -8,6 +8,17 @@ speccpu2017_benchmark(RATE)
 
 speccpu2017_add_include_dirs(frontend base . spec_qsort)
 
+if(APPLE)
+    # Building Povray breaks with -fdefine-target-os-macros, add flag to disable
+  # it as workaround.
+  include(CheckCCompilerFlag)
+  check_c_compiler_flag(-fno-define-target-os-macros
+                        COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+  if (COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+    add_compile_options(-fno-define-target-os-macros)
+  endif()
+endif()
+
 ## test ########################################################################
 
 speccpu2017_run_test(
