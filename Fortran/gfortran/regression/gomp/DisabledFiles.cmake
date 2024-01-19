@@ -448,5 +448,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr33439.f90
   pr44036-3.f90
   pr78866-2.f90
+  reduction3.f90
   sharing-3.f90
 )
