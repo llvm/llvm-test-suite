@@ -1815,9 +1815,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr93524.f90
   public_private_module_3.f90
   static_linking_1.f
-
-  # error: unknown argument" due to '-fschedule-insns' and '-fstrict-aliasing'.
-  pr43808.f90
 )
 
 # These tests are disabled because they fail when they are expected to pass.
