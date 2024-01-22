@@ -146,8 +146,10 @@ set(FLANG_ERRORING_FFLAGS
   -fpeel-loops
   -frecursive
   -fsanitize=undefined
+  -fschedule-insns
   -fset-g77-defaults
   -fshort-enums
+  -fstrict-aliasing
   -ftest-forall-temp
   -ftree-loop-distribution
   -ftree-loop-vectorize
