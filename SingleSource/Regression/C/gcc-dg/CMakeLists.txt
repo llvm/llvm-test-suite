@@ -2560,6 +2560,9 @@ if(ARCH MATCHES "riscv")
     c99-tgmath-2.c
     c99-tgmath-3.c
     c99-tgmath-4.c
+
+    # RISCV does not support `__bf16`
+    pr107262.c
   )
 
   if (LIBC MATCHES "musl")
