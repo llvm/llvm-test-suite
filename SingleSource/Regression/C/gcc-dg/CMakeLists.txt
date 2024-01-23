@@ -2450,6 +2450,16 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # Attempt to declare a global register variable
   pr34351.c
   pr57104.c
+
+  # -m32 specific
+  attr-ms_struct-1.c
+  attr-ms_struct-2.c
+
+  # Weird architectures only
+  bf-spl1.c
+
+  # Something to do with neted functions
+  cwsc1.c
 )
 
 list(APPEND TestsToSkip ${UnsupportedTests})
