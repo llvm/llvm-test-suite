@@ -2468,6 +2468,10 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
     re-read them after longjmp'ing back
   setjmp-3.c
   setjmp-4.c
+
+  # Stack protector
+  ssp-1.c
+  ssp-2.c
 )
 
 list(APPEND TestsToSkip ${UnsupportedTests})
