@@ -12,6 +12,31 @@ endif()
 if(ARCH STREQUAL "AArch64")
   add_subdirectory(AArch64)
 endif()
+# The value of LOONGARCH_CPU_SUPPORTS_SX means if the target machine
+# can run LSX tests. Its value is set automatically by detecting
+# process for native compile. While for cross compile, it needs the
+# user to set the value when running the cmake command, such as
+# "-DLOONGARCH_CPU_SUPPORTS_SX=TRUE" if LSX tests are expected to run.
+# LOONGARCH_CPU_SUPPORTS_ASX is used for LASX tests, the other is same.
+if(ARCH STREQUAL "LoongArch")
+  CHECK_C_COMPILER_FLAG(-mlsx COMPILER_SUPPORTS_LSX)
+  if(NOT DEFINED LOONGARCH_CPU_SUPPORTS_SX AND COMPILER_SUPPORTS_LSX)
+    include(DetectLoongArchSupportVector)
+    detect_loongarch_cpu_supports_sx(LOONGARCH_CPU_SUPPORTS_SX)
+  endif()
+  if(LOONGARCH_CPU_SUPPORTS_SX AND COMPILER_SUPPORTS_LSX)
+    add_subdirectory(LSX)
+  endif()
+
+  CHECK_C_COMPILER_FLAG(-mlasx COMPILER_SUPPORTS_LASX)
+  if(NOT DEFINED LOONGARCH_CPU_SUPPORTS_ASX AND COMPILER_SUPPORTS_LASX)
+    include(DetectLoongArchSupportVector)
+    detect_loongarch_cpu_supports_asx(LOONGARCH_CPU_SUPPORTS_ASX)
+  endif()
+  if(LOONGARCH_CPU_SUPPORTS_ASX AND COMPILER_SUPPORTS_LASX)
+    add_subdirectory(LASX)
+  endif()
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
   if(ARCH STREQUAL "x86")
