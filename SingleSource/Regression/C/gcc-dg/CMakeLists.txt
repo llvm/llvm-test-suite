@@ -2461,6 +2461,9 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   # Something to do with neted functions
   cwsc1.c
 
+  # Wrong `-march` option for Clang
+  profile-update-warning.c
+
   # LLVM expects us to mark variables as volatile if we want to
     re-read them after longjmp'ing back
   setjmp-3.c
