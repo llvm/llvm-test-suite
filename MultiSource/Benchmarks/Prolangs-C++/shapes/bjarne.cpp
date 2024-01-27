@@ -2,7 +2,7 @@
    in Bjarne Stroustrup's book "The C++ Programming Language" 2nd Edition. */
 #include <iostream>
 #include "bjarne.h"
-using namespace std;
+using std::cout;
 
 enum color {black='*', white=' '};
 
