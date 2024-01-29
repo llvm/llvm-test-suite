@@ -144,4 +144,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These files are expected to fail to compile, but succeed instead.
   c516.f90
   c524a.f90
+
+  # Tests that used to be hard errors, are now warnings, need -pedantic to
+  # observe them
+  tkr.f90
 )
