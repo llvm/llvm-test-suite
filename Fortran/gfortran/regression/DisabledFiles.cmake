@@ -844,11 +844,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   erf_2.F90
   erf_3.F90
 
-  # unimplemented: intrinsic: execute_command_line
-  execute_command_line_1.f90
-  execute_command_line_2.f90
-  execute_command_line_3.f90
-
   # unimplemented: intrinsic: failed_images
   coarray_failed_images_1.f08
 
