@@ -2213,6 +2213,23 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   whole_file_1.f90
   whole_file_2.f90
 
+  # Tests that used to be hard errors, are now warnings, need -pedantic to
+  # observe them
+  generic_32.f90
+  generic_34.f90
+  generic_7.f90
+  interface_37.f90
+  interface_6.f90
+  pr77406.f90
+  pr95584.f90
+  typebound_generic_10.f03
+  typebound_generic_11.f90
+  typebound_generic_12.f03
+  typebound_generic_13.f03
+  typebound_operator_14.f90
+  typebound_operator_16.f03
+  deallocate_error_2.f90
+
   # Tests that would be errors if we supported options to enable checks
   dec_structure_24.f90
   dec_structure_26.f90
