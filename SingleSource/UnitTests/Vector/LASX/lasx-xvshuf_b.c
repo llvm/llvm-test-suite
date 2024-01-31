@@ -64,10 +64,10 @@ main ()
                       0x0001000100010001, 0x0001000100010001};
   v4u64_op1 = (v4u64){0x7ff0000000000000, 0x7ff0000000000000,
                       0x7ff0000000000000, 0x7ff0000000000000};
-  v4u64_op2 = (v4u64){0x0000000000000000, 0x3ff0010000000000,
-                      0x0000000000000000, 0x3ff0010000000000};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  v4u64_op2 = (v4u64){0x0000000000000000, 0x1f10010000000000,
+                      0x0000000000000000, 0x1f10010000000000};
+  __m256i_result = (__m256i){0x0000000000000000, 0x0001000000000000,
+                             0x0000000000000000, 0x0001000000000000};
   __m256i_out = __lasx_xvshuf_b((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -115,14 +115,14 @@ main ()
   __m256i_out = __lasx_xvshuf_b((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x0000000000000101, 0xfffffffffffffefe,
-                      0x0000000000000101, 0xfffffffffffffefe};
+  v4u64_op0 = (v4u64){0x0000000000000001, 0x000f000f000f000e,
+                      0x0000000000000001, 0x000f000f000f000e};
   v4u64_op1 = (v4u64){0x67eee33567eee435, 0xffffffffffffffff,
                       0x67eee33567eee435, 0xffffffffffffffff};
   v4u64_op2 = (v4u64){0xffffffffffffffff, 0x00000000ffffffff,
                       0xffffffffffffffff, 0x00000000ffffffff};
-  __m256i_result = (__m256i){0xffffffffffffffff, 0x0000000000000000,
-                             0xffffffffffffffff, 0x0000000000000000};
+  __m256i_result = (__m256i){0xffffffffffffffff, 0xffffffffffffffff,
+                             0xffffffffffffffff, 0xffffffffffffffff};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -137,36 +137,36 @@ main ()
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x0000000000000000, 0xffffffff80000000,
-                      0x0000000000000000, 0xffffffff80000000};
+  v4u64_op0 = (v4u64){0x0000000000000000, 0x000f000f00000000,
+                      0x0000000000000000, 0x000f000f00000000};
   v4u64_op1 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
                       0xffffffffffffffff, 0xffffffffffffffff};
   v4u64_op2 = (v4u64){0x0000000000000000, 0x0000000000000000,
                       0x0000000000000000, 0x0000000000000000};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  __m256i_result = (__m256i){0x0000000000000000, 0xffffffff00000000,
+                             0x0000000000000000, 0xffffffff00000000};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
-                      0xffffffffffffffff, 0xffffffffffffffff};
+  v4u64_op0 = (v4u64){0x000f000f000f000f, 0x000f000f000f000f,
+                      0x000f000f000f000f, 0x000f000f000f000f};
   v4u64_op1 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
                       0xffffffffffffffff, 0xffffffffffffffff};
   v4u64_op2 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
                       0xffffffffffffffff, 0xffffffffffffffff};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  __m256i_result = (__m256i){0xffffffffffffffff, 0xffffffffffffffff,
+                             0xffffffffffffffff, 0xffffffffffffffff};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
-                      0xffffffffffffffff, 0xffffffffffffffff};
+  v4u64_op0 = (v4u64){0x000f000f000f000f, 0x000f000f000f000f,
+                      0x000f000f000f000f, 0x000f000f000f000f};
   v4u64_op1 = (v4u64){0xefdfefdfefdfefdf, 0xefdfefdf00000000,
                       0xefdfefdfefdfefdf, 0xefdfefdf00000000};
   v4u64_op2 = (v4u64){0xffffffffffffffff, 0xffffffffffffffff,
                       0xffffffffffffffff, 0xffffffffffffffff};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  __m256i_result = (__m256i){0xefdfefdfefdfefdf, 0xefdfefdfefdfefdf,
+                             0xefdfefdfefdfefdf, 0xefdfefdfefdfefdf};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -181,14 +181,14 @@ main ()
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x7575ffff7575f575, 0x7575ffff75757595,
-                      0x7575ffff7575f575, 0x7575ffff75757595};
+  v4u64_op0 = (v4u64){0x0005000f00050005, 0x0005000f00050005,
+                      0x0005000f00050005, 0x0005000f00050005};
   v4u64_op1 = (v4u64){0x0000000000010001, 0x0000000000000003,
                       0x0000000000010001, 0x0000000000000003};
   v4u64_op2 = (v4u64){0x7575757575757575, 0x7575757575757575,
                       0x7575757575757575, 0x7575757575757575};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  __m256i_result = (__m256i){0x7575000075757575, 0x7575000075757575,
+                             0x7575000075757575, 0x7575000075757575};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -225,25 +225,25 @@ main ()
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x00000000000000f0, 0x000000000000fffe,
-                      0x00000000000000f0, 0x000000000000fffe};
+  v4u64_op0 = (v4u64){0x0000000000000000, 0x000000000000000e,
+                      0x0000000000000000, 0x000000000000000e};
   v4u64_op1 = (v4u64){0x0000000000000000, 0x0000000000000000,
                       0x0000000000000000, 0x0000000000000000};
   v4u64_op2 = (v4u64){0x000000ffff88ff88, 0x8000000000000000,
                       0x000000ffff88ff88, 0x8000000000000000};
-  __m256i_result = (__m256i){0xff88ff88ff880000, 0xff88ff88ff880000,
-                             0xff88ff88ff880000, 0xff88ff88ff880000};
+  __m256i_result = (__m256i){0xff88ff88ff88ff88, 0xff88ff88ff880000,
+                             0xff88ff88ff88ff88, 0xff88ff88ff880000};
   __m256i_out = __lasx_xvshuf_h((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x0000000101001e18, 0x000000010000ffe1,
-                      0x0000000101001e18, 0x000000010000ffe1};
+  v4u64_op0 = (v4u64){0x0000000100000000, 0x0000000100000001,
+                      0x0000000100000000, 0x0000000100000001};
   v4u64_op1 = (v4u64){0x98111cca98111cca, 0x98111cca98111cca,
                       0x98111cca98111cca, 0x98111cca98111cca};
   v4u64_op2 = (v4u64){0x0000000101001e18, 0x000000010000ffe1,
                       0x0000000101001e18, 0x000000010000ffe1};
-  __m256i_result = (__m256i){0x0000000101001e18, 0x0000000100000000,
-                             0x0000000101001e18, 0x0000000100000000};
+  __m256i_result = (__m256i){0x0000000101001e18, 0x0000000100000001,
+                             0x0000000101001e18, 0x0000000100000001};
   __m256i_out = __lasx_xvshuf_w((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -346,14 +346,14 @@ main ()
   __m256i_out = __lasx_xvshuf_d((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0x00000000ff01ff02, 0x0000fffffe01fe52,
-                      0x00000000ff01ff02, 0x0000fffffe01fe52};
+  v4u64_op0 = (v4u64){0x0000000000000002, 0x0000000000000002,
+                      0x0000000000000002, 0x0000000000000002};
   v4u64_op1 = (v4u64){0x0000000080008001, 0x0000800000000000,
                       0x0000000080008001, 0x0000800000000000};
   v4u64_op2 = (v4u64){0x000000000000ffff, 0x0000000000000000,
                       0x000000000000ffff, 0x0000000000000000};
-  __m256i_result = (__m256i){0x0000000080008001, 0x0000000000000000,
-                             0x0000000080008001, 0x0000000000000000};
+  __m256i_result = (__m256i){0x0000000080008001, 0x0000000080008001,
+                             0x0000000080008001, 0x0000000080008001};
   __m256i_out = __lasx_xvshuf_d((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
@@ -423,14 +423,14 @@ main ()
   __m256i_out = __lasx_xvshuf_d((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 
-  v4u64_op0 = (v4u64){0xfffeb8649d0d6250, 0xfffeb6839ffffd80,
-                      0xfffeb8649d0d6250, 0xfffeb6839ffffd80};
+  v4u64_op0 = (v4u64){0x0000000000000000, 0x0000000000000000,
+                      0x0000000000000000, 0x0000000000000000};
   v4u64_op1 = (v4u64){0xfffe97c020010001, 0xfffeb6839ffffd80,
                       0xfffe97c020010001, 0xfffeb6839ffffd80};
   v4u64_op2 = (v4u64){0xfffe97c020010001, 0xfffeb6839ffffd80,
                       0xfffe97c020010001, 0xfffeb6839ffffd80};
-  __m256i_result = (__m256i){0x0000000000000000, 0x0000000000000000,
-                             0x0000000000000000, 0x0000000000000000};
+  __m256i_result = (__m256i){0xfffe97c020010001, 0xfffe97c020010001,
+                             0xfffe97c020010001, 0xfffe97c020010001};
   __m256i_out = __lasx_xvshuf_d((__m256)v4u64_op0, (__m256)v4u64_op1, (__m256)v4u64_op2);
   check_lasx_out(&__m256i_result, &__m256i_out, sizeof(__m256i_out), __FILE__, __LINE__);
 

@@ -46,8 +46,8 @@ main ()
 
   v2u64_op0 = (v2u64){0xffffffffffffffff, 0xffffffffffffffff};
   v2u64_op1 = (v2u64){0x52525252adadadad, 0x52525252adadadad};
-  v2u64_op2 = (v2u64){0x800000007fffffff, 0x800000007fffffff};
-  __m128i_result = (__m128i){0x00adadad00000000, 0x00adadad00000000};
+  v2u64_op2 = (v2u64){0x000000001f1f1f1f, 0x000000001f1f1f1f};
+  __m128i_result = (__m128i){0xadadadadffffffff, 0xadadadadffffffff};
   __m128i_out = __lsx_vshuf_b((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -81,8 +81,8 @@ main ()
 
   v2u64_op0 = (v2u64){0xffd7ff8dffa4ff7a, 0xff6cffb5ff98ff6e};
   v2u64_op1 = (v2u64){0xee297a731e5c5f86, 0x34947b4b11684f92};
-  v2u64_op2 = (v2u64){0xffc0000000000000, 0x7fffffffffffffff};
-  __m128i_result = (__m128i){0x0000868686868686, 0x0000000000000000};
+  v2u64_op2 = (v2u64){0x1f00000000000000, 0x1f1f1f1f1f1f1f1f};
+  __m128i_result = (__m128i){0xff86868686868686, 0xffffffffffffffff};
   __m128i_out = __lsx_vshuf_b((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -93,10 +93,10 @@ main ()
   __m128i_out = __lsx_vshuf_h((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0xffffffffffffffff, 0xffffffffffffffff};
+  v2u64_op0 = (v2u64){0x000f000f000f000f, 0x000f000f000f000f};
   v2u64_op1 = (v2u64){0x0000000000000000, 0x7fffffffffffffff};
   v2u64_op2 = (v2u64){0x0000000000000000, 0x0000000000000000};
-  __m128i_result = (__m128i){0x0000000000000000, 0x0000000000000000};
+  __m128i_result = (__m128i){0x7fff7fff7fff7fff, 0x7fff7fff7fff7fff};
   __m128i_out = __lsx_vshuf_h((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -121,10 +121,10 @@ main ()
   __m128i_out = __lsx_vshuf_h((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x0003000300a10003, 0x000300037ff000ff};
+  v2u64_op0 = (v2u64){0x0003000300010003, 0x000300030000000f};
   v2u64_op1 = (v2u64){0x0003000300a10003, 0x000300037ff000ff};
   v2u64_op2 = (v2u64){0x0000000000000000, 0x000000007ff000ff};
-  __m128i_result = (__m128i){0x0000000000000000, 0x0000000000000000};
+  __m128i_result = (__m128i){0x0000000000000000, 0x0000000000000003};
   __m128i_out = __lsx_vshuf_h((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -142,10 +142,10 @@ main ()
   __m128i_out = __lsx_vshuf_h((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x00000001ffffff29, 0x00000000000000c0};
+  v2u64_op0 = (v2u64){0x0000000100000001, 0x0000000000000000};
   v2u64_op1 = (v2u64){0x0000000000000000, 0x0000000000000000};
   v2u64_op2 = (v2u64){0x00000001ffffff29, 0x00000000000000c0};
-  __m128i_result = (__m128i){0x0000000100000001, 0xffffff2900000000};
+  __m128i_result = (__m128i){0x0000000100000001, 0xffffff29ffffff29};
   __m128i_out = __lsx_vshuf_w((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -184,24 +184,24 @@ main ()
   __m128i_out = __lsx_vshuf_w((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x0000000004870ba0, 0x0000000000000000};
+  v2u64_op0 = (v2u64){0x0000000000000000, 0x0000000000000000};
   v2u64_op1 = (v2u64){0x0000001000000010, 0x0000000000000000};
   v2u64_op2 = (v2u64){0x8000000000000103, 0x8000000100000000};
-  __m128i_result = (__m128i){0x0000010300000000, 0x0000010300000103};
+  __m128i_result = (__m128i){0x0000010300000103, 0x0000010300000103};
   __m128i_out = __lsx_vshuf_w((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x05fafe0101fe000e, 0x000000ff0000857a};
+  v2u64_op0 = (v2u64){0x0000000100000006, 0x0000000700000002};
   v2u64_op1 = (v2u64){0x0000000000000000, 0x0000000000000000};
   v2u64_op2 = (v2u64){0xffffffffffffffff, 0xffffffffffffffff};
-  __m128i_result = (__m128i){0xffffffff00000000, 0x0000000000000000};
+  __m128i_result = (__m128i){0xffffffff00000000, 0x00000000ffffffff};
   __m128i_out = __lsx_vshuf_w((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0xacad25090caca5a4, 0xada4808924882588};
+  v2u64_op0 = (v2u64){0x0000000100000004, 0x0000000100000000};
   v2u64_op1 = (v2u64){0x030298a6a1030a49, 0x021b7d24c9678a35};
   v2u64_op2 = (v2u64){0x0000000000000000, 0x0000000000000000};
-  __m128i_result = (__m128i){0x0000000000000000, 0x0000000000000000};
+  __m128i_result = (__m128i){0x00000000a1030a49, 0x0000000000000000};
   __m128i_out = __lsx_vshuf_w((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -212,10 +212,10 @@ main ()
   __m128i_out = __lsx_vshuf_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x21fc7081ec69b5f2, 0xdfa6e0c6d46cdc13};
+  v2u64_op0 = (v2u64){0x0000000000000002, 0x0000000000000003};
   v2u64_op1 = (v2u64){0x000000002c002400, 0x0000000000000000};
   v2u64_op2 = (v2u64){0xffff6080ffff4417, 0xffffb96bffff57c9};
-  __m128i_result = (__m128i){0x0000000000000000, 0x0000000000000000};
+  __m128i_result = (__m128i){0x000000002c002400, 0x0000000000000000};
   __m128i_out = __lsx_vshuf_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
@@ -233,17 +233,17 @@ main ()
   __m128i_out = __lsx_vshuf_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x030298a621030a49, 0x021b7d2449678a35};
+  v2u64_op0 = (v2u64){0x0000000000000001, 0x0000000000000001};
   v2u64_op1 = (v2u64){0x7fff7fff7fff7fff, 0x0000000000000000};
   v2u64_op2 = (v2u64){0x030298a6a1030a49, 0x021b7d24c9678a35};
-  __m128i_result = (__m128i){0x0000000000000000, 0x021b7d24c9678a35};
+  __m128i_result = (__m128i){0x021b7d24c9678a35, 0x021b7d24c9678a35};
   __m128i_out = __lsx_vshuf_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
-  v2u64_op0 = (v2u64){0x7f7f80807f7f8080, 0x7f7f00007f7f0000};
+  v2u64_op0 = (v2u64){0x0000000000000000, 0x0000000000000000};
   v2u64_op1 = (v2u64){0x0000fffe0000fffe, 0x0000000000000000};
   v2u64_op2 = (v2u64){0x7f8000007f800000, 0x7f8000007f800000};
-  __m128i_result = (__m128i){0x0000000000000000, 0x7f8000007f800000};
+  __m128i_result = (__m128i){0x7f8000007f800000, 0x7f8000007f800000};
   __m128i_out = __lsx_vshuf_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
   check_lsx_out(&__m128i_result, &__m128i_out, sizeof(__m128i_out), __FILE__, __LINE__);
 
