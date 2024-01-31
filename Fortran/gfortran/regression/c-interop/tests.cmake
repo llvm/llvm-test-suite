@@ -8,7 +8,7 @@
 # where
 #
 #     <kind>         is one of 'preprocess', 'assemble', 'compile', 'link' or
-#                    'execute'.
+#                    'run'.
 #
 #     <sources>      is a space separated list of sources files that comprise
 #                    the test. The first file is the "main" file. The rest
@@ -19,7 +19,7 @@
 #                    is expected to trigger a compile-time or runtime error.
 #
 #     <options>      is a space separated list of options to be passed to the
-#                    the compiler when building the test.
+#                    compiler when building the test.
 #
 #     <enabled-on>   is a space-separated list of targets on which the test is
 #                    enabled. Each element of the list will be a regular
