@@ -8,6 +8,7 @@ add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
 add_subdirectory(X86)
+add_subdirectory(AArch64)
 
 list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int)
 

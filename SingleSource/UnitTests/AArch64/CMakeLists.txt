@@ -1,0 +1,5 @@
+if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  if(ARCH STREQUAL "AArch64")
+    llvm_singlesource(PREFIX "aarch64-")
+  endif()
+endif()
