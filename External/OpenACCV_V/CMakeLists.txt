@@ -31,6 +31,7 @@ function (add_OpenACC_vv LANG)
 
     llvm_test_executable(${_name} "${TEST_SUITE_OPENACCVV_ROOT}/Tests/${_file}")
     
+    # Add -fopenmp to linker command line; only done with target_link_options.
     target_link_options(${_name} PRIVATE ${OpenACC_${LANG}_FLAGS})
 
     # CMake's find_package(OpenACC) currently does not not introspect flags necessary for offloading.
