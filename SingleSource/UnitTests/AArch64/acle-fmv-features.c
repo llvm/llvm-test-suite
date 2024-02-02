@@ -95,6 +95,8 @@ CHECK(sha2, {
         : : : "v0"
     );
 })
+// FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
+__attribute__((target("sha2")))
 CHECK(sha1, {
     asm volatile (
         "fmov s0, #0" "\n"
@@ -124,6 +126,8 @@ CHECK(rcpc, {
         : : "r" (&x) : "w0"
     );
 })
+// FIXME: rcpc2 instructions are under +rcpc-immo in clang, and not +rcpc2.
+__attribute__((target("rcpc-immo")))
 CHECK(rcpc2, {
     int x;
     asm volatile (
@@ -193,18 +197,7 @@ CHECK(ssbs2, {
 CHECK(bti, {
     // The only test for this requires reading a register that is only
     // accessible to EL1.
-    #ifdef __linux__
-        // On Linux, the kernel emulates this system register read in a trap
-        // handler, so we can just do the read as you would in EL1.
-        int val = 0;
-        asm volatile (
-            "mrs %0, ID_AA64PFR1_EL1"
-            : "=r"(val)
-        );
-        // https://developer.arm.com/documentation/ddi0601/2023-12/AArch64-Registers/ID-AA64PFR1-EL1--AArch64-Processor-Feature-Register-1?lang=en#fieldset_0-3_0
-        if (val & 0xF != 0x1)
-            return false;
-    #elif defined(__APPLE__)
+    #if defined(__APPLE__)
         // On Apple platforms, we need to check a sysctl.
         int32_t val = 0;
         size_t size = sizeof(val);

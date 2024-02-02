@@ -1,5 +1,10 @@
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
   if(ARCH STREQUAL "AArch64")
-    llvm_singlesource(PREFIX "aarch64-")
+    set(Source )
+    # TODO: this test is currently only supported on Darwin platforms:
+    if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+      list(APPEND Source acle-fmv-features.c)
+    endif()
+    llvm_singlesource(PREFIX "aarch64-" Source)
   endif()
 endif()
