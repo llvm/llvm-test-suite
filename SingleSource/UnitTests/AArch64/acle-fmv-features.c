@@ -95,12 +95,11 @@ CHECK(sha2, {
         : : : "v0"
     );
 })
-// FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
-__attribute__((target("sha2")))
 CHECK(sha1, {
     asm volatile (
         "fmov s0, #0" "\n"
-        "sha1h s0, s0" "\n"
+        // FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
+        ".inst 0x5e280800" "\n" // sha1h s0, s0
         : : : "v0"
     );
 })
@@ -126,12 +125,12 @@ CHECK(rcpc, {
         : : "r" (&x) : "w0"
     );
 })
-// FIXME: rcpc2 instructions are under +rcpc-immo in clang, and not +rcpc2.
-__attribute__((target("rcpc-immo")))
 CHECK(rcpc2, {
     int x;
     asm volatile (
-        "ldapurb w0, [%0]"
+        "mov x1, %0" "\n"
+        // FIXME: rcpc2 instructions are under +rcpc-immo in clang, and not +rcpc2.
+        ".inst 0x19400020" // ldapurb w0, [x1]
         : : "r" (&x) : "w0"
     );
 })
