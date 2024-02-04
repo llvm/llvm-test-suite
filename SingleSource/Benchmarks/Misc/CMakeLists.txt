@@ -32,4 +32,7 @@ set(Source
 if(NOT ARCH STREQUAL "PowerPC" OR NOT TARGET_OS STREQUAL "Darwin")
   list(APPEND Source dt.c)
 endif()
+if(ARCH STREQUAL "AArch64" AND TARGET_OS STREQUAL "Darwin")
+  list(APPEND Source aarch64-init-cpu-features.c)
+endif()
 llvm_singlesource()
