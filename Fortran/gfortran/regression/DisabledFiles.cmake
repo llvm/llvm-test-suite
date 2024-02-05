@@ -1205,6 +1205,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr106918.f90 # NYI: dynamic character length in struct constr
   pr92050.f90 # needs -fcheck=all
   winapi.f90 # needs -lkernel32 and target *-*-cygwin*
+  widechar_11.f90 # No ASSIGNMENT matches TYPE(c_ptr) and TYPE(__builtin_c_ptr)
 
   # error: 'fir.convert' op invalid type conversion
   achar_4.f90
