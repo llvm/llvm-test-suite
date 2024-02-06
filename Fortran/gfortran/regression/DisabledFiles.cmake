@@ -717,29 +717,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr50769.f90
   realloc_on_assign_16a.f90
 
-  # unimplemented: gather rhs LEN parameters in assignment to allocatable
-  allocate_assumed_charlen_4.f90
-  allocate_error_5.f90
-  associate_58.f90
-  bounds_check_22.f90
-  char_length_20.f90
-  char_length_21.f90
-  deferred_character_1.f90
-  deferred_character_14.f90
-  deferred_character_2.f90
-  deferred_character_21.f90
-  deferred_character_22.f90
-  deferred_character_27.f90
-  deferred_character_34.f90
-  deferred_character_4.f90
-  deferred_character_7.f90
-  dependency_50.f90
-  dependency_51.f90
-  elemental_function_3.f90
-  elemental_function_2.f90
-  realloc_on_assign_14.f90
-  widechar_11.f90
-
   # unimplemented: passing dynamically optional argument to elemental procedures
   bounds_check_9.f90
   bounds_check_fail_2.f90
@@ -988,6 +965,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   forall_3.f90
   pr49698.f90
 
+  # unimplemented: compute elemental function result length parameters in HLFIR
+  elemental_function_3.f90
+
   # These tests are NYI: support for polymorphic types; when polymorphic
   # type support is enabled by option, they pass.  Delete these when
   # polymorphic types are enabled by default.
@@ -1225,6 +1205,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr106918.f90 # NYI: dynamic character length in struct constr
   pr92050.f90 # needs -fcheck=all
   winapi.f90 # needs -lkernel32 and target *-*-cygwin*
+  widechar_11.f90 # No ASSIGNMENT matches TYPE(c_ptr) and TYPE(__builtin_c_ptr)
 
   # error: 'fir.convert' op invalid type conversion
   achar_4.f90
@@ -1960,6 +1941,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   widechar_intrinsics_8.f90
   write_check.f90
   zero_sized_1.f90
+  elemental_function_2.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -2760,4 +2742,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Requires -ffloat-store
   nearest_1.f90
+
+  # Requires -fcheck=mem
+  allocate_error_5.f90
 )
