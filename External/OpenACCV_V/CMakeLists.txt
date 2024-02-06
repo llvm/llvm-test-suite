@@ -8,7 +8,16 @@ option(TEST_SUITE_FORCE_ALL "Execute all OpenACC V&V tests, even those known to 
 set(TEST_SUITE_OFFLOADING_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for offloading")
 set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for offloading")
 
+set(EXPECT_FAIL
+	)
+
 function (add_OpenACC_vv LANG)
+  
+  if (NOT OpenACC_${LANG}_FOUND)
+    message(FATAL_ERROR "OpenACC for $(LANG} not found ")
+    return ()
+  endif ()
+
   if ("${LANG}" STREQUAL "C")
     set(_langext ".c")
   elseif ("${LANG}" STREQUAL "CXX")
@@ -23,15 +32,21 @@ function (add_OpenACC_vv LANG)
   foreach (_file IN LISTS _tests_sources)
     get_filename_component(_ext "${_file}" EXT)
     get_filename_component(_basename "${_file}" NAME_WE)
-    get_filename_component(_directory "${_file}" DIRECTORY)
     string(REPLACE "." "" _ext "${_ext}")
     set(_name "acctargetvv-${_basename}.${_ext}")
+    
+    if (NOT TEST_SUITE_FORCE_ALL AND "$(_file)" IN_LIST EXPECT_FAIL)
+      message(STATUS "Skipping OpenACC V&V test ${_file}")
+      continue ()
+    else ()
+      message(STATUS "Compiling OpenACC V&V test ${_file}")
+    endif ()
 
     llvm_test_run()
 
     llvm_test_executable(${_name} "${TEST_SUITE_OPENACCVV_ROOT}/Tests/${_file}")
     
-    # Add -fopenmp to linker command line; only done with target_link_options.
+    # Add -fopenacc to linker command line; only done with target_link_options.
     target_link_options(${_name} PRIVATE ${OpenACC_${LANG}_FLAGS})
 
     # CMake's find_package(OpenACC) currently does not not introspect flags necessary for offloading.
@@ -42,7 +57,15 @@ endfunction ()
 
 llvm_externals_find(TEST_SUITE_OPENACCVV_ROOT "OpenACCV_V" "OpenACC Offloading Validation & Verification Suite")
 
+
 if(TEST_SUITE_OPENACCVV_ROOT AND NOT TEST_SUITE_BENCHMARKING_ONLY)
+  if(OpenACC_FOUND)
+    message(STATUS "Adding OpenACC Validiation & Verification")
+  else()
+    message(STATUS "NOT using OpenACC Validiation & Verification because OpenACC was not found")
+    return()
+  endif()
+
   if(${CMAKE_VERSION} VERSION_LESS 3.25)
     message(STATUS "The cmake version must be at least 3.25 to perform OpenACC tests")
   endif()
