@@ -320,7 +320,7 @@ def parse_targets_into(
     if t.startswith('{') and t.endswith('}'):
         t = t[1:-1].strip()
 
-    # A complex expression is one which does not have any logical operators.
+    # A simple expression is one which does not have any logical operators.
     if ('&&' in t) or ('||' in t):
         warning('Ignoring target specification: {}', t)
         return
