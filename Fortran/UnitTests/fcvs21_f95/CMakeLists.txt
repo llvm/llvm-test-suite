@@ -79,11 +79,10 @@ else()
   list(FILTER Source EXCLUDE REGEX "FM509\.f$")
 endif()
 
-# Skip some tests that currently fail with flang on AArch64 when using libpgmath.
+# Skip some tests that currently fail with flang on Windows when using libpgmath.
 # FIXME: Reenable these tests after libpgmath is fixed or after we no longer
 # depend on it.
-if (CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang"
-    AND (ARCH STREQUAL "AArch64" OR TARGET_OS STREQUAL "Windows"))
+if (CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang" AND TARGET_OS STREQUAL "Windows")
   # Regex because the GLOB returns the full path to each file
   list(FILTER Source EXCLUDE REGEX "FM813\.f$")
   list(FILTER Source EXCLUDE REGEX "FM815\.f$")
