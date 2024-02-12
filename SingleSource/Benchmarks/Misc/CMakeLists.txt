@@ -1,3 +1,5 @@
+include(CheckSymbolExists)
+
 list(APPEND LDFLAGS -lm )
 list(APPEND CFLAGS -Wno-implicit-int)
 set(FP_TOLERANCE 0.001)
@@ -31,5 +33,12 @@ set(Source
 )
 if(NOT ARCH STREQUAL "PowerPC" OR NOT TARGET_OS STREQUAL "Darwin")
   list(APPEND Source dt.c)
+endif()
+if(ARCH STREQUAL "AArch64")
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/CheckHaveAArch64FMV.h "void __init_cpu_features_resolver(void);")
+  check_symbol_exists(__init_cpu_features_resolver ${CMAKE_CURRENT_BINARY_DIR}/CheckHaveAArch64FMV.h HAVE_AARCH64_FMV)
+  if(HAVE_AARCH64_FMV AND TARGET_OS STREQUAL "Darwin")
+    list(APPEND Source aarch64-init-cpu-features.c)
+  endif()
 endif()
 llvm_singlesource()
