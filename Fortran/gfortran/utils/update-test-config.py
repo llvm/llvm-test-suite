@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #
 # This script parses the DejaGNU annotations from the files in the gfortran test
-# suite and updates the static test configuration of the tests. This is required
-# to be run whenever the tests are updated with new tests from upstream
+# suite and updates the static test configuration files. This must
+# be run whenever the tests are updated with new tests from upstream
 # gfortran. There are currently several limitations in the way the annotations
-# are parsed and how they are dealt with when determining the static test
+# are parsed and how they are dealt with in the static test
 # configuration. These are described in inline comments. The format of the
 # static test configuration files is also documented inline.
 #
@@ -24,8 +24,11 @@ import typing
 
 # Class representing a single test. The fields of the test should be those that
 # are eventually serialized into the test configuration. The configuration will
-# only contain the test kind, the sources and flags that indicate what DejaGNU
-# annotations are present in the test file.
+# only contain the test kind, the sources and flags as determined directly
+# from the DejaGNU annotations in the corresponding source file(s). Any custom
+# handling of the test, e.g. to run it conditionally on some platform, should
+# not be present, either in this class or in the generated static test
+# configuration file.
 class Test:
     # int, [os.path], [str], [str], bool
     def __init__(
@@ -44,7 +47,7 @@ class Test:
         # The sources needed by the test. This will have at least one element.
         # The first element of the list will be the "main" file. The rest must
         # be in the order in which they should be compiled. The elements will be
-        # the basename's of the file because all dependent files are in the
+        # the basenames of the files because all dependent files are in the
         # same directory, so there is no need to have the full (or relative)
         # path.
         self.sources: list[str] = sources
@@ -71,10 +74,6 @@ class Test:
         # have been captured in the self.enabled_on member of this class.
         self.xfail: bool = expected_fail
 
-        # Whether to use separate compilation for this test (is this even
-        # necessary?)
-        self.separate_compilation = False
-
     def __eq__(self, other):
         if not isinstance(other, Test):
             return NotImplemented
@@ -86,8 +85,6 @@ class Test:
             self.enabled_on == other.enabled_on and \
             self.disabled_on == other.disabled_on
 
-    # The string-ified test is in comma-separated because that's all we need
-    # from this.
     def __str__(self):
         return ';'.join([
             self.kind,
@@ -187,6 +184,15 @@ def qsplit(s: str) -> list[str]:
         s = s[:-1]
     return s.split()
 
+# Drop the leading '{' and trailing '}', if any. This will only drop the
+# braces if both are present. The string will be unconditionally stripped of
+# leading and trailing whitespace.
+def strip_braces(s: str) -> str:
+    s = s.strip()
+    if s.startswith('{') and s.endswith('}'):
+        s = s[1:-1].strip()
+    return s
+
 # Try to match the line with the regex. If the line matches, add the match
 # object to the MOUT list and return True. Otherwise, leave the MOUT list
 # unchanged and return False.
@@ -197,7 +203,7 @@ def try_match(regex: re.Pattern, line: str, mout: list[re.Match[str]]) -> bool:
         return True
     return False
 
-# Count the number of elements in the list that match satisfy the predicate.
+# Count the number of elements in the list that satisfy the predicate.
 def count_if(l, predicate):
     return sum(1 for e in l if predicate(e))
 
@@ -205,7 +211,7 @@ def count_if(l, predicate):
 def printf(fmt: str, *args) -> None:
     print(fmt.format(*args))
 
-# Print a message in verbose mode.
+# Print a message.
 def message(fmt: str, *args) -> None:
     printf(fmt, *args)
 
@@ -245,8 +251,7 @@ def parse_enabled_targets(t: str) -> tuple[list[str], list[str]]:
 
     # An expression can be wrapped with braces. While this seems to be necessary
     # for complex expressions, it can be used with simple expressions as well.
-    if t.startswith('{') and t.endswith('}'):
-        t = t[1:-1].strip()
+    t = strip_braces(t)
 
     # A simple expression may be a sequence of targets.
     for tgt in t.split(' '):
@@ -287,8 +292,7 @@ def parse_disabled_targets(t: str) -> list[str]:
 
     # An expression can be wrapped with braces. While this seems to be necessary
     # for complex expressions, it can be used with simple expressions as well.
-    if t.startswith('{') and t.endswith('}'):
-        t = t[1:-1].strip()
+    t = strip_braces(t)
 
     # A simple expression may be a sequence of targets.
     for tgt in t.split(' '):
@@ -317,8 +321,7 @@ def parse_targets_into(
 
     # An expression can be wrapped with braces. While this seems to be necessary
     # for complex expressions, it can be used with simple expressions as well.
-    if t.startswith('{') and t.endswith('}'):
-        t = t[1:-1].strip()
+    t = strip_braces(t)
 
     # A simple expression is one which does not have any logical operators.
     if ('&&' in t) or ('||' in t):
