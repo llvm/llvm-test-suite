@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.13.4)
 
 include(CheckSymbolExists)
 
+option(TEST_SUITE_VAST_ENABLE "Run tests through VAST" OFF)
+set(TEST_SUITE_VAST_TARGET "" CACHE STRING "Select target dialect for VAST")
 
 project(test-suite C CXX)
 
