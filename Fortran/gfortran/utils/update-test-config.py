@@ -30,7 +30,6 @@ import typing
 # not be present, either in this class or in the generated static test
 # configuration file.
 class Test:
-    # int, [os.path], [str], [str], bool
     def __init__(
         self,
         kind: str,
