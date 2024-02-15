@@ -63,18 +63,62 @@ set(TEST_SUITE_FORTRAN_ISO_C_HEADER_DIR "" CACHE STRING
 # be because they are currently unsupported and might eventually be supported
 # or because they are GCC-specific and will never be supported.
 set(FLANG_ERRORING_FFLAGS
+  # The "flags" that do not start with a hyphen (-) are actually arguments to
+  # some other flag but use the "-flag value" syntax (as opposed to the
+  # "-flag=value" syntax). Since we don't actually parse the command line, they
+  # are treated as if they were "flags" .
+  analyzer-max-svalue-depth=0
+  ggc-min-expand=0
+  ggc-min-heapsize=0
+  iv-max-considered-uses=2
+  large-stack-frame=4000
   max-completely-peel-loop-nest-depth=1
+  max-completely-peeled-insns=0
+  max-completely-peeled-insns=200
+  max-cse-insns=0
+  max-inline-insns-auto=0
+  max-inline-insns-single=0
+  parloops-chunk-size=2
+  parloops-min-per-thread=5
+  sccvn-max-alias-queries-per-access=1
+  vect-epilogues-nomask=0
+  vect-max-peeling-for-alignment=0
+
+  # This is an argument that should go with -idirafter which is not correctly
+  # handled right now. Once that is fixed, this can be removed.
+  fdaf
+  "/fdaf/"
+
+  -dA
+  -dH
+  -dirafter
+  -dp
+  -faggressive-function-elimination
+  -fall-intrinsics
+  -fallow-argument-mismatch
   -fallow-invalid-boz
+  -fautomatic
+  -fblas-matmul-limit=1
+  -fbounds-check
   -fcheck-array-temporaries
+  -fcheck=all
+  -fcheck=bits
   -fcheck=bounds
   -fcheck=do
+  -fcheck=mem
+  -fcheck=pointer
   -fcheck=recursion
+  -fcompare-debug
   -fcoarray=lib
+  -fcoarray=single
   -fcray-pointer
+  -fd-lines-as-code
+  -fd-lines-as-comments
   -fdec
   -fdec-format-defaults
   -fdec-static
   -fdec-structure
+  -fdollar-ok
   -frecord-marker=4
   -fbounds-check
   -fcheck-bounds
@@ -84,140 +128,317 @@ set(FLANG_ERRORING_FFLAGS
   # form in which case, this will have to be modified to accommodate those.
   -fdefault-real-10
   -fdefault-real-16
+  -fdiagnostics-format=json
+  -fdiagnostics-show-option
+  -fdollar-ok
   -fdump-ipa-cp-details
   -fdump-ipa-fnsummary-details
   -fdump-ipa-inline-details
+  -fdump-ipa-sra-details
+  -fdump-rtl-combine
   -fdump-rtl-expand
   -fdump-tree-all
   -fdump-tree-cunroll-details
   -fdump-tree-cunrolli-details
+  -fdump-tree-dom2
+  -fdump-tree-dom2-details
+  -fdump-tree-forwprop2
   -fdump-tree-fre1
   -fdump-tree-gimple
   -fdump-tree-ifcvt
+  -fdump-tree-ldist-all
+  -fdump-tree-ldist-details
+  -fdump-tree-lim2
+  -fdump-tree-lim2-details
+  -fdump-tree-linterchange-details
   -fdump-tree-lversion-details
   -fdump-tree-omplower
   -fdump-tree-optimized
+  -fdump-tree-optimized-raw
   -fdump-tree-original
+  -fdump-tree-original-lineno
+  -fdump-tree-parloops2-details
   -fdump-tree-pcom-details
+  -fdump-tree-pre
   -fdump-tree-pre-details
-  -fdump-tree-profile-estimate
+  -fdump-tree-profile_estimate
   -fdump-tree-reassoc1
+  -fdump-tree-slp-details
+  -fdump-tree-slp2-details
   -fdump-tree-vect-details
+  -fexceptions
   -fexpensive-optimizations
+  -fexternal-blas
   -ff2c
+  -ffixed-xmm1
+  -ffixed-xmm10
+  -ffixed-xmm11
+  -ffixed-xmm12
+  -ffixed-xmm13
+  -ffixed-xmm14
+  -ffixed-xmm15
+  -ffixed-xmm2
+  -ffixed-xmm3
+  -ffixed-xmm4
+  -ffixed-xmm5
+  -ffixed-xmm6
+  -ffixed-xmm7
+  -ffixed-xmm8
+  -ffixed-xmm9
+  -ffloat-store
   -ffree-line-length-none
   -ffrontend-optimize
   -fgcse
+  -fgcse-after-reload
+  -fgnu-tm
+  -findirect-inlining
+  -finit-character=32
+  -finit-derived
+  -finit-local-zero
+  -finit-integer=42
+  -finit-integer=12345678
+  -finit-logical=0
+  -finit-logical=true
+  -finit-real=inf
+  -finline-functions
   -finline-matmul-limit=0
   -finline-matmul-limit=10
   -finline-matmul-limit=100
   -finline-matmul-limit=1000
   -finline-matmul-limit=2
   -finline-matmul-limit=30
+  -finline-small-functions
+  -finstrument-functions
   -fipa-cp
   -fipa-cp-clone
   -fipa-pta
   -fipa-reference
+  -flinker-output=nolto-rel
+  -floop-interchange
+  -fmax-array-constructor=100000
+  -fmax-stack-var-size=8
+  -fmax-stack-var-size=100
+  -fmodule-private
   -fmodulo-sched
   -fno-align-commons
   -fno-asynchronous-unwind-tables
   -fno-backtrace
   -fno-bounds-check
   -fno-check-array-temporaries
+  -fno-code-hoisting
   -fno-dec
+  -fno-dse
+  -fno-early-inlining
   -fno-f2c
+  -fno-frontend-loop-interchange
   -fno-frontend-optimize
   -fno-guess-branch-probability
+  -fno-init-local-zero
   -fno-inline
+  -fno-inline-arg-packing
+  -fno-inline-functions-called-once
   -fno-ipa-cp
+  -fno-ipa-icf
   -fno-ipa-modref
   -fno-ipa-sra
+  -fno-move-loop-stores
+  -fno-openacc
+  -fno-openmp
   -fno-pad-source
+  -fno-protect-parens
   -fno-range-check
   -fno-realloc-lhs
+  -fno-schedule-insns
   -fno-sign-zero
   -fno-strict-aliasing
+  -fno-trapping-math
   -fno-tree-ccp
+  -fno-tree-ch
+  -fno-tree-copy-prop
+  -fno-tree-dce
+  -fno-tree-dominator-opts
   -fno-tree-forwprop
   -fno-tree-fre
+  -fno-tree-loop-ch
+  -fno-tree-loop-distribute-patterns
+  -fno-tree-loop-im
+  -fno-tree-loop-ivcanon
   -fno-tree-loop-optimize
   -fno-tree-loop-vectorize
+  -fno-tree-pre
+  -fno-tree-scev-cprop
+  -fno-tree-sink
+  -fno-tree-slp-vectorize
+  -fno-tree-vectorize
+  -fno-tree-vrp
+  -fnon-call-exceptions
+  -fopenmp-simd
+  -fopt-info-vec-optimized
   -fpad-source
   -fpeel-loops
+  -fpre-include=simd-builtins-1.h
+  -fpre-include=simd-builtins-3.h
+  -fpre-include=simd-builtins-4.h
+  -fpre-include=simd-builtins-7.h
+  -fpre-include=simd-builtins-8.h
+  -fpreprocessed
+  -fpredictive-commoning
+  -fprefetch-loop-arrays
+  -fprofile-arcs
+  -fprofile-generate
+  -frecord-marker=4
   -frecursive
+  -frepack-arrays
+  -frounding-math
+  -fsanitize=float-cast-overflow
+  -fsanitize=null
+  -fsanitize=signed-integer-overflow
   -fsanitize=undefined
   -fschedule-insns
+  -fsecond-underscore
+  -fsel-sched-pipelining
+  -fsel-sched-pipelining-outer-loops
+  -fselective-scheduling
+  -fselective-scheduling2
   -fset-g77-defaults
   -fshort-enums
   -fstrict-aliasing
+  -fsplit-loops
   -ftest-forall-temp
+  -ftest-coverage
+  -ftracer
+  -ftrapv
   -ftree-loop-distribution
+  -ftree-loop-if-convert
   -ftree-loop-vectorize
+  -ftree-parallelize-loops
+  -ftree-parallelize-loops=2
   -ftree-pre
   -ftree-slp-vectorize
   -ftree-tail-merge
   -ftree-vectorize
   -ftree-vrp
+  -funconstrained-commons
+  -funroll-all-loops
   -funroll-loops
+  -funsafe-math-optimizations
+  -fvect-cost-model=dynamic
+  -fwhole-program
   -fwrapv
+  -gno-strict-dwarf
+  -idirafter
+  -mavx
+  -mavx2
+  -mavx512f
+  -mcmodel=medium
   -mdalign
   -mdejagnu-cpu=power4
+  -mdejagnu-cpu=power7
+  -mdejagnu-cpu=power10
   -mfpmath=387
   -mfpmath=sse
+  -mlow-precision-sqrt
+  -mno-avx
+  -mno-power8-vector
+  -mno-power9-vector
+  -mprefer-avx128
+  -msse
+  -msse2
+  -msse3
+  -msse4.1
   -mtune=amdfam10
+  -mtune=generic
+  -mveclibabi=mass
+  -mveclibabi=svml
+  -mvsx
+  -mvzeroupper
+  -mzarch
+  -nostdinc
+  -nostdlib
   # -Os might eventually be supported, so this might also need to be removed
   # at some point
   -Og
   -Os
+  -pedantic-errors
+  # -pthread should be supported at some point.
+  -pthread
+  -r
   # At some point, if we ever support explicit standard flags, some of these
   # should be removed.
   -pedantic-errors
   -std=gnu
   -std=legacy
   -std=f95
+  --std=f95
   -std=f2003
   -std=f2008
   -std=f2008ts
   # At the time of writing, -W warnings are not supported. flang errors out
   # saying that only -Werror is supported.
+  -W
+  -Waliasing
   -Wall
   -Wampersand
   -Wanalyzer-too-complex
   -Warray-bounds
   -Warray-temporaries
+  -Wc-binding-type
+  -Wcharacter-truncation
+  -Wcompare-reals
   -Wconversion
   -Wconversion-extra
-  -Werner
+  -Wdate-time
+  -Wdo-subscript
   -Werror
   -Wextra
   -Wfunction-elimination
+  -Wimplicit-interface
   -Wimplicit-procedure
+  -Winteger-division
   -Wintrinsic-shadow
   -Wintrinsics-std
   -Wline-truncation
+  -Wmaybe-uninitialized
+  -Wmissing-include-dirs
   -Wno-all
+  -Wno-analyzer-malloc-leak
+  -Wno-analyzer-memory-leak
   -Wno-analyzer-null-dereference
   -Wno-analyzer-possible-null-dereference
   -Wno-analyzer-too-complex
   -Wno-analyzer-use-of-uninitialized-value
   -Wno-c-binding-type
   -Wno-complain-wrong-lang
+  -Wno-cpp
   -Wno-error
+  -Wno-error=cpp
   -Wno-intrinsic-shadow
   -Wno-intrinsics-std
+  -Wno-line-truncation
   -Wno-lto-type-mismatch
+  -Wno-missing-include-dirs
+  -Wno-overwrite-recursive
+  -Wno-pedantic
   -Wno-tabs
   -Wno-underflow
+  -Wno-uninitialized
+  -Wno-unused-dummy-argument
+  -Wno-zerotrip
+  -Wopenacc-parallelism
+  -Wpadded
   -Wrealloc-lhs
   -Wrealloc-lhs-all
   -Wreturn-type
   -Wstringop-overflow
   -Wsurprising
   -Wtabs
+  -Wtarget-lifetime
+  -Wundefined-do-loop
   -Wuninitialized
   -Wunused
   -Wunused-dummy-argument
   -Wunused-function
+  -Wunused-label
   -Wunused-parameter
   -Wunused-variable
   -Wzerotrip
