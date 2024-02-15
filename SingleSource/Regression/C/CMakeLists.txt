@@ -4,6 +4,7 @@ if(ARCH MATCHES "x86" OR ARCH MATCHES "riscv" OR
    ARCH MATCHES "LoongArch")
   add_subdirectory(gcc-c-torture)
   add_subdirectory(gcc-dg)
+  add_subdirectory(gcc-vect)
 endif()
 
 list(APPEND LDFLAGS -lm)
