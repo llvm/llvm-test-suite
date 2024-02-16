@@ -62,6 +62,13 @@ set(TEST_SUITE_FORTRAN_ISO_C_HEADER_DIR "" CACHE STRING
 # The following cause errors if they are passed to flang via FFLAGS. This could
 # be because they are currently unsupported and might eventually be supported
 # or because they are GCC-specific and will never be supported.
+#
+# FIXME: The flags here necessarily include the value as well, not just the
+# flag itself. For instance, in the list are -fcheck=all, -fcheck=bits etc. In
+# principle, one only needs the -fcheck. The argument should not matter. The
+# problem is that the annotation parser currently does not parse the flag into
+# `flag-name` and `flag-value`. Once this is fixed, we need only have the
+# flag name here.
 set(FLANG_ERRORING_FFLAGS
   # The "flags" that do not start with a hyphen (-) are actually arguments to
   # some other flag but use the "-flag value" syntax (as opposed to the
