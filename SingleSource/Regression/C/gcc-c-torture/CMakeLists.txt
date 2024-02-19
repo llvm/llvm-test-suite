@@ -55,8 +55,9 @@ function(gcc_torture_execute_test File)
 
   llvm_test_executable_no_test(${_target} ${File})
   llvm_test_run()
-
-  llvm_add_test_for_target(${_target})
+  if (TEST_SUITE_VAST_TARGET STREQUAL "")
+    llvm_add_test_for_target(${_target})
+  endif()
 endfunction()
 
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
