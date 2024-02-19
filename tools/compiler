@@ -15,7 +15,7 @@ main() {
         esac
         shift
     done
-    echo "compiling with ${COMPILER}"
+    #echo "compiling with ${COMPILER} with ${PARAMS[@]}"
     set -- "${PARAMS[@]}"
     if [ -z "$COMPILER" ]; then
         clang "$@"
