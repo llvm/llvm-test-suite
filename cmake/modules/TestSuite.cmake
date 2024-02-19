@@ -44,29 +44,48 @@ function(llvm_test_data target)
   endforeach()
 endfunction()
 
+function(generate_mlir target sources)
+    add_custom_command(
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
+        COMMAND ${CMAKE_C_COMPILER} ${COMPILE_FLAGS} ${sources}
+        COMMENT "Generating mlir file"
+    )
+    add_custom_target(
+        ${target} ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
+    )
+    set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir PARENT_SCOPE)
+endfunction()
+
 function(llvm_test_executable_no_test target)
-  add_executable(${target} ${ARGN})
-  append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
-  append_target_flags(COMPILE_FLAGS ${target} ${CPPFLAGS})
-  append_target_flags(COMPILE_FLAGS ${target} ${CXXFLAGS})
-  append_target_flags(COMPILE_FLAGS ${target} ${FFLAGS})
-  # Note that we cannot use target_link_libraries() here because that one
-  # only interprets inputs starting with '-' as flags.
-  append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})
-  set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target})
-  if(TEST_SUITE_PROFILE_USE)
-    append_target_flags(COMPILE_FLAGS ${target} -fprofile-instr-use=${target_path}.profdata)
-    append_target_flags(LINK_LIBRARIES ${target} -fprofile-instr-use=${target_path}.profdata)
-  endif()
+  if (NOT TEST_SUITE_VAST_TARGET STREQUAL "")
+    generate_mlir(${target} ${ARGN})
+    set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir PARENT_SCOPE)
+  else()
+    add_executable(${target} ${ARGN})
+    append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target} ${CPPFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target} ${CXXFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target} ${FFLAGS})
+    # Note that we cannot use target_link_libraries() here because that one
+    # only interprets inputs starting with '-' as flags.
+    append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})
+    set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target})
+    if(TEST_SUITE_PROFILE_USE)
+      append_target_flags(COMPILE_FLAGS ${target} -fprofile-instr-use=${target_path}.profdata)
+      append_target_flags(LINK_LIBRARIES ${target} -fprofile-instr-use=${target_path}.profdata)
+    endif()
 
-  llvm_codesign(${target})
-  set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
-  test_suite_add_build_dependencies(${target})
+    llvm_codesign(${target})
+    set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
+    test_suite_add_build_dependencies(${target})
 
-  if(TEST_SUITE_LLVM_SIZE)
-    add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<SHELL_PATH:$<TARGET_FILE:${target}>>
-      > $<SHELL_PATH:$<TARGET_FILE:${target}>>.size)
+    if (TEST_SUITE_VAST_TARGET STREQUAL "" AND (NOT SETTING_TESTS))
+      if(TEST_SUITE_LLVM_SIZE)
+        add_custom_command(TARGET ${target} POST_BUILD
+          COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<SHELL_PATH:$<TARGET_FILE:${target}>>
+          > $<SHELL_PATH:$<TARGET_FILE:${target}>>.size)
+      endif()
+    endif()
   endif()
 endfunction()
 
