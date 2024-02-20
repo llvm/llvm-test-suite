@@ -192,7 +192,7 @@ def print_filter_stats(reason, before, after):
 # in the middle
 def truncate(string, prefix_len, suffix_len):
     return re.sub(
-        "^(.{%d}).*(.{%d})$" % (prefix_len, suffix_len), "\g<1>...\g<2>", string
+        "^(.{%d}).*(.{%d})$" % (prefix_len, suffix_len), r"\g<1>...\g<2>", string
     )
 
 
