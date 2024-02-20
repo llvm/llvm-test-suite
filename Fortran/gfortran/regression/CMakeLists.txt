@@ -11,10 +11,7 @@
 set(PREFIX_EXECUTE "gfortran-regression-execute")
 set(PREFIX_COMPILE "gfortran-regression-compile")
 
-set(TESTS)
-gfortran_populate_tests(TESTS)
-gfortran_add_execute_tests_from("${TESTS}")
-gfortran_add_compile_tests_from("${TESTS}")
+gfortran_populate_tests()
 
 add_subdirectory(analyzer)
 add_subdirectory(asan)

@@ -6,6 +6,4 @@
 #
 #===------------------------------------------------------------------------===#
 
-set(TESTS)
-gfortran_populate_tests(TESTS)
-gfortran_add_execute_tests("${TESTS}")
+gfortran_populate_tests()
