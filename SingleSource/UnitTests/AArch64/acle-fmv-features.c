@@ -196,7 +196,14 @@ CHECK(ssbs2, {
 CHECK(bti, {
     // The only test for this requires reading a register that is only
     // accessible to EL1.
-    #if defined(__APPLE__)
+    #ifdef __linux__
+        int val = 0;
+        asm volatile("mrs %0, ID_AA64PFR1_EL1" : "=r"(val));
+        // ID_AA64PFR1_EL1.BT, bits [3:0] = 0b0001 if Branch Target Identification
+        // mechanism implemented.
+        if ((val & 0xF) != 0x1)
+          return false;
+    #elif defined(__APPLE__)
         // On Apple platforms, we need to check a sysctl.
         int32_t val = 0;
         size_t size = sizeof(val);
