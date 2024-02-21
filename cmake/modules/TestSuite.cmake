@@ -45,10 +45,21 @@ function(llvm_test_data target)
 endfunction()
 
 function(generate_mlir target sources)
+
+    add_executable(${target}-bogus EXCLUDE_FROM_ALL ${sources})
+    append_target_flags(COMPILE_FLAGS ${target}-bogus ${CFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target}-bogus ${CPPFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target}-bogus ${CXXFLAGS})
+    append_target_flags(COMPILE_FLAGS ${target}-bogus ${FFLAGS})
+    # Note that we cannot use target_link_libraries() here because that one
+    # only interprets inputs starting with '-' as flags.
+    # append_target_flags(LINK_LIBRARIES ${target}-bogus ${LDFLAGS})
+
+    get_target_property(EXE_COMPILE_OPTIONS ${target}-bogus COMPILE_OPTIONS)
     add_custom_command(
-        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
-        COMMAND ${CMAKE_C_COMPILER} ${COMPILE_FLAGS} ${sources}
-        COMMENT "Generating mlir file"
+         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
+         COMMAND ${CMAKE_C_COMPILER} ${EXE_COMPILE_OPTIONS} -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir" ${sources}
+         COMMENT "Generating mlir file for ${target}"
     )
     add_custom_target(
         ${target} ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
@@ -57,9 +68,10 @@ function(generate_mlir target sources)
 endfunction()
 
 function(llvm_test_executable_no_test target)
-  if (NOT TEST_SUITE_VAST_TARGET STREQUAL "")
+  if(TEST_GENERATION)
     generate_mlir(${target} ${ARGN})
-    set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir PARENT_SCOPE)
+    test_suite_add_build_dependencies(${target})
+    set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   else()
     add_executable(${target} ${ARGN})
     append_target_flags(COMPILE_FLAGS ${target} ${CFLAGS})
@@ -78,14 +90,11 @@ function(llvm_test_executable_no_test target)
     llvm_codesign(${target})
     set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
     test_suite_add_build_dependencies(${target})
-
-    if (TEST_SUITE_VAST_TARGET STREQUAL "" AND (NOT SETTING_TESTS))
       if(TEST_SUITE_LLVM_SIZE)
         add_custom_command(TARGET ${target} POST_BUILD
           COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<SHELL_PATH:$<TARGET_FILE:${target}>>
           > $<SHELL_PATH:$<TARGET_FILE:${target}>>.size)
       endif()
-    endif()
   endif()
 endfunction()
 
@@ -96,7 +105,9 @@ endfunction()
 # and support the TEST_SUITE_PROFILE_USE mode.
 function(llvm_test_executable target)
   llvm_test_executable_no_test(${target} ${ARGN})
-  llvm_add_test_for_target(${target})
+  if (TEST_SUITE_VAST_TARGET STREQUAL "")
+    llvm_add_test_for_target(${target})
+  endif()
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
 
