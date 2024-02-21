@@ -58,7 +58,7 @@ function(generate_mlir target sources)
     get_target_property(EXE_COMPILE_OPTIONS ${target}-bogus COMPILE_OPTIONS)
     add_custom_command(
          OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
-         COMMAND ${CMAKE_C_COMPILER} ${EXE_COMPILE_OPTIONS} -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir" ${sources}
+         COMMAND ${CMAKE_BINARY_DIR}/tools/timeit --summary ${target}.time ${CMAKE_C_COMPILER} ${EXE_COMPILE_OPTIONS} -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir" ${sources}
          COMMENT "Generating mlir file for ${target}"
     )
     add_custom_target(
