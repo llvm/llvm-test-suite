@@ -1,7 +1,7 @@
 unsigned fib(unsigned n) {
   unsigned a = 1;
   unsigned b = 1;
-  unsigned c;
+  unsigned c = 0;
   unsigned tmp;
   while (n > 1) {
     tmp = c;
