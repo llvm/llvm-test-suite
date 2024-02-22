@@ -197,6 +197,7 @@ CHECK(bti, {
     // The only test for this requires reading a register that is only
     // accessible to EL1.
     #ifdef __linux__
+        // On linux, the kernel intercepts the trap, and emulates it for EL0 processes.
         int val = 0;
         asm volatile("mrs %0, ID_AA64PFR1_EL1" : "=r"(val));
         // ID_AA64PFR1_EL1.BT, bits [3:0] = 0b0001 if Branch Target Identification
