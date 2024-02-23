@@ -32,7 +32,7 @@ function(find_compiler_rt_library variable)
     string(STRIP "${library_file}" library_file)
     file(TO_CMAKE_PATH "${library_file}" library_file)
     get_filename_component(basename ${library_file} NAME)
-    if(basename MATCHES ".*clang_rt\.([a-z0-9_\-]+)\.(a|lib)")
+    if(basename MATCHES ".*clang_rt\.([a-z0-9_\-]+)\.(a|lib)" AND EXISTS ${library_file})
       message(STATUS "Found compiler-rt builtin library: ${basename}")
       set(COMPILER_RT_LIBRARY_builtins_${target} "${basename}" CACHE INTERNAL
         "compiler-rt library for ${target}")
@@ -48,3 +48,4 @@ function(find_compiler_rt_library variable)
     set(${variable} "" PARENT_SCOPE)
   endif()
 endfunction()
+
