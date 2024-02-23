@@ -1,20 +1,18 @@
 unsigned fib(unsigned n) {
-  unsigned a = 1;
-  unsigned b = 1;
-  unsigned c = 0;
-  unsigned tmp;
+  unsigned a = 0;
+  unsigned b = 0;
+  unsigned c = 1;
   while (n > 1) {
-    tmp = c;
-    c = a + b;
     a = b;
-    b = tmp;
+    b = c;
+    c = a + b;
     n--;
   }
   return c;
 }
 
 int main() {
-  if (fib(2) == 0) {
+  if (fib(3) == 2) {
     return 0;
   } else {
     while (1) {
