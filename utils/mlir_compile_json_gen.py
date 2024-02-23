@@ -19,7 +19,7 @@ class test_result:
             code = int(lines[0].split()[1])
             base_name = os.path.splitext(res_path)[0]
 
-            self.elapsed = float(lines[1].split()[1])
+            self.elapsed = float(lines[2].split()[1]) # get user time
             total_elapsed += self.elapsed
 
             self.metrics = dict([
