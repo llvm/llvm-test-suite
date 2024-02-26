@@ -55,10 +55,17 @@ function(generate_mlir target sources)
     # only interprets inputs starting with '-' as flags.
     # append_target_flags(LINK_LIBRARIES ${target}-bogus ${LDFLAGS})
 
+    get_target_property(EXE_COMPILE_FLAGS ${target}-bogus COMPILE_FLAGS)
+    separate_arguments(EXE_COMPILE_FLAGS)
+    if(EXE_COMPILE_FLAGS STREQUAL "EXE_COMPILE_FLAGS-NOTFOUND")
+        set(EXE_COMPILE_FLAGS "")
+    endif()
+
     get_target_property(EXE_COMPILE_OPTIONS ${target}-bogus COMPILE_OPTIONS)
+    separate_arguments(EXE_COMPILE_OPTIONS)
     add_custom_command(
          OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir"
-         COMMAND ${CMAKE_BINARY_DIR}/tools/timeit --summary ${target}.time ${CMAKE_C_COMPILER} ${EXE_COMPILE_OPTIONS} -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir" ${sources}
+         COMMAND ${CMAKE_BINARY_DIR}/tools/timeit --summary ${target}.time ${CMAKE_C_COMPILER} ${EXE_COMPILE_OPTIONS} ${EXE_COMPILE_FLAGS} -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.mlir" ${sources}
          COMMENT "Generating mlir file for ${target}"
     )
     add_custom_target(
