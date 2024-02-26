@@ -40,6 +40,13 @@ def create_csv(results: list[dict[str, (str, float)]], names):
     create_result = lambda code, time: str(time) if code == 'PASS' else "FAIL"
     results = [{k: create_result(*v) for k, v in result.items()} for result in results]
     df = pd.DataFrame.from_records(results, index=names).transpose().sort_index()
+    size = df.index.size
+    totals = []
+    for column in df.columns:
+        failed = df.value_counts(column)['FAIL']
+        totals.append(str(size-failed) + '/' + str(size))
+    df.loc["TOTAL"] = totals
+
     return df.to_csv()
 
 def main():
