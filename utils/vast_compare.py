@@ -36,7 +36,7 @@ def read_json(filename):
     print("Could not open file %s", filename)
     sys.exit(1)
 
-def create_csv(results: list[dict[str, (str, float)]], names):
+def create_df(results: list[dict[str, (str, float)]], names):
     create_result = lambda code, time: str(time) if code == 'PASS' else "FAIL"
     results = [{k: create_result(*v) for k, v in result.items()} for result in results]
     df = pd.DataFrame.from_records(results, index=names).transpose().sort_index()
@@ -47,7 +47,7 @@ def create_csv(results: list[dict[str, (str, float)]], names):
         totals.append(str(size-failed) + '/' + str(size))
     df.loc["TOTAL"] = totals
 
-    return df.to_csv()
+    return df
 
 def main():
     parser = argparse.ArgumentParser(prog="vast_compare.py")
@@ -55,7 +55,10 @@ def main():
     parser.add_argument("--columns")
     config = parser.parse_args()
     results = [read_json(file) for file in config.files.split(',')]
-    csv = create_csv(results, config.columns.split(','))
-    print(csv)
+    df = create_df(results, config.columns.split(','))
+    with open("results.csv", "w") as res_csv:
+        res_csv.write(df.to_csv())
+    with open("results.md", "w") as res_csv:
+        res_csv.write(df.to_markdown())
 
 main()
