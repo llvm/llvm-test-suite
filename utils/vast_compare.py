@@ -53,12 +53,13 @@ def main():
     parser = argparse.ArgumentParser(prog="vast_compare.py")
     parser.add_argument("--files")
     parser.add_argument("--columns")
+    parser.add_argument("--output")
     config = parser.parse_args()
     results = [read_json(file) for file in config.files.split(',')]
     df = create_df(results, config.columns.split(','))
-    with open("results.csv", "w") as res_csv:
+    with open(config.output + ".csv", "w") as res_csv:
         res_csv.write(df.to_csv())
-    with open("results.md", "w") as res_csv:
+    with open(config.output + ".md", "w") as res_csv:
         res_csv.write(df.to_markdown())
 
 main()
