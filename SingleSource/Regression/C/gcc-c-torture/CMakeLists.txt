@@ -55,7 +55,7 @@ function(gcc_torture_execute_test File)
 
   llvm_test_executable_no_test(${_target} ${File})
   llvm_test_run()
-  if (TEST_SUITE_VAST_TARGET STREQUAL "")
+  if (VAST_TEST_SUITE_TARGET STREQUAL "bin")
     llvm_add_test_for_target(${_target})
   endif()
 endfunction()

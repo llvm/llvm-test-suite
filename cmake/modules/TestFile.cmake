@@ -114,7 +114,7 @@ function(llvm_add_test testfile executable)
 endfunction()
 
 function(llvm_add_test_for_target target)
-    if(TEST_SUITE_VAST_TARGET STREQUAL "")
+    if(VAST_TEST_SUITE_TARGET STREQUAL "bin")
         llvm_add_test($<TARGET_FILE:${target}>.test %S/$<TARGET_FILE_NAME:${target}>)
         set(TESTSCRIPT "" PARENT_SCOPE)
     else()
