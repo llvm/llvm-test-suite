@@ -12,9 +12,6 @@ set(UNSUPPORTED_FILES "")
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: procedure pointers
   atomic-10.f90
-  declare-variant-19.f90
-  proc_ptr_1.f90
-  proc_ptr_2.f90
 
   # unimplemented: procedure pointer arguments
   pr44036-1.f90
@@ -24,43 +21,24 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   declare-simd-coarray-lib.f90
 
   # unimplemented: gather rhs LEN parameters in assignment to allocatable
-  atomic-28.f90
-  defaultmap-2.f90
   defaultmap-3.f90
   defaultmap-4.f90
   defaultmap-5.f90
   defaultmap-6.f90
 
   # unimplemented: support for polymorphic types
-  associate2.f90
-  class-firstprivate-1.f90
-  class-firstprivate-2.f90
-  class-firstprivate-3.f90
-  class-firstprivate-4.f90
-  omp_parallel_1.f90
   pr102621.f90
-  pr52531.f90
-  pr56052.f90
   pr86470.f90
 
   # unimplemented: derived type components with non default lower bounds
   depend-iterator-1.f90
-  depend-iterator-2.f90
-
-  # unimplemented: assumed rank in procedure interface
-  pr94672.f90
 
   # unimplemented: Construct enclosing do loop
-  allocate-3.f90
   combined-if.f90
-  order-4.f90
-  openmp-simd-5.f90
   openmp-simd-6.f90
   pr107214-7.f90
   pr79154-2.f90
   pr82568.f90
-  pr87752.f90
-  pr99226.f90
   schedule-modifiers-1.f90
   target3.f90
   teams1.f90
@@ -68,26 +46,11 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: array sections not supported for task depend
   depend-4.f90
 
-  # unimplemented: Missing symbol, possible case of currently unsupported use of
-  # a program local variable in declare target or erroneous symbol information
-  implicit-save.f90
-
   # unimplemented: OMPD_target_data for Array Expressions or Structure
   # Components.
-  map-2.f90
   map-5.f90
-  map-9.f90
-  ref_inquiry.f90
-  substring.f90
-
-  # unimplemented: OMPD_target_update
-  pr71705.f90
-
-  # unimplemented: Do Concurrent in Worksharing loop construct
-  omp_do_concurrent.f90
 
   # unimplemented: OpenMP Block construct clause
-  pr107214-5.f90
   pr71758.f90
   pr77352.f90
   pr81887.f90
@@ -95,7 +58,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: OMPD_target_data MapOperand BoxType
   pr107214.f90
-  target-exit-data.f90
 
   # unimplemented: Unhandled block directive
   pr39152.f90
@@ -103,13 +65,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr69281.f90
   pr70855.f90
   pr95869.f90
-  target-parallel1.f90
   teams-4.f90
   workshare2.f90
   workshare3.f90
-
-  # unimplemented: Array references as atomic update variable
-  pr62131.f90
 
   # unimplemented: OpenMPDeclareSimdConstruct
   pr79154-1.f90
@@ -117,12 +75,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   declare-simd-6.f90
 
   # unimplemented: OpenMPRequiresConstruct
-  requires-1.f90
-  requires-5.f90
   requires-7.f90
-  requires-8.f90
-  requires-9.f90
-  target-device-ancestor-3.f90
   target-device-ancestor-5.f90
   target-device-ancestor-6.f90
 
@@ -134,41 +87,12 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
-  # error: not a memory reference type
-  associate1.f90
-
   # error: the update operation inside the region must be a binary operation and
   # that update operation must have the region argument as an operand
   atomic-12.f90
 
   # error: address must dereference to value type
   omp_atomic2.f90
-
-  # error: symbol must have a type
-  pr35786-1.f90
-
-  # error: expr was not lowered to MutableBoxValue
-  pr36726.f90
-  pr77666.f90
-
-  # error: exactly two operations are allowed inside an atomic update region
-  # while lowering to LLVM IR
-  pr39354.f90
-
-  # error: unhandled clauses for translation to LLVM IR
-  pr43337.f90
-  pr44085.f90
-
-  # error: operand #0 does not dominate this use
-  pr89651.f90
-
-  # error: /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/optional:484:
-  # const _Tp &std::_Optional_base_impl<Fortran::parser::OmpMapType, std::_Optional_base<Fortran::parser::OmpMapType, false, false>>::_M_get() const [_Tp = Fortran::parser::OmpMapType, _Dp = std::_Optional_base<Fortran::parser::OmpMapType, false, false>]: Assertion 'this->_M_is_engaged()' failed.
-  nesting-1.f90
-  pr78260-2.f90
-
-  # error: Operation *mlir::Block::getTerminator(): Assertion `!empty() && back().mightHaveTrait<OpTrait::IsTerminator>()' failed.
-  pr45597.f90
 
   # error: SemanticsContext::FindScope(): invalid source location
   target-device-ancestor-4.f90
@@ -388,7 +312,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # At least one of MAP clause must appear on the TARGET DATA directive
   is_device_ptr-2.f90
   map-3.f90
-  use_device_ptr-1.f90
 
   # ORDER clause is not allowed on the TEAMS DISTRIBUTE directive
   order-5.f90
@@ -442,7 +365,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # is expected to fail.
   #
   canonical-loop-2.f90
-  crayptr1.f90
   crayptr2.f90
   map-alloc-comp-1.f90
   pr33439.f90

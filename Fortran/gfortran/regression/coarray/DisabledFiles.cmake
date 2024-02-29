@@ -12,7 +12,6 @@ set(UNSUPPORTED_FILES "")
 # These tests trigger "not yet implemented" assertions in flang.
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: support for polymorphic types
-  alloc_comp_2.f90
   poly_run_3.f90
 
   # unimplemented: coarray allocation
@@ -79,7 +78,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   collectives_3.f90
   get_to_indexed_array_1.f90
   lib_realloc_1.f90
-  pr93671.f90
   ptr_comp_3.f08
   scalar_alloc_2.f90
 

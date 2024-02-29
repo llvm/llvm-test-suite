@@ -22,18 +22,15 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: intrinsic module procedure: [SYM]
   fma_1.f90
   ieee_11.F90
-  ieee_12.f90
   ieee_2.f90
   ieee_3.f90
   ieee_4.f90
   large_2.f90
   rounding_1.f90
-  rounding_2.f90
   rounding_3.f90
   signaling_1.f90
   signaling_2.f90
   signaling_3.f90
-  signbit_1.f90
 
   # unimplemented: no math runtime available for 'sqrt(f80)'
   large_1.f90
@@ -51,20 +48,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: Must be a constant value
   ieee_8.f90
 
-  # error: No specific subroutine of generic '[SYM]' matches the actual
-  # arguments
-  ieee_6.f90
-
-  # error: missing mandatory 'p=' argument
-  ieee_7.f90
-
-  # error: Must be a constant value
-  ieee_8.f90
-
   # error: unexpected typeless constant value
   ieee_10.f90
   ieee_5.f90
-  ieee_9.f90
   intrinsics_1.f90
   intrinsics_2.F90
   large_4.f90
