@@ -41,13 +41,13 @@ def create_df(results: list[dict[str, (str, float)]], names):
     results = [{k: create_result(*v) for k, v in result.items()} for result in results]
     df = pd.DataFrame.from_records(results, index=names).transpose().sort_index()
     size = df.index.size
+
     totals = []
     for column in df.columns:
         failed = df.value_counts(column)['FAIL']
         totals.append(str(size-failed) + '/' + str(size))
-    df.loc["TOTAL"] = totals
 
-    return df
+    return pd.concat([pd.DataFrame([totals], index=['TOTAL'], columns=names), df])
 
 def main():
     parser = argparse.ArgumentParser(prog="vast_compare.py")
