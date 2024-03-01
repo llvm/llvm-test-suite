@@ -1965,7 +1965,7 @@ compile;old_style_init.f90;xfail;;;
 compile;oldstyle_2.f90;xfail;;;
 compile;oldstyle_3.f90;xfail;;;
 compile;oldstyle_4.f90;;-std=f95;;
-compile;oldstyle_5.f;xfail;;;
+compile;oldstyle_5.f;;;;
 compile;open_access_1.f90;xfail;;;
 compile;open_nounit.f90;xfail;;;
 compile;operator_2.f90;xfail;;;
