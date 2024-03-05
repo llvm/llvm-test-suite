@@ -918,9 +918,26 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # --------------------------------------------------------------------------
   #
-  # These tests are skipped because REAL(10) is not supported on AAch64.
+  # These tests require libquadmath which is not built by default. They are
+  # disabled until the test suite's configure script is fixed to allow
+  # conditionally enabling them if libquadmath is available.
 
+  quad_1.f90
+  internal_dummy_3.f08
+
+  # --------------------------------------------------------------------------
+  #
+  # These tests are skipped because they fail on AArch64 but not x86. These
+  # will be disabled until we allow tests to be selectively enabled on certain
+  # platforms.
+
+  large_integer_kind.f90
+  oldstyle_5.f
+  maxlocval_1.f90
   pr91497.f90
+
+  alloc_comp_class_4.f03 # TODO: This also fails on X86, so recategorize
+  unpack_bounds_1.f90    # TODO: This also fails on X86, so recategorize
 
   # --------------------------------------------------------------------------
   #

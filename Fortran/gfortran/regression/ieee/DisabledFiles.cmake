@@ -55,6 +55,14 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   intrinsics_2.F90
   large_4.f90
   underflow_1.f90
+
+  # --------------------------------------------------------------------------
+  #
+  # These tests require libquadmath which is not built by default. They are
+  # disabled until the test suite's configure script is fixed to allow
+  # conditionally enabling them if libquadmath is available.
+
+  ieee_9.f90
 )
 
 # There are currently no failing files.
