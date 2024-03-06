@@ -2192,7 +2192,7 @@ compile;pr34163.f90;;-O2 -fno-tree-pre -fpredictive-commoning -fdump-tree-pcom-d
 compile;pr35031.f90;xfail;;;
 compile;pr35849.f90;xfail;;;
 compile;pr36006-1.f90;;;;
-compile;pr36006-2.f90;;;;aarch64.+-.+-.+
+compile;pr36006-2.f90;;;;
 compile;pr36192.f90;xfail;;;
 compile;pr36192_1.f90;xfail;;;
 compile;pr36206.f;;-O3;;
