@@ -2830,4 +2830,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Requires -fcheck=mem
   allocate_error_5.f90
+
+  # https://github.com/llvm/llvm-project/issues/84088
+  pr36006-2.f90
 )
