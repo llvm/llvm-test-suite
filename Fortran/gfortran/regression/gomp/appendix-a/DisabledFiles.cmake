@@ -18,20 +18,12 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   a.11.5.f90
   a.11.6.f90
   a.11.7.f90
-
-  # unimplemented: Common Block in privatization clause
-  a.23.1.f90
-  a.23.3.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   #
   # These tests fail when they should pass.
   #
-
-  # error: 't' appears in more than one data-sharing clause on the same OpenMP
-  # directive
-  a.22.6.f90
 
   # error: COMMON block must be declared in the same scoping unit in which the
   # OpenMP directive or clause appears
