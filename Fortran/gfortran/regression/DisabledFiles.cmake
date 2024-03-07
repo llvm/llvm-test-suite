@@ -1054,7 +1054,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr96436_10.f90
   promotion_3.f90
   promotion_4.f90
- read_5.f90
+  random_3.f90
+  read_5.f90
   read_bang4.f90
   read_bang.f90
   read_eof_all.f90
@@ -1089,6 +1090,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   unf_read_corrupted_1.f90
   unf_short_record_1.f90
   unformatted_subrecord_1.f90
+  where_2.f90
   widechar_IO_4.f90
   zero_sized_1.f90
   elemental_function_2.f90
