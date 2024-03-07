@@ -1054,7 +1054,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr96436_10.f90
   promotion_3.f90
   promotion_4.f90
-  random_3.f90
   read_5.f90
   read_bang4.f90
   read_bang.f90
@@ -1099,6 +1098,73 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # anyway so the test-suite passes by default on AArch64.
   entry_23.f
   findloc_8.f90
+
+  # These tests fail on Ubuntu because of a bug in the not utility. At least
+  # some of these should work once the issue with not has been fixed.
+  #
+  # https://github.com/llvm/llvm-test-suite/pull/102#issuecomment-1980674221
+  #
+  abort_shouldfail.f90
+  all_bounds_1.f90
+  alloc_comp_class_4.f03
+  allocate_error_5.f90
+  allocate_error_6.f90
+  allocate_with_source_23.f03
+  bounds_check_12.f90
+  bounds_check_array_ctor_4.f90
+  bounds_check_fail_3.f90
+  cshift_bounds_3.f90
+  cshift_bounds_4.f90
+  deallocate_error_2.f90
+  dim_sum_1.f90
+  dim_sum_2.f90
+  dim_sum_3.f90
+  do_check_1.f90
+  endfile_3.f90
+  eoshift_bounds_1.f90
+  error_format.f90
+  fmt_error_4.f90
+  fmt_error_5.f90
+  inline_matmul_15.f90
+  internal_write_1.f90
+  large_unit_1.f90
+  matmul_5.f90
+  matmul_bounds_11.f90
+  matmul_bounds_13.f90
+  matmul_bounds_15.f
+  matmul_bounds_16.f
+  matmul_bounds_7.f90
+  matmul_bounds_9.f90
+  maxloc_bounds_1.f90
+  maxloc_bounds_2.f90
+  maxloc_bounds_3.f90
+  maxloc_bounds_4.f90
+  maxloc_bounds_6.f90
+  maxloc_bounds_7.f90
+  maxloc_bounds_8.f90
+  open_errors_2.f90
+  open_new_segv.f90
+  PR100136.f90
+  pack_bounds_1.f90
+  pointer_check_11.f90
+  pointer_check_1.f90
+  pointer_check_2.f90
+  pointer_check_3.f90
+  pointer_check_4.f90
+  pointer_check_6.f90
+  pr92050.f90
+  random_3.f90
+  random_5.f90
+  repeat_1.f90
+  reshape_order_1.f90
+  reshape_order_2.f90
+  reshape_order_3.f90
+  reshape_order_4.f90
+  spread_bounds_1.f90
+  unpack_bounds_1.f90
+  unpack_bounds_2.f90
+  unpack_bounds_3.f90
+  write_check.f90
 
   # ---------------------------------------------------------------------------
   #
