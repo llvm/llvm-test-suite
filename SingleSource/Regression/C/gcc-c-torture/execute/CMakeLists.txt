@@ -379,21 +379,9 @@ foreach(File ${TestFiles})
   endif()
 
   # Add Test Target
-  set(_TORTURE_PREFIX "GCC-C-execute")
-  # There are a few tests with duplicate filenames, and CMake wants all target
-  # names to be unique, so we add a disambiguator to the target name. The
-  # disambiguator is based upon the directory structure, swapping `/` for `-`.
-  get_filename_component(Name ${File} NAME_WE)
-  set(_target "${_TORTURE_PREFIX}-${Name}")
-
-  gcc_torture_dg_options_cflags(DG_CFLAGS DG_DO DG_SRC ${File})
-
-  # Add any flags that were requested
-  list(APPEND CFLAGS ${DG_CFLAGS} ${MaybeCFlags})
-  list(APPEND LDFLAGS ${MaybeLDFlags})
-
-  llvm_test_executable_no_test(${_target} ${File})
-  llvm_test_run()
-
-  llvm_add_test_for_target(${_target})
+  gcc_torture_execute_test(${File}
+                           DG_DO_DEFAULT "run"
+                           PREFIX "GCC-C-execute"
+                           CFLAGS ${MaybeCFlags}
+                           LDFLAGS ${MaybeLDFlags})
 endforeach()

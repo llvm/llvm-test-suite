@@ -2969,6 +2969,7 @@ foreach(File ${TestFiles})
 
   # Add Test Target
   gcc_torture_execute_test(${File}
+                           DG_DO_DEFAULT "compile"
                            PREFIX "GCC-DG"
                            CFLAGS ${MaybeCFlags}
                            LDFLAGS ${MaybeLDFlags})

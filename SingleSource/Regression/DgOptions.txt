@@ -232,7 +232,7 @@ function(gcc_torture_dg_options_cflags Variable DG_DO DG_SRC File)
 endfunction()
 
 function(gcc_torture_execute_test File)
-  cmake_parse_arguments(_TORTURE "" "PREFIX" "CFLAGS;LDFLAGS" ${ARGN})
+  cmake_parse_arguments(_TORTURE "" "PREFIX;DG_DO_DEFAULT" "CFLAGS;LDFLAGS" ${ARGN})
   # There are a few tests with duplicate filenames, and CMake wants all target
   # names to be unique, so we add a disambiguator to the target name. The
   # disambiguator is based upon the directory structure, swapping `/` for `-`.
@@ -247,7 +247,38 @@ function(gcc_torture_execute_test File)
 
   # Only compile the test case if there is no dg-do in the test case.
   if(NOT DG_DO)
-    llvm_test_library(${_target} OBJECT ${File})
+    if(_TORTURE_DG_DO_DEFAULT STREQUAL "preprocess")
+      list(APPEND CFLAGS ${DG_CFLAGS} "-E")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "assemble")
+      list(APPEND CFLAGS ${DG_CFLAGS} "-S")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "compile")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "link")
+      if(DG_SRC)
+        llvm_test_executable_no_test(${_target} ${File} ${DG_SRC})
+      else()
+        llvm_test_executable_no_test(${_target} ${File})
+      endif()
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "run")
+      if(DG_SRC)
+        llvm_test_executable_no_test(${_target} ${File} ${DG_SRC})
+      else()
+        llvm_test_executable_no_test(${_target} ${File})
+      endif()
+
+      llvm_test_run()
+      llvm_add_test_for_target(${_target})
+
+    elseif()
+      message(FATAL_ERROR "Unknown DG_DO_DEFAULT parameter: \"${_TORTURE_DG_DO_DEFAULT}\"")
+    endif()
+
     return()
   endif()
 
