@@ -247,6 +247,5 @@ inside other directives such as `dg-error` or `dg-warning` are ignored.
 
 Some tests fail on certain platforms but not on others. There is, currently, no
 way to disable these tests on a specific platform and these are disabled 
-everywhere. This is obviously not ideal since we the extra coverage that the
-tests provide &mdash; even if on a limited set of platforms &mdash; is 
-desirable.
+everywhere. This is obviously not ideal since the extra coverage that the tests
+provide &mdash; even if on a limited set of platforms &mdash; is desirable.
