@@ -10,7 +10,6 @@ do
 	./llvm-valida/build/bin/clang -c -target delendum ./llvm-test-suite/SingleSource/UnitTests/$test.c -o ./build/$test.o
 	./llvm-valida/build/bin/ld.lld --script=./llvm-valida/valida.ld -o ./build/$test.out ./build/$test.o
 	./llvm-valida/build/bin/llvm-objcopy -O binary ./build/$test.out ./build/$test.out.bin
-	./valida-mc-fixer/result/bin/valida-mc-fixer ./build/$test.out.bin ./build/$test.out.bin.fix
 	timeout 3 ./valida/target/release/valida run ./build/$test.out.bin.fix ./build/$test.log
 	echo $? # status 124 indicates non-termination; status 0 indicates successful termination
 done
@@ -22,7 +21,6 @@ do
     ./llvm-valida/build/bin/clang -c -target delendum ./llvm-test-suite/SingleSource/UnitTests/$test.c -o ./build/$test.o
     ./llvm-valida/build/bin/ld.lld --script=./llvm-valida/valida.ld -o ./build/$test.out ./build/$test.o
     ./llvm-valida/build/bin/llvm-objcopy -O binary ./build/$test.out ./build/$test.out.bin
-    ./valida-mc-fixer/result/bin/valida-mc-fixer ./build/$test.out.bin ./build/$test.out.bin.fix
     ./valida/target/release/valida run ./build/$test.out.bin.fix ./build/$test.log
     ./valida/target/release/valida prove ./build/$test.out.bin.fix ./build/$test.proof
     ./valida/target/release/valida verify ./build/$test.out.bin.fix ./build/$test.proof
