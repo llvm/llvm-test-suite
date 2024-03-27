@@ -26,44 +26,53 @@ contains
 
   subroutine print_rank(a)
     integer a(..)
-    character(len=*), parameter :: format_='(a,i2)'
 
     select rank(a)
       rank(0)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(0,rank(a))
       rank(1)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(1,rank(a))
       rank(2)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(2,rank(a))
       rank(3)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(3,rank(a))
       rank(4)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(4,rank(a))
       rank(5)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(5,rank(a))
       rank(6)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(6,rank(a))
       rank(7)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(7,rank(a))
       rank(8)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(8,rank(a))
       rank(9)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(9,rank(a))
       rank(10)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(10,rank(a))
       rank(11)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(11,rank(a))
       rank(12)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(12,rank(a))
       rank(13)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(13,rank(a))
       rank(14)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(14,rank(a))
       rank(15)
-        print format_,"rank(a) = ",rank(a)
+        call check_rank(15,rank(a))
       rank default
         error stop "unrecognized rank"
     end select
+  end subroutine
+
+  subroutine check_rank(select_val, intrinsic_val)
+    integer, intent(in) :: select_val, intrinsic_val
+
+    if (select_val.eq.intrinsic_val) then
+      print '(a,i2)', "rank(a) = ", intrinsic_val
+    else
+      print *, "select rank value ", select_val, "doesn't match rank reported from `rank` intrinsic ", intrinsic_val
+    end if
   end subroutine
 
 end program rank_dummy_select_intrinsic
