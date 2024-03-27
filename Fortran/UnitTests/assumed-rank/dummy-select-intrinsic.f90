@@ -61,26 +61,33 @@ end module
 program rank_dummy_select_intrinsic
   use check_rank_utilities, only: print_rank
   implicit none
-  integer a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
-  integer a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
-  integer a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
-  integer a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
 
-  call print_rank(a)
-  call print_rank(a1)
-  call print_rank(a2)
-  call print_rank(a3)
-  call print_rank(a4)
-  call print_rank(a5)
-  call print_rank(a6)
-  call print_rank(a7)
-  call print_rank(a8)
-  call print_rank(a9)
-  call print_rank(a10)
-  call print_rank(a11)
-  call print_rank(a12)
-  call print_rank(a13)
-  call print_rank(a14)
-  call print_rank(a15)
+  call check_integer
+
+contains
+
+  subroutine check_integer
+    integer a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
+    integer a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
+    integer a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
+    integer a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
+
+    call print_rank(a)
+    call print_rank(a1)
+    call print_rank(a2)
+    call print_rank(a3)
+    call print_rank(a4)
+    call print_rank(a5)
+    call print_rank(a6)
+    call print_rank(a7)
+    call print_rank(a8)
+    call print_rank(a9)
+    call print_rank(a10)
+    call print_rank(a11)
+    call print_rank(a12)
+    call print_rank(a13)
+    call print_rank(a14)
+    call print_rank(a15)
+  end subroutine check_integer
 
 end program rank_dummy_select_intrinsic
