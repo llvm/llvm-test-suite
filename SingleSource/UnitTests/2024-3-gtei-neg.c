@@ -1,7 +1,6 @@
 int main() {
-  int v1 = 3;
-  int result = v1 >= 4;
-  if (result) {
+  unsigned v1 = 3;
+  if (v1 >= 4) {
     while (1) {
     }
   }
