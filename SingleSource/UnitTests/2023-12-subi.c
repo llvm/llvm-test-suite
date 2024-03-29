@@ -1,8 +1,8 @@
 int main()
 {
-    int v1 = -30;
-    int result = 12-(v1); //ADD is invoked whether v1 is negative or not.
-    if (result == 42) {
+    unsigned v1 = 30;
+    unsigned result = 42-(v1); //ADD is invoked whether v1 is negative or not.
+    if (result == 12) {
         while (1){}
     }
 
