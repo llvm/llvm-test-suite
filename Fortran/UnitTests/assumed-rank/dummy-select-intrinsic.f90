@@ -64,6 +64,10 @@ program rank_dummy_select_intrinsic
 
   call check_integer
   call check_real
+  call check_double_precision
+  call check_complex
+  call check_character
+  call check_logical
 
 contains
 
@@ -114,5 +118,101 @@ contains
     call print_rank(a14)
     call print_rank(a15)
   end subroutine check_real
+
+  subroutine check_double_precision
+    double precision a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
+    double precision a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
+    double precision a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
+    double precision a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
+
+    call print_rank(a)
+    call print_rank(a1)
+    call print_rank(a2)
+    call print_rank(a3)
+    call print_rank(a4)
+    call print_rank(a5)
+    call print_rank(a6)
+    call print_rank(a7)
+    call print_rank(a8)
+    call print_rank(a9)
+    call print_rank(a10)
+    call print_rank(a11)
+    call print_rank(a12)
+    call print_rank(a13)
+    call print_rank(a14)
+    call print_rank(a15)
+  end subroutine check_double_precision
+
+  subroutine check_complex
+    complex a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
+    complex a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
+    complex a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
+    complex a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
+
+    call print_rank(a)
+    call print_rank(a1)
+    call print_rank(a2)
+    call print_rank(a3)
+    call print_rank(a4)
+    call print_rank(a5)
+    call print_rank(a6)
+    call print_rank(a7)
+    call print_rank(a8)
+    call print_rank(a9)
+    call print_rank(a10)
+    call print_rank(a11)
+    call print_rank(a12)
+    call print_rank(a13)
+    call print_rank(a14)
+    call print_rank(a15)
+  end subroutine check_complex
+
+  subroutine check_character
+    character(len=1) a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
+    character(len=1) a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
+    character(len=1) a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
+    character(len=1) a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
+
+    call print_rank(a)
+    call print_rank(a1)
+    call print_rank(a2)
+    call print_rank(a3)
+    call print_rank(a4)
+    call print_rank(a5)
+    call print_rank(a6)
+    call print_rank(a7)
+    call print_rank(a8)
+    call print_rank(a9)
+    call print_rank(a10)
+    call print_rank(a11)
+    call print_rank(a12)
+    call print_rank(a13)
+    call print_rank(a14)
+    call print_rank(a15)
+  end subroutine check_character
+
+  subroutine check_logical
+    logical a,     a1(1),   a2(1,1), a3(1,1,1), a4(1,1,1, 1), a5(1,1,1, 1,1), a6(1,1,1, 1,1,1), a7(1,1,1, 1,1,1, 1)
+    logical a8(1,1,1, 1,1,1, 1,1), a9(1,1,1, 1,1,1, 1,1,1), a10(1,1,1, 1,1,1, 1,1,1, 1), a11(1,1,1, 1,1,1, 1,1,1, 1,1)
+    logical a12(1,1,1, 1,1,1, 1,1,1, 1,1,1), a13(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1), a14(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1)
+    logical a15(1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1)
+
+    call print_rank(a)
+    call print_rank(a1)
+    call print_rank(a2)
+    call print_rank(a3)
+    call print_rank(a4)
+    call print_rank(a5)
+    call print_rank(a6)
+    call print_rank(a7)
+    call print_rank(a8)
+    call print_rank(a9)
+    call print_rank(a10)
+    call print_rank(a11)
+    call print_rank(a12)
+    call print_rank(a13)
+    call print_rank(a14)
+    call print_rank(a15)
+  end subroutine check_logical
 
 end program rank_dummy_select_intrinsic
