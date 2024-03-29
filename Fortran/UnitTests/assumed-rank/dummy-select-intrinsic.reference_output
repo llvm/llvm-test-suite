@@ -110,4 +110,7 @@ rank(a) = 12
 rank(a) = 13
 rank(a) = 14
 rank(a) = 15
+Assumed rank arg with contiguous and target attribute is contiguous
+Assumed rank arg with contiguous and target attribute is contiguous
+Assumed rank arg with contiguous and target attribute is contiguous
 exit 0

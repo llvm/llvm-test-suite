@@ -1,13 +1,23 @@
 module check_rank_utilities
 
   private
-  public :: print_rank
+  public :: print_rank, check_contiguous_assumed_rank_arg
 
   type, public :: derived_type
      integer :: x,y
   end type
 
 contains
+
+  subroutine check_contiguous_assumed_rank_arg(arg)
+    type(*), intent(in), contiguous, target :: arg(..)
+
+    if (is_contiguous(arg)) then
+      print '(a)', "Assumed rank arg with contiguous and target attribute is contiguous"
+    else
+      print '(a)', "Assumed rank arg with contiguous and target attribute is NOT contiguous"
+    end if
+  end subroutine
 
   subroutine print_rank(a)
     class(*) a(..)
@@ -56,15 +66,16 @@ contains
     if (select_val.eq.intrinsic_val) then
       print '(a,i2)', "rank(a) = ", intrinsic_val
     else
-      print *, "select rank value ", select_val, "doesn't match rank reported from `rank` intrinsic ", intrinsic_val
+      print '(a)', "select rank value ", select_val, "doesn't match rank reported from `rank` intrinsic ", intrinsic_val
     end if
   end subroutine
 
 end module
 
 program rank_dummy_select_intrinsic
-  use check_rank_utilities, only: print_rank, derived_type
+  use check_rank_utilities, only: print_rank, derived_type, check_contiguous_assumed_rank_arg
   implicit none
+  integer :: scalar = 1, rank1_arr(10) = 1, rank2_arr(6,6) = 1
 
   call check_integer
   call check_real
@@ -73,6 +84,9 @@ program rank_dummy_select_intrinsic
   call check_character
   call check_logical
   call check_derived_type
+  call check_contiguous_assumed_rank_arg(scalar);
+  call check_contiguous_assumed_rank_arg(rank1_arr(1:6:2));
+  call check_contiguous_assumed_rank_arg(rank2_arr);
 
 contains
 
