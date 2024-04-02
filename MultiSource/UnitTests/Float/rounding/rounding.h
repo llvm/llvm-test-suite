@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// Helper entities for rounding mode testing. 
+// Helper entities for rounding mode testing.
 //
 //===----------------------------------------------------------------------===//
 #ifndef _ROUNDING_H_
@@ -21,8 +21,8 @@
 
 // Not all targets support getting/setting rounding mode using builtin
 // functions.
-#if defined(__x86_64__) || defined(__aarch64__) || defined(__arm__) || \
-    defined(__riscv)
+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || \
+    defined(__arm__) || defined(__riscv)
 #define FLOAT_AVAILABLE 1
 #define DOUBLE_AVAILABLE 1
 #endif
