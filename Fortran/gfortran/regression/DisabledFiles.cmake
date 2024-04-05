@@ -1322,6 +1322,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr91564.f90
   rank_3.f90
 
+  # Requires behaviour specific to -std=f2008 and fails with -std=f2018.
+  finalize_38a.f90
+
   # Tests that use -std=... to enable checks that no longer apply in modern Fortran.
   # Module variable with derived type default initialization requires explicit SAVE
   default_initialization_1.f90
