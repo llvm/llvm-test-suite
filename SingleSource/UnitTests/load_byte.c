@@ -1,6 +1,7 @@
 int main() {
 	char str1[] = "test";
 	char str2[] = "fall";
-	str1[1] = str2[1];
+	unsigned tmp = str2[1];
+	str1[1] = tmp;
 	return 0;
 }
