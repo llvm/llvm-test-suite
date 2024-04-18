@@ -541,6 +541,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr69739.f90
   typebound_call_32.f90
 
+  # Crashes at compile time in certain builds
+  # https://github.com/llvm/llvm-project/issues/89179
+  class_allocate_19.f03
+
   # --------------------------------------------------------------------------
   #
   # These tests are skipped because they result in a compile error. This may
