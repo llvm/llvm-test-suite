@@ -531,7 +531,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # lowering bugs (reported)
   c_char_tests.f03
-  masklr_2.F90
 
   # Categorize and debug further
   bounds_check_17.f90 # needs -fcheck=bounds
