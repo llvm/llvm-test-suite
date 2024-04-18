@@ -5,9 +5,7 @@ sha3
 rdm
 lse
 sha2
-sha1
 aes
-pmull
 rcpc
 rcpc2
 fcma
@@ -16,10 +14,7 @@ dpb
 dpb2
 bf16
 i8mm
-dit
 fp16
-ssbs2
-bti
 simd
 fp
 crc
