@@ -4,7 +4,7 @@ rm -rf ./buildValidaTests # reset the directory to make sure test results are cu
 mkdir ./buildValidaTests
 ./llvm-valida/build/bin/clang -c -target delendum ./llvm-valida/DelendumEntryPoint.c -o ./llvm-valida/build/DelendumEntryPoint.o
 
-# TODO fix these tests: 2023-11-alloca
+# TODO fix these tests: 2023-11-alloca storeu8
 
 TERMTESTS="2023-fibonacci 2023-11-gt-neg 2023-11-lt-neg 2023-12-and-neg 2023-12-div-neg 2023-12-eq-neg 2023-12-ishl-neg 2023-12-ishr-neg 2023-12-log-and-neg 2023-12-log-not-neg 2023-12-mul-neg 2023-12-muli-neg 2023-12-ne-neg 2023-12-not-neg 2023-12-or-neg 2023-12-shl-neg 2023-12-shri-neg 2023-12-shr-neg 2023-12-sra-neg 2023-12-subi-neg 2023-12-sub-neg 2023-12-xor-neg 2023-12-divi-neg 2023-12-divi-signed-neg 2024-1-gti-neg 2024-1-igt-neg 2024-1-lti-neg 2024-1-ilt-neg 2024-1-or-neg 2024-1-address-of-value-on-stack-neg 2024-1-stop 2024-1-null 2024-1-write 2024-3-gte-neg 2024-3-gtei-neg 2024-3-igte-neg 2024-3-lte-neg 2024-3-ltei-neg 2024-3-ilte-neg"
 for test in ${@:-${TERMTESTS[@]}}
