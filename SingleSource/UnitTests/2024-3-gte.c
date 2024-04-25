@@ -1,7 +1,7 @@
 int main() {
-  int v1 = 5;
-  int v2 = 5;
-  int result = v1 >= v2;
+  unsigned v1 = 5;
+  unsigned v2 = 5;
+  unsigned result = v1 >= v2;
   if (result) {
     while (1) {
     }
