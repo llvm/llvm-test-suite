@@ -1,0 +1,9 @@
+int main()
+{
+    int v2 = 3;
+    int result = 5 >= 2;
+    if (result) {
+        return 0;
+    }
+    while (1){}
+}
