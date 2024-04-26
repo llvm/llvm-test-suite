@@ -1,9 +1,6 @@
 int main() {
-	char x = 6;
+	char x = 65;
 	char y = x;
-     if (y == 0) {
-        while (1){}
-    }
-
+    __builtin_delendum_write((int)y);
     return 0;
 }
