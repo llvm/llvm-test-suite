@@ -153,6 +153,11 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: operation with block successors must terminate its parent block
   fixed-1.f
+
+  # These files cause non-deterministic out-of-memory errors in some cases and
+  # segfaults in others.
+  loop-3.f95
+  loop-3-2.f95
 )
 
 # There tests are disabled because they fail when they should pass.
