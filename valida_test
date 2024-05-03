@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+
+import sys
+import struct
+import argparse
+import pdb
+import subprocess
+import tempfile
+import os
+def read_and_cast_unsigned_32bit() -> int:
+    # Read 32-bit integer from stdin
+    data = sys.stdin.read(4)  # 4 bytes for a 32-bit integer
+    if len(data) != 4:
+        raise ValueError("Expected 4 bytes of data.")
+    
+    # Cast it to a 32-bit unsigned integer
+    return struct.unpack('<L', data)[0]  # Little-endian, unsigned long (32-bit)
+
+    
+class Test:
+    def __init__(self):
+        self.name :str = None
+        self.input: str = None
+        self.output:str = None
+
+    def __repr__(self):
+        return f"Name: '{self.name}', input: '{self.input}', output: '{self.output}'\n"
+
+
+class ParsedTest:
+    def __init__(self, file: str):
+        self.file = file
+        self.tests = {}
+        self.run_format = None
+        self.temp_folder = tempfile.TemporaryDirectory()
+        self.temp_compiled_file = tempfile.NamedTemporaryFile(delete=False)
+        self.temp_linked_file = self.temp_compiled_file.name + ".out"
+
+    def run_single_file(self) -> bool:
+        print(f"==== Running test '{self.file}'")
+        self.analyze_file(self.file)
+        self.build()
+        success = self.run()
+        self.clean()
+        return success
+
+    def try_add_run_format(self, line: str):
+        if "RUN-FORMAT:" in line:
+            self.run_format = line.split("RUN-FORMAT:")[1].strip()
+            return True
+        return False
+
+    def parse_values(self, line: str) -> list[int]:
+        # values are split by ',':
+        values = line.split(",")
+        return [int(value.strip()) for value in values]
+
+    def is_comment(self, line: str) -> bool:
+        return line.startswith("//")
+
+    def try_add_test_input(self, line: str):
+        if "INPUT-" in line:
+            new_test = Test()
+            # an example name is `// INPUT-NAME: xxxx`, the input name will be NAME. extract it:
+            new_test.name = line.split("INPUT-")[1].strip().split(":")[0]
+            input_str = line.split(":")[1].strip()
+            # split by ',', and trim the whitespaces:
+            new_test.input = self.parse_values(input_str)
+            self.tests[new_test.name] = new_test
+    
+    def try_add_test_output(self, line: str):
+        if "CHECK-" in line:
+            # extract check name:
+            check_name = line.split("CHECK-")[1].strip().split(":")[0]
+            if check_name in self.tests:
+                output_str = line.split(":")[1].strip()
+                self.tests[check_name].output = self.parse_values(output_str)
+            else:
+                print(f"Error: check name {check_name} not found in tests.")
+                sys.exit(1)
+
+    def analyze_file(self, file: str):
+        # open up the file:
+        with open(file, 'r') as f:
+            # scan by lines:
+            for line in f:
+                if not self.is_comment(line):
+                    continue
+                self.try_add_run_format(line)
+                self.try_add_test_input(line)
+                self.try_add_test_output(line)
+            
+    def build(self):
+        command = ["./llvm-test-suite/compile.sh", self.file, self.temp_compiled_file.name]
+        result = subprocess.run(command, timeout=10)
+        if result.returncode != 0:
+            print(f"Error: failed to build test {self.name}")
+            sys.exit(1)
+
+    def run(self):
+        # run the pre-compile script:
+        command = ["./llvm-test-suite/pre-compile.sh"]
+        result = subprocess.run(command, timeout=10)
+        if result.returncode != 0:
+            print(f"Error: failed to run pre-compile script.")
+            sys.exit(1)
+
+        has_failures = False
+        # run the tests:
+        for test in self.tests:
+            test_content = self.tests[test]
+            print(f"    Running test '{test}':\t", end='')
+            # run the test:
+            feed = self.get_input_binary(test_content.input)
+
+            #create a temp file for logging:
+            log_file = tempfile.NamedTemporaryFile(delete=False)
+
+            # invoke subprocess to run the test:
+            command = ["./valida/target/debug/valida", "run", self.temp_linked_file, log_file.name]
+            process = subprocess.Popen(command, stdin=subprocess.PIPE)
+            process.communicate(input=feed, timeout=2)
+
+            #check exit code:
+            if process.returncode != 0:
+                print(f"\033[31mFailed\033[0m\n  Process returned with non-zero exit code: {process.returncode}")
+                continue
+
+            # read the log file:
+            with open(log_file.name, 'br') as f:
+                logout = f.read()
+
+            # compare stdout with the expected output, but first need to convert the expected output to binary:
+            expected_output = self.get_input_binary(test_content.output)
+            if logout != expected_output:
+                print(f"\033[31mFailed\033[0m: Expected output: {expected_output}, actual output: {logout}")
+            else:
+                print(f"\033[32mPassed\033[0m")
+                has_failures = True
+
+        return not has_failures
+
+    def clean(self):
+        os.remove(self.temp_compiled_file.name)
+        # remove self temp folder:
+        self.temp_folder.cleanup()
+
+    def get_input_binary(self, input: list[int]) -> bytes:
+        # convert the input to binary
+        converted = []
+        for value in input:
+            bit_length = value.bit_length()
+            if bit_length > 32:
+                raise ValueError(f"Value {value} is too large to fit in 32 bits.")
+            if bit_length == 0:
+                bit_length = 1
+            byte_size = (bit_length + 7) // 8
+            if byte_size % 4 != 0:
+                byte_size += 4 - (byte_size % 4)
+            binary_bytes =value.to_bytes(byte_size, 'little')
+            converted.append(binary_bytes)
+        return b''.join(converted)
+
+class TestSuite:
+    def __init__(self):
+        self.tests : list[ParsedTest] = []
+
+    
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("--file", type=str, help="input file.")
+    parser.add_argument("--folder", type=str, help="input folder.")
+    args = parser.parse_args()
+
+    # args.file and args.folder are mutually exclusive:
+    if args.file is None and args.folder is None:
+        print("Error: either --file or --folder must be provided.")
+        sys.exit(1)
+    if args.file is not None and args.folder is not None:
+        print("Error: either --file or --folder must be provided, not both.")
+        sys.exit(1)
+
+    test_suite = TestSuite()
+
+    if args.file is not None:
+        test_suite.tests.append(ParsedTest(args.file))
+    else:
+        for file in os.listdir(args.folder):
+            if file.endswith(".c"):
+                test_suite.tests.append(ParsedTest(os.path.join(args.folder, file)))
+
+    success = False
+    for test in test_suite.tests:
+        success |= test.run_single_file()
+
+    if success:
+        print("Some tests failed.")
+        sys.exit(1)
+    else:
+        print("All tests passed.")
+        sys.exit(0)
