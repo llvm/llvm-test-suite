@@ -14,6 +14,13 @@ add_definitions(
 
 list(APPEND CXXFLAGS -std=gnu++98)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-fdelayed-template-parsing
+                        HAVE_CXX_FLAG_FDELAYED_PARSING)
+if(HAVE_CXX_FLAG_FDELAYED_PARSING)
+  add_compile_options(-fdelayed-template-parsing)
+endif()
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${BENCHMARK_DIR}/src
