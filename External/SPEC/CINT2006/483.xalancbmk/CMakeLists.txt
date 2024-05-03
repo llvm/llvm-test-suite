@@ -16,8 +16,8 @@ list(APPEND CXXFLAGS -std=gnu++98)
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-fdelayed-template-parsing
-                        HAVE_CXX_FLAG_FDELAYED_PARSING)
-if(HAVE_CXX_FLAG_FDELAYED_PARSING)
+                        HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
+if(HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
   add_compile_options(-fdelayed-template-parsing)
 endif()
 
