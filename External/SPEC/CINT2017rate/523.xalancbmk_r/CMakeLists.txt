@@ -8,6 +8,13 @@ speccpu2017_benchmark(RATE)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-fdelayed-template-parsing
+                        HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
+if(HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
+  add_compile_options(-fdelayed-template-parsing)
+endif()
+
 add_definitions(
   -DAPP_NO_THREADS
   -DXALAN_INMEM_MSG_LOADER
