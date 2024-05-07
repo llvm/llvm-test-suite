@@ -8,7 +8,9 @@ option(TEST_SUITE_FORCE_ALL "Execute all SOLLVE V&V tests, even those known to b
 set(TEST_SUITE_OFFLOADING_C_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for C")
  set(TEST_SUITE_OFFLOADING_CXX_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for CXX")
 set(TEST_SUITE_OFFLOADING_Fortran_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for Fortran")
-set(TEST_SUITE_OFFLOADING_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_C_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_CXX_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
+set(TEST_SUITE_OFFLOADING_Fortran_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 
 set(ALL_LIST_OPTIONS
   AMD
@@ -78,7 +80,7 @@ function (add_sollvevv LANG)
     # CMake's find_package(OpenMP) currently does not not introspect flags necessary for offloading.
     target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_${LANG}_FLAGS})
 
-    target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_LDFLAGS})
+    target_link_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_${LANG}_LDFLAGS})
   endforeach ()
 endfunction ()
 
