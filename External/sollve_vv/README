@@ -13,10 +13,16 @@ them are set, it will look into
 ${CMAKE_SOURCE_DIR}/test-suite-externals/sollve_vv where
 CMAKE_SOURCE_DIR is the root directory of the test-suite sources.
 
-The CMakeLists.txt will search for all C and C++ source files of the
+The CMakeLists.txt will search for all C, C++, and Fortran source files of the
 OpenMP V&V suite, compile and run them. That is, running llvm-lit
 (or "make check") will require a compatible accelerator on the running
 machine.
+
+Fortran source files won't be run unless specified. Add TEST_SUITE_FORTRAN=ON
+and TEST_SUITE_OFFLOADING_Fortran_FLAGS to the CMAKE build. 
+
+To specify the offloading flags, add TEST_SUITE_OFFLOADING_<lang>_FLAGS 
+where <lang> is C, CXX, or Fortran to the CMAKE build.
 
 The CMakeLists.txt contains internal greenlists and redlists that the user
 must declare which options to use with SYSTEM_GPU. The user is able to 
@@ -24,17 +30,8 @@ declare multiple lists to use.
 
 here are all of the options:
 -amd (this is the greenlist that contains tests that passes)
--amd_runtime_redlist
--amd_compiler_redlist
--amd_redlist(this is the combination of both runtime and compiler redlists)
 -nvidia (this is the greenlist that contains tests that passes)
--nvidia_runtime_redlist
--nvidia_compiler_redlist
--nvidia_redlist(this is the combination of both runtime and compiler redlists)
 -intel (this is the greenlist that contains tests that passes)
--intel_runtime_redlist
--intel_compiler_redlist
--intel_redlist(this is the combination of both runtime and compiler redlists)
 
 
 OpenMP support is autodetected by CMake, but clang requires additional
@@ -46,7 +43,8 @@ $ cmake ../llvm-test-suite -GNinja -DCMAKE_BUILD_TYPE=Release           \
   -DCMAKE_C_COMPILER=${HOME}/install/llvm-project/release/bin/clang     \
   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm-project/release/bin/clang++ \
   -DTEST_SUITE_SUBDIRS=External/sollve_vv                               \
-  -DTEST_SUITE_SOLLVEVV_OFFLOADING_CFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
+  -DTEST_SUITE_SOLLVEVV_OFFLOADING_C_FLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
+  -DTEST_SUITE_SOLLVEVV_OFFLOADING_CXX_FLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70 \
   -DTEST_SUITE_SOLLVEVV_OFFLOADING_LDFLAGS=-fopenmp-targets=nvptx64-nvidia-cuda;--cuda-path=/soft/compilers/cuda/cuda-10.1.243;-Xopenmp-target;-march=sm_70;-lopenmptarget \
   -DSYSTEM_GPU="amd\;amd_runtime_redlist" \
   -DTEST_SUITE_LIT_FLAGS=-svj1
@@ -59,7 +57,7 @@ target. A configuration compatible for the commands above is:
 
 $ cmake ../llvm-project/llvm -GNinja -DCMAKE_BUILD_TYPE=Release   \
   -DCMAKE_INSTALL_PREFIX=${HOME}/install/llvm-project/release     \
-  -DLLVM_ENABLE_PROJECTS=clang;openmp                             \
+  -DLLVM_ENABLE_PROJECTS=clang;openmp;offload;flang;mlir          \
   -DCUDA_TOOLKIT_ROOT_DIR=/soft/compilers/cuda/cuda-10.1.243      \
   -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=70
 
