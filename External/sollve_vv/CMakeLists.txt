@@ -3,10 +3,13 @@
 
 include(External)
 
+remove_definitions(-w)
+remove_definitions(-Werror=date-time)
+
 option(TEST_SUITE_FORCE_ALL "Execute all SOLLVE V&V tests, even those known to be unsupported by Clang" OFF)
 
 set(TEST_SUITE_OFFLOADING_C_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for C")
- set(TEST_SUITE_OFFLOADING_CXX_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for CXX")
+set(TEST_SUITE_OFFLOADING_CXX_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for CXX")
 set(TEST_SUITE_OFFLOADING_Fortran_FLAGS --offload-arch=native CACHE STRING "Compiler arguments for OpenMP offloading for Fortran")
 set(TEST_SUITE_OFFLOADING_C_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
 set(TEST_SUITE_OFFLOADING_CXX_LDFLAGS --offload-arch=native CACHE STRING "Linker arguments for OpenMP offloading")
@@ -68,6 +71,10 @@ function (add_sollvevv LANG)
       continue ()
     endif ()
 
+    # Create a directory for the test
+    set(test_dir "${CMAKE_BINARY_DIR}/${_name}")
+    file(MAKE_DIRECTORY ${test_dir})
+
     llvm_test_run()
 
     llvm_test_executable(${_name} "${TEST_SUITE_SOLLVEVV_ROOT}/tests/${_file}")
@@ -76,6 +83,8 @@ function (add_sollvevv LANG)
 
     # Add -fopenmp to linker command line; for some reason this is not done by target_link_libraries.
     target_link_options(${_name} PRIVATE ${OpenMP_${LANG}_FLAGS})
+
+    set_target_properties(${_name} PROPERTIES Fortran_MODULE_DIRECTORY ${test_dir})
 
     # CMake's find_package(OpenMP) currently does not not introspect flags necessary for offloading.
     target_compile_options(${_name} PUBLIC ${TEST_SUITE_OFFLOADING_${LANG}_FLAGS})
