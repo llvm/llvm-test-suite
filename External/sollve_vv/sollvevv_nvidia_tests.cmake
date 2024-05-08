@@ -323,4 +323,5 @@ set(NVIDIA
   5.2/metadirective/test_metadirective_otherwise.c
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
+  4.5/offloading_success.F90
 ) # NVIDIA
