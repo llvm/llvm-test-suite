@@ -310,15 +310,16 @@ set(AMD
   5.1/tile/test_tile.c
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
-  #  4.5/application_kernels/declare_target_subroutine.F90
-  #  5.0/atomic/test_atomic_acquire_release.F90
-  #  5.0/atomic/test_atomic_hint.F90
-  #  5.0/atomic/test_atomic_num_hint.F90
-  #  5.2/implementation_defined/test_ompx_free.F90
-  #  5.0/parallel_for_simd/test_parallel_for_simd_atomic.F90
-  #  5.2/misc/test_print_in_target_region.F90
-  #  5.0/requires/test_requires_atomic_default_mem_order_acq_rel.F90
-  #  5.0/requires/test_requires_atomic_default_mem_order_relaxed.F90
-  #  5.0/requires/test_requires_atomic_default_mem_order_seq_cst.F90
-  #  5.0/simd/test_simd_if.F90
+  4.5/application_kernels/declare_target_subroutine.F90
+  5.0/atomic/test_atomic_acquire_release.F90
+  5.0/atomic/test_atomic_hint.F90
+  5.0/atomic/test_atomic_num_hint.F90
+  5.2/implementation_defined/test_ompx_free.F90
+  5.0/parallel_for_simd/test_parallel_for_simd_atomic.F90
+  5.2/misc/test_print_in_target_region.F90
+  5.0/requires/test_requires_atomic_default_mem_order_acq_rel.F90
+  5.0/requires/test_requires_atomic_default_mem_order_relaxed.F90
+  5.0/requires/test_requires_atomic_default_mem_order_seq_cst.F90
+  5.0/simd/test_simd_if.F90
+  4.5/offloading_success.F90
 ) # AMD
