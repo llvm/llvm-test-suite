@@ -1430,6 +1430,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Tests that used to be hard errors, are now warnings, need -pedantic to
   # observe them
   interface_6.f90
+  interop_params.f03
+  iso_c_binding_class.f03
+  pr85877.f90
 
   # Tests that would be errors if we supported options to enable checks
   dec_structure_24.f90
