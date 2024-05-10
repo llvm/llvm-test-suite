@@ -324,4 +324,43 @@ set(NVIDIA
   5.2/misc/test_printf_in_target_region.c
   5.2/runtime_calls/test_omp_in_explicit_task.c
   4.5/offloading_success.F90
+  4.5/application_kernels/declare_target_subroutine.F90
+  5.0/atomic/test_atomic_acquire_release.F90
+  5.0/atomic/test_atomic_hint.F90
+  5.0/atomic/test_atomic_num_hint_device.F90
+  5.0/atomic/test_atomic_num_hint.F90
+  4.5/target_simd/test_nested_target_simd.F90
+  5.2/implementation_defined/test_ompx_free.F90
+  5.2/implementation_defined/test_omx_fixed.F
+  5.0/parallel_for_simd/test_parallel_for_simd_atomic.F90
+  5.2/misc/test_print_in_target_region.F90
+  5.0/requires/test_requires_atomic_default_mem_order_acq_rel.F90
+  5.0/requires/test_requires_atomic_default_mem_order_relaxed.F90
+  5.0/requires/test_requires_atomic_default_mem_order_seq_cst.F90
+  5.0/simd/test_simd_if.F90
+  4.5/target_data/test_target_data_map.F90
+  4.5/target/test_target_depends.F90
+  4.5/target_enter_data/test_target_enter_data_allocate_array_alloc.F90
+  4.5/target_enter_data/test_target_enter_data_allocate_array_to.F90
+  4.5/target_enter_data/test_target_enter_data_if.F90
+  4.5/target_enter_data/test_target_enter_data_module_array.F90
+  4.5/target_enter_data/test_target_enter_data_set_default_device.F90
+  4.5/target_enter_exit_data/test_target_enter_exit_data_allocate_array_alloc_delete.F90
+  4.5/target_enter_exit_data/test_target_enter_exit_data_if.F90
+  4.5/target_enter_exit_data/test_target_enter_exit_data_module_array.F90
+  4.5/target_enter_exit_data/test_target_enter_exit_data_set_default_device.F90
+  4.5/target/test_target_map_module_array.F90
+  4.5/target/test_target_map_pointer_default.F90
+  4.5/target/test_target_map_pointer.F90
+  4.5/target/test_target_map_program_arrays.F90
+  4.5/target/test_target_map_scalar_default.F90
+  4.5/target/test_target_map_subroutines_arrays.F90
+  4.5/target_parallel/test_target_parallel.F90
+  4.5/target_simd/test_target_simd_collapse.F90
+  4.5/target_simd/test_target_simd.F90
+  4.5/target_simd/test_target_simd_safelen.F90
+  4.5/target_simd/test_target_simd_simdlen.F90
+  4.5/target_update/test_target_update_from.F90
+  4.5/target_update/test_target_update_if.F90
+  4.5/target_update/test_target_update_to.F90
 ) # NVIDIA
