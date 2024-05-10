@@ -12,6 +12,19 @@ if(TEST_SUITE_POVRAY_ROOT)
     ${TEST_SUITE_POVRAY_ROOT}/source/libpng/example.c
   )
 
+if(APPLE)
+  # Building Povray breaks with -fdefine-target-os-macros, add flag to disable
+  # it as workaround.
+  include(CheckCCompilerFlag)
+  check_c_compiler_flag(-fno-define-target-os-macros
+                        COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+  if (COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+	list(APPEND CPPFLAGS
+      -fno-define-target-os-macros
+    )
+  endif()
+endif()
+
   list(APPEND CPPFLAGS
     -I${TEST_SUITE_POVRAY_ROOT}/source
     -I${TEST_SUITE_POVRAY_ROOT}/source/unix

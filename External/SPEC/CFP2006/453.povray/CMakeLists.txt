@@ -9,6 +9,17 @@ if(ARCH STREQUAL "AArch64" OR ARCH STREQUAL "LoongArch")
   list(APPEND CXXFLAGS -ffp-contract=off)
 endif()
 
+if(APPLE)
+  # Building Povray breaks with -fdefine-target-os-macros, add flag to disable
+  # it as workaround.
+  include(CheckCCompilerFlag)
+  check_c_compiler_flag(-fno-define-target-os-macros
+                        COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+  if (COMPILER_HAS_NO_DEFINE_TARGET_OS_MACROS)
+    add_compile_options(-fno-define-target-os-macros)
+  endif()
+endif()
+
 macro(test_input run_type stdout_reltol)
   llvm_test_run(RUN_TYPE ${run_type}
     WORKDIR %S/data/${run_type}/input
