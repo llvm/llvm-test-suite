@@ -1195,6 +1195,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   binding_label_tests_26b.f90
   test_common_binding_labels_2_main.f03
+  string_1.f90 # Expect error on 32 bits platform 
 
   # Tests that exercise gfortran's ability to set -std=f95 and then see errors on newer features
   abstract_type_1.f90
