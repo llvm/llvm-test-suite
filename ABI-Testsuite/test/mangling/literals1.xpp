@@ -1,8 +1,10 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// RUN: cxx_compiler cxx_11 -fclang-abi-compat=17 -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes --check-prefix=LP64-17 --check-prefix=CHECK17 %s
 // RUN: cxx_compiler cxx_11 -c %s -o %t.o
-// RUN: bindump %t.o | FileCheck prefixes %s
+// RUN: bindump %t.o | FileCheck prefixes --check-prefix=LP64-18 --check-prefix=CHECK18 %s
 
 
 
@@ -22,25 +24,35 @@ enum colour { RED = -3, GREEN, BLUE};
 // use long type for enumeration
 enum bigcolour { YELLOW = (1l << 32), CYAN, MAGENTA};
 void callreturnit() {
-    // CHECK-DAG: _Z8returnitIiLi4EET_v
+    // CHECK17-DAG: _Z8returnitIiLi4EET_v
+    // CHECK18-DAG: _Z8returnitIiTnT_Li4EES0_v
     auto a = returnit<int, 4>();
-    // CHECK-DAG: _Z8returnitIjLj4EET_v
+    // CHECK17-DAG: _Z8returnitIjLj4EET_v
+    // CHECK18-DAG: _Z8returnitIjTnT_Lj4EES0_v
     auto b = returnit<unsigned int, 4>();
-    // CHECK-DAG: _Z8returnitIlLl4EET_v
+    // CHECK17-DAG: _Z8returnitIlLl4EET_v
+    // CHECK18-DAG: _Z8returnitIlTnT_Ll4EES0_v
     auto c = returnit<long, 4>();
-    // CHECK-DAG: _Z8returnitImLm4EET_v
+    // CHECK17-DAG: _Z8returnitImLm4EET_v
+    // CHECK18-DAG: _Z8returnitImTnT_Lm4EES0_v
     auto d = returnit<unsigned long, 4>();
-    // CHECK-DAG: _Z8returnitIxLxn456789EET_v
+    // CHECK17-DAG: _Z8returnitIxLxn456789EET_v
+    // CHECK18-DAG: _Z8returnitIxTnT_Lxn456789EES0_v
     auto e = returnit<long long, -456789>();
-    // CHECK-DAG: _Z8returnitIbLb1EET_v
+    // CHECK17-DAG: _Z8returnitIbLb1EET_v
+    // CHECK18-DAG: _Z8returnitIbTnT_Lb1EES0_v
     auto f = returnit<bool, true>();
-    // CHECK-DAG: _Z8returnitIbLb0EET_v
+    // CHECK17-DAG: _Z8returnitIbLb0EET_v
+    // CHECK18-DAG: _Z8returnitIbTnT_Lb0EES0_v
     auto g = returnit<bool, false>();
-    // CHECK-DAG: _Z8returnitIDnLDn0EET_v
+    // CHECK17-DAG: _Z8returnitIDnLDn0EET_v
+    // CHECK18-DAG: _Z8returnitIDnTnT_LDn0EES0_v
     auto n = returnit<std::nullptr_t, nullptr>();
-    // CHECK-DAG: _Z8returnitI6colourLS0_n2EET_v
+    // CHECK17-DAG: _Z8returnitI6colourLS0_n2EET_v
+    // CHECK18-DAG: _Z8returnitI6colourTnT_LS0_n2EES1_v
     auto cg = returnit<colour, GREEN>();
-    // LP64-DAG: _Z8returnitI9bigcolourLS0_4294967296EET_v
+    // LP64-17-DAG: _Z8returnitI9bigcolourLS0_4294967296EET_v
+    // LP64-18-DAG: _Z8returnitI9bigcolourTnT_LS0_4294967296EES1_v
     // ILP32-DAG: _Z8returnitI9bigcolourLS0_n2147483648EET_v
     auto cy = returnit<bigcolour, YELLOW>();
 }

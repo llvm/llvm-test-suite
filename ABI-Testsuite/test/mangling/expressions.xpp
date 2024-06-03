@@ -1,6 +1,8 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// RUN: cxx_compiler cxx_11 -fclang-abi-compat=17 cxx_rtti cxx_exceptions -c %s -o %t.o
+// RUN: bindump %t.o | FileCheck prefixes --check-prefix=CHECK17 --check-prefix=LP64-17 %s
 // RUN: cxx_compiler cxx_11 cxx_rtti cxx_exceptions -c %s -o %t.o
 // RUN: bindump %t.o | FileCheck prefixes %s
 
@@ -9,14 +11,13 @@
 template<class T, int N> struct S1 {};
 template<class T, T N> struct S2 {};
 
-// LP64-DAG: _Z1fIiEv2S1IT_Li16EE
 // ILP32-DAG: _Z1fIiEv2S1IT_Li12EE
 template<class T> void f(S1<T, sizeof(long double)>);
  // The sizeof(...) is not instantiation-dependent, and converted to int:
  // the result is encoded as "Li16E" for 16-byte long double types.
 template <> void f<int>(S1<int, sizeof(long double)>) {}
 
-// LP64-DAG: _Z1fIiEv2S2IT_XLm16EEE
+// LP64-17-DAG: _Z1fIiEv2S2IT_Lm16EE
 // ILP32-DAG: _Z1fIiEv2S2IT_XLj12EEE
 template<class T> void f(S2<T, sizeof(long double)>);
  // The sizeof(...) is not instantiaion-dependent, and converted to an
