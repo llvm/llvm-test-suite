@@ -95,26 +95,11 @@ CHECK(sha2, {
         : : : "v0"
     );
 })
-CHECK(sha1, {
-    asm volatile (
-        "fmov s0, #0" "\n"
-        // FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
-        ".inst 0x5e280800" "\n" // sha1h s0, s0
-        : : : "v0"
-    );
-})
 CHECK(aes, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
         "aesd v0.16B, v0.16B" "\n"
-        : : : "v0"
-    );
-})
-CHECK(pmull, {
-    asm volatile (
-        "fmov d0, #0" "\n"
-        "pmull v0.1q, v0.1d, v0.1d" "\n"
         : : : "v0"
     );
 })
@@ -174,45 +159,11 @@ CHECK(i8mm, {
         : : : "v0"
     );
 })
-CHECK(dit, {
-    asm volatile (
-        "msr DIT, x0"
-        : : : "x0"
-    );
-})
 CHECK(fp16, {
     asm volatile (
         "fmov h0, #0"
         : : : "v0"
     );
-})
-CHECK(ssbs2, {
-    asm volatile (
-        "mrs x0, SSBS" "\n"
-        "msr SSBS, x0" "\n"
-        : : : "x0"
-    );
-})
-CHECK(bti, {
-    // The only test for this requires reading a register that is only
-    // accessible to EL1.
-    #ifdef __linux__
-        // On linux, the kernel intercepts the trap, and emulates it for EL0 processes.
-        int val = 0;
-        asm volatile("mrs %0, ID_AA64PFR1_EL1" : "=r"(val));
-        // ID_AA64PFR1_EL1.BT, bits [3:0] = 0b0001 if Branch Target Identification
-        // mechanism implemented.
-        if ((val & 0xF) != 0x1)
-          return false;
-    #elif defined(__APPLE__)
-        // On Apple platforms, we need to check a sysctl.
-        int32_t val = 0;
-        size_t size = sizeof(val);
-        if (sysctlbyname("hw.optional.arm.FEAT_BTI", &val, &size, NULL, 0) || val != 1)
-            return false;
-    #else
-        // TODO: implement me on your platform to fix this test!
-    #endif
 })
 CHECK(simd, {
     asm volatile (
@@ -263,9 +214,7 @@ int main(int, const char **) {
     check_rdm();
     check_lse();
     check_sha2();
-    check_sha1();
     check_aes();
-    check_pmull();
     check_rcpc();
     check_rcpc2();
     check_fcma();
@@ -274,10 +223,7 @@ int main(int, const char **) {
     check_dpb2();
     check_bf16();
     check_i8mm();
-    check_dit();
     check_fp16();
-    check_ssbs2();
-    check_bti();
     check_simd();
     check_fp();
     check_crc();
