@@ -35,7 +35,7 @@ to work. Available options are:
  * `-DTEST_SUITE_SYSTEM_GPU=nvidia` (select tests that should work with Clang/Flang on recent Nvidia GPUs)
  * `-DTEST_SUITE_SYSTEM_GPU=native` (select one of the options above based on which GPU is installed)
  * `-DTEST_SUITE_SYSTEM_GPU=all` (select all SOLLVE V&V tests)
- * `-DTEST_SUITE_SYSTEM_GPU=auto` (Use `native` for Clang/Flang, `all` for other compilers)
+ * `-DTEST_SUITE_SYSTEM_GPU=auto` (Use suitable preselected list, otherwise `all`)
 
 
 An example run is:
