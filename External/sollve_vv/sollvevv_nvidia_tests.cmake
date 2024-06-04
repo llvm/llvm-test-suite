@@ -1,4 +1,4 @@
-message(STATUS "Using SOLLVE V&V tests known to work with Clang/Flang on AMD GPUs")
+message(STATUS "Using SOLLVE V&V tests known to work with Clang/Flang on Nvidia GPUs")
 set(TEST_SUITE_SOLLVEVV_TESTS
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
