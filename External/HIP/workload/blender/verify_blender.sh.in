@@ -1,0 +1,11 @@
+#!/bin/bash
+
+grep "Blender test passes" $1
+ret=$?
+if [[ $ret -ne 0 ]]; then
+  cat $1
+fi
+if grep "Skip HIP Blender test since no blender or test scenes found" $1; then
+  exit 0
+fi
+exit $ret
