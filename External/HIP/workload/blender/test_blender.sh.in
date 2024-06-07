@@ -8,7 +8,7 @@ export CCC_OVERRIDE_OPTIONS=${HIP_BLENDER_TEST_CCC_OVERRIDE_OPTIONS:-"+-v"}
 export HIP_CLANG_PATH=${HIP_CLANG_PATH:-"@HIP_CLANG_PATH@"}
 export HIPCC_VERBOSE=${HIPCC_VERBOSE:-7}
 
-blender_options=${HIP_BLENDER_TEST_OPTIONS:-"-F PNG --debug-cycles -- --cycles-device HIP"}
+blender_options=${HIP_BLENDER_TEST_OPTIONS:-"--debug-cycles -- --cycles-device HIP"}
 blender_dir=${HIP_BLENDER_TEST_BIN_DIR:-"$TEST_SUITE_HIP_ROOT/blender"}
 scene_dir=${HIP_BLENDER_TEST_SCENES_DIR:-"$TEST_SUITE_HIP_ROOT/Blender_Scenes"}
 log_dir=${HIP_BLENDER_TEST_LOG_DIR:-"$scene_dir/logs"}
@@ -20,7 +20,7 @@ clang_hash=""
 
 get_clang_hash() {
   clang_version_output=$($HIP_CLANG_PATH/clang -v 2>&1)
-  clang_hash=$(echo "$clang_version_output" | grep -oP '(?<=llvm-project )\w{8}')
+  clang_hash=$(echo "$clang_version_output" | sed -n 's/^clang version.*(.* \([0-9a-f]\+\)).*/\1/p' | cut -c1-8)
   echo "$clang_hash"
 }
 
@@ -63,7 +63,7 @@ render() {
   echo "Render $input"
 
   blender_output=$(mktemp)
-  timeout 300 $blender_dir/blender -b $input -o ${output}### -f $frame $blender_options 2>&1 | tee $blender_output
+  timeout 300 $blender_dir/blender -b $input -F PNG -o ${output}### -f $frame $blender_options 2>&1 | tee $blender_output
   blender_return_code=${PIPESTATUS[0]}
 
   average_time=$(grep -P "^\s*Path Tracing\s+\d+\.\d+\s+\d+\.\d+" $blender_output | awk '{print $4}')
