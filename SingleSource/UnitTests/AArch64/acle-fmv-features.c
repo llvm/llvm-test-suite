@@ -42,7 +42,7 @@ static bool any_fails = false;
         } \
     }
 #else
-#define CHECK(X, BODY) \
+#define CHECK(X, TARGET_GUARD, BODY) \
     static void check_##X(void) { \
         printf("%s\n", #X); \
     }
