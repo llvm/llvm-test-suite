@@ -15,8 +15,8 @@ static bool safe_try_feature(bool (*try_feature)(void));
 static bool any_fails = false;
 
 #if __HAVE_FUNCTION_MULTI_VERSIONING
-#define CHECK(X, BODY) \
-    __attribute__((target(#X))) \
+#define CHECK(X, TARGET_GUARD, BODY) \
+    __attribute__((target(#TARGET_GUARD))) \
     static bool try_##X(void) { \
         do \
             BODY \
@@ -48,25 +48,25 @@ static bool any_fails = false;
     }
 #endif
 
-CHECK(flagm, {
+CHECK(flagm, flagm, {
     asm volatile (
         "cfinv" "\n"
         "cfinv" "\n"
     );
 })
-CHECK(flagm2, {
+CHECK(flagm2, arch=armv8.5-a, {
     asm volatile (
         "axflag" "\n"
         "xaflag" "\n"
     );
 })
-CHECK(dotprod, {
+CHECK(dotprod, dotprod, {
     asm volatile (
         "udot v0.4S,v1.16B,v2.16B"
         : : : "v0"
     );
 })
-CHECK(sha3, {
+CHECK(sha3, sha3, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -74,20 +74,20 @@ CHECK(sha3, {
         : : : "v0"
     );
 })
-CHECK(rdm, {
+CHECK(rdm, rdm, {
     asm volatile (
         "sqrdmlah s0, s1, s2"
         : : : "s0"
     );
 })
-CHECK(lse, {
+CHECK(lse, lse, {
     uint64_t pointee = 0;
     asm volatile (
         "swp xzr, xzr, [%[pointee]]"
         : : [pointee]"r"(&pointee)
     );
 })
-CHECK(sha2, {
+CHECK(sha2, sha2, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -95,7 +95,7 @@ CHECK(sha2, {
         : : : "v0"
     );
 })
-CHECK(sha1, {
+CHECK(sha1, sha1, {
     asm volatile (
         "fmov s0, #0" "\n"
         // FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
@@ -103,7 +103,7 @@ CHECK(sha1, {
         : : : "v0"
     );
 })
-CHECK(aes, {
+CHECK(aes, aes, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -111,21 +111,21 @@ CHECK(aes, {
         : : : "v0"
     );
 })
-CHECK(pmull, {
+CHECK(pmull, aes, {
     asm volatile (
         "fmov d0, #0" "\n"
         "pmull v0.1q, v0.1d, v0.1d" "\n"
         : : : "v0"
     );
 })
-CHECK(rcpc, {
+CHECK(rcpc, rcpc, {
     int x;
     asm volatile (
         "ldaprb w0, [%0]"
         : : "r" (&x) : "w0"
     );
 })
-CHECK(rcpc2, {
+CHECK(rcpc2, rcpc2, {
     int x;
     asm volatile (
         "mov x1, %0" "\n"
@@ -134,66 +134,66 @@ CHECK(rcpc2, {
         : : "r" (&x) : "w0"
     );
 })
-CHECK(fcma, {
+CHECK(fcma, fcma, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fcadd v0.2s, v0.2s, v0.2s, #90" "\n"
         : : : "v0"
     );
 })
-CHECK(jscvt, {
+CHECK(jscvt, jscvt, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fjcvtzs w1, d0" "\n"
         : : : "w1", "d0"
     );
 })
-CHECK(dpb, {
+CHECK(dpb, arch=armv8.2-a, {
     int x;
     asm volatile (
         "dc cvap, %0"
         : : "r" (&x)
     );
 })
-CHECK(dpb2, {
+CHECK(dpb2, arch=armv8.5-a, {
     int x;
     asm volatile (
         "dc cvadp, %0"
         : : "r" (&x)
     );
 })
-CHECK(bf16, {
+CHECK(bf16, bf16, {
     asm volatile (
         "bfdot v0.4S,v1.8H,v2.8H"
         : : : "v0"
     );
 })
-CHECK(i8mm, {
+CHECK(i8mm, i8mm, {
     asm volatile (
         "sudot v0.4S,v1.16B,v2.4B[0]"
         : : : "v0"
     );
 })
-CHECK(dit, {
+CHECK(dit, dit, {
     asm volatile (
         "msr DIT, x0"
         : : : "x0"
     );
 })
-CHECK(fp16, {
+CHECK(fp16, fp16, {
     asm volatile (
         "fmov h0, #0"
         : : : "v0"
     );
 })
-CHECK(ssbs2, {
+CHECK(ssbs2, ssbs, {
     asm volatile (
         "mrs x0, SSBS" "\n"
         "msr SSBS, x0" "\n"
         : : : "x0"
     );
 })
-CHECK(bti, {
+CHECK(bti, bti, {
     // The only test for this requires reading a register that is only
     // accessible to EL1.
     #ifdef __linux__
@@ -214,28 +214,28 @@ CHECK(bti, {
         // TODO: implement me on your platform to fix this test!
     #endif
 })
-CHECK(simd, {
+CHECK(simd, simd, {
     asm volatile (
         "mov v0.B[0], w0"
         : : :
     );
 })
-CHECK(fp, {
+CHECK(fp, fp, {
     asm volatile (
         "fmov s0, #0"
         : : : "v0"
     );
 })
-CHECK(crc, {
+CHECK(crc, crc, {
     asm volatile ( "crc32b wzr, wzr, wzr");
 })
-CHECK(sme, {
+CHECK(sme, sme, {
     asm volatile (
         "rdsvl x0, #1"
         : : : "x0"
     );
 })
-CHECK(sme2, {
+CHECK(sme2, sme2, {
     asm volatile (
         "smstart za" "\n"
         "zero { zt0 }" "\n"
