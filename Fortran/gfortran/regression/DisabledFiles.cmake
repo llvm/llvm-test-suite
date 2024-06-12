@@ -1534,6 +1534,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   directive_unroll_5.f90
   # Tests "!GCC$ attributes weak :: x"
   weak-3.f90
+  # Test is not conformant as it writes to a constant argument
+  # Similar test, that is conformant, added to hello.f90
+  assign_5.f90 
+   
 
   # Probable bugs
   # ["a", "ab"]
