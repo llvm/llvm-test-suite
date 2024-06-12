@@ -10,6 +10,7 @@ go to a
 777 continue
 end
 program test
-call s1 (1)
+integer x
+call s1 (x)
 end
 
