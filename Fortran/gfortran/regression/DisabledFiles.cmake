@@ -1535,7 +1535,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Tests "!GCC$ attributes weak :: x"
   weak-3.f90
   # Test is not conformant as it writes to a constant argument
-  # Similar test, that is conformant, added to hello.f90
+  # Similar test, that is conformant, added to UnitTests/assign-goto
   assign_5.f90 
    
 
