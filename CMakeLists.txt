@@ -107,7 +107,9 @@ mark_as_advanced(TEST_SUITE_REMOTE_CLIENT)
 if(TEST_SUITE_REMOTE_HOST)
   add_custom_target(rsync
     COMMAND ${PROJECT_SOURCE_DIR}/utils/rsync.sh
-                ${TEST_SUITE_REMOTE_HOST} ${PROJECT_BINARY_DIR}
+                ${TEST_SUITE_REMOTE_CLIENT}
+                ${TEST_SUITE_REMOTE_HOST}
+                ${PROJECT_BINARY_DIR}
     USES_TERMINAL
   )
 endif()
