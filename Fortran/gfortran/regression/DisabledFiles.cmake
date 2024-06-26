@@ -332,7 +332,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   erf_3.F90
 
   # Test is not conformant as it expects different value of cmdstat and cmdmsg
-  # Similar test added: UnitTests/assign-goto
+  # Similar test added: UnitTests/execute_command_line
   execute_command_line_1.f90
   execute_command_line_3.f90
 
