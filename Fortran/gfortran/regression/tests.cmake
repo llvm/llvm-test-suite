@@ -483,7 +483,7 @@ compile;boz_12.f90;;;;
 compile;boz_4.f90;;-fallow-invalid-boz;;
 compile;boz_5.f90;xfail;;;
 compile;boz_7.f90;xfail;-std=f95 -pedantic;;
-compile;boz_8.f90;xfail;-std=f2003;;
+compile;boz_8.f90;;;;
 compile;boz_complex_1.f90;xfail;;;
 compile;boz_complex_2.f90;;-fallow-invalid-boz;;
 compile;boz_dshift_1.f90;xfail;;;
