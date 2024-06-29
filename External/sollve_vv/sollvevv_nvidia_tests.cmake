@@ -1,9 +1,5 @@
-# SOLLVE OpenMP Offloading Validation & Verification Suite
-# https://crpl.cis.udel.edu/ompvvsollve/
-# Maintained By: Aaron Jarmusch <Jarmusch@udel.edu>
-
-
-set(NVIDIA
+message(STATUS "Using SOLLVE V&V tests known to work with Clang/Flang on Nvidia GPUs")
+set(TEST_SUITE_SOLLVEVV_TESTS
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -187,7 +183,6 @@ set(NVIDIA
   5.0/master_taskloop_simd/test_master_taskloop_simd.c
   5.0/master_taskloop_simd/test_master_taskloop_simd_device.c
   5.0/metadirective/test_metadirective_arch_is_nvidia.c
-  5.0/metadirective/test_metadirective_arch_is_nvidia.c
   5.0/metadirective/test_metadirective_arch_nvidia_or_amd.c
   5.0/parallel_for/test_parallel_for_allocate.c
   5.0/parallel_for/test_parallel_for_notequals.c
@@ -363,4 +358,4 @@ set(NVIDIA
   4.5/target_update/test_target_update_from.F90
   4.5/target_update/test_target_update_if.F90
   4.5/target_update/test_target_update_to.F90
-) # NVIDIA
+)
