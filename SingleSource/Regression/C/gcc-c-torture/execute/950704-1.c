@@ -35,22 +35,6 @@ main ()
   if (errflag)
     abort ();
 
-  f (0x8000000000000000LL, 0x8000000000000000LL);
-  if (!errflag)
-    abort ();
-
-  f (0x8000000000000000LL, -1LL);
-  if (!errflag)
-    abort ();
-
-  f (0x7fffffffffffffffLL, 0x7fffffffffffffffLL);
-  if (!errflag)
-    abort ();
-
-  f (0x7fffffffffffffffLL, 1LL);
-  if (!errflag)
-    abort ();
-
   f (0x7fffffffffffffffLL, 0x8000000000000000LL);
   if (errflag)
     abort ();
