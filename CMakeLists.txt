@@ -249,6 +249,8 @@ include(TestSuite)
 include(SingleMultiSource)
 # Needs by External/sollve_vv.
 find_package(OpenMP)
+# Needs by External/OpenACCV_V.
+find_package(OpenACC)
 # Fortran Helper Modules
 if(TEST_SUITE_FORTRAN)
   include(Fortran)
