@@ -115,6 +115,8 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   print_fmt_3.f
   # Unsupported extension intrinsic functions DACOSH, ZCOS, &c.
   specifics_2.f90
+  # Passing Hollerith to CLASS(*). This is not standard. Flang passes it as character.
+  unlimited_polymorphic_14.f90
   # Unsupported predefined macro: __TIMESTAMP__
   wdate-time.F90
 )
@@ -148,6 +150,8 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   assumed_rank_20.f90
   assumed_rank_21.f90
   assumed_type_9.f90
+  assumed_type_10.f90
+  assumed_type_11.f90
   bind-c-contiguous-2.f90
   interface_49.f90
   is_contiguous_2.f90
@@ -160,6 +164,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   sizeof_4.f90
   sizeof_6.f90
   unlimited_polymorphic_1.f03
+  unlimited_polymorphic_32.f90
 
   # unimplemented: ASYNCHRONOUS in procedure interface
   assumed_rank_13.f90
@@ -183,47 +188,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pointer_check_5.f90
   pr39695_1.f90
   pr63797.f90
-
-  # unimplemented: support for polymorphic types.
-  allocate_alloc_opt_8.f90
-  assumed_type_10.f90
-  assumed_type_11.f90
-  assumed_type_16.f90
-  assumed_type_1.f90
-  assumed_type_2.f90
-  assumed_type_4.f90
-  c_f_pointer_tests_5.f90
-  class_3.f03
-  class_45a.f03
-  class_52.f90
-  class_allocate_19.f03
-  class_array_3.f03
-  coarray_allocate_2.f08
-  coarray_allocate_3.f08
-  coarray_allocate_5.f08
-  coarray_lib_alloc_2.f90
-  coarray_lib_alloc_3.f90
-  coarray_poly_5.f90
-  der_io_5.f90
-  implicit_class_1.f90
-  intent_out_7.f90
-  pointer_array_5.f90
-  pr105501.f90
-  pr48958.f90
-  pr57987.f90
-  pr63331.f90
-  pr78092.f90
-  ptr_func_assign_2.f08
-  realloc_on_assign_20.f90
-  realloc_on_assign_21.f90
-  select_type_17.f03
-  select_type_48.f90
-  sizeof_5.f90
-  storage_size_1.f08
-  typebound_proc_15.f03
-  unlimited_polymorphic_14.f90
-  unlimited_polymorphic_3.f03
-  unlimited_polymorphic_32.f90
 
   # unimplemented: BIND (C) internal procedure.
   ISO_Fortran_binding_19.f90
@@ -277,12 +241,18 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_19.f90
   coarray_25.f90
   coarray_30.f90
+  coarray_allocate_2.f08
+  coarray_allocate_3.f08
+  coarray_allocate_5.f08
   coarray_alloc_with_implicit_sync_1.f90
   coarray_alloc_with_implicit_sync_2.f90
   coarray_lib_alloc_1.f90
+  coarray_lib_alloc_2.f90
+  coarray_lib_alloc_3.f90
   coarray_lib_token_3.f90
   coarray_lock_7.f90
   coarray_poly_4.f90
+  intent_out_7.f90
 
   # unimplemented: coarray in procedure interface
   coarray_29_1.f90
@@ -294,12 +264,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_lib_move_alloc_1.f90
   coarray_lib_this_image_1.f90
   coarray_lib_this_image_2.f90
+  coarray_poly_5.f90
   coarray_poly_6.f90
   coarray_poly_7.f90
   coarray_poly_8.f90
   class_optional_1.f90
   class_optional_2.f90
   coarray_41.f90
+  pr63331.f90
   submodule_26.f08
 
   # unimplemented: coarray reference
@@ -538,7 +510,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   c_char_tests.f03
 
   # Categorize and debug further
-  bounds_check_17.f90 # needs -fcheck=bounds
   c_char_tests_3.f90 # runtime segfault
   c_funptr_1.f90 # needs "win32_types" module
   c_funptr_1_mod.f90 # needs "win32_types" module
@@ -573,6 +544,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr68078.f90
   pr69739.f90
   typebound_call_32.f90
+
+  # Crashes at compile time in certain builds
+  # https://github.com/llvm/llvm-project/issues/89179
+  class_allocate_19.f03
 
   # --------------------------------------------------------------------------
   #
@@ -1221,6 +1196,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   boz_10.f90
   boz_7.f90
   byte_1.f90
+  class_3.f03
   common_19.f90
   common_9.f90
   constructor_4.f90
@@ -1283,10 +1259,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   warnings_are_errors_1.f90
 
   # -std=f2003 tests to detect Fortran 2008 features
+  allocate_alloc_opt_8.f90
   bessel_3.f90
   bind_c_array_params.f03
   bind_c_bool_1.f90
   binding_label_tests_20.f90
+  class_52.f90
   c_funloc_tests_5.f03
   c_kind_int128_test1.f03
   c_loc_test_19.f90
@@ -1313,12 +1291,17 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pointer_target_2.f90
   pr95373_2.f90
   ptr-func-2.f90
+  ptr_func_assign_2.f08
   pure_formal_2.f90
   rank_2.f90
+  realloc_on_assign_20.f90
   type_decl_2.f90
   typebound_proc_3.f03
+  typebound_proc_15.f03
 
   # -std=f2008 tests to detect Fortran 2018 features
+  assumed_type_16.f90
+  assumed_type_4.f90
   bind_c_usage_28.f90
   c_loc_tests_11.f03
   coarray_collectives_2.f90
@@ -1346,6 +1329,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Tests that are not errors, and compile just fine with flang
   constant_shape.f90
   continuation_2.f90
+  der_io_5.f90 # gfortran's error is inappropriate, array-ctor are not polymorphic.
   equiv_pure.f90 # gfortran's error is inappropriate for this test
   finalize_9.f90
   func_decl_3.f90
@@ -1354,6 +1338,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   interface_7.f90
   intrinsic_short-long.f90
   parameter_array_init_6.f90
+  pr105501.f90 # Missing space between TYPE and IS is not ambiguous for parser.
   pr19936_1.f90 # ac-do-variables are their own entities
   pr35031.f90 # ENTRY in ELEMENTAL
   pr43996.f90
@@ -1363,6 +1348,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr88328.f90
   recursive_check_1.f # RECURSIVE is now default
   recursive_check_2.f90
+  select_type_17.f03 # gfortran's error is inappropriate: pointer results are variables.
   string_1_lp64.f90
   substr_10.f90
 
@@ -1390,6 +1376,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   associated_3.f90
   bessel_5_redux.f90
   bounds_temporaries_1.f90
+  c_f_pointer_tests_5.f90
   dec_loc_rval_3.f03
   do_4.f
   do_check_5.f90
@@ -1896,6 +1883,13 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   init_flag_6.f90
   init_flag_7.f90
   init_flag_9.f90
+
+  # Require -fno-realloc-lhs or similar.
+  realloc_on_assign_21.f90
+
+  # Require -fcheck=bounds or similar.
+  bounds_check_17.f90
+  pr48958.f90
 
   # https://github.com/llvm/llvm-project/issues/84088
   pr36006-2.f90
