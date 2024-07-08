@@ -52,7 +52,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: OpenMP Block construct clause
   pr71758.f90
-  pr77352.f90
   pr81887.f90
   target-device-2.f90
 
@@ -61,13 +60,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: Unhandled block directive
   pr39152.f90
-  pr69128.f90
   pr69281.f90
-  pr70855.f90
   pr95869.f90
   teams-4.f90
-  workshare2.f90
-  workshare3.f90
 
   # unimplemented: OpenMPDeclareSimdConstruct
   pr79154-1.f90
