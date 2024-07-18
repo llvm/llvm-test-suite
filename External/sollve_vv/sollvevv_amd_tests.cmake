@@ -1,8 +1,5 @@
-# SOLLVE OpenMP Offloading Validation & Verification Suite
-# https://crpl.cis.udel.edu/ompvvsollve/
-# Maintained By: Aaron Jarmusch <Jarmusch@udel.edu>
-
-set(AMD
+message(STATUS "Using SOLLVE V&V tests known to work with Clang/Flang on AMD GPUs")
+set(TEST_SUITE_SOLLVEVV_TESTS
   4.5/application_kernels/alpaka_complex_template.cpp
   4.5/application_kernels/gemv_target.cpp
   4.5/application_kernels/gemv_target_many_matrices.cpp
@@ -182,7 +179,6 @@ set(AMD
   5.0/master_taskloop/test_master_taskloop.c
   5.0/master_taskloop_simd/test_master_taskloop_simd.c
   5.0/metadirective/test_metadirective_arch_is_nvidia.c
-  5.0/metadirective/test_metadirective_arch_is_nvidia.c
   5.0/metadirective/test_metadirective_arch_nvidia_or_amd.c
   5.0/parallel_for/test_parallel_for_allocate.c
   5.0/parallel_for/test_parallel_for_notequals.c
@@ -322,4 +318,4 @@ set(AMD
   5.0/requires/test_requires_atomic_default_mem_order_seq_cst.F90
   5.0/simd/test_simd_if.F90
   4.5/offloading_success.F90
-) # AMD
+)
