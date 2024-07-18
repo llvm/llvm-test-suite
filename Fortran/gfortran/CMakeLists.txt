@@ -138,8 +138,10 @@ set(FLANG_ERRORING_FFLAGS
   -fdiagnostics-format=json
   -fdiagnostics-show-option
   -fdollar-ok
+  -fdump-fortran-original
   -fdump-ipa-cp-details
   -fdump-ipa-fnsummary-details
+  -fdump-ipa-inline
   -fdump-ipa-inline-details
   -fdump-ipa-sra-details
   -fdump-rtl-combine
@@ -149,6 +151,7 @@ set(FLANG_ERRORING_FFLAGS
   -fdump-tree-cunrolli-details
   -fdump-tree-dom2
   -fdump-tree-dom2-details
+  -fdump-tree-dse-details
   -fdump-tree-forwprop2
   -fdump-tree-fre1
   -fdump-tree-gimple
