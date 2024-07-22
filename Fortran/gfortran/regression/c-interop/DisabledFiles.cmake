@@ -38,15 +38,11 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   ubound.f90
 
   # unimplemented: BIND(C) internal procedures
-  deferred-character-2.f90
   fc-out-descriptor-5.f90
-  ff-descriptor-5.f90
   ff-descriptor-6.f90
-  ff-descriptor-7.f90
 
   # unimplemented: support for polymorphic types
   c407a-1.f90
-  c407b-1.f90
 )
 
 # These tests are skipped because they trigger internal compiler errors.

@@ -28,9 +28,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   large_2.f90
   rounding_1.f90
   rounding_3.f90
-  signaling_1.f90
-  signaling_2.f90
-  signaling_3.f90
 
   # unimplemented: no math runtime available for 'sqrt(f80)'
   large_1.f90
