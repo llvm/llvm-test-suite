@@ -92,11 +92,14 @@ int main(int argc, char* const* argv) {
     retcode = result;
     signal = 0;
   }
-#elif defined(WEXITSTATUS) && defined(WTERMSIG)
+#elif defined(WIFEXITED) && defined(WEXITSTATUS) && defined(WIFSIGNALED) &&    \
+    defined(WTERMSIG)
   // On POSIX systems and Solaris, result is a composite value of the exit code
   // and, potentially, the signal that caused termination of the command.
-  retcode = WEXITSTATUS(result);
-  signal = WIFSIGNALED(result);
+  if (WIFEXITED(result))
+    retcode = WEXITSTATUS(result);
+  if (WIFSIGNALED(result))
+    signal = WTERMSIG(result);
 #else
 #error "Unsupported system"
 #endif
