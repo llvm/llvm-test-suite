@@ -96,7 +96,7 @@ int main(int argc, char* const* argv) {
   // On POSIX systems and Solaris, result is a composite value of the exit code
   // and, potentially, the signal that caused termination of the command.
   retcode = WEXITSTATUS(result);
-  signal = WTERMSIG(result);
+  signal = WIFSIGNALED(result);
 #else
 #error "Unsupported system"
 #endif
