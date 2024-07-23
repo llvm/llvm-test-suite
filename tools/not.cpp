@@ -29,10 +29,6 @@
 #include <sys/wait.h>
 #endif
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
-
 int main(int argc, char* const* argv) {
   bool expectCrash = false;
 
@@ -59,21 +55,20 @@ int main(int argc, char* const* argv) {
     return 1;
 
   int result;
-#ifdef _WIN32
-  std::stringstream ss;
-  ss << argv[0];
-  for (int i = 1; i < argc; ++i)
-    ss << " " << argv[i];
-  std::string cmd = ss.str();
-  result = std::system(cmd.c_str());
-#elif defined(__unix__) || defined(__APPLE__)
+
+#if defined(__unix__) || defined(__APPLE__)
   pid_t pid;
   if (posix_spawn(&pid, argv[0], NULL, NULL, argv, NULL))
     return EXIT_FAILURE;
   if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
     return EXIT_FAILURE;
 #else
-  #error "Unsupported system"
+  std::stringstream ss;
+  ss << argv[0];
+  for (int i = 1; i < argc; ++i)
+    ss << " " << argv[i];
+  std::string cmd = ss.str();
+  result = std::system(cmd.c_str());
 #endif
 
   int retcode = 0;
