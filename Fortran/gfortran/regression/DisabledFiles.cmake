@@ -468,6 +468,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: 'fir.convert' op invalid type conversion
   c_char_tests_4.f90
+  c_char_tests_5.f90
 
   # error: not a constant derived type expression
   coarray_42.f90
