@@ -466,10 +466,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   winapi.f90 # needs -lkernel32 and target *-*-cygwin*
   widechar_11.f90 # No ASSIGNMENT matches TYPE(c_ptr) and TYPE(__builtin_c_ptr)
 
-  # error: 'fir.convert' op invalid type conversion
-  c_char_tests_4.f90
-  c_char_tests_5.f90
-
   # error: not a constant derived type expression
   coarray_42.f90
   init_flag_10.f90
@@ -888,6 +884,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bounds_check_strlen_4.f90
   bounds_check_strlen_5.f90
   bounds_check_strlen_7.f90
+  c_char_tests_4.f90
+  c_char_tests_5.f90
   char_bounds_check_fail_1.f90
   char_pointer_assign_4.f90
   char_pointer_assign_5.f90
