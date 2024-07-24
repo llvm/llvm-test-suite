@@ -1727,4 +1727,15 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Require -fcheck=bounds or similar.
   bounds_check_17.f90
   pr48958.f90
+
+  # These files require the __truncsfbf2 intrinsic that is not available in
+  # before GCC 13. Alternatively, it requires compiler-rt to be built and a
+  # command line option provided to instruct the compiler to use it. Currently,
+  # we do not support either a version check on GCC or require that compiler-rt
+  # be built, so these are disabled. See:
+  #
+  # https://github.com/llvm/llvm-test-suite/pull/143#discussion_r1689462248
+  #
+  fmt_en.f90
+  fmt_en_rd.f90
 )
