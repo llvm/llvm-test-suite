@@ -1,3 +1,4 @@
+
 #===------------------------------------------------------------------------===#
 #
 # Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -21,6 +22,5 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr90681.f
   pr97761.f90
   pr99746.f90
-  vect-8.f90
   vect-8-epilogue.F90
 )
