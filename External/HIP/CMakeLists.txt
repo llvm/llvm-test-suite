@@ -15,6 +15,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS empty)
   list(APPEND HIP_LOCAL_TESTS with-fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
+  list(APPEND HIP_LOCAL_TESTS memmove)
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
 
