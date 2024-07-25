@@ -24,10 +24,9 @@
 #include <windows.h>
 #endif
 
-#ifdef __APPLE__
+#if defined(__unix__) || defined(__APPLE__)
 #include <spawn.h>
 #include <sys/wait.h>
-#include <TargetConditionals.h>
 #endif
 
 int main(int argc, char* const* argv) {
@@ -56,20 +55,22 @@ int main(int argc, char* const* argv) {
     return 1;
 
   int result;
-#if !defined(TARGET_OS_IPHONE)
+
+#if defined(__unix__) || defined(__APPLE__)
+  pid_t pid;
+  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, NULL))
+    return EXIT_FAILURE;
+  if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
+    return EXIT_FAILURE;
+#else
   std::stringstream ss;
   ss << argv[0];
   for (int i = 1; i < argc; ++i)
     ss << " " << argv[i];
   std::string cmd = ss.str();
   result = std::system(cmd.c_str());
-#else
-  pid_t pid;
-  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, NULL))
-    return EXIT_FAILURE;
-  if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
-    return EXIT_FAILURE;
 #endif
+
   int retcode = 0;
   int signal = 0;
 
