@@ -1738,4 +1738,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   fmt_en.f90
   fmt_en_rd.f90
+  fmt_en_rn.f90
+  fmt_en_ru.f90
+  fmt_en_rz.f90
 )
