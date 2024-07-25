@@ -115,14 +115,35 @@ are unrelated to the gfortran tests here.
 ### Testing non-standard features/flags
 
 Additional denylists for a particular feature can be included by creating
-DisabledFilesFEATURE.cmake files (in the same format as those for the default
-denylists), and adding FEATURE to `TEST_SUITE_FORTRAN_FEATURES`. Additional
-compiler flags can be added using `CMAKE_Fortran_FLAGS`.
+`DisabledFiles_FEATURE.cmake` files (in the same format as those for the default
+denylists, `DisabledFiles.cmake`), and adding FEATURE to 
+`TEST_SUITE_FORTRAN_FEATURES`. Additional compiler flags can be added using
+`CMAKE_Fortran_FLAGS`.
 
-For example, to test HLFIR one could use
-`CMAKE_Fortran_Flags=-flang-experimental-hlfir` and
-`TEST_SUITE_FORTRAN_FEATURES=HLFIR`.
+For example, to test feature, FOO, one could use
 
+```
+cmake -DTEST_SUITE_FORTRAN_FEATURES=FOO \
+      -DCMAKE_Fortran_FLAGS=-some-foo-specific-flag-if-required \
+      <other cmake flags>
+```
+
+`DisabledFiles_FOO.cmake` files can be created in the appropriate subdirectories
+if enabling the feature/flag results in the failure of tests that otherwise pass.
+Conversely, the feature/flag may cause some disabled tests to pass. These can be
+added to an allowlist file, `EnabledFiles_FOO.cmake` in the corresponding 
+directory. The file must contain a single variable named `ENABLED_FILES` with 
+the file names of the tests that should be enabled (in the case of multi-file
+tests, this should be the name of the "main" file). An example of such a list is
+below.
+
+```
+file(GLOB ENABLED_FILES CONFIGURE_DEPENDS
+  test_1.f90
+  multifile-main.f03
+)
+
+```
 
 ### Notes for developers/maintainers ###
 
