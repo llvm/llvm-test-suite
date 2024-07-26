@@ -161,31 +161,29 @@ int run_tests(item_type *buf_reference, item_type *buf_host,
 int main(void) {
   item_type *buf_device;
   CHKHIP(hipMalloc(&buf_device, ALLOC_SIZE));
-  item_type *buf_host = (item_type *)malloc(ALLOC_SIZE);
-  item_type *buf_reference = (item_type *)malloc(ALLOC_SIZE);
+
+  std::unique_ptr<item_type> buf_host(new item_type[ALLOC_SIZE]);
+  std::unique_ptr<item_type> buf_reference(new item_type[ALLOC_SIZE]);
 
   int nerrs = 0;
-  nerrs += run_tests<128>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<130>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<137>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<3>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<1>(buf_reference, buf_host, buf_device);
+  nerrs += run_tests<128>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<130>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<137>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<3>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<1>(buf_reference.get(), buf_host.get(), buf_device);
 
   // large enough for the IR lowering in the constant case, with simple
   // residual, no residual, and maximal residual:
-  nerrs += run_tests<1025>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<1040>(buf_reference, buf_host, buf_device);
-  nerrs += run_tests<1039>(buf_reference, buf_host, buf_device);
+  nerrs += run_tests<1025>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<1040>(buf_reference.get(), buf_host.get(), buf_device);
+  nerrs += run_tests<1039>(buf_reference.get(), buf_host.get(), buf_device);
 
-  // deallocate memory
-  free(buf_reference);
-  free(buf_host);
   CHKHIP(hipFree(buf_device));
 
   if (nerrs != 0) {
-    std::cout << nerrs << " errors" << std::endl;
+    std::cout << nerrs << " errors\n";
     return 1;
   }
-  std::cout << "PASSED!" << std::endl;
+  std::cout << "PASSED!\n";
   return 0;
 }
