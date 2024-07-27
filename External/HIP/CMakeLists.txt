@@ -11,10 +11,13 @@ macro(create_local_hip_tests VariantSuffix)
   # Set per-source compilation/link options
   set_source_files_properties(with-fopenmp.hip PROPERTIES
     COMPILE_FLAGS -fopenmp)
+  set_source_files_properties(host-min-max.hip PROPERTIES
+    COMPILE_FLAGS -D__HIP_DEFINE_MIXED_HOST_MIN_MAX__)
   # Add HIP tests to be added to hip-tests-simple
   list(APPEND HIP_LOCAL_TESTS empty)
   list(APPEND HIP_LOCAL_TESTS with-fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
+  list(APPEND HIP_LOCAL_TESTS host-min-max)
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
 

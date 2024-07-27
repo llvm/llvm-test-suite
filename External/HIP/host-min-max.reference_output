@@ -1,0 +1,32 @@
+
+Testing with values: 10 (unsigned long long) and -5 (long long)
+Host std::min result: 10 (Type: unsigned long long)
+Host std::max result: 18446744073709551611 (Type: unsigned long long)
+Host HIP min result: 10 (Type: unsigned long long)
+Host HIP max result: 18446744073709551611 (Type: unsigned long long)
+
+Testing with values: -15 (int) and 20 (unsigned int)
+Host std::min result: 20 (Type: unsigned int)
+Host std::max result: 4294967281 (Type: unsigned int)
+Host HIP min result: 20 (Type: unsigned int)
+Host HIP max result: 4294967281 (Type: unsigned int)
+
+Testing with values: 2147483647 (int) and 2147483648 (unsigned int)
+Host std::min result: 2147483647 (Type: unsigned int)
+Host std::max result: 2147483648 (Type: unsigned int)
+Host HIP min result: 2147483647 (Type: unsigned int)
+Host HIP max result: 2147483648 (Type: unsigned int)
+
+Testing with values: -922337203685477580 (long long) and 922337203685477580 (unsigned long long)
+Host std::min result: 922337203685477580 (Type: unsigned long long)
+Host std::max result: 17524406870024074036 (Type: unsigned long long)
+Host HIP min result: 922337203685477580 (Type: unsigned long long)
+Host HIP max result: 17524406870024074036 (Type: unsigned long long)
+
+Testing with values: 2.5 (float) and 3.14159 (double)
+Host std::min result: 2.5 (Type: double)
+Host std::max result: 3.14159 (Type: double)
+Host HIP min result: 2.5 (Type: double)
+Host HIP max result: 3.14159 (Type: double)
+
+Pass
