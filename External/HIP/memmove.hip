@@ -25,7 +25,7 @@ using item_type = uint8_t;
 // buffers.
 #define MAX_BYTES_PER_THREAD 2048
 
-// LDS is small, so run only smaller tests there
+// LDS is small, so run only smaller tests there.
 #define MAX_BYTES_PER_THREAD_SHARED 128
 
 // Number of threads that move started in parallel.
@@ -85,11 +85,11 @@ __global__ void move_kernel_shared_const(item_type *buf_device, size_t src_idx,
   constexpr size_t stride = get_stride(SZ);
   item_type *thread_buf = buf_device + stride * tid;
   item_type *thread_buf_shared = buf_shared + stride * tid;
-  // copy the original data to shared memory
+  // Copy the original data to shared memory.
   __builtin_memcpy(thread_buf_shared, thread_buf, stride);
-  // perform the move there
+  // Perform the move there.
   TESTED_FUNCTION(thread_buf_shared + dst_idx, thread_buf_shared + src_idx, SZ);
-  // copy the modified data back to global memory
+  // Copy the modified data back to global memory.
   __builtin_memcpy(thread_buf, thread_buf_shared, stride);
 }
 
@@ -103,11 +103,11 @@ __global__ void move_kernel_stack_const(item_type *buf_device, size_t src_idx,
   if (tid >= NUM_MOVE_THREADS)
     return;
   item_type *thread_buf = buf_device + stride * tid;
-  // copy the original data to the stack
+  // Copy the original data to the stack.
   __builtin_memcpy(buf_stack, thread_buf, stride);
-  // perform the move there
+  // Perform the move there.
   TESTED_FUNCTION(buf_stack + dst_idx, buf_stack + src_idx, SZ);
-  // copy the modified data back to global memory
+  // Copy the modified data back to global memory.
   __builtin_memcpy(thread_buf, buf_stack, stride);
 }
 
@@ -129,30 +129,30 @@ __global__ void move_kernel_shared_var(item_type *buf_device, size_t src_idx,
   size_t stride = get_stride(dyn_sz);
   item_type *thread_buf = buf_device + stride * tid;
   item_type *thread_buf_shared = buf_shared + stride * tid;
-  // copy the original data to shared memory
+  // Copy the original data to shared memory.
   __builtin_memcpy(thread_buf_shared, thread_buf, stride);
   // perform the move there
   TESTED_FUNCTION(thread_buf_shared + dst_idx, thread_buf_shared + src_idx,
                   dyn_sz);
-  // copy the modified data back to global memory
+  // Copy the modified data back to global memory.
   __builtin_memcpy(thread_buf, thread_buf_shared, stride);
 }
 
 template <size_t SZ>
 __global__ void move_kernel_stack_var(item_type *buf_device, size_t src_idx,
                                       size_t dst_idx, size_t dyn_sz) {
-  // we use the static SZ to allocate a fixed-size stack variable
+  // We use the static SZ to allocate a fixed-size stack variable.
   constexpr size_t stride = get_stride(SZ);
   item_type buf_stack[stride];
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
   if (tid >= NUM_MOVE_THREADS)
     return;
   item_type *thread_buf = buf_device + stride * tid;
-  // copy the original data to the stack
+  // Copy the original data to the stack.
   __builtin_memcpy(buf_stack, thread_buf, stride);
   // perform the move there
   TESTED_FUNCTION(buf_stack + dst_idx, buf_stack + src_idx, dyn_sz);
-  // copy the modified data back to global memory
+  // Copy the modified data back to global memory.
   __builtin_memcpy(thread_buf, buf_stack, stride);
 }
 
@@ -160,21 +160,22 @@ template <size_t SZ>
 bool run_test(item_type *buf_reference, item_type *buf_host,
               item_type *buf_device, size_t src_idx, size_t dst_idx,
               bool const_size, AddressSpace AS, size_t &differing_pos) {
-  // initialize device buffer
+  // Initialize device buffer.
   hipLaunchKernelGGL(init_kernel, dim3(1), dim3(1), 0, 0, buf_device,
                      ALLOC_SIZE);
   CHKHIP(hipDeviceSynchronize());
 
-  // set up the reference buffer
+  // Set up the reference buffer.
   for (size_t i = 0; i < ALLOC_SIZE; ++i)
     buf_reference[i] = (item_type)i;
 
+  // Simulate multi-threaded device-side memmove on the host.
   for (size_t tid = 0; tid < NUM_MOVE_THREADS; ++tid) {
     item_type *thread_buf = buf_reference + get_stride(SZ) * tid;
     std::memmove(thread_buf + dst_idx, thread_buf + src_idx, SZ);
   }
 
-  // do the device-side copying
+  // Do the device-side memmove.
   int block_size = std::min(BLOCK_SIZE, NUM_MOVE_THREADS);
   int num_blocks = (NUM_MOVE_THREADS + block_size - 1) / block_size;
 
@@ -200,10 +201,10 @@ bool run_test(item_type *buf_reference, item_type *buf_host,
   };
   CHKHIP(hipDeviceSynchronize());
 
-  // fetch the result into buf_host
+  // Fetch the result into buf_host.
   CHKHIP(hipMemcpy(buf_host, buf_device, ALLOC_SIZE, hipMemcpyDeviceToHost));
 
-  // compare to the reference
+  // Compare to the reference.
   bool success = true;
   for (size_t i = 0; i < ALLOC_SIZE; ++i) {
     if (buf_host[i] != buf_reference[i]) {
@@ -220,7 +221,7 @@ template <size_t SZ>
 int run_tests(item_type *buf_reference, item_type *buf_host,
               item_type *buf_device, AddressSpace AS) {
   if (AS == AddressSpace::SHARED && SZ > MAX_BYTES_PER_THREAD_SHARED) {
-    // LDS is too small for these tests
+    // LDS is too small for these tests.
     return 0;
   }
   assert(SZ <= MAX_BYTES_PER_THREAD &&
@@ -265,7 +266,8 @@ int run_tests(item_type *buf_reference, item_type *buf_host,
               << as_names[AS] << " memory\n";
   test_index_combinations(false);
 
-  // different paths in codegen are taken if the move length is statically known
+  // Different paths in codegen are taken if the move length is statically
+  // known.
   if (VERBOSE)
     std::cout << "running tests for static move length " << SZ << " in "
               << as_names[AS] << " memory\n";
@@ -290,8 +292,8 @@ int main(void) {
     nerrs += run_tests<3>(buf_reference.get(), buf_host.get(), buf_device, AS);
     nerrs += run_tests<1>(buf_reference.get(), buf_host.get(), buf_device, AS);
 
-    // large enough for the IR lowering in the constant case, with simple
-    // residual, no residual, and maximal residual:
+    // Move lengths that are large enough for the IR lowering in the constant
+    // case, with simple residual, no residual, and maximal residual:
     nerrs +=
         run_tests<1025>(buf_reference.get(), buf_host.get(), buf_device, AS);
     nerrs +=
