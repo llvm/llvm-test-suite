@@ -47,13 +47,13 @@ enum AddressSpace {
   STACK = 2,
 };
 
-const char *as_names[] = {
+static const char *as_names[] = {
     "global",
     "shared",
     "stack",
 };
 
-constexpr size_t get_stride(size_t bytes_per_thread) {
+static constexpr size_t get_stride(size_t bytes_per_thread) {
   return 2 * bytes_per_thread;
 }
 
