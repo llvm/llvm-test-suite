@@ -19,7 +19,8 @@ int check_fa_mid (const char *c)
   const char *f = __builtin_frame_address (0);
 
   /* Prevent a tail call to check_fa_work, eliding the current stack frame.  */
-  return check_fa_work (c, f) != 0;
+  int (*volatile func_ptr)(const char *, const char *) = check_fa_work;
+  return func_ptr(c, f) != 0;
 }
 
 int check_fa (char *unused)
@@ -27,7 +28,8 @@ int check_fa (char *unused)
   const char c = 0;
 
   /* Prevent a tail call to check_fa_mid, eliding the current stack frame.  */
-  return check_fa_mid (&c) != 0;
+  int (*volatile func_ptr)(const char *) = check_fa_mid;
+  return func_ptr(&c) != 0;
 }
 
 int how_much (void)
