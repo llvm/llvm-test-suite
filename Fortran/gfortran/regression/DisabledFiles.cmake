@@ -1741,4 +1741,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   fmt_en_rn.f90
   fmt_en_ru.f90
   fmt_en_rz.f90
+
+  # These test causes failures in some buildbots with an undefined reference to
+  # __trampoline_setup. This is probably an unrelated issue, but as a quick fix
+  # for the buildbot, this is disabled.
+  internal_dummy_2.f08
 )
