@@ -165,6 +165,13 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   unlimited_polymorphic_1.f03
   unlimited_polymorphic_32.f90
 
+  # unimplemented: assumed-rank variable in procedure implemented in Fortran
+  associate_66.f90
+  bind_c_optional-2.f90
+  intent_out_19.f90
+  intent_out_20.f90
+  shape_12.f90
+
   # unimplemented: ASYNCHRONOUS in procedure interface
   assumed_rank_13.f90
   asynchronous_3.f03
@@ -351,6 +358,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pdt_25.f03
   pdt_27.f03
   pdt_28.f03
+  pdt_36.f03
   pdt_7.f03
   pdt_9.f03
   pr95826.f90
@@ -541,6 +549,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: No intrinsic or user-defined ASSIGNMENT(=) matches operand types
   # 'TYPE 1' and 'TYPE 2'
+  assumed_type_18.f90
   dec-comparison-complex_1.f90
   dec-comparison-complex_2.f90
   dec-comparison-int_1.f90
@@ -853,6 +862,34 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   include_19.f90
   include_20.f90
   include_8.f90
+
+  # ----------------------------------------------------------------------------
+  #
+  # These tests require 128-bit integer support. Since we do not process
+  # DejaGNU directives to conditionally disable such tests, they are always
+  # disabled until we can conditionally run such tests
+  selected_logical_kind_3.f90
+
+  # error: conflicting debug info for argument
+  entry_6.f90
+
+  # error: Only -std=f2018 is allowed currently.
+  continuation_19.f
+
+  # error: Must be a constant value
+  pdt_33.f03
+
+  # error: 'foo_size' is not a procedure
+  pr103312.f90
+
+  # error: Actual argument type '__builtin_c_ptr' is not compatible with dummy
+  # argument type 'c_ptr'
+  pr108961.f90
+
+  # error: Procedure pointer 'op' with implicit interface may not be associated
+  # with procedure designator 'new_t' with explicit interface that cannot be
+  # called via an implicit interface
+  pr112407a.f90
 )
 
 # These tests are disabled because they fail when they are expected to pass.
@@ -1438,6 +1475,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # error: No explicit type declared for 'arg4'
   unused_artificial_dummies_1.f90
 
+  # Invalid specification expression: reference to OPTIONAL dummy argument
+  allocatable_length_2.f90
+
   # Valid errors
   # Valid out-of-bounds subscript errors, are warnings in gfortran
   bounds_check_3.f90
@@ -1730,7 +1770,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bounds_check_17.f90
   pr48958.f90
 
-  # These files require the __truncsfbf2 intrinsic that is not available in
+  # These files require the __truncsfbf2 intrinsic that is not available
   # before GCC 13. Alternatively, it requires compiler-rt to be built and a
   # command line option provided to instruct the compiler to use it. Currently,
   # we do not support either a version check on GCC or require that compiler-rt
@@ -1751,4 +1791,49 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # These are flaky tests, which may fail sometimes.
   random_init_2.f90
+
+  # The causes of failure of these tests need to be investigated
+  PR113061.f90
+  allocate_with_source_29.f90
+  boz_8.f90
+  continuation_18.f90
+  data_initialized_4.f90
+  data_pointer_3.f90
+  date_and_time_2.f90
+  interface_50.f90
+  interface_procedure_1.f90
+  iso_fortran_env_9.f90
+  line_length_12.f90
+  oldstyle_5.f
+  pdt_34.f03
+  pdt_35.f03
+  pr104555.f90
+  pr112407b.f90
+  pr114883.f90
+  pr25623-2.f90
+  pr25623.f90
+  pr43984.f90
+  pr88624.f90
+  pr99139.f90
+  pr99368.f90
+  reshape_10.f90
+  selected_logical_kind_2.f90
+  submodule_33.f08
+  achar_2.f90
+  allocate_with_source_30.f90
+  allocate_with_source_31.f90
+  backslash_1.f90
+  bound_11.f90
+  bounds_check_fail_6.f90
+  bounds_check_fail_7.f90
+  finalize_56.f90
+  internal_dummy_2.f08
+  iso_fortran_env_8.f90
+  optional_absent_12.f90
+  pr103389.f90
+  pr105456-nmlr.f90
+  pr105473.f90
+  pr111022.f90
+  pr114304.f90
+  zero_sized_15.f90
 )

@@ -181,4 +181,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # fails with a module not found error. There is a DejaGNU directive
   # "dg-compile-aux-modules" which might have something to do with this.
   routine-module-1.f90
+
+  # The causes of failure of these tests need to be investigated
+  enter-exit-data-2.f90
+  readonly-1.f90
 )

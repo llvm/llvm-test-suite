@@ -34,3 +34,4 @@
 compile;pr101624.f90;;-O2 -fsanitize=undefined;;
 compile;pr106062.f90;;-O2 -fsanitize=undefined;;
 run;bind-c-intent-out-2.f90;;-fsanitize=undefined -fcheck=all;;
+run;missing_optional_dummy_8.f90;;-fdump-tree-original -fsanitize=undefined;;
