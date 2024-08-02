@@ -979,6 +979,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   # https://github.com/llvm/llvm-test-suite/pull/102#issuecomment-1980674221
   #
+  do_check_1.f90
   pointer_check_1.f90
   pointer_check_2.f90
   pointer_check_3.f90
