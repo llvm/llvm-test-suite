@@ -34,3 +34,6 @@
 compile;associate_58.f90;;-O0;;
 compile;associate_59.f90;;-O0;;
 run;pointer_assign_16.f90;;;;
+run;pr110415-2.f90;;;;
+run;pr110415-3.f90;;;;
+run;unlimited_polymorphic_34.f90;;;;

@@ -98,6 +98,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   openmp-simd-2.f90
   openmp-simd-3.f90
   pr71704.f90
+
+  # error: A DO loop must follow the SIMD directive
+  unroll-simd-2.f90
 )
 
 file(GLOB FAILING_FILES CONFIGURE_DEPENDS
@@ -335,7 +338,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Must be a constant value
   target2.f90
 
- # bad character ('{') in Fortran token
+  # bad character ('{') in Fortran token
   declare-variant-10.f90
   declare-variant-11.f90
   declare-variant-12.f90
@@ -367,4 +370,53 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr78866-2.f90
   reduction3.f90
   sharing-3.f90
+
+  # These tests fail, but the cause of their failure needs to be investigated.
+  allocate-10.f90
+  allocate-13.f90
+  allocate-13a.f90
+  allocate-5.f90
+  allocate-8.f90
+  c_ptr_tests_20.f90
+  declare-target-indirect-2.f90
+  defaultmap-8.f90
+  defaultmap-9.f90
+  depobj-3.f90
+  inner-loops-1.f90
+  map-10.f90
+  map-11.f90
+  map-12.f90
+  requires-10.f90
+  target-update-1.f90
+  tile-10.f90
+  tile-1.f90
+  tile-2.f90
+  tile-5.f90
+  tile-imperfect-nest-1.f90
+  tile-inner-loops-1.f90
+  tile-inner-loops-2.f90
+  tile-inner-loops-3.f90
+  tile-inner-loops-4.f90
+  tile-inner-loops-5.f90
+  tile-inner-loops-6.f90
+  tile-inner-loops-7.f90
+  tile-non-rectangular-1.f90
+  tile-unroll-1.f90
+  unroll-13.f90
+  unroll-1.f90
+  unroll-2.f90
+  unroll-3.f90
+  unroll-4.f90
+  unroll-5.f90
+  unroll-7.f90
+  unroll-8.f90
+  unroll-9.f90
+  unroll-inner-loop-1.f90
+  unroll-no-clause-1.f90
+  unroll-non-rect-1.f90
+  unroll-non-rect-2.f90
+  unroll-simd-1.f90
+  unroll-tile-1.f90
+  unroll-tile-2.f90
+  unroll-tile-inner-1.f90
 )

@@ -60,6 +60,19 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # conditionally enabling them if libquadmath is available.
 
   ieee_9.f90
+
+  # --------------------------------------------------------------------------
+  #
+  # These tests cause linker errors with undefined references to ieee_*
+  # functions. This may be a configuration issue, but disable it for now until
+  # that can be determined.
+  comparisons_1.f90
+  comparisons_2.f90
+  comparisons_3.F90
+  minmax_1.f90
+  minmax_2.f90
+  minmax_3.f90
+  minmax_4.f90
 )
 
 # There are currently no failing files.

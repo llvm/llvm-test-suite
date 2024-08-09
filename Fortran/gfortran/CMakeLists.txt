@@ -109,6 +109,7 @@ set(FLANG_ERRORING_FFLAGS
   -fbounds-check
   -fcheck-array-temporaries
   -fcheck=all
+  -fcheck=array-temps
   -fcheck=bits
   -fcheck=bounds
   -fcheck=do
@@ -131,6 +132,7 @@ set(FLANG_ERRORING_FFLAGS
   -fcheck-bounds
   -fcheck=all
   -fcheck=bits
+  -fcheck=no-bounds
   # Not sure if the -fdefault-* options will be supported. Maybe in a different
   # form in which case, this will have to be modified to accommodate those.
   -fdefault-real-10
@@ -666,9 +668,7 @@ function(gfortran_add_compile_test expect_error main others fflags ldflags)
     -DALWAYS_SAVE_DIAGS=OFF
     -DWORKING_DIRECTORY=${working_dir}
     -DOUTPUT_FILE=${out}
-    -P ${COMPILE_SCRIPT_BIN}
-    USES_TERMINAL
-    COMMENT "Compiling ${main}")
+    -P ${COMPILE_SCRIPT_BIN})
 
   add_custom_target(${target}
     ALL

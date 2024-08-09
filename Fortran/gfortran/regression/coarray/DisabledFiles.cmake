@@ -15,6 +15,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   poly_run_3.f90
 
   # unimplemented: coarray allocation
+  alloc_comp_6.f90
+  alloc_comp_7.f90
+  alloc_comp_8.f90
   allocate_errgmsg.f90
   array_temporary.f90
   get_array.f90
