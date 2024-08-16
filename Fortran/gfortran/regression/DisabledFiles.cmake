@@ -890,6 +890,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # with procedure designator 'new_t' with explicit interface that cannot be
   # called via an implicit interface
   pr112407a.f90
+
+  # This causes a segmentation fault at compile-time.
+  ishftc_optional_size_1.f90
 )
 
 # These tests are disabled because they fail when they are expected to pass.
@@ -1010,6 +1013,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # anyway so the test-suite passes by default on AArch64.
   entry_23.f
   findloc_8.f90
+  pr99210.f90
 
   # These tests fail on Ubuntu because of a bug in the not utility. At least
   # some of these should work once the issue with not has been fixed.
