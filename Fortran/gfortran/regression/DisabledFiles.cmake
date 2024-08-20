@@ -891,7 +891,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # called via an implicit interface
   pr112407a.f90
 
-  # This causes a segmentation fault at compile-time.
+  # This causes a segmentation fault at run-time.
   ishftc_optional_size_1.f90
 )
 
