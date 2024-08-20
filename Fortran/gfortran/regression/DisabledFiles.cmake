@@ -1136,6 +1136,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pure_formal_2.f90
   rank_2.f90
   realloc_on_assign_20.f90
+  submodule_3.f08
   type_decl_2.f90
   typebound_proc_3.f03
   typebound_proc_15.f03
