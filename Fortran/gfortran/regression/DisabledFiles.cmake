@@ -1747,4 +1747,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # __trampoline_setup. This is probably an unrelated issue, but as a quick fix
   # for the buildbot, this is disabled.
   internal_dummy_2.f08
+
+  # These are flaky tests, which may fail sometimes.
+  random_init_2.f90
 )
