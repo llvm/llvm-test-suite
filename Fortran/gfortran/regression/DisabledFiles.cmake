@@ -1822,6 +1822,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr99368.f90
   reshape_10.f90
   selected_logical_kind_2.f90
+  submodule_3.f08
   submodule_33.f08
   achar_2.f90
   allocate_with_source_30.f90
