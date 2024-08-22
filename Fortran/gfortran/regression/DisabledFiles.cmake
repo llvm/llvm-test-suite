@@ -1824,6 +1824,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   selected_logical_kind_2.f90
   submodule_3.f08
   submodule_33.f08
+  achar_2.f90
   allocate_with_source_30.f90
   allocate_with_source_31.f90
   backslash_1.f90
