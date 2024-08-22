@@ -130,6 +130,11 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # Test is not conformant as it writes to a constant argument
   # Similar test, that is conformant, added to UnitTests/assign-goto
   assign_5.f90
+
+  # Test is not conformant as it expects different value of cmdstat and cmdmsg
+  # Similar test added: UnitTests/execute_command_line
+  execute_command_line_1.f90
+  execute_command_line_3.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -301,11 +306,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: intrinsic: co_broadcast
   coarray_collectives_17.f90
-
-  # Test is not conformant as it expects different value of cmdstat and cmdmsg
-  # Similar test added: UnitTests/execute_command_line
-  execute_command_line_1.f90
-  execute_command_line_3.f90
 
   # unimplemented: intrinsic: failed_images
   coarray_failed_images_1.f08
