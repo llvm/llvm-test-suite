@@ -119,6 +119,13 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   unlimited_polymorphic_14.f90
   # Unsupported predefined macro: __TIMESTAMP__
   wdate-time.F90
+
+  # This test occasionally fails. It checks that two arrays initialized with
+  # random numbers are not identical. This might be the case in gfortran, but in
+  # flang, it is possible, though unlikely, for two "randomly initialized"
+  # arrays to be identical. Unless something in flang's implementation of the
+  # RANDOM_* intrinsics changes, this test will be unsupported.
+  random_init_2.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -1792,9 +1799,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # __trampoline_setup. This is probably an unrelated issue, but as a quick fix
   # for the buildbot, this is disabled.
   internal_dummy_2.f08
-
-  # These are flaky tests, which may fail sometimes.
-  random_init_2.f90
 
   # The causes of failure of these tests need to be investigated
   PR113061.f90
