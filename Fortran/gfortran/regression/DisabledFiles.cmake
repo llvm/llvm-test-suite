@@ -126,6 +126,10 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # arrays to be identical. Unless something in flang's implementation of the
   # RANDOM_* intrinsics changes, this test will be unsupported.
   random_init_2.f90
+
+  # Test is not conformant as it writes to a constant argument
+  # Similar test, that is conformant, added to UnitTests/assign-goto
+  assign_5.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -1415,10 +1419,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   directive_unroll_5.f90
   # Tests "!GCC$ attributes weak :: x"
   weak-3.f90
-  # Test is not conformant as it writes to a constant argument
-  # Similar test, that is conformant, added to UnitTests/assign-goto
-  assign_5.f90
-
 
   # Probable bugs
   # ["a", "ab"]
@@ -1828,7 +1828,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   selected_logical_kind_2.f90
   submodule_3.f08
   submodule_33.f08
-  achar_2.f90
   allocate_with_source_30.f90
   allocate_with_source_31.f90
   backslash_1.f90
