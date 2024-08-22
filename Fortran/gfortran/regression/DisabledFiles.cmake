@@ -1019,6 +1019,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   widechar_IO_4.f90
   zero_sized_1.f90
   elemental_function_2.f90
+  do_check_1.f90
+  random_3.f90
 
   # These tests fail at runtime on AArch64 (but pass on x86). Disable them
   # anyway so the test-suite passes by default on AArch64.
@@ -1026,18 +1028,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   findloc_8.f90
   pr99210.f90
 
-  # These tests fail on Ubuntu because of a bug in the not utility. At least
-  # some of these should work once the issue with not has been fixed.
-  #
-  # https://github.com/llvm/llvm-test-suite/pull/102#issuecomment-1980674221
-  #
-  do_check_1.f90
+  # These tests go into an infinite loop printing "Hello World"
   pointer_check_1.f90
   pointer_check_2.f90
   pointer_check_3.f90
   pointer_check_4.f90
-  random_3.f90
-  unpack_bounds_1.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -1061,6 +1056,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   no_unit_error_1.f90
   pointer_check_10.f90
   pointer_remapping_6.f08
+  unpack_bounds_1.f90
 
   # ---------------------------------------------------------------------------
   #
