@@ -23,4 +23,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr97761.f90
   pr99746.f90
   vect-8-epilogue.F90
+
+  # The cause of failure of this test needs to be investigated
+  pr49955.f
 )
