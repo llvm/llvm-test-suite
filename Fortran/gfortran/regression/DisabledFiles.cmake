@@ -120,12 +120,10 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # Unsupported predefined macro: __TIMESTAMP__
   wdate-time.F90
 
-  # This test occasionally fails. It checks that two arrays initialized with
-  # random real numbers, converted to integers, are not identical. This might be
-  # the case in gfortran, but in flang, because of the precision loss and random
-  # nature of the test, it is possible, for two "randomly initialized" arrays to
-  # be identical. Unless something in flang's implementation of the RANDOM_*
-  # intrinsics changes, this test will be unsupported.
+  # This test checks that two arrays, initialized with random real numbers that
+  # are converted to integers, are not identical. It is possible, though
+  # unlikely for such "randomly initialized" arrays to be identical. Because of
+  # this inherent flakiness, this test will remain unsupported.
   random_init_2.f90
 
   # Test is not conformant as it writes to a constant argument
