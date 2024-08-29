@@ -119,6 +119,21 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   unlimited_polymorphic_14.f90
   # Unsupported predefined macro: __TIMESTAMP__
   wdate-time.F90
+
+  # This test checks that two arrays, initialized with random real numbers that
+  # are converted to integers, are not identical. It is possible, though
+  # unlikely for such "randomly initialized" arrays to be identical. Because of
+  # this inherent flakiness, this test will remain unsupported.
+  random_init_2.f90
+
+  # Test is not conformant as it writes to a constant argument
+  # Similar test, that is conformant, added to UnitTests/assign-goto
+  assign_5.f90
+
+  # Test is not conformant as it expects different value of cmdstat and cmdmsg
+  # Similar test added: UnitTests/execute_command_line
+  execute_command_line_1.f90
+  execute_command_line_3.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -290,11 +305,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: intrinsic: co_broadcast
   coarray_collectives_17.f90
-
-  # Test is not conformant as it expects different value of cmdstat and cmdmsg
-  # Similar test added: UnitTests/execute_command_line
-  execute_command_line_1.f90
-  execute_command_line_3.f90
 
   # unimplemented: intrinsic: failed_images
   coarray_failed_images_1.f08
@@ -1008,6 +1018,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   widechar_IO_4.f90
   zero_sized_1.f90
   elemental_function_2.f90
+  do_check_1.f90
+  random_3.f90
 
   # These tests fail at runtime on AArch64 (but pass on x86). Disable them
   # anyway so the test-suite passes by default on AArch64.
@@ -1015,18 +1027,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   findloc_8.f90
   pr99210.f90
 
-  # These tests fail on Ubuntu because of a bug in the not utility. At least
-  # some of these should work once the issue with not has been fixed.
-  #
-  # https://github.com/llvm/llvm-test-suite/pull/102#issuecomment-1980674221
-  #
-  do_check_1.f90
+  # These tests go into an infinite loop printing "Hello World"
   pointer_check_1.f90
   pointer_check_2.f90
   pointer_check_3.f90
   pointer_check_4.f90
-  random_3.f90
-  unpack_bounds_1.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -1050,6 +1055,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   no_unit_error_1.f90
   pointer_check_10.f90
   pointer_remapping_6.f08
+  unpack_bounds_1.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -1408,10 +1414,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   directive_unroll_5.f90
   # Tests "!GCC$ attributes weak :: x"
   weak-3.f90
-  # Test is not conformant as it writes to a constant argument
-  # Similar test, that is conformant, added to UnitTests/assign-goto
-  assign_5.f90
-
 
   # Probable bugs
   # ["a", "ab"]
@@ -1792,9 +1794,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # __trampoline_setup. This is probably an unrelated issue, but as a quick fix
   # for the buildbot, this is disabled.
   internal_dummy_2.f08
-
-  # These are flaky tests, which may fail sometimes.
-  random_init_2.f90
 
   # The causes of failure of these tests need to be investigated
   PR113061.f90
