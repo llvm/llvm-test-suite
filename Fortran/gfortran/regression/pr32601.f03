@@ -1,5 +1,5 @@
 ! { dg-do compile }
-! { dg-options "-std=f2003 -pedantic" }
+! { dg-options "-std=f2003" }
 ! PR fortran/32601
 module pr32601
 use, intrinsic :: iso_c_binding, only: c_int

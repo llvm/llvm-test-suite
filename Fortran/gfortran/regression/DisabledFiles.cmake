@@ -1840,4 +1840,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr111022.f90
   pr114304.f90
   zero_sized_15.f90
+
+  # Test needs to add -pedantic to show the error
+  pr32601.f03
 )
