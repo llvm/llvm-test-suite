@@ -6,6 +6,13 @@ endif ()
 
 speccpu2017_benchmark(RATE)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-fno-relaxed-template-template-args
+                        HAVE_CXX_FLAG_FNO_RELAXED_TEMPLATE_TEMPLATE_ARGS)
+if(HAVE_CXX_FLAG_FNO_RELAXED_TEMPLATE_TEMPLATE_ARGS)
+  add_compile_options(-fno-relaxed-template-template-args)
+endif()
+
 speccpu2017_add_include_dirs(include .)
 
 ## test ########################################################################
