@@ -247,6 +247,10 @@ char *load_file(const char *path, long *size_out) {
   return data;
 }
 
+void dump_inputs(const char *data_a, const char *data_b) {
+    fprintf(stderr, "\nInput 1:\n%s\nInput 2:\n%s", data_a, data_b);
+}
+
 int diff_file(const char *path_a, const char *path_b, bool parse_fp,
               double absolute_tolerance, double relative_tolerance,
               bool ignore_whitespace) {
@@ -356,6 +360,7 @@ int diff_file(const char *path_a, const char *path_b, bool parse_fp,
     fprintf(stderr,
             "%s: Comparison failed, textual difference between '%c' and '%c'\n",
             g_program, F1P[0], F2P[0]);
+    dump_inputs(data_a, data_b);
     free(data_a);
     free(data_b);
     return 1;
@@ -364,6 +369,7 @@ int diff_file(const char *path_a, const char *path_b, bool parse_fp,
     fprintf(stderr,
             "%s: Comparison failed, unexpected end of one of the files\n",
             g_program);
+    dump_inputs(data_a, data_b);
     free(data_a);
     free(data_b);
     return 1;
