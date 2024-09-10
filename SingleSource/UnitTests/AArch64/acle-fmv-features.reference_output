@@ -25,4 +25,5 @@ fp
 crc
 sme
 sme2
+ls64
 exit 0

@@ -242,6 +242,18 @@ CHECK(sme2, sme2, {
         "smstop  za" "\n"
     );
 })
+CHECK(ls64, ls64, {
+    long data[8];
+    asm volatile (
+        "ld64b x0, [%0]" "\n"
+        "st64b x0, [%0]" "\n"
+        "st64bv x8, x0, [%0]" "\n"
+        "st64bv0 x8, x0, [%0]" "\n"
+        :
+        : "r" (data)
+        : "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "memory"
+    );
+})
 
 static bool safe_try_feature(bool (*try_feature)(void)) {
     int child = fork();
@@ -283,6 +295,7 @@ int main(int, const char **) {
     check_crc();
     check_sme();
     check_sme2();
+    check_ls64();
 
     return any_fails ? -1 : 0;
 }
