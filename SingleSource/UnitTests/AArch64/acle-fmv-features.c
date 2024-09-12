@@ -92,14 +92,7 @@ CHECK(sha2, sha2, {
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
         "sha256h q0, q0, v0.4s" "\n"
-        : : : "v0"
-    );
-})
-CHECK(sha1, sha1, {
-    asm volatile (
-        "fmov s0, #0" "\n"
-        // FIXME: sha1h is under +sha2 in clang, and +sha1 doesn't exist yet.
-        ".inst 0x5e280800" "\n" // sha1h s0, s0
+        "sha1h s0, s0" "\n"
         : : : "v0"
     );
 })
@@ -263,7 +256,6 @@ int main(int, const char **) {
     check_rdm();
     check_lse();
     check_sha2();
-    check_sha1();
     check_aes();
     check_pmull();
     check_rcpc();
