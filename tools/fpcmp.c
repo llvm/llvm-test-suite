@@ -247,8 +247,25 @@ char *load_file(const char *path, long *size_out) {
   return data;
 }
 
-void dump_inputs(const char *data_a, const char *data_b) {
-    fprintf(stderr, "\nInput 1:\n%s\nInput 2:\n%s", data_a, data_b);
+static bool contains_non_printable_characters(const char *data) {
+  size_t len = strlen(data);
+  for (size_t i = 0; i < len; ++i)
+    if (!isprint(data[i]) && !isspace(data[i]))
+      return true;
+  return false;
+}
+
+static void dump_input(const char *label, const char *data) {
+  if (contains_non_printable_characters(data)) {
+    fprintf(stderr, "\n%s: Contains binary data.\n", label);
+  } else {
+    fprintf(stderr, "\n%s:\n%s", label, data);
+  }
+}
+
+static void dump_inputs(const char *data_a, const char *data_b) {
+  dump_input("Input 1", data_a);
+  dump_input("Input 2", data_b);
 }
 
 int diff_file(const char *path_a, const char *path_b, bool parse_fp,
