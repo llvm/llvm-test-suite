@@ -21,8 +21,8 @@ static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
 template <typename Ty>
 static void __attribute__((always_inline))
 runBenchForEpilogueVectorization(benchmark::State &state,
-                                 uint64_t (*Fn)(Ty *, Ty *, Ty *, int),
-                                 int Iterations) {
+                                 uint64_t (*Fn)(Ty *, Ty *, Ty *, int)) {
+  auto Iterations = state.range(0);
   std::unique_ptr<Ty[]> A(new Ty[Iterations]);
   std::unique_ptr<Ty[]> B(new Ty[Iterations]);
   std::unique_ptr<Ty[]> C(new Ty[Iterations]);
@@ -37,8 +37,6 @@ runBenchForEpilogueVectorization(benchmark::State &state,
     g_sum += Fn(&A[0], &B[0], &C[0], Iterations);
   }
 }
-
-#define STRINGIFY(a) #a
 
 template <typename Ty>
 static uint64_t __attribute__((noinline))
@@ -59,31 +57,17 @@ loopWithReductionAutoVec(Ty *A, Ty *B, Ty *C, int Iterations) {
   return sum;
 }
 
-#define ADD_BENCHMARK(Ty, Itr)                                                 \
-  void benchAutoVecFor##Ty##ForLoopTC##Itr(benchmark::State &state) {          \
-    runBenchForEpilogueVectorization<Ty>(state, &loopAutoVec<Ty>, Itr);        \
-  }                                                                            \
-  BENCHMARK(benchAutoVecFor##Ty##ForLoopTC##Itr);                              \
-  void benchReductionAutoVecFor##Ty##ForLoopTC##Itr(benchmark::State &state) { \
-    runBenchForEpilogueVectorization<Ty>(state, &loopWithReductionAutoVec<Ty>, \
-                                         Itr);                                 \
-  }                                                                            \
-  BENCHMARK(benchReductionAutoVecFor##Ty##ForLoopTC##Itr);
+template <typename Ty> void benchAutoVec(benchmark::State &state) {
+  runBenchForEpilogueVectorization<Ty>(state, &loopAutoVec<Ty>);
+}
 
-ADD_BENCHMARK(uint8_t, 65)
-ADD_BENCHMARK(uint8_t, 80)
-ADD_BENCHMARK(uint8_t, 96)
-ADD_BENCHMARK(uint8_t, 104)
-ADD_BENCHMARK(uint8_t, 127)
+template <typename Ty> void benchReductionAutoVec(benchmark::State &state) {
+  runBenchForEpilogueVectorization<Ty>(state, &loopWithReductionAutoVec<Ty>);
+}
 
-ADD_BENCHMARK(uint16_t, 65)
-ADD_BENCHMARK(uint16_t, 80)
-ADD_BENCHMARK(uint16_t, 96)
-ADD_BENCHMARK(uint16_t, 104)
-ADD_BENCHMARK(uint16_t, 127)
-
-ADD_BENCHMARK(uint32_t, 65)
-ADD_BENCHMARK(uint32_t, 80)
-ADD_BENCHMARK(uint32_t, 96)
-ADD_BENCHMARK(uint32_t, 104)
-ADD_BENCHMARK(uint32_t, 127)
+BENCHMARK_TEMPLATE(benchAutoVec, uint8_t)->DenseRange(65, 127, 1);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint8_t)->DenseRange(65, 127, 1);
+BENCHMARK_TEMPLATE(benchAutoVec, uint16_t)->DenseRange(65, 127, 1);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->DenseRange(65, 127, 1);
+BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->DenseRange(65, 127, 1);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->DenseRange(65, 127, 1);
