@@ -15,36 +15,36 @@ static bool safe_try_feature(bool (*try_feature)(void));
 static bool any_fails = false;
 
 #if __HAVE_FUNCTION_MULTI_VERSIONING
-#define CHECK(SUFFIX, FEATURE, TARGET_GUARD, BODY) \
+#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, BODY) \
     __attribute__((target(#TARGET_GUARD))) \
-    static bool try_##SUFFIX(void) { \
+    static bool try_##FN_NAME_SUFFIX(void) { \
         do \
             BODY \
         while (0); \
         return true; \
     } \
-    __attribute__((target_version(#FEATURE))) \
-    static void check_##SUFFIX(void) { \
-        printf("%s\n", #FEATURE); \
+    __attribute__((target_version(#FMV_FEATURE))) \
+    static void check_##FN_NAME_SUFFIX(void) { \
+        printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
-        if (!safe_try_feature(try_##SUFFIX)) { \
+        if (!safe_try_feature(try_##FN_NAME_SUFFIX)) { \
             printf("\tFAIL\n"); \
             any_fails = true; \
         } \
     } \
     __attribute__((target_version("default"))) \
-    static void check_##SUFFIX(void) { \
-        printf("%s\n", #FEATURE); \
+    static void check_##FN_NAME_SUFFIX(void) { \
+        printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
-        if (safe_try_feature(try_##SUFFIX)) { \
+        if (safe_try_feature(try_##FN_NAME_SUFFIX)) { \
             printf("\tUPASS\n"); \
             any_fails = true; \
         } \
     }
 #else
-#define CHECK(SUFFIX, FEATURE, TARGET_GUARD, BODY) \
-    static void check_##SUFFIX(void) { \
-        printf("%s\n", #FEATURE); \
+#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, BODY) \
+    static void check_##FN_NAME_SUFFIX(void) { \
+        printf("%s\n", #FMV_FEATURE); \
     }
 #endif
 
@@ -279,7 +279,8 @@ CHECK(predres, predres, predres, {
 })
 CHECK(rcpc3, rcpc3, rcpc3, {
     long x;
-    asm volatile ("stilp wzr, wzr, [%0]"
+    asm volatile (
+        "stilp wzr, wzr, [%0]"
         : : "r" (&x) : "memory"
     );
 })
