@@ -65,9 +65,18 @@ template <typename Ty> void benchReductionAutoVec(benchmark::State &state) {
   runBenchForEpilogueVectorization<Ty>(state, &loopWithReductionAutoVec<Ty>);
 }
 
+#ifdef ALL_LOOP_EPILOGUE_TESTS
 BENCHMARK_TEMPLATE(benchAutoVec, uint8_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchReductionAutoVec, uint8_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchAutoVec, uint16_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->DenseRange(65, 127, 1);
+#else
+BENCHMARK_TEMPLATE(benchAutoVec, uint8_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint8_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchAutoVec, uint16_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->Range(65, 127);
+#endif
