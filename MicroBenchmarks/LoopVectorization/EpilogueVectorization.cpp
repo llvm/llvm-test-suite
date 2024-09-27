@@ -18,6 +18,12 @@ static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
     A[I] = distrib(rng);
 }
 
+// Helper to block optimizing \p F based on its arguments.
+template <typename F, typename... Args>
+__attribute__((optnone)) static uint64_t callThroughOptnone(F &&f, Args &&...args) {
+  return f(std::forward<Args>(args)...);
+}
+
 template <typename Ty>
 static void __attribute__((always_inline))
 runBenchForEpilogueVectorization(benchmark::State &state,
@@ -34,7 +40,7 @@ runBenchForEpilogueVectorization(benchmark::State &state,
     benchmark::DoNotOptimize(B);
     benchmark::DoNotOptimize(C);
     benchmark::ClobberMemory();
-    g_sum += Fn(&A[0], &B[0], &C[0], Iterations);
+    g_sum += callThroughOptnone(Fn, &A[0], &B[0], &C[0], Iterations);
   }
 }
 
@@ -73,10 +79,10 @@ BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->DenseRange(65, 127, 1);
 BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->DenseRange(65, 127, 1);
 #else
-BENCHMARK_TEMPLATE(benchAutoVec, uint8_t)->Range(65, 127);
-BENCHMARK_TEMPLATE(benchReductionAutoVec, uint8_t)->Range(65, 127);
-BENCHMARK_TEMPLATE(benchAutoVec, uint16_t)->Range(65, 127);
-BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->Range(65, 127);
-BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->Range(65, 127);
-BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->Range(65, 127);
+BENCHMARK_TEMPLATE(benchAutoVec, uint8_t)->Arg(65)->Arg(127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint8_t)->Arg(65)->Arg(127);
+BENCHMARK_TEMPLATE(benchAutoVec, uint16_t)->Arg(65)->Arg(127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint16_t)->Arg(65)->Arg(127);
+BENCHMARK_TEMPLATE(benchAutoVec, uint32_t)->Arg(65)->Arg(127);
+BENCHMARK_TEMPLATE(benchReductionAutoVec, uint32_t)->Arg(65)->Arg(127);
 #endif
