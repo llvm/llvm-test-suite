@@ -10,7 +10,7 @@
 #include <sys/sysctl.h>
 #endif
 
-static bool safe_try_feature(bool (*try_feature)(void));
+static bool safe_try_feature(bool (*try_feature)(void), bool is_default);
 
 static bool any_fails = false;
 
@@ -27,7 +27,7 @@ static bool any_fails = false;
     static void check_##FN_NAME_SUFFIX(void) { \
         printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
-        if (!safe_try_feature(try_##FN_NAME_SUFFIX)) { \
+        if (!safe_try_feature(try_##FN_NAME_SUFFIX, false)) { \
             printf("\tFAIL\n"); \
             any_fails = true; \
         } \
@@ -36,7 +36,7 @@ static bool any_fails = false;
     static void check_##FN_NAME_SUFFIX(void) { \
         printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
-        if (safe_try_feature(try_##FN_NAME_SUFFIX)) { \
+        if (safe_try_feature(try_##FN_NAME_SUFFIX, true)) { \
             printf("\tUPASS\n"); \
             any_fails = true; \
         } \
@@ -363,7 +363,9 @@ CHECK(mops, mops, mops, {
      );
 })
 
-static bool safe_try_feature(bool (*try_feature)(void)) {
+bool (*whitelist[])(void) = { try_ssbs2 };
+
+static bool safe_try_feature(bool (*try_feature)(void), bool is_default) {
     int child = fork();
     if (child) {
         int exit_status = -1;
@@ -371,7 +373,13 @@ static bool safe_try_feature(bool (*try_feature)(void)) {
             return false;
         return exit_status == 0;
     } else {
-        exit(try_feature() ? 0 : 1);
+        bool found = false;
+        for (int i = 0, e = sizeof(whitelist) / sizeof(whitelist[0]);
+             i != e && !found; ++i)
+            if (try_feature == whitelist[i])
+                found = true;
+        bool is_exempt = is_default && found;
+        exit(try_feature() && !is_exempt ? EXIT_SUCCESS : EXIT_FAILURE);
     }
 }
 
