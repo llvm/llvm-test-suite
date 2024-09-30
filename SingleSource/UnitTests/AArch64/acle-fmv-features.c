@@ -10,12 +10,12 @@
 #include <sys/sysctl.h>
 #endif
 
-static bool safe_try_feature(bool (*try_feature)(void), bool is_default);
+static bool safe_try_feature(bool (*try_feature)(void), bool is_exempt);
 
 static bool any_fails = false;
 
 #if __HAVE_FUNCTION_MULTI_VERSIONING
-#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, BODY) \
+#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, IS_EXEMPT, BODY) \
     __attribute__((target(#TARGET_GUARD))) \
     static bool try_##FN_NAME_SUFFIX(void) { \
         do \
@@ -27,6 +27,7 @@ static bool any_fails = false;
     static void check_##FN_NAME_SUFFIX(void) { \
         printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
+        /* non-default versions are never exempt from diagnostics */ \
         if (!safe_try_feature(try_##FN_NAME_SUFFIX, false)) { \
             printf("\tFAIL\n"); \
             any_fails = true; \
@@ -36,37 +37,38 @@ static bool any_fails = false;
     static void check_##FN_NAME_SUFFIX(void) { \
         printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
-        if (safe_try_feature(try_##FN_NAME_SUFFIX, true)) { \
+        /* default versions are allowed to UPASS when IS_EXEMPT = true */ \
+        if (safe_try_feature(try_##FN_NAME_SUFFIX, #IS_EXEMPT)) { \
             printf("\tUPASS\n"); \
             any_fails = true; \
         } \
     }
 #else
-#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, BODY) \
+#define CHECK(FN_NAME_SUFFIX, FMV_FEATURE, TARGET_GUARD, IS_EXEMPT, BODY) \
     static void check_##FN_NAME_SUFFIX(void) { \
         printf("%s\n", #FMV_FEATURE); \
     }
 #endif
 
-CHECK(flagm, flagm, flagm, {
+CHECK(flagm, flagm, flagm, false, {
     asm volatile (
         "cfinv" "\n"
         "cfinv" "\n"
     );
 })
-CHECK(flagm2, flagm2, arch=armv8.5-a, {
+CHECK(flagm2, flagm2, arch=armv8.5-a, false, {
     asm volatile (
         "axflag" "\n"
         "xaflag" "\n"
     );
 })
-CHECK(dotprod, dotprod, dotprod, {
+CHECK(dotprod, dotprod, dotprod, false, {
     asm volatile (
         "udot v0.4S,v1.16B,v2.16B"
         : : : "v0"
     );
 })
-CHECK(sha3, sha3, sha3, {
+CHECK(sha3, sha3, sha3, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -74,20 +76,20 @@ CHECK(sha3, sha3, sha3, {
         : : : "v0"
     );
 })
-CHECK(rdm, rdm, rdm, {
+CHECK(rdm, rdm, rdm, false, {
     asm volatile (
         "sqrdmlah s0, s1, s2"
         : : : "s0"
     );
 })
-CHECK(lse, lse, lse, {
+CHECK(lse, lse, lse, false, {
     uint64_t pointee = 0;
     asm volatile (
         "swp xzr, xzr, [%[pointee]]"
         : : [pointee]"r"(&pointee)
     );
 })
-CHECK(sha2, sha2, sha2, {
+CHECK(sha2, sha2, sha2, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -96,7 +98,7 @@ CHECK(sha2, sha2, sha2, {
         : : : "v0"
     );
 })
-CHECK(aes, aes, aes, {
+CHECK(aes, aes, aes, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
@@ -104,21 +106,21 @@ CHECK(aes, aes, aes, {
         : : : "v0"
     );
 })
-CHECK(pmull, pmull, aes, {
+CHECK(pmull, pmull, aes, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "pmull v0.1q, v0.1d, v0.1d" "\n"
         : : : "v0"
     );
 })
-CHECK(rcpc, rcpc, rcpc, {
+CHECK(rcpc, rcpc, rcpc, false, {
     int x;
     asm volatile (
         "ldaprb w0, [%0]"
         : : "r" (&x) : "w0"
     );
 })
-CHECK(rcpc2, rcpc2, arch=armv8.4-a, {
+CHECK(rcpc2, rcpc2, arch=armv8.4-a, false, {
     int x;
     asm volatile (
         "mov x1, %0" "\n"
@@ -126,66 +128,71 @@ CHECK(rcpc2, rcpc2, arch=armv8.4-a, {
         : : "r" (&x) : "w0", "x1"
     );
 })
-CHECK(fcma, fcma, fcma, {
+CHECK(fcma, fcma, fcma, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fcadd v0.2s, v0.2s, v0.2s, #90" "\n"
         : : : "v0"
     );
 })
-CHECK(jscvt, jscvt, jscvt, {
+CHECK(jscvt, jscvt, jscvt, false, {
     asm volatile (
         "fmov d0, #0" "\n"
         "fjcvtzs w1, d0" "\n"
         : : : "w1", "d0"
     );
 })
-CHECK(dpb, dpb, arch=armv8.2-a, {
+CHECK(dpb, dpb, arch=armv8.2-a, false, {
     int x;
     asm volatile (
         "dc cvap, %0"
         : : "r" (&x)
     );
 })
-CHECK(dpb2, dpb2, arch=armv8.5-a, {
+CHECK(dpb2, dpb2, arch=armv8.5-a, false, {
     int x;
     asm volatile (
         "dc cvadp, %0"
         : : "r" (&x)
     );
 })
-CHECK(bf16, bf16, bf16, {
+CHECK(bf16, bf16, bf16, false, {
     asm volatile (
         "bfdot v0.4S,v1.8H,v2.8H"
         : : : "v0"
     );
 })
-CHECK(i8mm, i8mm, i8mm, {
+CHECK(i8mm, i8mm, i8mm, false, {
     asm volatile (
         "sudot v0.4S,v1.16B,v2.4B[0]"
         : : : "v0"
     );
 })
-CHECK(dit, dit, dit, {
+CHECK(dit, dit, dit, false, {
     asm volatile (
         "msr DIT, x0"
         : : : "x0"
     );
 })
-CHECK(fp16, fp16, fp16, {
+CHECK(fp16, fp16, fp16, false, {
     asm volatile (
         "fmov h0, #0"
         : : : "v0"
     );
 })
-CHECK(ssbs2, ssbs2, ssbs, {
+// When running try_ssbs2() on hardware which is affected by the "SSBS not fully
+// self-synchronizing" errata, the linux kernel mutes the detection of ssbs2 via
+// hardware caps. As a result the default version ends up running the ssbs2 code
+// which was expected to trap originally. Passing IS_EXEMPT = true here allows
+// the default version to UPASS.
+CHECK(ssbs2, ssbs2, ssbs, true, {
     asm volatile (
         "mrs x0, SSBS" "\n"
         "msr SSBS, x0" "\n"
         : : : "x0"
     );
 })
-CHECK(bti, bti, bti, {
+CHECK(bti, bti, bti, false, {
     // The only test for this requires reading a register that is only
     // accessible to EL1.
     #ifdef __linux__
@@ -206,35 +213,35 @@ CHECK(bti, bti, bti, {
         // TODO: implement me on your platform to fix this test!
     #endif
 })
-CHECK(simd, simd, simd, {
+CHECK(simd, simd, simd, false, {
     asm volatile (
         "mov v0.B[0], w0"
         : : :
     );
 })
-CHECK(fp, fp, fp, {
+CHECK(fp, fp, fp, false, {
     asm volatile (
         "fmov s0, #0"
         : : : "v0"
     );
 })
-CHECK(crc, crc, crc, {
+CHECK(crc, crc, crc, false, {
     asm volatile ( "crc32b wzr, wzr, wzr");
 })
-CHECK(sme, sme, sme, {
+CHECK(sme, sme, sme, false, {
     asm volatile (
         "rdsvl x0, #1"
         : : : "x0"
     );
 })
-CHECK(sme2, sme2, sme2, {
+CHECK(sme2, sme2, sme2, false, {
     asm volatile (
         "smstart za" "\n"
         "zero { zt0 }" "\n"
         "smstop  za" "\n"
     );
 })
-CHECK(ls64, ls64, ls64, {
+CHECK(ls64, ls64, ls64, false, {
     long data[8];
     asm volatile (
         "ld64b x0, [%0]" "\n"
@@ -246,109 +253,109 @@ CHECK(ls64, ls64, ls64, {
         : "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "memory"
     );
 })
-CHECK(f32mm, f32mm, f32mm, {
+CHECK(f32mm, f32mm, f32mm, false, {
     asm volatile (
         "fmmla z0.s, z1.s, z2.s"
         : : : "v0"
     );
 })
-CHECK(f64mm, f64mm, f64mm, {
+CHECK(f64mm, f64mm, f64mm, false, {
     asm volatile (
         "fmmla z0.d, z1.d, z2.d"
         : : : "v0"
     );
 })
-CHECK(fp16fml, fp16fml, fp16fml, {
+CHECK(fp16fml, fp16fml, fp16fml, false, {
     asm volatile (
         "fmlal v0.2s, v1.2h, v2.2h"
          : : : "v0"
     );
 })
-CHECK(frintts, frintts, arch=armv8.5-a, {
+CHECK(frintts, frintts, arch=armv8.5-a, false, {
     asm volatile (
         "frint32z s0, s1"
         : : : "v0"
     );
 })
-CHECK(predres, predres, predres, {
+CHECK(predres, predres, predres, false, {
     asm volatile (
         "cfp rctx, x0" "\n"
         "dvp rctx, x1" "\n"
         "cpp rctx, x2" "\n"
     );
 })
-CHECK(rcpc3, rcpc3, rcpc3, {
+CHECK(rcpc3, rcpc3, rcpc3, false, {
     long x;
     asm volatile (
         "stilp wzr, wzr, [%0]"
         : : "r" (&x) : "memory"
     );
 })
-CHECK(rng, rng, rng, {
+CHECK(rng, rng, rng, false, {
      asm volatile (
          "mrs x0, rndr" "\n"
          "mrs x1, rndrrs" "\n"
          : : : "x0", "x1"
      );
 })
-CHECK(sve, sve, sve, {
+CHECK(sve, sve, sve, false, {
      asm volatile (
          "fadda s0, p7, s0, z31.s"
          : : : "v0"
      );
 })
-CHECK(sve2, sve2, sve2, {
+CHECK(sve2, sve2, sve2, false, {
      asm volatile (
          "match p15.b, p7/z, z0.b, z1.b"
          : : : "p15", "cc"
      );
 })
-CHECK(sve2_bitperm, sve2-bitperm, sve2-bitperm, {
+CHECK(sve2_bitperm, sve2-bitperm, sve2-bitperm, false, {
      asm volatile (
          "bext z0.s, z1.s, z2.s"
          : : : "z0"
      );
 })
-CHECK(sve2_sha3, sve2-sha3, sve2-sha3, {
+CHECK(sve2_sha3, sve2-sha3, sve2-sha3, false, {
      asm volatile (
          "rax1 z0.d, z1.d, z2.d"
          : : : "z0"
      );
 })
-CHECK(sve2_sm4, sve2-sm4, sve2-sm4, {
+CHECK(sve2_sm4, sve2-sm4, sve2-sm4, false, {
      asm volatile (
          "sm4e z0.s, z0.s, z2.s"
          : : : "z0"
      );
 })
-CHECK(wfxt, wfxt, wfxt, {
+CHECK(wfxt, wfxt, wfxt, false, {
      asm volatile (
          "wfet x0" "\n"
          "wfit x1" "\n"
      );
 })
-CHECK(sb, sb, sb, {
+CHECK(sb, sb, sb, false, {
      asm volatile ("sb");
 })
-CHECK(sm4, sm4, sm4, {
+CHECK(sm4, sm4, sm4, false, {
      asm volatile (
          "sm4e v0.4s, v1.4s"
          : : : "v0"
      );
 })
-CHECK(sme_f64f64, sme-f64f64, sme-f64f64, {
+CHECK(sme_f64f64, sme-f64f64, sme-f64f64, false, {
      asm volatile (
          "fmops za0.d, p0/m, p0/m, z0.d, z0.d"
          : : : "za"
      );
 })
-CHECK(sme_i16i64, sme-i16i64, sme-i16i64, {
+CHECK(sme_i16i64, sme-i16i64, sme-i16i64, false, {
      asm volatile (
          "smopa za0.d, p0/m, p0/m, z0.h, z0.h"
          : : : "za"
      );
 })
-CHECK(mops, mops, mops, {
+CHECK(mops, mops, mops, false, {
      long dst[64];
      long src[64];
      size_t n = 32;
@@ -363,9 +370,7 @@ CHECK(mops, mops, mops, {
      );
 })
 
-bool (*whitelist[])(void) = { try_ssbs2 };
-
-static bool safe_try_feature(bool (*try_feature)(void), bool is_default) {
+static bool safe_try_feature(bool (*try_feature)(void), bool is_exempt) {
     int child = fork();
     if (child) {
         int exit_status = -1;
@@ -373,13 +378,7 @@ static bool safe_try_feature(bool (*try_feature)(void), bool is_default) {
             return false;
         return exit_status == 0;
     } else {
-        bool found = false;
-        for (int i = 0, e = sizeof(whitelist) / sizeof(whitelist[0]);
-             i != e && !found; ++i)
-            if (try_feature == whitelist[i])
-                found = true;
-        bool is_exempt = is_default && found;
-        exit(try_feature() && !is_exempt ? EXIT_SUCCESS : EXIT_FAILURE);
+        exit((try_feature() && !is_exempt) ? EXIT_SUCCESS : EXIT_FAILURE);
     }
 }
 
