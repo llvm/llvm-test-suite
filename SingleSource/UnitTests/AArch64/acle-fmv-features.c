@@ -38,7 +38,7 @@ static bool any_fails = false;
         printf("%s\n", #FMV_FEATURE); \
         fflush(stdout); \
         /* default versions are allowed to UPASS when IS_EXEMPT = true */ \
-        if (safe_try_feature(try_##FN_NAME_SUFFIX, #IS_EXEMPT)) { \
+        if (safe_try_feature(try_##FN_NAME_SUFFIX, IS_EXEMPT)) { \
             printf("\tUPASS\n"); \
             any_fails = true; \
         } \
