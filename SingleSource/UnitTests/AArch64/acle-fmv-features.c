@@ -180,12 +180,12 @@ CHECK(fp16, fp16, fp16, false, {
         : : : "v0"
     );
 })
-// When running try_ssbs2() on hardware which is affected by the "SSBS not fully
-// self-synchronizing" errata, the linux kernel mutes the detection of ssbs2 via
-// hardware caps. As a result the default version ends up running the ssbs2 code
+// When running try_ssbs() on hardware which is affected by the "SSBS not fully
+// self-synchronizing" errata, the linux kernel mutes the detection of ssbs via
+// hardware caps. As a result the default version ends up running the ssbs code
 // which was expected to trap originally. Passing IS_EXEMPT = true here allows
 // the default version to UPASS.
-CHECK(ssbs2, ssbs2, ssbs, true, {
+CHECK(ssbs, ssbs, ssbs, true, {
     asm volatile (
         "mrs x0, SSBS" "\n"
         "msr SSBS, x0" "\n"
@@ -402,7 +402,7 @@ int main(int, const char **) {
     check_i8mm();
     check_dit();
     check_fp16();
-    check_ssbs2();
+    check_ssbs();
     check_bti();
     check_simd();
     check_fp();
