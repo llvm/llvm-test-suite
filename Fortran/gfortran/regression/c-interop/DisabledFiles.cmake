@@ -124,4 +124,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These files are expected to fail to compile, but succeed instead.
   c516.f90
   c524a.f90
+  c535b-3.f90
+  c535c-1.f90
+  c535c-2.f90
+  c535c-3.f90
+  c535c-4.f90
 )
