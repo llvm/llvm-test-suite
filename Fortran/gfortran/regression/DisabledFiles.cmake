@@ -1199,6 +1199,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr90290.f90
   pr91564.f90
   rank_3.f90
+  assumed_rank_5.f90
 
   # Requires behaviour specific to -std=f2008 and fails with -std=f2018.
   finalize_38a.f90
@@ -1846,4 +1847,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Test needs to add -pedantic to show the error
   pr32601.f03
+
+  # Tests expect semantic errors that are not raised.
+  c_sizeof_7.f90
 )
