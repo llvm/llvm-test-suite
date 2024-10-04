@@ -67,6 +67,8 @@ void BM_explicit_iteration_count(benchmark::State& state) {
   assert(state.max_iterations == 42);
   size_t actual_iterations = 0;
   for (auto _ : state) ++actual_iterations;
+  benchmark::DoNotOptimize(actual_iterations);
+  assert(actual_iterations == 42);
   assert(state.iterations() == state.max_iterations);
   assert(state.iterations() == 42);
 }
