@@ -6,7 +6,6 @@ rdm
 lse
 sha2
 aes
-pmull
 rcpc
 rcpc2
 fcma
@@ -34,6 +33,7 @@ rcpc3
 rng
 sve
 sve2
+sve2-aes
 sve2-bitperm
 sve2-sha3
 sve2-sm4
