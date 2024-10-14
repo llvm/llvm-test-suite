@@ -4,15 +4,21 @@ extern struct {
   unsigned long long features;
 } __aarch64_cpu_features;
 
-void __init_cpu_features_resolver(void);
+#if HAS_DARWIN_FMV
+# define RUNTIME_INIT __init_cpu_features_resolver
+#elif HAS_LINUX_FMV
+# define RUNTIME_INIT __init_cpu_features
+#endif
+
+void RUNTIME_INIT(void);
 
 int main() {
-    __init_cpu_features_resolver();
+    RUNTIME_INIT();
     const unsigned long long first = __aarch64_cpu_features.features;
 
     // Manually reset it, so we can check that the result is consistent.
     __aarch64_cpu_features.features = 0;
-    __init_cpu_features_resolver();
+    RUNTIME_INIT();
 
     if (__aarch64_cpu_features.features != first) {
         printf("FAILED consistency test: 0x%llx != 0x%llx\n", first,
@@ -24,6 +30,6 @@ int main() {
     // per-iteration measurement in microseconds.
     for (int i = 0; i < 1000000; i++) {
         __aarch64_cpu_features.features = 0;
-        __init_cpu_features_resolver();
+        RUNTIME_INIT();
     }
 }
