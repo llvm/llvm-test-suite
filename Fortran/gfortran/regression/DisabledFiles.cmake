@@ -1850,4 +1850,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Tests expect semantic errors that are not raised.
   c_sizeof_7.f90
+
+  # Tests that use "PRINT namelistname"
+  namelist_print_2.f
+  print_fmt_2.f90
 )
