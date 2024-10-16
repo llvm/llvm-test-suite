@@ -43,4 +43,5 @@ sm4
 sme-f64f64
 sme-i16i64
 mops
+memtag
 exit 0
