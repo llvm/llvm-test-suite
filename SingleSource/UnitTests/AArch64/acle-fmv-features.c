@@ -369,6 +369,15 @@ CHECK(mops, mops, mops, false, {
          : : "cc", "memory"
      );
 })
+// We can't use any FEAT_MTE2 instruction in this test since they are undefined
+// at EL0. Therefore passing IS_EXEMPT = true here allows the default version to
+// UPASS on a system which doesn't have FEAT_MTE2 but has FEAT_MTE.
+CHECK(memtag, memtag, memtag, true, {
+    asm volatile (
+        "irg x0, sp"
+        : : : "x0"
+    );
+})
 
 static bool safe_try_feature(bool (*try_feature)(void), bool is_exempt) {
     int child = fork();
@@ -428,6 +437,7 @@ int main(int, const char **) {
     check_sme_f64f64();
     check_sme_i16i64();
     check_mops();
+    check_memtag();
 
     return any_fails ? -1 : 0;
 }
