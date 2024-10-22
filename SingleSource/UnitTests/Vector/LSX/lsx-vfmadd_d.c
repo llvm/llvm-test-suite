@@ -70,7 +70,8 @@ main ()
   v2u64_op2 = (v2u64){0xfff8000000000000, 0xfffb00fdfdf7ffff};
   v2u64_result = (v2u64){0xfff8000000000000, 0xfffb00fdfdf7ffff};
   __m128d_out = __lsx_vfmadd_d((__m128)v2u64_op0, (__m128)v2u64_op1, (__m128)v2u64_op2);
-  check_lsx_out(&v2u64_result, &__m128d_out, sizeof(__m128d_out), __FILE__, __LINE__);
+  check_lsx_fp_out(1, &v2u64_result, &__m128d_out, sizeof(__m128d_out),
+                   __FILE__, __LINE__);
 
   v2u64_op0 = (v2u64){0x8000000000000000, 0x8000000000000000};
   v2u64_op1 = (v2u64){0x0000000000000000, 0x0000000000000000};
