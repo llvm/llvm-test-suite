@@ -103,12 +103,6 @@ CHECK(aes, aes, aes, false, {
         "fmov d0, #0" "\n"
         "fmov d1, #0" "\n"
         "aesd v0.16B, v0.16B" "\n"
-        : : : "v0"
-    );
-})
-CHECK(pmull, pmull, aes, false, {
-    asm volatile (
-        "fmov d0, #0" "\n"
         "pmull v0.1q, v0.1d, v0.1d" "\n"
         : : : "v0"
     );
@@ -310,6 +304,13 @@ CHECK(sve2, sve2, sve2, false, {
          : : : "p15", "cc"
      );
 })
+CHECK(sve2_aes, sve2-aes, sve2-aes, false, {
+     asm volatile (
+         "aese z0.b, z0.b, z1.b" "\n"
+         "pmullt z2.q, z0.d, z1.d" "\n"
+         : : : "z0", "z2"
+     );
+})
 CHECK(sve2_bitperm, sve2-bitperm, sve2-bitperm, false, {
      asm volatile (
          "bext z0.s, z1.s, z2.s"
@@ -400,7 +401,6 @@ int main(int, const char **) {
     check_lse();
     check_sha2();
     check_aes();
-    check_pmull();
     check_rcpc();
     check_rcpc2();
     check_fcma();
@@ -428,6 +428,7 @@ int main(int, const char **) {
     check_rng();
     check_sve();
     check_sve2();
+    check_sve2_aes();
     check_sve2_bitperm();
     check_sve2_sha3();
     check_sve2_sm4();
