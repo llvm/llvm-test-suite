@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 #
 # This script parses the DejaGNU annotations from the files in the gfortran test
-# suite and updates the static test configuration files. This must
-# be run whenever the tests are updated with new tests from upstream
-# gfortran. There are currently several limitations in the way the annotations
-# are parsed and how they are dealt with in the static test
-# configuration. These are described in inline comments. The format of the
-# static test configuration files is also documented inline.
+# suite and updates the static test configuration files. This must be run
+# whenever the tests are updated with new tests from upstream gfortran. There
+# are currently several limitations in the way the annotations are parsed and
+# how they are dealt with in the static test configuration. These are described
+# in inline comments. The format of the static test configuration files is also
+# documented inline.
 #
 # This script modifies the test configuration files in place. If this is not
 # desirable,
@@ -20,7 +20,7 @@ import chardet
 import os
 import re
 import shutil
-import typing
+import yaml
 
 # Class representing a single test. The fields of the test should be those that
 # are eventually serialized into the test configuration. The configuration will
@@ -145,7 +145,6 @@ def get_ancestor(f: str, n: int) -> str:
 def get_encoding(filepath: str) -> str | None:
     with open(filepath, 'rb') as f:
         return chardet.detect(f.read())['encoding']
-    return None
 
 # Get the lines in the file.
 def get_lines(filepath: str) -> list[str]:
@@ -369,8 +368,8 @@ def collect_tests(d: str) -> list[Test]:
             '  \n'.join([os.path.basename(f) for f in remove])
         )
 
-    # Find all the files that are dependencies of some file that is the
-    # main file in a test.
+    # Find all the files that are dependencies of the main file of a multi-file
+    # test
     dependents = set([])
     for filename in files:
         for l in get_lines(filename):
@@ -511,18 +510,126 @@ def parse_tests(filename: str) -> list[Test]:
                     lno + 1
                 )
 
-            kind = elems[0]
-            sources = elems[1].split(' ')
-            xfail = True if elems[2] == 'xfail' else False
-            options = elems[3].split(' ')
-            enabled_on = elems[4].split(' ')
-            disabled_on = elems[5].split(' ')
+            kind: str = elems[0]
+            sources: list[str] = elems[1].split(' ')
+            xfail: bool = True if elems[2] == 'xfail' else False
+            options: list[str] = elems[3].split(' ')
+            enabled_on: list[str] = elems[4].split(' ')
+            disabled_on: list[str] = elems[5].split(' ')
 
             tests.append(
                 Test(kind, sources, options, enabled_on, disabled_on, xfail)
             )
 
     return tests
+
+# Parse the override file. The file is guaranteed to exist.
+def parse_override_file(filename: str) -> dict:
+    def type_error(attr: str, key: str, typ: str) -> None:
+        error(
+            'Value of attribute "{}" in key "{}" must be of type "{}"',
+            attr,
+            key,
+            typ
+        )
+
+    yml = {}
+    with open(filename, "r") as f:
+        yml = yaml.safe_load(f)
+
+    # Check that the keys and the values are as we expect. We could have used a
+    # schema for this, and probably should, but this should be sufficient for
+    # now.
+    for main, attrs in yml.items():
+        # The keys must be strings. They must also be a valid main file for a
+        # test, so it would be nice to check for that too, but it is probably
+        # not worth the extra hassle.
+        if not isinstance(main, str):
+            error('Key "{}" in override file must be a string', main)
+
+        if not isinstance(attrs, dict):
+            error('Key "{}" must be mapped to a dictionary', main)
+
+        for attr, val in attrs.items():
+            if not isinstance(attr, str):
+                error('Attribute "{}" in key "{}" must be a string', attr, main)
+
+            # We could, in principle, allow 'disabled_on' and 'enabled_on' to be
+            # strings. For now, force them to be lists even if they contain only
+            # a single element. Empty lists are allowed, even if they are
+            # somewhat useless.
+            if attr == 'disabled_on':
+                if not isinstance(val, list):
+                    type_error(attr, main, 'array')
+            elif attr == 'enabled_on':
+                if not isinstance(val, list):
+                    type_error(attr, main, 'array')
+            elif attr == 'xfail':
+                if not isinstance(val, bool):
+                    type_error(attr, main, 'boolean')
+            else:
+                error('Unknown attribute "{}" in key "{}"', attr, main)
+    return yml
+
+# Override the disabled_on property of the test.
+def override_disabled_on(disabled_on: list[str], t: Test) -> None:
+    message('Overriding "disabled_on" in {}', t.sources[0])
+
+    # Some tests could be explicitly enabled on certain platforms. When
+    # disabling such tests, the corresponding entry should be removed from the
+    # enabled_on list. The match must be exact. Regex matches are not, and
+    # likely will never be, supported.
+    for s in disabled_on:
+        if s in t.enabled_on and len(t.enabled_on) == 1:
+            error(
+                ('"{}" is the sole remaining entry in the enabled_on list of '\
+                 'test "{}". This will result in the test being enabled on '\
+                 'all platforms except "{}". This is a known issue and is '\
+                 'currently not supported. You may need to add the test to '\
+                 'DisabledFiles.cmake to disable the test altogether'),
+                s,
+                t.sources[0],
+                s
+            )
+        elif s in t.enabled_on:
+            t.enabled_on.remove(s)
+    t.disabled_on.extend(disabled_on)
+
+# Override the enabled_on property of the test.
+def override_enabled_on(enabled_on: list[str], t: Test) -> None:
+    message('Overriding "enabled_on" in {}', t.sources[0])
+
+    # A test will typically run on all platforms except those on which it has
+    # been explicitly disabled. This option is almost always going to be used
+    # to override the platform on which it has been disabled. If so, platform
+    # specification (potentially a regex) should be removed from the disable_on
+    # list. The platforms will be added to the enabled_on list.
+    #
+    # The string must exactly match what is in the disable_on list. Regex
+    # matches are not, and likely will never be, supported.
+    for s in enabled_on:
+        if s in t.disabled_on:
+            t.disabled_on.remove(s)
+        else:
+            t.enabled_on.append(s)
+
+# Override the xfail property of the test.
+def override_xfail(xfail: bool, t: Test) -> None:
+    message('Overriding "xfail" in {}', t.sources[0])
+    t.xfail = xfail
+
+# Override the properties of the test based on the attributes from the override
+# file.
+def override_test(attrs: dict, t: Test) -> None:
+    for attr, val in attrs.items():
+        if attr == 'disabled_on':
+            override_disabled_on(val, t)
+        elif attr == 'enabled_on':
+            override_enabled_on(val, t)
+        elif attr == 'xfail':
+            override_xfail(val, t)
+        else:
+            error('Unknown attribute "{}" in key "{}"', attr, main)
 
 # Setup the argument parser and return it.
 def get_argument_parser():
@@ -562,17 +669,29 @@ def main() -> int:
         'run': 0
     }
     for d in dirs:
-        printf('{}', d)
+        message('In {}', d)
         tests = collect_tests(d)
         if not tests:
             continue
 
+        # Process an override file if one exists. It is probably not beneficial
+        # to force every subdirectory to have an override file since it is
+        # unlikely that a large number of tests will need to be overridden.
+        override = os.path.join(d, 'override.yaml')
+        if os.path.exists(override):
+            message('Found override file: {}', override)
+            yml = parse_override_file(override)
+            for t in tests:
+                main: str = t.sources[0]
+                if main in yml:
+                    override_test(yml[main], t)
+
         existing = []
         config_file = os.path.join(d, 'tests.cmake')
         if os.path.exists(config_file):
-            message('Backing up test configuration')
             existing = parse_tests(config_file)
             if args.backup:
+                message('Backing up test configuration')
                 shutil.move(config_file, config_file + '.bak')
         else:
             message('Test configuration not found')
