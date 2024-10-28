@@ -258,7 +258,7 @@ The value must be a list of strings. Each string describes a platform on which
 the test must be disabled. This will usually be a target triple, and may be a
 regex. 
 
-This can be used to disable tests on aplatforms on which they have been
+This can be used to disable tests on platforms on which they have been
 explicitly enabled (this usually occurs when tests are restricted to run only 
 on certain platforms). In such cases, the string that is used to specify the 
 platform must exactly match the string that was used in a DejaGNU annotation. 
