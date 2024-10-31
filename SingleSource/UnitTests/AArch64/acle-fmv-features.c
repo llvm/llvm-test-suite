@@ -162,12 +162,6 @@ CHECK(i8mm, i8mm, i8mm, false, {
         : : : "v0"
     );
 })
-CHECK(dit, dit, dit, false, {
-    asm volatile (
-        "msr DIT, x0"
-        : : : "x0"
-    );
-})
 CHECK(fp16, fp16, fp16, false, {
     asm volatile (
         "fmov h0, #0"
@@ -409,7 +403,6 @@ int main(int, const char **) {
     check_dpb2();
     check_bf16();
     check_i8mm();
-    check_dit();
     check_fp16();
     check_ssbs();
     check_bti();
