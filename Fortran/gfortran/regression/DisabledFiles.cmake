@@ -1780,6 +1780,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bounds_check_17.f90
   pr48958.f90
 
+  # Require -fcheck=pointer.
+  pointer_check_6.f90
+
   # These files require the __truncsfbf2 intrinsic that is not available
   # before GCC 13. Alternatively, it requires compiler-rt to be built and a
   # command line option provided to instruct the compiler to use it. Currently,
