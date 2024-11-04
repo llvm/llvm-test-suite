@@ -22,7 +22,7 @@
 // Not all targets support getting/setting rounding mode using builtin
 // functions.
 #if defined(__x86_64__) || defined(__aarch64__) || defined(__arm__) || \
-    defined(__riscv)
+    defined(__riscv) || defined(__ppc__)
 #define FLOAT_AVAILABLE 1
 #define DOUBLE_AVAILABLE 1
 #endif
