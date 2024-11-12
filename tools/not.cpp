@@ -58,7 +58,8 @@ int main(int argc, char* const* argv) {
 
 #if defined(__unix__) || defined(__APPLE__)
   pid_t pid;
-  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, NULL))
+  extern char** environ;
+  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ))
     return EXIT_FAILURE;
   if (waitpid(pid, &result, WUNTRACED | WCONTINUED) == -1)
     return EXIT_FAILURE;

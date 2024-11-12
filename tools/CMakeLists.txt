@@ -41,3 +41,7 @@ else()
 endif()
 
 add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+
+# Always add the test subdirectory. After all, we really should test these
+# tools.
+add_subdirectory(test)
