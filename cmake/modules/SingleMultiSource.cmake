@@ -33,7 +33,9 @@ function(llvm_singlesource)
   if(DEFINED Source)
     set(sources ${Source})
   else()
-    file(GLOB sources *.c *.cpp *.cc *.f *.F *.f90 *.F90 *.f03 *.F03 *.f08 *.F08)
+    file(GLOB sources
+         *.c *.cpp *.cc
+         *.for *.FOR *.fpp *.FPP *.[fF] *.[fF]90 *.[fF]95 *.[fF]03 *.[fF]08)
   endif()
   foreach(source ${sources})
     basename(name ${source})
@@ -51,7 +53,9 @@ endfunction()
 function(llvm_multisource target)
   set(sources ${ARGN})
   if(NOT sources)
-    file(GLOB sources *.c *.cpp *.cc *.f *.F *.f90 *.F90 *.f03 *.F03 *.f08 *.F08)
+    file(GLOB sources
+         *.c *.cpp *.cc
+         *.for *.FOR *.fpp *.FPP *.[fF] *.[fF]90 *.[fF]95 *.[fF]03 *.[fF]08)
   endif()
 
   llvm_test_executable_no_test(${target} ${sources})
