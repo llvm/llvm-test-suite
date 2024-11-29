@@ -13,7 +13,7 @@ add_subdirectory(SNAP)
 # test suite. These have not been widely tested, so they are only enabled for
 # certain combinations of platforms and architectures.
 if (NOT WIN32 AND NOT APPLE)
-  if (ARCH MATCHES "x86" OR ARCH MATCHES "AArch64")
+  if (ARCH MATCHES "x86" OR ARCH MATCHES "AArch64" OR ARCH MATCHES "LoongArch")
     add_subdirectory(gfortran)
   endif()
 endif()
