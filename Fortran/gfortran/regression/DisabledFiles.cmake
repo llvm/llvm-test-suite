@@ -134,6 +134,11 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # Similar test added: UnitTests/execute_command_line
   execute_command_line_1.f90
   execute_command_line_3.f90
+
+  # Test is not conformant: reference to f() in tobias::sub1 violates Fortran
+  # 2023 (and before) 15.5.2.14 point (4). `f()` references the actual argument
+  # of `x` while `x` does not have the TARGET or POINTER attribute. 
+  aliasing_array_result_1.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
