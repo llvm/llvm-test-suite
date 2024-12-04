@@ -17,3 +17,5 @@ if (NOT WIN32 AND NOT APPLE)
     add_subdirectory(gfortran)
   endif()
 endif()
+
+file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
