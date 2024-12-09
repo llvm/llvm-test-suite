@@ -108,7 +108,7 @@ tgt = f'({pfx}target[ ]*(?P<target>.+){sfx})?'
 
 re_btxt = re.compile('[{][ ]*(.+?)[ ]*[}]')
 re_fortran = re.compile('^.+[.][Ff].*$')
-re_assemble = re.compile(f'{pfx}dg-(lto-)?do[ ]*assemble{sfx}')
+re_assemble = re.compile(f'{pfx}dg-(lto-)?do[ ]*assemble[ ]*{tgt}{sfx}')
 re_preprocess = re.compile(f'{pfx}dg-do[ ]*preprocess{sfx}')
 re_compile = re.compile(f'{pfx}dg-do[ ]*compile[ ]*{tgt}{sfx}')
 re_link = re.compile(f'{pfx}dg-(lto-)?do[ ]*link[ ]*{tgt}{sfx}')

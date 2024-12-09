@@ -312,7 +312,7 @@ In order to enable this test on cygwin, the following must be added to
     
 ```
 "chmod_1.f90":
-    enable_on: ["*-*-cygwin*"]
+    enabled_on: ["*-*-cygwin*"]
 ```
 
 Note that the string in the value of `enabled_on` exactly matches the string 
