@@ -4701,7 +4701,7 @@ run;entry_12.f90;;;;
 run;entry_13.f90;;;;
 run;entry_14.f90;;;;
 run;entry_16.f90;;;;
-run;entry_23.f;;;;aarch64-*-*
+run;entry_23.f;;;;aarch64-*-* loongarch64-*-*
 run;entry_26.f90;;-fno-f2c;;
 run;entry_27.f90;;-ff2c;;
 run;entry_3.f90;;;;
@@ -4806,7 +4806,7 @@ run;findloc_3.f90;;;;
 run;findloc_4.f90;;;;
 run;findloc_5.f90;;;;
 run;findloc_6.f90;;;;
-run;findloc_8.f90;;;;aarch64-*-*
+run;findloc_8.f90;;;;aarch64-*-* loongarch64-*-*
 run;float_1.f90;;;;
 run;flush_1.f90;;;;
 run;fmt_bz_bn.f;;;;

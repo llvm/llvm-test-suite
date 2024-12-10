@@ -25,11 +25,11 @@
 #     Assertion `Elt->getBitWidth() == EltVT.getSizeInBits() && "APInt size does not match type size!"' failed.
 #
 "findloc_8.f90":
-  disabled_on: ["aarch64-*-*"]
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*"]
 
 # entry_23.f raises a segmentation fault at runtime, but only on AArch64.
 "entry_23.f":
-  disabled_on: ["aarch64-*-*"]
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*"]
 
 # pr91497.f90 fails to compile on AArch64 with the following message:
 # error: 'kind=' argument must be a constant scalar integer whose value is a
