@@ -6,7 +6,7 @@ foo (unsigned long *start, unsigned long *end)
   while (end > start) 
   {
     *end = *(end - 1);
-	--end;
+    --end;
   }
 }
 
