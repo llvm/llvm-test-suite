@@ -3,10 +3,11 @@
 void
 foo (unsigned long *start, unsigned long *end)
 {
-  unsigned long *temp = end - 1;
-
-  while (end > start)
-    *end-- = *temp--;
+  while (end > start) 
+  {
+    *end = *(end - 1);
+	--end;
+  }
 }
 
 int
