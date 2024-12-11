@@ -17,7 +17,7 @@ within the `llvm-test-suite/test-suite-externals` directory, or
 set `TEST_SUITE_FFMPEG_ROOT` to point to a similar checkout, in the
 CMake configuration. (As this is a branch, not a tag, you may wish
 to check out e.g. the commit
-`364f6a5f118d35058a49eee3624c5d82435be443`, in case the branch
+`10aaf84f855dbcedb8ee2e3fce307e9b98320946`, in case the branch
 changes further.)
 
 For x86 targets, the `nasm` tool is used for building assembly, if
@@ -161,7 +161,7 @@ On Windows, `pmccntr_el0` is used; this register should always be
 accessible from userspace on Windows.
 
 
-Evaulating vectorization effectiveness
+Evaluating vectorization effectiveness
 --------------------------------------
 
 For evaluating e.g. the effectiveness of compiler autovectorization,
