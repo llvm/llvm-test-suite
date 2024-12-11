@@ -6,7 +6,7 @@
 # Please see gfortran/README.md for instructions on editing this file.
 #
 # This file is broadly divided into two. The first section contains tests that
-# are "temporarily "overridden. This are usually tests that fail on certain 
+# are "temporarily" overridden. These are usually tests that fail on certain 
 # platforms, but pass on others, but are intended to pass everywhere. When the
 # underlying issue is addressed, the tests should be removed. Eventually, there
 # should be no tests at all in this section. The second section contains tests
@@ -19,8 +19,8 @@
 
 # ------------------------ TEMPORARILY OVERRIDDEN TESTS ------------------------
 
-# findloc_8.f90 currently causes an assertion failure in SelectionDAG.cpp, but
-# only on AArch64.
+# findloc_8.f90 currently causes an assertion failure in SelectionDAG.cpp on
+# some platforms.
 #
 #     Assertion `Elt->getBitWidth() == EltVT.getSizeInBits() && "APInt size does not match type size!"' failed.
 #
@@ -29,13 +29,13 @@
 
 # entry_23.f raises a segmentation fault at runtime, but only on AArch64.
 "entry_23.f":
-  disabled_on: ["aarch64-*-*", "loongarch64-*-*"]
+  disabled_on: ["aarch64-*-*"]
 
-# pr91497.f90 fails to compile on AArch64 with the following message:
+# pr91497.f90 fails to compile on some platforms with the following message:
 # error: 'kind=' argument must be a constant scalar integer whose value is a
 # supported kind for the intrinsic result type.
 "pr91497.f90":
-  disabled_on: ["aarch64-*-*"]
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*"]
 
 # maxlocval_1.f90 fails at runtime with "STOP: code 1" on AArch64. This is not
 # expected and does not occur on other targets.
