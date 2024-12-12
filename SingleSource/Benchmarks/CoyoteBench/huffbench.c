@@ -111,25 +111,23 @@ static void heap_adjust(size_t * freq, size_t * heap, int n, int k)
     // queues and heaps for more explanation.
     int j;
 
-    --heap;
-
-    int v = heap[k];
+    int v = heap[k-1];
 
     while (k <= (n / 2))
     {
         j = k + k;
     
-        if ((j < n) && (freq[heap[j]] > freq[heap[j+1]]))
+        if ((j < n) && (freq[heap[j-1]] > freq[heap[j]]))
             ++j;
     
-        if (freq[v] < freq[heap[j]])
+        if (freq[v] < freq[heap[j-1]])
             break;
     
-        heap[k] = heap[j];
+        heap[k-1] = heap[j-1];
         k = j;
     }
 
-    heap[k] = v;
+    heap[k-1] = v;
 }
 
 // Huffman compression/decompression function
