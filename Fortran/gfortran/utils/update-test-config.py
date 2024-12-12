@@ -129,7 +129,7 @@ re_platform = re.compile('^[A-Za-z0-9*?_]+-[A-Za-z0-9*?_]+-[A-Za-z0-9*?_]+$')
 
 # Maps from known platforms to triples that LLVM will understand.
 # FIXME: The ia32 target probably does not always correspond to i386. Does it
-# means that it will be enabled on other non-X86 platforms?
+# mean that it will be enabled on other non-X86 platforms?
 platforms = {'ia32': 'i386-*-*'}
 
 # Get the n-th level ancestor of the given file. The 1st level ancestor is
@@ -225,17 +225,22 @@ def error(fmt: str, *args) -> None:
 # The target is usually a regular expression. But the regex syntax used by
 # DejaGNU is not exactly the same as that supported by cmake. This translates
 # the DejaGNU regex to a cmake-compatible regex.
+#
+# WARNING: This function is not intended to be a faithful translation of all
+# DejaGNU regexes to equivalent CMake regexes. The target specifications used in
+# the gfortran test suite happen to use a subset of the regex language, so we
+# can get away with doing quick and easy replacements.
 def convert_target_regex(t: str) -> str:
-    # XXX: This translation is not strictly correct.
     # In DejaGNU, the ? character matches a single character unless it follows
-    # an atom. In the target specifications in the gfortran test suite, this is
-    # only used as a single character match.
+    # an atom. In the target specifications in the gfortran test suite, however,
+    # it is only used as a single character match, so just replace it with the
+    # cmake equivalent.
     t = t.replace('?', '.')
 
-    # XXX: This translation is not strictly correct.
-    # in DejaGNU, the * character can also be a wildcard match for zero or more
+    # In DejaGNU, the * character can also be a wildcard match for zero or more
     # characters unless it follows an atom. In the target specifications in the
-    # gfortran test suite, it is only used as a wildcard.
+    # gfortran test suite, however, it is only used as a wildcard match, so just
+    # replace it with the cmake equivalent.
     t = t.replace('*', '.+')
 
     return t
@@ -569,6 +574,16 @@ def parse_override_file(filename: str) -> dict:
                     type_error(attr, main, 'boolean')
             else:
                 error('Unknown attribute "{}" in key "{}"', attr, main)
+
+    # We allow the target specifications in the `enabled_on` and `disabled_on`
+    # lists to use * as a wildcard match. This is to keep it consistent with
+    # the DejaGNU specifications in the tests. But that syntax is not
+    # compatible with CMake regexes, so they need to be converted before use.
+    for _, attrs in yml.items():
+        for k in ['enabled_on', 'disabled_on']:
+            if k in attrs:
+                attrs[k] = [convert_target_regex(r) for r in attrs[k]]
+
     return yml
 
 # Override the disabled_on property of the test.
