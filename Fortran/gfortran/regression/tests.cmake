@@ -2671,7 +2671,7 @@ compile;pr91372.f90;;;;
 compile;pr91471.f90;;;;
 compile;pr91485.f90;;;;
 compile;pr91496.f90;;-fdump-tree-original;;
-compile;pr91497.f90;;-Wall;;aarch64-*-*
+compile;pr91497.f90;;-Wall;;aarch64-*-* loongarch64-*-*
 compile;pr91497_2.f90;;-Wall;;
 compile;pr91564.f90;xfail;;;
 compile;pr91565.f90;xfail;;;
