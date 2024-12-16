@@ -44,6 +44,7 @@ preprocess;warning-directive-2.F90;xfail;-std=f95 -fdiagnostics-show-option -Wer
 preprocess;warning-directive-3.F90;;-std=f95 -fdiagnostics-show-option -Werror -Wno-error=cpp;;
 preprocess;warning-directive-4.F90;;-std=f95 -fdiagnostics-show-option -Wno-cpp;;
 assemble;module_naming_1.f90;;;;
+assemble;pr88833.f90;;-O3 -march=armv8.2-a+sve --save-temps;;
 assemble;same_name_1.f90;;;;
 compile;20181025-1.f;;-Ofast;;
 compile;20231103-1.f90;;-Ofast;;
@@ -2635,7 +2636,6 @@ compile;pr88379.f90;;-fcoarray=single;;
 compile;pr88467.f90;xfail;;;
 compile;pr88552.f90;xfail;;;
 compile;pr88624.f90;;-fcoarray=lib;;
-compile;pr88833.f90;;-O3 -march=armv8.2-a+sve --save-temps;;
 compile;pr88902.f90;;-flto --param ggc-min-heapsize=0;;
 compile;pr88932.f90;;-O1 -fpredictive-commoning -fno-tree-ch -fno-tree-dominator-opts -fno-tree-fre;;
 compile;pr88934.f90;;-O -ftree-vectorize;;
@@ -2671,7 +2671,7 @@ compile;pr91372.f90;;;;
 compile;pr91471.f90;;;;
 compile;pr91485.f90;;;;
 compile;pr91496.f90;;-fdump-tree-original;;
-compile;pr91497.f90;;-Wall;;
+compile;pr91497.f90;;-Wall;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+
 compile;pr91497_2.f90;;-Wall;;
 compile;pr91564.f90;xfail;;;
 compile;pr91565.f90;xfail;;;
@@ -4701,7 +4701,7 @@ run;entry_12.f90;;;;
 run;entry_13.f90;;;;
 run;entry_14.f90;;;;
 run;entry_16.f90;;;;
-run;entry_23.f;;;;
+run;entry_23.f;;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+
 run;entry_26.f90;;-fno-f2c;;
 run;entry_27.f90;;-ff2c;;
 run;entry_3.f90;;;;
@@ -4806,7 +4806,7 @@ run;findloc_3.f90;;;;
 run;findloc_4.f90;;;;
 run;findloc_5.f90;;;;
 run;findloc_6.f90;;;;
-run;findloc_8.f90;;;;
+run;findloc_8.f90;;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+
 run;float_1.f90;;;;
 run;flush_1.f90;;;;
 run;fmt_bz_bn.f;;;;
@@ -5248,7 +5248,7 @@ run;maxloc_bounds_6.f90;xfail;-fbounds-check;;
 run;maxloc_bounds_7.f90;xfail;-fbounds-check;;
 run;maxloc_bounds_8.f90;xfail;-fbounds-check;;
 run;maxloc_string_1.f90;;;;
-run;maxlocval_1.f90;;;;
+run;maxlocval_1.f90;;;;aarch64-.+-.+
 run;maxlocval_2.f90;;;;
 run;maxlocval_3.f90;;;;
 run;maxlocval_4.f90;;;;

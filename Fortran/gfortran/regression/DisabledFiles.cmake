@@ -137,7 +137,7 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
 
   # Test is not conformant: reference to f() in tobias::sub1 violates Fortran
   # 2023 (and before) 15.5.2.14 point (4). `f()` references the actual argument
-  # of `x` while `x` does not have the TARGET or POINTER attribute. 
+  # of `x` while `x` does not have the TARGET or POINTER attribute.
   aliasing_array_result_1.f90
 )
 
@@ -831,19 +831,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # --------------------------------------------------------------------------
   #
-  # These tests are skipped because they fail on AArch64 but not x86. These
-  # will be disabled until we allow tests to be selectively enabled on certain
-  # platforms.
-
-  large_integer_kind.f90
-  maxlocval_1.f90
-  pr91497.f90
-
-  alloc_comp_class_4.f03 # TODO: This also fails on X86, so recategorize
-  unpack_bounds_1.f90    # TODO: This also fails on X86, so recategorize
-
-  # --------------------------------------------------------------------------
-  #
   # These are skipped almost certainly because of a bug in the way multi-file
   # compile tests are built by the test-suite. This almost certainly has nothing
   # to do with flang, but they will be skipped until the test suite build
@@ -925,6 +912,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   stop_shouldfail.f90 # STOP stops program
 
   # require further analysis
+  alloc_comp_class_4.f03
   bounds_check_10.f90
   bounds_check_7.f90
   bounds_check_array_ctor_1.f90
@@ -1025,12 +1013,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   elemental_function_2.f90
   do_check_1.f90
   random_3.f90
-
-  # These tests fail at runtime on AArch64 (but pass on x86). Disable them
-  # anyway so the test-suite passes by default on AArch64.
-  entry_23.f
-  findloc_8.f90
-  pr99210.f90
 
   # These tests go into an infinite loop printing "Hello World"
   pointer_check_1.f90
@@ -1864,8 +1846,4 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Tests expect semantic errors that are not raised.
   c_sizeof_7.f90
-
-  # Tests that use "PRINT namelistname"
-  namelist_print_2.f
-  print_fmt_2.f90
 )
