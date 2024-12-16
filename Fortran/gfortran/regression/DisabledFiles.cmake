@@ -148,52 +148,14 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: assumed rank in procedure interface.
   ISO_Fortran_binding_1.f90
-  ISO_Fortran_binding_13.f90
   ISO_Fortran_binding_3.f90
-  PR100029.f90
-  PR100097.f90
-  PR100098.f90
   PR100911.f90
   PR100915.f90
-  PR93963.f90
-  PR94022.f90
-  PR95196.f90
-  PR95352.f90
-  PR96726.f90
-  PR96727.f90
-  PR96728.f90
-  PR97046.f90
-  assumed_rank_12.f90
-  assumed_rank_18.f90
-  assumed_rank_19.f90
-  assumed_rank_20.f90
-  assumed_rank_21.f90
-  assumed_type_9.f90
-  assumed_type_10.f90
-  assumed_type_11.f90
-  bind-c-contiguous-2.f90
   interface_49.f90
-  is_contiguous_2.f90
-  pr103366.f90
-  pr84088.f90
-  pr88932.f90
-  pr92277.f90
-  pr95828.f90
-  select_rank_5.f90
-  sizeof_4.f90
   sizeof_6.f90
   unlimited_polymorphic_1.f03
-  unlimited_polymorphic_32.f90
-
-  # unimplemented: assumed-rank variable in procedure implemented in Fortran
-  associate_66.f90
-  bind_c_optional-2.f90
-  intent_out_19.f90
-  intent_out_20.f90
-  shape_12.f90
 
   # unimplemented: ASYNCHRONOUS in procedure interface
-  assumed_rank_13.f90
   asynchronous_3.f03
 
   # unimplemented: assumed type in actual argument
@@ -214,18 +176,15 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr63797.f90
 
   # unimplemented: BIND (C) internal procedure.
-  array_reference_3.f90
   bind_c_char_4.f90
   bind_c_char_5.f90
 
   # unimplemented: BIND(C) internal procedures:
-  bind-c-char-descr.f90
   bind_c_usage_9.f03
 
   # unimplemented: BIND(C) module variable linkage
   binding_label_tests_10.f03
   binding_label_tests_13.f03
-  global_vars_c_init.f90
   proc_ptr_8.f90
 
   # unimplemented: character array expression temp with dynamic length.
@@ -359,7 +318,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: %VAL() intrinsic for arguments
   c_by_val_1.f
   c_by_val_3.f90
-  pointer_check_12.f90
 
   # unimplemented: parameterized derived types
   dec_type_print_2.f03
@@ -464,7 +422,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   c_ptr_tests_14.f90
   deferred_character_10.f90
   iso_c_binding_rename_2.f03
-  iso_fortran_binding_uint8_array.f90
   logical_temp_io.f90
   logical_temp_io_kind8.f90
   pr35983.f90
@@ -484,8 +441,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   coarray_alloc_comp_8.f08 # NYI: lowering coarray reference
   coarray_lib_alloc_4.f90 # NYI: allocation of coarray
   coarray_poly_9.f90 # NYI: allocation of coarray
-  c_ptr_tests_10.f03 # valid compilation error on print of c_null_ptr (?)
-  c_ptr_tests_9.f03 # valid compilation error on print of c_null_ptr (?)
   winapi.f90 # needs -lkernel32 and target *-*-cygwin*
   widechar_11.f90 # No ASSIGNMENT matches TYPE(c_ptr) and TYPE(__builtin_c_ptr)
 
@@ -503,30 +458,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # supported in flang or some other reason. If there are multiple errors
   # in a single file, each distinct error message will be provided.
 
-  # error: Entity in ALLOCATE statement must have the ALLOCATABLE or POINTER
-  # attribute
-  ISO_Fortran_binding_15.f90
-
-  # error: Left-hand side of assignment may not be polymorphic unless
-  # assignment is to an entire allocatable
-  PR100040.f90
-  PR100103.f90
-
-  # error: The left-hand side of a pointer assignment is not definable
-  PR100094.f90
-
   # error: Assumed-rank array cannot be forwarded to '[var]=' argument
   PR100906.f90
   PR100914.f90
-  assumed_rank_10.f90
-  assumed_rank_24.f90
-  assumed_rank_9.f90
-  associated_assumed_rank.f90
-  assumed_rank_16.f90
-  assumed_rank_8.f90
-
-  # error: Pointer has rank 0 but target has rank [n]
-  assumed_rank_1.f90
 
   # error: Actual argument variable length '1' does not match the expected
   # length '77'
@@ -534,17 +468,11 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: Dimension 1 of left operand has extent [m], but right operand has
   # extent [n]
-  PR94289.f90
-  assumed_rank_2.f90
-  assumed_rank_22.f90
   assumed_rank_bounds_2.f90
-  assumed_rank_bounds_3.f90
-  assumed_rank_17.f90
   assumed_rank_bounds_1.f90
 
   # error: DIM=3 dimension is out of range for rank-1 array
   assumed_rank_3.f90
-  assumed_rank_7.f90
 
   # error: Subscript [m] is less than lower bound [n] for dimension [d] of
   # array
@@ -598,7 +526,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   class_dummy_6.f90
 
   # error: No explicit type declared for '[sym]'
-  PR49268.f90
   boz_complex_3.f90
   char_result_19.f90
   chmod_1.f90
@@ -629,9 +556,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: Actual argument for 'i=' has bad type 'LOGICAL(1)'
   and_or_xor.f90
-
-  # error: Argument of ALLOCATED() must be an ALLOCATABLE object or component
-  select_rank_1.f90
 
   # error: 'coarray=' argument must have corank > 0 for intrinsic 'lcobound'
   bound_simplification_4.f90
@@ -679,10 +603,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: No operator .XOR. defined for LOGICAL(4) and LOGICAL(4)
   dec_logical_xor_1.f90
 
-  # error: Value in structure constructor of type 'education' is incompatible
-  # with component
-  extends_2.f03
-
   # error: If a POINTER or ALLOCATABLE dummy or actual argument is polymorphic,
   # both must be so
   finalize_12.f90
@@ -716,9 +636,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: Subscript 3 is greater than upper bound 2 for dimension 1 of array
   module_procedure_4.f90
 
-  # error: '[SYM]' is not an object that can appear in an expression
-  namelist_print_1.f
-
   # error: '[SYM]' is already declared in this scoping unit
   namelist_use.f90
 
@@ -728,7 +645,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pdt_2.f03
 
   # error: '[SYM]' not found in module 'iso_fortran_env'
-  quad_3.f90
   team_change_1.f90
   team_end_1.f90
   team_form_1.f90
@@ -872,9 +788,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # disabled until we can conditionally run such tests
   selected_logical_kind_3.f90
 
-  # error: conflicting debug info for argument
-  entry_6.f90
-
   # error: Only -std=f2018 is allowed currently.
   continuation_19.f
 
@@ -892,9 +805,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # with procedure designator 'new_t' with explicit interface that cannot be
   # called via an implicit interface
   pr112407a.f90
-
-  # This causes a segmentation fault at run-time.
-  ishftc_optional_size_1.f90
 )
 
 # These tests are disabled because they fail when they are expected to pass.
@@ -927,7 +837,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bounds_check_strlen_4.f90
   bounds_check_strlen_5.f90
   bounds_check_strlen_7.f90
-  c_char_tests_4.f90
   c_char_tests_5.f90
   char_bounds_check_fail_1.f90
   char_pointer_assign_4.f90
@@ -1010,15 +919,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   unformatted_subrecord_1.f90
   widechar_IO_4.f90
   zero_sized_1.f90
-  elemental_function_2.f90
-  do_check_1.f90
   random_3.f90
-
-  # These tests go into an infinite loop printing "Hello World"
-  pointer_check_1.f90
-  pointer_check_2.f90
-  pointer_check_3.f90
-  pointer_check_4.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -1411,8 +1312,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   array_constructor_28.f03
   bounds_check_array_ctor_3.f90
   bounds_check_array_ctor_5.f90
-  # C_SIZEOF() argument must be an interoperable type
-  c_sizeof_6.f90
   # External should not have same name as COMMON
   common_15.f90
   # Not catching lack of label actual argument for alternate return dummy
@@ -1503,7 +1402,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   goto_8.f90
   # These tests attempt to print the value of the private component of a C_PTR.
   init_flag_17.f90
-  c_ptr_tests_16.f90
   # Valid error: Generic 'ambiguous' may not have specific procedures 'f' and 'f' as their interfaces are not distinguishable
   interface_1.f90
   # Valid error: Generic 'generic' may not have specific procedures 'foo' and 'bar' as their interfaces are not distinguishable
@@ -1511,9 +1409,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Valid error: Dimension 1 of left-hand side has extent 2, but right-hand side has extent 3
   iso_fortran_env_7.f90
   # Valid error: Invalid specification expression: reference to local entity '...'
-  pr101026.f
-  pr101267.f90
-  pr78061.f
   pr79315.f90
   pr95090.f90
   # Valid error: An array component of an interoperable type must have at least one element
@@ -1560,8 +1455,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   coarray_collectives_11.f90
   coarray_collectives_15.f90
   coarray_collectives_16.f90
-  # Unsupported in folding: erfc_scaled(real(kind=4)) cannot be folded on host
-  erfc_scaled_2.f90
 
   # Unclear; may be bogus error on actual non-coarray arg to dummy coarray, may be bad test
   coarray_args_2.f90
@@ -1810,14 +1703,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   oldstyle_5.f
   pdt_34.f03
   pdt_35.f03
-  pr104555.f90
   pr112407b.f90
   pr114883.f90
   pr25623-2.f90
   pr25623.f90
   pr43984.f90
   pr88624.f90
-  pr99139.f90
   pr99368.f90
   reshape_10.f90
   selected_logical_kind_2.f90
@@ -1830,8 +1721,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bound_11.f90
   bounds_check_fail_6.f90
   bounds_check_fail_7.f90
-  finalize_56.f90
-  internal_dummy_2.f08
   iso_fortran_env_8.f90
   optional_absent_12.f90
   pr103389.f90

@@ -28,7 +28,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: support for polymorphic types
   pr102621.f90
-  pr86470.f90
 
   # unimplemented: derived type components with non default lower bounds
   depend-iterator-1.f90
@@ -205,7 +204,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   num-teams-1.f90
   num-teams-2.f90
   openmp-simd-7.f90
-  parallel-master-1.f90
   pr103695.f90
   pr99928-11.f90
   reduction-task-3.f90
@@ -285,14 +283,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # COPYPRIVATE variable is not PRIVATE or THREADPRIVATE in outer context
   copyprivate-1.f90
-  pr26224.f
 
   # The DEFAULT(NONE) clause requires that 'a' must be listed in a data-sharing
   # attribute clause
   crayptr4.f90
-
-  # Implied-shape array must be a named constant or a dummy argument
-  crayptr5.f90
 
   # Internal: no symbol found for
   declare-simd-2.f90
@@ -366,7 +360,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   crayptr2.f90
   map-alloc-comp-1.f90
   pr33439.f90
-  pr44036-3.f90
   pr78866-2.f90
   reduction3.f90
   sharing-3.f90
