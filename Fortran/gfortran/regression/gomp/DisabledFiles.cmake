@@ -28,6 +28,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: support for polymorphic types
   pr102621.f90
+  pr86470.f90
 
   # unimplemented: derived type components with non default lower bounds
   depend-iterator-1.f90
