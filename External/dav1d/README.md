@@ -158,7 +158,7 @@ On Windows, `pmccntr_el0` is used; this register should always be
 accessible from userspace on Windows.
 
 
-Evaulating vectorization effectiveness
+Evaluating vectorization effectiveness
 --------------------------------------
 
 For evaluating e.g. the effectiveness of compiler autovectorization,
