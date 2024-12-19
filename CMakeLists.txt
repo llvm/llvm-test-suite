@@ -360,6 +360,8 @@ if(NOT TEST_SUITE_SUBDIRS)
   if(NOT TEST_SUITE_FORTRAN)
     list(REMOVE_ITEM TEST_SUITE_SUBDIRS Fortran)
   endif()
+  # Separately add tests for tools.
+  list(APPEND TEST_SUITE_SUBDIRS tools/test)
   set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}")
 endif()
 set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
