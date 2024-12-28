@@ -42,7 +42,52 @@
 "maxlocval_1.f90":
   disabled_on: ["aarch64-*-*"]
 
-  
+# unsupported real type on PPC platform
+"gamma_4.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"boz_15.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"array_constructor_23.f":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"internal_pack_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"intrinsic_pack_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"intrinsic_spread_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"intrinsic_unpack_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"transpose_reshape_r10.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"unf_io_convert_3.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"c_f_pointer_complex.f03":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"large_real_kind_form_io_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"pr36006-2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"pr35944-2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"default_format_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
+"default_format_denormal_2.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This
@@ -54,3 +99,10 @@
 
 "print_fmt_2.f90":
   xfail: false
+
+# float bessel functions are not supported on AIX
+"bessel_1.f90":
+  disabled_on: ["powerpc-*-*"]
+
+"bessel_5.f90":
+  disabled_on: ["powerpc-*-*"]
