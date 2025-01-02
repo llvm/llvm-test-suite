@@ -21,6 +21,11 @@ import os
 import re
 import shutil
 import yaml
+import sys
+
+if (sys.version_info.major, sys.version_info.minor) < (3, 10):
+    print("Error: Python version 3.10 or later is required.")
+    sys.exit(1)
 
 # Class representing a single test. The fields of the test should be those that
 # are eventually serialized into the test configuration. The configuration will
