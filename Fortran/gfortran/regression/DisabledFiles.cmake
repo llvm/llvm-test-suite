@@ -1627,8 +1627,16 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Tests looking for runtime errors (e.g., bound checks). Correctly
   # caught by flang runtime, but not caught with Flang optimizations,
   # e.g. due to intrinsics inlining. These can pass with -O0:
+  all_bounds_1.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
+  maxloc_bounds_1.f90
+  maxloc_bounds_2.f90
+  maxloc_bounds_4.f90
+  maxloc_bounds_8.f90
+  maxloc_bounds_7.f90
+  pack_bounds_1.f90
+  spread_bounds_1.f90
 
   # Bad test, assigning an 11 elements array to a 12 elements array.
   transfer_array_intrinsic_4.f90
