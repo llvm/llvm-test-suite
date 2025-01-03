@@ -1626,7 +1626,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Tests looking for runtime errors (e.g., bound checks). Correctly
   # caught by flang runtime, but not caught with Flang optimizations,
-  # e.g. due to intrinsics inlining. These can pass with -O0:
+  # e.g. due to intrinsics inlining.
+  # Until https://github.com/orgs/llvm/projects/12?pane=issue&itemId=29048733
+  # is implemented, they can only pass at -O0:
   all_bounds_1.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
