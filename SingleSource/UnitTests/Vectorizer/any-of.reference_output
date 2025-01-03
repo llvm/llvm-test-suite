@@ -1,0 +1,8 @@
+Checking anyof_icmp_true_update
+Checking anyof_fcmp_true_update
+Checking anyof_icmp_false_update
+Checking anyof_fcmp_false_update
+Checking anyof_icmp_start_TC
+Checking anyof_fcmp_start_TC
+Checking anyof_icmp_update_by_TC
+Checking anyof_fcmp_update_by_TC
