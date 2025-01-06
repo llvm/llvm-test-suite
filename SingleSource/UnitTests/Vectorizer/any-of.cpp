@@ -115,66 +115,94 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
 int main(void) {
   rng = std::mt19937(15);
 
+#define DEFINE_ANYOF_LOOP_BODY(TrueVal, FalseVal)                              \
+  for (unsigned I = 0; I < TC; I++) {                                          \
+    Rdx = A[I] > B[I] ? TrueVal : FalseVal;                                    \
+  }                                                                            \
+  return Rdx;
+
   {
-    // Update Rdx to 3 once any A[i] > B[i] is true.
+    // Update 32-bits integer Rdx to 3 once any A[i] > B[i] is true.
     DEFINE_SCALAR_AND_VECTOR_FN2(
-        uint32_t Rdx = -1;,
-        for (unsigned I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? 3 : Rdx;
-        }
-        return Rdx;
-        );
-    checkVectorFunction<uint32_t, int32_t>(ScalarFn, VectorFn,
-                                           "anyof_icmp_true_update");
-    checkVectorFunction<uint32_t, float>(ScalarFn, VectorFn,
-                                         "anyof_fcmp_true_update");
+        int32_t Rdx = -1;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ 3, /* FalseVal= */ Rdx));
+    checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
+                                          "anyof_icmp_s32_true_update");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+                                        "anyof_fcmp_s32_true_update");
   }
 
   {
-    // Update Rdx to 3 once any A[i] > B[i] is false.
+    // Update 16-bits integer Rdx to 3 once any A[i] > B[i] is true.
     DEFINE_SCALAR_AND_VECTOR_FN2(
-        uint32_t Rdx = -1;,
-        for (unsigned I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? Rdx : 3;
-        }
-        return Rdx;
-        );
-    checkVectorFunction<uint32_t, int32_t>(ScalarFn, VectorFn,
-                                           "anyof_icmp_false_update");
-    checkVectorFunction<uint32_t, float>(ScalarFn, VectorFn,
-                                         "anyof_fcmp_false_update");
+        int16_t Rdx = -1;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ 3, /* FalseVal= */ Rdx));
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+                                          "anyof_icmp_s16_true_update");
   }
 
   {
-    // Rdx starts from TC, and will be updated to 3 once any A[i] > B[i] is
-    // true.
+    // Update 32-bits integer Rdx to 3 once any A[i] > B[i] is false.
     DEFINE_SCALAR_AND_VECTOR_FN2(
-        uint32_t Rdx = TC;,
-        for (unsigned I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? Rdx : 3;
-        }
-        return Rdx;
-        );
-    checkVectorFunction<uint32_t, int32_t>(ScalarFn, VectorFn,
-                                           "anyof_icmp_start_TC");
-    checkVectorFunction<uint32_t, float>(ScalarFn, VectorFn,
-                                         "anyof_fcmp_start_TC");
+        int32_t Rdx = -1;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ Rdx, /* FalseVal= */ 3));
+    checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
+                                          "anyof_icmp_s32_false_update");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+                                        "anyof_fcmp_s32_false_update");
   }
 
   {
-    // Rdx starts from -1, and will be updated to TC once any A[i] > B[i] is
-    // true.
+    // Update 16-bits integer Rdx to 3 once any A[i] > B[i] is false.
     DEFINE_SCALAR_AND_VECTOR_FN2(
-        int32_t Rdx = -1;,
-        for (unsigned I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? TC : Rdx;
-        }
-        return Rdx;
-        );
-    checkVectorFunction<uint32_t, int32_t>(ScalarFn, VectorFn,
-                                           "anyof_icmp_update_by_TC");
+        int16_t Rdx = -1;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ Rdx, /* FalseVal= */ 3));
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+                                          "anyof_icmp_s16_false_update");
+  }
+
+  {
+    // 32-bits integer Rdx starts from TC, and will be updated to 3 once any
+    // A[i] > B[i] is true.
+    DEFINE_SCALAR_AND_VECTOR_FN2(
+        uint32_t Rdx = TC;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ 3, /* FalseVal= */ Rdx));
+    checkVectorFunction<uint32_t, uint32_t>(ScalarFn, VectorFn,
+                                            "anyof_icmp_u32_start_TC");
     checkVectorFunction<uint32_t, float>(ScalarFn, VectorFn,
-                                         "anyof_fcmp_update_by_TC");
+                                         "anyof_fcmp_u32_start_TC");
+  }
+
+  {
+    // 16-bits integer Rdx starts from TC, and will be updated to 3 once any
+    // A[i] > B[i] is true.
+    DEFINE_SCALAR_AND_VECTOR_FN2(
+        uint16_t Rdx = TC;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ 3, /* FalseVal= */ Rdx));
+    checkVectorFunction<uint16_t, uint16_t>(ScalarFn, VectorFn,
+                                            "anyof_icmp_u16_start_TC");
+  }
+
+  {
+    // 32-bits integer Rdx starts from 3, and will be updated to TC once any
+    // A[i] > B[i] is true.
+    DEFINE_SCALAR_AND_VECTOR_FN2(
+        uint32_t Rdx = 3;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ TC, /* FalseVal= */ Rdx));
+    checkVectorFunction<uint32_t, uint32_t>(ScalarFn, VectorFn,
+                                            "anyof_icmp_u32_update_by_TC");
+    checkVectorFunction<uint32_t, float>(ScalarFn, VectorFn,
+                                         "anyof_fcmp_u32_update_by_TC");
+  }
+
+  {
+    // 16-bits integer Rdx starts from 3, and will be updated to TC once any
+    // A[i] > B[i] is true.
+    DEFINE_SCALAR_AND_VECTOR_FN2(
+        uint16_t Rdx = 3;
+        , DEFINE_ANYOF_LOOP_BODY(/* TrueVal= */ TC, /* FalseVal= */ Rdx));
+    checkVectorFunction<uint16_t, uint16_t>(ScalarFn, VectorFn,
+                                            "anyof_icmp_u16_update_by_TC");
   }
 
   return 0;
