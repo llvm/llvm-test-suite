@@ -11,7 +11,7 @@ set_package_properties(PFM PROPERTIES
                        DESCRIPTION "a helper library to develop monitoring tools"
                        PURPOSE "Used to program specific performance monitoring events")
 
-check_library_exists(libpfm.a pfm_initialize "" HAVE_LIBPFM_INITIALIZE)
+check_library_exists(pfm pfm_initialize "" HAVE_LIBPFM_INITIALIZE)
 if(HAVE_LIBPFM_INITIALIZE)
   check_include_file(perfmon/perf_event.h HAVE_PERFMON_PERF_EVENT_H)
   check_include_file(perfmon/pfmlib.h HAVE_PERFMON_PFMLIB_H)
