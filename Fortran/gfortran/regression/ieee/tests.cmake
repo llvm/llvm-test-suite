@@ -66,8 +66,8 @@ run;modes_1.f90;;;;
 run;rounding_1.f90;;;;
 run;rounding_2.f90;;;;
 run;rounding_3.f90;;;;
-run;signaling_1.f90 signaling_1_c.c;;-w;;i386-.+-.+
-run;signaling_2.f90 signaling_2_c.c;;-w;;i386-.+-.+
-run;signaling_3.f90;;;;i386-.+-.+
+run;signaling_1.f90 signaling_1_c.c;;-w;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
+run;signaling_2.f90 signaling_2_c.c;;-w;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
+run;signaling_3.f90;;;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;signbit_1.f90;;;;
 run;underflow_1.f90;;;;
