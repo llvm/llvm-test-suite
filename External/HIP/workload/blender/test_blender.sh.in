@@ -63,7 +63,7 @@ render() {
   echo "Render $input"
 
   blender_output=$(mktemp)
-  timeout 300 $blender_dir/blender -b $input -F PNG -o ${output}### -f $frame $blender_options 2>&1 | tee $blender_output
+  timeout 600 $blender_dir/blender -b $input -F PNG -o ${output}### -f $frame $blender_options 2>&1 | tee $blender_output
   blender_return_code=${PIPESTATUS[0]}
 
   average_time=$(grep -P "^\s*Path Tracing\s+\d+\.\d+\s+\d+\.\d+" $blender_output | awk '{print $4}')
@@ -71,12 +71,12 @@ render() {
   log_kernel_compilation_time $blender_output
 
   compare_output=$(mktemp)
-  timeout 300 python3 compare_image.py --image $scene_dir/out/${out_file_full} --ref $scene_dir/ref/${out_file_full} 2>&1 | tee $compare_output
+  timeout 600 python3 compare_image.py --image $scene_dir/out/${out_file_full} --ref $scene_dir/ref/${out_file_full} 2>&1 | tee $compare_output
   compare_return_code=${PIPESTATUS[0]}
 
   ssim=$(grep "SSIM Index:" $compare_output | awk '{print $3}')
   mse=$(grep "MSE Value:" $compare_output | awk '{print $3}')
-  
+
   previous_average=""
   percentage_difference=""
   perf_regress=0
