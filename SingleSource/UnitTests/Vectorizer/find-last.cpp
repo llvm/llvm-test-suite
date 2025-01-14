@@ -133,7 +133,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_true_update");
+					  "findlast_icmp_true_update");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_true_update");
   }
 
   {
@@ -146,7 +148,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_false_update");
+					  "findlast_icmp_false_update");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_false_update");
   }
 
   {
@@ -159,7 +163,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_start_TC");
+					  "findlast_icmp_start_TC");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_start_TC");
   }
 
   {
@@ -172,7 +178,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 2, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_inc_2");
+					  "findlast_icmp_inc_2");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_inc_2");
   }
 
   {
@@ -185,7 +193,9 @@ int main(void) {
 	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(
-        ScalarFn, VectorFn, "findlast_start_decreasing_induction");
+        ScalarFn, VectorFn, "findlast_icmp_start_decreasing_induction");
+    checkVectorFunction<int32_t, float>(
+        ScalarFn, VectorFn, "findlast_fcmp_start_decreasing_induction");
   }
 
   {
@@ -198,7 +208,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_iv_start_3");
+					  "findlast_icmp_iv_start_3");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_iv_start_3");
   }
 
   {
@@ -211,7 +223,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_start_3_iv_start_3");
+					  "findlast_icmp_start_3_iv_start_3");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_start_3_iv_start_3");
   }
 
   {
@@ -224,7 +238,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_start_2_iv_start_3");
+					  "findlast_icmp_start_2_iv_start_3");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_start_2_iv_start_3");
   }
 
   {
@@ -237,7 +253,9 @@ int main(void) {
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_start_4_iv_start_3");
+					  "findlast_icmp_start_4_iv_start_3");
+    checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
+					"findlast_fcmp_start_4_iv_start_3");
   }
 
   return 0;
