@@ -123,8 +123,8 @@ int main(void) {
   return Rdx;
 
   {
-    // Find the last index where A[I] > B[I] and update Rdx when the condition
-    // is true.
+    // Find the last index where A[I] > B[I] and update 32-bits Rdx when the
+    // condition is true.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = -1;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -133,13 +133,27 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_true_update");
+					  "findlast_icmp_s32_true_update");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_true_update");
+					"findlast_fcmp_s32_true_update");
   }
 
   {
-    // Update Rdx when the condition A[I] > B[I] is false.
+    // Find the last index where A[I] > B[I] and update 16-bits Rdx when the
+    // condition is true.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+					  "findlast_icmp_s16_true_update");
+  }
+
+  {
+    // Update 32-bits Rdx when the condition A[I] > B[I] is false.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = -1;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -148,13 +162,26 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_false_update");
+					  "findlast_icmp_s32_false_update");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_false_update");
+					"findlast_fcmp_s32_false_update");
   }
 
   {
-    // Find the last index with the start value TC.
+    // Update 16-bits Rdx when the condition A[I] > B[I] is false.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ Rdx, /* FalseVal= */ I,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+					  "findlast_icmp_s16_false_update");
+  }
+
+  {
+    // Find the last 32-bits index with the start value TC.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = TC;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -163,13 +190,26 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_start_TC");
+					  "findlast_icmp_s32_start_TC");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_start_TC");
+					"findlast_fcmp_s32_start_TC");
   }
 
   {
-    // Increment the induction variable by 2.
+    // Find the last 16-bits index with the start value TC.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = TC;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+					  "findlast_icmp_s16_start_TC");
+  }
+
+  {
+    // Increment the 32-bits induction variable by 2.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = -1;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -178,13 +218,26 @@ int main(void) {
 	    INC_COND(/* Start= */ 0, /* Step= */ 2, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_inc_2");
+					  "findlast_icmp_s32_inc_2");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_inc_2");
+					"findlast_fcmp_s32_inc_2");
   }
 
   {
-    // Check with decreasing induction variable.
+    // Increment the 16-bits induction variable by 2.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 2, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+					  "findlast_icmp_s16_inc_2");
+  }
+
+  {
+    // Check with decreasing 32-bits induction variable.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = -1;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -193,13 +246,26 @@ int main(void) {
 	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(
-        ScalarFn, VectorFn, "findlast_icmp_start_decreasing_induction");
+        ScalarFn, VectorFn, "findlast_icmp_s32_start_decreasing_induction");
     checkVectorFunction<int32_t, float>(
-        ScalarFn, VectorFn, "findlast_fcmp_start_decreasing_induction");
+        ScalarFn, VectorFn, "findlast_fcmp_s32_start_decreasing_induction");
   }
 
   {
-    // Check with the induction variable starts from 3.
+    // Check with decreasing 16-bits induction variable.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(
+        ScalarFn, VectorFn, "findlast_icmp_s16_start_decreasing_induction");
+  }
+
+  {
+    // Check with 32-bits the induction variable starts from 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = -1;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -208,13 +274,26 @@ int main(void) {
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_iv_start_3");
+					  "findlast_icmp_s32_iv_start_3");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_iv_start_3");
+					"findlast_fcmp_s32_iv_start_3");
   }
 
   {
-    // Check with start value of 3 and induction variable starts at 3.
+    // Check with 16-bits the induction variable starts from 3.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(ScalarFn, VectorFn,
+					  "findlast_icmp_s16_iv_start_3");
+  }
+
+  {
+    // Check with start value of 3 and 32-bits induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = 3;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -222,14 +301,27 @@ int main(void) {
 	    /* ForCond= */
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
-    checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_start_3_iv_start_3");
+    checkVectorFunction<int32_t, int32_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s32_start_3_iv_start_3");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_start_3_iv_start_3");
+					"findlast_fcmp_s32_start_3_iv_start_3");
   }
 
   {
-    // Check with start value of 2 and induction variable starts at 3.
+    // Check with start value of 3 and 16-bits induction variable starts at 3.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = 3;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s16_start_3_iv_start_3");
+  }
+
+  {
+    // Check with start value of 2 and 32-bits induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = 2;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -237,14 +329,27 @@ int main(void) {
 	    /* ForCond= */
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
-    checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_start_2_iv_start_3");
+    checkVectorFunction<int32_t, int32_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s32_start_2_iv_start_3");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_start_2_iv_start_3");
+					"findlast_fcmp_s32_start_2_iv_start_3");
   }
 
   {
-    // Check with start value of 4 and induction variable starts at 3.
+    // Check with start value of 2 and 16-bits induction variable starts at 3.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = 2;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s16_start_2_iv_start_3");
+  }
+
+  {
+    // Check with start value of 4 and 32-bits induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
 	int32_t Rdx = 4;,
 	DEFINE_FINDLAST_LOOP_BODY(
@@ -252,10 +357,23 @@ int main(void) {
 	    /* ForCond= */
 	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
 	int32_t);
-    checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-					  "findlast_icmp_start_4_iv_start_3");
+    checkVectorFunction<int32_t, int32_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s32_start_4_iv_start_3");
     checkVectorFunction<int32_t, float>(ScalarFn, VectorFn,
-					"findlast_fcmp_start_4_iv_start_3");
+					"findlast_fcmp_s32_start_4_iv_start_3");
+  }
+
+  {
+    // Check with start value of 4 and 16-bits induction variable starts at 3.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = 4;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(
+	ScalarFn, VectorFn, "findlast_icmp_s16_start_4_iv_start_3");
   }
 
   return 0;
