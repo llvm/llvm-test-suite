@@ -115,31 +115,36 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
 int main(void) {
   rng = std::mt19937(15);
 
+#define INC_COND(Start, Step, RetTy) for (RetTy I = Start; I < TC; I += Step)
+#define DEC_COND(End, Step, RetTy) for (RetTy I = TC; I > End; I -= Step)
+
+#define DEFINE_FINDLAST_LOOP_BODY(TrueVal, FalseVal, ForCond)                  \
+  ForCond { Rdx = A[I] > B[I] ? TrueVal : FalseVal; }                          \
+  return Rdx;
+
   {
     // Find the last index where A[I] > B[I] and update Rdx when the condition
     // is true.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = -1;,
-        for (int32_t I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
-                                          "findlast_true_update");
+					  "findlast_true_update");
   }
 
   {
     // Update Rdx when the condition A[I] > B[I] is false.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = -1;,
-        for (int32_t I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? Rdx : I;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ Rdx, /* FalseVal= */ I,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_false_update");
   }
@@ -147,13 +152,12 @@ int main(void) {
   {
     // Find the last index with the start value TC.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = TC;,
-        for (int32_t I = 0; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = TC;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_start_TC");
   }
@@ -161,13 +165,12 @@ int main(void) {
   {
     // Increment the induction variable by 2.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = -1;,
-        for (int32_t I = 0; I < TC; I += 2) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 0, /* Step= */ 2, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_inc_2");
   }
@@ -175,13 +178,12 @@ int main(void) {
   {
     // Check with decreasing induction variable.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = -1;,
-        for (int32_t I = TC; I > 0; I--) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(
         ScalarFn, VectorFn, "findlast_start_decreasing_induction");
   }
@@ -189,13 +191,12 @@ int main(void) {
   {
     // Check with the induction variable starts from 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = -1;,
-        for (int32_t I = 3; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_iv_start_3");
   }
@@ -203,13 +204,12 @@ int main(void) {
   {
     // Check with start value of 3 and induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = 3;,
-        for (int32_t I = 3; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = 3;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_start_3_iv_start_3");
   }
@@ -217,13 +217,12 @@ int main(void) {
   {
     // Check with start value of 2 and induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = 2;,
-        for (int32_t I = 3; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = 2;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_start_2_iv_start_3");
   }
@@ -231,13 +230,12 @@ int main(void) {
   {
     // Check with start value of 4 and induction variable starts at 3.
     DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
-        int32_t Rdx = 4;,
-        for (int32_t I = 3; I < TC; I++) {
-          Rdx = A[I] > B[I] ? I : Rdx;
-        }
-        return Rdx;,
-        int32_t
-        );
+	int32_t Rdx = 4;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ I, /* FalseVal= */ Rdx,
+	    /* ForCond= */
+	    INC_COND(/* Start= */ 3, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
     checkVectorFunction<int32_t, int32_t>(ScalarFn, VectorFn,
                                           "findlast_start_4_iv_start_3");
   }
