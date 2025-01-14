@@ -7,3 +7,4 @@ Checking findlast_iv_start_3
 Checking findlast_start_3_iv_start_3
 Checking findlast_start_2_iv_start_3
 Checking findlast_start_4_iv_start_3
+exit 0
