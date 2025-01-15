@@ -329,7 +329,7 @@ compile;assumed_size_refs_1.f90;xfail;;;
 compile;assumed_size_refs_2.f90;xfail;;;
 compile;assumed_size_refs_3.f90;;;;
 compile;assumed_size_refs_4.f90;xfail;;;
-compile;assumed_type_1.f90;;;;
+compile;assumed_type_1.f90;;;;powerpc-.+-aix
 compile;assumed_type_10.f90;;-O0 -fdump-tree-original;;
 compile;assumed_type_11.f90;;-O3 -fdump-tree-original;;
 compile;assumed_type_12.f90;xfail;;;
@@ -1118,8 +1118,8 @@ compile;do_4.f;xfail;;;
 compile;do_5.f90;;;;
 compile;do_check_10.f90;;-Wall -Wno-zerotrip;;
 compile;do_check_13.f90;xfail;;;
-compile;do_check_14.f90;;;;
-compile;do_check_15.f90;;;;
+compile;do_check_14.f90;;;;powerpc-.+-aix
+compile;do_check_15.f90;;;;powerpc-.+-aix
 compile;do_check_16.f90;xfail;;;
 compile;do_check_17.f90;;;;
 compile;do_check_18.f90;xfail;;;
@@ -1138,7 +1138,7 @@ compile;do_iterator.f90;xfail;;;
 compile;do_pointer_1.f90;;;;
 compile;do_subscript_1.f90;;;;
 compile;do_subscript_2.f90;;-Wdo-subscript;;
-compile;do_subscript_3.f90;;-O0;;
+compile;do_subscript_3.f90;;-O0;;powerpc-.+-aix
 compile;do_subscript_4.f90;;;;
 compile;do_subscript_5.f90;;-Wdo-subscript;;
 compile;do_subscript_6.f90;xfail;-std=legacy;;
@@ -1710,7 +1710,7 @@ compile;intrinsic_6.f90;;-fimplicit-none;;
 compile;intrinsic_7.f90;;;;
 compile;intrinsic_8.f90;;;;
 compile;intrinsic_actual_1.f;;;;
-compile;intrinsic_actual_2.f90;;;;
+compile;intrinsic_actual_2.f90;;;;powerpc-.+-aix
 compile;intrinsic_actual_3.f90;xfail;-std=gnu;;
 compile;intrinsic_argument_conformance_1.f90;xfail;;;
 compile;intrinsic_argument_conformance_2.f90;xfail;;;
@@ -2343,7 +2343,7 @@ compile;pr46519-2.f90;;-O3 -mavx -mvzeroupper -mtune=generic -dp;i.86-.+-.+ x86_
 compile;pr46755.f;;-O;;
 compile;pr46884.f;;;;
 compile;pr46985.f90;;-O -ftree-pre -ftree-vrp -fno-tree-ccp -fno-tree-dominator-opts -fno-tree-fre;;
-compile;pr47054_1.f90;;-fcray-pointer;;
+compile;pr47054_1.f90;;-fcray-pointer;;powerpc-.+-aix
 compile;pr47054_2.f90;;-fcray-pointer;;
 compile;pr47574.f90;;;;
 compile;pr48636-2.f90;;-O3 -fdump-ipa-cp-details -fno-inline -fno-ipa-sra;;
@@ -2671,7 +2671,7 @@ compile;pr91372.f90;;;;
 compile;pr91471.f90;;;;
 compile;pr91485.f90;;;;
 compile;pr91496.f90;;-fdump-tree-original;;
-compile;pr91497.f90;;-Wall;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+
+compile;pr91497.f90;;-Wall;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 compile;pr91497_2.f90;;-Wall;;
 compile;pr91564.f90;xfail;;;
 compile;pr91565.f90;xfail;;;
@@ -2823,7 +2823,7 @@ compile;pr97505.f90;;-Os -fsanitize=signed-integer-overflow;;
 compile;pr97673.f90;;-O3 -fno-early-inlining --param large-stack-frame=4000;;
 compile;pr97768_1.f90;;;;
 compile;pr97768_2.f90;xfail;;;
-compile;pr98016.f90;;;;
+compile;pr98016.f90;;;;powerpc-.+-aix
 compile;pr98284.f90;xfail;;;
 compile;pr98411.f90;;-std=f2008 -Wall -fautomatic -fmax-stack-var-size=100;;
 compile;pr98661.f90;xfail;;;
@@ -3077,7 +3077,7 @@ compile;result_2.f90;xfail;;;
 compile;result_in_spec_3.f90;;-std=gnu -Wreturn-type;;
 compile;result_in_spec_4.f90;;;;
 compile;return_1.f90;xfail;-std=legacy;;
-compile;round_4.f90;;;;
+compile;round_4.f90;;;;powerpc-.+-aix
 compile;same_name_2.f90;xfail;;;
 compile;same_type_as_1.f03;xfail;;;
 compile;save_3.f90;;;;
@@ -3291,7 +3291,7 @@ compile;transfer_simplify_15.f90;xfail;;;
 compile;transfer_simplify_5.f90;;;;
 compile;transfer_simplify_6.f90;;;;
 compile;transfer_simplify_7.f90;xfail;;;
-compile;transpose_1.f90;;;;
+compile;transpose_1.f90;;;;powerpc-.+-aix
 compile;transpose_5.f90;;-O2;;
 compile;transpose_optimization_1.f90;;-Warray-temporaries -fdump-tree-original -finline-matmul-limit=0;;
 compile;trim_optimize_8.f90;;-O -fdump-tree-original;;
@@ -3307,7 +3307,7 @@ compile;typebound_assignment_4.f90;;;;
 compile;typebound_assignment_5.f03;;-O0 -fdump-tree-original;;
 compile;typebound_assignment_6a.f03;;-O0 -fdump-tree-original;;
 compile;typebound_assignment_8.f90;;;;
-compile;typebound_call_11.f03;;;;
+compile;typebound_call_11.f03;;;;powerpc-.+-aix
 compile;typebound_call_12.f03;;-fcheck=bounds;;
 compile;typebound_call_14.f03;;;;
 compile;typebound_call_15.f03;xfail;;;
@@ -3434,7 +3434,7 @@ compile;use_20.f90;;;;
 compile;use_21.f90;;-Wall;;
 compile;use_22.f90;;;;
 compile;use_23.f90;;;;
-compile;use_25.f90;;;;
+compile;use_25.f90;;;;powerpc-.+-aix
 compile;use_26.f90;;;;
 compile;use_28.f90;xfail;;;
 compile;use_29.f90;xfail;;;
@@ -3471,12 +3471,12 @@ compile;used_before_typed_6.f90;xfail;-std=gnu;;
 compile;used_dummy_types_2.f90;;;;
 compile;used_dummy_types_3.f90;xfail;;;
 compile;used_dummy_types_4.f90;xfail;;;
-compile;used_dummy_types_5.f90;;;;
+compile;used_dummy_types_5.f90;;;;powerpc-.+-aix
 compile;used_dummy_types_6.f90;;;;
 compile;used_dummy_types_7.f90;;;;
 compile;used_dummy_types_8.f90;;;;
 compile;used_types_1.f90;;;;
-compile;used_types_10.f90;;;;
+compile;used_types_10.f90;;;;powerpc-.+-aix
 compile;used_types_11.f90;;;;
 compile;used_types_12.f90;;;;
 compile;used_types_13.f90;;;;
@@ -3548,7 +3548,7 @@ compile;warn_intent_out_not_set.f90;;-c -Wall;;
 compile;warn_std_1.f90;;-std=gnu;;
 compile;warn_std_2.f90;;-std=f95 -Wintrinsics-std;;
 compile;warn_std_3.f90;;-std=f2003 -Wintrinsics-std;;
-compile;warn_target_lifetime_1.f90;;-Wtarget-lifetime;;
+compile;warn_target_lifetime_1.f90;;-Wtarget-lifetime;;powerpc-.+-aix
 compile;warn_target_lifetime_2.f90;;-Wtarget-lifetime;;
 compile;warn_target_lifetime_3.f90;;-Wall;;
 compile;warn_target_lifetime_4.f90;;-Wtarget-lifetime;;
@@ -3557,7 +3557,7 @@ compile;warn_unused_dummy_argument_1.f90;;-Wall;;
 compile;warn_unused_dummy_argument_2.f90;;-Wall -Wno-unused-dummy-argument;;
 compile;warn_unused_dummy_argument_3.f90;;-Wunused-dummy-argument -Wunused-parameter;;
 compile;warn_unused_dummy_argument_4.f90;;-Wall;;
-compile;warn_unused_dummy_argument_5.f90;;-Wunused-dummy-argument;;
+compile;warn_unused_dummy_argument_5.f90;;-Wunused-dummy-argument;;powerpc-.+-aix
 compile;warn_unused_dummy_argument_6.f90;;-Wall;;
 compile;warn_unused_function.f90;;-Wunused-function;;
 compile;warn_unused_function_2.f90;;-Wall;;
@@ -4015,8 +4015,8 @@ run;backspace_7.f90;;;;
 run;backspace_8.f;;-std=legacy;;
 run;backspace_9.f;;-std=legacy;;
 run;backtrace_1.f90;;;;
-run;bessel_1.f90;;;;powerpc-.+-.+
-run;bessel_5.f90;;-Wall -fno-range-check;;powerpc-.+-.+
+run;bessel_1.f90;;;;powerpc-.+-aix
+run;bessel_5.f90;;-Wall -fno-range-check;;powerpc-.+-aix
 run;bind-c-contiguous-1.f90 bind-c-contiguous-1.c;;-fcheck=all -Wno-complain-wrong-lang;;
 run;bind-c-contiguous-3.f90 bind-c-contiguous-3.c;;;;
 run;bind-c-contiguous-4.f90 bind-c-contiguous-4.c;;-fcheck=all -Wno-complain-wrong-lang;;
@@ -4101,7 +4101,7 @@ run;bounds_check_fail_1.f90;xfail;-fbounds-check;;
 run;bounds_check_fail_2.f90;xfail;-fbounds-check;;
 run;bounds_check_fail_3.f90;xfail;-fbounds-check;;
 run;bounds_check_fail_4.f90;xfail;-fbounds-check;;
-run;bounds_check_fail_5.f90;xfail;-fcheck=bounds -g -fdump-tree-original;;
+run;bounds_check_fail_5.f90;xfail;-fcheck=bounds -g -fdump-tree-original;;powerpc-.+-aix
 run;bounds_check_fail_6.f90;xfail;-fcheck=bounds -g -fdump-tree-original;;
 run;bounds_check_fail_7.f90;xfail;-fcheck=bounds -g;;
 run;bounds_check_strlen_1.f90;xfail;-fbounds-check;;
@@ -4143,7 +4143,7 @@ run;c_f_pointer_logical.f03 c_f_pointer_logical_driver.c;;;;
 run;c_f_pointer_shape_tests_2.f03 c_f_pointer_shape_tests_2_driver.c;;;;
 run;c_f_pointer_shape_tests_4.f03 c_f_pointer_shape_tests_2_driver.c;;;;
 run;c_f_pointer_shape_tests_5.f90;;;;
-run;c_f_pointer_tests.f90 c_f_tests_driver.c;;;;
+run;c_f_pointer_tests.f90 c_f_tests_driver.c;;;;powerpc-.+-aix
 run;c_f_pointer_tests_4.f90;;;;
 run;c_funloc_tests.f03;;;;
 run;c_funloc_tests_3.f03 c_funloc_tests_3_funcs.c;;;;
@@ -4806,7 +4806,7 @@ run;findloc_3.f90;;;;
 run;findloc_4.f90;;;;
 run;findloc_5.f90;;;;
 run;findloc_6.f90;;;;
-run;findloc_8.f90;;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+
+run;findloc_8.f90;;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;float_1.f90;;;;
 run;flush_1.f90;;;;
 run;fmt_bz_bn.f;;;;
@@ -5235,8 +5235,8 @@ run;matmul_bounds_8.f90;xfail;-fno-backtrace -fbounds-check -fno-realloc-lhs;;
 run;matmul_bounds_9.f90;xfail;-fbounds-check -ffrontend-optimize;;
 run;matmul_const.f90;;-fno-frontend-optimize -fdump-tree-original;;
 run;maxloc_1.f90;;;;
-run;maxloc_2.f90;;;;
-run;maxloc_3.f90;;;;
+run;maxloc_2.f90;;;;powerpc-.+-aix
+run;maxloc_3.f90;;;;powerpc-.+-aix
 run;maxloc_4.f90;;;;
 run;maxloc_5.f90;;;;
 run;maxloc_bounds_1.f90;xfail;-fbounds-check;;
@@ -5250,7 +5250,7 @@ run;maxloc_bounds_8.f90;xfail;-fbounds-check;;
 run;maxloc_string_1.f90;;;;
 run;maxlocval_1.f90;;;;aarch64-.+-.+
 run;maxlocval_2.f90;;;;
-run;maxlocval_3.f90;;;;
+run;maxlocval_3.f90;;;;powerpc-.+-aix
 run;maxlocval_4.f90;;;;
 run;maxval_char_1.f90;;;;
 run;maxval_char_2.f90;;;;
@@ -5271,26 +5271,26 @@ run;min_max_optional_1.f90;;;;
 run;min_max_optional_5.f90;;;;
 run;min_max_type.f90;;;;
 run;min_max_type_2.f90;;;;
-run;minloc_1.f90;;;;
-run;minloc_2.f90;;;;
+run;minloc_1.f90;;;;powerpc-.+-aix
+run;minloc_2.f90;;;;powerpc-.+-aix
 run;minloc_3.f90;;;;
 run;minloc_4.f90;;;;
 run;minloc_5.f90;;;;
 run;minloc_string_1.f90;;;;
-run;minlocval_1.f90;;;;
-run;minlocval_2.f90;;;;
+run;minlocval_1.f90;;;;powerpc-.+-aix
+run;minlocval_2.f90;;;;powerpc-.+-aix
 run;minlocval_3.f90;;;;
-run;minlocval_4.f90;;;;
+run;minlocval_4.f90;;;;powerpc-.+-aix
 run;minmax_char_1.f90;;;;
-run;minmaxloc_1.f90;;;;
-run;minmaxloc_10.f90;;-fdefault-integer-8;;
+run;minmaxloc_1.f90;;;;powerpc-.+-aix
+run;minmaxloc_10.f90;;-fdefault-integer-8;;powerpc-.+-aix
 run;minmaxloc_11.f90;;;;
 run;minmaxloc_12.f90;;;;
 run;minmaxloc_13.f90;;;;
 run;minmaxloc_16.f90;;-fdump-tree-original;;
-run;minmaxloc_17.f90;;;;
+run;minmaxloc_17.f90;;;;powerpc-.+-aix
 run;minmaxloc_2.f90;;;;
-run;minmaxloc_3.f90;;-fdefault-integer-8;;
+run;minmaxloc_3.f90;;-fdefault-integer-8;;powerpc-.+-aix
 run;minmaxloc_4.f90;;;;
 run;minmaxloc_5.f90;;;;
 run;minmaxloc_6.f90;;;;
@@ -5616,7 +5616,7 @@ run;PR100098.f90;;-fdump-tree-original;;
 run;PR100103.f90;;;;
 run;PR100120.f90;;;;
 run;PR100132.f90;;;;
-run;PR100136.f90;xfail;-fcheck=pointer;;
+run;PR100136.f90;xfail;-fcheck=pointer;;powerpc-.+-aix
 run;PR100245.f90;;;;
 run;pr100551.f90;;;;
 run;PR100906.f90 PR100906.c;;;;
@@ -6090,8 +6090,8 @@ run;save_1.f90;;-O2 -fno-automatic;;
 run;save_2.f90;;-O2 -fno-automatic;;
 run;save_5.f90;;-fno-automatic;;
 run;save_6.f90;;-fno-automatic -flto -g;;
-run;scalar_mask_1.f90;;;;
-run;scalar_mask_2.f90;;;;
+run;scalar_mask_1.f90;;;;powerpc-.+-aix
+run;scalar_mask_2.f90;;;;powerpc-.+-aix
 run;scalarize_parameter_array_1.f90;;;;
 run;scale_1.f90;;;;
 run;scan_1.f90;;;;
@@ -6454,7 +6454,7 @@ run;zero_array_components_1.f90;;;;
 run;zero_length_1.f90;;;;
 run;zero_length_2.f90;;;;
 run;zero_sized_1.f90;;;;
-run;zero_sized_14.f90;;;;
+run;zero_sized_14.f90;;;;powerpc-.+-aix
 run;zero_sized_15.f90;;;;
 run;zero_sized_3.f90;;;;
 run;zero_sized_4.f90;;;;

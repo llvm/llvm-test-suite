@@ -1,0 +1,31 @@
+---
+# Overrides for DejaGNU annotations for tests in the directory in which this
+# file is present. To override tests in subdirectories, create/edit an
+# override.yaml file in that subdirectory.
+#
+# Please see gfortran/README.md for instructions on editing this file.
+#
+# This file is broadly divided into two. The first section contains tests that
+# are "temporarily" overridden. These are usually tests that fail on certain
+# platforms, but pass on others, but are intended to pass everywhere. When the
+# underlying issue is addressed, the tests should be removed. Eventually, there
+# should be no tests at all in this section. The second section contains tests
+# that are "permanently" overridden - usually because flang's behavior deviates
+# from gfortran, but we want the tests to run anyway.
+#
+# When adding a test to this file, please leave a comment describing why the
+# behavior of the test is being overridden.
+
+
+# ------------------------ TEMPORARILY OVERRIDDEN TESTS ------------------------
+
+# incorrect result from ilogb on AIX
+"intrinsic_set_exponent.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+# zero-sized array crash (https://github.com/llvm/llvm-project/issues/110913)
+"iolength_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+# ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
+

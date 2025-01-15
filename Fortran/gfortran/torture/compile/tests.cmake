@@ -94,7 +94,7 @@ compile;pr40413.f90;;;;
 compile;pr40421.f;;;;
 compile;pr40421.f90;;;;
 compile;pr41654.f90;;;;
-compile;pr42781.f90;;;;
+compile;pr42781.f90;;;;powerpc-.+-aix
 compile;pr45598.f90;;;;
 compile;pr45634.f90;;;;
 compile;pr45738.f90;;;;
@@ -114,11 +114,11 @@ compile;pr83189.f90;;;;
 compile;pr85863.f;;-ffast-math -ftree-vectorize;;
 compile;pr85878.f90;;;;
 compile;pr88304-2.f90;;;;
-compile;pr88304.f90;;;;
+compile;pr88304.f90;;;;powerpc-.+-aix
 compile;pr89324.f90;;;;
 compile;shape_reshape.f90;;;;
 compile;stoppause.f90;;;;
 compile;strparm_1.f90;;;;
-compile;transfer-1.f90;;;;
+compile;transfer-1.f90;;;;powerpc-.+-aix
 compile;vrp_1.f90;;;;
 compile;write.f90;;;;
