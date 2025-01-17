@@ -43,6 +43,6 @@ compile;pr93405.f90;;;;
 compile;pr93777.f90;;-O0 -Wno-analyzer-possible-null-dereference -Wno-analyzer-null-dereference -Wno-analyzer-malloc-leak;;
 compile;pr93778.f90;;;;
 compile;pr93993.f90;;;;
-compile;pr96949.f90;;-Wno-analyzer-too-complex --param analyzer-max-svalue-depth=0;;
+compile;pr96949.f90;;-Wno-analyzer-too-complex --param analyzer-max-svalue-depth=0;;powerpc-.+-aix
 compile;pr97668.f;;-std=legacy -Wno-analyzer-use-of-uninitialized-value -Wno-analyzer-too-complex;;
 compile;uninit-pr63311.f90;;-O0;;
