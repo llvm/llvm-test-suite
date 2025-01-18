@@ -19,9 +19,6 @@ set(SKIPPED_FILES "")
 # These tests fail when they are expected to pass.
 file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These tests fail to compile when compilation is expected to succeed.
-  pr90681.f
-  pr97761.f90
-  pr99746.f90
   vect-8-epilogue.F90
 
   # The cause of failure of this test needs to be investigated
