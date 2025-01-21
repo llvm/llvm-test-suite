@@ -12,6 +12,7 @@
 
 #include <ctype.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,10 +21,6 @@
 const char *g_program;
 
 /* *** */
-
-typedef int bool;
-#define true ((bool) 1)
-#define false ((bool) 0)
 
 static bool isSignedChar(char C) {
   return (C == '+' || C == '-');
