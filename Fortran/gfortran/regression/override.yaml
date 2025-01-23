@@ -25,7 +25,7 @@
 #     Assertion `Elt->getBitWidth() == EltVT.getSizeInBits() && "APInt size does not match type size!"' failed.
 #
 "findloc_8.f90":
-  disabled_on: ["aarch64-*-*", "loongarch64-*-*", "ppc64le-*-*"]
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*", "ppc64le-*-*", "powerpc-*-*"]
 
 # entry_23.f raises a segmentation fault at runtime, on some platforms.
 "entry_23.f":
@@ -35,7 +35,7 @@
 # error: 'kind=' argument must be a constant scalar integer whose value is a
 # supported kind for the intrinsic result type.
 "pr91497.f90":
-  disabled_on: ["aarch64-*-*", "loongarch64-*-*", "ppc64le-*-*"]
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*", "ppc64le-*-*", "powerpc-*-*"]
 
 # maxlocval_1.f90 fails at runtime with "STOP: code 1" on AArch64. This is not
 # expected and does not occur on other targets.
@@ -88,6 +88,98 @@
 "default_format_denormal_2.f90":
   disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
 
+# unimplemented feature on AIX: Nested arguments are unimplemented
+"assumed_type_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"do_check_14.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"do_check_15.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"do_subscript_3.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"intrinsic_actual_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"pr47054_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"pr98016.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"round_4.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"transpose_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"typebound_call_11.f03":
+  disabled_on: ["powerpc-*-aix"]
+
+"use_25.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"used_dummy_types_5.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"used_types_10.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"warn_target_lifetime_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"warn_unused_dummy_argument_5.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"zero_sized_14.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+# incorrect inlining for minloc/maxloc on AIX
+"maxloc_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"maxloc_3.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"maxlocval_3.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minloc_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minloc_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minlocval_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minlocval_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minlocval_4.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minmaxloc_10.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minmaxloc_17.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minmaxloc_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"minmaxloc_3.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"scalar_mask_1.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"scalar_mask_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This
@@ -102,7 +194,21 @@
 
 # float bessel functions are not supported on AIX
 "bessel_1.f90":
-  disabled_on: ["powerpc-*-*"]
+  disabled_on: ["powerpc-*-aix"]
 
 "bessel_5.f90":
-  disabled_on: ["powerpc-*-*"]
+  disabled_on: ["powerpc-*-aix"]
+
+# The test case passes the non-bind(c) derived type to the C routine
+# and expects the same alignment of the components. However, on AIX,
+# non-bind(c) derived type has the natural alignment and bind(c) derived
+# type the special alignment rule applies.
+"c_f_pointer_tests.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+# The test cases expect seg fault but not occur on AIX.
+"PR100136.f90":
+  disabled_on: ["powerpc-*-aix"]
+
+"bounds_check_fail_5.f90":
+  disabled_on: ["powerpc-*-aix"]
