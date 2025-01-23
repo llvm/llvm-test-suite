@@ -9,6 +9,14 @@
     Init _Pragma("clang loop vectorize(enable)") Loop                          \
   };
 
+#define DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(Init, Loop, Type)                    \
+  auto ScalarFn = [](auto *A, auto *B, Type TC) -> Type {                      \
+    Init _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop     \
+  };                                                                           \
+  auto VectorFn = [](auto *A, auto *B, Type TC) -> Type {                      \
+    Init _Pragma("clang loop vectorize(enable)") Loop                          \
+  };
+
 #define DEFINE_SCALAR_AND_VECTOR_FN3(Loop)                                     \
   auto ScalarFn = [](auto *A, auto *B, auto *C, unsigned TC) {                 \
     _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop          \
