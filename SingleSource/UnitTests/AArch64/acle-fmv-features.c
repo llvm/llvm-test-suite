@@ -235,18 +235,6 @@ CHECK(sme2, sme2, sme2, false, {
         "smstop  za" "\n"
     );
 })
-CHECK(ls64, ls64, ls64, false, {
-    long data[8];
-    asm volatile (
-        "ld64b x0, [%0]" "\n"
-        "st64b x0, [%0]" "\n"
-        "st64bv x8, x0, [%0]" "\n"
-        "st64bv0 x8, x0, [%0]" "\n"
-        :
-        : "r" (data)
-        : "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "memory"
-    );
-})
 CHECK(f32mm, f32mm, f32mm, false, {
     asm volatile (
         "fmmla z0.s, z1.s, z2.s"
@@ -269,13 +257,6 @@ CHECK(frintts, frintts, arch=armv8.5-a, false, {
     asm volatile (
         "frint32z s0, s1"
         : : : "v0"
-    );
-})
-CHECK(predres, predres, predres, false, {
-    asm volatile (
-        "cfp rctx, x0" "\n"
-        "dvp rctx, x1" "\n"
-        "cpp rctx, x2" "\n"
     );
 })
 CHECK(rcpc3, rcpc3, rcpc3, false, {
@@ -418,12 +399,10 @@ int main(int, const char **) {
     check_crc();
     check_sme();
     check_sme2();
-    check_ls64();
     check_f32mm();
     check_f64mm();
     check_fp16fml();
     check_frintts();
-    check_predres();
     check_rcpc3();
     check_rng();
     check_sve();

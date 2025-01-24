@@ -23,12 +23,10 @@ fp
 crc
 sme
 sme2
-ls64
 f32mm
 f64mm
 fp16fml
 frintts
-predres
 rcpc3
 rng
 sve
