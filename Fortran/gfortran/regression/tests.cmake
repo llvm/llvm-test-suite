@@ -5450,7 +5450,7 @@ run;newunit_1.f90;;;;
 run;newunit_3.f90;;;;
 run;newunit_5.f90;;;;
 run;nint_1.f90;;;;
-run;nint_2.f90;;;;
+run;nint_2.f90;;;;powerpc-.+-aix
 run;no-automatic.f90;;-fno-automatic;;
 run;no_arg_check_2a.f90;;;;
 run;no_range_check_1.f90;;-fno-range-check -O0;;
