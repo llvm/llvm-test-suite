@@ -180,6 +180,10 @@
 "scalar_mask_2.f90":
   disabled_on: ["powerpc-*-aix"]
 
+# libm's routine lround returns incorrect values on AIX
+"nint_2.f90":
+  disabled_on: ["powerpc-*-aix"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This
