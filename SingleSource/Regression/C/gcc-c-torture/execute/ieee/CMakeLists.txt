@@ -19,6 +19,19 @@ file(GLOB UnsupportedTests
 )
 list(APPEND TestsToSkip ${UnsupportedTests})
 
+if(ARCH MATCHES "Hexagon")
+  file(GLOB HexagonTestsToSkip
+    CONFIGURE_DEPENDS
+      fp-cmp-8.c
+      fp-cmp-8f.c
+      fp-cmp-8l.c
+      pr38016.c
+      pr50310.c
+  )
+  list(APPEND TestsToSkip ${HexagonTestsToSkip})
+endif()
+
+
 ##
 ## Tests that require extra CFLAGS in Clang
 ##
