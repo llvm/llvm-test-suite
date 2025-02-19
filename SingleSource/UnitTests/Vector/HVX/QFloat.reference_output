@@ -1,0 +1,45 @@
+
+Add intrinsics with a qf32 result
+The sum of flt  0.500000 and flt  0.250000 is 0.750000
+The sum of qf32 0.500000 and qf32 0.250000 is 0.750000
+The sum of qf32 0.500000 and flt  0.250000 is 0.750000
+
+Subtract intrinsics with a qf32 result
+The sum of flt  0.500000 and flt  -0.250000 is 0.250000
+The sum of qf32 0.500000 and qf32 -0.250000 is 0.250000
+The sum of qf32 0.500000 and flt  -0.250000 is 0.250000
+
+Multiply intrinsics with a qf32 result
+The result of flt  0.500000 * flt  0.250000 is 0.125000
+The result of qf32 0.500000 * qf32 0.250000 is 0.125000
+
+Add intrinsics with a qf16 result
+The sum of hf   0.500 and hf   0.250 is 0.750
+The sum of qf16 0.500 and qf16 0.250 is 0.750
+The sum of qf16 0.500 and hf   0.250 is 0.750
+
+Subtract intrinsics with a qf16 result
+The sum of hf   0.500 and hf   -0.250 is 0.250
+The sum of qf16 0.500 and qf16 -0.250 is 0.250
+The sum of qf16 0.500 and hf   -0.250 is 0.250
+
+Multiply intrinsics with a qf16 result
+The result of hf   0.500 * hf   0.250 is 0.125
+The result of qf16 0.500 * qf16 0.250 is 0.125
+The result of qf16 0.500 * hf   0.250 is 0.125
+
+Multiply hf/qf16 intrinsics with a qf32 result
+The result of hf   0.500 * hf   0.250 is 0.125
+The result of qf16 0.500 * qf16 0.250 is 0.125
+The result of qf16 0.500 * hf   0.250 is 0.125
+
+Compare instrinsics
+The sum of the predicate bits from the sf compare is 128
+The sum of the predicate bits from the hf compare is 128
+
+Min/Max instrinsics
+The max value of sf v1 and sf v2 is 0.500000
+The min value of sf v1 and sf v2 is 0.250000
+The max value of hf v5 and sf v6 is 0.500000
+The min value of hf v5 and sf v6 is 0.250000
+exit 0
