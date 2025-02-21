@@ -59,7 +59,7 @@ av:
       for (; e; e++)
         for (; q;)
           return ax[e];
-      if (bc.c < g.d <= a[7])
+      if ((bc.c < g.d) <= a[7])
         aa--;
     }
     {
