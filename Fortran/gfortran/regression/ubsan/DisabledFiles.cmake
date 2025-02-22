@@ -6,18 +6,7 @@
 #
 #===------------------------------------------------------------------------===#
 
-# There are currently no unsupported files.
 set(UNSUPPORTED_FILES "")
-
-# These tests are disabled because they trigger "not yet implemented"
-# assertions in flang.
-file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
-  # not yet implemented: assumed-rank variable in procedure
-  missing_optional_dummy_8.f90
-)
-
-# There are currently no skipped files.
+set(UNIMPLEMENTED_FILES "")
 set(SKIPPED_FILES "")
-
-# There are currently no failing files.
 set(FAILING_FILES "")
