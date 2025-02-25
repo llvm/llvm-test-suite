@@ -93,6 +93,11 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   target-device-ancestor-4.f90
   taskwait.f90
 
+  # The test is checking for semantic checks ensuring that omp library calls
+  # are not nested inside of omp teams. Flang does not currently implement this
+  # check.
+  teams-3.f90
+
   # Crash in: Fortran::semantics::AnalyzeKindSelector
   openmp-simd-1.f90
   openmp-simd-2.f90
