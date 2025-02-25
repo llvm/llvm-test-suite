@@ -767,6 +767,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: Result of pure function may not have an impure FINAL subroutine
   finalize_51.f90
 
+  # error: local non-SAVE variable has coarray component
+  # Consider using override.yaml to enable this test but expect different behavior
+  coarray_lib_realloc_1.f90
+
   # --------------------------------------------------------------------------
   #
   # These tests are skipped for a variety of reasons that don't fit well in
