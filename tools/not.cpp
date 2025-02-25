@@ -29,6 +29,10 @@
 #include <sys/wait.h>
 #endif
 
+#ifdef TEST_SUITE_RUN_UNDER
+#include <vector>
+#endif
+
 int main(int argc, char* const* argv) {
   bool expectCrash = false;
 
@@ -53,6 +57,19 @@ int main(int argc, char* const* argv) {
 
   if (argc == 0)
     return 1;
+
+#ifdef TEST_SUITE_RUN_UNDER
+  // In case of user-mode emulation, before spawning a new subprocess, the
+  // emulator needs to be preprended to the argv vector for the child.
+  // TEST_SUITE_RUN_UNDER will be defined to a comma-separated list of
+  // string litterals.
+  std::vector<char *> argvbuf = {TEST_SUITE_RUN_UNDER};
+  for (char *const *argp = argv; *argp != NULL; ++argp)
+    argvbuf.push_back(*argp);
+  argvbuf.push_back(NULL);
+  argv = argvbuf.data();
+  argc = argvbuf.size() - 1;
+#endif
 
   int result;
 

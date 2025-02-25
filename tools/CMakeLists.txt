@@ -41,3 +41,18 @@ else()
 endif()
 
 add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+
+if(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
+  # Because 'not' spawns a subprocess for its argument, it needs to know about the
+  # emulator when running in user-mode emulation. This is not needed when using 'not' to
+  # verify outputs, only when using it to execute a test binary, which is why this
+  # definition is only added to the 'not-target' target.
+  separate_arguments(TEST_SUITE_RUN_UNDER_AS_LIST NATIVE_COMMAND ${TEST_SUITE_RUN_UNDER})
+  set(AS_STRINGLITS "")
+  foreach(arg ${TEST_SUITE_RUN_UNDER_AS_LIST})
+      set(AS_STRINGLITS "${AS_STRINGLITS}\t\"${arg}\",\n")
+  endforeach()
+  add_executable(not-spawning-emulator ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+  target_compile_definitions(not-spawning-emulator PUBLIC "-DTEST_SUITE_RUN_UNDER=${AS_STRINGLITS}")
+  unset(AS_STRINGLITS)
+endif()
