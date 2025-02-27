@@ -1,3 +1,5 @@
+include(ExternalProject)
+
 include(External)
 include(GPUTestVariant)
 llvm_externals_find(TEST_SUITE_HIP_ROOT "hip" "HIP prerequisites")
@@ -120,6 +122,27 @@ macro(create_hip_tests)
 
     create_hip_test(${_HIP_Suffix})
   endforeach()
+
+  if (EXTERNAL_HIP_TESTS_KOKKOS)
+    set(EXTERNAL_HIP_TESTS_KOKKOS_TAG "4.5.01" CACHE STRING "Kokkos tag to download and test")
+    ExternalProject_Add(TestKokkosHIP
+      GIT_REPOSITORY  https://github.com/kokkos/kokkos.git
+      GIT_TAG         ${EXTERNAL_HIP_TESTS_KOKKOS_TAG}
+      CMAKE_ARGS      -DCMAKE_BUILD_TYPE=Release
+                      -DCMAKE_CXX_STANDARD=17
+                      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                      -DKokkos_ENABLE_HIP=ON
+                      -DKokkos_ARCH_AMD_GFX90A=ON
+                      -DCMAKE_PREFIX_PATH=/opt/rocm
+                      -DKokkos_ENABLE_TESTS=ON
+      INSTALL_COMMAND ""
+      TEST_COMMAND    ""
+      )
+    add_custom_target(build-kokkos DEPENDS TestKokkosHIP)
+    ExternalProject_Get_Property(TestKokkosHIP BINARY_DIR)
+    add_custom_target(test-kokkos COMMAND "ctest" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-kokkos)
+  endif()
 
   add_custom_target(hip-tests-all DEPENDS hip-tests-simple
     COMMENT "Build all HIP tests.")
