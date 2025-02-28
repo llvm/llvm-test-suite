@@ -1,8 +1,3 @@
-# Copy these files to the build directory so that the tests can be run even
-# without the source directory.
-configure_file(test_not.py test_not.py
-  COPYONLY)
-
 llvm_test_executable_no_test(ret1 ret1.c)
 add_dependencies(ret1 not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "$<TARGET_FILE:ret1>")
@@ -13,25 +8,15 @@ add_dependencies(ret0 not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "$<TARGET_FILE:not>" "$<TARGET_FILE:ret0>")
 llvm_add_test_for_target(ret0)
 
-if(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
-  # Check that expected crashes are handled correctly under user-mode emulation.
-  llvm_test_executable_no_test(abrt abort.c)
-  add_dependencies(abrt not-spawning-emulator)
-  llvm_test_run(EXECUTABLE "$<TARGET_FILE:not-spawning-emulator>" "--crash" "$<TARGET_FILE:abrt>")
-  llvm_add_test_for_target(abrt)
-else()
-  # Check that expected crashes are handled correctly.
-  llvm_test_executable_no_test(abrt abort.c)
-  add_dependencies(abrt not)
-  llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "--crash" "$<TARGET_FILE:abrt>")
-  llvm_add_test_for_target(abrt)
+# Check that expected crashes are handled correctly under user-mode emulation.
+llvm_test_executable_no_test(abrt abort.c)
+add_dependencies(abrt ${NOT_TOOL})
+llvm_test_run(EXECUTABLE "$<TARGET_FILE:${NOT_TOOL}>" "--crash" "$<TARGET_FILE:abrt>")
+llvm_add_test_for_target(abrt)
 
-  # Check that not passes environment variables to the called executable.
-  # This test is disabled in case of user-mode emulation because it would otherwise run the
-  # host python interpreter under the target emulator.
-  find_package(Python COMPONENTS Interpreter)
-  llvm_test_executable_no_test(check_env check_env.c)
-  add_dependencies(check_env not)
-  llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_not.py" "$<TARGET_FILE:not>" "$<TARGET_FILE:check_env>")
-  llvm_add_test_For_target(check_env)
-endif()
+# Check that not passes environment variables to the called executable.
+llvm_test_executable_no_test(test_not test_not.cpp)
+llvm_test_executable_no_test(check_env check_env.c)
+add_dependencies(check_env not test_not)
+llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "$<TARGET_FILE:test_not>" "$<TARGET_FILE:${NOT_TOOL}>" "$<TARGET_FILE:check_env>")
+llvm_add_test_For_target(check_env)

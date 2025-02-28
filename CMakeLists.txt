@@ -319,6 +319,12 @@ if (TEST_SUITE_USER_MODE_EMULATION)
   set(FPCMP fpcmp)
 endif()
 
+# Shortcut for the path to the not executable
+set(NOT_TOOL not)
+if (TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
+  set(NOT_TOOL not-spawning-emulator)
+endif()
+
 add_subdirectory(litsupport)
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME

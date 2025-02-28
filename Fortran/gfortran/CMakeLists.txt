@@ -716,14 +716,6 @@ function(gfortran_add_execute_test expect_error main others fflags ldflags)
   gfortran_make_working_dir("${target}" working_dir)
   get_filename_component(working_dir_name "${working_dir}" NAME)
 
-  # When running in an emulator, use the version of 'not' that will
-  # spawn the subprocess under that emulator as well.
-  if(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
-    set(NOT_TOOL "not-spawning-emulator")
-  else()
-    set(NOT_TOOL "not")
-  endif()
-
   llvm_test_executable_no_test(${target} ${main} ${others})
   if (expect_error)
     llvm_test_run(
