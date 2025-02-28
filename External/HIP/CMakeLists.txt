@@ -144,6 +144,28 @@ macro(create_hip_tests)
     add_custom_target(test-kokkos COMMAND "ctest" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-kokkos)
   endif()
 
+  if (EXTERNAL_HIP_TESTS_GINKGO)
+    set(EXTERNAL_HIP_TESTS_GINKGO_TAG "v1.9.0" CACHE STRING "Ginkgo tag to download and test")
+    ExternalProject_Add(TestGinkgoHIP
+      GIT_REPOSITORY  https://github.com/ginkgo-project/ginkgo.git
+      GIT_TAG         ${EXTERNAL_HIP_TESTS_GINKGO_TAG}
+      CMAKE_ARGS      -DGINKGO_BUILD_HIP=ON
+                      -DCMAKE_PREFIX_PATH=/opt/rocm
+                      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                      -DGINKGO_BUILD_MPI=OFF
+                      -DCMAKE_HIP_COMPILER=${CMAKE_CXX_COMPILER}
+                      -DGINKGO_WITH_CCACHE=OFF
+                      -DGINKGO_BUILD_EXAMPLES=OFF
+      INSTALL_COMMAND ""
+      TEST_COMMAND    ""
+      )
+
+    add_custom_target(build-ginkgo DEPENDS TestGinkgoHIP)
+    ExternalProject_Get_Property(TestGinkgoHIP BINARY_DIR)
+    add_custom_target(test-ginkgo COMMAND "ctest" "-R hip" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-ginkgo)
+  endif()
+
   add_custom_target(hip-tests-all DEPENDS hip-tests-simple
     COMMENT "Build all HIP tests.")
 
