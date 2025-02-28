@@ -13,10 +13,13 @@ add_dependencies(ret0 not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "$<TARGET_FILE:not>" "$<TARGET_FILE:ret0>")
 llvm_add_test_for_target(ret0)
 
-# These test will always fail under user-mode emulation because 'not'
-# spawns a subprocess outside the emulator and the check_env test
-# runs the host python interpreter under the emulator for the target.
-if(NOT(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER))
+if(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
+  # Check that expected crashes are handled correctly under user-mode emulation.
+  llvm_test_executable_no_test(abrt abort.c)
+  add_dependencies(abrt not-spawning-emulator)
+  llvm_test_run(EXECUTABLE "$<TARGET_FILE:not-spawning-emulator>" "--crash" "$<TARGET_FILE:abrt>")
+  llvm_add_test_for_target(abrt)
+else()
   # Check that expected crashes are handled correctly.
   llvm_test_executable_no_test(abrt abort.c)
   add_dependencies(abrt not)
@@ -24,15 +27,11 @@ if(NOT(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER))
   llvm_add_test_for_target(abrt)
 
   # Check that not passes environment variables to the called executable.
+  # This test is disabled in case of user-mode emulation because it would otherwise run the
+  # host python interpreter under the target emulator.
   find_package(Python COMPONENTS Interpreter)
   llvm_test_executable_no_test(check_env check_env.c)
   add_dependencies(check_env not)
   llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_not.py" "$<TARGET_FILE:not>" "$<TARGET_FILE:check_env>")
   llvm_add_test_For_target(check_env)
-else()
-  # Check that expected crashes are handled correctly under user-mode emulation.
-  llvm_test_executable_no_test(abrt abort.c)
-  add_dependencies(abrt not-spawning-emulator)
-  llvm_test_run(EXECUTABLE "$<TARGET_FILE:not-spawning-emulator>" "--crash" "$<TARGET_FILE:abrt>")
-  llvm_add_test_for_target(abrt)
 endif()
