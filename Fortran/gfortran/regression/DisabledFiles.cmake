@@ -1186,6 +1186,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   bind_c_usage_28.f90
   c_loc_tests_11.f03
   coarray_collectives_2.f90
+  coarray_collectives_10.f90
+  coarray_collectives_13.f90
   implicit_14.f90
   pr90290.f90
   pr91564.f90
