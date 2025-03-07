@@ -88,6 +88,9 @@
 "default_format_denormal_2.f90":
   disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
 
+"nan_7.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
 # unimplemented feature on AIX: Nested arguments are unimplemented
 "assumed_type_1.f90":
   disabled_on: ["powerpc-*-aix"]
