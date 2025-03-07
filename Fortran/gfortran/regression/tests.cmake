@@ -5235,8 +5235,8 @@ run;matmul_bounds_8.f90;xfail;-fno-backtrace -fbounds-check -fno-realloc-lhs;;
 run;matmul_bounds_9.f90;xfail;-fbounds-check -ffrontend-optimize;;
 run;matmul_const.f90;;-fno-frontend-optimize -fdump-tree-original;;
 run;maxloc_1.f90;;;;
-run;maxloc_2.f90;;;;powerpc-.+-aix
-run;maxloc_3.f90;;;;powerpc-.+-aix
+run;maxloc_2.f90;;;;
+run;maxloc_3.f90;;;;
 run;maxloc_4.f90;;;;
 run;maxloc_5.f90;;;;
 run;maxloc_bounds_1.f90;xfail;-fbounds-check;;
@@ -5250,7 +5250,7 @@ run;maxloc_bounds_8.f90;xfail;-fbounds-check;;
 run;maxloc_string_1.f90;;;;
 run;maxlocval_1.f90;;;;aarch64-.+-.+
 run;maxlocval_2.f90;;;;
-run;maxlocval_3.f90;;;;powerpc-.+-aix
+run;maxlocval_3.f90;;;;
 run;maxlocval_4.f90;;;;
 run;maxval_char_1.f90;;;;
 run;maxval_char_2.f90;;;;
@@ -5271,26 +5271,26 @@ run;min_max_optional_1.f90;;;;
 run;min_max_optional_5.f90;;;;
 run;min_max_type.f90;;;;
 run;min_max_type_2.f90;;;;
-run;minloc_1.f90;;;;powerpc-.+-aix
-run;minloc_2.f90;;;;powerpc-.+-aix
+run;minloc_1.f90;;;;
+run;minloc_2.f90;;;;
 run;minloc_3.f90;;;;
 run;minloc_4.f90;;;;
 run;minloc_5.f90;;;;
 run;minloc_string_1.f90;;;;
-run;minlocval_1.f90;;;;powerpc-.+-aix
-run;minlocval_2.f90;;;;powerpc-.+-aix
+run;minlocval_1.f90;;;;
+run;minlocval_2.f90;;;;
 run;minlocval_3.f90;;;;
-run;minlocval_4.f90;;;;powerpc-.+-aix
+run;minlocval_4.f90;;;;
 run;minmax_char_1.f90;;;;
-run;minmaxloc_1.f90;;;;powerpc-.+-aix
-run;minmaxloc_10.f90;;-fdefault-integer-8;;powerpc-.+-aix
+run;minmaxloc_1.f90;;;;
+run;minmaxloc_10.f90;;-fdefault-integer-8;;
 run;minmaxloc_11.f90;;;;
 run;minmaxloc_12.f90;;;;
 run;minmaxloc_13.f90;;;;
 run;minmaxloc_16.f90;;-fdump-tree-original;;
-run;minmaxloc_17.f90;;;;powerpc-.+-aix
+run;minmaxloc_17.f90;;;;
 run;minmaxloc_2.f90;;;;
-run;minmaxloc_3.f90;;-fdefault-integer-8;;powerpc-.+-aix
+run;minmaxloc_3.f90;;-fdefault-integer-8;;
 run;minmaxloc_4.f90;;;;
 run;minmaxloc_5.f90;;;;
 run;minmaxloc_6.f90;;;;
@@ -6090,8 +6090,8 @@ run;save_1.f90;;-O2 -fno-automatic;;
 run;save_2.f90;;-O2 -fno-automatic;;
 run;save_5.f90;;-fno-automatic;;
 run;save_6.f90;;-fno-automatic -flto -g;;
-run;scalar_mask_1.f90;;;;powerpc-.+-aix
-run;scalar_mask_2.f90;;;;powerpc-.+-aix
+run;scalar_mask_1.f90;;;;
+run;scalar_mask_2.f90;;;;
 run;scalarize_parameter_array_1.f90;;;;
 run;scale_1.f90;;;;
 run;scan_1.f90;;;;
