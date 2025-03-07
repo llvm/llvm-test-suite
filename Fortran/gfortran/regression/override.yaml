@@ -137,49 +137,6 @@
 "zero_sized_14.f90":
   disabled_on: ["powerpc-*-aix"]
 
-# incorrect inlining for minloc/maxloc on AIX
-"maxloc_2.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"maxloc_3.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"maxlocval_3.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minloc_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minloc_2.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minlocval_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minlocval_2.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minlocval_4.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minmaxloc_10.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minmaxloc_17.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minmaxloc_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"minmaxloc_3.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"scalar_mask_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"scalar_mask_2.f90":
-  disabled_on: ["powerpc-*-aix"]
-
 # libm's routine lround returns incorrect values on AIX
 "nint_2.f90":
   disabled_on: ["powerpc-*-aix"]
