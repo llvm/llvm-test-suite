@@ -15,7 +15,9 @@
 //     subcommand. If --crash is used as well, it has to come after the
 //     '--run-under <...> ...' arguments. The double-dash is used to separate
 //     emulator arguments from cmd arguments. This order makes it easier to
-//     use the not tool in the test-suite.
+//     use the not tool in the test-suite. The emulator is expected to exit
+//     with the same exit status/signal than the emulated binary in case of
+//     a crash, and the --crash flag will behave the same way.
 
 // This file is a stripped down version of not.cpp from llvm/utils. This does
 // not depend on any LLVM library.
@@ -23,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -34,8 +37,6 @@
 #include <spawn.h>
 #include <sys/wait.h>
 #endif
-
-#include <vector>
 
 int main(int argc, char* const* argv) {
   bool expectCrash = false;
@@ -61,8 +62,7 @@ int main(int argc, char* const* argv) {
       ++argv;
     }
 
-    // If present, the crash flag is between the emulator
-    // arguments and the cmd.
+    // If present, the crash flag is between the emulator arguments and cmd.
     if (argc > 0 && std::string(argv[0]) == "--crash") {
       ++argv;
       --argc;

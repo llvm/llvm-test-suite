@@ -21,8 +21,10 @@ add_dependencies(check_env not test_not)
 if(TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
   # ${TEST_SUITE_RUN_UNDER} is needed here because test_not is not itself
   # user-mode emulation aware, unlike the not tool.
-  llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "$<TARGET_FILE:test_not>" ${TEST_SUITE_RUN_UNDER} ${NOT_TOOL} "$<TARGET_FILE:check_env>")
+  llvm_test_run(EXECUTABLE "$<TARGET_FILE:test_not>" ${TEST_SUITE_RUN_UNDER}
+                           ${NOT_TOOL} "$<TARGET_FILE:check_env>")
 else()
-  llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "$<TARGET_FILE:test_not>" ${NOT_TOOL} "$<TARGET_FILE:check_env>")
+  llvm_test_run(EXECUTABLE "$<TARGET_FILE:test_not>" ${NOT_TOOL}
+                           "$<TARGET_FILE:check_env>")
 endif()
 llvm_add_test_For_target(check_env)
