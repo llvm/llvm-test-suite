@@ -1,9 +1,7 @@
 include(External)
 
 # In llvm-test-suite/test-suite-externals:
-# git clone -b release/7.1 https://git.ffmpeg.org/ffmpeg.git
-# cd ffmpeg
-# git checkout 10aaf84f855dbcedb8ee2e3fce307e9b98320946
+# git clone -b n7.1.1 https://git.ffmpeg.org/ffmpeg.git
 
 llvm_externals_find(TEST_SUITE_FFMPEG_ROOT "ffmpeg" "ffmpeg 7.1")
 

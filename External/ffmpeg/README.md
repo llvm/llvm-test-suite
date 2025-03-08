@@ -12,13 +12,10 @@ This integration of ffmpeg into llvm-test-suite works with ffmpeg 7.1
 7.1 release tag).
 
 To include the ffmpeg library in llvm-test-suite, run
-`git clone -b release/7.1 https://git.ffmpeg.org/ffmpeg.git`
+`git clone -b n7.1.1 https://git.ffmpeg.org/ffmpeg.git`
 within the `llvm-test-suite/test-suite-externals` directory, or
 set `TEST_SUITE_FFMPEG_ROOT` to point to a similar checkout, in the
-CMake configuration. (As this is a branch, not a tag, you may wish
-to check out e.g. the commit
-`10aaf84f855dbcedb8ee2e3fce307e9b98320946`, in case the branch
-changes further.)
+CMake configuration.
 
 For x86 targets, the `nasm` tool is used for building assembly, if
 the tool is found at configure time. If not found, the assembly is
