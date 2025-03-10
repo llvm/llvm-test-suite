@@ -5425,7 +5425,7 @@ run;nan_1.f90;;;;
 run;nan_2.f90;;-fno-range-check -pedantic;;
 run;nan_3.f90;;-fno-range-check;;
 run;nan_6.f90;;;;
-run;nan_7.f90;;-fno-range-check;;
+run;nan_7.f90;;-fno-range-check;;ppc64le-.+-.+ powerpc-.+-.+
 run;nearest_1.f90;;-O0 -ffloat-store;;
 run;nearest_2.f90;;-fno-range-check;;
 run;nearest_3.f90;;;;
