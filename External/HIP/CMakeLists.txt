@@ -166,6 +166,24 @@ macro(create_hip_tests)
     add_custom_target(test-ginkgo COMMAND "ctest" "-R hip" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-ginkgo)
   endif()
 
+  if (EXTERNAL_HIP_TESTS_ROCPRIM)
+    ExternalProject_Add(BuildRocPrim
+      GIT_REPOSITORY      https://github.com/ROCm/rocPRIM.git
+      GIT_TAG             ae4d27e # Staging for ROCm 6.4
+      CMAKE_ARGS          -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                          -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                          -DCMAKE_HIP_COMPILER=${CMAKE_CXX_COMPILER}
+                          -DBUILD_TEST=ON
+                          -DAMDGPU_TARGETS="${AMDGPU_ARCHS}"
+                          -DCMAKE_BUILD_TYPE=Release
+      INSTALL_COMMAND    ""
+      TEST_COMMAND       ""
+      )
+
+    add_custom_target(build-rocprim DEPENDS BuildRocPrim)
+
+  endif()
+
   add_custom_target(hip-tests-all DEPENDS hip-tests-simple
     COMMENT "Build all HIP tests.")
 
