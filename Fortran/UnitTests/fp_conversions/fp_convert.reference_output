@@ -1,0 +1,13 @@
+ huge
+ PASS 1
+ -huge
+ PASS 2
+ tiny
+ PASS 3
+ -tiny
+ PASS 4
+ inf
+ PASS 5
+ -inf
+ PASS 6
+exit 0
