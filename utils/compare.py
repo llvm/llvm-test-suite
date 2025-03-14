@@ -203,7 +203,7 @@ def truncate(string, prefix_len, suffix_len):
 def determine_common_prefix_suffix(names, min_len=8):
     if len(names) <= 1:
         return (0, 0)
-    name0 = names[0]
+    name0 = names.iloc[0]
     prefix = name0
     prefix_len = len(name0)
     suffix = name0
