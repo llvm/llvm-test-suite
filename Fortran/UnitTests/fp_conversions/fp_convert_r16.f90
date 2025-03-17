@@ -1,4 +1,4 @@
-module fp_convert_m
+module fp_convert_r16_m
   implicit none
   type answer
     integer(kind=1)   :: i8
@@ -49,11 +49,11 @@ contains
     result = do_conversion(value)
     call print_answer(result)
   end subroutine
-end module fp_convert_m
+end module fp_convert_r16_m
 
-program fp_convert
+program fp_convert_r16
   use ieee_arithmetic, only: ieee_value, ieee_quiet_nan, ieee_positive_inf, ieee_negative_inf
-  use fp_convert_m
+  use fp_convert_r16_m
   implicit none
 
   real(kind=16) :: r128, nan, inf, ninf
@@ -83,4 +83,4 @@ program fp_convert
   print *, "nan"
   call testcase(nan)
 
-end program fp_convert
+end program fp_convert_r16
