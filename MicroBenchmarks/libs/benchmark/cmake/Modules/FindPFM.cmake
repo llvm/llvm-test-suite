@@ -23,11 +23,6 @@ if (PFM_FOUND AND NOT TARGET PFM::libpfm)
     set_target_properties(PFM::libpfm PROPERTIES
         IMPORTED_LOCATION "${PFM_LIBRARY}"
         INTERFACE_INCLUDE_DIRECTORIES "${PFM_INCLUDE_DIR}")
-    message("Using Perf Counters.")
-    set(HAVE_LIBPFM 1)
-    set(PFM_FOUND 1)
-else()
-    message("Perf Counters support requested, but was unable to find libpfm.")
 endif()
 
 mark_as_advanced(PFM_LIBRARY PFM_INCLUDE_DIR)
