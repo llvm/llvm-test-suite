@@ -14,16 +14,6 @@ set(UNIMPLEMENTED_FILES "")
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   #
-  # These tests fail when they should pass.
-  #
-
-  # error: COPYPRIVATE variable is not PRIVATE or THREADPRIVATE in outer
-  # context
-  a.33.1.f90
-  a.33.2.f90
-  a.33.4.f90
-
-  #
   # These tests pass when they should fail.
   #
   a.23.4.f90
