@@ -33,10 +33,6 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   dec_io_2a.f90                   # fseek
   fgetc_1.f90                     # fgetc, fputc
   fgetc_2.f90                     # fgetc, fputc
-  fseek.f90                       # fseek
-  ftell_1.f90                     # ftell
-  ftell_2.f90                     # ftell
-  ftell_3.f90                     # ftell
   inquire_10.f90                  # getcwd
   int_conv_1.f90                  # int2, int8
   itime_idate_1.f                 # itime, idate
