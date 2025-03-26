@@ -49,6 +49,6 @@ extern struct SYMBOL_TABLE_ENTRY *LOOK_UP_SYMBOL();
 /* If <MODULE,LABEL> pair is not in the symbol table, put it there and       */
 /* TRUE (integer 1). Otherwise return FALSE (integer 0).                     */
 /* Puts onto front of the linked list.                                       */
-extern int INSERT_IN_SYM_TAB();
+extern int INSERT_IN_SYM_TAB(char *, char *, int, enum kind, SYMBOL_TABLE *);
 
 
