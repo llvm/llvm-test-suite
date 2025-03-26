@@ -360,6 +360,12 @@ CHECK(memtag, memtag, memtag, true, {
         : : : "x0"
     );
 })
+CHECK(cssc, cssc, cssc, false, {
+    asm volatile (
+        "cnt x0, x1"
+        : : : "x0"
+    );
+})
 
 static bool safe_try_feature(bool (*try_feature)(void), bool is_exempt) {
     int child = fork();
@@ -418,6 +424,7 @@ int main(int, const char **) {
     check_sme_i16i64();
     check_mops();
     check_memtag();
+    check_cssc();
 
     return any_fails ? -1 : 0;
 }

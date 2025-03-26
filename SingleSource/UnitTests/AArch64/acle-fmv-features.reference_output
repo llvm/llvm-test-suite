@@ -42,4 +42,5 @@ sme-f64f64
 sme-i16i64
 mops
 memtag
+cssc
 exit 0
