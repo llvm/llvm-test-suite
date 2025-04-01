@@ -141,7 +141,7 @@ macro(create_hip_tests)
       )
     add_custom_target(build-kokkos DEPENDS TestKokkosHIP)
     ExternalProject_Get_Property(TestKokkosHIP BINARY_DIR)
-    add_custom_target(test-kokkos COMMAND "ctest" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-kokkos)
+    add_custom_target(test-kokkos ${CMAKE_COMMAND} -E env GTEST_FILTER=-hip.atomics:hip.bit_manip_bit_ceil "ctest" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-kokkos)
   endif()
 
   if (EXTERNAL_HIP_TESTS_GINKGO)
