@@ -141,11 +141,13 @@ def _executePlan(context, plan):
             continue
         try:
             value = lit.Test.toMetricValue(float(out))
-            context.result_metrics[metric] = value
         except ValueError:
             logging.warning(
-                "Metric reported for '%s' is not a float: '%s'", metric, out
+                "Metric reported for '%s' is not a float: '%s', treating as JSON", metric, out
             )
+            value = lit.Test.JSONMetricValue(out)
+        finally:
+            context.result_metrics[metric] = value
 
     return lit.Test.PASS
 
