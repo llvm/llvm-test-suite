@@ -48,18 +48,21 @@ speccpu2017_run_test(
   RUN_TYPE ref
 )
 
-speccpu2017_run_test(
-  < "${RUN_ref_DIR_REL}/bwaves_3.in"
-  STDOUT bwaves_3.out
-  RUN_TYPE ref
-)
+if (BENCHMARK_SUITE_TYPE STREQUAL "rate")
 
-speccpu2017_run_test(
-  < "${RUN_ref_DIR}/bwaves_4.in"
-  STDOUT bwaves_4.out
-  RUN_TYPE ref
-)
+  speccpu2017_run_test(
+    < "${RUN_ref_DIR_REL}/bwaves_3.in"
+    STDOUT bwaves_3.out
+    RUN_TYPE ref
+  )
 
+  speccpu2017_run_test(
+    < "${RUN_ref_DIR}/bwaves_4.in"
+    STDOUT bwaves_4.out
+    RUN_TYPE ref
+  )
+
+endif()
 
 ################################################################################
 
