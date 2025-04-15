@@ -1046,7 +1046,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   namelist_96.f90 # real data for integer NAMELIST input
   no_unit_error_1.f90
   pointer_check_10.f90
-  pointer_check_11.f90
+  pointer_check_11.f90 # test exhibits UB, sometimes at O3 it hangs forever
   pointer_remapping_6.f08
   unpack_bounds_1.f90
 
