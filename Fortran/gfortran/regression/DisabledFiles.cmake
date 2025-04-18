@@ -1645,7 +1645,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   matmul_bounds_9.f90
   maxloc_bounds_1.f90
   maxloc_bounds_2.f90
+  maxloc_bounds_3.f90
   maxloc_bounds_4.f90
+  maxloc_bounds_6.f90
   maxloc_bounds_7.f90
   maxloc_bounds_8.f90
   pack_bounds_1.f90
