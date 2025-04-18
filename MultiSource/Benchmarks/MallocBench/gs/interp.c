@@ -47,7 +47,7 @@ private op_proc_(interp_exit);
 #define os_guard_under 10
 #define os_guard_over 10
 private ref ostack[os_guard_under+max_ostack+os_guard_over];
-ref estack[max_estack];
+ref estack[max_estack + 1];
 ref dstack[max_dstack];
 ref *osp_nargs[os_max_nargs];		/* for checking osp */
 
@@ -107,7 +107,7 @@ interp_init(int ndict)
 		for ( i = 1; i < os_max_nargs; i++ )
 			osp_nargs[i] = osbot + i - 1;
 	   }
-	esp = estack - 1, estop = estack + (max_estack-1);
+	esp = estack, estop = estack + max_estack;
 	/* Initialize the dictionary stack to the first ndict */
 	/* dictionaries.  ndict is a parameter because during */
 	/* initialization, only systemdict exists. */
