@@ -8,6 +8,11 @@ speccpu2017_benchmark(RATE)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Workaround undefined behaviour in xerces-c dependency.
+# This is fixed upstream but not included in SPEC CPU 2017:
+# https://github.com/apache/xerces-c/commit/02e48494496dd24476490fd36c1bc97b6a37002e#diff-e2f4677367dcf43bd6d31b2bbca5b1aa89e36ec155a040fe4447b201a554cf81
+add_compile_options(-fwrapv-pointer)
+
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-fdelayed-template-parsing
                         HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
