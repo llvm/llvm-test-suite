@@ -13,11 +13,15 @@ macro(create_local_hip_tests VariantSuffix)
   # Set per-source compilation/link options
   set_source_files_properties(with-fopenmp.hip PROPERTIES
     COMPILE_FLAGS -fopenmp)
+  # TODO: Add the flag after the kernel argument splitting pass is enabled.
+  #set_source_files_properties(split-kernel-args.hip PROPERTIES
+  #  COMPILE_FLAGS "-mllvm -amdgpu-enable-split-kernel-args")
   # Add HIP tests to be added to hip-tests-simple
   list(APPEND HIP_LOCAL_TESTS empty)
   list(APPEND HIP_LOCAL_TESTS with-fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
   list(APPEND HIP_LOCAL_TESTS memmove)
+  list(APPEND HIP_LOCAL_TESTS split-kernel-args)
 
   # TODO: Re-enable InOneWeekend after it is fixed
   #list(APPEND HIP_LOCAL_TESTS InOneWeekend)
