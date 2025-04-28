@@ -73,6 +73,7 @@ if (NOT TARGET wrf_netcdf)
   ${SRC_DIR}/netcdf/posixio.c)
   add_library(wrf_netcdf OBJECT ${netcdf_sources})
   target_compile_definitions(wrf_netcdf PRIVATE SPEC_CASE_FLAG)
+  test_suite_add_build_dependencies(wrf_netcdf)
 endif ()
 
 ## test ########################################################################
