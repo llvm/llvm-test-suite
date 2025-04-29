@@ -1053,7 +1053,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   binding_label_tests_26b.f90
   test_common_binding_labels_2_main.f03
   string_1.f90 # Expect error on 32 bits platform
-  volatile8.f90 # Expects error on bad dummy argument declarations
+  volatile8.f90 # Gfortran expects compilation errors for invalid uses of volatile; flang
+                # supports one of these as an extension, and the others ought to either be warnings
+                # or errors. See the flang extensions document: "A non-definable actual argument,
+                # including the case of a vector subscript, may be associated with an ASYNCHRONOUS or VOLATILE dummy argument"
                 # llvm-project#137369
 
   # Tests that exercise gfortran's ability to set -std=f95 and then see errors on newer features
