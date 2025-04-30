@@ -1,7 +1,11 @@
 #include <stdio.h>
 
 
-#ifdef __FLT16_DIG__
+// Clang on s390x now supports _Float16, however the system libraries
+// on current distributions do not yet contain the necessary conversion
+// routines to actually run binaries using _Float16.  Disable the test
+// on s390x for now.
+#if defined(__FLT16_DIG__) && !defined(__s390x__)
 
 typedef _Float16 fp16_t;
 __attribute__((noinline))
