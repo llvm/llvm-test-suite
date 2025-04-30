@@ -100,6 +100,6 @@ int main(int argc, char **argv) {
   HIP_CHECK(hipFree(d_exp));
   HIP_CHECK(hipFree(t_res));
   free(d_res);
-  return 0;
+  return errs;
 }
 
