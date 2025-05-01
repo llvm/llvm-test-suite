@@ -24,10 +24,10 @@ __global__ void my_kernel(float a[], int alen, int exp[], int explen, float *t_r
 
   for (int i = 0; i < alen; i++) {
     for (int j = 0; j < explen; j++) {
-      t_res[4*alen + explen*i + 4*j] = scalbnf(a[i], exp[j]);
-      t_res[4*alen + explen*i + 4*j + 1] = scalbn(a[i], exp[j]);
-      t_res[4*alen + explen*i + 4*j + 2] = __builtin_scalbnf(a[i], exp[j]);
-      t_res[4*alen + explen*i + 4*j + 3] = __builtin_scalbn(a[i], exp[j]);
+      t_res[4*alen + 4*explen*i + 4*j] = scalbnf(a[i], exp[j]);
+      t_res[4*alen + 4*explen*i + 4*j + 1] = scalbn(a[i], exp[j]);
+      t_res[4*alen + 4*explen*i + 4*j + 2] = __builtin_scalbnf(a[i], exp[j]);
+      t_res[4*alen + 4*explen*i + 4*j + 3] = __builtin_scalbn(a[i], exp[j]);
     }
   }
 }
@@ -42,10 +42,10 @@ void __attribute__((noinline)) test(float a[], int alen, int exp[], int explen, 
 
   for (int i = 0; i < alen; i++) {
     for (int j = 0; j < explen; j++) {
-      h_res[4*alen + explen*i + 4*j] = scalbnf(a[i], exp[j]);
-      h_res[4*alen + explen*i + 4*j + 1] = scalbn(a[i], exp[j]);
-      h_res[4*alen + explen*i + 4*j + 2] = __builtin_scalbnf(a[i], exp[j]);
-      h_res[4*alen + explen*i + 4*j + 3] = __builtin_scalbn(a[i], exp[j]);
+      h_res[4*alen + 4*explen*i + 4*j] = scalbnf(a[i], exp[j]);
+      h_res[4*alen + 4*explen*i + 4*j + 1] = scalbn(a[i], exp[j]);
+      h_res[4*alen + 4*explen*i + 4*j + 2] = __builtin_scalbnf(a[i], exp[j]);
+      h_res[4*alen + 4*explen*i + 4*j + 3] = __builtin_scalbn(a[i], exp[j]);
     }
   }
 }
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
   int errs = 0;
   for(int i = 0; i < res_len; i++) {
     if (fabs(h_res[i] - d_res[i]) > fabs(h_res[i] * 0.0001f)) {
-      //printf("found error i=%i h=%f d=%f\n", i, h_res[i], d_res[i]);
+      printf("found error i=%i h=%f d=%f\n", i, h_res[i], d_res[i]);
       errs++;
     }
   }
