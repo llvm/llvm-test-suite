@@ -138,6 +138,8 @@ set(FLANG_ERRORING_FFLAGS
   -fdefault-real-10
   -fdefault-real-16
   -fdiagnostics-format=json
+  -fdiagnostics-format=json-stderr
+  -fdiagnostics-format=sarif-file
   -fdiagnostics-show-option
   -fdollar-ok
   -fdump-fortran-original
@@ -158,12 +160,15 @@ set(FLANG_ERRORING_FFLAGS
   -fdump-tree-fre1
   -fdump-tree-gimple
   -fdump-tree-ifcvt
+  -fdump-tree-ivopts-all
   -fdump-tree-ldist-all
   -fdump-tree-ldist-details
   -fdump-tree-lim2
   -fdump-tree-lim2-details
   -fdump-tree-linterchange-details
   -fdump-tree-lversion-details
+  -fdump-tree-ompdevlow
+  -fdump-tree-ompexp
   -fdump-tree-omplower
   -fdump-tree-optimized
   -fdump-tree-optimized-raw
@@ -213,6 +218,8 @@ set(FLANG_ERRORING_FFLAGS
   -finit-logical=true
   -finit-real=inf
   -finline-functions
+  -finline-intrinsics=maxloc
+  -finline-intrinsics=minloc
   -finline-matmul-limit=0
   -finline-matmul-limit=10
   -finline-matmul-limit=100
@@ -228,6 +235,7 @@ set(FLANG_ERRORING_FFLAGS
   -flinker-output=nolto-rel
   -floop-interchange
   -fmax-array-constructor=100000
+  -fmax-errors=1
   -fmax-stack-var-size=8
   -fmax-stack-var-size=100
   -fmodule-private
@@ -249,6 +257,8 @@ set(FLANG_ERRORING_FFLAGS
   -fno-inline
   -fno-inline-arg-packing
   -fno-inline-functions-called-once
+  -fno-inline-intrinsics=maxloc
+  -fno-inline-intrinsics=minloc
   -fno-ipa-cp
   -fno-ipa-icf
   -fno-ipa-modref
@@ -285,6 +295,7 @@ set(FLANG_ERRORING_FFLAGS
   -fno-tree-vrp
   -fnon-call-exceptions
   -fopenmp-simd
+  -fopt-info-optimized-omp
   -fopt-info-vec-optimized
   -fpad-source
   -fpeel-loops
@@ -385,6 +396,7 @@ set(FLANG_ERRORING_FFLAGS
   -std=f2003
   -std=f2008
   -std=f2008ts
+  -std=f202y
   # At the time of writing, -W warnings are not supported. flang errors out
   # saying that only -Werror is supported.
   -W
@@ -402,7 +414,9 @@ set(FLANG_ERRORING_FFLAGS
   -Wdate-time
   -Wdo-subscript
   -Werror
+  -Wexternal-argument-mismatch
   -Wextra
+  -Wfatal-errors
   -Wfunction-elimination
   -Wimplicit-interface
   -Wimplicit-procedure
@@ -431,10 +445,12 @@ set(FLANG_ERRORING_FFLAGS
   -Wno-missing-include-dirs
   -Wno-overwrite-recursive
   -Wno-pedantic
+  -Wno-return-type
   -Wno-tabs
   -Wno-underflow
   -Wno-uninitialized
   -Wno-unused-dummy-argument
+  -Wno-unused-variable
   -Wno-zerotrip
   -Wopenacc-parallelism
   -Wpadded
@@ -559,7 +575,7 @@ function(gfortran_check_test_config used_fort used_other)
   # files have been added or removed.
   foreach (f u IN ZIP_LISTS files used_fort)
     if (NOT f STREQUAL u)
-      list(FIND used ${f} idx)
+      list(FIND used_fort ${f} idx)
       if (idx EQUAL -1)
         message(FATAL_ERROR "${msg_unused}\n  ${f}\n${msg_rerun}\n")
       else ()
@@ -793,16 +809,35 @@ function(gfortran_populate_tests)
     string(REPLACE " " ";" sources "${sources_t}")
     list(TRANSFORM sources PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
 
+    # Multi-file tests consist of a "main" file and a number of (possibly
+    # non-Fortran dependents). This the list of dependents.
+    set(rest)
+
     # The tests in the configuration must be added to the used list even if the
     # test is disabled because the sanity check will expect that the list of
     # Fortran files in the directory exactly matches the list of used Fortran
     # files.
-    set(rest)
     list(LENGTH sources nsources)
     math(EXPR iend "${nsources} - 1")
     foreach (i RANGE ${iend})
       list(GET sources ${i} source)
-      if (source MATCHES "^.+[.][Ff].*$")
+
+      # This is a clumsy workaround which probably warrants a cleaner fix. In
+      # some cases, the dependent files are in a subdirectory of the current
+      # source directory. If any such files are Fortran sources, the sanity
+      # check in gfortran_check_test_config will fail because it only looks for
+      # Fortran sources in the current source directory and ensures that the
+      # list of those exactly match the list of Fortran source files that are
+      # used in the test configurations. If we do encounter a situation like
+      # this, simply ignore the Fortran source from the subdirectory. Ideally,
+      # we should have a list of subdirectories into which we should recurse
+      # in order to find used Fortran files. But for now, this workaround
+      # will do.
+      #
+      # The source files have been prepended with ${CMAKE_CURRENT_SOURCE_DIR},
+      # so take that into account when matching.
+      if (source MATCHES "^${CMAKE_CURRENT_SOURCE_DIR}/.+[/].+$")
+      elseif (source MATCHES "^.+[.][Ff].*$")
         list(APPEND used_fort ${source})
       else ()
         list(APPEND used_other ${source})

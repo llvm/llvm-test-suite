@@ -53,6 +53,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   large_4.f90
   underflow_1.f90
 
+  # error: Actual argument for 'mold=' has bad type 'UNSIGNED'
+  out_of_range.f90
+
   # --------------------------------------------------------------------------
   #
   # These tests require libquadmath which is not built by default. They are

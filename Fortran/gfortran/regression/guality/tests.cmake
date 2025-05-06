@@ -34,4 +34,5 @@
 #                    expression that is expected to match an LLVM target triple.
 #
 run;arg1.f90;;-g;;
+run;pr119190.f90;;-g;;
 run;pr41558.f90;;-g;;

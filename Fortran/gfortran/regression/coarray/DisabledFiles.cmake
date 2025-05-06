@@ -48,6 +48,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   failed_images_2.f08
   image_status_2.f08
   stopped_images_2.f08
+  substring_1.f90
   this_image_1.f90
 
   # unimplemented: EVENT POST runtime
@@ -59,6 +60,25 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: CriticalConstruct implementation
   sync_1.f90
   sync_3.f90
+
+  # unimplemented: lowering a reference to a coarray objcet
+  associate_1.f90
+  pr85510.f90
+
+  # unimplemented: dummy argument coarray in procedure interface
+  class_1.f90
+  complex_1.f90
+  dummy_3.f90
+  pr81265.f90
+
+  # unimplemented: allocation of a coarray object
+  get_with_fn_parameter.f90
+  get_with_scalar_fn.f90
+  move_alloc_2.f90
+  ptr_comp_6.f08
+  select_type_1.f90
+  select_type_3.f90
+  sizeof_1.f90
 )
 
 # Some tests in the suite may be unsupported for one reason or another.
@@ -129,6 +149,11 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: '[SYM]' is a non-ALLOCATABLE coarray and must have an explicit
   # coshape
   poly_run_2.f90
+
+  # error: No intrinsic or user-defined ASSIGNMENT(=) matches operand types
+  # TYPE(team_type) and TYPE(__builtin_team_type)
+  coindexed_3.f08
+  coindexed_5.f90
 
   # --------------------------------------------------------------------------
   #

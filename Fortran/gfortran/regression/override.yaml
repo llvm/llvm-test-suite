@@ -6,7 +6,7 @@
 # Please see gfortran/README.md for instructions on editing this file.
 #
 # This file is broadly divided into two. The first section contains tests that
-# are "temporarily" overridden. These are usually tests that fail on certain 
+# are "temporarily" overridden. These are usually tests that fail on certain
 # platforms, but pass on others, but are intended to pass everywhere. When the
 # underlying issue is addressed, the tests should be removed. Eventually, there
 # should be no tests at all in this section. The second section contains tests
@@ -176,3 +176,10 @@
 
 "bounds_check_fail_5.f90":
   disabled_on: ["powerpc-*-aix"]
+
+# This test contains a single #error message directive in the file which will
+# obviously fail. The test checks that diagnostics are written to a file, but
+# it is an argument that is not supported in flang. Just mark it as xfail since
+# this is not worth marking as "permanently unsupported".
+"diagnostic-format-sarif-1.F90":
+  xfail: true
