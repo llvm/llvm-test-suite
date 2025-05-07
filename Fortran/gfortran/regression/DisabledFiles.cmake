@@ -1086,6 +1086,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pointer_check_3.f90
   pointer_check_4.f90
 
+  # This test fails with "STOP: code 2" when compiled with -O0, but passes at
+  # higher optimization levels.
+  pr117797.f90
+
   # ---------------------------------------------------------------------------
   #
   # These tests are expected to raise a runtime error, but currently don't.
