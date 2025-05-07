@@ -34,6 +34,7 @@
 #                    expression that is expected to match an LLVM target triple.
 #
 compile;large_4.f90;;;;
+compile;pr115070.f90;;;;
 compile;pr77372.f90;;;;
 compile;pr77507.f90;;;;
 run;comparisons_1.f90;;;;
@@ -58,11 +59,16 @@ run;intrinsics_2.F90;;-fno-range-check;;
 run;large_1.f90;;;;
 run;large_2.f90;;;;
 run;large_3.F90;;-ffree-line-length-none;;
+run;maxloc_nan_1.f90;;;;
+run;maxloc_nan_2.f90;;;;
+run;minloc_nan_1.f90;;;;
+run;minloc_nan_2.f90;;;;
 run;minmax_1.f90;;;;
 run;minmax_2.f90;;;;
 run;minmax_3.f90;;;;
 run;minmax_4.f90;;;;
 run;modes_1.f90;;;;
+run;out_of_range.f90;;-funsigned;;
 run;rounding_1.f90;;;;
 run;rounding_2.f90;;;;
 run;rounding_3.f90;;;;

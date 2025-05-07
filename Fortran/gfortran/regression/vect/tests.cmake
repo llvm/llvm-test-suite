@@ -60,6 +60,7 @@ compile;pr110451.f;;-ffast-math -floop-interchange -fdump-tree-linterchange-deta
 compile;pr114736.f90;;-O3;;
 compile;pr115528.f;;-fno-inline;;
 compile;pr115710.f90;;-Ofast;;
+compile;pr116956.f90;;;;
 compile;pr19049.f90;;;;
 compile;pr32377.f90;;;;
 compile;pr32380.f;;-O3 -fcray-pointer;;

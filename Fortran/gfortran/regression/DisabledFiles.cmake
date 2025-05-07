@@ -286,6 +286,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr63331.f90
   submodule_26.f08
 
+  # unimplemented: dummy argument coarray in procedure interface
+  complex_1.f90
+
   # unimplemented: coarray reference
   coarray_lib_comm_1.f90
 
@@ -297,6 +300,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: CriticalConstruct implementation
   coarray_2.f90
   coarray_critical_1.f90
+  coarray_critical_3.f90
+
+  # unimplemented: FORM TEAM statement
+  team_sync_2.f90
 
   # unimplemented: SYNC IMAGES
   pr71706.f90
@@ -351,6 +358,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   random_init_4.f90
   random_init_5.f90
   random_init_6.f90
+  team_change_3.f90
+  team_form_3.f90
+  team_get_1.f90
+  team_end_3.f90
 
   # unimplemented: %VAL() intrinsic for arguments
   c_by_val_1.f
@@ -499,6 +510,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # supported in flang or some other reason. If there are multiple errors
   # in a single file, each distinct error message will be provided.
 
+  # error: ALLOCATABLE dummy argument 'arg=' must be associated with an
+  # ALLOCATABLE actual argument
+  class_transformational_1.f90
+
   # error: Entity in ALLOCATE statement must have the ALLOCATABLE or POINTER
   # attribute
   ISO_Fortran_binding_15.f90
@@ -577,6 +592,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   hollerith4.f90
   hollerith6.f90
   pdt_23.f03
+  value_optional_2.f90
 
   # error: Operands of .AND. must be LOGICAL; have 'TYPE 1' and 'TYPE 2'
   dec_bitwise_ops_1.f90
@@ -604,6 +620,8 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   cray_pointers_7.f90
   dec_math.f90
   dec_math_5.f90
+  f_c_string1.f90
+  f_c_string2.f90
   fmt_g0_6.f08
   fmt_pf.f90
   interface_12.f90
@@ -625,6 +643,11 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: Actual argument for 'i=' has bad type 'LOGICAL(1)'
   and_or_xor.f90
+
+  # error: Actual argument for 'x=' has bad type 'UNSIGNED''
+  out_of_range.f90
+  out_of_range_2.f90
+  out_of_range_3.f90
 
   # error: Argument of ALLOCATED() must be an ALLOCATABLE object or component
   select_rank_1.f90
@@ -766,6 +789,40 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: local non-SAVE variable has coarray component
   # Consider using override.yaml to enable this test but expect different behavior
   coarray_lib_realloc_1.f90
+
+  # error: 'arith.constant' op integer return type must be signless
+  # error: Lowering to LLVM IR failed
+  # error: cannot be converted to LLVM IR: missing
+  # `LLVMTranslationDialectInterface` registration for dialect for op: func.func
+  unsigned_25.f90
+  unsigned_26.f90
+  unsigned_34.f90
+  unsigned_35.f90
+
+  # error: Operands must not be UNSIGNED
+  unsigned_43.f90
+  unsigned_44.f90
+
+  # error: Substring must begin at 1 or later, not -1
+  bounds_check_26.f90
+
+  # This test uses the makefile generation options -MT, -MD etc. which are
+  # not yet supported.
+  dependency_generation_1.f90
+
+  # error: BIND(C) procedure assembly name conflicts with non BIND(C) procedure
+  # assembly name
+  use_rename_14.f90
+
+  # ---------------------------------------------------------------------------
+  #
+  # These tests require REAL(kind=16) support. Currently, we do not determine
+  # if this is available before enabling the test. Until we can do so
+  # reliably, disable it everywhere.
+
+  pr82253.f90
+  pr91497.f90
+  nan_7.f90
 
   # --------------------------------------------------------------------------
   #
@@ -958,11 +1015,13 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pad_source_3.f # depends on -fno-pad-source option
   pad_source_4.f # depends on -ffixed-line-length-none option
   pad_source_5.f # depends on -ffixed-line-length-0 option
+  pr119502.f90
   pr12884.f
   pr17286.f90
   pr17706.f90 # depends on -fno-sign-zero option
   pr59700.f90
   pr71523_2.f90
+  pr88052.f90
   pr96436_3.f90
   pr96436_4.f90
   pr96436_5.f90
@@ -997,6 +1056,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   recursive_check_13.f90
   recursive_check_7.f90
   recursive_check_9.f90
+  reduce_1.f90
   round_3.f08
   selected_kind_1.f90
   short_circuiting_3.f90
@@ -1008,6 +1068,12 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   unf_read_corrupted_1.f90
   unf_short_record_1.f90
   unformatted_subrecord_1.f90
+  unsigned_2.f90
+  unsigned_21.f90
+  unsigned_22.f90
+  unsigned_30.f90
+  unsigned_4.f90
+  utf8_3.f03
   widechar_IO_4.f90
   zero_sized_1.f90
   elemental_function_2.f90
@@ -1019,6 +1085,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pointer_check_2.f90
   pointer_check_3.f90
   pointer_check_4.f90
+
+  # This test fails with "STOP: code 2" when compiled with -O0, but passes at
+  # higher optimization levels.
+  pr117797.f90
 
   # ---------------------------------------------------------------------------
   #
@@ -1050,14 +1120,33 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   # Compilation of these tests is expected to fail, but it succeeds instead.
 
+  allocate_error_8.f90
   binding_label_tests_26b.f90
+  do_concurrent_12.f90
+  do_concurrent_15.f90
+  empty_derived_type_2.f90
+  interface_51.f90
+  interface_52.f90
+  proc_ptr_56.f90
   test_common_binding_labels_2_main.f03
   string_1.f90 # Expect error on 32 bits platform
-  volatile8.f90 # Gfortran expects compilation errors for invalid uses of volatile; flang
-                # supports one of these as an extension, and the others ought to either be warnings
-                # or errors. See the flang extensions document: "A non-definable actual argument,
-                # including the case of a vector subscript, may be associated with an ASYNCHRONOUS or VOLATILE dummy argument"
-                # llvm-project#137369
+  unsigned_16.f90
+  unsigned_37.f90
+  unsigned_38.f90
+  unsigned_41.f90
+
+  # This test seems to have been commented out entirely, and therefore
+  # compilation will succeed. However, there are still DejaGNU annotations in
+  # it, and one of them is xfail, so our framework registers this test as xfail.
+  initialization_25.f90
+
+  # Gfortran expects compilation errors for invalid uses of volatile; flang
+  # supports one of these as an extension, and the others ought to either be
+  # warnings or errors. See the flang extensions document: "A non-definable
+  # actual argument, including the case of a vector subscript, may be associated
+  # with an ASYNCHRONOUS or VOLATILE dummy argument"
+  # llvm-project#137369
+  volatile8.f90
 
   # Tests that exercise gfortran's ability to set -std=f95 and then see errors on newer features
   abstract_type_1.f90
@@ -1836,6 +1925,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   iso_fortran_env_9.f90
   line_length_12.f90
   oldstyle_5.f
+  out_of_range_1.f90
   pdt_34.f03
   pdt_35.f03
   pr104555.f90
@@ -1851,6 +1941,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   selected_logical_kind_2.f90
   submodule_3.f08
   submodule_33.f08
+  unsigned_21_be.f90
   achar_2.f90
   allocate_with_source_30.f90
   allocate_with_source_31.f90

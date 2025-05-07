@@ -28,7 +28,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   private-predetermined-routine-1.f95
   privatization-1-routine_gang.f90
   privatization-1-routine_gang-loop.f90
-  routine-external-level-of-parallelism-1.f
   routine-level-of-parallelism-1.f90
   routine-module-mod-1.f90
   routine-multiple-directives-1.f90
@@ -49,6 +48,10 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
 # These tests are disabled because they cause flang to crash.
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
+  # error: could not parse
+  nested-reductions-1-serial.f90
+  nested-reductions-2-serial.f90
+
   # error: unsupported OpenACC operation:
   array-with-dt-1a.f90
   array-with-dt-1.f90
@@ -82,8 +85,13 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   uninit-firstprivate-clause.f95
 
   # error: unsupported OpenACC operation: acc.private.recipe
+  implied-copy-1.f90
+  loop-2-serial-nested.f95
   private-explicit-kernels-1.f95
   private-explicit-parallel-1.f95
+  private-explicit-serial-1.f95
+  private-predetermined-serial-1.f95
+  serial-tree.f95
 
   # error: unsupported OpenACC operation: acc.reduction
   parallel-tree.f95
@@ -92,6 +100,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   combined-directives.f90
   combined_loop.f90
   loop-tree-1.f90
+  implied-copy-2.f90
   modules.f95
   orphan-reductions-3.f90
   pr85703.f90
@@ -100,6 +109,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: unsupported OpenACC operation: acc.reduction
   reduction-promotions.f90
+
+  # error: unsupported OpenACC operation: acc.routine
+  routine-external-level-of-parallelism-1-parallel.f
+  routine-external-level-of-parallelism-1-serial.f
 
   # error: unsupported OpenACC operation: acc.use_device
   host_data-tree.f95
