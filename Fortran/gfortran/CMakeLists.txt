@@ -810,7 +810,7 @@ function(gfortran_populate_tests)
     list(TRANSFORM sources PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
 
     # Multi-file tests consist of a "main" file and a number of (possibly
-    # non-Fortran dependents). This the list of dependents.
+    # non-Fortran) dependents. This is the list of dependents.
     set(rest)
 
     # The tests in the configuration must be added to the used list even if the
