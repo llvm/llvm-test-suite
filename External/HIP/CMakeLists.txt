@@ -97,6 +97,7 @@ macro(create_local_hip_tests VariantSuffix)
   endforeach()
 
   list(APPEND CUDA_LOCAL_TESTS algorithm)
+  list(APPEND CUDA_LOCAL_TESTS array)
   list(APPEND CUDA_LOCAL_TESTS cmath)
   list(APPEND CUDA_LOCAL_TESTS complex)
   list(APPEND CUDA_LOCAL_TESTS math_h)
