@@ -6,6 +6,10 @@ endif ()
 
 speccpu2017_benchmark(SPEED ORIGIN 502.gcc_r)
 
+if(APPLE)
+  add_definitions(-DSPEC_GCC_VARIADIC_FUNCTIONS_MISMATCH_WORKAROUND)
+endif()
+
 ## ref #########################################################################
 
 speccpu2017_run_test(

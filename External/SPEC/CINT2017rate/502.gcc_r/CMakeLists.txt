@@ -7,6 +7,9 @@ endif ()
 speccpu2017_benchmark(RATE)
 
 add_definitions(-DSPEC_502 -DIN_GCC -DHAVE_CONFIG_H)
+if(APPLE)
+  add_definitions(-DSPEC_GCC_VARIADIC_FUNCTIONS_MISMATCH_WORKAROUND)
+endif()
 speccpu2017_add_include_dirs(. include spec_qsort)
 add_compile_options(-fgnu89-inline -fno-strict-aliasing)
 
