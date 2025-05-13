@@ -7,6 +7,54 @@ message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
+# Inspired from create_one_local_test. Runs hipify on the TestSource and then compiles it.
+# Search for the reference files next to TestSource.
+macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuffix VariantCPPFlags VariantLibs)
+  set(_cuda_src "${TestSource}")
+  set(_hip_src "${TestName}.hip")
+  set(_hipify_target "${TestName}-hipify")
+
+  set_source_files_properties(${_hip_src} PROPERTIES LANGUAGE CXX)
+  add_custom_command(OUTPUT ${_hip_src}
+                     COMMAND ${HIPIFY_EXE} "${_cuda_src}" -o "${_hip_src}"
+                     DEPENDS "${_cuda_src}")
+  add_custom_target(${_hipify_target} DEPENDS ${_hip_src})
+
+  set(_executable ${TestName}-${VariantSuffix})
+  set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
+  llvm_test_run()
+
+  get_filename_component(_test_source_dir "${TestSource}" DIRECTORY)
+  get_filename_component(_test_source_name "${TestSource}" NAME_WE)
+  set(REFERENCE_OUTPUT "${_test_source_dir}/${test_source_name}.reference_output")
+  if(EXISTS "${REFERENCE_OUTPUT}")
+    llvm_test_verify(WORKDIR %S
+      %b/${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
+    )
+    llvm_test_executable(${_executable} ${_hip_src})
+    llvm_test_data(${_executable}
+                    DEST_SUFFIX "-${VariantSuffix}"
+                    ${REFERENCE_OUTPUT})
+  else()
+    llvm_test_executable(${_executable} ${_hip_src})
+  endif()
+
+  target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
+
+  # In External/CUDA, tests define a STDLIB_VERSION that matches the C++
+  # standard supported by the standard library.
+  # For the HIP case, we set a huge number and assume that the latest C++
+  # standard version is supported by the library.
+  target_compile_definitions(${_executable} PRIVATE STDLIB_VERSION=9999)
+  add_dependencies(${_executable} ${_hipify_target})
+  if(VariantLibs)
+    target_link_libraries(${_executable} ${VariantLibs})
+  endif()
+
+  add_dependencies(hip-tests-simple-${VariantSuffix} ${_executable})
+  list(APPEND VARIANT_SIMPLE_TEST_TARGETS ${_executable}.test)
+endmacro()
+
 # Create targets for HIP tests that are part of the test suite.
 macro(create_local_hip_tests VariantSuffix)
   set(VariantOffload "hip")
@@ -47,6 +95,27 @@ macro(create_local_hip_tests VariantSuffix)
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()
+
+  list(APPEND CUDA_LOCAL_TESTS algorithm)
+  list(APPEND CUDA_LOCAL_TESTS cmath)
+  list(APPEND CUDA_LOCAL_TESTS complex)
+  list(APPEND CUDA_LOCAL_TESTS math_h)
+  list(APPEND CUDA_LOCAL_TESTS new)
+
+  find_program(HIPIFY_EXE
+               NAME hipify-perl
+               PATHS ${_RocmPath}/bin)
+
+  if(HIPIFY_EXE)
+      foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
+        set(_cuda_src "${CMAKE_CURRENT_SOURCE_DIR}/../CUDA/${_cuda_test}.cu")
+        create_one_hipify_cuda_test(${_cuda_test} ${_cuda_src}
+          ${VariantOffload} ${VariantSuffix}
+          "${VariantCPPFLAGS}" "${VariantLibs}")
+      endforeach()
+  else()
+      message(WARNING "hipify-perl not found for ROCm installation in ${_RocmPath}.")
+  endif()
 
   # Add test for Blender.
   configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
