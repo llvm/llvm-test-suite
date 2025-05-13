@@ -190,7 +190,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   specification-part.f90
   uninit-if-clause.f95
 
-  # This test failes to compile when compilation is expected to succeed. It
+  # These tests are expected to issue a compile-time error, but succeed instead.
+  routine-8.f90
+  routine-intrinsic-2.f
+
+  # This test fails to compile when compilation is expected to succeed. It
   # fails with a module not found error. There is a DejaGNU directive
   # "dg-compile-aux-modules" which might have something to do with this.
   routine-module-1.f90
