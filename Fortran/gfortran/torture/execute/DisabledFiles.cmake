@@ -15,8 +15,6 @@ set(UNIMPLEMENTED_FILES "")
 # These tests are disabled because they cause internal compiler errors.
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: unexpected typeless constant value
-  forall_5.f90
-  forall_6.f90
   st_function.f90
 
   # --------------------------------------------------------------------------
@@ -31,9 +29,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: '[SYM]' is not a known intrinsic procedure
   specifics.f90
-
-  # conflicting debug info for argument
-  entry_5.f90
 )
 
 # These tests are disabled because they fail at runtime when they should pass.
