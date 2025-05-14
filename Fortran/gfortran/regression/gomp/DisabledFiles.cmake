@@ -64,21 +64,33 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr95869.f90
   teams-4.f90
 
+  # unimplemented: OpenMPDeclarativeAllocate
+  allocate-pinned-1.f90
+
   # unimplemented: OpenMPDeclareSimdConstruct
   pr79154-1.f90
   pr93555.f90
   declare-simd-6.f90
+
+  # unimplemented: OpenMPDispatchConstruct
+  dispatch-10.f90
 
   # unimplemented: OpenMPRequiresConstruct
   requires-7.f90
   target-device-ancestor-5.f90
   target-device-ancestor-6.f90
 
+  # unimplemented: METADIRECTIVE
+  metadirective-7.f90
+
   # unimplemented: NONTEMPORAL clause in SIMD construct
   nontemporal-1.f90
 
   # unimplemented: LINEAR clause in SIMD construct
   pr89027.f90
+
+  # unimplemented: clause ALLOCATE in TARGET construct
+  allocate-clause.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
@@ -363,6 +375,54 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   include_1.f
   include_2.f90
 
+  # error: to and alloc map types are permitted
+  # error: verification of lowering to FIR failed
+  polymorphic-mapping-1.f90
+
+  #
+  # error: unknown argument: '-foffload=disable'
+  #
+  # In many other cases, we have ignored command line options that are not
+  # recognized by flang. But in this case, this approach may not be desirable
+  # since disabling offload when using $omp target, as is the case in these
+  # tests, is probably exercising something specific that we care about. We
+  # keep this disabled here until we decide how we want to handle this.
+  metadirective-construct.f90
+
+  # error: could not parse
+  adjust-args-4.f90
+  adjust-args-5.f90
+  adjust-args-7.f90
+  adjust-args-8.f90
+  adjust-args-10.f90
+  adjust-args-12.f90
+  adjust-args-13.f90
+  append_args-3.f90
+  append_args-4.f90
+  append-args-interop.f90
+  declare-variant-21.f90
+  dispatch-3.f90
+  dispatch-8.f90
+  dispatch-9a.f90
+  interop-4.f90
+  interop-5.f90
+  metadirective-2.f90
+  metadirective-6.f90
+  metadirective-13.f90
+
+  # error: DEFAULT clause is not allowed on directive METADIRECTIVE in
+  # OpenMP v3.1, try -fopenmp-version=50
+  metadirective-3.f90
+  metadirective-4.f90
+  metadirective-5.f90
+  metadirective-12.f90
+
+  # error: The DISPATCH construct is empty or contains more than one statement
+  dispatch-1.f90
+  dispatch-4.f90
+  dispatch-5.f90
+  dispatch-7.f90
+
   #
   # These tests are marked as failing because the compilation succeeds when it
   # is expected to fail.
@@ -370,6 +430,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   canonical-loop-2.f90
   crayptr2.f90
   map-alloc-comp-1.f90
+  polymorphic-mapping-4.f90
+  polymorphic-mapping-5.f90
   pr33439.f90
   pr44036-3.f90
   pr78866-2.f90
