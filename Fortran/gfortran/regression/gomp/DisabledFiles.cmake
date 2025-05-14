@@ -10,12 +10,8 @@
 set(UNSUPPORTED_FILES "")
 
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
-  # unimplemented: procedure pointers
-  atomic-10.f90
-
   # unimplemented: procedure pointer arguments
   pr44036-1.f90
-  pr44036-2.f90
 
   # unimplemented: coarray in procedure interface
   declare-simd-coarray-lib.f90
@@ -40,15 +36,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr79154-2.f90
   pr82568.f90
   schedule-modifiers-1.f90
-  target3.f90
-  teams1.f90
 
   # unimplemented: array sections not supported for task depend
   depend-4.f90
-
-  # unimplemented: OMPD_target_data for Array Expressions or Structure
-  # Components.
-  map-5.f90
 
   # unimplemented: OpenMP Block construct clause
   pr71758.f90
@@ -60,9 +50,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: Unhandled block directive
   pr39152.f90
-  pr69281.f90
   pr95869.f90
-  teams-4.f90
 
   # unimplemented: OpenMPDeclarativeAllocate
   allocate-pinned-1.f90
@@ -222,7 +210,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   num-teams-1.f90
   num-teams-2.f90
   openmp-simd-7.f90
-  parallel-master-1.f90
   pr103695.f90
   pr99928-11.f90
   reduction-task-3.f90
@@ -268,7 +255,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   loop-5.f90
 
   # expected 'TARGET UPDATE'
-  map-6.f90
   map-7.f90
   target-has-device-addr-2.f90
 
@@ -302,14 +288,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # COPYPRIVATE variable is not PRIVATE or THREADPRIVATE in outer context
   copyprivate-1.f90
-  pr26224.f
-
-  # The DEFAULT(NONE) clause requires that 'a' must be listed in a data-sharing
-  # attribute clause
-  crayptr4.f90
-
-  # Implied-shape array must be a named constant or a dummy argument
-  crayptr5.f90
 
   # Internal: no symbol found for
   declare-simd-2.f90
@@ -429,11 +407,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   canonical-loop-2.f90
   crayptr2.f90
-  map-alloc-comp-1.f90
   polymorphic-mapping-4.f90
   polymorphic-mapping-5.f90
   pr33439.f90
-  pr44036-3.f90
   pr78866-2.f90
   reduction3.f90
   sharing-3.f90
@@ -451,10 +427,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   depobj-3.f90
   inner-loops-1.f90
   map-10.f90
-  map-11.f90
   map-12.f90
   requires-10.f90
-  target-update-1.f90
   tile-10.f90
   tile-1.f90
   tile-2.f90

@@ -50,7 +50,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   ieee_5.f90
   intrinsics_1.f90
   intrinsics_2.F90
-  large_4.f90
   underflow_1.f90
 
   # error: Actual argument for 'mold=' has bad type 'UNSIGNED'
