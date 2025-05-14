@@ -71,7 +71,7 @@ if (NOT TARGET wrf_netcdf)
   ${SRC_DIR}/netcdf/fort-var1io.c ${SRC_DIR}/netcdf/fort-vario.c
   ${SRC_DIR}/netcdf/fort-varmio.c ${SRC_DIR}/netcdf/varsio.c
   ${SRC_DIR}/netcdf/posixio.c)
-  add_library(wrf_netcdf OBJECT ${netcdf_sources})
+  llvm_test_library(wrf_netcdf OBJECT ${netcdf_sources})
   target_compile_definitions(wrf_netcdf PRIVATE SPEC_CASE_FLAG)
 endif ()
 
