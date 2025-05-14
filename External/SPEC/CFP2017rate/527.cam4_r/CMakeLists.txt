@@ -55,7 +55,7 @@ if (NOT TARGET cam4_netcdf)
     "${SRC_DIR}/spec_qsort/spec_qsort.c")
   list(REMOVE_ITEM netcdf_sources "${SRC_DIR}/netcdf/ncio.c")
 
-  add_library(cam4_netcdf OBJECT ${netcdf_sources})
+  llvm_test_library(cam4_netcdf OBJECT ${netcdf_sources})
   target_compile_definitions(cam4_netcdf PRIVATE SPEC)
 endif ()
 
