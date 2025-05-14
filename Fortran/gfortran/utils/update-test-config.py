@@ -163,6 +163,20 @@ def get_lines(filepath: str) -> list[str]:
     finally:
         return lines
 
+# Check if a test configuration should be generated for the given directory
+#
+# Multi-file tests consist of a single "main" file and some number of dependent
+# sources. Some directories only contain "dependent" sources. A test
+# configuration should not be generated for such directories.
+def should_generate_config(d: str) -> bool:
+    # The directories containing only dependent sources. These should be
+    # relative to the root directory containing the gfortran tests.
+    skip: list[str] = ['regression/coarray/add_sources']
+    for s in skip:
+        if d.endswith(s):
+            return False
+    return True
+
 # Collect the subdirectories of the gfortran directory which may contain tests.
 def get_subdirs(gfortran: str) -> list[str]:
     regression = os.path.join(gfortran, 'regression')
@@ -174,7 +188,8 @@ def get_subdirs(gfortran: str) -> list[str]:
     subdirs.append(torture)
     for root, dirs, _ in os.walk(torture):
         subdirs.extend([os.path.join(root, d) for d in dirs])
-    return subdirs
+
+    return list(filter(should_generate_config, subdirs))
 
 # Strip any leading and trailing whitespace from the string as well as any
 # optional quotes around the string. Then split the string on whitespace and
