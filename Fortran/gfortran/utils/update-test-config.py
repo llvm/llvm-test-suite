@@ -163,7 +163,8 @@ def get_lines(filepath: str) -> list[str]:
     finally:
         return lines
 
-# Check if a test configuration should be generated for the given directory
+# Check if a test configuration should be generated for the given directory.
+# The directory will be an absolute path.
 #
 # Multi-file tests consist of a single "main" file and some number of dependent
 # sources. Some directories only contain "dependent" sources. A test
@@ -171,7 +172,7 @@ def get_lines(filepath: str) -> list[str]:
 def should_generate_config(d: str) -> bool:
     # The directories containing only dependent sources. These should be
     # relative to the root directory containing the gfortran tests.
-    skip: list[str] = ['regression/coarray/add_sources']
+    skip: list[str] = [os.path.join('regression', 'coarray', 'add_sources')]
     for s in skip:
         if d.endswith(s):
             return False
