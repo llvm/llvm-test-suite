@@ -17,16 +17,12 @@ speccpu2017_benchmark(RATE)
 # that will be processed by specpp and is common to ${PROG} and ${VALIDATOR}
 # wrf_netcdf an object library for the netcdf sources
 
-# There is only one argument to the validator. Only the location
-# of the reference data changes. Tolerances and filenames are hard
-# coded.
-#
 # ${SPECDIFF_BIN} is used to check that all the test pass in
 # diffwrf_output_01.txt. We replace this with a call to `diff -b` so
 # that SPEC need not be installed. The `-b` is used to ignore
 # extraneous whitespace.
 macro(wrf_validator)
-  cmake_parse_arguments(_carg "" "RUN_TYPE" "" ${ARGN})
+  cmake_parse_arguments(_carg "" "RUN_TYPE;WRF_OUT_FILE" "" ${ARGN})
 
   set(VALIDATOR wrf_validate-target_${BENCHMARK_SUITE_TYPE})
   if (NOT TARGET ${VALIDATOR})
@@ -41,7 +37,7 @@ macro(wrf_validator)
   llvm_test_verify(WORKDIR ${RUN_${_carg_RUN_TYPE}_DIR_REL}
     "%S/${VALIDATOR}"
     "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/wrf_reference_01"
-    wrfout_d01_2000-01-24_14_00_00 >
+    ${_carg_WRF_OUT_FILE} >
     "${RUN_${_carg_RUN_TYPE}_DIR_REL}/diffwrf_output_01.txt" &&
     diff -b "${RUN_${_carg_RUN_TYPE}_DIR_REL}/diffwrf_output_01.txt" "${RUN_${_carg_RUN_TYPE}_DIR_REL}/compare/diffwrf_output_01.txt"
     RUN_TYPE ${_carg_RUN_TYPE}
@@ -79,19 +75,24 @@ endif ()
 
 speccpu2017_run_test(RUN_TYPE test)
 
-wrf_validator(RUN_TYPE test)
+wrf_validator(RUN_TYPE test WRF_OUT_FILE wrfout_d01_2000-01-24_12_10_00)
 
 ## train #######################################################################
 
 speccpu2017_run_test(RUN_TYPE train)
 
-wrf_validator(RUN_TYPE train)
+wrf_validator(RUN_TYPE train WRF_OUT_FILE wrfout_d01_2000-01-24_14_00_00)
 
 ## ref #########################################################################
 
 speccpu2017_run_test(RUN_TYPE ref)
 
-wrf_validator(RUN_TYPE ref)
+if (BENCHMARK_SUITE_TYPE STREQUAL rate)
+  wrf_validator(RUN_TYPE ref WRF_OUT_FILE wrfout_d01_2000-01-24_20_00_00)
+endif ()
+if (BENCHMARK_SUITE_TYPE STREQUAL speed)
+  wrf_validator(RUN_TYPE ref WRF_OUT_FILE wrfout_d01_2000-01-24_15_00_00)
+endif ()
 
 ################################################################################
 
