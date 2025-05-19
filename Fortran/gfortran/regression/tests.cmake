@@ -6561,7 +6561,7 @@ run;unsigned_18.f90;;-funsigned;;
 run;unsigned_19.f90;;-funsigned;;
 run;unsigned_2.f90;;-funsigned;;
 run;unsigned_20.f90;;-funsigned;;
-run;unsigned_21.f90;;-funsigned;;
+run;unsigned_21.f90;;-funsigned;;powerpc-.+-aix
 run;unsigned_21_be.f90;;-funsigned;;
 run;unsigned_22.f90;;-funsigned -pedantic;;
 run;unsigned_23.f90;;-funsigned;;
