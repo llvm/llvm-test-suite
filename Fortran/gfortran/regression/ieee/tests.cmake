@@ -39,10 +39,10 @@ compile;pr77372.f90;;;;
 compile;pr77507.f90;;;;
 run;comparisons_1.f90;;;;
 run;comparisons_2.f90;;;;
-run;comparisons_3.F90;;-ffree-line-length-none;;
-run;dec_math_1.f90;;-cpp -std=gnu;;
+run;comparisons_3.F90;;;;
+run;dec_math_1.f90;;-cpp;;
 run;fma_1.f90;;;;
-run;ieee_1.F90;;-ffree-line-length-none;;
+run;ieee_1.F90;;;;
 run;ieee_10.f90;;-ffpe-trap=overflow,invalid;;
 run;ieee_11.F90;;;;
 run;ieee_12.f90;;;;
@@ -54,11 +54,11 @@ run;ieee_6.f90;;;;
 run;ieee_7.f90;;;;
 run;ieee_8.f90;;;;
 run;ieee_9.f90;;;;
-run;intrinsics_1.f90;;-fno-range-check;;
-run;intrinsics_2.F90;;-fno-range-check;;
+run;intrinsics_1.f90;;;;
+run;intrinsics_2.F90;;;;
 run;large_1.f90;;;;
 run;large_2.f90;;;;
-run;large_3.F90;;-ffree-line-length-none;;
+run;large_3.F90;;;;
 run;maxloc_nan_1.f90;;;;
 run;maxloc_nan_2.f90;;;;
 run;minloc_nan_1.f90;;;;
@@ -72,8 +72,8 @@ run;out_of_range.f90;;-funsigned;;
 run;rounding_1.f90;;;;
 run;rounding_2.f90;;;;
 run;rounding_3.f90;;;;
-run;signaling_1.f90 signaling_1_c.c;;-w;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
-run;signaling_2.f90 signaling_2_c.c;;-w;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
+run;signaling_1.f90 signaling_1_c.c;;;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
+run;signaling_2.f90 signaling_2_c.c;;;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;signaling_3.f90;;;;i386-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;signbit_1.f90;;;;
 run;underflow_1.f90;;;;

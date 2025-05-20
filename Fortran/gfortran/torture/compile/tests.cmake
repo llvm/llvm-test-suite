@@ -103,7 +103,7 @@ compile;pr57517.f90;;;;
 compile;pr65758.f90;;;;
 compile;pr66251-2.f90;;;;
 compile;pr66251.f90;;;;
-compile;pr66352.f90;;-fprofile-generate;;
+compile;pr66352.f90;;;;
 compile;pr68639.f90;;;;
 compile;pr70960.f90;;;;
 compile;pr76490.f90;;;;
@@ -111,7 +111,7 @@ compile;pr77798.f90;;;;
 compile;pr80158.f;;;;
 compile;pr80464.f90;;;;
 compile;pr83189.f90;;;;
-compile;pr85863.f;;-ffast-math -ftree-vectorize;;
+compile;pr85863.f;;-ffast-math;;
 compile;pr85878.f90;;;;
 compile;pr88304-2.f90;;;;
 compile;pr88304.f90;;;;powerpc-.+-aix

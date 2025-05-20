@@ -99,6 +99,240 @@ class Test:
             ' '.join(self.disabled_on)
         ])
 
+# The following cause errors if they are passed to flang via FFLAGS. This could
+# be because they are currently unsupported and might eventually be supported
+# or because they are GCC-specific and will never be supported.
+unsupported_options = [
+    # This is an argument that should go with -idirafter which is not correctly
+    # handled right now. Once that is fixed, this can be removed.
+    'fdaf',
+    '"/fdaf/"',
+
+    '-dA',
+    '-dH',
+    '-dirafter',
+    '-dp',
+
+    '-faggressive-function-elimination',
+    '-fall-intrinsics',
+    '-fallow-argument-mismatch',
+    '-fallow-invalid-boz',
+    '-fautomatic',
+    '-fblas-matmul-limit',
+    '-fbounds-check',
+    '-fcheck',
+    '-fcheck-array-temporaries',
+    '-fcompare-debug',
+    '-fcoarray',
+    '-fcray-pointer',
+    '-fd-lines-as-code',
+    '-fd-lines-as-comments',
+    '-fdec',
+    '-fdec-format-defaults',
+    '-fdec-static',
+    '-fdec-structure',
+
+    # Not sure if the -fdefault-* options will be supported. Maybe in a
+    # different form in which case, this will have to be modified to accommodate
+    # those.
+    '-fdefault-real-10',
+    '-fdefault-real-16',
+
+    '-fdiagnostics-format',
+    '-fdiagnostics-show-option',
+    '-fdollar-ok',
+    '-fexceptions',
+    '-fexpensive-optimizations',
+    '-fexternal-blas',
+    '-ff2c',
+    '-ffloat-store',
+    '-ffree-line-length-none',
+    '-ffrontend-optimize',
+    '-fgcse',
+    '-fgcse-after-reload',
+    '-fgnu-tm',
+    '-findirect-inlining',
+    '-finit-character',
+    '-finit-derived',
+    '-finit-local-zero',
+    '-finit-integer',
+    '-finit-logical',
+    '-finit-real',
+    '-finline-functions',
+    '-finline-intrinsics',
+    '-finline-matmul-limit',
+    '-finline-small-functions',
+    '-finstrument-functions',
+    '-fipa-cp',
+    '-fipa-cp-clone',
+    '-fipa-pta',
+    '-fipa-reference',
+    '-flinker-output',
+    '-floop-interchange',
+    '-fmax-array-constructor',
+    '-fmax-errors',
+    '-fmax-stack-var-size',
+    '-fmodule-private',
+    '-fmodulo-sched',
+    '-fno-align-commons',
+    '-fno-asynchronous-unwind-tables',
+    '-fno-backtrace',
+    '-fno-bounds-check',
+    '-fno-check-array-temporaries',
+    '-fno-code-hoisting',
+    '-fno-dec',
+    '-fno-dse',
+    '-fno-early-inlining',
+    '-fno-f2c',
+    '-fno-frontend-loop-interchange',
+    '-fno-frontend-optimize',
+    '-fno-guess-branch-probability',
+    '-fno-init-local-zero',
+    '-fno-inline',
+    '-fno-inline-arg-packing',
+    '-fno-inline-functions-called-once',
+    '-fno-inline-intrinsics',
+    '-fno-ipa-cp',
+    '-fno-ipa-icf',
+    '-fno-ipa-modref',
+    '-fno-ipa-sra',
+    '-fno-move-loop-stores',
+    '-fno-openacc',
+    '-fno-openmp',
+    '-fno-pad-source',
+    '-fno-protect-parens',
+    '-fno-range-check',
+    '-fno-realloc-lhs',
+    '-fno-schedule-insns',
+    '-fno-sign-zero',
+    '-fno-strict-aliasing',
+    '-fno-trapping-math',
+    '-fnon-call-exceptions',
+    '-fopenmp-simd',
+    '-fopt-info-optimized-omp',
+    '-fopt-info-vec-optimized',
+    '-fpad-source',
+    '-fpeel-loops',
+    '-fpre-include',
+    '-fpreprocessed',
+    '-fpredictive-commoning',
+    '-fprefetch-loop-arrays',
+    '-fprofile-arcs',
+    '-fprofile-generate',
+    '-frecord-marker',
+    '-frecursive',
+    '-frepack-arrays',
+    '-frounding-math',
+    '-fsanitize',
+    '-fschedule-insns',
+    '-fsecond-underscore',
+    '-fsel-sched-pipelining',
+    '-fsel-sched-pipelining-outer-loops',
+    '-fselective-scheduling',
+    '-fselective-scheduling2',
+    '-fset-g77-defaults',
+    '-fshort-enums',
+    '-fstrict-aliasing',
+    '-fsplit-loops',
+    '-ftest-forall-temp',
+    '-ftest-coverage',
+    '-ftracer',
+    '-ftrapv',
+    '-funconstrained-commons',
+    '-funroll-all-loops',
+    '-funroll-loops',
+    '-funsafe-math-optimizations',
+    '-fvect-cost-model',
+    '-fwhole-program',
+    '-fwrapv',
+    '-gno-strict-dwarf',
+    '-idirafter',
+    '-mavx',
+    '-mavx2',
+    '-mavx512f',
+    '-mcmodel',
+    '-mdalign',
+    '-mdejagnu',
+    '-mfpmath',
+    '-mlow-precision-sqrt',
+    '-mno-avx',
+    '-mno-power8-vector',
+    '-mno-power9-vector',
+    '-mprefer-avx128',
+    '-mtune',
+    '-mveclibabi',
+    '-mvsx',
+    '-mvzeroupper',
+    '-mzarch',
+    '-nostdinc',
+    '-nostdlib',
+    '-Og',
+    '-Os',
+    '--param',
+    '-pedantic-errors',
+    '-r',
+    '-w',
+    '-W',
+]
+
+# The "options" that do not start with a hyphen (-) are actually arguments to
+# some other option but use the "-option value" syntax (as opposed to the
+# "-option=value" syntax). Since we don't actually parse the command line, they
+# are treated as if they were options. Otherwise they are deemed to be source
+# files which is obviously incorrect.
+unsupported_option_values = [
+    'analyzer-max-svalue-depth=0',
+    'ggc-min-expand=0',
+    'ggc-min-heapsize=0',
+    'iv-max-considered-uses=2',
+    'large-stack-frame=4000',
+    'max-completely-peel-loop-nest-depth=1',
+    'max-completely-peeled-insns=0',
+    'max-completely-peeled-insns=200',
+    'max-cse-insns=0',
+    'max-inline-insns-auto=0',
+    'max-inline-insns-single=0',
+    'parloops-chunk-size=2',
+    'parloops-min-per-thread=5',
+    'sccvn-max-alias-queries-per-access=1',
+    'vect-epilogues-nomask=0',
+    'vect-max-peeling-for-alignment=0',
+]
+
+# Entire classes of gfortran flags will never be supported since they are
+# intended to expose the internal representations which are not relevant for
+# flang. Use regexes to match these instead of explicitly enumerating them.
+# This should make it easier in the long run since any new flags added by
+# gfortran will be automatically handled.
+unsupported_patterns = [
+    re.compile('^-fdec[-].+$'),
+    re.compile('^-fdump[-].+$'),
+    re.compile('^-ffixed-xmm[0-9]+$'),
+    re.compile('^-fno-tree-.+$'),
+    re.compile('^-fopt-.+$'),
+    re.compile('^-ftree-.+$'),
+
+    # Unlike the others in this list, these may actually be supported at some
+    # point
+    re.compile('^-mavx.*$'),
+    re.compile('^-msse.*$'),
+]
+
+# Some categories of options are treated as special cases. In such cases, we
+# match all options and mark them as unsupported unless they are explicitly
+# supported. In the case of warnings, we may support several of the warning
+# options in gfortran. Even if we don't support exactly the same ones, there
+# may well be flang equivalents. For the standards, it is unlikely that we will
+# ever support too many the way gfortran does.
+re_std = re.compile('^[-][-]?std$')
+re_warning = re.compile('^[-]W[A-Za-z0-9-]+$')
+
+# For the supported standard, only specific values are supported.
+supported_stds = ['f2018']
+
+# For the warnings, only specific warning options are supported.
+supported_warnings = ['-Werror',]
+
 # The strings containing regexes which will be compiled later.
 pfx = '[{][ ]*'
 sfx = '[ ]*[}]'
@@ -242,6 +476,39 @@ def warning(fmt: str, *args) -> None:
 def error(fmt: str, *args) -> None:
     printf('ERROR: ' + fmt, *args)
     exit(1)
+
+# Check if the given option is supported.
+def is_supported_option(opt: str) -> bool:
+    # In some cases of options with values, specific values may be unsupported
+    # while the option itself. First check for such cases.
+    if opt in unsupported_options:
+        return False
+
+    # In cases where the "-option value" syntax is used, we don't associate
+    # the value with the option, so check if this is one such value.
+    if opt in unsupported_option_values:
+        return False
+
+    # Otherwise, the option itself may be unsupported, in which case just check
+    # the spelling.
+    spelling, _, value = opt.partition('=')
+    if spelling in unsupported_options:
+        return False
+    for r in unsupported_patterns:
+        if r.match(spelling):
+            return False
+
+    # Warnings are handled as a special case. By default, we assume that the
+    # -W options are not supported, but we do have a list of supported warnings.
+    if re_warning.match(spelling) and spelling not in supported_warnings:
+        return False
+
+    # In the case of the standards, the only supported option has a very
+    # specific combination of spelling and value.
+    if re_std.match(spelling) and value not in supported_stds:
+        return False
+
+    return True
 
 # The target is usually a regular expression. But the regex syntax used by
 # DejaGNU is not exactly the same as that supported by cmake. This translates
@@ -458,6 +725,7 @@ def collect_tests(d: str) -> list[Test]:
                  try_match(re_addnl_opts, l, mout) or \
                  try_match(re_ld_opts, l, mout):
                 m = mout[0]
+                opts = qsplit(m[1])
 
                 # FIXME: This is not correct.
                 # If the options have a target annotation, those options should
@@ -465,9 +733,10 @@ def collect_tests(d: str) -> list[Test]:
                 # this case in the static configuration, so just ignore those
                 # options entirely for now.
                 if not m['target']:
-                    options.extend(qsplit(m[1]))
+                    options.extend(list(filter(is_supported_option, opts)))
             elif try_match(re_lto_opts, l, mout):
                 m = mout[0]
+
                 # FIXME: There are two sets of options in some files. It is
                 # possible that an arbitrary number of these is allowed, but I
                 # don't know exactly what it is for, so for now, just use the
@@ -480,7 +749,7 @@ def collect_tests(d: str) -> list[Test]:
                 # this case in the static configuration, so just ignore those
                 # options entirely for now.
                 if not m['target']:
-                    options.extend(opts)
+                    options.extend(list(filter(is_supported_option, opts)))
 
         # If the kind is missing, assume that it is a compile test except
         # for torture/execute where it is an execute test.
