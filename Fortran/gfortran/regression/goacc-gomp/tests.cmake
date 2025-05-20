@@ -33,9 +33,9 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-compile;atomic.f90;;-fdump-tree-original;;
+compile;atomic.f90;;;;
 compile;depobj.f90;xfail;;;
-compile;fixed-1.f;;-fdump-tree-original -Wunused-variable;;
-compile;free-1.f90;;-fdump-tree-original -Wunused-variable;;
-compile;mixed-1.f;xfail;-fdump-tree-original;;
-compile;pr102330-1.f90;;-fopt-info-omp-note --param=openacc-privatization=noisy;;
+compile;fixed-1.f;;;;
+compile;free-1.f90;;;;
+compile;mixed-1.f;xfail;;;
+compile;pr102330-1.f90;;;;

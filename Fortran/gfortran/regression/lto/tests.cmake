@@ -33,7 +33,7 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-assemble;pr46629_0.f90;;-O2 -flto -ftree-vectorize;;
+assemble;pr46629_0.f90;;-O2 -flto;;
 compile;20091015-1_1.f;;;;
 compile;20091015-1_2.f;;;;
 compile;pr40724_0.f;;;;
@@ -45,22 +45,22 @@ compile;pr41521_1.f90;;;;
 compile;pr41576_1.f90;;;;
 compile;pr47839_1.f90;;;;
 compile;pr87689_1.f;;;;
-link;20091015-1_0.f;;-w;;
-link;20091016-1_0.f90;;-flto -g -fPIC -r -flinker-output=nolto-rel;;
-link;20091028-1_0.f90;;-r -nostdlib -finline-functions -flinker-output=nolto-rel -Wno-lto-type-mismatch;;
-link;20091028-2_0.f90;;-r -nostdlib -finline-functions -flinker-output=nolto-rel -Wno-lto-type-mismatch;;
+link;20091015-1_0.f;;;;
+link;20091016-1_0.f90;;-flto -g -fPIC;;
+link;20091028-1_0.f90;;;;
+link;20091028-2_0.f90;;;;
 link;20100110-1_0.f90;;-O1 -flto;;
 link;bind-c-char_0.f90;;-O0 -flto;;
 link;pr41069_0.f90;;;;
-link;pr41521_0.f90;;-g -flto -Wno-lto-type-mismatch;;
+link;pr41521_0.f90;;-g -flto;;
 link;pr41764_0.f;;;;
 link;pr45586-2_0.f90;;;;
 link;pr45586_0.f90;;;;
-link;pr46036_0.f90;;-O -flto -ftree-vectorize;;
-link;pr46911_0.f;;-O2 -flto -g -r -nostdlib -flinker-output=nolto-rel;;
-link;pr47839_0.f90;;-g -flto -r -nostdlib -flinker-output=nolto-rel;;
-link;pr60635_0.f90;;-Wno-lto-type-mismatch;;
-link;pr79108_0.f90;;-Ofast -flto --param ggc-min-expand=0 --param ggc-min-heapsize=0 -r;;
+link;pr46036_0.f90;;-O -flto;;
+link;pr46911_0.f;;-O2 -flto -g;;
+link;pr47839_0.f90;;-g -flto;;
+link;pr60635_0.f90;;;;
+link;pr79108_0.f90;;-Ofast -flto;;
 link;pr84645_0.f90;;-flto -g0 -g;;
 link;pr89084_0.f90;;-O0 -flto;;
 run;20100222-1_0.f03;;;;
@@ -71,5 +71,5 @@ run;bind_c-3_0.f90;;-O3 -flto;;
 run;bind_c-4_0.f90;;-O3 -flto;;
 run;bind_c-5_0.f90;;-O3 -flto;;
 run;bind_c-6_0.f90;;-O3 -flto;;
-run;pr41576_0.f90;;-O2 -flto -Werror -Wno-lto-type-mismatch;;
+run;pr41576_0.f90;;-O2 -flto -Werror;;
 run;pr87689_0.f;;;;
