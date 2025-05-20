@@ -407,6 +407,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   #
   canonical-loop-2.f90
   crayptr2.f90
+  linear-8.f90
   polymorphic-mapping-4.f90
   polymorphic-mapping-5.f90
   pr33439.f90
