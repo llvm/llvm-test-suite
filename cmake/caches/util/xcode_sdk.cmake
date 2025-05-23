@@ -30,7 +30,7 @@ if (CMAKE_C_COMPILER)
     file(WRITE ${CMAKE_BINARY_DIR}/${TOOLNAME} "
 #!/bin/bash
 # Shim to have the tool use the correct libLTO.dylib
-DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} \"$@\"
+DYLD_LIBRARY_PATH=\"${COMPILER_DIR}/../lib:$DYLD_LIBRARY_PATH\" ${SDK_TOOL_BIN} $@
     ")
     execute_process(COMMAND chmod +x ${CMAKE_BINARY_DIR}/${TOOLNAME})
     set(${VARIABLE} ${CMAKE_BINARY_DIR}/${TOOLNAME} CACHE STRING "")
