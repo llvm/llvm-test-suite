@@ -1,8 +1,5 @@
 add_subdirectory(ieee)
 
-# GCC C Torture Suite is conventionally run without warnings
-list(APPEND CFLAGS -Wno-implicit-int -Wno-int-conversion -Wno-implicit-function-declaration -w)
-
 set(TestsToSkip)
 
 ##
@@ -398,6 +395,7 @@ foreach(File ${TestFiles})
 
   # Add Test Target
   gcc_torture_execute_test(${File}
+                           DG_DO_DEFAULT "run"
                            PREFIX "GCC-C-execute"
                            CFLAGS ${MaybeCFlags}
                            LDFLAGS ${MaybeLDFlags})
