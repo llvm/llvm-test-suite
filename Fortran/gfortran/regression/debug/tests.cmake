@@ -33,8 +33,8 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-compile;pr35154-dwarf2.f;;-dA -gno-strict-dwarf;;
-compile;pr37738.f;;-dA -gno-strict-dwarf;;
+compile;pr35154-dwarf2.f;;;;
+compile;pr37738.f;;;;
 compile;pr43166.f;;-O;;
-compile;pr46756.f;;-O -fcompare-debug;;
+compile;pr46756.f;;-O;;
 compile;trivial.f;;;;

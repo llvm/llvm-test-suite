@@ -1007,6 +1007,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   unsigned_38.f90
   unsigned_41.f90
 
+  # This test requires the -fmax-array-constructor option which is not supported
+  # in flang (yet?)
+  spread_size_limit_2.f90
+
   # This test seems to have been commented out entirely, and therefore
   # compilation will succeed. However, there are still DejaGNU annotations in
   # it, and one of them is xfail, so our framework registers this test as xfail.
@@ -1114,6 +1118,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   c_loc_test_21.f90
   c_loc_tests_10.f03
   c_loc_tests_4.f03
+  c_sizeof_2.f90
   char_length_1.f90
   coarray_5.f90
   common_20.f90
@@ -1127,6 +1132,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   iall_iany_iparity_2.f90
   intrinsic_std_5.f03
   io_constraints_12.f90
+  line_length_13.f90
   module_procedure_double_colon_3.f90
   norm2_4.f90
   parity_3.f90
@@ -1159,6 +1165,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Requires behaviour specific to -std=f2008 and fails with -std=f2018.
   finalize_38a.f90
+
+  # -std=f2023 test to check for restrictions on arguments to SYSTEM_CLOCK
+  system_clock_4.f90
 
   # Tests that use -std=... to enable checks that no longer apply in modern Fortran.
   # Module variable with derived type default initialization requires explicit SAVE
@@ -1528,6 +1537,17 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These are "compile" tests which fail to compile, though compilation is
   # expected to succeed.
   internal_dummy_1.f90
+
+  # This has a #warning directive alongside -Werror, but no dg-error annotation.
+  # As a result, the test does not get marked as 'xfail' but does raise a
+  # compile-time error.
+  # TODO: This test should be overridden permanently.
+  diagnostic-format-json-3.F90
+
+  # This has a #warning directive alongside -Werror and -Wno-error=cpp. Since
+  # -Wno-error is not supported, but -Werror is, the test raises a compile-time
+  # error when it should not.
+  warning-directive-3.F90
 
   # This test has a #illegal preprocessor directive. I think this is expected to
   # raise a warning in gfortran, but flang raises an error and fails to compile

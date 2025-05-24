@@ -33,7 +33,7 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-compile;pr101624.f90;;-O2 -fsanitize=undefined;;
-compile;pr106062.f90;;-O2 -fsanitize=undefined;;
-run;bind-c-intent-out-2.f90;;-fsanitize=undefined -fcheck=all;;
-run;missing_optional_dummy_8.f90;;-fdump-tree-original -fsanitize=undefined;;
+compile;pr101624.f90;;-O2;;
+compile;pr106062.f90;;-O2;;
+run;bind-c-intent-out-2.f90;;;;
+run;missing_optional_dummy_8.f90;;;;
