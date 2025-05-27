@@ -33,16 +33,16 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-compile;deferred_character_25.f90;;-Wno-analyzer-too-complex;;
-compile;malloc-example.f90;;-fcray-pointer;;
-compile;malloc.f90;;-fcray-pointer -O0;;
+compile;deferred_character_25.f90;;;;
+compile;malloc-example.f90;;;;
+compile;malloc.f90;;-O0;;
 compile;pr107210.f90;;-O1;;
-compile;pr108065.f90;;-fcheck=bounds -Wno-analyzer-malloc-leak;;
+compile;pr108065.f90;;;;
 compile;pr88304-2.f90;;;;
 compile;pr93405.f90;;;;
-compile;pr93777.f90;;-O0 -Wno-analyzer-possible-null-dereference -Wno-analyzer-null-dereference -Wno-analyzer-malloc-leak;;
+compile;pr93777.f90;;-O0;;
 compile;pr93778.f90;;;;
 compile;pr93993.f90;;;;
-compile;pr96949.f90;;-Wno-analyzer-too-complex --param analyzer-max-svalue-depth=0;;powerpc-.+-aix
-compile;pr97668.f;;-std=legacy -Wno-analyzer-use-of-uninitialized-value -Wno-analyzer-too-complex;;
+compile;pr96949.f90;;;;powerpc-.+-aix
+compile;pr97668.f;;;;
 compile;uninit-pr63311.f90;;-O0;;

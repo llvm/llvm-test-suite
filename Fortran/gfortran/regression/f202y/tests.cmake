@@ -33,6 +33,6 @@
 #                    disabled. Each element of the list will be a regular
 #                    expression that is expected to match an LLVM target triple.
 #
-compile;generic_assumed_rank_2.f90;xfail;-std=f2023 -Wsurprising;;
-run;generic_assumed_rank_1.f90;;-fcheck=bounds;;
-run;generic_assumed_rank_3.f90;;-std=f202y -Wsurprising;;
+compile;generic_assumed_rank_2.f90;xfail;;;
+run;generic_assumed_rank_1.f90;;;;
+run;generic_assumed_rank_3.f90;;;;
