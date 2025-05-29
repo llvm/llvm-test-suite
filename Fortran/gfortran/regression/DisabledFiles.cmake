@@ -135,6 +135,12 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # 2023 (and before) 15.5.2.14 point (4). `f()` references the actual argument
   # of `x` while `x` does not have the TARGET or POINTER attribute.
   aliasing_array_result_1.f90
+
+  # Test is not conformant, because the Cray pointee and the underlying
+  # storage are accessed at the same time, and violate Fortran rules
+  # for accessing/modifying DUMMY arguments.
+  # Also see https://flang.llvm.org/docs/Aliasing.html#cray-pointers
+  cray_pointers_2.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
