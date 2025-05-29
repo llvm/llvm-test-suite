@@ -1,11 +1,13 @@
-! { dg-do run }
-! { dg-options "-O3 -fcray-pointer -fbounds-check -fno-inline" }
-! { dg-timeout-factor 4 }
+! The original gfortran test on which this is based is compiled with
+! -fcray-pointer -fbounds-check -fno-inline. Of these, we may want to compile
+! with -fbounds-check (or its equivalent) if it is ever supported in flang
 !
 ! Series of routines for testing a Cray pointer implementation
 !
-! Note: Some of the test cases violate Fortran's alias rules;
-! the "-fno-inline option" for now prevents failures.
+! The original source is in Fortran/gfortran/regression/cray_pointers_2.f90
+! The parmptr and parmpte subroutines violate the non-aliasing
+! rules for the dummy arguments, so a TARGET attribute was added
+! for them (including the interface declarations inside parmtest).
 !
 program craytest
   common /errors/errors(400)
