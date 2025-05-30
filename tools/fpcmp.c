@@ -67,17 +67,13 @@ static const char *AdvanceNumber(const char *StartPos, const char *End) {
   // Decimal separator
   if (Pos < End && *Pos == '.') {
     ++Pos;
+    EndOfNumber = Pos;
 
-    // Post-decimal digits (require at least one when period present)
-    bool HasPostDecimalDigit = false;
+    // Post-decimal digits (optional)
     while (Pos < End && isDigitChar(*Pos)) {
-      HasPostDecimalDigit = true;
-
       ++Pos;
       EndOfNumber = Pos;
     }
-    if (!HasPostDecimalDigit)
-      return EndOfNumber;
   }
 
   // Require a valid number before the exponent.
