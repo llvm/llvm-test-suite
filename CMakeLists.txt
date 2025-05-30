@@ -319,6 +319,15 @@ if (TEST_SUITE_USER_MODE_EMULATION)
   set(FPCMP fpcmp)
 endif()
 
+# Shortcut for the path to the not executable
+set(NOT_TOOL "$<TARGET_FILE:not>")
+if (TEST_SUITE_USER_MODE_EMULATION AND TEST_SUITE_RUN_UNDER)
+  # Because 'not' spawns a subprocess for its argument, it needs to know about
+  # the emulator when running in user-mode emulation. This is not needed when
+  # using 'not' to verify outputs, only when using it to execute a test binary.
+  set(NOT_TOOL "$<TARGET_FILE:not>" "--run-under" ${TEST_SUITE_RUN_UNDER} "--")
+endif()
+
 add_subdirectory(litsupport)
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME

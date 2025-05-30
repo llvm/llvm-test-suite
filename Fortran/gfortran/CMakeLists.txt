@@ -320,7 +320,7 @@ function(gfortran_add_execute_test expect_error main others fflags ldflags)
   llvm_test_executable_no_test(${target} ${main} ${others})
   if (expect_error)
     llvm_test_run(
-      EXECUTABLE "%b/not --crash %S/${target}"
+      EXECUTABLE "%b/${NOT_TOOL} --crash %S/${target}"
       WORKDIR "%S/${working_dir_name}")
   else ()
     llvm_test_run(WORKDIR "%S/${working_dir_name}")

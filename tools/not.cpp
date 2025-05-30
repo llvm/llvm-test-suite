@@ -10,6 +10,14 @@
 //     Will return true if cmd doesn't crash and returns false.
 //   not --crash cmd
 //     Will return true if cmd crashes (e.g. for testing crash reporting).
+//   not --run-under ...<emulator and args>... -- cmd
+//     Will prepend the emulator and its arguments to the spawn of the
+//     subcommand. If --crash is used as well, it has to come after the
+//     '--run-under <...> ...' arguments. The double-dash is used to separate
+//     emulator arguments from cmd arguments. This order makes it easier to
+//     use the not tool in the test-suite. The emulator is expected to exit
+//     with the same exit status/signal than the emulated binary in case of
+//     a crash, and the --crash flag will behave the same way.
 
 // This file is a stripped down version of not.cpp from llvm/utils. This does
 // not depend on any LLVM library.
@@ -17,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -35,11 +44,43 @@ int main(int argc, char* const* argv) {
   ++argv;
   --argc;
 
-  if (argc > 0 && std::string(argv[0]) == "--crash") {
+  // If necessary, prepend the command and arguments for a user-mode
+  // emulator such as QEMU to the command line that will be used
+  // to then spawn a subcommand.
+  std::vector<char *> argvbuf;
+  if (argc > 0 && std::string(argv[0]) == "--run-under") {
+    ++argv;
+    --argc;
+    while (argc > 0) {
+      --argc;
+      if (std::string(argv[0]) == "--") {
+        ++argv;
+        break;
+      }
+
+      argvbuf.push_back(argv[0]);
+      ++argv;
+    }
+
+    // If present, the crash flag is between the emulator arguments and cmd.
+    if (argc > 0 && std::string(argv[0]) == "--crash") {
+      ++argv;
+      --argc;
+      expectCrash = true;
+    }
+
+    for (char *const *argp = argv; *argp != NULL; ++argp)
+      argvbuf.push_back(*argp);
+    argvbuf.push_back(NULL);
+    argv = argvbuf.data();
+    argc = argvbuf.size() - 1;
+  } else if (argc > 0 && std::string(argv[0]) == "--crash") {
     ++argv;
     --argc;
     expectCrash = true;
+  }
 
+  if (expectCrash) {
     // Crash is expected, so disable crash report and symbolization to reduce
     // output and avoid potentially slow symbolization.
 #ifdef _WIN32
