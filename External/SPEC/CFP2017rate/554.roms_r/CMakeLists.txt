@@ -37,13 +37,22 @@ speccpu2017_run_test(
 )
 
 ## ref #########################################################################
-
-speccpu2017_run_test(
-  < ocean_benchmark2.in.x
-  STDOUT ocean_benchmark2.log
-  STDERR ocean_benchmark2.err
-  RUN_TYPE ref
+if (BENCHMARK_SUITE_TYPE STREQUAL rate)
+  speccpu2017_run_test(
+    < ocean_benchmark2.in.x
+    STDOUT ocean_benchmark2.log
+    STDERR ocean_benchmark2.err
+    RUN_TYPE ref
 )
+endif ()
+if (BENCHMARK_SUITE_TYPE STREQUAL speed)
+  speccpu2017_run_test(
+    < ocean_benchmark3.in.x
+    STDOUT ocean_benchmark3.log
+    STDERR ocean_benchmark3.err
+    RUN_TYPE ref
+)
+endif ()
 
 ################################################################################
 
