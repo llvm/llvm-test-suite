@@ -1,2 +1,2 @@
-#add_subdirectory(ldecod)
-#add_subdirectory(lencod)
+add_subdirectory(ldecod)
+add_subdirectory(lencod)
