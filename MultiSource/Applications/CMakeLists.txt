@@ -1,5 +1,6 @@
 if(NOT TARGET_OS STREQUAL "OpenBSD")
-  add_subdirectory(JM)
+  # [DEV] Disable JM
+  # add_subdirectory(JM)
 endif()
 
 add_subdirectory(SIBsim4)
