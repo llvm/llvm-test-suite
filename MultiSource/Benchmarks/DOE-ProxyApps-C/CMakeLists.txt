@@ -10,5 +10,6 @@ add_subdirectory(miniAMR)
 add_subdirectory(miniGMG)
 add_subdirectory(SimpleMOC)
 if(NOT CMAKE_SYSTEM_NAME MATCHES "AIX")
-add_subdirectory(CoMD)
+  # [DEV] Disable CoMD
+  # add_subdirectory(CoMD)
 endif()

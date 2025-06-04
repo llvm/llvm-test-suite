@@ -1,7 +1,8 @@
 add_subdirectory(agrep)
 add_subdirectory(gnugo)
 if((NOT "${ARCH}" STREQUAL "Sparc") AND (NOT "${ARCH}" STREQUAL "Alpha"))
-  add_subdirectory(bison)
+  # [DEV] Disable bison
+  # add_subdirectory(bison)
 endif()
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   add_subdirectory(TimberWolfMC)

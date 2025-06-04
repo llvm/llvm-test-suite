@@ -2,7 +2,8 @@
 # add_subdirectory(bh)
 add_subdirectory(bisort)
 add_subdirectory(em3d)
-add_subdirectory(health)
+# [DEV] Disable health
+# add_subdirectory(health)
 add_subdirectory(mst)
 add_subdirectory(perimeter)
 add_subdirectory(power)

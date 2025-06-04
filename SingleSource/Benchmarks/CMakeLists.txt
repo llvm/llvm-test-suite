@@ -1,11 +1,13 @@
-add_subdirectory(Adobe-C++)
+# [DEV] Disable Adobe-C++
+# add_subdirectory(Adobe-C++)
 add_subdirectory(BenchmarkGame)
 add_subdirectory(CoyoteBench)
 add_subdirectory(Dhrystone)
 add_subdirectory(Linpack)
 add_subdirectory(McGill)
 add_subdirectory(Misc)
-add_subdirectory(Misc-C++)
+# [DEV] Disable Misc-C++
+# add_subdirectory(Misc-C++)
 # [DEV] Disable Misc-C++-EH
 # add_subdirectory(Misc-C++-EH)
 add_subdirectory(Polybench)
