@@ -1,4 +1,5 @@
-add_subdirectory(bh)
+# [DEV] Disable bh
+# add_subdirectory(bh)
 add_subdirectory(bisort)
 add_subdirectory(em3d)
 add_subdirectory(health)

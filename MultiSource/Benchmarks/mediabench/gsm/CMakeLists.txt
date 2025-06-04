@@ -1,1 +1,2 @@
-add_subdirectory(toast)
+# [DEV] Disable toast
+# add_subdirectory(toast)

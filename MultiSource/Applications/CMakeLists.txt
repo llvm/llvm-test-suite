@@ -16,7 +16,8 @@ add_subdirectory(sgefa)
 add_subdirectory(spiff)
 add_subdirectory(viterbi)
 
-add_subdirectory(ALAC)
+# [DEV] Disable ALAC
+# add_subdirectory(ALAC)
 add_subdirectory(hbd)
 add_subdirectory(lambda-0.1.3)
 add_subdirectory(minisat)

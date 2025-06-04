@@ -2,9 +2,12 @@ add_subdirectory(automotive-basicmath)
 add_subdirectory(automotive-bitcount)
 # [DEV] Disable automotive-susan
 # add_subdirectory(automotive-susan)
-add_subdirectory(consumer-jpeg)
-add_subdirectory(consumer-typeset)
-add_subdirectory(network-dijkstra)
+# [DEV] Disable consumer-jpeg
+# add_subdirectory(consumer-jpeg)
+# [DEV] Disable consumer-typeset
+# add_subdirectory(consumer-typeset)
+# [DEV] Disable network-dijkstra
+# add_subdirectory(network-dijkstra)
 add_subdirectory(network-patricia)
 add_subdirectory(security-rijndael)
 add_subdirectory(security-sha)

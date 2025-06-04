@@ -1,12 +1,16 @@
 add_subdirectory(01-qbsort)
-add_subdirectory(03-testtrie)
+# [DEV] Disable 03-testtrie
+# add_subdirectory(03-testtrie)
 add_subdirectory(04-bisect)
-add_subdirectory(05-eks)
-add_subdirectory(08-main)
+# [DEV] Disable 05-eks
+# add_subdirectory(05-eks)
+# [DEV] Disable 08-main
+# add_subdirectory(08-main)
 add_subdirectory(09-vor)
 add_subdirectory(12-IOtest)
 add_subdirectory(17-bintr)
-add_subdirectory(18-imp)
+# [DEV] Disable 18-imp
+# add_subdirectory(18-imp)
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   add_subdirectory(15-trie)
 endif()

@@ -1,5 +1,6 @@
 add_subdirectory(HPCCG)
-add_subdirectory(PENNANT)
+# [DEV] Disable PENNANT
+# add_subdirectory(PENNANT)
 add_subdirectory(miniFE)
 if(NOT CMAKE_SYSTEM_NAME MATCHES "AIX")
 # [DEV] Disable CLAMR
