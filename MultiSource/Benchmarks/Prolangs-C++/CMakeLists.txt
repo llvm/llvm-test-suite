@@ -1,12 +1,9 @@
-# [DEV] Disable city
-# add_subdirectory(city)
-# [DEV] Disable employ
-# add_subdirectory(employ)
+add_subdirectory(city)
+add_subdirectory(employ)
 add_subdirectory(life)
 add_subdirectory(ocean)
 add_subdirectory(primes)
-# [DEV] Disable simul
-# add_subdirectory(simul)
+add_subdirectory(simul)
 if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   add_subdirectory(NP)
   add_subdirectory(deriv1)
