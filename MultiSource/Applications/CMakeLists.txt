@@ -36,8 +36,7 @@ if(NOT TARGET_OS STREQUAL "SunOS")
   # add_subdirectory(kimwitu++)
 endif()
 if(NOT TARGET_OS STREQUAL "SunOS")
-  # [DEV] Disable SPASS
-  # add_subdirectory(SPASS)
+  add_subdirectory(SPASS)
 endif()
 if(NOT ARCH STREQUAL "XCore")
   # [DEV] Disable ClamAV
