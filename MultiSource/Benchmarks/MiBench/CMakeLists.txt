@@ -6,16 +6,13 @@ add_subdirectory(automotive-bitcount)
 # add_subdirectory(consumer-jpeg)
 # [DEV] Disable consumer-typeset
 # add_subdirectory(consumer-typeset)
-# [DEV] Disable network-dijkstra
-# add_subdirectory(network-dijkstra)
-# [DEV] Disable network-patricia
-# add_subdirectory(network-patricia)
+add_subdirectory(network-dijkstra)
+add_subdirectory(network-patricia)
 add_subdirectory(security-rijndael)
 add_subdirectory(security-sha)
 add_subdirectory(telecomm-CRC32)
 add_subdirectory(telecomm-FFT)
-# [DEV] Disable telecomm-gsm
-# add_subdirectory(telecomm-gsm)
+add_subdirectory(telecomm-gsm)
 if(NOT "${ARCH}" STREQUAL "XCore")
   add_subdirectory(consumer-lame)
 endif()
