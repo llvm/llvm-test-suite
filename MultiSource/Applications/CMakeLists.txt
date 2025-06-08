@@ -30,8 +30,7 @@ if((TARGET_OS STREQUAL "Linux" OR TARGET_OS STREQUAL "Darwin") AND (NOT ARCH STR
   add_subdirectory(obsequi)
 endif()
 if(NOT TARGET_OS STREQUAL "SunOS")
-  # [DEV] Disable kimwitu++
-  # add_subdirectory(kimwitu++)
+  add_subdirectory(kimwitu++)
 endif()
 if(NOT TARGET_OS STREQUAL "SunOS")
   add_subdirectory(SPASS)
