@@ -120,6 +120,13 @@ def readmulti(filenames):
     return d
 
 
+def merge_values(values, merge_function):
+    # Drop the "hash" column because it's irreducible for averages.
+    if merge_function is pd.DataFrame.mean and "hash" in values.columns:
+        values = values[[c for c in values.columns if c != "hash"]]
+    return values.groupby(level=1).apply(merge_function)
+
+
 def get_values(values):
     # Create data view without diff column.
     if "diff" in values.columns:
@@ -417,11 +424,11 @@ def main():
         lhs = files[0:split]
         rhs = files[split + 1 :]
 
-        # Filter minimum of lhs and rhs
+        # Combine the multiple left and right hand sides.
         lhs_d = readmulti(lhs)
-        lhs_merged = lhs_d.groupby(level=1).apply(config.merge_function)
+        lhs_merged = merge_values(lhs_d, config.merge_function)
         rhs_d = readmulti(rhs)
-        rhs_merged = rhs_d.groupby(level=1).apply(config.merge_function)
+        rhs_merged = merge_values(rhs_d, config.merge_function)
 
         # Combine to new dataframe
         data = pd.concat(
