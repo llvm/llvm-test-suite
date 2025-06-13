@@ -56,6 +56,8 @@
 #ifndef _TIMER_H
 #define _TIMER_H
 
+#include <sys/time.h>
+
 #ifdef __cplusplus
 extern "C"
 {
