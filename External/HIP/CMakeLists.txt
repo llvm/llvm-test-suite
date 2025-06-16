@@ -65,6 +65,7 @@ macro(create_local_hip_tests VariantSuffix)
   #set_source_files_properties(split-kernel-args.hip PROPERTIES
   #  COMPILE_FLAGS "-mllvm -amdgpu-enable-split-kernel-args")
   # Add HIP tests to be added to hip-tests-simple
+  list(APPEND HIP_LOCAL_TESTS array)
   list(APPEND HIP_LOCAL_TESTS empty)
   list(APPEND HIP_LOCAL_TESTS with-fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
