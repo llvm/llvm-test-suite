@@ -9,6 +9,7 @@ DIRS :=
 
 DIRS += Vector
 DIRS += Vectorizer
+DIRS += HashRecognize
 
 DIRS += SignlessTypes Threads C++11 Float
 
