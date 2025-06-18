@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Tool to filter, organize, compare and display benchmarking results. Usefull
 for smaller datasets. It works great with a few dozen runs it is not designed to
 deal with hundreds.
