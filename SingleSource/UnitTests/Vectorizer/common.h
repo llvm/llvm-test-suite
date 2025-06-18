@@ -72,8 +72,7 @@ static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
     for (unsigned i = 0; i < N; i++)
       A[i] = distrib(rng);
   } else {
-    using DistTy = std::conditional_t<std::is_signed_v<Ty>, int64_t, uint64_t>;
-    std::uniform_int_distribution<DistTy> distrib(
+    std::uniform_int_distribution<Ty> distrib(
         std::numeric_limits<Ty>::min(), std::numeric_limits<Ty>::max());
     for (unsigned i = 0; i < N; i++)
       A[i] = distrib(rng);
