@@ -7,6 +7,7 @@ add_subdirectory(SignlessTypes)
 add_subdirectory(Threads)
 add_subdirectory(Vector)
 add_subdirectory(Vectorizer)
+add_subdirectory(HashRecognize)
 add_subdirectory(X86)
 add_subdirectory(AArch64)
 
