@@ -211,7 +211,7 @@ int main(void) {
   testTranspose<double, 3, 10>();
   testTranspose<double, 4, 3>();
   testTranspose<float, 31, 17>();
-  testTranspose<unsigned, 8, 7>();
+  testTranspose<signed, 8, 7>();
 
   testMultiply<double, 3, 3, 3>();
   testMultiply<double, 10, 21, 23>();

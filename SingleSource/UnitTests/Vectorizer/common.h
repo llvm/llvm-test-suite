@@ -66,10 +66,18 @@ static std::mt19937 rng;
 // Initialize arrays A with random numbers.
 template <typename Ty>
 static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
-  std::uniform_int_distribution<uint64_t> distrib(
-      std::numeric_limits<Ty>::min(), std::numeric_limits<Ty>::max());
-  for (unsigned i = 0; i < N; i++)
-    A[i] = distrib(rng);
+  if constexpr (std::is_floating_point_v<Ty>) {
+    std::uniform_real_distribution<Ty> distrib(
+        std::numeric_limits<Ty>::min(), std::numeric_limits<Ty>::max());
+    for (unsigned i = 0; i < N; i++)
+      A[i] = distrib(rng);
+  } else {
+    using DistTy = std::conditional_t<std::is_signed_v<Ty>, int64_t, uint64_t>;
+    std::uniform_int_distribution<DistTy> distrib(
+        std::numeric_limits<Ty>::min(), std::numeric_limits<Ty>::max());
+    for (unsigned i = 0; i < N; i++)
+      A[i] = distrib(rng);
+  }
 }
 
 template <typename Ty>
