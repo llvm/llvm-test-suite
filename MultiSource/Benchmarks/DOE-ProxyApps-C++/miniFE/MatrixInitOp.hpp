@@ -76,8 +76,6 @@ struct MatrixInitOp<miniFE::CSRMatrix<MINIFE_SCALAR,MINIFE_LOCAL_ORDINAL,MINIFE_
      mesh(&input_mesh),
      dest_rows(&matrix.rows[0]),
      dest_rowoffsets(&matrix.row_offsets[0]),
-     dest_cols(&matrix.packed_cols[0]),
-     dest_coefs(&matrix.packed_coefs[0]),
      n(matrix.rows.size())
   {
     if (matrix.packed_cols.capacity() != matrix.packed_coefs.capacity()) {
@@ -93,6 +91,9 @@ struct MatrixInitOp<miniFE::CSRMatrix<MINIFE_SCALAR,MINIFE_LOCAL_ORDINAL,MINIFE_
 
     matrix.packed_cols.resize(nnz);
     matrix.packed_coefs.resize(nnz);
+
+    dest_cols = matrix.packed_cols.data();
+    dest_coefs = matrix.packed_coefs.data();
     dest_rowoffsets[n] = nnz;
 #ifdef HAVE_MPI 
    MPI_Comm_rank(MPI_COMM_WORLD, &proc);

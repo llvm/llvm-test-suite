@@ -273,19 +273,19 @@ void Mesh::initInvMap() {
     sort(pcpair.begin(), pcpair.end());
     for (int i = 0; i < numc; ++i) {
         int p = pcpair[i].first;
-        int pp = pcpair[i+1].first;         
-        int pm = 0;
-        // pm is only used when i != 0
-        if(i != 0)
-            pm = pcpair[i-1].first;
         int c = pcpair[i].second;
-        int cp = pcpair[i+1].second;
 
-        if (i == 0 || p != pm)  mappcfirst[p] = c;
-        if (i+1 == numc || p != pp)
-            mapccnext[c] = -1;
-        else
-            mapccnext[c] = cp;
+        if (i == 0) mappcfirst[p] = c;
+        else {
+            int pm = pcpair[i-1].first;
+            if (p != pm) mappcfirst[p] = c;
+        }
+        mapccnext[c] = -1;
+        if (i+1 != numc) {
+            int pp = pcpair[i+1].first;
+            int cp = pcpair[i+1].second;
+            if (p == pp) mapccnext[c] = cp;
+        }
     }
 
 }
