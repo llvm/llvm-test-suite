@@ -24,8 +24,8 @@ static uint16_t crc_table(uint16_t crc_initval, uint16_t data) {
     crc_init();
 
   for (size_t i = 0; i < 2; ++i) {
-    uint16_t pos = crc ^ (data >> (i << 3));
-    crc = (crc >> 8) ^ CRCTable[pos & 0xFF];
+    uint8_t pos = crc ^ (data >> (i << 3));
+    crc = (crc >> 8) ^ CRCTable[pos];
   }
 
   return crc;
