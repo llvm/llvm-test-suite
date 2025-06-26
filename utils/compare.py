@@ -122,7 +122,7 @@ def readmulti(filenames):
 
 def merge_values(values, merge_function):
     # Drop the "hash" column because it's irreducible for averages.
-    if merge_function is pd.DataFrame.mean and "hash" in values.columns:
+    if merge_function in [pd.DataFrame.mean, pd.DataFrame.median] and "hash" in values.columns:
         values = values[[c for c in values.columns if c != "hash"]]
     return values.groupby(level=1).apply(merge_function)
 
@@ -357,6 +357,12 @@ def main():
         dest="merge_function",
         const=pd.DataFrame.mean,
         default=pd.DataFrame.min,
+    )
+    parser.add_argument(
+        "--merge-median",
+        action="store_const",
+        dest="merge_function",
+        const=pd.DataFrame.median,
     )
     parser.add_argument(
         "--merge-min",
