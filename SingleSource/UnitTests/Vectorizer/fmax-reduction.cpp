@@ -12,7 +12,7 @@ static bool isEqual(float A, float B) {
     return std::isnan(A) && std::isnan(B);
 
   if (A == 0.0f)
-    return std::signbit(A) == std::signbit(B);
+    return B == 0.0f && std::signbit(A) == std::signbit(B);
 
   return A == B;
 }
