@@ -1030,6 +1030,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # llvm-project#137369
   volatile8.f90
 
+  # flang no longer errors out for cases when main program name conflicts with
+  # some other symbol.
+  recursive_check_15.f90
+
   # Tests that exercise gfortran's ability to set -std=f95 and then see errors on newer features
   abstract_type_1.f90
   alloc_comp_constraint_7.f90
