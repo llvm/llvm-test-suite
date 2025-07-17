@@ -8,8 +8,8 @@
 #include "common.h"
 
 static bool isEqual(float A, float B) {
-  if (std::isnan(A))
-    return std::isnan(B);
+  if (std::isnan(A) || std::isnan(B))
+    return std::isnan(A) && std::isnan(B);
 
   if (A == 0.0f)
     return std::signbit(A) == std::signbit(B);
@@ -59,6 +59,12 @@ static void checkVectorFunction(Fn1Ty<Ty> ScalarFn, Fn1Ty<Ty> VectorFn,
   for (unsigned I = 0; I != N; ++I)
     Src1[I] = std::numeric_limits<Ty>::min();
   check(ScalarFn, VectorFn, &Src1[0], N, "all-min");
+
+  // Check with various denormals.
+  Src1[0] = std::numeric_limits<Ty>::denorm_min();
+  for (unsigned I = 1; I != N; ++I)
+    Src1[I] = std::numeric_limits<Ty>::denorm_min() / I;
+  check(ScalarFn, VectorFn, &Src1[0], N, "denormals");
 
   // Check with inputs all zero.
   for (unsigned I = 0; I != N; ++I)
@@ -120,6 +126,19 @@ static void checkVectorFunction(Fn1Ty<Ty> ScalarFn, Fn1Ty<Ty> VectorFn,
       check(ScalarFn, VectorFn, &Src1[0], N, "full-with-multiple-nan");
     }
   }
+
+  // Check with multiple infinity values at different positions.
+  for (unsigned Idx = 0; Idx != 64; ++Idx) {
+    for (unsigned I = 0; I != N; ++I)
+      Src1[I] = -1.0;
+
+    for (unsigned Offset = 1; Offset != 16; ++Offset) {
+      Src1[Idx] = -std::numeric_limits<float>::infinity();
+      Src1[Idx + Offset] = std::numeric_limits<float>::infinity();
+
+      check(ScalarFn, VectorFn, &Src1[0], N, "infinity");
+    }
+  }
 }
 
 int main(void) {
@@ -139,6 +158,14 @@ int main(void) {
                I++) { Max = std::fmax(Max, A[I]); } return Max;
         , float);
     checkVectorFunction<float>(ScalarFn, VectorFn, "fmaxnum_start_min");
+  }
+  {
+    DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
+        float Max = std::numeric_limits<float>::denorm_min();
+        , for (unsigned I = 0; I < 1024;
+               I++) { Max = std::fmax(Max, A[I]); } return Max;
+        , float);
+    checkVectorFunction<float>(ScalarFn, VectorFn, "fmaxnum_start_denorm_min");
   }
   {
     DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
@@ -164,6 +191,15 @@ int main(void) {
                I++) { Max = A[I] > Max ? A[I] : Max; } return Max;
         , float);
     checkVectorFunction<float>(ScalarFn, VectorFn, "fmax_strict_start_min");
+  }
+  {
+    DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
+        float Max = std::numeric_limits<float>::denorm_min();
+        , for (unsigned I = 0; I < 1025;
+               I++) { Max = A[I] > Max ? A[I] : Max; } return Max;
+        , float);
+    checkVectorFunction<float>(ScalarFn, VectorFn,
+                               "fmax_strict_start_denorm_min");
   }
   {
     DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
@@ -203,7 +239,15 @@ int main(void) {
     checkVectorFunction<float>(ScalarFn, VectorFn,
                                "fmax_cmp_max_lt_start_neg_2");
   }
-
+  {
+    DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
+        float Max = std::numeric_limits<float>::denorm_min();
+        , for (unsigned I = 0; I < 1024;
+               I++) { Max = Max < A[I] ? A[I] : Max; } return Max;
+        , float);
+    checkVectorFunction<float>(ScalarFn, VectorFn,
+                               "fmax_cmp_max_lt_start_denorm_min");
+  }
   {
     DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(
         float Max = std::numeric_limits<float>::quiet_NaN();
