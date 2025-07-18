@@ -1,6 +1,14 @@
 #include <memory>
 #include <random>
 
+#define DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(Init, Loop, Type)                    \
+  auto ScalarFn = [](auto *A, Type TC) -> Type {                               \
+    Init _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop     \
+  };                                                                           \
+  auto VectorFn = [](auto *A, Type TC) -> Type {                               \
+    Init _Pragma("clang loop vectorize(enable)") Loop                          \
+  };
+
 #define DEFINE_SCALAR_AND_VECTOR_FN2(Init, Loop)                               \
   auto ScalarFn = [](auto *A, auto *B, unsigned TC) {                          \
     Init _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop     \
