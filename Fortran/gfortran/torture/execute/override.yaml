@@ -23,9 +23,5 @@
 "intrinsic_set_exponent.f90":
   disabled_on: ["powerpc-*-aix"]
 
-# zero-sized array crash (https://github.com/llvm/llvm-project/issues/110913)
-"iolength_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
