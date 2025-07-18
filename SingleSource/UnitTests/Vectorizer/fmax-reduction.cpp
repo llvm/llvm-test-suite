@@ -85,9 +85,21 @@ static void checkVectorFunction(Fn1Ty<Ty> ScalarFn, Fn1Ty<Ty> VectorFn,
     for (unsigned I = 0; I != N; ++I)
       Src1[I] = -1.0;
 
-    for (unsigned Offset = 1; Offset != 16; ++Offset) {
+    for (unsigned Offset = 1; Offset != 32; ++Offset) {
       Src1[Idx] = -0.0;
       Src1[Idx + Offset] = +0.0;
+
+      check(ScalarFn, VectorFn, &Src1[0], N, "signed-zeros");
+    }
+  }
+
+  for (unsigned Idx = 0; Idx != 64; ++Idx) {
+    for (unsigned I = 0; I != N; ++I)
+      Src1[I] = -1.0;
+
+    for (unsigned Offset = 1; Offset != 32; ++Offset) {
+      Src1[Idx] = +0.0;
+      Src1[Idx + Offset] = -0.0;
 
       check(ScalarFn, VectorFn, &Src1[0], N, "signed-zeros");
     }
