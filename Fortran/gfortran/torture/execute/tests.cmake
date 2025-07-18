@@ -167,7 +167,7 @@ run;intrinsic_trailz.f90;;;;
 run;intrinsic_transpose.f90;;;;
 run;intrinsic_trim.f90;;;;
 run;intrinsic_unpack.f90;;;;
-run;iolength_1.f90;;;;powerpc-.+-aix
+run;iolength_1.f90;;;;
 run;iolength_2.f90;;;;
 run;iolength_3.f90;;;;
 run;list_read_1.f90;;;;
