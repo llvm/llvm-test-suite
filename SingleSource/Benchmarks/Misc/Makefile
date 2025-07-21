@@ -12,6 +12,15 @@ PROGRAMS_TO_SKIP := dt
 endif
 endif
 
+ifeq ($(ARCH),AArch64)
+ifeq ($(TARGET_OS),Darwin)
+CFLAGS += -DHAS_DARWIN_FMV
+endif
+ifeq ($(TARGET_OS),Linux)
+CFLAGS += -DHAS_LINUX_FMV	
+endif
+endif
+
 ifeq ($(ARCH),Mips)
 RUNTIMELIMIT := 2000
 endif
