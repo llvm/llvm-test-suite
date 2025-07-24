@@ -23,4 +23,25 @@ RUNTIMELIMIT:=10800
 endif
 endif
 
+ifeq ($(ARCH),AArch64)
+ifeq ($(TARGET_OS),Darwin)
+SYMBOL = __init_cpu_features_resolver
+endif
+ifeq ($(TARGET_OS),Linux)
+SYMBOL = __init_cpu_features
+endif
+SYMBOL := $(shell echo "extern void $(SYMBOL)(void); void (*p)() = $(SYMBOL); int main() {}" | \
+       $(TARGET_LLVMGCC) --rtlib=compiler-rt -x c - -o /dev/null 2>/dev/null && \
+       echo $(SYMBOL) || echo undefined)
+ifeq ($(SYMBOL),__init_cpu_features_resolver)
+CFLAGS += --rtlib=compiler-rt -DHAS_DARWIN_FMV
+endif
+ifeq ($(SYMBOL),__init_cpu_features)
+CFLAGS += --rtlib=compiler-rt -DHAS_LINUX_FMV
+endif
+ifeq ($(SYMBOL),undefined)
+PROGRAMS_TO_SKIP := aarch64-init-cpu-features
+endif
+endif
+
 include $(LEVEL)/SingleSource/Makefile.singlesrc
