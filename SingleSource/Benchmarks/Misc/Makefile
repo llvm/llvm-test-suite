@@ -13,24 +13,12 @@ endif
 endif
 
 ifeq ($(ARCH),AArch64)
-	ifeq ($(TARGET_OS),Darwin)
-		CHECK_FMV := $(shell echo "void __init_cpu_features_resolver(void);" > CheckHasAArch64FMV.h && \
-			$(CC) -c -x c CheckHasAArch64FMV.h -o CheckHasAArch64FMV.o 2>/dev/null && \
-			echo yes || echo no; \
-			rm -f CheckHasAArch64FMV.h CheckHasAArch64FMV.o)
-		ifeq ($(CHECK_FMV),yes)
-			CFLAGS += -DHAS_DARWIN_FMV
-		endif
-	endif
-	ifeq ($(TARGET_OS),Linux)
-		CHECK_FMV := $(shell echo "void __init_cpu_features(void);" > CheckHasAArch64FMV.h && \
-			$(CC) -c -x c CheckHasAArch64FMV.h -o CheckHasAArch64FMV.o 2>/dev/null && \
-			echo yes || echo no; \
-			rm -f CheckHasAArch64FMV.h CheckHasAArch64FMV.o)
-		ifeq ($(CHECK_FMV),yes)
-			CFLAGS += -DHAS_LINUX_FMV
-		endif
-	endif
+ifeq ($(TARGET_OS),Darwin)
+CFLAGS += -DHAS_DARWIN_FMV
+endif
+ifeq ($(TARGET_OS),Linux)
+CFLAGS += -DHAS_LINUX_FMV	
+endif
 endif
 
 ifeq ($(ARCH),Mips)

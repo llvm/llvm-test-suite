@@ -1,5 +1,3 @@
-#if defined(HAS_DARWIN_FMV) || defined(HAS_LINUX_FMV)
-
 #include <stdio.h>
 
 extern struct {
@@ -14,10 +12,7 @@ extern struct {
 
 void RUNTIME_INIT(void);
 
-#endif /* defined(HAS_DARWIN_FMV) || defined(HAS_LINUX_FMV) */
-
 int main() {
-#if defined(HAS_DARWIN_FMV) || defined(HAS_LINUX_FMV)
     RUNTIME_INIT();
     const unsigned long long first = __aarch64_cpu_features.features;
 
@@ -37,5 +32,4 @@ int main() {
         __aarch64_cpu_features.features = 0;
         RUNTIME_INIT();
     }
-#endif /* defined(HAS_DARWIN_FMV) || defined(HAS_LINUX_FMV) */
 }
