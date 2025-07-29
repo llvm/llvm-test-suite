@@ -91,6 +91,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   private-explicit-parallel-1.f95
   private-explicit-serial-1.f95
   private-predetermined-serial-1.f95
+  routine-3.f90
   serial-tree.f95
 
   # error: unsupported OpenACC operation: acc.reduction
