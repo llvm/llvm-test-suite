@@ -320,7 +320,6 @@ def print_result(
         formatters=formatters,
     )
     print(out)
-    print(d.describe())
 
 
 def main():
