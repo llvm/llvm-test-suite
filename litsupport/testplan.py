@@ -209,3 +209,4 @@ class TestContext:
         self.tmpDir = tmpDir
         self.tmpBase = tmpBase
         self.read_result_file = default_read_result_file
+        self.profilefile = None
