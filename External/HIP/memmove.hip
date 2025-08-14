@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "hip/hip_runtime.h"
