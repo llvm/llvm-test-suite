@@ -141,6 +141,9 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # for accessing/modifying DUMMY arguments.
   # Also see https://flang.llvm.org/docs/Aliasing.html#cray-pointers
   cray_pointers_2.f90
+
+  # The "stop 171" case expects an incorrect number of finalizations.
+  finalize_38.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
