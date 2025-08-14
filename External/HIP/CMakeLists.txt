@@ -70,6 +70,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS with-fopenmp)
   list(APPEND HIP_LOCAL_TESTS saxpy)
   list(APPEND HIP_LOCAL_TESTS memmove)
+  list(APPEND HIP_LOCAL_TESTS memset)
   list(APPEND HIP_LOCAL_TESTS split-kernel-args)
   list(APPEND HIP_LOCAL_TESTS builtin-logb-scalbn)
 
