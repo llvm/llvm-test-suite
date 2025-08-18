@@ -24,6 +24,7 @@ class TestPlan(object):
         self.preparescript = []
         self.profile_files = []
         self.profilescript = []
+        self.profilecollectscript = []
 
 
 def mutateScript(context, script, mutator):
@@ -119,6 +120,13 @@ def _executePlan(context, plan):
     if exitCode != 0:
         logging.warning("Profile script '%s' failed", plan.profilescript)
 
+    # Execute steps to manage the generated profile data, on the host.
+    _, _, exitCode, _ = _executeScript(
+        context, plan.profilecollectscript, "profilecollect"
+    )
+    if exitCode != 0:
+        logging.warning("Profile collect script '%s' failed", plan.profilecollectscript)
+
     # Perform various metric extraction steps setup by testing modules.
     for metric_collector in plan.metric_collectors:
         try:
@@ -201,3 +209,4 @@ class TestContext:
         self.tmpDir = tmpDir
         self.tmpBase = tmpBase
         self.read_result_file = default_read_result_file
+        self.profilefile = None
