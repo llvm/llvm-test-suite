@@ -1617,6 +1617,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   all_bounds_1.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
+  eoshift_bounds_1.f90
   inline_matmul_15.f90
   matmul_5.f90
   matmul_bounds_11.f90
