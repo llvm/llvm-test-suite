@@ -22,21 +22,22 @@
 
 // Maximal number of bytes to set with a memset call, used to allocate
 // buffers.
-#define MAX_BYTES_PER_THREAD 2048
+static constexpr size_t MaxBytesPerThread = 2048;
 
 // LDS is small, so run only smaller tests there.
-#define MAX_BYTES_PER_THREAD_SHARED 128
+static constexpr size_t MaxLDSBytesPerThread = 128;
 
 // Number of threads started in parallel.
-#define NUM_MOVE_THREADS (2 * 32)
+static constexpr size_t NumMoveThreads = 2 * 32;
 
 // Size of blocks in the grid used for threads. If the number of threads is
 // smaller than this, it is used instead.
-#define BLOCK_SIZE 256
+static constexpr size_t BlockSize = 256;
 
-#define ALLOC_SIZE (2 * NUM_MOVE_THREADS * MAX_BYTES_PER_THREAD)
+static constexpr size_t AllocSize = 2 * NumMoveThreads * MaxBytesPerThread;
 
-#define ALLOC_SIZE_SHARED (2 * NUM_MOVE_THREADS * MAX_BYTES_PER_THREAD_SHARED)
+static constexpr size_t LDSAllocSize =
+    2 * NumMoveThreads * MaxLDSBytesPerThread;
 
 enum AddressSpace {
   GLOBAL = 0,
@@ -68,7 +69,7 @@ __global__ void memset_kernel_global(uint8_t *buf_device, size_t dst_idx,
                                      uint8_t dyn_setval, size_t dyn_sz) {
   (void)dyn_sz;
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
-  if (tid >= NUM_MOVE_THREADS)
+  if (tid >= NumMoveThreads)
     return;
   uint8_t *thread_buf = buf_device + get_stride(SZ) * tid;
 
@@ -96,9 +97,9 @@ template <size_t SZ, uint8_t SetVal, bool const_size, bool use_tid,
 __global__ void memset_kernel_shared(uint8_t *buf_device, size_t dst_idx,
                                      uint8_t dyn_setval, size_t dyn_sz) {
   (void)dyn_sz;
-  __shared__ uint8_t buf_shared[ALLOC_SIZE_SHARED];
+  __shared__ uint8_t buf_shared[LDSAllocSize];
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
-  if (tid >= NUM_MOVE_THREADS)
+  if (tid >= NumMoveThreads)
     return;
   constexpr size_t stride = get_stride(SZ);
   uint8_t *thread_buf = buf_device + stride * tid;
@@ -137,7 +138,7 @@ __global__ void memset_kernel_stack(uint8_t *buf_device, size_t dst_idx,
   constexpr size_t stride = get_stride(SZ);
   uint8_t buf_stack[stride];
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
-  if (tid >= NUM_MOVE_THREADS)
+  if (tid >= NumMoveThreads)
     return;
   uint8_t *thread_buf = buf_device + stride * tid;
   // Copy the original data to the stack.
@@ -172,87 +173,68 @@ bool run_test(uint8_t *buf_reference, uint8_t *buf_host, uint8_t *buf_device,
               AddressSpace AS, size_t &differing_pos) {
   // Initialize device buffer.
   hipLaunchKernelGGL(init_kernel, dim3(1), dim3(1), 0, 0, buf_device,
-                     ALLOC_SIZE);
+                     AllocSize);
   CHKHIP(hipDeviceSynchronize());
 
   // Set up the reference buffer.
-  for (size_t i = 0; i < ALLOC_SIZE; ++i)
+  for (size_t i = 0; i < AllocSize; ++i)
     buf_reference[i] = (uint8_t)i;
 
   // Simulate multi-threaded device-side memset on the host.
-  for (size_t tid = 0; tid < NUM_MOVE_THREADS; ++tid) {
+  for (size_t tid = 0; tid < NumMoveThreads; ++tid) {
     uint8_t *thread_buf = buf_reference + get_stride(SZ) * tid;
     uint8_t v = use_tid ? tid : SetVal;
     std::memset(thread_buf + dst_idx, v, SZ);
   }
 
   // Do the device-side memset.
-  int block_size = std::min(BLOCK_SIZE, NUM_MOVE_THREADS);
-  int num_blocks = (NUM_MOVE_THREADS + block_size - 1) / block_size;
+  int block_size = std::min(BlockSize, NumMoveThreads);
+  int num_blocks = (NumMoveThreads + block_size - 1) / block_size;
+
+  // Select the right kernel with the right template paramters. This is done
+  // using compile-time constant template parameters so that we can control
+  // which memset arguments the compiler sees as constant, as this affects code
+  // generation.
+  void (*chosen_kernel)(uint8_t *, size_t, uint8_t, size_t) = nullptr;
+
+#define SELECT_KERNEL_FOR_ADDRSPACE(AS)                                        \
+  if (const_size) {                                                            \
+    if (use_tid)                                                               \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, true, true, false>;       \
+    else if (const_setval)                                                     \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, true, false, true>;       \
+    else                                                                       \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, true, false, false>;      \
+  } else {                                                                     \
+    if (use_tid)                                                               \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, false, true, false>;      \
+    else if (const_setval)                                                     \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, false, false, true>;      \
+    else                                                                       \
+      chosen_kernel = memset_kernel_##AS<SZ, SetVal, false, false, false>;     \
+  }
 
   switch (AS) {
   case AddressSpace::GLOBAL:
-    hipLaunchKernelGGL(
-        (const_size
-             ? (use_tid
-                    ? (memset_kernel_global<SZ, SetVal, true, true, false>)
-                    : (const_setval ? (memset_kernel_global<SZ, SetVal, true,
-                                                            false, true>)
-                                    : (memset_kernel_global<SZ, SetVal, true,
-                                                            false, false>)))
-             : (use_tid
-                    ? (memset_kernel_global<SZ, SetVal, false, true, false>)
-                    : (const_setval ? (memset_kernel_global<SZ, SetVal, false,
-                                                            false, true>)
-                                    : (memset_kernel_global<SZ, SetVal, false,
-                                                            false, false>)))),
-        dim3(num_blocks), dim3(block_size), 0, 0, buf_device, dst_idx, SetVal,
-        SZ);
+    SELECT_KERNEL_FOR_ADDRSPACE(global);
     break;
   case AddressSpace::SHARED:
-    hipLaunchKernelGGL(
-        (const_size
-             ? (use_tid
-                    ? (memset_kernel_shared<SZ, SetVal, true, true, false>)
-                    : (const_setval ? (memset_kernel_shared<SZ, SetVal, true,
-                                                            false, true>)
-                                    : (memset_kernel_shared<SZ, SetVal, true,
-                                                            false, false>)))
-             : (use_tid
-                    ? (memset_kernel_shared<SZ, SetVal, false, true, false>)
-                    : (const_setval ? (memset_kernel_shared<SZ, SetVal, false,
-                                                            false, true>)
-                                    : (memset_kernel_shared<SZ, SetVal, false,
-                                                            false, false>)))),
-        dim3(num_blocks), dim3(block_size), 0, 0, buf_device, dst_idx, SetVal,
-        SZ);
+    SELECT_KERNEL_FOR_ADDRSPACE(shared);
     break;
   case AddressSpace::STACK:
-    hipLaunchKernelGGL(
-        (const_size
-             ? (use_tid ? (memset_kernel_stack<SZ, SetVal, true, true, false>)
-                        : (const_setval ? (memset_kernel_stack<SZ, SetVal, true,
-                                                               false, true>)
-                                        : (memset_kernel_stack<SZ, SetVal, true,
-                                                               false, false>)))
-             : (use_tid
-                    ? (memset_kernel_stack<SZ, SetVal, false, true, false>)
-                    : (const_setval ? (memset_kernel_stack<SZ, SetVal, false,
-                                                           false, true>)
-                                    : (memset_kernel_stack<SZ, SetVal, false,
-                                                           false, false>)))),
-        dim3(num_blocks), dim3(block_size), 0, 0, buf_device, dst_idx, SetVal,
-        SZ);
+    SELECT_KERNEL_FOR_ADDRSPACE(stack);
     break;
   };
+  hipLaunchKernelGGL(chosen_kernel, dim3(num_blocks), dim3(block_size), 0, 0,
+                     buf_device, dst_idx, SetVal, SZ);
   CHKHIP(hipDeviceSynchronize());
 
   // Fetch the result into buf_host.
-  CHKHIP(hipMemcpy(buf_host, buf_device, ALLOC_SIZE, hipMemcpyDeviceToHost));
+  CHKHIP(hipMemcpy(buf_host, buf_device, AllocSize, hipMemcpyDeviceToHost));
 
   // Compare to the reference.
   bool success = true;
-  for (size_t i = 0; i < ALLOC_SIZE; ++i) {
+  for (size_t i = 0; i < AllocSize; ++i) {
     if (buf_host[i] != buf_reference[i]) {
       differing_pos = i;
       success = false;
@@ -266,12 +248,12 @@ bool run_test(uint8_t *buf_reference, uint8_t *buf_host, uint8_t *buf_device,
 template <size_t SZ, uint8_t SetVal>
 int run_tests(uint8_t *buf_reference, uint8_t *buf_host, uint8_t *buf_device,
               AddressSpace AS) {
-  if (AS == AddressSpace::SHARED && SZ > MAX_BYTES_PER_THREAD_SHARED) {
+  if (AS == AddressSpace::SHARED && SZ > MaxLDSBytesPerThread) {
     // LDS is too small for these tests.
     return 0;
   }
-  assert(SZ <= MAX_BYTES_PER_THREAD &&
-         "Increase MAX_BYTES_PER_THREAD for larger sizes");
+  assert(SZ <= MaxBytesPerThread &&
+         "Increase MaxBytesPerThread for larger sizes");
 
   std::vector<size_t> indexes_to_test = {0, 1, SZ - 1, SZ};
   if (SZ > 8) {
@@ -337,10 +319,10 @@ int run_tests(uint8_t *buf_reference, uint8_t *buf_host, uint8_t *buf_device,
 
 int main(void) {
   uint8_t *buf_device;
-  CHKHIP(hipMalloc(&buf_device, ALLOC_SIZE));
+  CHKHIP(hipMalloc(&buf_device, AllocSize));
 
-  std::unique_ptr<uint8_t> buf_host(new uint8_t[ALLOC_SIZE]);
-  std::unique_ptr<uint8_t> buf_reference(new uint8_t[ALLOC_SIZE]);
+  std::unique_ptr<uint8_t> buf_host(new uint8_t[AllocSize]);
+  std::unique_ptr<uint8_t> buf_reference(new uint8_t[AllocSize]);
 
   int nerrs = 0;
   for (AddressSpace AS :
