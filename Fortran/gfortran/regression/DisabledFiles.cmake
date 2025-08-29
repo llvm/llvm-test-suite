@@ -1759,6 +1759,10 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # some compilers, including f18, emit "Inf".
   large_real_kind_1.f90
 
+  # gfortran allows pointers to be associated with zero sized entities.
+  # flang doesn't allow it per F2023, 16.9.20, p5, case (v)-(vi)
+  pointer_init_8.f90
+
   # Require -finit-local-zero or similar.
   dec_init_2.f90 # needs -finit-derived -finit-integer=42 &c.
   init_flag_15.f03 # needs -finit-derived -finit-integer
