@@ -46,8 +46,7 @@ program llvm_project_issue_154979
     type(base) :: b1(2)
 
 
-    open (1, file='dcmlChildRead003.data', access='stream', form='formatted', &
-            decimal='Comma')
+    open (1, access='stream', form='formatted', decimal='Comma', status='scratch')
 
     write (1, '(i4, 10(g15.7))', pos=1, decimal='Point') 10, (i*1.0, i=1, 10)
 
