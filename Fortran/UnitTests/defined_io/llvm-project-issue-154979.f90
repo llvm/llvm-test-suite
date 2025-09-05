@@ -1,4 +1,5 @@
-module m
+! A verbatim copy of test case from https://github.com/llvm/llvm-project/issues/154979
+module llvm_project_issue_154979_m
     type base
         real, allocatable :: data(:)
         complex, allocatable :: cx(:)
@@ -38,8 +39,8 @@ module m
     end subroutine
 end module
 
-program list_read
-    use m
+program llvm_project_issue_154979
+    use llvm_project_issue_154979_m
     integer currentPos, ss
 
     type(base) :: b1(2)
@@ -62,4 +63,4 @@ program list_read
 
     print*, size(b1(1)%data)
     print*, size(b1(1)%cx)
-end program list_read
+end program
