@@ -14,18 +14,7 @@
 #include <array>
 #include <assert.h>
 
-// Check the C++ standard and define the library version accordingly
-#if defined(__cpp_lib_concepts) && (__cpp_lib_concepts >= 201811L)
-    #define STDLIB_VERSION 2020
-#elif defined(__cpp_lib_parallel_algorithm) && (__cpp_lib_parallel_algorithm >= 201603L)
-    #define STDLIB_VERSION 2017
-#elif __cplusplus >= 201402L
-    #define STDLIB_VERSION 2014
-#else
-    #define STDLIB_VERSION 2011
-#endif
-
-#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
+#if __cplusplus >= 201402L
 // call the function in a constexpr and a non-constexpr context
 #define TEST(expr)                                                             \
   do {                                                                         \
@@ -47,7 +36,7 @@
 MAYBE_CONSTEXPR __host__ __device__ size_t test_array() {
   // Before C++17 only "operator[] const" is constexpr (thus available on
   // device).
-#if __cplusplus < 201703L && STDLIB_VERSION < 2017
+#if __cplusplus < 201703L
   const
 #endif
       std::array<int, 4>
@@ -56,12 +45,12 @@ MAYBE_CONSTEXPR __host__ __device__ size_t test_array() {
   size_t N = A.size();
   assert(N == 4);
 
-#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
+#if __cplusplus >= 201402L
   int fst = A[0];
   assert(fst == 0);
 #endif
 
-#if __cplusplus >= 201703L && STDLIB_VERSION >= 2017
+#if __cplusplus >= 201703L
   A[0] = 4;
   int snd = A[0];
   assert(snd == 4);
