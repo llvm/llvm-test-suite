@@ -1,0 +1,324 @@
+# The following cause errors if they are passed to clang via CFLAGS
+set(CLANG_ERRORING_CFLAGS
+  "-fdump-ipa-"
+  "-fdump-tree-"
+  "-fdump-rtl-"
+  "-fipa-"
+  "-fira-"
+  "-fopt-"
+  "-fno-ipa-"
+  "-fno-ira-"
+  "-ftree-loop-"
+  "-fno-tree-b"
+  "-fno-tree-c"
+  "-fno-tree-d"
+  "-fno-tree-f"
+  "-fno-tree-t"
+  "-fno-tree-p"
+  "-ftree-p"
+  "-fdisable-tree-"
+  "-fdisable-ipa-"
+  "-fcode-hoisting"
+  "-fcompare-debug"
+  "-fno-checking"
+  "-fno-dse"
+  "-fno-delayed-branch"
+  "-fno-early-inlining"
+  "-fno-rerun-cse-after-loop"
+  "-fno-guess-branch-probability"
+  "-fno-split-loops"
+  "-fno-tree-reassoc"
+  "-fno-tree-loop-im"
+  "-fno-tree-sink"
+  "-fno-tree-sra"
+  "-fno-tree-scev-cprop"
+  "-fno-toplevel-reorder"
+  "-fno-fp-int-builtin-inexact"
+  "-ftree-tail-merge"
+  "-fgimple"
+  "-fisolate-erroneous-paths-attribute"
+  "-flive-patching=inline-clone"
+  "-fdisable-rtl-init-regs"
+  "-fpredictive-commoning"
+  "-ftrack-macro-expansion=0"
+  "-fstrict-volatile-bitfields"
+  "-fvar-tracking-assignments"
+  "-fno-selective-scheduling"
+  "-fleading-underscore"
+  "-fopt-info-optimized-inline=stderr"
+  "-fdump-passes"
+  "-fno-dce"
+  "-fno-sched-pressure"
+  "-fno-tree-loop-distribute-patterns"
+  "-fenable-tree-cunrolli"
+  "-floop-unroll-and-jam"
+  "-fpeephole2"
+  "-fno-code-hoisting"
+  "-fno-finite-loops"
+  "--fast-math"
+  "--completion"
+  "--dump"
+  "-free"
+  "-fdiagnostics-show-caret"
+  "-fallow-parameterless-variadic-functions"
+  "-freorder-blocks-and-partition"
+  "-fstack-protector-explicit"
+  "-fno-var-tracking-assignments"
+  "-fno-strict-volatile-bitfields"
+  "-fprofile-exclude-files"
+  "-fprofile-filter-files"
+  "-fsched2-use-superblocks"
+  "-fno-forward-propagate"
+  "-frerun-cse-after-loop"
+  "-fsection-anchors"
+  "-fno-keep-inline-dllexport"
+  "-fcrossjumping"
+  "-ftree-coalesce-vars"
+  "-fselective-scheduling"
+  "-fsel-sched-pipelining"
+  "-fdiagnostics-generate-patch"
+  "-fstack-usage"
+  "-fno-split-wide-types"
+  "-fno-ssa-phiopt"
+  "-fno-tree-loop-ivcanon"
+  "-ftrack-macro-expansion"
+  "-fno-cprop-registers"
+  "-fno-optimize-strlen"
+  "-fno-if-conversion"
+  "-fno-peephole2"
+  "-flive-range-shrinkage"
+  "-fno-isolate-erroneous-paths-dereference"
+  "-fcse-follow-jumps"
+  "-freorder-blocks-algorithm"
+  "-fsplit-loops"
+  "-fno-gcse-lm"
+  "-fno-reorder-blocks-and-partition"
+  "-fno-move-loop-invariants"
+  "-fdbg-cnt"
+  "-fno-tree-loop-vectorize"
+  "-fsched-pressure"
+  "-ftree-cselim"
+  "-findirect-inlining"
+  "-fno-sched-critical-path-heuristic"
+  "-fno-sched-rank-heuristic"
+  "-fstack-check"
+  "-fno-tree-loop-optimize"
+  "-fself-test"
+  "-fguess-branch-probability"
+  "-fsplit-wide-types"
+  "-fno-inline-atomics"
+  "-finstrument-functions-exclude-function-list"
+  "-finstrument-functions-exclude-file-list"
+  "-fsched-stalled-insns"
+  "-gstabs"
+  "-flive-patching"
+  "-fplan9-extensions"
+  "-fif-conversion"
+  "-fno-crossjumping"
+  "-fkeep-inline-dllexport"
+  "-fthread-jumps"
+  "-fno-tree-slsr"
+  "--no-enum-size-warning"
+  "-ms"
+  "-mno-foobar"
+  "-m64"
+  "-mavx"
+  "-fkeep-static-functions"
+  "-fmove-loop-invariants"
+  "-fprofile-update"
+  "-fwrapv-pointer"
+  "-fno-foobar"
+  "-fhoist-adjacent-loads"
+  "-fno-partial-inlining"
+  "-fno-tree-switch-conversion"
+  "-floop-interchange"
+  "-fsplit-paths"
+  "-ftree-dominator-opts"
+  "-fno-wrapv-pointer"
+  "-fopenacc"
+  "-fvect-cost-model"
+  "-fprintf-return-value"
+  "-ffinite-loops"
+  "-fkeep-gc-roots-live"
+  "-fallow-store-data-races"
+  "-fgnu-tm"
+  "-floop-parallelize-all"
+  "-floop-nest-optimize"
+  "-fgraphite-identity"
+  "-fgraphite"
+  "-fstack-reuse"
+  "-floop-block"
+  "-floop-strip-mine"
+  "-fno-tree-loop-if-convert"
+  "-fno-version-loops-for-strides"
+  "-fno-reorder-functions"
+  "-fno-profile-reorder-functions"
+  "-flto-partition"
+  "-fno-allow-store-data-races"
+  "-fno-strict-flex-arrays"
+  "-fconserve-stack"
+  "-finstrument-functions-once"
+  "-fno-thread-jumps"
+  "-fpreprocessed"
+  "-fchecking"
+  "-fstrict-flex-arrays"
+  "-fbranch-probabilities"
+  "-fdelete-dead-exceptions"
+  "-fharden-compares"
+  "-gtoggle"
+  "-fabi-version"
+  "-fharden-conditional-branches"
+  "-fvar-tracking"
+  "-funreachable-traps"
+  "-fpartial-inlining"
+  "-foptimize-strlen"
+  "-fno-bit-tests"
+  "-fasan-shadow-offset"
+  "--disable-tree-evrp"
+  "-fprofile-info-section"
+  "-Wl,--no-enum-size-warning"
+)
+
+# The following cause errors if they are passed to clang via LDFLAGS
+set(CLANG_ERRORING_LDFLAGS
+  "-flinker-output"
+  "-flto-partition"
+)
+
+# This pulls out options in dg-options into `${Variable}` and pulls
+# dg-do "action" into DG_DO
+# dg-additional-sources "*.c" into DG_SRC
+function(gcc_torture_dg_options_cflags Variable DG_DO DG_SRC File)
+  # Some files have dg-options which we need to pick up. These should be in
+  # the first line but often aren't.
+  #
+  # We also need to be careful not to pick up target-specific dg-options.
+  set(DG_CFLAGS)
+
+  file(STRINGS ${File} FileLines)
+  foreach(FileLine ${FileLines})
+    if(FileLine MATCHES "dg-additional-sources \"?([^\" ]*)")
+      set(DG_SRC ${CMAKE_MATCH_1} PARENT_SCOPE)
+    endif()
+    if(FileLine MATCHES "dg-do ([^}\" ]*)(.*)")
+      set(DG_DO ${CMAKE_MATCH_1} PARENT_SCOPE)
+    endif()
+    # Skip dg-warning
+    if(FileLine MATCHES "dg-warning(.*)")
+      continue()
+    endif()
+    # Looking for `dg-options "..."` or `dg-additional-options "..."` without
+    # `{ target` afterwards (ignoring spaces).
+    if(FileLine MATCHES "dg-(additional-)?options ({ )?\"([^\"]*)\"( })?(.*)")
+      # This is needed to turn the string into a list of CFLAGS
+      separate_arguments(FILE_CFLAGS UNIX_COMMAND ${CMAKE_MATCH_3})
+      # This does the negative lookahead for `{ target` anywhere in the rest of
+      # the line
+      if(NOT ${CMAKE_MATCH_5} MATCHES "{ +target")
+        list(APPEND DG_CFLAGS ${FILE_CFLAGS})
+      endif()
+    endif()
+  endforeach()
+
+  # Remove any flags that will make clang error
+  if (DG_CFLAGS)
+    foreach(ERROR_CFLAG ${CLANG_ERRORING_CFLAGS})
+      list(FILTER DG_CFLAGS EXCLUDE REGEX "^${ERROR_CFLAG}.*")
+    endforeach()
+  endif()
+
+  # Set the parent scope variable
+  set(${Variable} ${DG_CFLAGS} PARENT_SCOPE)
+endfunction()
+
+function(gcc_torture_execute_test File)
+  cmake_parse_arguments(_TORTURE "" "PREFIX;DG_DO_DEFAULT" "CFLAGS;LDFLAGS" ${ARGN})
+  # There are a few tests with duplicate filenames, and CMake wants all target
+  # names to be unique, so we add a disambiguator to the target name. The
+  # disambiguator is based upon the directory structure, swapping `/` for `-`.
+  get_filename_component(Name ${File} NAME_WE)
+  set(_target "${_TORTURE_PREFIX}_${Name}")
+
+  gcc_torture_dg_options_cflags(DG_CFLAGS DG_DO DG_SRC ${File})
+
+  # Add any flags that were requested
+  list(APPEND CFLAGS ${DG_CFLAGS} ${_TORTURE_CFLAGS})
+  list(APPEND LDFLAGS ${DG_CFLAGS} ${_TORTURE_LDFLAGS})
+
+  # Only compile the test case if there is no dg-do in the test case.
+  if(NOT DG_DO)
+    if(_TORTURE_DG_DO_DEFAULT STREQUAL "preprocess")
+      list(APPEND CFLAGS ${DG_CFLAGS} "-E")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "assemble")
+      list(APPEND CFLAGS ${DG_CFLAGS} "-S")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "compile")
+      llvm_test_library(${_target} OBJECT ${File})
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "link")
+      if(DG_SRC)
+        llvm_test_executable_no_test(${_target} ${File} ${DG_SRC})
+      else()
+        llvm_test_executable_no_test(${_target} ${File})
+      endif()
+
+    elseif(_TORTURE_DG_DO_DEFAULT STREQUAL "run")
+      if(DG_SRC)
+        llvm_test_executable_no_test(${_target} ${File} ${DG_SRC})
+      else()
+        llvm_test_executable_no_test(${_target} ${File})
+      endif()
+
+      llvm_test_run()
+      llvm_add_test_for_target(${_target})
+
+    elseif()
+      message(FATAL_ERROR "Unknown DG_DO_DEFAULT parameter: \"${_TORTURE_DG_DO_DEFAULT}\"")
+    endif()
+
+    return()
+  endif()
+
+  # Only compile the test case if specify with "dg-do compile"
+  if(DG_DO STREQUAL "compile")
+    llvm_test_library(${_target} OBJECT ${File})
+    return()
+  endif()
+
+  # Only assemble the test case if specify with "dg-do assemble"
+  if(DG_DO STREQUAL "assemble")
+    list(APPEND CFLAGS ${DG_CFLAGS} "-S")
+    llvm_test_library(${_target} OBJECT ${File})
+    return()
+  endif()
+
+  # Only assemble the test case if specify with "dg-do preprocess"
+  if(DG_DO STREQUAL "preprocess")
+    list(APPEND CFLAGS ${DG_CFLAGS} "-E")
+    llvm_test_library(${_target} OBJECT ${File})
+    return()
+  endif()
+
+  if(DG_SRC)
+    llvm_test_executable_no_test(${_target} ${File} ${DG_SRC})
+  else()
+    llvm_test_executable_no_test(${_target} ${File})
+  endif()
+
+  # Only link the test case if specify with "dg-do link"
+  if(DG_DO STREQUAL "link")
+    return()
+  endif()
+
+  llvm_test_run()
+
+  llvm_add_test_for_target(${_target})
+endfunction()
+
+
+# GCC C Torture Suite is conventionally run without warnings
+list(APPEND CFLAGS "-w" "-Wno-implicit-function-declaration" "-Wno-implicit-int"
+    "-Wno-int-conversion")
