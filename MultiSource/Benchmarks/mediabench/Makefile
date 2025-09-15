@@ -1,5 +1,6 @@
 # MultiSource/mediabench Makefile:  Build all subdirectories automatically
 
+CPPFLAGS += -Wno-error=incompatible-pointer-types
 LEVEL = ../../..
 PARALLEL_DIRS  := adpcm g721 gsm jpeg mpeg2
 #epic fails with lli, needs more investigation

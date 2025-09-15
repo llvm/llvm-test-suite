@@ -1,3 +1,4 @@
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 add_subdirectory(adpcm)
 add_subdirectory(g721)
 add_subdirectory(gsm)
