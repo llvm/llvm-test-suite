@@ -1,5 +1,6 @@
 # MultiSource/Benchmarks/MiBench Makefile
 
+CPPFLAGS += -Wno-error=incompatible-pointer-types
 LEVEL = ../../..
 
 ## NOTE: This must remain in this order, so that the labels in the nightly 

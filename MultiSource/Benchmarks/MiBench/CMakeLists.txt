@@ -1,3 +1,4 @@
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 add_subdirectory(automotive-basicmath)
 add_subdirectory(automotive-bitcount)
 add_subdirectory(automotive-susan)
