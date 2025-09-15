@@ -65,7 +65,7 @@ include $(LEVEL)/Makefile.config
 
 # for ClamAV these are in clamav-config.h, but since we can't run configure, we have to define them here
 
-
+CPPFLAGS += -Wno-error=incompatible-pointer-types
 # -- OS macros --
 #  It is especially important to get this correctly defined for windows.
 

@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/zlib -DDONT_LOCK_DBDIRS)
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 
 set(INPUT
   inputs/clam.cab
