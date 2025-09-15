@@ -1,3 +1,5 @@
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
+
 # The following cause errors if they are passed to clang via CFLAGS
 set(CLANG_ERRORING_CFLAGS
   "-fno-early-inlining"

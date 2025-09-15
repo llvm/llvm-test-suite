@@ -7,6 +7,7 @@ endif
 endif
 
 CFLAGS += -Wno-implicit-int
+CFLAGS += -Wno-error=incompatible-pointer-types
 
 ifdef BENCHMARKING_ONLY
 PROGRAMS_TO_SKIP += \

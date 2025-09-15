@@ -1,5 +1,6 @@
 # SingleSource/UnitTests/Vector/Makefile
 LEVEL = ../../..
+CPPFLAGS += -Wno-error=incompatible-pointer-types
 
 include $(LEVEL)/Makefile.config
 

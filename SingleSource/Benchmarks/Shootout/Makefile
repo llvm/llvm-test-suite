@@ -1,5 +1,6 @@
 LEVEL = ../../..
 LDFLAGS += -lm
+CPPFLAGS += -Wno-error=incompatible-pointer-types
 
 ifeq ($(ARCH),XCore)
 XCORE_TARGET_NEEDS_MEMORY := 256

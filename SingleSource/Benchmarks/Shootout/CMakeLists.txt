@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 set(Source
   ackermann.c
   ary3.c

@@ -1,3 +1,4 @@
+list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 set(VECTOR_MAIN_DIR SingleSource/UnitTests/Vector)
 if(ARCH STREQUAL "PowerPC")
   add_subdirectory(Altivec)
