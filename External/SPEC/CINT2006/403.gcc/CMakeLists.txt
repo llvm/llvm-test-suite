@@ -8,7 +8,7 @@ if(TARGET_OS STREQUAL "Darwin")
   # Necessary for iOS
   list(APPEND LDFLAGS -Xlinker -stack_size -Xlinker 0x8000000)
 endif()
-list(APPEND CPPFLAGS -DPOSIX -DSPEC_CPU_HAVE_BOOL)
+list(APPEND CPPFLAGS -DPOSIX -DSPEC_CPU_HAVE_BOOL -Wno-error=incompatible-pointer-types)
 
 macro(test_input run_type ifile sfile)
   llvm_test_run(RUN_TYPE ${run_type} WORKDIR %S
