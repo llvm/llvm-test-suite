@@ -43,14 +43,18 @@ def mutatePlan(context, plan):
     plan.verifyscript = _mutateScript(context, plan.verifyscript)
     for name, script in plan.metricscripts.items():
         plan.metricscripts[name] = _mutateScript(context, script)
+    plan.profilescript = _mutateScript(context, plan.profilescript)
 
     # Merging profile data should happen on the host because that is where
     # the toolchain resides, however we have to retrieve the profile data
     # from the device first, add commands for that to the profile script.
-    for path in plan.profile_files:
+    profile_files = plan.profile_files
+    if context.profilefile:
+        profile_files += [context.profilefile]
+    for path in profile_files:
         assert os.path.isabs(path)
         command = "scp %s:%s %s" % (context.config.remote_host, path, path)
-        plan.profilescript.insert(0, command)
+        plan.profilecollectscript.insert(0, command)
 
     assert context.read_result_file is testplan.default_read_result_file
     context.read_result_file = remote_read_result_file
