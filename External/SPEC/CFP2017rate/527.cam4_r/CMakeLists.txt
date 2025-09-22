@@ -69,6 +69,8 @@ speccpu2017_add_include_dirs(
 # the netcdf modules are in the build directory for the rate test
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../CFP2017rate/527.cam4_r")
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-int")
+
 set(CAM4_C_DEFS "-DNO_SHR_VMATH;-DCO2A;-DPERGRO")
 list(APPEND CAM4_C_DEFS "-DPLON=144;-DPLAT=96;-DPLEV=26;-DPCNST=3;-DPCOLS=4")
 list(APPEND CAM4_C_DEFS "-DPTRM=1;-DPTRN=1;-DPTRK=1")
