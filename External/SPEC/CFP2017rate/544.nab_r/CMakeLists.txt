@@ -66,4 +66,5 @@ speccpu2017_add_executable(
   regex-alpha/regexec.c
   regex-alpha/regfree.c
 )
+set_property(TARGET ${PROG} PROPERTY C_STANDARD 17)
 speccpu2017_prepare_rundir()

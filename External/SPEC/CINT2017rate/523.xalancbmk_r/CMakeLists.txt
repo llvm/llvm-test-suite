@@ -25,6 +25,13 @@ if(HAVE_CXX_FLAG_FDELAYED_TEMPLATE_PARSING)
   add_compile_options(-fdelayed-template-parsing)
 endif()
 
+# Equivalent workaround for GCC: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116064
+check_cxx_compiler_flag(-Wno-error=template-body
+                        HAVE_CXX_FLAG_WNO_ERROR_TEMPLATE_BODY)
+if(HAVE_CXX_FLAG_WNO_ERROR_TEMPLATE_BODY)
+  add_compile_options(-Wno-error=template-body)
+endif()
+
 add_definitions(
   -DAPP_NO_THREADS
   -DXALAN_INMEM_MSG_LOADER

@@ -1219,5 +1219,6 @@ speccpu2017_add_executable(
   specrand/specrand.c
   spec_backtrace.c
 )
+set_property(TARGET ${PROG} PROPERTY C_STANDARD 17)
 set_property(TARGET ${PROG} PROPERTY CXX_STANDARD 98)
 speccpu2017_prepare_rundir()
