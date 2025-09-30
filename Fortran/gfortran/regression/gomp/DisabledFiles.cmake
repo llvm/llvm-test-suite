@@ -79,6 +79,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: clause ALLOCATE in TARGET construct
   allocate-clause.f90
+
+  # unimplemented: non-rectangular canonical loop nests
+  canonical-loop-1.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
