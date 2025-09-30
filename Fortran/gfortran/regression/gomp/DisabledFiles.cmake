@@ -82,6 +82,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: non-rectangular canonical loop nests
   canonical-loop-1.f90
+  pr85313.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
