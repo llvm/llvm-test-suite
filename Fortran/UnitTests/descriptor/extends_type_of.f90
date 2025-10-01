@@ -39,6 +39,19 @@ contains
     end if
     print *, check_result, ": ", trim(label)
   end subroutine
+  subroutine check_extended_type_allocatable(a, b, expect, label)
+    class(*), allocatable :: a
+    class(*), allocatable :: b
+    character(len=20) :: label
+    character(len=6) :: check_result
+    logical :: expect
+    if (extends_type_of(a, b) .eqv. expect) then
+      check_result = "passed"
+    else
+      check_result = "FAILED"
+    end if
+    print *, check_result, ": ", trim(label)
+  end subroutine
 end module
 
 program test
@@ -56,6 +69,20 @@ program test
   class(*), pointer :: k10p => k10, k20p => k20
   class(*), pointer :: i1p => i1, i2p => i2, i3p => i3, fp => f
 
+  class(*), allocatable :: unalloc
+  class(*), allocatable :: pa, qa, ra
+  class(*), allocatable :: k10a, k20a
+  class(*), allocatable :: i1a, i2a, i3a, fa
+
+  allocate(pa, source=p)
+  allocate(qa, source=q)
+  allocate(ra, source=r)
+  allocate(k10a, source=k10)
+  allocate(k20a, source=k20)
+  allocate(i1a, source=i1)
+  allocate(i2a, source=i2)
+  allocate(i3a, source=i3)
+  allocate(fa, source=f)
 
   call check_extended_type(p, p, .true., "p <: p")
   call check_extended_type(p, q, .false., "p <: q")
@@ -97,4 +124,29 @@ program test
   call check_extended_type_pointer(fp, null_cp, .true., "fp <: null_cp")
   call check_extended_type_pointer(null_cp, fp, .false., "null_cp <: fp")
   call check_extended_type_pointer(null_cp, null_cp, .true., "null_cp <: null_cp")
+  
+  ! Repeating above tests with allocatables
+  call check_extended_type_allocatable(pa, pa, .true., "pa <: pa")
+  call check_extended_type_allocatable(pa, qa, .false., "pa <: qa")
+  call check_extended_type_allocatable(qa, pa, .true., "qa <: pa")
+  call check_extended_type_allocatable(qa, ra, .true., "qa <: ra")
+  call check_extended_type_allocatable(k10a, k20a, .false., "k10a <: k20a")
+  call check_extended_type_allocatable(k20a, k10a, .false., "k20a <: k10a")
+  call check_extended_type_allocatable(k10a, k10a, .true., "k10a <: k10a")
+  call check_extended_type_allocatable(k20a, k20a, .true., "k20a <: k20a")
+  call check_extended_type_allocatable(i1a, i2a, .true., "i1a <: i2a")
+  call check_extended_type_allocatable(i2a, i1a, .true., "i2a <: i1a")
+  call check_extended_type_allocatable(fa, fa, .true., "fa <: fa")
+  call check_extended_type_allocatable(i1a, i3a, .false., "i1a <: i3a")
+  call check_extended_type_allocatable(i3a, i1a, .false., "i3a <: i1a")
+  call check_extended_type_allocatable(i1a, fa, .false., "i1a <: fa")
+  call check_extended_type_allocatable(fa, i1a, .false., "fa <: i1a")
+  ! Checking rules with unallocated allocatables
+  call check_extended_type_allocatable(unalloc, pa, .false., "unalloc <: pa")
+  call check_extended_type_allocatable(pa, unalloc, .true., "pa <: unalloc")
+  call check_extended_type_allocatable(unalloc, k10a, .false., "unalloc <: k10a")
+  call check_extended_type_allocatable(k10a, unalloc, .true., "k10a <: unalloc")
+  call check_extended_type_allocatable(fa, unalloc, .true., "fa <: unalloc")
+  call check_extended_type_allocatable(unalloc, fa, .false., "unalloc <: fa")
+  call check_extended_type_allocatable(unalloc, unalloc, .true., "unalloc <: unalloc")
 end
