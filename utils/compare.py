@@ -128,9 +128,9 @@ def merge_values(values, merge_function):
 
 
 def get_values(values):
-    # Create data view without diff column.
-    if "diff" in values.columns:
-        values = values[[c for c in values.columns if c != "diff"]]
+    # Create data view without diff column and statistical columns.
+    exclude_cols = ["diff", "std_lhs", "std_rhs", "t-value", "p-value", "significant"]
+    values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
         return (values.iloc[:, 0], values.iloc[:, 1])
@@ -148,6 +148,57 @@ def add_diff_column(metric, values, absolute_diff=False):
     else:
         values[(metric, "diff")] = (values1 / values0) - 1.0
     return values
+
+
+def compute_statistics(lhs_d, rhs_d, metrics, alpha):
+    stats_dict = {}
+
+    for metric in metrics:
+        if metric not in lhs_d.columns:
+            continue
+
+        stats_dict[metric] = {}
+
+        # Group by program
+        for program in lhs_d.index.get_level_values(1).unique():
+            lhs_values = lhs_d.loc[(slice(None), program), metric].dropna()
+            rhs_values = rhs_d.loc[(slice(None), program), metric].dropna()
+
+            stats_dict[metric][program] = {
+                'std_lhs': lhs_values.std(ddof=1) if len(lhs_values) >= 2 else float('nan'),
+                'std_rhs': rhs_values.std(ddof=1) if len(rhs_values) >= 2 else float('nan'),
+            }
+
+            # Compute t-test if we have enough samples
+            if len(lhs_values) >= 2 and len(rhs_values) >= 2:
+                t_stat, p_val = stats.ttest_ind(lhs_values, rhs_values)
+                stats_dict[metric][program]['t-value'] = t_stat
+                stats_dict[metric][program]['p-value'] = p_val
+                stats_dict[metric][program]['significant'] = "✅" if p_val < alpha else "❌"
+            else:
+                stats_dict[metric][program]['t-value'] = float('nan')
+                stats_dict[metric][program]['p-value'] = float('nan')
+                stats_dict[metric][program]['significant'] = ""
+
+    return stats_dict
+
+
+def add_precomputed_statistics(data, stats_dict):
+    """Add precomputed statistics to the unstacked dataframe."""
+    for metric in data.columns.levels[0]:
+        if metric not in stats_dict:
+            continue
+
+        for stat_name in ['std_lhs', 'std_rhs', 't-value', 'p-value', 'significant']:
+            values = []
+            for program in data.index:
+                if program in stats_dict[metric]:
+                    values.append(stats_dict[metric][program].get(stat_name, float('nan') if stat_name != 'significant' else ""))
+                else:
+                    values.append(float('nan') if stat_name != 'significant' else "")
+            data[(metric, stat_name)] = values
+
+    return data
 
 
 def add_geomean_row(metrics, data, dataout):
@@ -272,6 +323,16 @@ def print_result(
     if not absolute_diff:
         for m in metrics:
             formatters[(m, "diff")] = format_relative_diff
+    # Add formatters for statistical columns
+    for m in metrics:
+        if (m, "p-value") in dataout.columns:
+            formatters[(m, "p-value")] = lambda x: "%.4f" % x if not pd.isna(x) else ""
+        if (m, "t-value") in dataout.columns:
+            formatters[(m, "t-value")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if (m, "std_lhs") in dataout.columns:
+            formatters[(m, "std_lhs")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if (m, "std_rhs") in dataout.columns:
+            formatters[(m, "std_rhs")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -320,7 +381,10 @@ def print_result(
         formatters=formatters,
     )
     print(out)
-    print(d.describe())
+    # Exclude statistical columns from summary statistics
+    exclude_from_summary = ["std_lhs", "std_rhs", "t-value", "p-value", "significant"]
+    d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
+    print(d_summary.describe())
 
 
 def main():
@@ -400,6 +464,19 @@ def main():
         default=False,
         help="Don't use abs() when sorting results",
     )
+    parser.add_argument(
+        "--statistics",
+        action="store_true",
+        dest="statistics",
+        default=False,
+        help="Add statistical analysis columns (std, t-value, p-value, significance)",
+    )
+    parser.add_argument(
+        "--alpha",
+        type=float,
+        default=0.05,
+        help="Significance level for statistical tests (default: 0.05)",
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -425,6 +502,7 @@ def main():
 
     # Read inputs
     files = config.files
+    stats_dict = None
     if "vs" in files:
         split = files.index("vs")
         lhs = files[0:split]
@@ -432,8 +510,22 @@ def main():
 
         # Combine the multiple left and right hand sides.
         lhs_d = readmulti(lhs)
-        lhs_merged = merge_values(lhs_d, config.merge_function)
         rhs_d = readmulti(rhs)
+
+        # Compute statistics on raw data before merging (if requested)
+        if config.statistics:
+            # Get metrics early for statistics computation
+            temp_metrics = config.metrics
+            if len(temp_metrics) == 0:
+                defaults = ["Exec_Time", "exec_time", "Value", "Runtime"]
+                for defkey in defaults:
+                    if defkey in lhs_d.columns:
+                        temp_metrics = [defkey]
+                        break
+            stats_dict = compute_statistics(lhs_d, rhs_d, temp_metrics, alpha=config.alpha)
+
+        # Merge data
+        lhs_merged = merge_values(lhs_d, config.merge_function)
         rhs_merged = merge_values(rhs_d, config.merge_function)
 
         # Combine to new dataframe
@@ -507,6 +599,9 @@ def main():
 
     for metric in data.columns.levels[0]:
         data = add_diff_column(metric, data, absolute_diff=config.absolute_diff)
+
+    if config.statistics and stats_dict is not None:
+        data = add_precomputed_statistics(data, stats_dict)
 
     sortkey = "diff"
     # TODO: should we still be sorting by diff even if the diff is hidden?
