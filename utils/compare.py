@@ -129,13 +129,27 @@ def merge_values(values, merge_function):
 
 def get_values(values):
     # Create data view without diff column and statistical columns.
-    exclude_cols = ["diff", "std_lhs", "std_rhs", "t-value", "p-value", "significant"]
-    values = values[[c for c in values.columns if c not in exclude_cols]]
+    # Filter out diff and statistical analysis columns
+    exclude_cols = ["diff", "t-value", "p-value", "significant"]
+    # Also exclude std_* columns (dynamic based on lhs/rhs names)
+    values = values[[c for c in values.columns if c not in exclude_cols and not c.startswith('std_')]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
         return (values.iloc[:, 0], values.iloc[:, 1])
     else:
         return (values.min(axis=1), values.max(axis=1))
+
+
+def get_default_metric(data, second_data=None):
+    """Find a default metric to use if none specified.
+       data: Primary dataframe to check
+       second_data: Optional secondary dataframe (for 'vs' mode with lhs/rhs)
+    """
+    defaults = ["Exec_Time", "exec_time", "Value", "Runtime"]
+    for defkey in defaults:
+        if defkey in data.columns or (second_data is not None and defkey in second_data.columns):
+            return [defkey]
+    return []
 
 
 def add_diff_column(metric, values, absolute_diff=False):
@@ -150,46 +164,49 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha):
+def compute_statistics(lhs_d, rhs_d, metrics, alpha, lhs_name='lhs', rhs_name='rhs'):
     stats_dict = {}
 
     for metric in metrics:
-        if metric not in lhs_d.columns:
+        if metric not in lhs_d.columns or metric not in rhs_d.columns:
             continue
 
         stats_dict[metric] = {}
 
-        # Group by program
-        for program in lhs_d.index.get_level_values(1).unique():
-            lhs_values = lhs_d.loc[(slice(None), program), metric].dropna()
+        # Group by program (more efficient than unique+loc)
+        for program, lhs_group in lhs_d.groupby(level=1):
+            lhs_values = lhs_group[metric].dropna()
             rhs_values = rhs_d.loc[(slice(None), program), metric].dropna()
-
-            stats_dict[metric][program] = {
-                'std_lhs': lhs_values.std(ddof=1) if len(lhs_values) >= 2 else float('nan'),
-                'std_rhs': rhs_values.std(ddof=1) if len(rhs_values) >= 2 else float('nan'),
-            }
 
             # Compute t-test if we have enough samples
             if len(lhs_values) >= 2 and len(rhs_values) >= 2:
+                stats_dict[metric][program] = {
+                    f'std_{lhs_name}': lhs_values.std(ddof=1),
+                    f'std_{rhs_name}': rhs_values.std(ddof=1),
+                }
                 t_stat, p_val = stats.ttest_ind(lhs_values, rhs_values)
                 stats_dict[metric][program]['t-value'] = t_stat
                 stats_dict[metric][program]['p-value'] = p_val
-                stats_dict[metric][program]['significant'] = "✅" if p_val < alpha else "❌"
+                stats_dict[metric][program]['significant'] = "Y" if p_val < alpha else "N"
             else:
-                stats_dict[metric][program]['t-value'] = float('nan')
-                stats_dict[metric][program]['p-value'] = float('nan')
-                stats_dict[metric][program]['significant'] = ""
+                stats_dict[metric][program] = {
+                    f'std_{lhs_name}': float('nan'),
+                    f'std_{rhs_name}': float('nan'),
+                    't-value': float('nan'),
+                    'p-value': float('nan'),
+                    'significant': ""
+                }
 
     return stats_dict
 
 
-def add_precomputed_statistics(data, stats_dict):
+def add_precomputed_statistics(data, stats_dict, stat_col_names):
     """Add precomputed statistics to the unstacked dataframe."""
     for metric in data.columns.levels[0]:
         if metric not in stats_dict:
             continue
 
-        for stat_name in ['std_lhs', 'std_rhs', 't-value', 'p-value', 'significant']:
+        for stat_name in stat_col_names:
             values = []
             for program in data.index:
                 if program in stats_dict[metric]:
@@ -329,10 +346,10 @@ def print_result(
             formatters[(m, "p-value")] = lambda x: "%.4f" % x if not pd.isna(x) else ""
         if (m, "t-value") in dataout.columns:
             formatters[(m, "t-value")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
-        if (m, "std_lhs") in dataout.columns:
-            formatters[(m, "std_lhs")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
-        if (m, "std_rhs") in dataout.columns:
-            formatters[(m, "std_rhs")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        # Handle dynamic std_* columns (e.g., std_lhs, std_rhs, or custom names)
+        for col in dataout.columns:
+            if col[0] == m and col[1].startswith('std_'):
+                formatters[col] = lambda x: "%.3f" % x if not pd.isna(x) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -382,7 +399,9 @@ def print_result(
     )
     print(out)
     # Exclude statistical columns from summary statistics
-    exclude_from_summary = ["std_lhs", "std_rhs", "t-value", "p-value", "significant"]
+    # Build exclude list with dynamic std_* columns
+    exclude_from_summary = ["t-value", "p-value", "significant"]
+    exclude_from_summary.extend([col for col in d.columns.get_level_values(1).unique() if col.startswith('std_')])
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -503,6 +522,7 @@ def main():
     # Read inputs
     files = config.files
     stats_dict = None
+    stat_col_names = None
     if "vs" in files:
         split = files.index("vs")
         lhs = files[0:split]
@@ -517,12 +537,15 @@ def main():
             # Get metrics early for statistics computation
             temp_metrics = config.metrics
             if len(temp_metrics) == 0:
-                defaults = ["Exec_Time", "exec_time", "Value", "Runtime"]
-                for defkey in defaults:
-                    if defkey in lhs_d.columns:
-                        temp_metrics = [defkey]
-                        break
-            stats_dict = compute_statistics(lhs_d, rhs_d, temp_metrics, alpha=config.alpha)
+                temp_metrics = get_default_metric(lhs_d, rhs_d)
+            stats_dict = compute_statistics(
+                lhs_d, rhs_d, temp_metrics,
+                alpha=config.alpha,
+                lhs_name=config.lhs_name,
+                rhs_name=config.rhs_name
+            )
+            # Build the ordered list of stat column names
+            stat_col_names = [f'std_{config.lhs_name}', f'std_{config.rhs_name}', 't-value', 'p-value', 'significant']
 
         # Merge data
         lhs_merged = merge_values(lhs_d, config.merge_function)
@@ -540,11 +563,7 @@ def main():
     # Decide which metric to display / what is our "main" metric
     metrics = config.metrics
     if len(metrics) == 0:
-        defaults = ["Exec_Time", "exec_time", "Value", "Runtime"]
-        for defkey in defaults:
-            if defkey in data.columns:
-                metrics = [defkey]
-                break
+        metrics = get_default_metric(data)
     if len(metrics) == 0:
         sys.stderr.write("No default metric found and none specified\n")
         sys.stderr.write("Available metrics:\n")
@@ -600,8 +619,8 @@ def main():
     for metric in data.columns.levels[0]:
         data = add_diff_column(metric, data, absolute_diff=config.absolute_diff)
 
-    if config.statistics and stats_dict is not None:
-        data = add_precomputed_statistics(data, stats_dict)
+    if config.statistics:
+        data = add_precomputed_statistics(data, stats_dict, stat_col_names)
 
     sortkey = "diff"
     # TODO: should we still be sorting by diff even if the diff is hidden?
