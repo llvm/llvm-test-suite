@@ -141,6 +141,16 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # for accessing/modifying DUMMY arguments.
   # Also see https://flang.llvm.org/docs/Aliasing.html#cray-pointers
   cray_pointers_2.f90
+
+  # This program is not conforming Fortran in two ways. The pointer returned
+  # from bar points to an actual argument (namely a function result value
+  # returned from build) that is not a target or pointer, and it must not be
+  # referenced afterwards. Second, the array returned from evaluate is allocated
+  # to 8 elements, but the comparison in the line with stop 2 compares it
+  # against an array constructor with only four elements.
+  #
+  # https://github.com/llvm/llvm-project/issues/139754#issuecomment-3336027989
+  pr117797.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
@@ -964,10 +974,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   zero_sized_1.f90
   do_check_1.f90
   random_3.f90
-
-  # This test fails with "STOP: code 2" when compiled with -O0, but passes at
-  # higher optimization levels.
-  pr117797.f90
 
   # ---------------------------------------------------------------------------
   #
