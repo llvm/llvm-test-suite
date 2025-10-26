@@ -127,12 +127,11 @@ def merge_values(values, merge_function):
     return values.groupby(level=1).apply(merge_function)
 
 
-def get_values(values):
-    # Create data view without diff column and statistical columns.
-    # Filter out diff and statistical analysis columns
+def get_values(values, lhs_name=None, rhs_name=None):
     exclude_cols = ["diff", "t-value", "p-value", "significant"]
-    # Also exclude std_* columns (dynamic based on lhs/rhs names)
-    values = values[[c for c in values.columns if c not in exclude_cols and not c.startswith('std_')]]
+    if lhs_name is not None and rhs_name is not None:
+        exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
+    values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
         return (values.iloc[:, 0], values.iloc[:, 1])
@@ -164,7 +163,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, lhs_name='lhs', rhs_name='rhs'):
+def compute_statistics(lhs_d, rhs_d, metrics, alpha, lhs_name, rhs_name):
     stats_dict = {}
 
     for metric in metrics:
@@ -210,7 +209,7 @@ def add_precomputed_statistics(data, stats_dict, stat_col_names):
             values = []
             for program in data.index:
                 if program in stats_dict[metric]:
-                    values.append(stats_dict[metric][program].get(stat_name, float('nan') if stat_name != 'significant' else ""))
+                    values.append(stats_dict[metric][program][stat_name])
                 else:
                     values.append(float('nan') if stat_name != 'significant' else "")
             data[(metric, stat_name)] = values
@@ -218,14 +217,14 @@ def add_precomputed_statistics(data, stats_dict, stat_col_names):
     return data
 
 
-def add_geomean_row(metrics, data, dataout):
+def add_geomean_row(metrics, data, dataout, lhs_name=None, rhs_name=None):
     """
     Normalize values1 over values0, compute geomean difference and add a
     summary row to dataout.
     """
     gm = pd.DataFrame(index=[GEOMEAN_ROW], columns=dataout.columns, dtype="float64")
     for metric in metrics:
-        values0, values1 = get_values(data[metric])
+        values0, values1 = get_values(data[metric], lhs_name, rhs_name)
         # Avoid infinite values in the diff and instead use NaN, as otherwise
         # the computation of the geometric mean will fail.
         values0 = values0.replace({0: float("NaN")})
@@ -317,6 +316,8 @@ def print_result(
     sortkey="diff",
     sort_by_abs=True,
     absolute_diff=False,
+    lhs_name=None,
+    rhs_name=None,
 ):
     metrics = d.columns.levels[0]
     if sort_by_abs:
@@ -346,10 +347,11 @@ def print_result(
             formatters[(m, "p-value")] = lambda x: "%.4f" % x if not pd.isna(x) else ""
         if (m, "t-value") in dataout.columns:
             formatters[(m, "t-value")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
-        # Handle dynamic std_* columns (e.g., std_lhs, std_rhs, or custom names)
-        for col in dataout.columns:
-            if col[0] == m and col[1].startswith('std_'):
-                formatters[col] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if lhs_name is not None and rhs_name is not None:
+            if (m, f'std_{lhs_name}') in dataout.columns:
+                formatters[(m, f'std_{lhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+            if (m, f'std_{rhs_name}') in dataout.columns:
+                formatters[(m, f'std_{rhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -380,7 +382,7 @@ def print_result(
     # as it will otherwise interfere with common prefix/suffix computation.
     if show_diff_column and not absolute_diff:
         # geometric mean only makes sense for relative differences.
-        dataout = add_geomean_row(metrics, d, dataout)
+        dataout = add_geomean_row(metrics, d, dataout, lhs_name, rhs_name)
 
     def float_format(x):
         if x == "":
@@ -398,10 +400,9 @@ def print_result(
         formatters=formatters,
     )
     print(out)
-    # Exclude statistical columns from summary statistics
-    # Build exclude list with dynamic std_* columns
     exclude_from_summary = ["t-value", "p-value", "significant"]
-    exclude_from_summary.extend([col for col in d.columns.get_level_values(1).unique() if col.startswith('std_')])
+    if lhs_name is not None and rhs_name is not None:
+        exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -534,17 +535,13 @@ def main():
 
         # Compute statistics on raw data before merging (if requested)
         if config.statistics:
-            # Get metrics early for statistics computation
-            temp_metrics = config.metrics
-            if len(temp_metrics) == 0:
-                temp_metrics = get_default_metric(lhs_d, rhs_d)
+            metrics_for_stats = config.metrics if len(config.metrics) > 0 else get_default_metric(lhs_d, rhs_d)
             stats_dict = compute_statistics(
-                lhs_d, rhs_d, temp_metrics,
+                lhs_d, rhs_d, metrics_for_stats,
                 alpha=config.alpha,
                 lhs_name=config.lhs_name,
                 rhs_name=config.rhs_name
             )
-            # Build the ordered list of stat column names
             stat_col_names = [f'std_{config.lhs_name}', f'std_{config.rhs_name}', 't-value', 'p-value', 'significant']
 
         # Merge data
@@ -619,7 +616,7 @@ def main():
     for metric in data.columns.levels[0]:
         data = add_diff_column(metric, data, absolute_diff=config.absolute_diff)
 
-    if config.statistics:
+    if config.statistics and stats_dict is not None:
         data = add_precomputed_statistics(data, stats_dict, stat_col_names)
 
     sortkey = "diff"
@@ -640,6 +637,8 @@ def main():
         sortkey,
         config.no_abs_sort,
         config.absolute_diff,
+        config.lhs_name,
+        config.rhs_name,
     )
 
 
