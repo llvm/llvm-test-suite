@@ -127,7 +127,7 @@ def merge_values(values, merge_function):
     return values.groupby(level=1).apply(merge_function)
 
 
-def get_values(values, lhs_name=None, rhs_name=None):
+def get_values(values, lhs_name, rhs_name):
     exclude_cols = ["diff", "t-value", "p-value", "significant"]
     exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     values = values[[c for c in values.columns if c not in exclude_cols]]
