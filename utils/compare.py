@@ -316,13 +316,18 @@ def print_result(
     sort_by_abs=True,
     absolute_diff=False,
     lhs_name="lhs",
-    rhs_name="rhs"
+    rhs_name="rhs",
+    only_significant=False
 ):
     metrics = d.columns.levels[0]
     if sort_by_abs:
         d = d.sort_values(by=(metrics[0], sortkey), key=pd.Series.abs, ascending=False)
     else:
         d = d.sort_values(by=(metrics[0], sortkey), ascending=False)
+
+    if only_significant:
+        if (metrics[0], 'significant') in d.columns:
+            d = d[d[(metrics[0], 'significant')] == 'Y']
 
     # Ensure that the columns are grouped by metric (rather than having the
     # diffs at the end of the line).
@@ -494,6 +499,13 @@ def main():
         default=0.05,
         help="Significance level for statistical tests (default: 0.05)",
     )
+    parser.add_argument(
+        "--only-significant",
+        action="store_true",
+        dest="only_significant",
+        default=False,
+        help="Show only significant results when used with --statistics",
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -636,6 +648,7 @@ def main():
         config.absolute_diff,
         config.lhs_name,
         config.rhs_name,
+        config.only_significant,
     )
 
 
