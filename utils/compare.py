@@ -129,8 +129,7 @@ def merge_values(values, merge_function):
 
 def get_values(values, lhs_name=None, rhs_name=None):
     exclude_cols = ["diff", "t-value", "p-value", "significant"]
-    if lhs_name is not None and rhs_name is not None:
-        exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
+    exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
@@ -217,7 +216,7 @@ def add_precomputed_statistics(data, stats_dict, stat_col_names):
     return data
 
 
-def add_geomean_row(metrics, data, dataout, lhs_name=None, rhs_name=None):
+def add_geomean_row(metrics, data, dataout, lhs_name, rhs_name):
     """
     Normalize values1 over values0, compute geomean difference and add a
     summary row to dataout.
@@ -316,8 +315,8 @@ def print_result(
     sortkey="diff",
     sort_by_abs=True,
     absolute_diff=False,
-    lhs_name=None,
-    rhs_name=None,
+    lhs_name="lhs",
+    rhs_name="rhs"
 ):
     metrics = d.columns.levels[0]
     if sort_by_abs:
@@ -347,11 +346,10 @@ def print_result(
             formatters[(m, "p-value")] = lambda x: "%.4f" % x if not pd.isna(x) else ""
         if (m, "t-value") in dataout.columns:
             formatters[(m, "t-value")] = lambda x: "%.3f" % x if not pd.isna(x) else ""
-        if lhs_name is not None and rhs_name is not None:
-            if (m, f'std_{lhs_name}') in dataout.columns:
-                formatters[(m, f'std_{lhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
-            if (m, f'std_{rhs_name}') in dataout.columns:
-                formatters[(m, f'std_{rhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if (m, f'std_{lhs_name}') in dataout.columns:
+            formatters[(m, f'std_{lhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if (m, f'std_{rhs_name}') in dataout.columns:
+            formatters[(m, f'std_{rhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -401,8 +399,7 @@ def print_result(
     )
     print(out)
     exclude_from_summary = ["t-value", "p-value", "significant"]
-    if lhs_name is not None and rhs_name is not None:
-        exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
+    exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
