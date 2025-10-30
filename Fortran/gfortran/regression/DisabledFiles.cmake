@@ -151,6 +151,9 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   #
   # https://github.com/llvm/llvm-project/issues/139754#issuecomment-3336027989
   pr117797.f90
+
+  # Function call via a PROCEDURE()
+  proc_ptr_comp_46.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
