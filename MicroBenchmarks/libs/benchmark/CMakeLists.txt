@@ -199,7 +199,9 @@ else()
     add_cxx_compiler_flag(-Wsuggest-override)
   endif()
   add_cxx_compiler_flag(-pedantic)
-  add_cxx_compiler_flag(-pedantic-errors)
+  # Disable -pedantic-errors because of __COUNTER__ use. See
+  # https://github.com/google/benchmark/issues/2057 for details.
+  #add_cxx_compiler_flag(-pedantic-errors)
   add_cxx_compiler_flag(-Wshorten-64-to-32)
   add_cxx_compiler_flag(-fstrict-aliasing)
   # Disable warnings regarding deprecated parts of the library while building
