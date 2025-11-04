@@ -4,13 +4,13 @@ Also contains logic to load benchmark modules.
 """
 import lit
 import lit.TestRunner
-import lit.util
 import lit.formats
 import litsupport.modules
 import litsupport.modules.hash
 import litsupport.testfile
 import litsupport.testplan
 import os
+import pathlib
 
 
 # The ResultCode constructor has been changed recently in lit.  An additional parameter has ben added, which
@@ -38,7 +38,7 @@ class TestSuiteTest(lit.formats.ShTest):
 
         # Parse .test file and initialize context
         tmpDir, tmpBase = lit.TestRunner.getTempPaths(test)
-        lit.util.mkdir_p(os.path.dirname(tmpBase))
+        pathlib.Path(tmpBase).parent.mkdir(parents=True, exist_ok=True)
         context = litsupport.testplan.TestContext(test, litConfig, tmpDir, tmpBase)
         litsupport.testfile.parse(context, test.getSourcePath())
         plan = litsupport.testplan.TestPlan()
