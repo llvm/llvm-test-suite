@@ -1,5 +1,11 @@
-# Regenerate bitcode file
+# SAP function splitting regression test
 
+## Purpose
+This tests the correct compilation of `indirectbr` and `blockaddr`, that led to issues downstream, due to a not
+yet fixed issue, which was reported here:
+https://github.com/llvm/llvm-project/issues/161164
+
+## Regenerate bitcode file
 This bitcode test was generated from this high level program:
 
 ```
