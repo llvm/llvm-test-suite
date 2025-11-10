@@ -10,6 +10,6 @@ if(ARCH STREQUAL "x86")
   add_subdirectory(fft)
   endif()
 
-  # Proprietary e2e regression tests for SAP
+  # E2E regression tests from SAP
   add_subdirectory(sap_fct_splitting)
 endif()
