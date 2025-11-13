@@ -1,7 +1,5 @@
 #include <iostream>
-#include <math.h>
 #include <memory>
-#include <optional>
 #include <random>
 
 #include "benchmark/benchmark.h"
@@ -11,7 +9,8 @@
 // Find the last element in A above the given threshold,
 // with default loop vectorization settings.
 template <typename T> static T run_csa_autovec(T *A, T *B, T *C, T Threshold) {
-  // Pick out-of-range default value.
+  // Pick a default value that's out of the uniform distribution created
+  // for 'A' in init_data below.
   T Result = 101;
   for (unsigned i = 0; i < ITERATIONS; i++) {
     // Do some work to make the difference noticeable
@@ -26,7 +25,8 @@ template <typename T> static T run_csa_autovec(T *A, T *B, T *C, T Threshold) {
 // Find the last element in A above the given threshold,
 // with loop vectorization disabled.
 template <typename T> static T run_csa_novec(T *A, T *B, T* C, T Threshold) {
-  // Pick out-of-range default value.
+  // Pick a default value that's out of the uniform distribution created
+  // for 'A' in init_data below.
   T Result = 101;
 #pragma clang loop vectorize(disable) interleave(disable)
   for (unsigned i = 0; i < ITERATIONS; i++) {
