@@ -3,7 +3,7 @@
 ## Purpose
 This tests the correct compilation of `indirectbr` and `blockaddr` in combination with custom cost-based function outlining.
 
-## Regenerate bitcode file
+## Produce bitcode file
 This bitcode test was generated from this high level program:
 
 ```
@@ -24,10 +24,4 @@ Int32 main() {
   return 1;
 }
 
-```
-
-convert IR to bitcode using this command:
-
-```sh
-llvm-as <ir-file> -o <bitcode-file>
 ```
