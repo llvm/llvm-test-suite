@@ -9,4 +9,7 @@ if(ARCH STREQUAL "x86")
      NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
   add_subdirectory(fft)
   endif()
+
+  # E2E regression tests from SAP
+  add_subdirectory(sap_fct_splitting)
 endif()
