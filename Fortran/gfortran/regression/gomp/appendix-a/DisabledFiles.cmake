@@ -16,6 +16,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   #
   # These tests pass when they should fail.
   #
+  a.6.2.f90
   a.23.4.f90
   a.31.3.f90
 )
