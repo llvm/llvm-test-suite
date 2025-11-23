@@ -11,8 +11,12 @@ static bool isEqual(float A, float B) {
   if (std::isnan(A) || std::isnan(B))
     return std::isnan(A) && std::isnan(B);
 
+#if defined(__aarch64__) && defined(__APPLE__)
+  // On ARM64 macOS, check signbit for zeros since fmax treats -0.0 < +0.0.
+  // On other platforms, treat -0.0 and +0.0 via the == check below
   if (A == 0.0f)
     return B == 0.0f && std::signbit(A) == std::signbit(B);
+#endif
 
   return A == B;
 }
