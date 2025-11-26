@@ -8,6 +8,7 @@ set(ENABLE_HIP_CATCH_TESTS ON CACHE BOOL "Enable HIP Catch test framework and al
 set(CATCH_TEST_CATEGORIES "unit" CACHE STRING "Semicolon-separated list of test categories to include (unit;stress;performance;perftests)")
 set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdirectories to include (e.g., compiler;memory;stream). Empty means all subdirectories within enabled categories.")
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")
+set(HIP_CATCH_TEST_VERBOSE OFF CACHE BOOL "Show verbose output with individual TEST_CASE results from Catch2")
 
 # Local paths for Catch test infrastructure (now self-contained)
 set(HIP_CATCH_TESTS_DIR "${CMAKE_CURRENT_LIST_DIR}/catch")
@@ -133,10 +134,157 @@ function(track_test_target_multi_level TEST_TARGET CATEGORY SUBDIR VARIANT)
   set_property(GLOBAL APPEND PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_TEST_TARGETS_${VARIANT}" "${TEST_TARGET}")
 endfunction()
 
+# Function to create special generic target executables for hipSquareGenericTarget test
+# This test requires additional executables built with generic-only offload architectures
+# Arguments:
+#   TEST_BASENAME  - Base name of the test (e.g., hipSquareGenericTarget)
+#   TEST_DIR       - Directory containing the test sources
+#   VARIANT_SUFFIX - Variant suffix (e.g., hip-7.2.0)
+#   ROCM_PATH      - Path to ROCm installation
+function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX ROCM_PATH)
+  # Check if this is AMD platform (generic targets are AMD-specific)
+  get_filename_component(_compiler_name "${CMAKE_CXX_COMPILER}" NAME)
+  if(NOT (_compiler_name MATCHES "hipcc" OR _compiler_name MATCHES "clang"))
+    message(STATUS "Skipping generic target executables (not AMD platform)")
+    return()
+  endif()
+
+  message(STATUS "Creating generic target executables for ${TEST_BASENAME}-${VARIANT_SUFFIX}")
+
+  # Generic target architecture flags
+  set(_generic_archs
+    "--offload-arch=gfx9-generic"
+    "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
+    "--offload-arch=gfx9-4-generic:sramecc-:xnack-"
+    "--offload-arch=gfx9-4-generic:xnack+"
+    "--offload-arch=gfx10-1-generic"
+    "--offload-arch=gfx10-3-generic"
+    "--offload-arch=gfx11-generic"
+    "--offload-arch=gfx12-generic"
+  )
+
+  set(_source_file "${TEST_DIR}/${TEST_BASENAME}.cc")
+  set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests")
+
+  # Common source files
+  set(_common_sources
+    "${_source_file}"
+    "${HIP_CATCH_TESTS_DIR}/hipTestMain/hip_test_context.cc"
+    "${HIP_CATCH_TESTS_DIR}/hipTestMain/hip_test_features.cc"
+    "${HIP_CATCH_TESTS_DIR}/hipTestMain/main.cc"
+  )
+
+  # Common include directories
+  set(_include_flags
+    "-I${ROCM_PATH}/include"
+    "-I${HIP_CATCH_TESTS_DIR}/include"
+    "-I${CATCH2_INCLUDE_PATH}"
+    "-I${HIP_CATCH_TESTS_DIR}/external/picojson"
+  )
+
+  # Determine library linking flags
+  if(WIN32)
+    set(_libfs_flag "")
+    set(_exe_suffix ".exe")
+  else()
+    set(_libfs_flag "-lstdc++fs")
+    set(_exe_suffix "")
+  endif()
+
+  # 1. Build hipSquareGenericTargetOnly (regular fatbin with generic targets only)
+  set(_exe_name_regular "hipSquareGenericTargetOnly${_exe_suffix}")
+  set(_output_path_regular "${_output_dir}/${_exe_name_regular}")
+
+  add_custom_command(
+    OUTPUT "${_output_path_regular}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
+    COMMAND ${CMAKE_CXX_COMPILER}
+      -DNO_GENERIC_TARGET_ONLY_TEST
+      --std=c++17
+      -x hip
+      -mcode-object-version=6
+      -w
+      ${_generic_archs}
+      ${_common_sources}
+      -o "${_output_path_regular}"
+      --hip-path=${ROCM_PATH}
+      --rocm-path=${ROCM_PATH}
+      --hip-link
+      -rtlib=compiler-rt
+      -unwindlib=libgcc
+      -frtlib-add-rpath
+      ${_include_flags}
+      ${_libfs_flag}
+    DEPENDS ${_common_sources}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Building ${_exe_name_regular} for ${VARIANT_SUFFIX}"
+    VERBATIM
+  )
+
+  # 2. Build hipSquareGenericTargetOnlyCompressed (compressed fatbin with generic targets only)
+  set(_exe_name_compressed "hipSquareGenericTargetOnlyCompressed${_exe_suffix}")
+  set(_output_path_compressed "${_output_dir}/${_exe_name_compressed}")
+
+  add_custom_command(
+    OUTPUT "${_output_path_compressed}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
+    COMMAND ${CMAKE_CXX_COMPILER}
+      -DNO_GENERIC_TARGET_ONLY_TEST
+      -DGENERIC_COMPRESSED
+      --std=c++17
+      -x hip
+      -mcode-object-version=6
+      --offload-compress
+      -w
+      ${_generic_archs}
+      ${_common_sources}
+      -o "${_output_path_compressed}"
+      --hip-path=${ROCM_PATH}
+      --rocm-path=${ROCM_PATH}
+      --hip-link
+      -rtlib=compiler-rt
+      -unwindlib=libgcc
+      -frtlib-add-rpath
+      ${_include_flags}
+      ${_libfs_flag}
+    DEPENDS ${_common_sources}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Building ${_exe_name_compressed} for ${VARIANT_SUFFIX}"
+    VERBATIM
+  )
+
+  # Create custom targets for these executables
+  add_custom_target(hipSquareGenericTargetOnly-${VARIANT_SUFFIX}
+    DEPENDS "${_output_path_regular}"
+  )
+
+  add_custom_target(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
+    DEPENDS "${_output_path_compressed}"
+  )
+
+  # Make the main test executable depend on these
+  set(_main_test_exe "catch_unit_compiler_${TEST_BASENAME}-${VARIANT_SUFFIX}")
+  if(TARGET ${_main_test_exe})
+    add_dependencies(${_main_test_exe}
+      hipSquareGenericTargetOnly-${VARIANT_SUFFIX}
+      hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
+    )
+    message(STATUS "Added generic target executable dependencies to ${_main_test_exe}")
+  endif()
+
+  # Also add to the build target hierarchy
+  if(TARGET hip-tests-catch-unit-compiler-${VARIANT_SUFFIX})
+    add_dependencies(hip-tests-catch-unit-compiler-${VARIANT_SUFFIX}
+      hipSquareGenericTargetOnly-${VARIANT_SUFFIX}
+      hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
+    )
+  endif()
+endfunction()
+
 # Function to create a Catch test executable
 # Arguments:
 #   TEST_NAME     - Name of the test
-#   TEST_SOURCES  - List of source files
+#   TEST_SOURCES  - Source file(s) (can be a single file or list of files)
 #   TEST_DIR      - Directory containing the test sources
 #   CATEGORY      - Test category (unit, stress, etc.)
 #   SUBDIR        - Subdirectory name
@@ -218,6 +366,23 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     -Wno-unused-command-line-argument
   )
 
+  # Special handling for hipSquareGenericTarget test - add generic target architectures
+  if("${TEST_NAME}" MATCHES "hipSquareGenericTarget" AND "${CATEGORY}" STREQUAL "unit" AND "${SUBDIR}" STREQUAL "compiler")
+    target_compile_options(${_test_exe} PRIVATE
+      -mcode-object-version=6
+      -w
+      --offload-arch=gfx9-generic
+      --offload-arch=gfx9-4-generic:sramecc+:xnack-
+      --offload-arch=gfx9-4-generic:sramecc-:xnack-
+      --offload-arch=gfx9-4-generic:xnack+
+      --offload-arch=gfx10-1-generic
+      --offload-arch=gfx10-3-generic
+      --offload-arch=gfx11-generic
+      --offload-arch=gfx12-generic
+    )
+    message(STATUS "Added generic target compile options to ${_test_exe}")
+  endif()
+
   # Link options - platform-specific handling
   # If using hipcc wrapper (AMD or NVIDIA backend), it handles flags automatically
   # Otherwise, add explicit flags for AMD clang
@@ -251,12 +416,48 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # Create a test wrapper script
   set(_test_wrapper "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/${_test_exe}_wrapper.sh")
   file(WRITE "${_test_wrapper}" "#!/bin/bash\n")
-  file(APPEND "${_test_wrapper}" "exec \"${CMAKE_CURRENT_BINARY_DIR}/catch_tests/${_test_exe}\" \"$@\"\n")
+  file(APPEND "${_test_wrapper}" "# Auto-generated wrapper for ${_test_exe}\n")
+
+  # Special handling for hipSquareGenericTarget - needs to run from catch_tests dir
+  # so that helper executables (hipSquareGenericTargetOnly, etc.) can be found
+  if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
+    file(APPEND "${_test_wrapper}" "cd \"${CMAKE_CURRENT_BINARY_DIR}/catch_tests\" || exit 1\n")
+  endif()
+
+  # Add verbose reporting if enabled
+  if(HIP_CATCH_TEST_VERBOSE)
+    # When verbose mode is enabled, run test with Catch2 reporter flags
+    # Output is captured to .out files by timeit-target (LLVM test suite design)
+    # To see output during run, use: tail -f build/External/HIP/Output/*.out
+    file(APPEND "${_test_wrapper}" "echo \"=== Running: ${_test_exe} ===\"\n")
+    if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
+      # Use relative path since we're in catch_tests dir
+      file(APPEND "${_test_wrapper}" "exec \"./${_test_exe}\" --reporter compact --success \"$@\"\n")
+    else()
+      file(APPEND "${_test_wrapper}" "exec \"${CMAKE_CURRENT_BINARY_DIR}/catch_tests/${_test_exe}\" --reporter compact --success \"$@\"\n")
+    endif()
+  else()
+    # Non-verbose mode: use compact reporter with --success to show all assertions
+    if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
+      # Use relative path since we're in catch_tests dir
+      file(APPEND "${_test_wrapper}" "exec \"./${_test_exe}\" --reporter compact --success \"$@\"\n")
+    else()
+      file(APPEND "${_test_wrapper}" "exec \"${CMAKE_CURRENT_BINARY_DIR}/catch_tests/${_test_exe}\" --reporter compact --success \"$@\"\n")
+    endif()
+  endif()
+
   execute_process(COMMAND chmod +x "${_test_wrapper}")
 
   # Register with LIT
-  llvm_test_run(EXECUTABLE "/bin/bash" "${_test_exe}_wrapper.sh")
-  llvm_add_test(${_test_exe}.test ${_test_exe}_wrapper.sh)
+  # Use relative path from build directory for the wrapper script
+  llvm_test_run(EXECUTABLE "/bin/bash" "catch_tests/${_test_exe}_wrapper.sh")
+
+  # Add verification to check if test passed
+  # Catch2 prints "test cases: X | Y failed" when tests fail
+  # Check for failure indicators in output (%o expands to Output/<test_name>.test.out)
+  llvm_test_verify("! grep -q failed %o")
+
+  llvm_add_test(${_test_exe}.test catch_tests/${_test_exe}_wrapper.sh)
 
   # Track this test target at all hierarchy levels
   track_test_target_multi_level(${_test_exe}.test ${CATEGORY} ${SUBDIR} ${VARIANT_SUFFIX})
@@ -320,25 +521,200 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
 
   message(STATUS "Discovered test sources in ${CATEGORY}/${SUBDIR}: ${_test_sources}")
 
-  # Create test name from category and subdir
-  set(_test_name "catch_${CATEGORY}_${SUBDIR}")
+  # Create a separate test executable for each source file
+  # This allows LIT to report statistics for each individual test
+  foreach(_src ${_test_sources})
+    # Get the test name from the source filename (without extension)
+    get_filename_component(_test_basename "${_src}" NAME_WE)
+    set(_test_name "catch_${CATEGORY}_${SUBDIR}_${_test_basename}")
 
-  message(STATUS "Creating Catch test: ${_test_name} with ${CMAKE_CURRENT_LIST_LENGTH} sources")
+    message(STATUS "Creating Catch test: ${_test_name} from ${_src}")
 
-  # Create the test executable
-  create_catch_test_executable("${_test_name}" "${_test_sources}" "${_test_dir}" "${CATEGORY}" "${SUBDIR}" "${VARIANT_SUFFIX}" "${ROCM_PATH}")
+    # Create the test executable with just this one source file
+    create_catch_test_executable("${_test_name}" "${_src}" "${_test_dir}" "${CATEGORY}" "${SUBDIR}" "${VARIANT_SUFFIX}" "${ROCM_PATH}")
+
+    # Special handling for hipSquareGenericTarget test (unit/compiler only)
+    # This test requires additional executables with generic-only targets
+    if("${_test_basename}" STREQUAL "hipSquareGenericTarget" AND
+       "${CATEGORY}" STREQUAL "unit" AND "${SUBDIR}" STREQUAL "compiler")
+      create_generic_target_executables("${_test_basename}" "${_test_dir}" "${VARIANT_SUFFIX}" "${ROCM_PATH}")
+    endif()
+  endforeach()
 
   # Create per-variant check target for this subdirectory
   # Get test targets for this subdirectory-variant combination
   get_property(_subdir_variant_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_TEST_TARGETS_${VARIANT_SUFFIX}")
 
   if(_subdir_variant_tests)
-    add_custom_target(check-hip-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
-      COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} ${_subdir_variant_tests}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      DEPENDS hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
-      USES_TERMINAL
-      COMMENT "Run HIP Catch ${CATEGORY}/${SUBDIR} tests for variant ${VARIANT_SUFFIX}")
+    # When verbose mode is enabled, create a direct-run check target (bypasses LIT)
+    # Otherwise, use LIT for standard test infrastructure integration
+    if(HIP_CATCH_TEST_VERBOSE)
+      # Create a script that runs tests directly and shows verbose output
+      set(_run_script "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/run_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
+      file(WRITE "${_run_script}" "#!/bin/bash\n")
+      file(APPEND "${_run_script}" "cd ${CMAKE_CURRENT_BINARY_DIR}\n")
+      file(APPEND "${_run_script}" "FAILED=0\n")
+      file(APPEND "${_run_script}" "TOTAL_FILES=0\n")
+      file(APPEND "${_run_script}" "TOTAL_TESTS=0\n")
+      file(APPEND "${_run_script}" "PASSED_TESTS=0\n")
+      file(APPEND "${_run_script}" "FAILED_TESTS=0\n")
+      file(APPEND "${_run_script}" "echo \"\"\n")
+      file(APPEND "${_run_script}" "for test in catch_tests/catch_${CATEGORY}_${SUBDIR}_*-${VARIANT_SUFFIX}; do\n")
+      file(APPEND "${_run_script}" "  if [ -x \"\$test\" ]; then\n")
+      file(APPEND "${_run_script}" "    TOTAL_FILES=\$((TOTAL_FILES + 1))\n")
+      file(APPEND "${_run_script}" "    echo \"=== \$(basename \$test) ===\"\n")
+      file(APPEND "${_run_script}" "    # Special handling for hipSquareGenericTarget - must run from catch_tests dir\n")
+      file(APPEND "${_run_script}" "    if [[ \"\$test\" == *hipSquareGenericTarget* ]]; then\n")
+      file(APPEND "${_run_script}" "      SAVED_DIR=\$(pwd)\n")
+      file(APPEND "${_run_script}" "      cd catch_tests || exit 1\n")
+      file(APPEND "${_run_script}" "      TEST_PATH=\"./\$(basename \$test)\"\n")
+      file(APPEND "${_run_script}" "    else\n")
+      file(APPEND "${_run_script}" "      TEST_PATH=\"\$test\"\n")
+      file(APPEND "${_run_script}" "    fi\n")
+      file(APPEND "${_run_script}" "    # First, get total test case count from --list-tests\n")
+      file(APPEND "${_run_script}" "    LIST_OUTPUT=\$(\"\$TEST_PATH\" --list-tests 2>&1)\n")
+      file(APPEND "${_run_script}" "    FILE_TOTAL=\$(echo \"\$LIST_OUTPUT\" | tail -1 | grep -o '^[0-9]*' || echo 0)\n")
+      file(APPEND "${_run_script}" "    TOTAL_TESTS=\$((TOTAL_TESTS + FILE_TOTAL))\n")
+      file(APPEND "${_run_script}" "    # Now run the tests with console reporter to get full summary\n")
+      file(APPEND "${_run_script}" "    OUTPUT=\$(\"\$TEST_PATH\" --reporter console 2>&1)\n")
+      file(APPEND "${_run_script}" "    TEST_EXIT=\$?\n")
+      file(APPEND "${_run_script}" "    # Restore directory if we changed it\n")
+      file(APPEND "${_run_script}" "    if [[ \"\$test\" == *hipSquareGenericTarget* ]]; then\n")
+      file(APPEND "${_run_script}" "      cd \"\$SAVED_DIR\"\n")
+      file(APPEND "${_run_script}" "    fi\n")
+      file(APPEND "${_run_script}" "    echo \"\$OUTPUT\"\n")
+      file(APPEND "${_run_script}" "    if [ \$TEST_EXIT -ne 0 ]; then\n")
+      file(APPEND "${_run_script}" "      FAILED=1\n")
+      file(APPEND "${_run_script}" "    fi\n")
+      file(APPEND "${_run_script}" "    # Parse Catch2 summary line: 'test cases: X | Y passed | Z failed' or 'test cases: X | Y failed'\n")
+      file(APPEND "${_run_script}" "    SUMMARY_LINE=\$(echo \"\$OUTPUT\" | grep '^test cases:')\n")
+      file(APPEND "${_run_script}" "    if [ -n \"\$SUMMARY_LINE\" ]; then\n")
+      file(APPEND "${_run_script}" "      # Extract total\n")
+      file(APPEND "${_run_script}" "      CASES_TOTAL=\$(echo \"\$SUMMARY_LINE\" | sed 's/test cases: \\([0-9]*\\).*/\\1/')\n")
+      file(APPEND "${_run_script}" "      # Extract passed (if present)\n")
+      file(APPEND "${_run_script}" "      CASES_PASSED=\$(echo \"\$SUMMARY_LINE\" | grep -o '[0-9]* passed' | grep -o '[0-9]*' || echo 0)\n")
+      file(APPEND "${_run_script}" "      # Extract failed (if present)\n")
+      file(APPEND "${_run_script}" "      CASES_FAILED=\$(echo \"\$SUMMARY_LINE\" | grep -o '[0-9]* failed' | grep -o '[0-9]*' || echo 0)\n")
+      file(APPEND "${_run_script}" "      # If no explicit passed count, calculate from total - failed\n")
+      file(APPEND "${_run_script}" "      if [ \$CASES_PASSED -eq 0 ] && [ \$CASES_FAILED -gt 0 ]; then\n")
+      file(APPEND "${_run_script}" "        CASES_PASSED=\$((CASES_TOTAL - CASES_FAILED))\n")
+      file(APPEND "${_run_script}" "      fi\n")
+      file(APPEND "${_run_script}" "      PASSED_TESTS=\$((PASSED_TESTS + CASES_PASSED))\n")
+      file(APPEND "${_run_script}" "      FAILED_TESTS=\$((FAILED_TESTS + CASES_FAILED))\n")
+      file(APPEND "${_run_script}" "    fi\n")
+      file(APPEND "${_run_script}" "    echo \"(\$FILE_TOTAL TEST_CASE definitions in this file)\"\n")
+      file(APPEND "${_run_script}" "    echo \"\"\n")
+      file(APPEND "${_run_script}" "  fi\n")
+      file(APPEND "${_run_script}" "done\n")
+      file(APPEND "${_run_script}" "echo \"========================================\"\n")
+      file(APPEND "${_run_script}" "echo \"Summary:\"\n")
+      file(APPEND "${_run_script}" "echo \"  Test Suites: \$TOTAL_FILES\"\n")
+      file(APPEND "${_run_script}" "echo \"  Total Tests: \$TOTAL_TESTS\"\n")
+      file(APPEND "${_run_script}" "echo \"  Passed: \$PASSED_TESTS\"\n")
+      file(APPEND "${_run_script}" "echo \"  Failed: \$FAILED_TESTS\"\n")
+      file(APPEND "${_run_script}" "# Calculate not run (crashed before running)\n")
+      file(APPEND "${_run_script}" "NOT_RUN=\$((TOTAL_TESTS - PASSED_TESTS - FAILED_TESTS))\n")
+      file(APPEND "${_run_script}" "if [ \$NOT_RUN -gt 0 ]; then\n")
+      file(APPEND "${_run_script}" "  echo \"  Not Run (crashed/skipped): \$NOT_RUN\"\n")
+      file(APPEND "${_run_script}" "fi\n")
+      file(APPEND "${_run_script}" "echo \"========================================\"\n")
+      file(APPEND "${_run_script}" "exit \$FAILED\n")
+      execute_process(COMMAND chmod +x "${_run_script}")
+
+      add_custom_target(check-hip-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
+        COMMAND ${_run_script}
+        DEPENDS hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
+        USES_TERMINAL
+        COMMENT "Run HIP Catch ${CATEGORY}/${SUBDIR} tests (verbose mode: direct run)")
+    else()
+      # Standard LIT-based check target for metric collection
+      # Generate a summary script to show TEST_CASE-level statistics after LIT completes
+      set(_summary_script "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/summary_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
+      file(WRITE "${_summary_script}" "#!/bin/bash\n")
+      file(APPEND "${_summary_script}" "# Summary script for Catch2 TEST_CASE statistics in LIT mode\n")
+      file(APPEND "${_summary_script}" "cd ${CMAKE_CURRENT_BINARY_DIR}\n")
+      file(APPEND "${_summary_script}" "echo \"\"\n")
+      file(APPEND "${_summary_script}" "echo \"========================================\"\n")
+      file(APPEND "${_summary_script}" "echo \"Catch2 TEST_CASE Summary:\"\n")
+      file(APPEND "${_summary_script}" "TOTAL_FILES=0\n")
+      file(APPEND "${_summary_script}" "TOTAL_TESTS=0\n")
+      file(APPEND "${_summary_script}" "PASSED_TESTS=0\n")
+      file(APPEND "${_summary_script}" "FAILED_TESTS=0\n")
+      file(APPEND "${_summary_script}" "for test in catch_tests/catch_${CATEGORY}_${SUBDIR}_*-${VARIANT_SUFFIX}; do\n")
+      file(APPEND "${_summary_script}" "  if [ -x \"\$test\" ]; then\n")
+      file(APPEND "${_summary_script}" "    TOTAL_FILES=\$((TOTAL_FILES + 1))\n")
+      file(APPEND "${_summary_script}" "    # Get total TEST_CASE count from --list-tests\n")
+      file(APPEND "${_summary_script}" "    LIST_OUTPUT=\$(\"\$test\" --list-tests 2>&1)\n")
+      file(APPEND "${_summary_script}" "    FILE_TOTAL=\$(echo \"\$LIST_OUTPUT\" | tail -1 | grep -o '^[0-9]*' || echo 0)\n")
+      file(APPEND "${_summary_script}" "    TOTAL_TESTS=\$((TOTAL_TESTS + FILE_TOTAL))\n")
+      file(APPEND "${_summary_script}" "    # Parse the corresponding .test.out file for results\n")
+      file(APPEND "${_summary_script}" "    TEST_NAME=\$(basename \"\$test\")\n")
+      file(APPEND "${_summary_script}" "    OUT_FILE=\"Output/\${TEST_NAME}.test.out\"\n")
+      file(APPEND "${_summary_script}" "    if [ -f \"\$OUT_FILE\" ]; then\n")
+      file(APPEND "${_summary_script}" "      # Parse Catch2 output - try multiple formats\n")
+      file(APPEND "${_summary_script}" "      # Format 1: 'test cases: X | Y passed | Z failed' or 'test cases: X | Y failed'\n")
+      file(APPEND "${_summary_script}" "      SUMMARY_LINE=\$(grep '^test cases:' \"\$OUT_FILE\" 2>/dev/null || echo \"\")\n")
+      file(APPEND "${_summary_script}" "      if [ -n \"\$SUMMARY_LINE\" ]; then\n")
+      file(APPEND "${_summary_script}" "        # Extract total\n")
+      file(APPEND "${_summary_script}" "        CASES_TOTAL=\$(echo \"\$SUMMARY_LINE\" | sed 's/test cases: \\([0-9]*\\).*/\\1/')\n")
+      file(APPEND "${_summary_script}" "        # Extract passed (if present)\n")
+      file(APPEND "${_summary_script}" "        CASES_PASSED=\$(echo \"\$SUMMARY_LINE\" | grep -o '[0-9]* passed' | grep -o '[0-9]*' || echo 0)\n")
+      file(APPEND "${_summary_script}" "        # Extract failed (if present)\n")
+      file(APPEND "${_summary_script}" "        CASES_FAILED=\$(echo \"\$SUMMARY_LINE\" | grep -o '[0-9]* failed' | grep -o '[0-9]*' || echo 0)\n")
+      file(APPEND "${_summary_script}" "        # If no explicit passed count, calculate from total - failed\n")
+      file(APPEND "${_summary_script}" "        if [ \$CASES_PASSED -eq 0 ] && [ \$CASES_FAILED -gt 0 ]; then\n")
+      file(APPEND "${_summary_script}" "          CASES_PASSED=\$((CASES_TOTAL - CASES_FAILED))\n")
+      file(APPEND "${_summary_script}" "        fi\n")
+      file(APPEND "${_summary_script}" "        PASSED_TESTS=\$((PASSED_TESTS + CASES_PASSED))\n")
+      file(APPEND "${_summary_script}" "        FAILED_TESTS=\$((FAILED_TESTS + CASES_FAILED))\n")
+      file(APPEND "${_summary_script}" "      else\n")
+      file(APPEND "${_summary_script}" "        # Format 2: 'Passed N test case' / 'Failed N test case' (compact reporter to terminal)\n")
+      file(APPEND "${_summary_script}" "        PASSED_LINE=\$(grep -i 'Passed [0-9]* test case' \"\$OUT_FILE\" 2>/dev/null || echo \"\")\n")
+      file(APPEND "${_summary_script}" "        if [ -n \"\$PASSED_LINE\" ]; then\n")
+      file(APPEND "${_summary_script}" "          FILE_PASSED=\$(echo \"\$PASSED_LINE\" | grep -o 'Passed [0-9]*' | grep -o '[0-9]*')\n")
+      file(APPEND "${_summary_script}" "          PASSED_TESTS=\$((PASSED_TESTS + FILE_PASSED))\n")
+      file(APPEND "${_summary_script}" "        fi\n")
+      file(APPEND "${_summary_script}" "        FAILED_LINE=\$(grep -i 'Failed [0-9]* test case' \"\$OUT_FILE\" 2>/dev/null || echo \"\")\n")
+      file(APPEND "${_summary_script}" "        if [ -n \"\$FAILED_LINE\" ]; then\n")
+      file(APPEND "${_summary_script}" "          FILE_FAILED=\$(echo \"\$FAILED_LINE\" | grep -o 'Failed [0-9]*' | grep -o '[0-9]*')\n")
+      file(APPEND "${_summary_script}" "          FAILED_TESTS=\$((FAILED_TESTS + FILE_FAILED))\n")
+      file(APPEND "${_summary_script}" "        fi\n")
+      file(APPEND "${_summary_script}" "      fi\n")
+      file(APPEND "${_summary_script}" "    fi\n")
+      file(APPEND "${_summary_script}" "  fi\n")
+      file(APPEND "${_summary_script}" "done\n")
+      file(APPEND "${_summary_script}" "echo \"  Test Suites: \$TOTAL_FILES\"\n")
+      file(APPEND "${_summary_script}" "echo \"  Total Tests: \$TOTAL_TESTS\"\n")
+      file(APPEND "${_summary_script}" "echo \"  Passed: \$PASSED_TESTS\"\n")
+      file(APPEND "${_summary_script}" "echo \"  Failed: \$FAILED_TESTS\"\n")
+      file(APPEND "${_summary_script}" "# Calculate not run (crashed before running)\n")
+      file(APPEND "${_summary_script}" "NOT_RUN=\$((TOTAL_TESTS - PASSED_TESTS - FAILED_TESTS))\n")
+      file(APPEND "${_summary_script}" "if [ \$NOT_RUN -gt 0 ]; then\n")
+      file(APPEND "${_summary_script}" "  echo \"  Not Run (crashed/skipped): \$NOT_RUN\"\n")
+      file(APPEND "${_summary_script}" "fi\n")
+      file(APPEND "${_summary_script}" "echo \"========================================\"\n")
+      execute_process(COMMAND chmod +x "${_summary_script}")
+
+      # Create a wrapper script that runs LIT then shows summary
+      set(_lit_wrapper "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/lit_wrapper_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
+      file(WRITE "${_lit_wrapper}" "#!/bin/bash\n")
+      file(APPEND "${_lit_wrapper}" "cd ${CMAKE_CURRENT_BINARY_DIR}\n")
+      # Convert test list to space-separated string for the command
+      string(REPLACE ";" " " _test_list_str "${_subdir_variant_tests}")
+      file(APPEND "${_lit_wrapper}" "${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} ${_test_list_str}\n")
+      file(APPEND "${_lit_wrapper}" "LIT_EXIT=\$?\n")
+      file(APPEND "${_lit_wrapper}" "${_summary_script}\n")
+      file(APPEND "${_lit_wrapper}" "exit \$LIT_EXIT\n")
+      execute_process(COMMAND chmod +x "${_lit_wrapper}")
+
+      add_custom_target(check-hip-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
+        COMMAND ${_lit_wrapper}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
+        USES_TERMINAL
+        COMMENT "Run HIP Catch ${CATEGORY}/${SUBDIR} tests for variant ${VARIANT_SUFFIX}")
+    endif()
+
     # Ensure litsupport files (including lit.cfg) and timeit-target are available
     if(TARGET build-litsupport)
       add_dependencies(check-hip-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX} build-litsupport)
@@ -421,8 +797,14 @@ function(integrate_catch_tests VARIANT_SUFFIX ROCM_PATH)
     get_property(_category_variant_tests GLOBAL PROPERTY "CATCH_${_category}_TEST_TARGETS_${VARIANT_SUFFIX}")
 
     if(_category_variant_tests)
+      # Add verbose flag to LIT if verbose Catch output is enabled
+      set(_lit_flags ${TEST_SUITE_LIT_FLAGS})
+      if(HIP_CATCH_TEST_VERBOSE)
+        list(APPEND _lit_flags -a)  # Show all output (not just failures)
+      endif()
+
       add_custom_target(check-hip-catch-${_category}-${VARIANT_SUFFIX}
-        COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} ${_category_variant_tests}
+        COMMAND ${TEST_SUITE_LIT} ${_lit_flags} ${_category_variant_tests}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS hip-tests-catch-${_category}-${VARIANT_SUFFIX}
         USES_TERMINAL
@@ -443,9 +825,15 @@ function(integrate_catch_tests VARIANT_SUFFIX ROCM_PATH)
   # Add variant target to main catch target
   add_dependencies(hip-tests-catch hip-tests-catch-${VARIANT_SUFFIX})
 
+  # Add verbose flag to LIT if verbose Catch output is enabled
+  set(_lit_flags ${TEST_SUITE_LIT_FLAGS})
+  if(HIP_CATCH_TEST_VERBOSE)
+    list(APPEND _lit_flags -a)  # Show all output (not just failures)
+  endif()
+
   # Create check target
   add_custom_target(check-hip-catch-${VARIANT_SUFFIX}
-    COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS}
+    COMMAND ${TEST_SUITE_LIT} ${_lit_flags}
             ${VARIANT_CATCH_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS hip-tests-catch-${VARIANT_SUFFIX}

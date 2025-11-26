@@ -151,6 +151,63 @@ Examples:
 - Debugging simple test failures without the overhead of Catch tests
 - Systems with limited resources where minimal test coverage is acceptable
 
+### HIP_CATCH_TEST_VERBOSE
+
+**Type**: Boolean (ON/OFF)
+**Default**: OFF
+**Description**: Show verbose output with individual TEST_CASE results from Catch2
+
+When enabled, test output will show:
+- Each source file being executed
+- Individual TEST_CASE names and results
+- Success/failure status for each TEST_CASE
+- Compact reporter format for better readability
+
+Example:
+```bash
+# Enable verbose Catch2 output
+-DHIP_CATCH_TEST_VERBOSE=ON
+
+# Disable verbose output (default - only shows LIT summary)
+-DHIP_CATCH_TEST_VERBOSE=OFF
+```
+
+**Output Comparison:**
+
+With `HIP_CATCH_TEST_VERBOSE=OFF` (default):
+```
+Testing Time: 0.06s
+Total Discovered Tests: 3
+  Passed: 3 (100.00%)
+```
+
+With `HIP_CATCH_TEST_VERBOSE=ON`:
+```
+=== Running: catch_unit_compiler_hipSquare-hip-7.2.0 ===
+Passed: Unit_test_compressed_codeobject
+
+=== Running: catch_unit_compiler_hipClassKernel-hip-7.2.0 ===
+Passed: Unit_hipClassKernel_Overload_Override
+Passed: Unit_hipClassKernel_Friend
+Passed: Unit_hipClassKernel_Empty
+Passed: Unit_hipClassKernel_BSize
+Passed: Unit_hipClassKernel_Size
+Passed: Unit_hipClassKernel_Virtual
+Passed: Unit_hipClassKernel_Value
+
+=== Running: catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0 ===
+Passed: Unit_test_generic_target_in_compressed_fatbin
+Passed: Unit_test_generic_target_in_regular_fatbin
+Passed: Unit_test_generic_target_only_in_compressed_fatbin
+Passed: Unit_test_generic_target_only_in_regular_fatbin
+
+Testing Time: 0.06s
+Total Discovered Tests: 3
+  Passed: 3 (100.00%)
+```
+
+**Note**: The verbose TEST_CASE output appears in the terminal during the test run (sent to stderr). It's also saved to `.out` files in `build/External/HIP/Output/` for later analysis.
+
 ### CATCH_TEST_CATEGORIES
 
 **Type**: Semicolon-separated list
@@ -475,14 +532,21 @@ ninja check-hip-catch-unit-compiler-hip-7.2.0
 
 ### Run Individual Test Executable
 
+Each `.cc` source file is compiled into a separate test executable, allowing for individual test execution:
+
 ```bash
 # Run a specific test executable directly
-./External/HIP/catch_tests/catch_unit_compiler-hip-7.2.0
+./External/HIP/catch_tests/catch_unit_compiler_hipSquare-hip-7.2.0
+./External/HIP/catch_tests/catch_unit_compiler_hipClassKernel-hip-7.2.0
+
+# Run with Catch2 filtering to select specific test cases
+./External/HIP/catch_tests/catch_unit_compiler_hipSquare-hip-7.2.0 "[tag]"
+./External/HIP/catch_tests/catch_unit_compiler_hipClassKernel-hip-7.2.0 "Unit_hipClassKernel_*"
 ```
 
 ### Using LIT
 
-The tests are integrated with the LIT test runner:
+The tests are integrated with the LIT test runner. Each `.cc` source file creates a separate LIT test:
 
 ```bash
 # Run all HIP tests
@@ -490,7 +554,14 @@ lit External/HIP
 
 # Run only Catch tests (filter by name pattern)
 lit -a External/HIP | grep catch_
+
+# Run a specific test file
+llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 ```
+
+**Note**: LIT reports one test per source file. For example, `unit/compiler` with 3 `.cc` files will show "Total Discovered Tests: 3" in LIT output. Each test executable may contain multiple Catch2 TEST_CASE definitions internally.
+
+**Viewing Verbose Output**: When `HIP_CATCH_TEST_VERBOSE=ON`, the detailed TEST_CASE output is displayed in the terminal during the test run (sent to stderr to bypass LIT's stdout redirection). The output is also saved to `.out` files for later analysis.
 
 ## Troubleshooting
 
@@ -540,8 +611,7 @@ The framework consists of:
 1. **HipCatchTests.cmake**: Main CMake module with functions for:
    - Repository discovery and validation
    - Test category discovery
-   - CMakeLists.txt parsing
-   - Test executable creation
+   - Test executable creation (one per `.cc` source file)
    - LIT integration
 
 2. **Modified CMakeLists.txt**: Integration points in the main HIP test CMakeLists.txt:
@@ -549,7 +619,13 @@ The framework consists of:
    - Per-variant integration in `create_hip_test()`
    - Target dependencies in `hip-tests-all`
 
-3. **Test Wrappers**: Shell scripts for LIT integration
+3. **Test Granularity**: Each `.cc` source file is compiled into a separate test executable, allowing:
+   - Individual test tracking in LIT
+   - Parallel test execution
+   - Fine-grained failure reporting
+   - Independent test filtering
+
+4. **Test Wrappers**: Shell scripts for LIT integration
 
 ## Extending the Framework
 
@@ -569,9 +645,9 @@ To add support for additional test categories:
 
 ## Performance Considerations
 
-- **Build Time**: Catch tests can significantly increase build time. Use specific categories to reduce build scope.
-- **Disk Space**: Each test variant creates separate executables.
-- **Parallelism**: Use ninja's `-j` flag to parallelize builds:
+- **Build Time**: Each `.cc` file is compiled into a separate executable, which can increase build time. Use specific categories or subdirectories to reduce build scope.
+- **Disk Space**: Each `.cc` source file creates a separate executable per variant. For example, 3 source files with 2 variants = 6 executables.
+- **Parallelism**: Use ninja's `-j` flag to parallelize builds (particularly beneficial with multiple test executables):
   ```bash
   ninja -j16 hip-tests-catch
   ```
