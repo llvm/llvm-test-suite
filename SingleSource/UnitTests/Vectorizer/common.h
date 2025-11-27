@@ -1,6 +1,12 @@
 #include <memory>
 #include <random>
 
+// Helper macros for stringification in _Pragma
+#define XSTR(s) STR(s)
+#define STR(s) #s
+#define PRAGMA_VF(VF) _Pragma(STR(clang loop vectorize_width(VF)))
+#define PRAGMA_IC(IC) _Pragma(STR(clang loop interleave_count(IC)))
+
 #define DEFINE_SCALAR_AND_VECTOR_FN1_TYPE(Init, Loop, Type)                    \
   auto ScalarFn = [](auto *A, Type TC) -> Type {                               \
     Init _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop     \
@@ -15,6 +21,15 @@
   };                                                                           \
   auto VectorFn = [](auto *A, auto *B, unsigned TC) {                          \
     Init _Pragma("clang loop vectorize(enable)") Loop                          \
+  };
+
+// Macro with explicit VF and interleave count control
+#define DEFINE_SCALAR_AND_VECTOR_FN2_VF_INTERLEAVE(Init, Loop, VF, IC)         \
+  auto ScalarFn = [](auto *A, auto *B, unsigned TC) {                          \
+    Init _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop     \
+  };                                                                           \
+  auto VectorFn = [](auto *A, auto *B, unsigned TC) {                          \
+    Init PRAGMA_VF(VF) PRAGMA_IC(IC) Loop                                      \
   };
 
 #define DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(Init, Loop, Type)                    \
@@ -36,34 +51,34 @@
 #define DEFINE_NESTED_SCALAR_AND_VECTOR_FN4(InnerLoopCode)                     \
   auto ScalarFn = [](auto *A, auto *B, unsigned OuterTC, unsigned InnerTC) {   \
     for (unsigned long i = 0; i < OuterTC; i++) {                              \
-      _Pragma("clang loop vectorize(disable) interleave_count(1)")             \
-      for (unsigned long j = 0; j < InnerTC; j++) {                            \
+      _Pragma("clang loop vectorize(disable) interleave_count(1)") for (       \
+          unsigned long j = 0; j < InnerTC; j++) {                             \
         InnerLoopCode                                                          \
       }                                                                        \
     }                                                                          \
   };                                                                           \
   auto VectorFn = [](auto *A, auto *B, unsigned OuterTC, unsigned InnerTC) {   \
     for (unsigned long i = 0; i < OuterTC; i++) {                              \
-      _Pragma("clang loop vectorize(enable)")                                  \
-      for (unsigned long j = 0; j < InnerTC; j++) {                            \
+      _Pragma("clang loop vectorize(enable)") for (unsigned long j = 0;        \
+                                                   j < InnerTC; j++) {         \
         InnerLoopCode                                                          \
       }                                                                        \
     }                                                                          \
   };
 
-#define DEFINE_NESTED_SCALAR_AND_VECTOR_FN5(InnerLoopCode)                            \
+#define DEFINE_NESTED_SCALAR_AND_VECTOR_FN5(InnerLoopCode)                     \
   auto ScalarFn = [](auto *A, auto *B, unsigned OuterTC, unsigned InnerTC) {   \
-    for (long i = OuterTC - 1; i >= 0; i--) {                         \
-      _Pragma("clang loop vectorize(disable) interleave_count(1)")             \
-      for (unsigned long j = 0; j < InnerTC; j++) {                            \
+    for (long i = OuterTC - 1; i >= 0; i--) {                                  \
+      _Pragma("clang loop vectorize(disable) interleave_count(1)") for (       \
+          unsigned long j = 0; j < InnerTC; j++) {                             \
         InnerLoopCode                                                          \
       }                                                                        \
     }                                                                          \
   };                                                                           \
   auto VectorFn = [](auto *A, auto *B, unsigned OuterTC, unsigned InnerTC) {   \
-    for (long i = OuterTC - 1; i >= 0; i--) {                         \
-      _Pragma("clang loop vectorize(enable)")                                  \
-      for (unsigned long j = 0; j < InnerTC; j++) {                            \
+    for (long i = OuterTC - 1; i >= 0; i--) {                                  \
+      _Pragma("clang loop vectorize(enable)") for (unsigned long j = 0;        \
+                                                   j < InnerTC; j++) {         \
         InnerLoopCode                                                          \
       }                                                                        \
     }                                                                          \
