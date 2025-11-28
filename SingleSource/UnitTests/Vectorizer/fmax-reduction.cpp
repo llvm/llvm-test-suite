@@ -80,6 +80,9 @@ static void checkVectorFunction(Fn1Ty<Ty> ScalarFn, Fn1Ty<Ty> VectorFn,
     check(ScalarFn, VectorFn, &Src1[0], N, "NaN");
   }
 
+// While fmax is not required to distinguish signed-zeros, this behavior is
+// desired on Aarch64/MacOS.
+#if defined(__aarch64__) && TARGET_OS_MAC
   // Check with multiple signed-zeros at different positions.
   for (unsigned Idx = 0; Idx != 64; ++Idx) {
     for (unsigned I = 0; I != N; ++I)
@@ -104,6 +107,7 @@ static void checkVectorFunction(Fn1Ty<Ty> ScalarFn, Fn1Ty<Ty> VectorFn,
       check(ScalarFn, VectorFn, &Src1[0], N, "signed-zeros");
     }
   }
+#endif
 
   // Check with max value at all possible indices.
   for (unsigned Idx = 0; Idx != N; ++Idx) {
