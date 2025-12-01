@@ -2760,7 +2760,8 @@ void Mesh::rezone_all(int icount, int jcount, vector<int> mpot, int have_state, 
    mesh_memory.memory_swap(&level, &level_old);
 
    index.clear();
-   index.resize(new_ncells);
+   // allocate to ncells (oldsize) because index is a map from old cells to new
+   index.resize(ncells);
 #ifdef _OPENMP
    }
 #pragma omp barrier
