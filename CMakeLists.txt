@@ -346,11 +346,12 @@ endif()
 
 # When CMAKE_INTERPROCEDURAL_OPTIMIZATION is set, CMake implicitly uses
 # -flto=thin on Clang, but -flto=auto on GCC. Append -flto=auto on Clang so they
-# are equivalent. This needs to be done in CXXFLAGS/LDFLAGS so it appears after
-# -flto=thin and overrides it.
+# are equivalent. This needs to be done in CFLAGS/CXXFLAGS/LDFLAGS so it appears
+# after -flto=thin and overrides it.
 # https://gitlab.kitware.com/cmake/cmake/-/blob/b65b7687cc541265f894567174a4c0ee65ea03d6/Modules/Compiler/Clang.cmake#L78-82
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_INTERPROCEDURAL_OPTIMIZATION
     AND NOT TEST_SUITE_THIN_LTO)
+  list(APPEND CFLAGS -flto=auto)
   list(APPEND CXXFLAGS -flto=auto)
   list(APPEND LDFLAGS -flto=auto)
 endif()
