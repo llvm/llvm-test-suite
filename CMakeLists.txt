@@ -146,6 +146,10 @@ Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
   endif()
 endif()
 
+# Disabling the `hash` lit module can reduce disk usage by not generating
+# `.stripped` files.
+option(TEST_SUITE_COLLECT_CODE_HASH "Collect hash of stripped binaries" ON)
+
 option(TEST_SUITE_USE_IR_PGO
   "Use IR PGO instrumentation (requires TEST_SUITE_PROFILE_GENERATE)" OFF)
 
@@ -395,7 +399,9 @@ endif()
 if(TEST_SUITE_COLLECT_CODE_SIZE)
   list(APPEND LIT_MODULES codesize)
 endif()
-list(APPEND LIT_MODULES hash)
+if(TEST_SUITE_COLLECT_CODE_HASH)
+  list(APPEND LIT_MODULES hash)
+endif()
 if(TEST_SUITE_COLLECT_COMPILE_TIME)
   list(APPEND LIT_MODULES compiletime)
 endif()
