@@ -1,4 +1,5 @@
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -x medsmall1.adj_list)
 llvm_multisource(PathFinder)
+set_property(TARGET PathFinder PROPERTY C_STANDARD 17)
 llvm_test_data(PathFinder medsmall1.adj_list)

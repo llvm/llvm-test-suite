@@ -1,4 +1,4 @@
 list(APPEND LDFLAGS -lm)
-list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 3450 5)
 llvm_multisource(GlobalDataFlow-flt)
+set_property(TARGET GlobalDataFlow-flt PROPERTY C_STANDARD 99)
