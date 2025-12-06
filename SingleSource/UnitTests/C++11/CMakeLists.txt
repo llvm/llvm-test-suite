@@ -1,4 +1,4 @@
-list(APPEND CXXFLAGS -std=c++11 -pthread)
+list(APPEND CXXFLAGS -pthread)
 list(APPEND LDFLAGS -pthread)
 
 file(GLOB Source RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.c *.cpp)
@@ -7,3 +7,4 @@ if(${CMAKE_EXE_LINKER_FLAGS} MATCHES "-static")
 endif()
 
 llvm_singlesource()
+set_property(TARGET stdthreadbug PROPERTY CXX_STANDARD 11)

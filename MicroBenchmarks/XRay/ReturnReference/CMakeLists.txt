@@ -5,8 +5,9 @@
 # 'MicroBenchmarks/XRay/ReturnReference/CMakeFiles/retref-bench.dir/retref-bench.cc.o'
 # for architecture x86_64
 
-list(APPEND CPPFLAGS -std=c++11 -Wl,--gc-sections -fxray-instrument)
+list(APPEND CPPFLAGS -Wl,--gc-sections -fxray-instrument)
 list(APPEND LDFLAGS -fxray-instrument)
 llvm_test_run()
 llvm_test_executable(retref-bench retref-bench.cc)
+set_property(TARGET hatref-bench PROPERTY CXX_STANDARD 11)
 target_link_libraries(retref-bench benchmark)

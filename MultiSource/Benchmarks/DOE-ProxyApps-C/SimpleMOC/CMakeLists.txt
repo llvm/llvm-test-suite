@@ -1,5 +1,5 @@
 list(APPEND LDFLAGS -lm)
-list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS -i default.in)
 llvm_multisource(SimpleMOC)
+set_property(TARGET SimpleMOC PROPERTY C_STANDARD 99)
 llvm_test_data(SimpleMOC default.in)

@@ -1,4 +1,5 @@
 list(APPEND CFLAGS -Wno-int-conversion)
 set(RUN_OPTIONS -v ALL < main.c)
 llvm_multisource(unix-smail)
+set_property(TARGET unix-smail PROPERTY C_STANDARD 17)
 llvm_test_data(unix-smail main.c)

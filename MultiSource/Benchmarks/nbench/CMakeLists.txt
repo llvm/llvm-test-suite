@@ -3,4 +3,5 @@ list(APPEND CFLAGS -Wno-implicit-function-declaration)
 list(APPEND LDFLAGS -lm)
 
 llvm_multisource(nbench)
+set_property(TARGET nbench PROPERTY C_STANDARD 17)
 llvm_test_data(nbench NNET.DAT)

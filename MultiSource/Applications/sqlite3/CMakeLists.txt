@@ -18,5 +18,6 @@ llvm_multisource(sqlite3
   sqlite3.c
   shell.c
 )
+set_property(TARGET sqlite3 PROPERTY C_STANDARD 17)
 add_dependencies(sqlite3 sqlite_input)
 llvm_test_data(sqlite3 sqlite3rc commands)

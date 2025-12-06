@@ -95,3 +95,4 @@ llvm_test_data(gs
   ppath.ps
   quit.ps
 )
+set_property(TARGET gs PROPERTY C_STANDARD 17)

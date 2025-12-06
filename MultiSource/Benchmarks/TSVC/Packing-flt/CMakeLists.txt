@@ -1,4 +1,4 @@
 list(APPEND LDFLAGS -lm)
-list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 50000 5)
 llvm_multisource(Packing-flt)
+set_property(TARGET Packing-flt PROPERTY C_STANDARD 99)
