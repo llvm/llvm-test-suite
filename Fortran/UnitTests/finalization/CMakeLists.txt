@@ -15,7 +15,7 @@ endif()
 
 configure_file(
   specification_expression_finalization.reference_output.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/specification_expression_finalization.reference_output
+  specification_expression_finalization.reference_output
   @ONLY)
 
 set(Source)
