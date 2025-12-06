@@ -167,8 +167,11 @@ extern char *alloca ();
 #endif
 
 extern void die ();
-extern void message (), fatal (), error ();
-extern void makefile_error (), makefile_fatal ();
+extern void message(const char* format, ...);
+extern void fatal(const char* format, ...);
+extern void error (const char* format, ...);
+extern void makefile_error(const char* file, unsigned int lineno, const char* format, ...);
+extern void makefile_fatal(const char* file, unsigned int lineno, const char* format, ...);
 extern void pfatal_with_name (), perror_with_name ();
 extern char *savestring (), *concat ();
 extern char *xmalloc (), *xrealloc ();

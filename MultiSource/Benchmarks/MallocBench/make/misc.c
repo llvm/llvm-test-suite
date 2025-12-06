@@ -18,7 +18,8 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include "make.h"
 #include "dep.h"
 #include <errno.h>
-
+#include <stdarg.h>
+#include <stdio.h>
 
 /* Compare strings *S1 and *S2.
    Return negative if the first is less, positive if it is greater,
@@ -196,15 +197,18 @@ concat (s1, s2, s3)
 
 /* Print a message on stdout.  */
 
+/* VARARGS1 */
 void
-message (s1, s2, s3, s4, s5, s6)
-     char *s1, *s2, *s3, *s4, *s5, *s6;
+message (const char* format, ...)
 {
   if (makelevel == 0)
     printf ("%s: ", program);
   else
     printf ("%s[%u]: ", program, makelevel);
-  printf (s1, s2, s3, s4, s5, s6);
+  va_list args;
+  va_start(args, format);
+  vprintf (format, args);
+  va_end(args);
   putchar ('\n');
   fflush (stdout);
 }
@@ -213,14 +217,16 @@ message (s1, s2, s3, s4, s5, s6)
 
 /* VARARGS1 */
 void
-fatal (s1, s2, s3, s4, s5, s6)
-     char *s1, *s2, *s3, *s4, *s5, *s6;
+fatal (const char* format, ...)
 {
   if (makelevel == 0)
     fprintf (stderr, "%s: ", program);
   else
     fprintf (stderr, "%s[%u]: ", program, makelevel);
-  fprintf (stderr, s1, s2, s3, s4, s5, s6);
+  va_list args;
+  va_start(args, format);
+  vfprintf (stderr, format, args);
+  va_end(args);
   fputs (".  Stop.\n", stderr);
 
   die (1);
@@ -229,40 +235,41 @@ fatal (s1, s2, s3, s4, s5, s6)
 /* Print error message.  `s1' is printf control string, `s2' is arg for it. */
 
 /* VARARGS1 */
-
-void
-error (s1, s2, s3, s4, s5, s6)
-     char *s1, *s2, *s3, *s4, *s5, *s6;
+void error (const char* format, ...)
 {
   if (makelevel == 0)
     fprintf (stderr, "%s: ", program);
   else
-    fprintf (stderr, "%s[%u]: ", program, makelevel);
-  fprintf (stderr, s1, s2, s3, s4, s5, s6);
+    fprintf(stderr, "%s[%u]: ", program, makelevel);
+  va_list args;
+  va_start(args, format);
+  vfprintf (stderr, format, args);
+  va_end(args);
   putc ('\n', stderr);
   fflush (stderr);
 }
 
-void
-makefile_error (file, lineno, s1, s2, s3, s4, s5, s6)
-     char *file;
-     unsigned int lineno;
-     char *s1, *s2, *s3, *s4, *s5, *s6;
+void makefile_error(const char* file, unsigned int lineno, const char* format,
+                    ...)
 {
-  fprintf (stderr, "%s:%u: ", file, lineno);
-  fprintf (stderr, s1, s2, s3, s4, s5, s6);
+  fprintf(stderr, "%s:%u: ", file, lineno);
+  va_list args;
+  va_start(args, format);
+  vfprintf(stderr, format, args);
+  va_end(args);
   putc ('\n', stderr);
   fflush (stderr);
 }
 
+/* VARARGS3 */
 void
-makefile_fatal (file, lineno, s1, s2, s3, s4, s5, s6)
-     char *file;
-     unsigned int lineno;
-     char *s1, *s2, *s3, *s4, *s5, *s6;
+makefile_fatal (const char* file, unsigned int lineno, const char* format, ...)
 {
   fprintf (stderr, "%s:%u: ", file, lineno);
-  fprintf (stderr, s1, s2, s3, s4, s5, s6);
+  va_list args;
+  va_start(args, format);
+  vfprintf (stderr, format, args);
+  va_end(args);
   fputs (".  Stop.\n", stderr);
 
   die (1);
