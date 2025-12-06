@@ -418,6 +418,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr78866-2.f90
   reduction3.f90
   sharing-3.f90
+  linear-5.f90 # Re-enable this test when default OpenMP version = 5.2
 
   # These tests fail, but the cause of their failure needs to be investigated.
   allocate-10.f90
