@@ -70,12 +70,14 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
   # THIS_IMAGE(DISTANCE=), NUM_IMAGES(DISTANCE=), and NUM_IMAGES(FAILED=) extensions not supported
   coarray_this_image_1.f90
   coarray_this_image_2.f90
-  # f18 requires extension Cray pointee to be a sequence type if derived
-  cray_pointers_11.f90
   # Unimplemented in extension: assumed-size Cray pointee
   cray_pointers_6.f90
   # Unimplemented in extension: Cray pointer to function
   cray_pointers_9.f90
+  # By default, flang assumes that Cray pointers do not alias with non-TARGET data
+  cray_pointers_10.f90
+  # f18 requires extension Cray pointee to be a sequence type if derived
+  cray_pointers_11.f90
   # DEC "typed" bit intrinsics: BBTEST, BITEST, FLOATI, FLOATJ, BIEOR, &c.
   dec_intrinsic_ints.f90
   # COTAN extension intrinsic
