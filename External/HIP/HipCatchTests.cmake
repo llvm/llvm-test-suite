@@ -10,9 +10,29 @@ set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdire
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")
 set(HIP_CATCH_TEST_VERBOSE OFF CACHE BOOL "Show verbose output with individual TEST_CASE results from Catch2")
 
-# Local paths for Catch test infrastructure (now self-contained)
+# Local paths for Catch test infrastructure
 set(HIP_CATCH_TESTS_DIR "${CMAKE_CURRENT_LIST_DIR}/catch")
-set(CATCH2_INCLUDE_PATH "${HIP_CATCH_TESTS_DIR}/external/Catch2")
+
+# Try to find system-installed Catch2 v2.13.10+
+# Note: v2.13.10 is used because v2.13.4 has glibc 2.34+ incompatibility (MINSIGSTKSZ issue)
+find_package(Catch2 2.13.10 QUIET)
+
+if(Catch2_FOUND)
+  message(STATUS "Using system Catch2: ${Catch2_DIR}")
+  get_target_property(CATCH2_INCLUDE_PATH Catch2::Catch2 INTERFACE_INCLUDE_DIRECTORIES)
+else()
+  message(STATUS "Catch2 >= 2.13.10 not found on system, fetching v2.13.10...")
+  include(FetchContent)
+  FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.13.10
+    GIT_SHALLOW    TRUE
+  )
+  FetchContent_MakeAvailable(Catch2)
+  set(CATCH2_INCLUDE_PATH "${catch2_SOURCE_DIR}/single_include/catch2")
+endif()
+
 set(CATCH2_FOUND TRUE)
 
 # Global tracking for hierarchical targets
@@ -33,11 +53,11 @@ define_property(GLOBAL PROPERTY CATCH_SUBDIR_TARGETS_CREATED
 function(validate_catch_tests_infrastructure)
   set(_required_paths
     "${HIP_CATCH_TESTS_DIR}/unit/compiler"
-    "${HIP_CATCH_TESTS_DIR}/external/Catch2/catch.hpp"
     "${HIP_CATCH_TESTS_DIR}/external/picojson/picojson.h"
     "${HIP_CATCH_TESTS_DIR}/hipTestMain"
     "${HIP_CATCH_TESTS_DIR}/include"
   )
+  # Note: Catch2 is now obtained via find_package or FetchContent, not vendored
   # Note: kernels/ directory not required for unit/compiler tests
 
   foreach(_path ${_required_paths})
@@ -47,7 +67,7 @@ function(validate_catch_tests_infrastructure)
   endforeach()
 
   message(STATUS "Using local Catch test infrastructure: ${HIP_CATCH_TESTS_DIR}")
-  message(STATUS "Catch2 found at: ${CATCH2_INCLUDE_PATH}")
+  message(STATUS "Catch2 include path: ${CATCH2_INCLUDE_PATH}")
 endfunction()
 
 # Function to discover test sources from hip-tests

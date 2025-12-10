@@ -1,10 +1,10 @@
 # HIP Catch Tests Integration
 
-This document describes the self-contained Catch-based test framework for HIP functionality in the LLVM Test Suite.
+This document describes the Catch-based test framework for HIP functionality in the LLVM Test Suite.
 
 ## Overview
 
-The HIP Catch Tests framework provides comprehensive HIP tests using the Catch2 testing framework. The tests are **fully self-contained** within the LLVM Test Suite - no external dependencies are required. The framework includes:
+The HIP Catch Tests framework provides comprehensive HIP tests using the Catch2 testing framework. The framework includes:
 
 - **Unit tests**: Core HIP API functionality (memory, streams, events, kernels, compiler features, etc.)
 - Support for multiple ROCm versions (per-variant testing)
@@ -18,9 +18,13 @@ Currently included test categories:
 
 1. **ROCm installation**: A valid ROCm installation with HIP support
 
-2. **LLVM Test Suite**: This repository contains all necessary Catch test infrastructure in `External/HIP/catch/`
+2. **LLVM Test Suite**: This repository contains the Catch test infrastructure in `External/HIP/catch/`
 
 3. **clang++**: ROCm's clang++ compiler for building HIP code
+
+4. **Catch2 v2.13.10+**: Obtained automatically via:
+   - **System installation**: If Catch2 >= 2.13.10 is installed, it will be used
+   - **FetchContent**: If not found, CMake will download Catch2 v2.13.10 from GitHub at configure time (requires internet connection for first build)
 
 ## Quick Start
 
@@ -40,7 +44,7 @@ cmake -G Ninja \
   /path/to/llvm-test-suite
 ```
 
-**Note**: Catch tests are **enabled by default** (`ENABLE_HIP_CATCH_TESTS=ON`) and self-contained in `External/HIP/catch/` - no external dependencies needed. Set `ENABLE_HIP_CATCH_TESTS=OFF` to disable all Catch test targets.
+**Note**: Catch tests are **enabled by default** (`ENABLE_HIP_CATCH_TESTS=ON`). Catch2 is automatically obtained via `find_package` (system) or `FetchContent` (download). Set `ENABLE_HIP_CATCH_TESTS=OFF` to disable all Catch test targets.
 
 ### Platform Support
 
@@ -565,23 +569,27 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 
 ## Troubleshooting
 
-### Catch2 Not Found
+### Catch2 Download Failed
 
-**Error**: `Catch2 not found in expected location`
+**Error**: `FetchContent failed to download Catch2`
 
-**Solution**: Ensure the hip-tests repository has the Catch2 submodule initialized:
-```bash
-cd /path/to/hip-tests
-git submodule update --init --recursive
-```
+**Cause**: No internet connection during first configure, and Catch2 is not installed system-wide.
 
-### hip-tests Repository Not Found
+**Solutions**:
+1. **Install Catch2 system-wide** (recommended for offline builds):
+   ```bash
+   # Ubuntu/Debian
+   sudo apt install catch2
 
-**Error**: `Could not find hip-tests repository`
+   # Or build from source (exact version)
+   git clone -b v2.13.10 https://github.com/catchorg/Catch2.git
+   cd Catch2
+   cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local
+   cmake --build build
+   sudo cmake --install build
+   ```
 
-**Solution**: Either:
-1. Set `-DHIP_CATCH_TESTS_REPO=/path/to/hip-tests`
-2. Place hip-tests in one of the auto-detected locations
+2. **Ensure internet connectivity** during first CMake configure. Subsequent builds use the cached download.
 
 ### No Test Sources Found
 
@@ -673,7 +681,7 @@ Potential improvements:
 
 ## Directory Structure
 
-The Catch test infrastructure is self-contained in `External/HIP/catch/`:
+The Catch test infrastructure is located in `External/HIP/catch/`:
 
 ```
 External/HIP/catch/
@@ -694,10 +702,10 @@ External/HIP/catch/
 │   ├── hip_test_context.cc
 │   └── hip_test_features.cc
 └── external/               # Third-party libraries
-    ├── Catch2/
-    │   └── catch.hpp       # Catch2 test framework (required)
     └── picojson/
-        └── picojson.h      # JSON parser (required)
+        └── picojson.h      # JSON parser (vendored)
+
+# Note: Catch2 is obtained via find_package or FetchContent, not vendored
 ```
 
 **Note**: The `kernels/` directory is not needed for `unit/compiler` tests. These tests define kernels inline using `__global__` functions.
