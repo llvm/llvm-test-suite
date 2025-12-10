@@ -337,7 +337,7 @@ compile;assumed_size_refs_1.f90;xfail;;;
 compile;assumed_size_refs_2.f90;xfail;;;
 compile;assumed_size_refs_3.f90;;;;
 compile;assumed_size_refs_4.f90;xfail;;;
-compile;assumed_type_1.f90;;;;powerpc-.+-aix
+compile;assumed_type_1.f90;;;;
 compile;assumed_type_10.f90;;-O0;;
 compile;assumed_type_11.f90;;-O3;;
 compile;assumed_type_12.f90;xfail;;;
@@ -1137,8 +1137,8 @@ compile;do_4.f;xfail;;;
 compile;do_5.f90;;;;
 compile;do_check_10.f90;;;;
 compile;do_check_13.f90;xfail;;;
-compile;do_check_14.f90;;;;powerpc-.+-aix
-compile;do_check_15.f90;;;;powerpc-.+-aix
+compile;do_check_14.f90;;;;
+compile;do_check_15.f90;;;;
 compile;do_check_16.f90;xfail;;;
 compile;do_check_17.f90;;;;
 compile;do_check_18.f90;xfail;;;
@@ -1173,7 +1173,7 @@ compile;do_iterator.f90;xfail;;;
 compile;do_pointer_1.f90;;;;
 compile;do_subscript_1.f90;;;;
 compile;do_subscript_2.f90;;;;
-compile;do_subscript_3.f90;;-O0;;powerpc-.+-aix
+compile;do_subscript_3.f90;;-O0;;
 compile;do_subscript_4.f90;;;;
 compile;do_subscript_5.f90;;;;
 compile;do_subscript_6.f90;xfail;;;
@@ -1754,7 +1754,7 @@ compile;intrinsic_6.f90;;-fimplicit-none;;
 compile;intrinsic_7.f90;;;;
 compile;intrinsic_8.f90;;;;
 compile;intrinsic_actual_1.f;;;;
-compile;intrinsic_actual_2.f90;;;;powerpc-.+-aix
+compile;intrinsic_actual_2.f90;;;;
 compile;intrinsic_actual_3.f90;xfail;;;
 compile;intrinsic_argument_conformance_1.f90;xfail;;;
 compile;intrinsic_argument_conformance_2.f90;xfail;;;
@@ -2410,7 +2410,7 @@ compile;pr46519-2.f90;;-O3;i.86-.+-.+ x86_64-.+-.+;
 compile;pr46755.f;;-O;;
 compile;pr46884.f;;;;
 compile;pr46985.f90;;-O;;
-compile;pr47054_1.f90;;;;powerpc-.+-aix
+compile;pr47054_1.f90;;;;
 compile;pr47054_2.f90;;;;
 compile;pr47574.f90;;;;
 compile;pr48636-2.f90;;-O3;;
@@ -2892,7 +2892,7 @@ compile;pr97505.f90;;;;
 compile;pr97673.f90;;-O3;;
 compile;pr97768_1.f90;;;;
 compile;pr97768_2.f90;xfail;;;
-compile;pr98016.f90;;;;powerpc-.+-aix
+compile;pr98016.f90;;;;
 compile;pr98284.f90;xfail;;;
 compile;pr98411.f90;;;;
 compile;pr98661.f90;xfail;;;
@@ -3153,7 +3153,7 @@ compile;result_2.f90;xfail;;;
 compile;result_in_spec_3.f90;;;;
 compile;result_in_spec_4.f90;;;;
 compile;return_1.f90;xfail;;;
-compile;round_4.f90;;;;powerpc-.+-aix
+compile;round_4.f90;;;;
 compile;same_name_2.f90;xfail;;;
 compile;same_type_as_1.f03;xfail;;;
 compile;save_3.f90;;;;
@@ -3372,7 +3372,7 @@ compile;transfer_simplify_15.f90;xfail;;;
 compile;transfer_simplify_5.f90;;;;
 compile;transfer_simplify_6.f90;;;;
 compile;transfer_simplify_7.f90;xfail;;;
-compile;transpose_1.f90;;;;powerpc-.+-aix
+compile;transpose_1.f90;;;;
 compile;transpose_5.f90;;-O2;;
 compile;transpose_optimization_1.f90;;;;
 compile;trim_optimize_8.f90;;-O;;
@@ -3388,7 +3388,7 @@ compile;typebound_assignment_4.f90;;;;
 compile;typebound_assignment_5.f03;;-O0;;
 compile;typebound_assignment_6a.f03;;-O0;;
 compile;typebound_assignment_8.f90;;;;
-compile;typebound_call_11.f03;;;;powerpc-.+-aix
+compile;typebound_call_11.f03;;;;
 compile;typebound_call_12.f03;;;;
 compile;typebound_call_14.f03;;;;
 compile;typebound_call_15.f03;xfail;;;
@@ -3525,7 +3525,7 @@ compile;use_20.f90;;;;
 compile;use_21.f90;;;;
 compile;use_22.f90;;;;
 compile;use_23.f90;;;;
-compile;use_25.f90;;;;powerpc-.+-aix
+compile;use_25.f90;;;;
 compile;use_26.f90;;;;
 compile;use_28.f90;xfail;;;
 compile;use_29.f90;xfail;;;
@@ -3565,12 +3565,12 @@ compile;used_before_typed_6.f90;xfail;;;
 compile;used_dummy_types_2.f90;;;;
 compile;used_dummy_types_3.f90;xfail;;;
 compile;used_dummy_types_4.f90;xfail;;;
-compile;used_dummy_types_5.f90;;;;powerpc-.+-aix
+compile;used_dummy_types_5.f90;;;;
 compile;used_dummy_types_6.f90;;;;
 compile;used_dummy_types_7.f90;;;;
 compile;used_dummy_types_8.f90;;;;
 compile;used_types_1.f90;;;;
-compile;used_types_10.f90;;;;powerpc-.+-aix
+compile;used_types_10.f90;;;;
 compile;used_types_11.f90;;;;
 compile;used_types_12.f90;;;;
 compile;used_types_13.f90;;;;
@@ -3642,7 +3642,7 @@ compile;warn_intent_out_not_set.f90;;-c;;
 compile;warn_std_1.f90;;;;
 compile;warn_std_2.f90;;;;
 compile;warn_std_3.f90;;;;
-compile;warn_target_lifetime_1.f90;;;;powerpc-.+-aix
+compile;warn_target_lifetime_1.f90;;;;
 compile;warn_target_lifetime_2.f90;;;;
 compile;warn_target_lifetime_3.f90;;;;
 compile;warn_target_lifetime_4.f90;;;;
@@ -3651,7 +3651,7 @@ compile;warn_unused_dummy_argument_1.f90;;;;
 compile;warn_unused_dummy_argument_2.f90;;;;
 compile;warn_unused_dummy_argument_3.f90;;;;
 compile;warn_unused_dummy_argument_4.f90;;;;
-compile;warn_unused_dummy_argument_5.f90;;;;powerpc-.+-aix
+compile;warn_unused_dummy_argument_5.f90;;;;
 compile;warn_unused_dummy_argument_6.f90;;;;
 compile;warn_unused_function.f90;;;;
 compile;warn_unused_function_2.f90;;;;
@@ -6664,7 +6664,7 @@ run;zero_array_components_1.f90;;;;
 run;zero_length_1.f90;;;;
 run;zero_length_2.f90;;;;
 run;zero_sized_1.f90;;;;
-run;zero_sized_14.f90;;;;powerpc-.+-aix
+run;zero_sized_14.f90;;;;
 run;zero_sized_15.f90;;;;
 run;zero_sized_3.f90;;;;
 run;zero_sized_4.f90;;;;

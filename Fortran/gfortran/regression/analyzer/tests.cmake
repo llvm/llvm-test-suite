@@ -43,6 +43,6 @@ compile;pr93405.f90;;;;
 compile;pr93777.f90;;-O0;;
 compile;pr93778.f90;;;;
 compile;pr93993.f90;;;;
-compile;pr96949.f90;;;;powerpc-.+-aix
+compile;pr96949.f90;;;;
 compile;pr97668.f;;;;
 compile;uninit-pr63311.f90;;-O0;;

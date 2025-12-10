@@ -383,7 +383,7 @@ compile;pr27573.f90;;-O2 -fopenmp;;
 compile;pr29759.f90;xfail;;;
 compile;pr33439.f90;xfail;-fopenmp;;
 compile;pr35786-1.f90;xfail;-fopenmp;;
-compile;pr35786-2.f90;;-fopenmp;;powerpc-.+-aix
+compile;pr35786-2.f90;;-fopenmp;;
 compile;pr36726.f90;;-fopenmp;;
 compile;pr39152.f90;;-march=i486 -fopenmp -O3;;
 compile;pr39354.f90;;-fopenmp;;

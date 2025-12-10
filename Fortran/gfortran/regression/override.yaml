@@ -91,55 +91,6 @@
 "nan_7.f90":
   disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
 
-# unimplemented feature on AIX: Nested arguments are unimplemented
-"assumed_type_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"do_check_14.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"do_check_15.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"do_subscript_3.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"intrinsic_actual_2.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"pr47054_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"pr98016.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"round_4.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"transpose_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"typebound_call_11.f03":
-  disabled_on: ["powerpc-*-aix"]
-
-"use_25.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"used_dummy_types_5.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"used_types_10.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"warn_target_lifetime_1.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"warn_unused_dummy_argument_5.f90":
-  disabled_on: ["powerpc-*-aix"]
-
-"zero_sized_14.f90":
-  disabled_on: ["powerpc-*-aix"]
-
 # libm's routine lround returns incorrect values on AIX
 "nint_2.f90":
   disabled_on: ["powerpc-*-aix"]
