@@ -763,7 +763,7 @@ External/HIP/catch/
 
 ## References
 
-- [hip-tests Repository](https://github.com/ROCm/hip-tests) (original source of tests)
+- [hip-tests in ROCm Systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) (original source of tests)
 - [ROCm Documentation](https://rocm.docs.amd.com/)
 - [LLVM Test Suite](https://llvm.org/docs/TestSuiteGuide.html)
 - [Catch2 Framework](https://github.com/catchorg/Catch2)
