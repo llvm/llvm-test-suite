@@ -183,34 +183,58 @@ With `HIP_CATCH_TEST_VERBOSE=OFF` (default):
 Testing Time: 0.06s
 Total Discovered Tests: 3
   Passed: 3 (100.00%)
+
+========================================
+Catch2 TEST_CASE Summary:
+  Test Suites: 3
+  Total Tests: 10
+  Passed: 10
+  Failed: 0
+========================================
 ```
 
 With `HIP_CATCH_TEST_VERBOSE=ON`:
 ```
-=== Running: catch_unit_compiler_hipSquare-hip-7.2.0 ===
-Passed: Unit_test_compressed_codeobject
+=== catch_unit_compiler_hipSquare-hip-7.2.0 ===
+... Catch2 test output ...
+(1 TEST_CASE definitions in this file)
 
-=== Running: catch_unit_compiler_hipClassKernel-hip-7.2.0 ===
-Passed: Unit_hipClassKernel_Overload_Override
-Passed: Unit_hipClassKernel_Friend
-Passed: Unit_hipClassKernel_Empty
-Passed: Unit_hipClassKernel_BSize
-Passed: Unit_hipClassKernel_Size
-Passed: Unit_hipClassKernel_Virtual
-Passed: Unit_hipClassKernel_Value
+=== catch_unit_compiler_hipClassKernel-hip-7.2.0 ===
+... Catch2 test output ...
+(7 TEST_CASE definitions in this file)
 
-=== Running: catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0 ===
-Passed: Unit_test_generic_target_in_compressed_fatbin
-Passed: Unit_test_generic_target_in_regular_fatbin
-Passed: Unit_test_generic_target_only_in_compressed_fatbin
-Passed: Unit_test_generic_target_only_in_regular_fatbin
+=== catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0 ===
+... Catch2 test output ...
+(2 TEST_CASE definitions in this file)
 
-Testing Time: 0.06s
-Total Discovered Tests: 3
-  Passed: 3 (100.00%)
+========================================
+Summary:
+  Test Suites: 3
+  Total Tests: 10
+  Passed: 10
+  Failed: 0
+========================================
 ```
 
-**Note**: The verbose TEST_CASE output appears in the terminal during the test run (sent to stderr). It's also saved to `.out` files in `build/External/HIP/Output/` for later analysis.
+**Summary Categories:**
+- **Passed**: Tests that completed successfully
+- **Failed**: Tests that failed assertions
+- **Skipped**: Tests that intentionally didn't run (e.g., architecture not supported) - exit code 0
+- **Crashed/Error**: Tests that terminated abnormally (e.g., segfault, abort) - non-zero exit code
+
+Example with skipped tests (on a different architecture):
+```
+========================================
+Summary:
+  Test Suites: 3
+  Total Tests: 10
+  Passed: 8
+  Failed: 0
+  Skipped: 2
+========================================
+```
+
+**Note**: The verbose TEST_CASE output appears in the terminal during the test run. It's also saved to `.out` files in `build/External/HIP/Output/` for later analysis.
 
 ### CATCH_TEST_CATEGORIES
 
