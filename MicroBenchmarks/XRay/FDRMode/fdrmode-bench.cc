@@ -14,6 +14,9 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+#include <cstdlib>
+
 #include "benchmark/benchmark.h"
 #include "xray/xray_interface.h"
 #include "xray/xray_log_interface.h"

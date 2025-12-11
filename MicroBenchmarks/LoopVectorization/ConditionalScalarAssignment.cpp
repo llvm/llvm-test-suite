@@ -153,10 +153,11 @@ benchmark_csa_autovec(benchmark::State &state, CSAFunc<T> VecFn,
 #endif
 
   for (auto _ : state) {
-    VecFn(&A[0], &B[0], &C[0], Threshold);
+    T Res = VecFn(&A[0], &B[0], &C[0], Threshold);
     benchmark::DoNotOptimize(A);
     benchmark::DoNotOptimize(B);
     benchmark::DoNotOptimize(C);
+    benchmark::DoNotOptimize(Res);
     benchmark::ClobberMemory();
   }
 }
@@ -171,10 +172,12 @@ benchmark_csa_novec(benchmark::State &state, CSAFunc<T> NoVecFn, T Threshold) {
   init_data(&A[0], &B[0], &C[0]);
 
   for (auto _ : state) {
-    NoVecFn(&A[0], &B[0], &C[0], Threshold);
+    T Res = NoVecFn(&A[0], &B[0], &C[0], Threshold);
     benchmark::DoNotOptimize(A);
     benchmark::DoNotOptimize(B);
     benchmark::DoNotOptimize(C);
+    benchmark::DoNotOptimize(Res);
+    benchmark::ClobberMemory();
   }
 }
 

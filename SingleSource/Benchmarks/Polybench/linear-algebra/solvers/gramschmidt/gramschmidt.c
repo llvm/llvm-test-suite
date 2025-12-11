@@ -233,7 +233,7 @@ int main(int argc, char** argv)
 
   /* Prevent dead-code elimination. All live-out data must be printed
      by the function call in argument. */
-  polybench_prevent_dce(print_array(ni, nj,
+  polybench_prevent_dce(print_array(m, n,
                                     POLYBENCH_ARRAY(A_StrictFP),
                                     POLYBENCH_ARRAY(R_StrictFP),
                                     POLYBENCH_ARRAY(Q_StrictFP)));

@@ -125,12 +125,12 @@ void kernel_bicg_StrictFP(int m, int n,
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
 static int
-check_FP(int ny,
-         DATA_TYPE POLYBENCH_1D(A,NY,ny),
-         DATA_TYPE POLYBENCH_1D(B,NX,nx)) {
+check_FP(int n,
+         DATA_TYPE POLYBENCH_1D(A,N,n),
+         DATA_TYPE POLYBENCH_1D(B,M,m)) {
   int i;
   double AbsTolerance = FP_ABSTOLERANCE;
-  for (i = 0; i < _PB_NY; i++)
+  for (i = 0; i < _PB_N; i++)
     {
       double V1 = A[i];
       double V2 = B[i];
