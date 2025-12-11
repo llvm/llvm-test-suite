@@ -159,20 +159,18 @@ Examples:
 
 **Type**: Boolean (ON/OFF)
 **Default**: OFF
-**Description**: Show verbose output with individual TEST_CASE results from Catch2
+**Description**: Controls output verbosity level for Catch2 test runs
 
-When enabled, test output will show:
-- Each source file being executed
-- Individual TEST_CASE names and results
-- Success/failure status for each TEST_CASE
-- Compact reporter format for better readability
+Both modes use unified LIT-based execution (metrics always collected). The difference is only in output detail:
+- **OFF**: Shows LIT summary only, full details available in `.test.out` files
+- **ON**: Shows full test output in terminal (LIT `-a` flag)
 
 Example:
 ```bash
-# Enable verbose Catch2 output
+# Enable verbose output (shows full Catch2 output)
 -DHIP_CATCH_TEST_VERBOSE=ON
 
-# Disable verbose output (default - only shows LIT summary)
+# Quiet mode (default - only shows LIT summary)
 -DHIP_CATCH_TEST_VERBOSE=OFF
 ```
 
@@ -185,52 +183,81 @@ Total Discovered Tests: 3
   Passed: 3 (100.00%)
 
 ========================================
-Catch2 TEST_CASE Summary:
-  Test Suites: 3
-  Total Tests: 10
-  Passed: 10
-  Failed: 0
-========================================
-```
-
-With `HIP_CATCH_TEST_VERBOSE=ON`:
-```
-=== catch_unit_compiler_hipSquare-hip-7.2.0 ===
-... Catch2 test output ...
-(1 TEST_CASE definitions in this file)
-
-=== catch_unit_compiler_hipClassKernel-hip-7.2.0 ===
-... Catch2 test output ...
-(7 TEST_CASE definitions in this file)
-
-=== catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0 ===
-... Catch2 test output ...
-(2 TEST_CASE definitions in this file)
-
-========================================
-Summary:
-  Test Suites: 3
-  Total Tests: 10
-  Passed: 10
-  Failed: 0
-========================================
-```
-
-**Summary Categories:**
-- **Passed**: Tests that completed successfully
-- **Failed**: Tests that failed assertions
-- **Skipped**: Tests that intentionally didn't run (e.g., architecture not supported) - exit code 0
-- **Crashed/Error**: Tests that terminated abnormally (e.g., segfault, abort) - non-zero exit code
-
-Example with skipped tests (on a different architecture):
-```
-========================================
-Summary:
+Detailed Test Summary:
   Test Suites: 3
   Total Tests: 10
   Passed: 8
   Failed: 0
   Skipped: 2
+
+Skipped Tests:
+  - Unit_test_generic_target_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+  - Unit_test_generic_target_only_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+========================================
+```
+
+With `HIP_CATCH_TEST_VERBOSE=ON`:
+```
+PASS: test-suite :: External/HIP/catch_unit_compiler_hipSquare-hip-7.2.0.test (1 of 3)
+... full command and output shown ...
+
+PASS: test-suite :: External/HIP/catch_unit_compiler_hipClassKernel-hip-7.2.0.test (2 of 3)
+... full command and output shown ...
+
+PASS: test-suite :: External/HIP/catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0.test (3 of 3)
+... full command and output shown ...
+
+Testing Time: 0.06s
+Total Discovered Tests: 3
+  Passed: 3 (100.00%)
+
+========================================
+Detailed Test Summary:
+  Test Suites: 3
+  Total Tests: 10
+  Passed: 8
+  Failed: 0
+  Skipped: 2
+
+Skipped Tests:
+  - Unit_test_generic_target_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+  - Unit_test_generic_target_only_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+========================================
+```
+
+**Summary Categories:**
+- **Passed**: Tests that completed successfully with passing assertions
+- **Failed**: Tests that failed assertions
+- **Skipped**: Tests that intentionally didn't run (detected via "is skipped" messages) - exit code 0
+- **Crashed/Error**: Tests that terminated abnormally (e.g., segfault, abort) - non-zero exit code
+
+**Triage Lists:**
+The summary includes lists of failed, skipped, and crashed tests by name for easier debugging:
+```
+========================================
+Detailed Test Summary:
+  Test Suites: 3
+  Total Tests: 10
+  Passed: 0
+  Failed: 2
+  Skipped: 2
+  Crashed/Error: 6
+
+Failed Tests:
+  - Unit_hipClassKernel_Overload_Override [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_test_compressed_codeobject [catch_unit_compiler_hipSquare-hip-7.2.0]
+
+Skipped Tests:
+  - Unit_test_generic_target_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+  - Unit_test_generic_target_only_in_regular_fatbin [catch_unit_compiler_hipSquareGenericTarget-hip-7.2.0]
+
+Crashed/Error Tests:
+  - Unit_hipClassKernel_Friend [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_hipClassKernel_Empty [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_hipClassKernel_BSize [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_hipClassKernel_Size [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_hipClassKernel_Virtual [catch_unit_compiler_hipClassKernel-hip-7.2.0]
+  - Unit_hipClassKernel_Value [catch_unit_compiler_hipClassKernel-hip-7.2.0]
 ========================================
 ```
 
@@ -589,7 +616,7 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 
 **Note**: LIT reports one test per source file. For example, `unit/compiler` with 3 `.cc` files will show "Total Discovered Tests: 3" in LIT output. Each test executable may contain multiple Catch2 TEST_CASE definitions internally.
 
-**Viewing Verbose Output**: When `HIP_CATCH_TEST_VERBOSE=ON`, the detailed TEST_CASE output is displayed in the terminal during the test run (sent to stderr to bypass LIT's stdout redirection). The output is also saved to `.out` files for later analysis.
+**Viewing Verbose Output**: When `HIP_CATCH_TEST_VERBOSE=ON`, LIT's `-a` flag is enabled, showing the full test output in the terminal after each test completes. The output is also saved to `.test.out` files in the `Output/` directory for later analysis. Both verbose and non-verbose modes use the same LIT-based execution and always collect metrics.
 
 ## Troubleshooting
 
