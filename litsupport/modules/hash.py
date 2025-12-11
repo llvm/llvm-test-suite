@@ -2,6 +2,7 @@
 from litsupport import testplan
 import hashlib
 import logging
+import os
 import platform
 
 
@@ -28,6 +29,8 @@ def compute(context):
         h = hashlib.md5()
         h.update(open(executable, "rb").read())
         context.executable_hash = h.hexdigest()
+        if executable != context.executable:
+            os.remove(executable)
     except Exception:
         logging.info("Could not calculate hash for %s" % executable)
         context.executable_hash = ""
