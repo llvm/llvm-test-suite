@@ -4,7 +4,7 @@
 include(CMakeParseArguments)
 
 # Global variables for Catch test configuration
-set(ENABLE_HIP_CATCH_TESTS ON CACHE BOOL "Enable HIP Catch test framework and all catch test targets")
+set(ENABLE_HIP_CATCH_TESTS OFF CACHE BOOL "Enable HIP Catch test framework and all catch test targets")
 set(CATCH_TEST_CATEGORIES "unit" CACHE STRING "Semicolon-separated list of test categories to include (unit;stress;performance;perftests)")
 set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdirectories to include (e.g., compiler;memory;stream). Empty means all subdirectories within enabled categories.")
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")

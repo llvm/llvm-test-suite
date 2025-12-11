@@ -34,17 +34,15 @@ Configure the test suite with Catch tests enabled:
 
 ```bash
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=/path/to/rocm/installation \
-  -DTEST_SUITE_EXTERNALS_DIR=/path/to/externals \
-  -DAMDGPU_ARCHS=gfx90a \
   -DENABLE_HIP_CATCH_TESTS=ON \
-  -DCATCH_TEST_CATEGORIES="unit" \
+  -DTEST_SUITE_EXTERNALS_DIR=/path/to/externals \
   -DCMAKE_CXX_COMPILER=/path/to/clang++ \
   -DCMAKE_C_COMPILER=/path/to/clang \
+  -DAMDGPU_ARCHS=gfx90a \
   /path/to/llvm-test-suite
 ```
 
-**Note**: Catch tests are **enabled by default** (`ENABLE_HIP_CATCH_TESTS=ON`). Catch2 is automatically obtained via `find_package` (system) or `FetchContent` (download). Set `ENABLE_HIP_CATCH_TESTS=OFF` to disable all Catch test targets.
+**Note**: Catch tests are **disabled by default**. Set `-DENABLE_HIP_CATCH_TESTS=ON` to enable. Catch2 is automatically obtained via `find_package` (system) or `FetchContent` (download).
 
 ### Platform Support
 
@@ -56,7 +54,8 @@ Use AMD's clang++ compiler directly:
 
 ```bash
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=/opt/rocm \
+  -DENABLE_HIP_CATCH_TESTS=ON \
+  -DTEST_SUITE_EXTERNALS_DIR=/path/to/externals \
   -DCMAKE_CXX_COMPILER=/opt/rocm/llvm/bin/clang++ \
   -DCMAKE_C_COMPILER=/opt/rocm/llvm/bin/clang \
   -DAMDGPU_ARCHS=gfx90a \
@@ -69,7 +68,8 @@ Use HIP's `hipcc` wrapper (built with CUDA backend):
 
 ```bash
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=/path/to/hip-cuda \
+  -DENABLE_HIP_CATCH_TESTS=ON \
+  -DTEST_SUITE_EXTERNALS_DIR=/path/to/externals \
   -DCMAKE_CXX_COMPILER=/path/to/hip-cuda/bin/hipcc \
   -DCMAKE_C_COMPILER=/path/to/hip-cuda/bin/hipcc \
   -DCUDA_ARCH=sm_75 \
@@ -126,7 +126,7 @@ Build or run tests for a specific **subdirectory** within a category (e.g., `uni
 ### ENABLE_HIP_CATCH_TESTS
 
 **Type**: Boolean
-**Default**: ON
+**Default**: OFF
 **Description**: Master switch to enable or disable the entire HIP Catch test framework. When disabled, no Catch test targets are created, and the build only includes simple HIP tests.
 
 **When ENABLED (default)**:
@@ -335,12 +335,11 @@ export ROCM_PATH=/opt/rocm-7.2.0
 export AMDGPU_ARCHS=gfx90a
 
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=${ROCM_PATH} \
+  -DENABLE_HIP_CATCH_TESTS=ON \
   -DTEST_SUITE_EXTERNALS_DIR=${ROCM_PATH} \
-  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   -DCMAKE_CXX_COMPILER="${CLANG_DIR}/bin/clang++" \
   -DCMAKE_C_COMPILER="${CLANG_DIR}/bin/clang" \
-  -DCATCH_TEST_CATEGORIES="unit" \
+  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   /path/to/llvm-test-suite
 ```
 
@@ -356,11 +355,11 @@ export ROCM_PATH=/opt/rocm-7.2.0
 export AMDGPU_ARCHS=gfx90a
 
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=${ROCM_PATH} \
+  -DENABLE_HIP_CATCH_TESTS=ON \
   -DTEST_SUITE_EXTERNALS_DIR=${ROCM_PATH} \
-  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   -DCMAKE_CXX_COMPILER="${CLANG_DIR}/bin/clang++" \
   -DCMAKE_C_COMPILER="${CLANG_DIR}/bin/clang" \
+  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   -DCATCH_TEST_CATEGORIES="unit" \
   -DCATCH_TEST_SUBDIRS="compiler" \
   /path/to/llvm-test-suite
@@ -388,12 +387,11 @@ PATH=${CLANG_DIR}/bin:$PATH \
 CXX=clang++ \
 CC=clang \
 cmake -G Ninja \
+  -DENABLE_HIP_CATCH_TESTS=ON \
   -DTEST_SUITE_EXTERNALS_DIR=${EXTERNAL_DIR} \
-  -DTEST_SUITE_HIP_ROOT=${EXTERNAL_DIR} \
-  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   -DCMAKE_CXX_COMPILER="${CLANG_DIR}/bin/clang++" \
   -DCMAKE_C_COMPILER="${CLANG_DIR}/bin/clang" \
-  -DCATCH_TEST_CATEGORIES="unit" \
+  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   ${TEST_SUITE_DIR}
 
 # Build all tests
@@ -420,12 +418,11 @@ export ROCM_PATH=/opt/rocm-7.2.0
 export AMDGPU_ARCHS=gfx90a
 
 cmake -G Ninja \
-  -DTEST_SUITE_HIP_ROOT=${ROCM_PATH} \
+  -DENABLE_HIP_CATCH_TESTS=OFF \
   -DTEST_SUITE_EXTERNALS_DIR=${ROCM_PATH} \
-  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   -DCMAKE_CXX_COMPILER="${CLANG_DIR}/bin/clang++" \
   -DCMAKE_C_COMPILER="${CLANG_DIR}/bin/clang" \
-  -DENABLE_HIP_CATCH_TESTS=OFF \
+  -DAMDGPU_ARCHS=${AMDGPU_ARCHS} \
   /path/to/llvm-test-suite
 
 # With Catch tests disabled, only simple test targets available
@@ -441,7 +438,7 @@ ninja check-hip-simple-hip-7.2.0 # Run simple tests for specific variant
 
 ## Target Hierarchy
 
-The framework creates a three-level hierarchical structure for organizing and running tests (when `ENABLE_HIP_CATCH_TESTS=ON`, which is the default):
+The framework creates a three-level hierarchical structure for organizing and running tests (when `ENABLE_HIP_CATCH_TESTS=ON`):
 
 **Note**: When `ENABLE_HIP_CATCH_TESTS=OFF`, NO Catch test targets are created at all. Only simple HIP test targets are available.
 
