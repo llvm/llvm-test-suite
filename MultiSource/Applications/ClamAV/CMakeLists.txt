@@ -175,6 +175,7 @@ llvm_multisource(clamscan
   zlib_uncompr.c
   zlib_zutil.c
 )
+set_property(TARGET clamscan PROPERTY C_STANDARD 17)
 if(TARGET_OS STREQUAL "Linux")
   find_package(Intl REQUIRED)
   target_link_libraries(clamscan ${Intl_LIBRARIES})

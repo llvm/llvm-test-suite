@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -DUNIX -DTRANSIZE=1050011 -DPROBES=8 -DREPORTPLY=8)
 set(RUN_OPTIONS < input)
 llvm_multisource(fhourstones)
+set_property(TARGET fhourstones PROPERTY C_STANDARD 17)
 llvm_test_data(fhourstones input)
