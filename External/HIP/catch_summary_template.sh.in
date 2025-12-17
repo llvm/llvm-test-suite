@@ -1,0 +1,191 @@
+#!/bin/bash
+# Enhanced summary script for Catch2 TEST_CASE statistics
+# Generated from catch_summary_template.sh.in by CMake configure_file()
+#
+# Variables substituted by CMake:
+#   @CMAKE_CURRENT_BINARY_DIR@ - build directory
+#   @CATCH_CATEGORY@ - test category (unit, stress, etc.)
+#   @CATCH_SUBDIR@ - subdirectory name (compiler, etc.)
+#   @CATCH_VARIANT_SUFFIX@ - variant suffix (hip-7.2.0, etc.)
+
+cd @CMAKE_CURRENT_BINARY_DIR@
+echo ""
+echo "========================================"
+echo "Detailed Test Summary:"
+TOTAL_FILES=0
+TOTAL_TESTS=0
+PASSED_TESTS=0
+FAILED_TESTS=0
+SKIPPED_TESTS=0
+CRASHED_TESTS=0
+# Arrays to track test names for triage
+FAILED_LIST=""
+SKIPPED_LIST=""
+CRASHED_LIST=""
+for test in catch_tests/catch_@CATCH_CATEGORY@_@CATCH_SUBDIR@_*-@CATCH_VARIANT_SUFFIX@; do
+  if [ -x "$test" ]; then
+    TOTAL_FILES=$((TOTAL_FILES + 1))
+    TEST_BASENAME=$(basename "$test")
+    # Get test names from --list-tests
+    LIST_OUTPUT=$("$test" --list-tests 2>&1)
+    FILE_TOTAL=$(echo "$LIST_OUTPUT" | tail -1 | grep -o '^[0-9]*' || echo 0)
+    TOTAL_TESTS=$((TOTAL_TESTS + FILE_TOTAL))
+    # Extract individual test names (lines starting with spaces after 'All available test cases:')
+    TEST_NAMES=$(echo "$LIST_OUTPUT" | grep '^  ' | sed 's/^  //')
+    # Parse the corresponding .test.out file for results
+    OUT_FILE="Output/${TEST_BASENAME}.test.out"
+    if [ -f "$OUT_FILE" ]; then
+      CASES_PASSED=0
+      CASES_FAILED=0
+      PARSED=0
+      FILE_FAILED_NAMES=""
+      FILE_SKIPPED_NAMES=""
+      FILE_CRASHED_NAMES=""
+      # Parse Catch2 output - try multiple formats (prefer final summary over intermediate)
+      # Format 1: 'All tests passed (N assertion in M test cases)' - final summary, most accurate
+      ALL_PASSED_LINE=$(grep 'All tests passed' "$OUT_FILE" 2>/dev/null | tail -1 || echo "")
+      if [ -n "$ALL_PASSED_LINE" ]; then
+        PARSED=1
+        CASES_PASSED=$(echo "$ALL_PASSED_LINE" | grep -o 'in [0-9]* test case' | grep -o '[0-9]*' || echo 0)
+        CASES_FAILED=0
+      fi
+      # Format 2: 'test cases: X | Y passed | Z failed' - use LAST occurrence (final summary)
+      if [ $PARSED -eq 0 ]; then
+        SUMMARY_LINE=$(grep '^test cases:' "$OUT_FILE" 2>/dev/null | tail -1 || echo "")
+        if [ -n "$SUMMARY_LINE" ]; then
+          PARSED=1
+          CASES_PASSED=$(echo "$SUMMARY_LINE" | grep -o '[0-9]* passed' | grep -o '[0-9]*' || echo 0)
+          CASES_FAILED=$(echo "$SUMMARY_LINE" | grep -o '[0-9]* failed' | grep -o '[0-9]*' || echo 0)
+          CASES_TOTAL=$(echo "$SUMMARY_LINE" | sed 's/test cases: \([0-9]*\).*/\1/')
+          if [ $CASES_PASSED -eq 0 ] && [ $CASES_FAILED -gt 0 ]; then
+            CASES_PASSED=$((CASES_TOTAL - CASES_FAILED))
+          fi
+        fi
+      fi
+      # Update totals if we parsed something
+      if [ $PARSED -eq 1 ]; then
+        # Detect runtime skips by parsing 'is skipped' messages
+        RUNTIME_SKIPPED=$(grep -i 'is skipped' "$OUT_FILE" 2>/dev/null | wc -l)
+        if [ $RUNTIME_SKIPPED -gt 0 ] && [ $CASES_PASSED -gt 0 ]; then
+          if [ $RUNTIME_SKIPPED -gt $CASES_PASSED ]; then
+            RUNTIME_SKIPPED=$CASES_PASSED
+          fi
+          CASES_PASSED=$((CASES_PASSED - RUNTIME_SKIPPED))
+          SKIPPED_TESTS=$((SKIPPED_TESTS + RUNTIME_SKIPPED))
+        fi
+        # Find failed and skipped test names by cross-referencing --list-tests with output
+        # Catch2 console reporter shows 'TestName passed' for tests that passed
+        FAILED_COUNT=$CASES_FAILED
+        SKIPPED_COUNT=$RUNTIME_SKIPPED
+        if [ -n "$TEST_NAMES" ]; then
+          while IFS= read -r tname; do
+            [ -z "$tname" ] && continue
+            # Trim trailing whitespace from test name
+            tname=$(echo "$tname" | sed 's/[[:space:]]*$//')
+            [ -z "$tname" ] && continue
+            # Check if this test passed
+            if grep -q "^$tname passed" "$OUT_FILE" 2>/dev/null; then
+              : # Test passed, nothing to track
+            elif [ $SKIPPED_COUNT -gt 0 ]; then
+              # Test didn't pass - count as skipped first
+              FILE_SKIPPED_NAMES="${FILE_SKIPPED_NAMES}${tname}|"
+              SKIPPED_COUNT=$((SKIPPED_COUNT - 1))
+            elif [ $FAILED_COUNT -gt 0 ]; then
+              # Test didn't pass and no more skips - count as failed
+              FILE_FAILED_NAMES="${FILE_FAILED_NAMES}${tname}|"
+              FAILED_COUNT=$((FAILED_COUNT - 1))
+            fi
+          done <<< "$TEST_NAMES"
+        fi
+        PASSED_TESTS=$((PASSED_TESTS + CASES_PASSED))
+        FAILED_TESTS=$((FAILED_TESTS + CASES_FAILED))
+        # Categorize incomplete tests using exit code
+        # Exit code is appended by timeit as "exit X" at the end of output
+        INCOMPLETE=$((FILE_TOTAL - CASES_PASSED - CASES_FAILED - RUNTIME_SKIPPED))
+        FILE_EXIT=$(grep '^exit [0-9]' "$OUT_FILE" 2>/dev/null | tail -1 | grep -o '[0-9]*' || echo 1)
+        if [ $INCOMPLETE -gt 0 ]; then
+          if [ "$FILE_EXIT" -eq 0 ]; then
+            SKIPPED_TESTS=$((SKIPPED_TESTS + INCOMPLETE))
+          else
+            CRASHED_TESTS=$((CRASHED_TESTS + INCOMPLETE))
+            # Track crashed test names - tests that didn't pass and weren't explicitly categorized
+            if [ -n "$TEST_NAMES" ]; then
+              while IFS= read -r tname; do
+                [ -z "$tname" ] && continue
+                tname=$(echo "$tname" | sed 's/[[:space:]]*$//')
+                [ -z "$tname" ] && continue
+                # Check if this test passed, was skipped, or was failed
+                if ! grep -q "^$tname passed" "$OUT_FILE" 2>/dev/null; then
+                  # Not passed - check if already in skipped or failed
+                  if [[ "$FILE_SKIPPED_NAMES" != *"$tname|"* ]] && [[ "$FILE_FAILED_NAMES" != *"$tname|"* ]]; then
+                    FILE_CRASHED_NAMES="${FILE_CRASHED_NAMES}${tname}|"
+                  fi
+                fi
+              done <<< "$TEST_NAMES"
+            fi
+          fi
+        fi
+        # Accumulate test names for triage lists (names are | delimited)
+        IFS='|' read -ra FAILED_ARR <<< "$FILE_FAILED_NAMES"
+        for name in "${FAILED_ARR[@]}"; do
+          [ -n "$name" ] && FAILED_LIST="${FAILED_LIST}${name} [${TEST_BASENAME}]\n"
+        done
+        IFS='|' read -ra SKIPPED_ARR <<< "$FILE_SKIPPED_NAMES"
+        for name in "${SKIPPED_ARR[@]}"; do
+          [ -n "$name" ] && SKIPPED_LIST="${SKIPPED_LIST}${name} [${TEST_BASENAME}]\n"
+        done
+        IFS='|' read -ra CRASHED_ARR <<< "$FILE_CRASHED_NAMES"
+        for name in "${CRASHED_ARR[@]}"; do
+          [ -n "$name" ] && CRASHED_LIST="${CRASHED_LIST}${name} [${TEST_BASENAME}]\n"
+        done
+      fi
+    else
+      # No output file - test crashed before producing output
+      if [ $FILE_TOTAL -gt 0 ]; then
+        CRASHED_TESTS=$((CRASHED_TESTS + FILE_TOTAL))
+        # Add all test names to crashed list
+        if [ -n "$TEST_NAMES" ]; then
+          while IFS= read -r tname; do
+            [ -z "$tname" ] && continue
+            tname=$(echo "$tname" | sed 's/[[:space:]]*$//')
+            [ -n "$tname" ] && CRASHED_LIST="${CRASHED_LIST}${tname} [${TEST_BASENAME}]\n"
+          done <<< "$TEST_NAMES"
+        fi
+      fi
+    fi
+  fi
+done
+echo "  Test Suites: $TOTAL_FILES"
+echo "  Total Tests: $TOTAL_TESTS"
+echo "  Passed: $PASSED_TESTS"
+echo "  Failed: $FAILED_TESTS"
+if [ $SKIPPED_TESTS -gt 0 ]; then
+  echo "  Skipped: $SKIPPED_TESTS"
+fi
+if [ $CRASHED_TESTS -gt 0 ]; then
+  echo "  Crashed/Error: $CRASHED_TESTS"
+fi
+# Print triage lists
+if [ -n "$FAILED_LIST" ]; then
+  echo ""
+  echo "Failed Tests:"
+  echo -e "$FAILED_LIST" | while IFS= read -r line; do
+    [ -n "$line" ] && echo "  - $line"
+  done
+fi
+if [ -n "$SKIPPED_LIST" ]; then
+  echo ""
+  echo "Skipped Tests:"
+  echo -e "$SKIPPED_LIST" | while IFS= read -r line; do
+    [ -n "$line" ] && echo "  - $line"
+  done
+fi
+if [ -n "$CRASHED_LIST" ]; then
+  echo ""
+  echo "Crashed/Error Tests:"
+  echo -e "$CRASHED_LIST" | while IFS= read -r line; do
+    [ -n "$line" ] && echo "  - $line"
+  done
+fi
+echo "========================================"
+
