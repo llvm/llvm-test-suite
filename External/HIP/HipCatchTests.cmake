@@ -10,6 +10,19 @@ set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdire
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")
 set(HIP_CATCH_TEST_VERBOSE OFF CACHE BOOL "Show verbose output with individual TEST_CASE results from Catch2")
 
+# Generic target architectures for hipSquareGenericTarget test
+# Used by both the main test executable and helper executables
+set(HIP_GENERIC_TARGET_ARCHS
+  "--offload-arch=gfx9-generic"
+  "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
+  "--offload-arch=gfx9-4-generic:sramecc-:xnack-"
+  "--offload-arch=gfx9-4-generic:xnack+"
+  "--offload-arch=gfx10-1-generic"
+  "--offload-arch=gfx10-3-generic"
+  "--offload-arch=gfx11-generic"
+  "--offload-arch=gfx12-generic"
+)
+
 # Local paths for Catch test infrastructure
 set(HIP_CATCH_TESTS_DIR "${CMAKE_CURRENT_LIST_DIR}/catch")
 
@@ -171,18 +184,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
 
   message(STATUS "Creating generic target executables for ${TEST_BASENAME}-${VARIANT_SUFFIX}")
 
-  # Generic target architecture flags
-  set(_generic_archs
-    "--offload-arch=gfx9-generic"
-    "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
-    "--offload-arch=gfx9-4-generic:sramecc-:xnack-"
-    "--offload-arch=gfx9-4-generic:xnack+"
-    "--offload-arch=gfx10-1-generic"
-    "--offload-arch=gfx10-3-generic"
-    "--offload-arch=gfx11-generic"
-    "--offload-arch=gfx12-generic"
-  )
-
+  # Use shared generic target architecture flags from module scope
   set(_source_file "${TEST_DIR}/${TEST_BASENAME}.cc")
   set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests")
 
@@ -224,7 +226,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -x hip
       -mcode-object-version=6
       -w
-      ${_generic_archs}
+      ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
       -o "${_output_path_regular}"
       --hip-path=${ROCM_PATH}
@@ -256,7 +258,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -mcode-object-version=6
       --offload-compress
       -w
-      ${_generic_archs}
+      ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
       -o "${_output_path_compressed}"
       --hip-path=${ROCM_PATH}
@@ -326,23 +328,15 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     "${HIP_CATCH_TESTS_DIR}/hipTestMain/hip_test_features.cc"
   )
 
-  # Check if sources exist
-  set(_valid_sources "")
+  # Check if sources exist (fail early on configuration problems)
   foreach(_src ${_test_sources})
-    if(EXISTS "${_src}")
-      list(APPEND _valid_sources "${_src}")
-    else()
-      message(STATUS "Source file not found: ${_src}")
+    if(NOT EXISTS "${_src}")
+      message(FATAL_ERROR "Source file not found: ${_src}")
     endif()
   endforeach()
 
-  if(NOT _valid_sources)
-    message(STATUS "No valid sources found for ${TEST_NAME}, skipping")
-    return()
-  endif()
-
   # Create the executable
-  add_executable(${_test_exe} EXCLUDE_FROM_ALL ${_valid_sources})
+  add_executable(${_test_exe} EXCLUDE_FROM_ALL ${_test_sources})
 
   # Ensure timeit tool is built first (needed for compilation timing)
   if(TARGET build-timeit)
@@ -391,14 +385,7 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     target_compile_options(${_test_exe} PRIVATE
       -mcode-object-version=6
       -w
-      --offload-arch=gfx9-generic
-      --offload-arch=gfx9-4-generic:sramecc+:xnack-
-      --offload-arch=gfx9-4-generic:sramecc-:xnack-
-      --offload-arch=gfx9-4-generic:xnack+
-      --offload-arch=gfx10-1-generic
-      --offload-arch=gfx10-3-generic
-      --offload-arch=gfx11-generic
-      --offload-arch=gfx12-generic
+      ${HIP_GENERIC_TARGET_ARCHS}
     )
     message(STATUS "Added generic target compile options to ${_test_exe}")
   endif()
@@ -564,14 +551,18 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
     execute_process(COMMAND chmod +x "${_summary_script}")
 
     # Create wrapper script that runs LIT then shows summary
+    # Set template variables
+    set(LIT_VERBOSITY_FLAGS "${_lit_verbosity_flags}")
+    string(REPLACE ";" " " TEST_LIST "${_subdir_variant_tests}")
+    set(SUMMARY_SCRIPT "${_summary_script}")
+
+    # Generate wrapper from template
     set(_lit_wrapper "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/lit_wrapper_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
-    file(WRITE "${_lit_wrapper}" "#!/bin/bash\n")
-    file(APPEND "${_lit_wrapper}" "cd ${CMAKE_CURRENT_BINARY_DIR}\n")
-    string(REPLACE ";" " " _test_list_str "${_subdir_variant_tests}")
-    file(APPEND "${_lit_wrapper}" "${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS} ${_lit_verbosity_flags} ${_test_list_str}\n")
-    file(APPEND "${_lit_wrapper}" "LIT_EXIT=\$?\n")
-    file(APPEND "${_lit_wrapper}" "${_summary_script}\n")
-    file(APPEND "${_lit_wrapper}" "exit \$LIT_EXIT\n")
+    configure_file(
+      "${CMAKE_CURRENT_SOURCE_DIR}/lit_wrapper_template.sh.in"
+      "${_lit_wrapper}"
+      @ONLY
+    )
     execute_process(COMMAND chmod +x "${_lit_wrapper}")
 
     add_custom_target(check-hip-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX}
