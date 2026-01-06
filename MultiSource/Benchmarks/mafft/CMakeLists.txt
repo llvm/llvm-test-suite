@@ -31,4 +31,5 @@ llvm_multisource(pairlocalalign
   suboptalign11.c
   tddis.c
 )
+set_property(TARGET pairlocalalign PROPERTY C_STANDARD 17)
 llvm_test_data(pairlocalalign pyruvate_decarboxylase.fasta)

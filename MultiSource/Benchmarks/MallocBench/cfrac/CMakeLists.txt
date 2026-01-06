@@ -35,3 +35,4 @@ llvm_multisource(cfrac
   pcfrac.c
   pgcd.c
 )
+set_property(TARGET cfrac PROPERTY C_STANDARD 17)

@@ -1,4 +1,5 @@
 list(APPEND CFLAGS -Wno-implicit-function-declaration -Wno-implicit-int -Wno-int-conversion)
 set(RUN_OPTIONS parse.y.in -v)
 llvm_multisource(mybison)
+set_property(TARGET mybison PROPERTY C_STANDARD 17)
 llvm_test_data(mybison parse.y.in)

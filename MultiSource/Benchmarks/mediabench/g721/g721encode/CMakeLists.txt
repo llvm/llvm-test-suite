@@ -8,6 +8,7 @@ llvm_multisource(encode
   g723_40.c
   g72x.c
 )
+set_property(TARGET encode PROPERTY C_STANDARD 17)
 llvm_test_data(encode SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../data
   clinton.pcm
 )

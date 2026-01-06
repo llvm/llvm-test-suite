@@ -1,4 +1,4 @@
 list(APPEND LDFLAGS -lm)
-list(APPEND CFLAGS -std=gnu99)
 set(RUN_OPTIONS 20000 14)
 llvm_multisource(StatementReordering-dbl)
+set_property(TARGET StatementReordering-dbl PROPERTY C_STANDARD 99)

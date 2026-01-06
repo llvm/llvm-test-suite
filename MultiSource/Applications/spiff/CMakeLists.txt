@@ -1,4 +1,5 @@
 list(APPEND CFLAGS -Wno-implicit-int)
 set(RUN_OPTIONS Sample.3 Sample.4)
 llvm_multisource(spiff)
+set_property(TARGET spiff PROPERTY C_STANDARD 17)
 llvm_test_data(spiff Sample.3 Sample.4)
