@@ -57,6 +57,10 @@ if(NOT ARCH STREQUAL "x86")
     ms_struct_pack_layout-1.c
   )
 endif()
+if (ARCH MATCHES "riscv32")
+  # 8-byte atomics aren't supported on RV32.
+  list(REMOVE_ITEM Source AtomicOps.c)
+endif()
 
 # Enable matrix types extension tests for compilers supporting -fenable-matrix.
 check_c_compiler_flag(-fenable-matrix COMPILER_HAS_MATRIX_FLAG)
