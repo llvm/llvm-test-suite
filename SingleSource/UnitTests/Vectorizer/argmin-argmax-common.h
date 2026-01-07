@@ -211,6 +211,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
   }
 }
 
+// Generate test name from operation, min type, index type, and suffix.
 #define NAME(Op, MinTy, MinIdxTy, Suffix)                                      \
   "arg" Op "_" #MinTy "_" #MinIdxTy Suffix
 
@@ -230,7 +231,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
                                          NAME(Op, MinTy, MinIdxTy, Suffix));   \
   }
 
-// Predicate-parameterized tests
+// Test basic argmin/argmax with configurable start, increment, and predicate.
 #define T_BASIC_P(Op, M, I, Start, Inc, InitVal, InitIdx, Pred, Suf)           \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = InitIdx;                           \
@@ -243,6 +244,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
+// Test argmin/argmax on A[i]+B[i] to check vectorization of reductions on ADD.
 #define T_ADD_P(Op, M, I, Start, Inc, InitVal, InitIdx, Pred, Suf)             \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = InitIdx;                           \
@@ -256,6 +258,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
+// Test with separate selects: index from B[i], min value from A[i].
 #define T_SEP_P(Op, M, I, InitVal, Pred, Suf)                                  \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -271,6 +274,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
+// Test with different arrays in selects: index from B[i], value from A[i].
 #define T_DIFF_P(Op, M, I, InitVal, Pred, Suf)                                 \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -286,7 +290,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
-// Two-predicate tests (for mismatch patterns)
+// Test with mismatched predicates: index update uses Pred1, value uses Pred2.
 #define T_2PRED(Op, M, I, InitVal, Pred1, Pred2, Suf)                          \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -302,6 +306,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
+// Test with mismatched predicates reversed: value uses Pred1, index uses Pred2.
 #define T_2PRED_REV(Op, M, I, InitVal, Pred1, Pred2, Suf)                      \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -317,6 +322,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , Suf)
 
+// Test with uint64_t induction variable truncated to index type I.
 #define T_TRUNC(Op, M, I, InitVal)                                             \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -329,6 +335,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , "_with_trunc")
 
+// Test with decrementing induction variable to find last occurrence.
 #define T_DEC(Op, M, I, InitVal)                                               \
   TEST(                                                                        \
       Op, M, I, M Min = InitVal; I MinIdx = 0;                                 \
@@ -341,7 +348,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , "_induction_decrement")
 
-// Variants with explicit VF and interleave count.
+// Basic test with explicit vectorization factor and interleave count.
 #define T_BASIC_VF_IC(Op, M, I, Start, Inc, InitVal, InitIdx, VF, IC, Suf)     \
   TEST_VF_IC(                                                                  \
       Op, M, I, M Min = InitVal; I MinIdx = InitIdx;                           \
@@ -354,6 +361,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       } return MinIdx;                                                         \
       , VF, IC, Suf)
 
+// Run core argmin tests with various start indices and increments.
 #define RUN_ALL_TESTS_FOR_TYPE(M, I)                                           \
   T_BASIC_P("min", M, I, 0, 1, std::numeric_limits<M>::max(), 0, <=,           \
             "_start_0")                                                        \
@@ -372,7 +380,7 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
   T_SEP_P("min", M, I, std::numeric_limits<M>::max(), <=, "_separate_selects") \
   T_DIFF_P("min", M, I, std::numeric_limits<M>::max(), <=, "_different_selects")
 
-// Run tests with different predicates for additional coverage
+// Run argmin/argmax tests with <, <=, >, >= predicates.
 #define RUN_PRED_TESTS_FOR_TYPE(M, I)                                          \
   T_BASIC_P("min", M, I, 0, 1, std::numeric_limits<M>::max(), 0, <,            \
             "_start_0_lt")                                                     \
@@ -385,89 +393,15 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
   T_SEP_P("max", M, I, std::numeric_limits<M>::lowest(), >,                    \
           "_separate_selects_gt")
 
-// Run tests with explicit VF and interleave count
+// Run tests with specific VF and interleave count combinations.
 #define RUN_VF_IC_TESTS_FOR_TYPE(M, I)                                         \
   T_BASIC_VF_IC("min", M, I, 0, 1, std::numeric_limits<M>::max(), 0, 4, 1,     \
                 "_start_0_vf4_ic1")                                            \
   T_BASIC_VF_IC("min", M, I, 0, 1, std::numeric_limits<M>::max(), 0, 2, 2,     \
                 "_start_0_vf2_ic2")
 
+// Run tests with induction variable truncation and decrementing loops.
 #define RUN_TRUNC_TESTS_FOR_TYPE(M, I)                                         \
   T_TRUNC("min", M, I, std::numeric_limits<M>::max())                          \
   T_DEC("min", M, I, std::numeric_limits<M>::max())
 
-int main(void) {
-  rng = std::mt19937(15);
-
-  // Run tests for unsigned 8-bit types
-  RUN_ALL_TESTS_FOR_TYPE(uint8_t, uint8_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint8_t, uint8_t)
-
-  // Run tests for unsigned 16-bit types
-  RUN_ALL_TESTS_FOR_TYPE(uint16_t, uint16_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint16_t, uint16_t)
-
-  // Run tests for unsigned 32-bit types
-  RUN_ALL_TESTS_FOR_TYPE(uint32_t, uint32_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint32_t, uint32_t)
-  RUN_VF_IC_TESTS_FOR_TYPE(uint32_t, uint32_t)
-
-  // Run tests for unsigned 64-bit types
-  RUN_ALL_TESTS_FOR_TYPE(uint64_t, uint64_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint64_t, uint64_t)
-  RUN_VF_IC_TESTS_FOR_TYPE(uint64_t, uint64_t)
-
-  // Run tests for signed 8-bit types
-  RUN_ALL_TESTS_FOR_TYPE(int8_t, int8_t)
-  RUN_PRED_TESTS_FOR_TYPE(int8_t, int8_t)
-
-  // Run tests for signed 16-bit types
-  RUN_ALL_TESTS_FOR_TYPE(int16_t, int16_t)
-  RUN_PRED_TESTS_FOR_TYPE(int16_t, int16_t)
-
-  // Run tests for signed 32-bit types
-  RUN_ALL_TESTS_FOR_TYPE(int32_t, int32_t)
-  RUN_PRED_TESTS_FOR_TYPE(int32_t, int32_t)
-  RUN_VF_IC_TESTS_FOR_TYPE(int32_t, int32_t)
-
-  // Run tests for signed 64-bit types
-  RUN_ALL_TESTS_FOR_TYPE(int64_t, int64_t)
-  RUN_PRED_TESTS_FOR_TYPE(int64_t, int64_t)
-
-  // Run tests with mixed signedness (unsigned min, signed idx)
-  RUN_ALL_TESTS_FOR_TYPE(uint8_t, int8_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint8_t, int8_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(uint16_t, int16_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint16_t, int16_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(uint32_t, int32_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint32_t, int32_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(uint64_t, int64_t)
-  RUN_PRED_TESTS_FOR_TYPE(uint64_t, int64_t)
-
-  // Run tests with mixed signedness (signed min, unsigned idx)
-  RUN_ALL_TESTS_FOR_TYPE(int8_t, uint8_t)
-  RUN_PRED_TESTS_FOR_TYPE(int8_t, uint8_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(int16_t, uint16_t)
-  RUN_PRED_TESTS_FOR_TYPE(int16_t, uint16_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(int32_t, uint32_t)
-  RUN_PRED_TESTS_FOR_TYPE(int32_t, uint32_t)
-
-  RUN_ALL_TESTS_FOR_TYPE(int64_t, uint64_t)
-  RUN_PRED_TESTS_FOR_TYPE(int64_t, uint64_t)
-
-  // Run truncation tests with original type combination
-  RUN_TRUNC_TESTS_FOR_TYPE(uint64_t, uint32_t)
-
-  // Run mismatch tests only for uint64_t (matching original scope)
-  T_2PRED("mixed", uint64_t, uint64_t, std::numeric_limits<uint64_t>::max(), >=,
-          <=, "_predicate_mismatch_0")
-  T_2PRED_REV("mixed", uint64_t, uint64_t, std::numeric_limits<uint64_t>::max(),
-              <=, >=, "_predicate_mismatch_1")
-
-  return 0;
-}
