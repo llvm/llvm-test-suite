@@ -162,7 +162,7 @@ void procquery(char *host,char *str,int max_hits,int offset,char query_type,
                int sortflag,int listflag)
 {
     VLINK l;
-    long now;
+    time_t now;
 
     /* initialize data structures for this query */
     (void)time(&now);
