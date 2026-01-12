@@ -1,21 +1,39 @@
-// This program tests performance impact of Epilogue Vectorization
-// with varying epilogue lengths, and vector widths.
+//===- EarlyExit.cpp - Early Exit Vectorization Benchmarks ------*- C++ -*-===//
+///
+/// \file
+/// Benchmarks for early exit loop vectorization with varying trip counts
+/// and element types.
+///
+//===----------------------------------------------------------------------===//
+#include <algorithm>
 #include <cstdint>
 #include <memory>
-#include <random>
 
 #include "benchmark/benchmark.h"
 
-static std::mt19937 rng;
+// Check for builtin availability using __has_builtin when available.
+#ifndef __has_builtin
+#define __has_builtin(x) 0
+#endif
+
+#if __has_builtin(__builtin_assume_aligned)
+#define ASSUME_ALIGNED(ptr, align) __builtin_assume_aligned(ptr, align)
+#else
+#define ASSUME_ALIGNED(ptr, align) (ptr)
+#endif
+
+#if __has_builtin(__builtin_assume_dereferenceable)
+#define ASSUME_DEREFERENCEABLE(ptr, size) __builtin_assume_dereferenceable(ptr, size)
+#else
+#define ASSUME_DEREFERENCEABLE(ptr, size) ((void)0)
+#endif
+
 uint64_t Sum = 0;
 
-// Initialize array A with random numbers.
+/// Initialize array \p A with 1s.
 template <typename Ty>
 static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
-  std::uniform_int_distribution<Ty> distrib(std::numeric_limits<Ty>::min(),
-                                            std::numeric_limits<Ty>::max());
-  for (unsigned I = 0; I < N; I++)
-    A[I] = 1;
+  std::fill_n(A.get(), N, static_cast<Ty>(1));
 }
 
 // Helper to block optimizing \p F based on its arguments.
@@ -47,7 +65,7 @@ runEarlyExitBenchmark(benchmark::State &state,
     A[0] = 0;
     break;
   case EarlyExitPosition::Mid:
-    A[Iterations * 0.5] = 0;
+    A[Iterations / 2] = 0;
     break;
   }
 
@@ -64,8 +82,8 @@ runEarlyExitBenchmark(benchmark::State &state,
 template <typename Ty>
 static uint64_t __attribute__((noinline))
 singleEarlyExitWithSingleLoad(Ty *A, Ty *B, Ty *C, int Iterations) {
-  auto AlignedA = static_cast<Ty *>(__builtin_assume_aligned(A, sizeof(Ty)));
-  __builtin_assume_dereferenceable(AlignedA, Iterations * sizeof(Ty));
+  auto AlignedA = static_cast<Ty *>(ASSUME_ALIGNED(A, sizeof(Ty)));
+  ASSUME_DEREFERENCEABLE(AlignedA, Iterations * sizeof(Ty));
   for (int J = 0; J < Iterations; J++) {
     if (AlignedA[J] == 0)
       return J;
@@ -76,10 +94,10 @@ singleEarlyExitWithSingleLoad(Ty *A, Ty *B, Ty *C, int Iterations) {
 template <typename Ty>
 static uint64_t __attribute__((noinline))
 singleEarlyExitWithTwoLoads(Ty *A, Ty *B, Ty *C, int Iterations) {
-  auto AlignedA = static_cast<Ty *>(__builtin_assume_aligned(A, sizeof(Ty)));
-  auto AlignedB = static_cast<Ty *>(__builtin_assume_aligned(B, sizeof(Ty)));
-  __builtin_assume_dereferenceable(AlignedA, Iterations * sizeof(Ty));
-  __builtin_assume_dereferenceable(AlignedB, Iterations * sizeof(Ty));
+  auto AlignedA = static_cast<Ty *>(ASSUME_ALIGNED(A, sizeof(Ty)));
+  auto AlignedB = static_cast<Ty *>(ASSUME_ALIGNED(B, sizeof(Ty)));
+  ASSUME_DEREFERENCEABLE(AlignedA, Iterations * sizeof(Ty));
+  ASSUME_DEREFERENCEABLE(AlignedB, Iterations * sizeof(Ty));
   for (int J = 0; J < Iterations; J++) {
     if (AlignedA[J] != AlignedB[J])
       return J;
@@ -90,12 +108,12 @@ singleEarlyExitWithTwoLoads(Ty *A, Ty *B, Ty *C, int Iterations) {
 template <typename Ty>
 static uint64_t __attribute__((noinline))
 singleEarlyExitWithThreeLoadsAndCompute(Ty *A, Ty *B, Ty *C, int Iterations) {
-  auto AlignedA = static_cast<Ty *>(__builtin_assume_aligned(A, sizeof(Ty)));
-  auto AlignedB = static_cast<Ty *>(__builtin_assume_aligned(B, sizeof(Ty)));
-  auto AlignedC = static_cast<Ty *>(__builtin_assume_aligned(C, sizeof(Ty)));
-  __builtin_assume_dereferenceable(AlignedA, Iterations * sizeof(Ty));
-  __builtin_assume_dereferenceable(AlignedB, Iterations * sizeof(Ty));
-  __builtin_assume_dereferenceable(AlignedC, Iterations * sizeof(Ty));
+  auto AlignedA = static_cast<Ty *>(ASSUME_ALIGNED(A, sizeof(Ty)));
+  auto AlignedB = static_cast<Ty *>(ASSUME_ALIGNED(B, sizeof(Ty)));
+  auto AlignedC = static_cast<Ty *>(ASSUME_ALIGNED(C, sizeof(Ty)));
+  ASSUME_DEREFERENCEABLE(AlignedA, Iterations * sizeof(Ty));
+  ASSUME_DEREFERENCEABLE(AlignedB, Iterations * sizeof(Ty));
+  ASSUME_DEREFERENCEABLE(AlignedC, Iterations * sizeof(Ty));
   for (int J = 0; J < Iterations; J++) {
     // Exits when A[J] == 0: (0 + 1) * 1 == 1
     // Continues when A[J] == 1: (1 + 1) * 1 == 2
@@ -121,6 +139,12 @@ template <typename Ty>
 void autovec_early_exit_taken_first_single_load(benchmark::State &state) {
   runEarlyExitBenchmark<Ty>(state, &singleEarlyExitWithSingleLoad<Ty>,
                             EarlyExitPosition::First);
+}
+
+template <typename Ty>
+void autovec_early_exit_taken_mid_single_load(benchmark::State &state) {
+  runEarlyExitBenchmark<Ty>(state, &singleEarlyExitWithSingleLoad<Ty>,
+                            EarlyExitPosition::Mid);
 }
 
 template <typename Ty>
@@ -163,6 +187,8 @@ void autovec_early_exit_taken_mid_three_loads(benchmark::State &state) {
 
 REGISTER_BENCHMARK_FOR_TYPES(autovec_no_early_exit_single_load)
 REGISTER_BENCHMARK_FOR_TYPES(autovec_early_exit_taken_first_single_load)
+REGISTER_BENCHMARK_FOR_TYPES(autovec_early_exit_taken_mid_single_load)
+REGISTER_BENCHMARK_FOR_TYPES(autovec_no_early_exit_two_loads)
 REGISTER_BENCHMARK_FOR_TYPES(autovec_early_exit_taken_first_two_loads)
 REGISTER_BENCHMARK_FOR_TYPES(autovec_early_exit_taken_mid_two_loads)
 REGISTER_BENCHMARK_FOR_TYPES(autovec_no_early_exit_three_loads)
