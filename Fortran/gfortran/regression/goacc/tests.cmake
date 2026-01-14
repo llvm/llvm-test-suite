@@ -55,7 +55,7 @@ compile;atomic.f90;xfail;;;
 compile;attach-descriptor.f90;;;;
 compile;branch.f95;xfail;;;
 compile;cache-1.f95;;;;
-compile;cache-2.f95;xfail;;;
+compile;cache-2.f95;;;;
 compile;classify-kernels-parloops.f95;;openacc-kernels=parloops -O2;;
 compile;classify-kernels-unparallelized-parloops.f95;;openacc-kernels=parloops -O2;;
 compile;classify-kernels-unparallelized.f95;;openacc-kernels=decompose -O2;;
