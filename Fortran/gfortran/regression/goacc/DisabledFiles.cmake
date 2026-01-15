@@ -18,6 +18,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: OpenACC Cache construct not lowered yet
   cache-1.f95
+  cache-2.f95
 
   # unimplemented: OpenACC Routine construct not lowered yet
   classify-routine.f95
