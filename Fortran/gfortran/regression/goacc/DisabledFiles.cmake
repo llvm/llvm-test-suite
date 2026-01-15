@@ -16,10 +16,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   privatization-1-compute.f90
   privatization-1-compute-loop.f90
 
-  # unimplemented: OpenACC Cache construct not lowered yet
-  cache-1.f95
-  cache-2.f95
-
   # unimplemented: OpenACC Routine construct not lowered yet
   classify-routine.f95
   classify-routine-nohost.f95
@@ -193,6 +189,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   uninit-if-clause.f95
 
   # These tests are expected to issue a compile-time error, but succeed instead.
+  cache-2.f95
   routine-8.f90
   routine-intrinsic-2.f
 
