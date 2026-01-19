@@ -17,10 +17,12 @@ __attribute__((optnone)) static auto callThroughOptnone(F &&f, Args &&...args) {
 
 template <typename Ty>
 static void checkVectorFunction(TestFnTy<Ty> ScalarFn, TestFnTy<Ty> VectorFn,
+                                TestFnTy<Ty> ForcedVectorFn,
                                 TestFnTy<Ty> InterleavedFn, const char *Name) {
   std::cout << "Checking " << Name << "\n";
 
   std::array Tests = {std::make_pair(VectorFn, "autovec"),
+                      std::make_pair(ForcedVectorFn, "vector-forced"),
                       std::make_pair(InterleavedFn, "interleave-forced")};
 
   // Check finding the target element at all indices between 0 and 512.
@@ -78,6 +80,11 @@ static void checkVectorFunction(TestFnTy<Ty> ScalarFn, TestFnTy<Ty> VectorFn,
     II(Src);                                                                   \
     _Pragma("clang loop vectorize(enable)") Loop                               \
   };                                                                           \
+  auto ForcedVectorFn = [](std::function<void(int *)> II) -> unsigned {        \
+    Init;                                                                      \
+    II(Src);                                                                   \
+    _Pragma("clang loop vectorize_width(8) interleave_count(1)") Loop          \
+  };                                                                           \
   auto InterleavedFn = [](std::function<void(int *)> II) -> unsigned {         \
     Init;                                                                      \
     II(Src);                                                                   \
@@ -91,7 +98,7 @@ int main(void) {
           if (A[I] == 0)
             return I;
         } return -1;);
-    checkVectorFunction<int>(ScalarFn, VectorFn, InterleavedFn,
+    checkVectorFunction<int>(ScalarFn, VectorFn, ForcedVectorFn, InterleavedFn,
                              "early_exit_find_step_1");
   }
 
@@ -102,7 +109,7 @@ int main(void) {
             return J;
           J += 3;
         } return -1;);
-    checkVectorFunction<int>(ScalarFn, VectorFn, InterleavedFn,
+    checkVectorFunction<int>(ScalarFn, VectorFn, ForcedVectorFn, InterleavedFn,
                              "early_exit_find_step_3");
   }
   return 0;
