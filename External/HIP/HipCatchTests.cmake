@@ -11,7 +11,21 @@ set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests i
 set(HIP_CATCH_TEST_VERBOSE OFF CACHE BOOL "Show verbose output with individual TEST_CASE results from Catch2")
 
 # Generic target architectures for hipSquareGenericTarget test
-# Used by both the main test executable and helper executables
+#
+# AMD GPUs support "generic targets" (e.g., gfx10-3-generic) which allow a single
+# binary to run on multiple specific GPUs within a family (e.g., gfx1030, gfx1031, gfx1032).
+# The HIP runtime matches the generic target to the actual GPU at load time.
+#
+# The hipSquareGenericTarget test validates this feature by:
+# 1. Building the main test with BOTH specific (AMDGPU_ARCHS) and generic architectures
+# 2. Building helper executables with ONLY generic architectures
+# 3. At runtime, checking that generic-only binaries can execute on the actual GPU
+#
+# This list is used by:
+# - Main test executable (create_catch_test_executable) - lines 381-388
+# - Helper executables (create_generic_target_executables) - lines 220-273
+#
+# Note: Generic targets require Code Object V6+, which is the default in ROCm 6.0+.
 set(HIP_GENERIC_TARGET_ARCHS
   "--offload-arch=gfx9-generic"
   "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
@@ -168,7 +182,31 @@ function(track_test_target_multi_level TEST_TARGET CATEGORY SUBDIR VARIANT)
 endfunction()
 
 # Function to create special generic target executables for hipSquareGenericTarget test
-# This test requires additional executables built with generic-only offload architectures
+#
+# The hipSquareGenericTarget test requires THREE executables to fully test generic targets:
+#
+# 1. Main test executable (created by create_catch_test_executable):
+#    - Built with AMDGPU_ARCHS (specific, e.g., gfx1030) + HIP_GENERIC_TARGET_ARCHS (generic)
+#    - Runs the Catch2 test harness
+#    - Contains TEST_CASEs that invoke the helper executables
+#
+# 2. hipSquareGenericTargetOnly (created here):
+#    - Built with ONLY generic architectures (no specific GPU targets)
+#    - Tests that a generic-only binary can execute on the actual GPU
+#    - The main test runs this via: ./hipSquareGenericTargetOnly
+#
+# 3. hipSquareGenericTargetOnlyCompressed (created here):
+#    - Same as #2, but with --offload-compress for compressed code objects
+#    - Tests that compressed generic-only binaries work correctly
+#
+# Test flow:
+#   ninja check-hip-catch
+#     -> builds main test + helper executables
+#     -> LIT runs main test executable
+#     -> main test's TEST_CASEs check if GPU supports generic targets
+#     -> if supported: spawns helper executables and verifies they run successfully
+#     -> if not supported: test is skipped (e.g., no generic mapping for the GPU)
+#
 # Arguments:
 #   TEST_BASENAME  - Base name of the test (e.g., hipSquareGenericTarget)
 #   TEST_DIR       - Directory containing the test sources
@@ -224,7 +262,6 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -DNO_GENERIC_TARGET_ONLY_TEST
       --std=c++17
       -x hip
-      -mcode-object-version=6
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
@@ -255,7 +292,6 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -DGENERIC_COMPRESSED
       --std=c++17
       -x hip
-      -mcode-object-version=6
       --offload-compress
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
@@ -381,9 +417,14 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   )
 
   # Special handling for hipSquareGenericTarget test - add generic target architectures
+  # The main test executable needs BOTH specific GPU targets (from AMDGPU_ARCHS, applied
+  # via VariantCPPFLAGS above) AND generic targets. This allows the test to:
+  # - Run on the actual GPU (via specific target)
+  # - Test generic target functionality (via generic targets in the same binary)
+  # The -w flag suppresses warnings from the generic target compilation.
+  # See also: create_generic_target_executables() for the helper executables.
   if("${TEST_NAME}" MATCHES "hipSquareGenericTarget" AND "${CATEGORY}" STREQUAL "unit" AND "${SUBDIR}" STREQUAL "compiler")
     target_compile_options(${_test_exe} PRIVATE
-      -mcode-object-version=6
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
     )
@@ -423,8 +464,12 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # Register with LIT
   # Use console reporter for consistent output parsing in summary scripts
   # Console reporter outputs: "test cases: X | Y passed | Z failed"
-  # Special handling for hipSquareGenericTarget - needs to run from catch_tests dir
-  # so that helper executables (hipSquareGenericTargetOnly, etc.) can be found
+  #
+  # Special handling for hipSquareGenericTarget:
+  # The test spawns helper executables (hipSquareGenericTargetOnly, etc.) using relative
+  # paths like "./hipSquareGenericTargetOnly". For this to work, the test must run from
+  # the catch_tests directory where both the main test and helpers are located.
+  # WORKDIR causes LIT to cd into the directory before executing the test.
   if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
     # Use WORKDIR to change directory before running (parsed as "cd DIR ; executable")
     # %S expands to source directory (where .test file is located)
@@ -515,7 +560,10 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
     create_catch_test_executable("${_test_name}" "${_src}" "${_test_dir}" "${CATEGORY}" "${SUBDIR}" "${VARIANT_SUFFIX}" "${ROCM_PATH}")
 
     # Special handling for hipSquareGenericTarget test (unit/compiler only)
-    # This test requires additional executables with generic-only targets
+    # This test requires additional helper executables built with ONLY generic targets
+    # (no specific GPU architectures). These helpers are spawned by the main test to
+    # verify that generic-only binaries can execute correctly on the actual GPU.
+    # See create_generic_target_executables() for detailed documentation.
     if("${_test_basename}" STREQUAL "hipSquareGenericTarget" AND
        "${CATEGORY}" STREQUAL "unit" AND "${SUBDIR}" STREQUAL "compiler")
       create_generic_target_executables("${_test_basename}" "${_test_dir}" "${VARIANT_SUFFIX}" "${ROCM_PATH}")
