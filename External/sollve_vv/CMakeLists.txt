@@ -2,24 +2,24 @@
 # https://crpl.cis.udel.edu/ompvvsollve/
 
 if (TEST_SUITE_BENCHMARKING_ONLY)
-  message(STATUS "Skipping OpenMP Validiation & Verification because benchmarking-only mode")
+  message(STATUS "Skipping OpenMP Validation & Verification because benchmarking-only mode")
   return ()
 endif ()
 
 include(External)
 llvm_externals_find(TEST_SUITE_SOLLVEVV_ROOT "sollve_vv" "OpenMP Offloading Validation & Verification Suite")
 if (NOT TEST_SUITE_SOLLVEVV_ROOT)
-  message(STATUS "Skipping OpenMP Validiation & Verification because external sources not specified")
+  message(STATUS "Skipping OpenMP Validation & Verification because external sources not specified")
   return ()
 endif ()
 
 include(../OpenMPOffloading.cmake)
 if (NOT TARGET OpenMP_Offloading)
-  message(STATUS "Skipping OpenMP Validiation & Verification because OpenMP Offloading not available")
+  message(STATUS "Skipping OpenMP Validation & Verification because OpenMP Offloading not available")
   return ()
 endif ()
 
-message(STATUS "Adding OpenMP Offloading Validiation & Verification tests")
+message(STATUS "Adding OpenMP Offloading Validation & Verification tests")
 if (TEST_SUITE_EFFECTIVE_SYSTEM_GPU STREQUAL "all")
   file(GLOB_RECURSE _tests_sources RELATIVE "${TEST_SUITE_SOLLVEVV_ROOT}/tests"
       "${TEST_SUITE_SOLLVEVV_ROOT}/tests/*.c"
