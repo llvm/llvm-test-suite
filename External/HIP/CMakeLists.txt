@@ -7,6 +7,9 @@ message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
+# Include Catch tests integration module
+include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
+
 # Inspired from create_one_local_test. Runs hipify on the TestSource and then compiles it.
 # Search for the reference files next to TestSource.
 macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuffix VariantCPPFlags VariantLibs)
@@ -151,6 +154,11 @@ function(create_hip_test VariantSuffix)
     DEPENDS hip-tests-simple-${VariantSuffix}
     USES_TERMINAL)
   add_dependencies(check-hip-simple check-hip-simple-${VariantSuffix})
+
+  # Integrate Catch tests for this variant (if enabled)
+  if(ENABLE_HIP_CATCH_TESTS)
+    integrate_catch_tests(${VariantSuffix} ${_RocmPath})
+  endif()
 endfunction(create_hip_test)
 
 macro(create_hip_tests)
@@ -175,6 +183,9 @@ macro(create_hip_tests)
     COMMENT "Build all simple HIP tests")
   add_custom_target(check-hip-simple
     COMMENT "Run all simple HIP tests")
+
+  # Initialize Catch tests framework
+  initialize_catch_tests()
 
   if(NOT AMDGPU_ARCHS)
     list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;native")
@@ -260,8 +271,14 @@ macro(create_hip_tests)
 
   endif()
 
-  add_custom_target(hip-tests-all DEPENDS hip-tests-simple
-    COMMENT "Build all HIP tests.")
+  # Build all HIP tests (simple + catch if enabled)
+  if(ENABLE_HIP_CATCH_TESTS)
+    add_custom_target(hip-tests-all DEPENDS hip-tests-simple hip-tests-catch
+      COMMENT "Build all HIP tests (simple + catch).")
+  else()
+    add_custom_target(hip-tests-all DEPENDS hip-tests-simple
+      COMMENT "Build all HIP tests (simple only, catch disabled).")
+  endif()
 
   file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endmacro(create_hip_tests)
