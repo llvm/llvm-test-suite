@@ -1,11 +1,13 @@
 # Fortran TestSuite Directory Structure (TENTATIVE):
 #
+# cray         - Tests ported from the Cray CCE internal test suite
 # UnitTests    - Single source tests for language features
 # Benchmarks   - Single source tests for benchmarking
 # Applications - Multi-source tests for proxy apps, small apps, etc.
 #
 # This file should only contain add_subdirectory(...) one for each test
 # directory
+add_subdirectory(cray)
 add_subdirectory(UnitTests)
 add_subdirectory(SNAP)
 
