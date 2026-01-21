@@ -96,6 +96,12 @@ file(GLOB UnsupportedTests CONFIGURE_DEPENDS
   #     dx[size] != 0x12345678) is UB on its own.
   921202-1.c
 
+  # UB: Use of uninitialized variables does not guarantee any specific behavior.
+  20030404-1.c
+  pr34099.c
+  pr34099-2.c
+  pr43629.c
+
   # The following all expect very specific optimiser behavior from the compiler
 
   # __builtin_return_address(n) with n > 0 not guaranteed to give expected result
