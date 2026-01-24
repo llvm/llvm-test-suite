@@ -9,8 +9,6 @@ CMake Build configuration added by the LLVM project. The tests in
 `execute/builtins` are not run, and each CMakeLists.txt contains a list of tests
 to skip. These are both general and architecture-specific.
 
-There are not Makefiles for this part of the test suite.
-
 # Platform-specific concerns:
 
 RISC-V: The list of tests to exclude on RISC-V was devised using glibc and qemu.
