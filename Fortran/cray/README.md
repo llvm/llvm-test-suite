@@ -27,7 +27,7 @@ Where:
   Fortran 90 edition of the standard.
 - `f2003/10/02/` contains tests based on Clause 10, Subclause 2
   from Fortran 2003.
-- `f2023/05/04/03/02/` would contain tests of deeper Sublause references,
+- `f2023/05/04/03/02/` would contain tests of deeper Subclause references,
   as required.
 
 ## Test organization
