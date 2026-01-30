@@ -2,11 +2,14 @@
 #include <functional>
 #include <iostream>
 
+/// N is divisible by common VFs. Used to test vector code path without the
+/// scalar epilogue.
 #define N 512
-// N_ODD is not divisible by common VFs (4, 8, 16) to test scalar epilogue.
+
+/// N_ODD is not divisible by common VFs (4, 8, 16) to test scalar epilogue.
 #define N_ODD 511
-// N_SMALL is a small trip count divisible by common VFs, allowing the compiler
-// to potentially eliminate the scalar remainder loop entirely.
+
+/// N_SMALL is a small trip count divisible by common VFs
 #define N_SMALL 64
 
 template <typename Ty>
