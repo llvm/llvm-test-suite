@@ -353,8 +353,6 @@ $> for i in `cat utilities/benchmark_list`; do perl utilities/create_cpped_versi
 ------------------
 create_cpped_version.pl: Used in the above for generating macro free version.
 
-makefile-gen.pl: generates make files in each directory. Options are globally
-                 configurable through config.mk at polybench root.
   header-gen.pl: refers to 'polybench.spec' file and generates header in
                  each directory. Allows default problem sizes and datatype to
                  be configured without going into each header file.
