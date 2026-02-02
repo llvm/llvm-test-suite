@@ -84,6 +84,15 @@
     }                                                                          \
   };
 
+#define DEFINE_NESTED_SCALAR_AND_VECTOR_FN4_PTR(OuterLoop, InnerLoop, Ret)     \
+  auto ScalarFn = [](auto *FirstA, auto *LastA, auto *FirstB, auto *LastB) {   \
+    OuterLoop _Pragma("clang loop vectorize(disable) interleave_count(1)")     \
+        InnerLoop Ret                                                          \
+  };                                                                           \
+  auto VectorFn = [](auto *FirstA, auto *LastA, auto *FirstB, auto *LastB) {   \
+    OuterLoop _Pragma("clang loop vectorize(enable)") InnerLoop Ret            \
+  };
+
 static std::mt19937 rng;
 
 // Initialize arrays A with random numbers.
