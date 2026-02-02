@@ -1,4 +1,4 @@
-This directory contains Makefiles and CMakeLists.txt so they can be built and
+This directory contains CMakeLists.txt so they can be built and
 run as part of the llvm test-suite. The sourcecode and benchmark inputs are of
 course not redistributed and have be bought from SPEC.
 
