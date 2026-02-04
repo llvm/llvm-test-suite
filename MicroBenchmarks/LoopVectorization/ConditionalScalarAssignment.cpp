@@ -10,55 +10,55 @@ template <typename T>
 using CSAFunc = T (*)(T *, T *, T *, T);
 
 #define INIT_BLOCK
-#define LOOP_BLOCK
 #define EXIT_BLOCK
 
 #define _Args(...) __VA_ARGS__
-#define STRIP_PARENS(X) X
-#define INIT_VARS(X) STRIP_PARENS(_Args X)
+#define _STRIP_PARENS(X) X
+#define STRIP_PARENS(X) _STRIP_PARENS(_Args X)
 
-#define DEF_CSA_LOOP(name, init, body, result)                                 \
+#define DEF_CSA_LOOP(name, init, loop, result)                                 \
   template <typename T>                                                        \
   __attribute__((noinline)) static T run_##name##_autovec(T *A, T *B, T *C,    \
                                                           T Threshold) {       \
-    INIT_VARS(init);                                                           \
-    for (unsigned i = 0; i < ITERATIONS; i++)                                  \
-      body;                                                                    \
+    STRIP_PARENS(init);                                                        \
+    STRIP_PARENS(loop);                                                        \
     result;                                                                    \
   }                                                                            \
   template <typename T>                                                        \
   __attribute__((noinline)) static T run_##name##_novec(T *A, T *B, T *C,      \
                                                         T Threshold) {         \
-    INIT_VARS(init);                                                           \
+    STRIP_PARENS(init);                                                        \
     _Pragma("clang loop vectorize(disable) interleave(disable)")               \
-                                                                               \
-        for (unsigned i = 0; i < ITERATIONS; i++) body;                        \
+        STRIP_PARENS(loop);                                                    \
     result;                                                                    \
   }
 
-#define DEF_SINGLE_CSA_LOOP(name, body)                                        \
+#define DEF_SINGLE_CSA_LOOP(name, loop)                                        \
   DEF_CSA_LOOP(name,                                                           \
                (/* Pick a default value that's out of range of the uniform     \
                  * distribution created for 'A' in init_data below. */         \
                 T Result = 101;),                                              \
-               body, ({ return Result; }));
+               loop, ({ return Result; }));
 
 // Find the last element in A above the given threshold.
-DEF_SINGLE_CSA_LOOP(single_csa_only, LOOP_BLOCK({
+DEF_SINGLE_CSA_LOOP(single_csa_only,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
                       if (A[i] > Threshold)
                         Result = A[i];
                     }));
 
 // Find the last element in B where the corresponding value in A is above the
 // given threshold.
-DEF_SINGLE_CSA_LOOP(single_csa_cond_load, LOOP_BLOCK({
+DEF_SINGLE_CSA_LOOP(single_csa_cond_load,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
                       if (A[i] > Threshold)
                         Result = B[i];
                     }));
 
 // Find the last element in B where the corresponding value in C is below the
 // given threshold and the corresponding in A is above the threshold.
-DEF_SINGLE_CSA_LOOP(single_csa_nested_cond_load, LOOP_BLOCK({
+DEF_SINGLE_CSA_LOOP(single_csa_nested_cond_load,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
                       if (C[i] < Threshold)
                         if (A[i] > Threshold)
                           Result = B[i];
@@ -66,13 +66,15 @@ DEF_SINGLE_CSA_LOOP(single_csa_nested_cond_load, LOOP_BLOCK({
 
 // Find the last element in A above the given threshold, and use it to perform
 // some arith (that may need masking).
-DEF_SINGLE_CSA_LOOP(csa_with_cond_arith, LOOP_BLOCK({
+DEF_SINGLE_CSA_LOOP(csa_with_cond_arith,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
                       if (A[i] > Threshold)
                         Result = (A[i] * 13) / B[i];
                     }));
 
 // Find the last element in A above the given threshold (+ some arith).
-DEF_SINGLE_CSA_LOOP(csa_with_arith, LOOP_BLOCK({
+DEF_SINGLE_CSA_LOOP(csa_with_in_loop_arith,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
                       // Do some work to make the difference noticeable
                       C[i] = A[i] * 13 + B[i] * 5;
                       if (A[i] > Threshold)
@@ -86,7 +88,7 @@ DEF_CSA_LOOP(
         // Pick a default value that's out of range of the uniform
         // distribution created for 'A', 'B', and 'C' in init_data below.
         T ResultA = 101; T ResultB = 101; T ResultC = 101;),
-    LOOP_BLOCK({
+    (for (unsigned i = 0; i < ITERATIONS; i++) {
       if (A[i] > Threshold)
         ResultA = A[i];
       if (B[i] > Threshold)
@@ -104,7 +106,7 @@ DEF_CSA_LOOP(
         // Pick a default value that's out of range of the uniform
         // distribution created for 'A', 'B', and 'C' in init_data below.
         T ResultA = 101; T ResultB = 101; T ResultC = 101;),
-    LOOP_BLOCK({
+    (for (unsigned i = 0; i < ITERATIONS; i++) {
       if (A[i] > Threshold)
         ResultA = 7 / A[i];
       if (B[i] > Threshold)
@@ -195,7 +197,7 @@ benchmark_csa_novec(benchmark::State &state, CSAFunc<T> NoVecFn, T Threshold) {
 #define ADD_BENCHMARK(ty, threshold)                                           \
   BENCHMARK_CASE(single_csa_only, ty, threshold)                               \
   BENCHMARK_CASE(multi_csa_only, ty, threshold)                                \
-  BENCHMARK_CASE(csa_with_arith, ty, threshold)                                \
+  BENCHMARK_CASE(csa_with_in_loop_arith, ty, threshold)                        \
   BENCHMARK_CASE(single_csa_cond_load, ty, threshold)                          \
   BENCHMARK_CASE(single_csa_nested_cond_load, ty, threshold)                   \
   BENCHMARK_CASE(csa_with_cond_arith, ty, threshold)                           \
