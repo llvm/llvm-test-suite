@@ -13,7 +13,7 @@ cmake -G Ninja \
       -DTEST_SUITE_SUBDIRS=/path/to/llvm-test-suite/CTMark \
       -DTEST_SUITE_RUN_BENCHMARKS=0
 ninja -C build -j 1
-llvm-lit build
+llvm-lit build -o results.json
 ```
 
 Note: the build command (`ninja`) should execute a single thread to make the measurements consistent and comparable across different systems with different parallelism capabilities, and reduce noise (resource pressure, thermal throttling etc).
