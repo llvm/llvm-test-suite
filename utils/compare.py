@@ -249,12 +249,12 @@ def filter_same_hash(data, key="hash"):
     return data.groupby(level=1).filter(lambda x: x[key].nunique() != 1)
 
 
-def select_names(data, pattern):
+def select_patterns(data, pattern):
     program_index = data.index.get_level_values(1).astype(str)
     try:
         mask = program_index.to_series().str.contains(pattern, regex=True, na=False)
     except re.error as e:
-        sys.stderr.write("Invalid regular expression for --bench-regex: %s\n" % e)
+        sys.stderr.write("Invalid regular expression for --pattern: %s\n" % e)
         sys.exit(1)
     return data[mask.values]
 
@@ -423,7 +423,7 @@ def main():
     parser.add_argument("-a", "--all", action="store_true")
     parser.add_argument("-f", "--full", action="store_true")
     parser.add_argument("-m", "--metric", action="append", dest="metrics", default=[])
-    parser.add_argument("-n", "--name", action="append", dest="names", default=[])
+    parser.add_argument("-p", "--pattern", action="append", dest="patterns", default=[])
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
     )
@@ -615,12 +615,12 @@ def main():
         newdata = filter_same_hash(data)
         print_filter_stats("Same hash", data, newdata)
         data = newdata
-    if config.names:
+    if config.patterns:
         found = []
-        for pattern in config.names:
-            found.append(select_names(data, pattern))
+        for pattern in config.patterns:
+            found.append(select_patterns(data, pattern))
         newdata = pd.concat(found, axis=0)
-        print_filter_stats("In filter names", data, newdata)
+        print_filter_stats("In filter patterns", data, newdata)
         data = newdata
     if config.filter_blacklist:
         blacklist = open(config.filter_blacklist).readlines()
