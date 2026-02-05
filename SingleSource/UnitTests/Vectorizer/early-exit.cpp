@@ -29,11 +29,9 @@ checkVectorFunction(TestFnTy<Ty> ScalarFn, TestFnTy<Ty> VectorFn,
   std::cout << "Checking " << Name << "\n";
 
   std::array Tests = {std::make_pair(VectorFn, "autovec"),
-                      std::make_pair(ForcedVectorFn, "vector-forced")};
-  // TODO: Re-enabled forced interleaving tests once
-  // AArch64 SVE lowering issue has been fixed.
-  // std::make_pair(InterleavedFn, "interleave-forced"),
-  // std::make_pair(InterleavedOnlyFn, "interleave-only")};
+                      std::make_pair(ForcedVectorFn, "vector-forced"),
+                      std::make_pair(InterleavedFn, "interleave-forced"),
+                      std::make_pair(InterleavedOnlyFn, "interleave-only")};
 
   // Check finding the target element at all indices between 0 and N.
   for (unsigned IdxToFind = 0; IdxToFind < N; ++IdxToFind) {
