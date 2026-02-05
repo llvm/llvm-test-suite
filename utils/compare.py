@@ -249,14 +249,19 @@ def filter_same_hash(data, key="hash"):
     return data.groupby(level=1).filter(lambda x: x[key].nunique() != 1)
 
 
-def select_patterns(data, pattern):
-    program_index = data.index.get_level_values(1).astype(str)
-    try:
-        mask = program_index.to_series().str.contains(pattern, regex=True, na=False)
-    except re.error as e:
-        sys.stderr.write("Invalid regular expression for --pattern: %s\n" % e)
-        sys.exit(1)
-    return data[mask.values]
+def select_patterns(data, patterns):
+    selected = []
+    for pattern in patterns:
+        program_index = data.index.get_level_values(1).astype(str)
+        try:
+            mask = program_index.to_series().str.contains(pattern, regex=True, na=False)
+        except re.error as e:
+            sys.stderr.write("Invalid regular expression for --pattern: %s\n" % e)
+            sys.exit(1)
+
+        selected.append(data[mask.values])
+
+    return pd.concat(selected, axis=0)
 
 def filter_blacklist(data, blacklist):
     return data.loc[~(data.index.get_level_values(1).isin(blacklist))]
@@ -616,10 +621,7 @@ def main():
         print_filter_stats("Same hash", data, newdata)
         data = newdata
     if config.patterns:
-        found = []
-        for pattern in config.patterns:
-            found.append(select_patterns(data, pattern))
-        newdata = pd.concat(found, axis=0)
+        newdata = select_patterns(data, config.patterns)
         print_filter_stats("In filter patterns", data, newdata)
         data = newdata
     if config.filter_blacklist:
