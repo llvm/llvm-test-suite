@@ -249,6 +249,20 @@ def filter_same_hash(data, key="hash"):
     return data.groupby(level=1).filter(lambda x: x[key].nunique() != 1)
 
 
+def select_patterns(data, patterns):
+    selected = []
+    program_index = data.index.get_level_values(1).astype(str).to_series().str
+    for pattern in patterns:
+        try:
+            mask = program_index.contains(pattern, regex=True, na=False)
+        except re.error as e:
+            sys.stderr.write("Invalid regular expression for --pattern: %s\n" % e)
+            sys.exit(1)
+
+        selected.append(data[mask.values])
+
+    return pd.concat(selected, axis=0)
+
 def filter_blacklist(data, blacklist):
     return data.loc[~(data.index.get_level_values(1).isin(blacklist))]
 
@@ -414,6 +428,14 @@ def main():
     parser.add_argument("-a", "--all", action="store_true")
     parser.add_argument("-f", "--full", action="store_true")
     parser.add_argument("-m", "--metric", action="append", dest="metrics", default=[])
+    parser.add_argument(
+        "-p",
+        "--pattern",
+        action="append",
+        dest="patterns",
+        default=[],
+        help="Show only results whose program name matches any of the specified regexes.",
+    )
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
     )
@@ -604,6 +626,10 @@ def main():
     ):
         newdata = filter_same_hash(data)
         print_filter_stats("Same hash", data, newdata)
+        data = newdata
+    if config.patterns:
+        newdata = select_patterns(data, config.patterns)
+        print_filter_stats("In filter patterns", data, newdata)
         data = newdata
     if config.filter_blacklist:
         blacklist = open(config.filter_blacklist).readlines()
