@@ -434,7 +434,7 @@ def main():
         action="append",
         dest="patterns",
         default=[],
-        help="Show only results whose program name matches the specified regexes.",
+        help="Show only results whose program name matches any of the specified regexes.",
     )
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
