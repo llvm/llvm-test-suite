@@ -251,10 +251,10 @@ def filter_same_hash(data, key="hash"):
 
 def select_patterns(data, patterns):
     selected = []
+    program_index = data.index.get_level_values(1).astype(str).to_series().str
     for pattern in patterns:
-        program_index = data.index.get_level_values(1).astype(str)
         try:
-            mask = program_index.to_series().str.contains(pattern, regex=True, na=False)
+            mask = program_index.contains(pattern, regex=True, na=False)
         except re.error as e:
             sys.stderr.write("Invalid regular expression for --pattern: %s\n" % e)
             sys.exit(1)
@@ -428,7 +428,14 @@ def main():
     parser.add_argument("-a", "--all", action="store_true")
     parser.add_argument("-f", "--full", action="store_true")
     parser.add_argument("-m", "--metric", action="append", dest="metrics", default=[])
-    parser.add_argument("-p", "--pattern", action="append", dest="patterns", default=[])
+    parser.add_argument(
+        "-p",
+        "--pattern",
+        action="append",
+        dest="patterns",
+        default=[],
+        help="Show only results whose program name matches the specified regexes.",
+    )
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
     )
