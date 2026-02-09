@@ -18,7 +18,15 @@ if(NOT TEST_SUITE_BENCHMARKING_ONLY)
   add_subdirectory(office-stringsearch)
   add_subdirectory(security-blowfish)
   add_subdirectory(telecomm-adpcm)
-  if((NOT "${ARCH}" STREQUAL "XCore") AND (NOT "${ARCH}" STREQUAL "ARM"))
+
+  # The GNU-specific 'sgtty.h' header file is included from term.c file in
+  # office-ispell test. Only enable the test if the header is present on the
+  # target platform.
+  include(CheckIncludeFiles)
+  check_include_files("sgtty.h" HAVE_SGTTY_INCLUDE LANGUAGE C)
+
+  if((NOT "${ARCH}" STREQUAL "XCore") AND (NOT "${ARCH}" STREQUAL "ARM")
+     AND HAVE_SGTTY_INCLUDE)
     add_subdirectory(office-ispell)
   endif()
 endif()
