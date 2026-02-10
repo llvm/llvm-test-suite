@@ -553,8 +553,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   cray_pointers_7.f90
   dec_math.f90
   dec_math_5.f90
-  f_c_string1.f90
-  f_c_string2.f90
   fmt_g0_6.f08
   fmt_pf.f90
   interface_12.f90
