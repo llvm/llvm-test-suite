@@ -160,41 +160,33 @@ static void checkVectorFunction(Fn2Ty<Ty> ScalarFn, Fn2Ty<Ty> VectorFn,
 int main() {
   rng = std::mt19937(15);
 
-#define DEFINE_FIND_FIRST_OF_LOOP_OUTER for (; FirstA != LastA; ++FirstA)
-#define DEFINE_FIND_FIRST_OF_LOOP_INNER                                        \
-  for (auto *It = FirstB; It != LastB; ++It)                                   \
-    if (*FirstA == *It)                                                        \
-      return FirstA;
-#define DEFINE_FIND_FIRST_OF_RET return LastA;
+#define DEFINE_FIND_FIRST_OF_LOOP                                              \
+  for (; FirstA != LastA; ++FirstA)                                            \
+    for (auto *It = FirstB; It != LastB; ++It)                                 \
+      if (*FirstA == *It)                                                      \
+        return FirstA;                                                         \
+  return LastA;
 
   {
-    DEFINE_NESTED_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP_OUTER,
-                                            DEFINE_FIND_FIRST_OF_LOOP_INNER,
-                                            DEFINE_FIND_FIRST_OF_RET);
+    DEFINE_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP);
 
     checkVectorFunction<uint8_t>(ScalarFn, VectorFn, "find_first_of_u8");
   }
 
   {
-    DEFINE_NESTED_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP_OUTER,
-                                            DEFINE_FIND_FIRST_OF_LOOP_INNER,
-                                            DEFINE_FIND_FIRST_OF_RET);
+    DEFINE_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP);
 
     checkVectorFunction<uint16_t>(ScalarFn, VectorFn, "find_first_of_u16");
   }
 
   {
-    DEFINE_NESTED_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP_OUTER,
-                                            DEFINE_FIND_FIRST_OF_LOOP_INNER,
-                                            DEFINE_FIND_FIRST_OF_RET);
+    DEFINE_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP);
 
     checkVectorFunction<uint32_t>(ScalarFn, VectorFn, "find_first_of_u32");
   }
 
   {
-    DEFINE_NESTED_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP_OUTER,
-                                            DEFINE_FIND_FIRST_OF_LOOP_INNER,
-                                            DEFINE_FIND_FIRST_OF_RET);
+    DEFINE_SCALAR_AND_VECTOR_FN4_PTR(DEFINE_FIND_FIRST_OF_LOOP);
 
     checkVectorFunction<uint64_t>(ScalarFn, VectorFn, "find_first_of_u64");
   }
