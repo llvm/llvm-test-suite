@@ -68,7 +68,7 @@ DEF_SINGLE_CSA_LOOP(single_csa_nested_cond_load,
 // some arith (that may need masking).
 DEF_SINGLE_CSA_LOOP(csa_with_cond_arith,
                     (for (unsigned i = 0; i < ITERATIONS; i++) {
-                      if (A[i] > Threshold)
+                      if (B[i] > Threshold)
                         Result = (A[i] * 13) / B[i];
                     }));
 
