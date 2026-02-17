@@ -69,5 +69,7 @@ def main():
         if not args.quiet:
             print(f"Difference image saved to: {diff_image_path}")
 
+    sys.exit(result)
+
 if __name__ == "__main__":
     main()
