@@ -9,112 +9,112 @@
 template <typename T>
 using CSAFunc = T (*)(T *, T *, T *, T);
 
-// Find the last element in A above the given threshold,
-// with default loop vectorization settings.
-template <typename T>
-static T run_single_csa_only_autovec(T *A, T *B, T *C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A' in init_data below.
-  T Result = 101;
-  for (unsigned i = 0; i < ITERATIONS; i++)
-    if (A[i] > Threshold)
-      Result = A[i];
+#define INIT_BLOCK
+#define EXIT_BLOCK
 
-  return Result;
-}
+#define _Args(...) __VA_ARGS__
+#define _STRIP_PARENS(X) X
+#define STRIP_PARENS(X) _STRIP_PARENS(_Args X)
 
-// Find the last element in A above the given threshold,
-// with loop vectorization disabled.
-template <typename T>
-static T run_single_csa_only_novec(T *A, T *B, T *C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A' in init_data below.
-  T Result = 101;
-#pragma clang loop vectorize(disable) interleave(disable)
-  for (unsigned i = 0; i < ITERATIONS; i++)
-    if (A[i] > Threshold)
-      Result = A[i];
-
-  return Result;
-}
-
-// Find the last elements in A, B, and C above the given threshold,
-// with default loop vectorization settings.
-template <typename T>
-static T run_multi_csa_only_autovec(T *A, T *B, T *C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A', 'B', and 'C' in init_data below.
-  T ResultA = 101;
-  T ResultB = 101;
-  T ResultC = 101;
-  for (unsigned i = 0; i < ITERATIONS; i++) {
-    if (A[i] > Threshold)
-      ResultA = A[i];
-    if (B[i] > Threshold)
-      ResultB = B[i];
-    if (C[i] > Threshold)
-      ResultC = C[i];
+#define DEF_CSA_LOOP(name, init, loop, result)                                 \
+  template <typename T>                                                        \
+  __attribute__((noinline)) static T run_##name##_autovec(T *A, T *B, T *C,    \
+                                                          T Threshold) {       \
+    STRIP_PARENS(init);                                                        \
+    STRIP_PARENS(loop);                                                        \
+    result;                                                                    \
+  }                                                                            \
+  template <typename T>                                                        \
+  __attribute__((noinline)) static T run_##name##_novec(T *A, T *B, T *C,      \
+                                                        T Threshold) {         \
+    STRIP_PARENS(init);                                                        \
+    _Pragma("clang loop vectorize(disable) interleave(disable)")               \
+        STRIP_PARENS(loop);                                                    \
+    result;                                                                    \
   }
 
-  return ResultA ^ ResultB ^ ResultC;
-}
+#define DEF_SINGLE_CSA_LOOP(name, loop)                                        \
+  DEF_CSA_LOOP(name,                                                           \
+               (/* Pick a default value that's out of range of the uniform     \
+                 * distribution created for 'A' in init_data below. */         \
+                T Result = 101;),                                              \
+               loop, ({ return Result; }));
 
-// Find the last elements in A, B, and C above the given threshold,
-// with loop vectorization disabled.
-template <typename T>
-static T run_multi_csa_only_novec(T *A, T *B, T *C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A', 'B', and 'C' in init_data below.
-  T ResultA = 101;
-  T ResultB = 101;
-  T ResultC = 101;
-#pragma clang loop vectorize(disable) interleave(disable)
-  for (unsigned i = 0; i < ITERATIONS; i++) {
-    if (A[i] > Threshold)
-      ResultA = A[i];
-    if (B[i] > Threshold)
-      ResultB = B[i];
-    if (C[i] > Threshold)
-      ResultC = C[i];
-  }
+// Find the last element in A above the given threshold.
+DEF_SINGLE_CSA_LOOP(single_csa_only,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
+                      if (A[i] > Threshold)
+                        Result = A[i];
+                    }));
 
-  return ResultA ^ ResultB ^ ResultC;
-}
+// Find the last element in B where the corresponding value in A is above the
+// given threshold.
+DEF_SINGLE_CSA_LOOP(single_csa_cond_load,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
+                      if (A[i] > Threshold)
+                        Result = B[i];
+                    }));
 
-// Find the last element in A above the given threshold,
-// with default loop vectorization settings.
-template <typename T>
-static T run_csa_with_arith_autovec(T *A, T *B, T *C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A' in init_data below.
-  T Result = 101;
-  for (unsigned i = 0; i < ITERATIONS; i++) {
-    // Do some work to make the difference noticeable
-    C[i] = A[i] * 13 + B[i] * 5;
-    if (A[i] > Threshold)
-      Result = A[i];
-  }
+// Find the last element in B where the corresponding value in C is below the
+// given threshold and the corresponding in A is above the threshold.
+DEF_SINGLE_CSA_LOOP(single_csa_nested_cond_load,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
+                      if (C[i] < Threshold)
+                        if (A[i] > Threshold)
+                          Result = B[i];
+                    }));
 
-  return Result;
-}
+// Find the last element in A above the given threshold, and use it to perform
+// some arith (that may need masking).
+DEF_SINGLE_CSA_LOOP(csa_with_cond_arith,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
+                      if (B[i] > Threshold)
+                        Result = (A[i] * 13) / B[i];
+                    }));
 
-// Find the last element in A above the given threshold,
-// with loop vectorization disabled.
-template <typename T>
-static T run_csa_with_arith_novec(T *A, T *B, T* C, T Threshold) {
-  // Pick a default value that's out of range of the uniform distribution
-  // created for 'A' in init_data below.
-  T Result = 101;
-#pragma clang loop vectorize(disable) interleave(disable)
-  for (unsigned i = 0; i < ITERATIONS; i++) {
-    // Do some work to make the difference noticeable
-    C[i] = A[i] * 13 + B[i] * 5;
-    if (A[i] > Threshold)
-      Result = A[i];
-  }
+// Find the last element in A above the given threshold (+ some arith).
+DEF_SINGLE_CSA_LOOP(csa_with_in_loop_arith,
+                    (for (unsigned i = 0; i < ITERATIONS; i++) {
+                      // Do some work to make the difference noticeable
+                      C[i] = A[i] * 13 + B[i] * 5;
+                      if (A[i] > Threshold)
+                        Result = A[i];
+                    }));
 
-  return Result;
-}
+// Find the last elements in A, B, and C above the given threshold.
+DEF_CSA_LOOP(
+    multi_csa_only,
+    INIT_BLOCK(
+        // Pick a default value that's out of range of the uniform
+        // distribution created for 'A', 'B', and 'C' in init_data below.
+        T ResultA = 101; T ResultB = 101; T ResultC = 101;),
+    (for (unsigned i = 0; i < ITERATIONS; i++) {
+      if (A[i] > Threshold)
+        ResultA = A[i];
+      if (B[i] > Threshold)
+        ResultB = B[i];
+      if (C[i] > Threshold)
+        ResultC = C[i];
+    }),
+    EXIT_BLOCK({ return ResultA ^ ResultB ^ ResultC; }));
+
+// Find the last elements in A, B, and C above the given threshold. Sets the
+// result to `N / the element`, which is UB if the element is zero.
+DEF_CSA_LOOP(
+    multi_csa_with_cond_arith,
+    INIT_BLOCK(
+        // Pick a default value that's out of range of the uniform
+        // distribution created for 'A', 'B', and 'C' in init_data below.
+        T ResultA = 101; T ResultB = 101; T ResultC = 101;),
+    (for (unsigned i = 0; i < ITERATIONS; i++) {
+      if (A[i] > Threshold)
+        ResultA = 7 / A[i];
+      if (B[i] > Threshold)
+        ResultB = 4 / B[i];
+      if (C[i] > Threshold)
+        ResultC = 10 / C[i];
+    }),
+    EXIT_BLOCK({ return ResultA ^ ResultB ^ ResultC; }));
 
 // Initialize arrays A, B, and C with random numbers
 template <typename T> static void init_data(T *A, T* B, T *C) {
@@ -181,44 +181,27 @@ benchmark_csa_novec(benchmark::State &state, CSAFunc<T> NoVecFn, T Threshold) {
   }
 }
 
+#define BENCHMARK_CASE(name, ty, threshold)                                    \
+  void BENCHMARK_##name##_autovec_##ty##_(benchmark::State &state) {           \
+    benchmark_csa_autovec<ty>(state, run_##name##_autovec, run_##name##_novec, \
+                              threshold);                                      \
+  }                                                                            \
+  BENCHMARK(BENCHMARK_##name##_autovec_##ty##_)->Unit(benchmark::kNanosecond); \
+                                                                               \
+  void BENCHMARK_##name##_novec_##ty##_(benchmark::State &state) {             \
+    benchmark_csa_novec<ty>(state, run_##name##_novec, threshold);             \
+  }                                                                            \
+  BENCHMARK(BENCHMARK_##name##_novec_##ty##_)->Unit(benchmark::kNanosecond);
+
 // Add benchmarks with and without auto-vectorization
-#define ADD_BENCHMARK(ty, Threshold)                                           \
-  void BENCHMARK_single_csa_only_autovec_##ty##_(benchmark::State &state) {    \
-    benchmark_csa_autovec<ty>(state, run_single_csa_only_autovec,              \
-                              run_single_csa_only_novec, Threshold);           \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_single_csa_only_autovec_##ty##_)->Unit(                  \
-                                                      benchmark::kNanosecond); \
-                                                                               \
-  void BENCHMARK_single_csa_only_novec_##ty##_(benchmark::State &state) {      \
-    benchmark_csa_novec<ty>(state, run_single_csa_only_novec, Threshold);      \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_single_csa_only_novec_##ty##_)->Unit(                    \
-                                                      benchmark::kNanosecond); \
-  void BENCHMARK_multi_csa_only_autovec_##ty##_(benchmark::State &state) {     \
-    benchmark_csa_autovec<ty>(state, run_multi_csa_only_autovec,               \
-                              run_multi_csa_only_novec, Threshold);            \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_multi_csa_only_autovec_##ty##_)->Unit(                   \
-                                                      benchmark::kNanosecond); \
-                                                                               \
-  void BENCHMARK_multi_csa_only_novec_##ty##_(benchmark::State &state) {       \
-    benchmark_csa_novec<ty>(state, run_multi_csa_only_novec, Threshold);       \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_multi_csa_only_novec_##ty##_)->Unit(                     \
-                                                      benchmark::kNanosecond); \
-  void BENCHMARK_csa_with_arith_autovec_##ty##_(benchmark::State &state) {     \
-    benchmark_csa_autovec<ty>(state, run_csa_with_arith_autovec,               \
-                              run_csa_with_arith_novec, Threshold);            \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_csa_with_arith_autovec_##ty##_)->Unit(                   \
-                                                      benchmark::kNanosecond); \
-                                                                               \
-  void BENCHMARK_csa_with_arith_novec_##ty##_(benchmark::State &state) {       \
-    benchmark_csa_novec<ty>(state, run_csa_with_arith_novec, Threshold);       \
-  }                                                                            \
-  BENCHMARK(BENCHMARK_csa_with_arith_novec_##ty##_)->Unit(                     \
-                                                        benchmark::kNanosecond);
+#define ADD_BENCHMARK(ty, threshold)                                           \
+  BENCHMARK_CASE(single_csa_only, ty, threshold)                               \
+  BENCHMARK_CASE(multi_csa_only, ty, threshold)                                \
+  BENCHMARK_CASE(csa_with_in_loop_arith, ty, threshold)                        \
+  BENCHMARK_CASE(single_csa_cond_load, ty, threshold)                          \
+  BENCHMARK_CASE(single_csa_nested_cond_load, ty, threshold)                   \
+  BENCHMARK_CASE(csa_with_cond_arith, ty, threshold)                           \
+  BENCHMARK_CASE(multi_csa_with_cond_arith, ty, threshold)
 
 ADD_BENCHMARK(int32_t, 75)
 ADD_BENCHMARK(uint8_t, 90)
