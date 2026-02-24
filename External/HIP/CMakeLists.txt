@@ -77,8 +77,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS split-kernel-args)
   list(APPEND HIP_LOCAL_TESTS builtin-logb-scalbn)
 
-  # TODO: Re-enable InOneWeekend after it is fixed
-  #list(APPEND HIP_LOCAL_TESTS InOneWeekend)
+  list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
 
   # Copy files needed for ray-tracing tests.
