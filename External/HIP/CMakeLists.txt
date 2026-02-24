@@ -188,7 +188,7 @@ macro(create_hip_tests)
   initialize_catch_tests()
 
   if(NOT AMDGPU_ARCHS)
-    list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;native")
+    list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;gfx1201;gfx942;gfx950;native")
   endif()
 
   foreach(_RocmPath ${ROCM_PATHS})
