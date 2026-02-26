@@ -4,6 +4,7 @@
 // Use fixed value for __FILE__ so assert message does not depend on
 // the actual path to the file during compilation..
 #define __FILE__ "assert.cu"
+#define __builtin_FILE() __FILE__
 
 __global__ void kernel() {
   // Our reference output contains the line number of this assert() call; be
