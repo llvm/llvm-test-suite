@@ -28,8 +28,6 @@
 #define ASSUME_DEREFERENCEABLE(ptr, size) ((void)0)
 #endif
 
-uint64_t Sum = 0;
-
 /// Initialize array \p A with 1s.
 template <typename Ty>
 static void init_data(const std::unique_ptr<Ty[]> &A, unsigned N) {
@@ -69,6 +67,7 @@ runEarlyExitBenchmark(benchmark::State &state,
     break;
   }
 
+  uint64_t Sum = 0;
   for (auto _ : state) {
     benchmark::DoNotOptimize(A);
     benchmark::DoNotOptimize(B);
