@@ -67,23 +67,15 @@ __attribute__((noinline)) static void run_uncond_inc_novec(T *A, unsigned N) {
 }
 
 // Define loops with different strides.
-// stride=2: 50% active lanes
-// stride=4: 25% active lanes
-// stride=8: 12.5% active lanes
-// stride=16: 6.25% active lanes
-// stride=32: 3.125% active lanes
-// stride=64: 1.5625% active lanes
-// stride=128: 0.78% active lanes
-DEF_COND_INC_LOOP(cond_inc_stride_2, 2)
-DEF_COND_INC_LOOP(cond_inc_stride_4, 4)
-DEF_COND_INC_LOOP(cond_inc_stride_8, 8)
+// Stride 16 usually big enough to accross single vector which can test if
+// control-flow-vectorization is profitable on these loops.
 DEF_COND_INC_LOOP(cond_inc_stride_16, 16)
 DEF_COND_INC_LOOP(cond_inc_stride_32, 32)
 DEF_COND_INC_LOOP(cond_inc_stride_64, 64)
 DEF_COND_INC_LOOP(cond_inc_stride_128, 128)
 
-// Conditional increment by value (sparse condition).
-DEF_COND_INC_VALUE_LOOP(cond_inc_by_value, 42)
+// Conditional increment by value.
+DEF_COND_INC_VALUE_LOOP(cond_inc_by_value, 40)
 
 // Initialize array with random numbers.
 template <typename T> static void init_data(T *A) {
@@ -173,9 +165,6 @@ benchmark_cfv_novec(benchmark::State &state, CFVFunc<T> NoVecFn) {
 // Add benchmarks for all variants.
 #define ADD_CFV_BENCHMARKS(ty)                                                 \
   BENCHMARK_UNCOND_CASE(ty)                                                    \
-  BENCHMARK_CFV_CASE(cond_inc_stride_2, ty)                                    \
-  BENCHMARK_CFV_CASE(cond_inc_stride_4, ty)                                    \
-  BENCHMARK_CFV_CASE(cond_inc_stride_8, ty)                                    \
   BENCHMARK_CFV_CASE(cond_inc_stride_16, ty)                                   \
   BENCHMARK_CFV_CASE(cond_inc_stride_32, ty)                                   \
   BENCHMARK_CFV_CASE(cond_inc_stride_64, ty)                                   \
