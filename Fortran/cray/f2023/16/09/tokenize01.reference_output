@@ -1,0 +1,192 @@
+ ==== Case  1 : common case ====
+  STRING = "first,second third"
+  SET = ", :;"
+ 
+   ---- Test 1 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1      5
+         7     12
+        14     18
+   ---- Test 1 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      "first "
+      "second"
+      "third "
+   ---- Test 1 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      "first "
+      "second"
+      "third "
+   SEPARATOR:
+      ","
+      " "
+ ==== Case  2 : first and last characters are delimiters ====
+  STRING = ",first,second third;"
+  SET = ", :;"
+ 
+   ---- Test 2 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1      0
+         2      6
+         8     13
+        15     19
+        21     20
+   ---- Test 2 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      "      "
+      "first "
+      "second"
+      "third "
+      "      "
+   ---- Test 2 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      "      "
+      "first "
+      "second"
+      "third "
+      "      "
+   SEPARATOR:
+      ","
+      ","
+      " "
+      ";"
+ ==== Case  3 : multiple delimiters in a row ====
+  STRING = ",first,second; ,:;third,"
+  SET = ", :;"
+ 
+   ---- Test 3 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1      0
+         2      6
+         8     13
+        15     14
+        16     15
+        17     16
+        18     17
+        19     23
+        25     24
+   ---- Test 3 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      "      "
+      "first "
+      "second"
+      "      "
+      "      "
+      "      "
+      "      "
+      "third "
+      "      "
+   ---- Test 3 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      "      "
+      "first "
+      "second"
+      "      "
+      "      "
+      "      "
+      "      "
+      "third "
+      "      "
+   SEPARATOR:
+      ","
+      ","
+      ";"
+      " "
+      ","
+      ":"
+      ";"
+      ","
+ ==== Case  4 : the last token is the longest ====
+  STRING = ",first,second;third_third"
+  SET = ", :;"
+ 
+   ---- Test 4 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1      0
+         2      6
+         8     13
+        15     25
+   ---- Test 4 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      "           "
+      "first      "
+      "second     "
+      "third_third"
+   ---- Test 4 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      "           "
+      "first      "
+      "second     "
+      "third_third"
+   SEPARATOR:
+      ","
+      ","
+      ";"
+ ==== Case  5 : SET is zero size ====
+  STRING = ",first,second;third_third"
+  SET = ""
+ 
+   ---- Test 5 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1     25
+   ---- Test 5 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      ",first,second;third_third"
+   ---- Test 5 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      ",first,second;third_third"
+   SEPARATOR:
+      ""
+ ==== Case  6 : one character tokens ====
+  STRING = "f,s;t"
+  SET = ", :;"
+ 
+   ---- Test 6 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         1      1
+         3      3
+         5      5
+   ---- Test 6 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      "f"
+      "s"
+      "t"
+   ---- Test 6 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      "f"
+      "s"
+      "t"
+   SEPARATOR:
+      ","
+      ";"
+ ==== Case  7 : STRING is zero size ====
+  STRING = ""
+  SET = ", :;"
+ 
+   ---- Test 7 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         0      0
+   ---- Test 7 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      ""
+   ---- Test 7 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      ""
+   SEPARATOR:
+      ""
+ ==== Case  8 : both STRING and SET are zero size ====
+  STRING = ""
+  SET = ""
+ 
+   ---- Test 8 - 4: TOKENIZE with FIRST and LAST ----
+     FIRST   LAST
+         0      0
+   ---- Test 8 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
+   TOKENS:   
+      ""
+   ---- Test 8 - 6: TOKENIZE with TOKENS and SEPARATOR ----
+   TOKENS:   
+      ""
+   SEPARATOR:
+      ""
+exit 0
