@@ -1,2 +1,2 @@
-assert.cu:11: void kernel(): block: [0,0,0], thread: [0,0,0] Assertion `false` failed.
+assert.cu:12: void kernel(): block: [0,0,0], thread: [0,0,0] Assertion `false` failed.
 exit 0
