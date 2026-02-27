@@ -74,11 +74,15 @@ checkVectorFunction(TestFnTy<Ty> ScalarFn, TestFnTy<Ty> VectorFn,
   }
 }
 
-// Test function type for two arrays, one used for stores and the other
+
+// Test function types for two arrays, one used for stores and the other
 // for loop control
 template <typename Ty>
+using InitFnStTy =
+    std::function<void(Ty *, Ty *)>;
+template <typename Ty>
 using TestFnStTy =
-    std::function<unsigned(std::function<void(Ty *, Ty *)>)>;
+    std::function<Ty(InitFnStTy<Ty>)>;
 
 template <typename Ty>
 static void
@@ -98,8 +102,7 @@ checkVectorWithStoresFunction(TestFnStTy<Ty> ScalarFn, TestFnStTy<Ty> VectorFn,
     // for to zero.
     auto Init1 = [IdxToFind](Ty *Data, Ty *Pred) {
       std::fill_n(Pred, N, 1);
-      if (IdxToFind < N)
-        Pred[IdxToFind] = 0;
+      Pred[IdxToFind] = 0;
       std::fill_n(Data, N, 0);
     };
 
@@ -107,8 +110,7 @@ checkVectorWithStoresFunction(TestFnStTy<Ty> ScalarFn, TestFnStTy<Ty> VectorFn,
     // for and the IdxToFind + 3 to zero.
     auto Init2 = [IdxToFind](Ty *Data, Ty *Pred) {
       std::fill_n(Pred, N, 1);
-      if (IdxToFind < N)
-        Pred[IdxToFind] = 0;
+      Pred[IdxToFind] = 0;
       if (IdxToFind + 3 < N)
         Pred[IdxToFind + 3] = 0;
       std::fill_n(Data, N, 0);
@@ -310,28 +312,28 @@ checkVectorFunctionMulti(TestFnTy3<Ty> ScalarFn, TestFnTy3<Ty> VectorFn,
   };
 
 /// Define test functions for single early exits with stores
-#define DEFINE_EARLY_EXIT_WITH_STORES(Init, Data, Pred, Loop)                  \
-  auto ScalarFn = [](std::function<void(int *, int *)> II) -> int {            \
+#define DEFINE_EARLY_EXIT_WITH_STORES(Ty, Init, Data, Pred, Loop)              \
+  auto ScalarFn = [](InitFnStTy<Ty> II) -> Ty {                                \
     Init;                                                                      \
     II(Data, Pred);                                                            \
     _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop          \
   };                                                                           \
-  auto VectorFn = [](std::function<void(int *, int *)> II) -> int {            \
+  auto VectorFn = [](InitFnStTy<Ty> II) -> Ty {                                \
     Init;                                                                      \
     II(Data, Pred);                                                            \
     _Pragma("clang loop vectorize(enable)") Loop                               \
   };                                                                           \
-  auto ForcedVectorFn = [](std::function<void(int *, int *)> II) -> int {      \
+  auto ForcedVectorFn = [](InitFnStTy<Ty> II) -> Ty {                          \
     Init;                                                                      \
     II(Data, Pred);                                                            \
     _Pragma("clang loop vectorize_width(8) interleave_count(1)") Loop          \
   };                                                                           \
-  auto InterleavedFn = [](std::function<void(int *, int *)> II) -> int {       \
+  auto InterleavedFn = [](InitFnStTy<Ty> II) -> Ty {                           \
     Init;                                                                      \
     II(Data, Pred);                                                            \
     _Pragma("clang loop vectorize(enable) interleave_count(4)") Loop           \
   };                                                                           \
-  auto InterleavedOnlyFn = [](std::function<void(int *, int *)> II) -> int {   \
+  auto InterleavedOnlyFn = [](InitFnStTy<Ty> II) -> Ty {                       \
     Init;                                                                      \
     II(Data, Pred);                                                            \
     _Pragma("clang loop vectorize_width(1) interleave_count(4)") Loop          \
@@ -545,6 +547,7 @@ int main(void) {
 
   {
     DEFINE_EARLY_EXIT_WITH_STORES(
+      int,
       int Data[N]; int Pred[N];
       , Data, Pred, for (unsigned I = 0; I < N; I++) {
         Data[I] = I;
@@ -557,6 +560,7 @@ int main(void) {
 
   {
     DEFINE_EARLY_EXIT_WITH_STORES(
+      int,
       int Data[N]; int Pred[N];
       , Data, Pred, for (unsigned I = 0; I < N; I++) {
         if (Pred[I] == 0)
@@ -569,15 +573,42 @@ int main(void) {
 
   {
     DEFINE_EARLY_EXIT_WITH_STORES(
+      int,
       int Data[N]; int Pred[N];
       , Data, Pred, for (unsigned I = 0; I < N; I++) {
         Data[I] = I;
         if (Pred[I] == 0)
           break;
-        Data[I]++;
+        Data[I] = I + 3;
       } return std::reduce(Data, Data + N););
     checkVectorWithStoresFunction<int>(ScalarFn, VectorFn, ForcedVectorFn,
                        InterleavedFn, InterleavedOnlyFn, "exit_between_stores");
+  }
+
+  {
+    DEFINE_EARLY_EXIT_WITH_STORES(
+      int,
+      int Data[N]; int Pred[N]; unsigned I;
+      , Data, Pred, for (I = 0; I < N; I++) {
+        Data[I] = I;
+        if (Pred[I] == 0)
+          break;
+      } return I + std::reduce(Data, Data + N););
+    checkVectorWithStoresFunction<int>(ScalarFn, VectorFn, ForcedVectorFn,
+                          InterleavedFn, InterleavedOnlyFn, "exit_after_store_live_out");
+  }
+
+  {
+    DEFINE_EARLY_EXIT_WITH_STORES(
+      float,
+      float Data[N]; float Pred[N];
+      , Data, Pred, for (unsigned I = 0; I < N; I++) {
+        Data[I] = I;
+        if (Pred[I] == 0.0f)
+          break;
+      } return std::reduce(Data, Data + N););
+    checkVectorWithStoresFunction<float>(ScalarFn, VectorFn, ForcedVectorFn,
+                    InterleavedFn, InterleavedOnlyFn, "exit_after_float_store");
   }
 
   return 0;
