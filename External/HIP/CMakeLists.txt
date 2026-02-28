@@ -146,13 +146,14 @@ function(create_hip_test VariantSuffix)
   create_local_hip_tests(${VariantSuffix})
   add_dependencies(hip-tests-simple hip-tests-simple-${VariantSuffix})
 
+  # Enable verbose output for running HIP tests.
+  set(HIP_LIT_FLAGS "-v")
   if (HIP_EXPORT_XUNIT_XML)
-    set(HIP_LIT_FLAGS --xunit-xml-output hip-results-${VariantSuffix}.xml)
-    list(APPEND TEST_SUITE_LIT_FLAGS "${HIP_LIT_FLAGS}")
+    list(APPEND HIP_LIT_FLAGS --xunit-xml-output hip-results-${VariantSuffix}.xml)
   endif()
 
   add_custom_target(check-hip-simple-${VariantSuffix}
-    COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS}
+    COMMAND ${TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
             ${VARIANT_SIMPLE_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS hip-tests-simple-${VariantSuffix}
