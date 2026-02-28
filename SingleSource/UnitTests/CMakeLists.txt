@@ -1,5 +1,6 @@
 include(CheckCCompilerFlag)
 
+add_subdirectory(Atomic)
 add_subdirectory(C++11)
 add_subdirectory(Float)
 add_subdirectory(Matrix)
