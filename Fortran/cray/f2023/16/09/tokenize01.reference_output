@@ -165,7 +165,7 @@
  
    ---- Test 7 - 4: TOKENIZE with FIRST and LAST ----
      FIRST   LAST
-         0      0
+         1      0
    ---- Test 7 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
    TOKENS:   
       ""
@@ -180,7 +180,7 @@
  
    ---- Test 8 - 4: TOKENIZE with FIRST and LAST ----
      FIRST   LAST
-         0      0
+         1      0
    ---- Test 8 - 5: TOKENIZE with TOKENS, but no SEPARATOR ----
    TOKENS:   
       ""
