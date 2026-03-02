@@ -439,8 +439,14 @@ __global__ void tests() {
   test_set_real_imag<float>();
   test_set_real_imag<double>();
 
+  // The implementation of std::complex transcendental functions in libstdc++
+  // versions newer than v13 relies on C99 complex math functions which are
+  // not implemented by CUDA for GPUs. Usually this results in
+  // "ptxas fatal : Unresolved extern function 'casinf'" or similar error.
+#if !(defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE > 13)
   test_transcendentals_etc<float>();
   test_transcendentals_etc<double>();
+#endif
 }
 #else
 __global__ void tests() {}

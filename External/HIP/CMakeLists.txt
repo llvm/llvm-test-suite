@@ -77,8 +77,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS split-kernel-args)
   list(APPEND HIP_LOCAL_TESTS builtin-logb-scalbn)
 
-  # TODO: Re-enable InOneWeekend after it is fixed
-  #list(APPEND HIP_LOCAL_TESTS InOneWeekend)
+  list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
 
   # Copy files needed for ray-tracing tests.
@@ -147,6 +146,11 @@ function(create_hip_test VariantSuffix)
   create_local_hip_tests(${VariantSuffix})
   add_dependencies(hip-tests-simple hip-tests-simple-${VariantSuffix})
 
+  if (HIP_EXPORT_XUNIT_XML)
+    set(HIP_LIT_FLAGS --xunit-xml-output hip-results-${VariantSuffix}.xml)
+    list(APPEND TEST_SUITE_LIT_FLAGS "${HIP_LIT_FLAGS}")
+  endif()
+
   add_custom_target(check-hip-simple-${VariantSuffix}
     COMMAND ${TEST_SUITE_LIT} ${TEST_SUITE_LIT_FLAGS}
             ${VARIANT_SIMPLE_TEST_TARGETS}
@@ -188,7 +192,7 @@ macro(create_hip_tests)
   initialize_catch_tests()
 
   if(NOT AMDGPU_ARCHS)
-    list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;native")
+    list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;gfx1201;gfx942;gfx950;native")
   endif()
 
   foreach(_RocmPath ${ROCM_PATHS})

@@ -30,6 +30,7 @@
 #include "material.h"
 #include "sphere.h"
 #include <chrono>
+#include <cstring>
 
 #define BLKDIM_X 16
 #define BLKDIM_Y 16
