@@ -14,4 +14,6 @@ Checking two_early_exits_small_different_values
 Checking exit_after_store
 Checking exit_before_store
 Checking exit_between_stores
+Checking exit_after_store_live_out
+Checking exit_after_float_store
 exit 0
