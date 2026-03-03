@@ -595,7 +595,8 @@ int main(void) {
           break;
       } return I + std::reduce(Data, Data + N););
     checkVectorWithStoresFunction<int>(ScalarFn, VectorFn, ForcedVectorFn,
-                          InterleavedFn, InterleavedOnlyFn, "exit_after_store_live_out");
+                                       InterleavedFn, InterleavedOnlyFn,
+                                       "exit_after_store_live_out");
   }
 
   {
@@ -609,6 +610,19 @@ int main(void) {
       } return std::reduce(Data, Data + N););
     checkVectorWithStoresFunction<float>(ScalarFn, VectorFn, ForcedVectorFn,
                     InterleavedFn, InterleavedOnlyFn, "exit_after_float_store");
+  }
+
+  {
+    DEFINE_EARLY_EXIT_WITH_STORES(
+        int, int Data[N]; int Pred[N]; unsigned I;
+        , Data, Pred, for (I = 0; I < N; I++) {
+          Data[I] = Data[I] * 3 + 5;
+          if (Pred[I] == 0)
+            break;
+        } return I + std::reduce(Data, Data + N););
+    checkVectorWithStoresFunction<int>(ScalarFn, VectorFn, ForcedVectorFn,
+                                       InterleavedFn, InterleavedOnlyFn,
+                                       "exit_after_load_update_store");
   }
 
   return 0;
