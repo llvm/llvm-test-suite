@@ -11,4 +11,10 @@ Checking three_early_exits_odd_trip_count
 Checking two_early_exits_small_known_tc
 Checking three_early_exits_small_known_tc
 Checking two_early_exits_small_different_values
+Checking exit_after_store
+Checking exit_before_store
+Checking exit_between_stores
+Checking exit_after_store_live_out
+Checking exit_after_float_store
+Checking exit_after_load_update_store
 exit 0
