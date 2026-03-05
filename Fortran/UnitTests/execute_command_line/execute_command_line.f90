@@ -50,8 +50,9 @@
   msg = ''
   call execute_command_line("notthere",               exitstat=i, cmdstat=j, cmdmsg=msg)
   if (j /= 5 .or. msg /= "Command not found with exit code: 127." ) STOP 1
+  msg = ''
   call execute_command_line("cat GeneralErrorCommand", exitstat=i, cmdstat=j, cmdmsg=msg)
-  if (j /= 3 .or. msg /= "Command line execution failed with exit code: 1." ) STOP 2
+  if (j /= 0 .or. msg /= "" ) STOP 2
   msg = "remaining buffer not modified XXXXXXXXXXXXXXXXXXX"
   call execute_command_line("touch NotExecutedCommandFile && chmod -x NotExecutedCommandFile && ./NotExecutedCommandFile", exitstat=i, cmdstat=j, cmdmsg=msg)
   if (j /= 4 .or. msg /= "Command cannot be executed with exit code: 126.XX" ) STOP 3
