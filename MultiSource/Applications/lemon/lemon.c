@@ -1238,14 +1238,14 @@ struct lemon *lemp;
 
 /* Sort the configuration list */
 void Configlist_sort(){
-  current = (struct config *)msort((char *)current,(char **)&(current->next),Configcmp);
+  current = (struct config *)msort((char *)current,(char **)&(current->next),(int(*)(const char*,const char*))Configcmp);
   currentend = 0;
   return;
 }
 
 /* Sort the basis configuration list */
 void Configlist_sortbasis(){
-  basis = (struct config *)msort((char *)current,(char **)&(current->bp),Configcmp);
+  basis = (struct config *)msort((char *)current,(char **)&(current->bp),(int(*)(const char*,const char*))Configcmp);
   basisend = 0;
   return;
 }
@@ -3356,7 +3356,7 @@ int mhflag;                 /* True if generating makeheaders output */
   int maxdtlength;          /* Maximum length of any ".datatype" field. */
   char *stddt;              /* Standardized name for a datatype */
   int i,j;                  /* Loop counters */
-  int hash;                 /* For hashing the name of a type */
+  unsigned int hash;        /* For hashing the name of a type (unsigned to avoid UB on overflow) */
   char *name;               /* Name of the parser */
 
   /* Allocate and initialize types[] and allocate stddt[] */
@@ -4167,11 +4167,11 @@ char *s2;
 ** Code for processing tables in the LEMON parser generator.
 */
 
-PRIVATE int strhash(x)
+PRIVATE unsigned int strhash(x)
 char *x;
 {
-  int h = 0;
-  while( *x) h = h*13 + *(x++);
+  unsigned int h = 0;
+  while (*x) h = h*13u + (unsigned char)*(x++);
   return h;
 }
 
@@ -4552,12 +4552,12 @@ struct config *b;
 PRIVATE int statehash(a)
 struct config *a;
 {
-  int h=0;
-  while( a ){
-    h = h*571 + a->rp->index*37 + a->dot;
+  unsigned int h = 0;
+  while (a) {
+    h = h*571u + (unsigned)a->rp->index * 37u + (unsigned)a->dot;
     a = a->bp;
   }
-  return h;
+  return (int)h;
 }
 
 /* Allocate a new state structure */
@@ -4711,9 +4711,9 @@ struct state **State_arrayof()
 PRIVATE int confighash(a)
 struct config *a;
 {
-  int h=0;
-  h = h*571 + a->rp->index*37 + a->dot;
-  return h;
+  unsigned int h = 0;
+  h = h*571u + (unsigned)a->rp->index * 37u + (unsigned)a->dot;
+  return (int)h;
 }
 
 /* There is one instance of the following structure for each
