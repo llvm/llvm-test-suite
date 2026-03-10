@@ -76,6 +76,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS memset)
   list(APPEND HIP_LOCAL_TESTS split-kernel-args)
   list(APPEND HIP_LOCAL_TESTS builtin-logb-scalbn)
+  list(APPEND HIP_LOCAL_TESTS pgo-tiled-matmul)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
@@ -121,6 +122,14 @@ macro(create_local_hip_tests VariantSuffix)
   else()
       message(WARNING "hipify-perl not found for ROCm installation in ${_RocmPath}.")
   endif()
+
+  # Add test for PGO tiled matmul.
+  configure_file(workload/pgo/test_pgo_matmul.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_pgo_matmul.sh @ONLY)
+  configure_file(workload/pgo/verify_pgo_matmul.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_pgo_matmul.sh @ONLY)
+  llvm_test_run(EXECUTABLE "/bin/bash" "test_pgo_matmul.sh")
+  llvm_test_verify(/bin/bash verify_pgo_matmul.sh %o)
+  llvm_add_test(pgo-tiled-matmul-pipeline.test test_pgo_matmul.sh)
+  list(APPEND VARIANT_SIMPLE_TEST_TARGETS pgo-tiled-matmul-pipeline.test)
 
   # Add test for Blender.
   configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
