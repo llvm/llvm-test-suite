@@ -1,0 +1,56 @@
+LZP with F descriptor:
+   0.2
+     0.200
+ 0.1
+LZP with E descriptor:
+ 0.200E+00
+ 0.20000E+00
+LZP with D descriptor:
+ 0.200D+00
+LZP with G descriptor (F-path):
+ 0.200    
+LZP with G descriptor (E-path):
+ 0.200E-03
+LZS with F descriptor:
+    .2
+      .200
+  .1
+LZS with E descriptor:
+  .200E+00
+  .20000E+00
+LZS with D descriptor:
+  .200D+00
+LZS with G descriptor (F-path):
+  .200    
+LZS with G descriptor (E-path):
+  .200E-03
+LZ with F descriptor:
+   0.2
+Negative values:
+   -0.2
+    -.2
+Values >= 1 (no effect):
+   1.2
+   1.2
+Zero value:
+   0.0
+    .0
+Switch mid-format:
+   0.5    .5
+With 1P scale (no effect):
+ 2.000E-01
+ 2.000E-01
+Without comma separator:
+   0.2
+    .2
+Spaces in descriptors:
+   0.2
+    .2
+   0.2
+    .2
+   0.2
+    .2
+   0.2
+   0.2
+    .2
+exit 0
