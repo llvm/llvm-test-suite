@@ -1,0 +1,118 @@
+#!/bin/bash
+# test_pgo_matmul.sh - Full offload PGO pipeline E2E test
+#
+# Tests the complete -fprofile-generate / -fprofile-use workflow for HIP:
+#   1. Build and run baseline (no PGO)
+#   2. Build instrumented binary, run to collect device profiles
+#   3. Merge profiles with llvm-profdata
+#   4. Build PGO-optimized binary, run and compare
+#
+# The test uses a tiled matmul kernel with 256 float accumulators per thread
+# that naturally exceeds the VGPR budget on AMDGPU, causing register spills.
+# PGO reduces spills on the hot (interior tile) path.
+
+set -e
+
+CLANG="@CMAKE_CXX_COMPILER@"
+CLANG_DIR=$(dirname "$CLANG")
+LLVM_PROFDATA="$CLANG_DIR/llvm-profdata"
+ROCM_PATH="@_RocmPath@"
+ARCH_FLAGS="@_ArchFlags@"
+SRC="@CMAKE_CURRENT_SOURCE_DIR@/pgo-tiled-matmul.hip"
+WORK_DIR="."
+
+# Problem size: non-tile-aligned to create boundary tiles
+M=1000 N=1000 K=500 GROUPS=4
+WARMUP=3
+BENCH_RUNS=5
+
+# Detect GPU architecture and set sub-tile size to induce register spills.
+# gfx950 has 512 VGPRs (vs 256 on gfx1100), so needs larger sub-tiles.
+GPU_ARCH=$("$CLANG_DIR/amdgpu-arch" 2>/dev/null | head -1 || echo "")
+TILE_FLAGS=""
+if echo "$GPU_ARCH" | grep -q "gfx950"; then
+    TILE_FLAGS="-DTH_M=20 -DTH_N=16"
+    log "gfx950 detected, using larger sub-tile (20x16=320 accumulators)"
+fi
+
+log() { echo "[pgo-test] $*"; }
+
+compile() {
+    local output=$1
+    local extra_flags=$2
+    "$CLANG" -O3 $ARCH_FLAGS -x hip \
+        --rocm-path="$ROCM_PATH" \
+        $TILE_FLAGS $extra_flags \
+        "$SRC" -o "$output" \
+        --hip-link -rtlib=compiler-rt -unwindlib=libgcc -frtlib-add-rpath \
+        2>&1 | grep -v "warning:" || true
+}
+
+run_kernel() {
+    local binary=$1
+    local runs=$2
+    local verify=${3:-0}
+    "$binary" $M $N $K $GROUPS $runs $verify
+}
+
+extract_avg_ms() {
+    grep "Average:" "$1" | awk '{print $2}'
+}
+
+# Step 1: Build baseline
+log "Step 1/6: Build baseline"
+compile "$WORK_DIR/baseline" ""
+
+# Step 2: Run baseline (warmup + benchmark)
+log "Step 2/6: Run baseline"
+run_kernel "$WORK_DIR/baseline" 1 1 > /dev/null  # verify correctness
+run_kernel "$WORK_DIR/baseline" $WARMUP 0 > /dev/null  # warmup
+run_kernel "$WORK_DIR/baseline" $BENCH_RUNS 0 > "$WORK_DIR/baseline_output.txt"
+BASELINE_AVG=$(extract_avg_ms "$WORK_DIR/baseline_output.txt")
+log "  Baseline average: $BASELINE_AVG ms"
+
+# Step 3: Build instrumented
+log "Step 3/6: Build instrumented"
+PROFILE_DIR="$WORK_DIR/pgo_profiles"
+rm -rf "$PROFILE_DIR"
+mkdir -p "$PROFILE_DIR"
+compile "$WORK_DIR/pgo_gen" "-fprofile-generate=$PROFILE_DIR"
+
+# Step 4: Collect profiles
+log "Step 4/6: Collect profiles"
+LLVM_PROFILE_FILE="$PROFILE_DIR/default_%m.profraw" \
+    run_kernel "$WORK_DIR/pgo_gen" 1 0 > /dev/null
+
+DEVICE_PROFS=$(find "$PROFILE_DIR" -name "*.gfx*.profraw" 2>/dev/null || true)
+if [ -z "$DEVICE_PROFS" ]; then
+    log "ERROR: No device profiles generated"
+    echo "PGO test FAILED: no device profiles"
+    exit 1
+fi
+
+# Step 5: Merge profiles and build PGO-optimized
+log "Step 5/6: Merge profiles and build PGO-optimized"
+"$LLVM_PROFDATA" merge -o "$WORK_DIR/device.profdata" $DEVICE_PROFS
+
+compile "$WORK_DIR/pgo_use" "-Xarch_device -fprofile-use=$WORK_DIR/device.profdata"
+
+# Step 6: Run PGO-optimized (warmup + benchmark)
+log "Step 6/6: Run PGO-optimized"
+run_kernel "$WORK_DIR/pgo_use" 1 1 > /dev/null  # verify correctness
+run_kernel "$WORK_DIR/pgo_use" $WARMUP 0 > /dev/null  # warmup
+run_kernel "$WORK_DIR/pgo_use" $BENCH_RUNS 0 > "$WORK_DIR/pgo_output.txt"
+PGO_AVG=$(extract_avg_ms "$WORK_DIR/pgo_output.txt")
+log "  PGO average: $PGO_AVG ms"
+
+# Report
+echo ""
+echo "=== PGO Tiled Matmul Results ==="
+echo "Baseline: $BASELINE_AVG ms"
+echo "PGO:      $PGO_AVG ms"
+
+if [ -n "$BASELINE_AVG" ] && [ -n "$PGO_AVG" ]; then
+    SPEEDUP=$(echo "scale=1; ($BASELINE_AVG - $PGO_AVG) / $BASELINE_AVG * 100" | bc 2>/dev/null || echo "N/A")
+    echo "Speedup:  ${SPEEDUP}% (positive = PGO faster)"
+fi
+
+echo "PGO test PASSED"
