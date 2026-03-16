@@ -1,56 +1,78 @@
-LZP with F descriptor:
-   0.2
-     0.200
- 0.1
-LZP with E descriptor:
- 0.200E+00
- 0.20000E+00
-LZP with D descriptor:
- 0.200D+00
-LZP with G descriptor (F-path):
- 0.200    
-LZP with G descriptor (E-path):
- 0.200E-03
-LZS with F descriptor:
-    .2
-      .200
-  .1
-LZS with E descriptor:
-  .200E+00
-  .20000E+00
-LZS with D descriptor:
-  .200D+00
-LZS with G descriptor (F-path):
-  .200    
-LZS with G descriptor (E-path):
-  .200E-03
-LZ with F descriptor:
-   0.2
-Negative values:
-   -0.2
-    -.2
-Values >= 1 (no effect):
-   1.2
-   1.2
-Zero value:
-   0.0
-    .0
-Switch mid-format:
-   0.5    .5
-With 1P scale (no effect):
- 2.000E-01
- 2.000E-01
-Without comma separator:
-   0.2
-    .2
-Spaces in descriptors:
-   0.2
-    .2
-   0.2
-    .2
-   0.2
-    .2
-   0.2
-   0.2
-    .2
+PASS: LZP F6.1
+PASS: LZP E10.3
+PASS: LZP D10.3
+PASS: LZP G10.3 F-path
+PASS: LZP G10.3 E-path
+PASS: LZS F6.1
+PASS: LZS E10.3
+PASS: LZS D10.3
+PASS: LZS G10.3 F-path
+PASS: LZS G10.3 E-path
+PASS: LZ F6.1
+PASS: LZ E10.3
+PASS: LZ D10.3
+PASS: LZ G10.3
+PASS: LZ overrides SUPPRESS
+PASS: LZP neg
+PASS: LZS neg
+PASS: LZP >= 1
+PASS: LZS >= 1
+PASS: LZP zero
+PASS: LZS zero
+PASS: switch mid-fmt
+PASS: LZP 1P E
+PASS: LZS 1P E
+PASS: LZPF no comma
+PASS: LZSF no comma
+PASS: L ZP spaces
+PASS: L Z S spaces
+PASS: L Z spaces
+PASS: OPEN PRINT F6.1
+PASS: OPEN PRINT E10.3
+PASS: OPEN SUPPRESS F6.1
+PASS: OPEN SUPPRESS E10.3
+PASS: OPEN PROC_DEF F6.1
+PASS: OPEN PROC_DEF E10.3
+PASS: OPEN PROC_DEF D10.3
+PASS: WRITE PROC_DEF F6.1
+PASS: LZS overrides PROC_DEF
+PASS: LZP overrides SUPPRESS
+PASS: LZS overrides PRINT
+PASS: OPEN PRINT D10.3
+PASS: OPEN PRINT G10.3
+PASS: OPEN PRINT ES10.3
+PASS: OPEN PRINT EN12.3
+PASS: OPEN SUPPRESS D10.3
+PASS: OPEN SUPPRESS G10.3
+PASS: OPEN SUPPRESS ES10.3
+PASS: OPEN SUPPRESS EN12.3
+PASS: OPEN PRINT neg
+PASS: OPEN SUPPRESS neg
+PASS: OPEN SUPPRESS >= 1
+PASS: OPEN persist 1
+PASS: OPEN persist 2
+PASS: OPEN lowercase print
+PASS: OPEN lowercase suppress
+PASS: LZS then reset P
+PASS: reset to PRINT
+PASS: OPEN SUPPRESS multi
+PASS: INQUIRE default
+PASS: INQUIRE PRINT
+PASS: INQUIRE SUPPRESS
+PASS: INQUIRE PROC_DEF
+PASS: INQUIRE unconnected
+PASS: INQUIRE by file
+PASS: NEWUNIT SUPPRESS
+PASS: reopen changed
+PASS: OPEN PRINT list-dir
+PASS: OPEN SUPPRESS list-dir
+PASS: non-advancing SUPPRESS
+PASS: direct-access SUPPRESS
+PASS: WRITE PRINT F6.1
+PASS: WRITE SUPPRESS F6.1
+PASS: WRITE PRINT overrides OPEN SUPPRESS
+PASS: WRITE SUPPRESS temp
+PASS: WRITE reverts to OPEN
+PASS: LZS overrides WRITE PRINT
+Result: 76 passed, 0 failed
 exit 0
