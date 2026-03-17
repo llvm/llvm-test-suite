@@ -1,9 +1,9 @@
 #include <hip/hip_runtime.h>
 #include <cmath>
-#include <cstdint>
 #include <cstdio>
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
+#include <memory>
 
 #define HIP_CHECK(call)                                                        \
   do {                                                                         \
@@ -15,19 +15,19 @@
     }                                                                          \
   } while (0)
 
-static uint64_t ulp_distance(double a, double b) {
+static double ulp_distance(double a, double b) {
   if (std::isnan(a) && std::isnan(b))
-    return 0;
+    return 0.0;
   if (std::isnan(a) || std::isnan(b))
-    return UINT64_MAX;
+    return INFINITY;
   if (a == b)
-    return 0;
+    return 0.0;
   int64_t ai, bi;
   memcpy(&ai, &a, sizeof(double));
   memcpy(&bi, &b, sizeof(double));
   if ((ai < 0) != (bi < 0))
-    return UINT64_MAX;
-  return (uint64_t)llabs(ai - bi);
+    return INFINITY;
+  return (double)llabs(ai - bi);
 }
 
 enum MathFunc { FN_EXP, FN_EXP2, FN_EXP10 };
@@ -54,7 +54,7 @@ static double host_exp10(double x) { return pow(10.0, x); }
 
 static int test_func(const char *name, MathFunc fn,
                      double (*host_fn)(double), const double *inputs, int n,
-                     int max_ulp) {
+                     double max_ulp) {
   size_t sz = n * sizeof(double);
   double *d_in, *d_out;
   HIP_CHECK(hipMalloc(&d_in, sz));
@@ -66,27 +66,26 @@ static int test_func(const char *name, MathFunc fn,
   compute_exp<<<blocks, threads>>>(d_in, d_out, n, fn);
   HIP_CHECK(hipDeviceSynchronize());
 
-  double *h_out = (double *)malloc(sz);
-  HIP_CHECK(hipMemcpy(h_out, d_out, sz, hipMemcpyDeviceToHost));
+  auto h_out = std::make_unique<double[]>(n);
+  HIP_CHECK(hipMemcpy(h_out.get(), d_out, sz, hipMemcpyDeviceToHost));
 
   int errs = 0;
-  uint64_t worst_ulp = 0;
+  double worst_ulp = 0.0;
   for (int i = 0; i < n; i++) {
     double expected = host_fn(inputs[i]);
-    uint64_t ulp = ulp_distance(h_out[i], expected);
+    double ulp = ulp_distance(h_out[i], expected);
     if (ulp > worst_ulp)
       worst_ulp = ulp;
-    if (ulp > (uint64_t)max_ulp) {
+    if (ulp > max_ulp) {
       if (errs < 10)
-        printf("  FAIL %s(%a) = %a, expected %a, ulp = %llu\n", name,
-               inputs[i], h_out[i], expected, (unsigned long long)ulp);
+        printf("  FAIL %s(%a) = %a, expected %a, ulp = %.0f\n", name,
+               inputs[i], h_out[i], expected, ulp);
       errs++;
     }
   }
-  printf("  %s: %d/%d passed (worst ulp = %llu)\n", name, n - errs, n,
-         (unsigned long long)worst_ulp);
+  printf("  %s: %d/%d passed (worst ulp = %.0f)\n", name, n - errs, n,
+         worst_ulp);
 
-  free(h_out);
   HIP_CHECK(hipFree(d_in));
   HIP_CHECK(hipFree(d_out));
   return errs;
@@ -108,23 +107,22 @@ int main() {
     small[i] = -1.0 + 2.0 * i / (N_SMALL - 1);
 
   int total = N_SPECIAL + N_RANGE + N_SMALL;
-  double *inputs = (double *)malloc(total * sizeof(double));
-  memcpy(inputs, special, N_SPECIAL * sizeof(double));
-  memcpy(inputs + N_SPECIAL, range, N_RANGE * sizeof(double));
-  memcpy(inputs + N_SPECIAL + N_RANGE, small, N_SMALL * sizeof(double));
+  auto inputs = std::make_unique<double[]>(total);
+  memcpy(inputs.get(), special, N_SPECIAL * sizeof(double));
+  memcpy(inputs.get() + N_SPECIAL, range, N_RANGE * sizeof(double));
+  memcpy(inputs.get() + N_SPECIAL + N_RANGE, small, N_SMALL * sizeof(double));
 
   int errs = 0;
-  int max_ulp = 1;
-  printf("Testing f64 math accuracy (max %d ULP):\n", max_ulp);
-  errs += test_func("exp", FN_EXP, exp, inputs, total, max_ulp);
-  errs += test_func("exp2", FN_EXP2, exp2, inputs, total, max_ulp);
-  errs += test_func("exp10", FN_EXP10, host_exp10, inputs, total, max_ulp);
+  double max_ulp = 1.0;
+  printf("Testing f64 math accuracy (max %.0f ULP):\n", max_ulp);
+  errs += test_func("exp", FN_EXP, exp, inputs.get(), total, max_ulp);
+  errs += test_func("exp2", FN_EXP2, exp2, inputs.get(), total, max_ulp);
+  errs += test_func("exp10", FN_EXP10, host_exp10, inputs.get(), total, max_ulp);
 
   if (errs)
     printf("%d total errors\n", errs);
   else
     printf("PASSED!\n");
 
-  free(inputs);
   return errs;
 }
