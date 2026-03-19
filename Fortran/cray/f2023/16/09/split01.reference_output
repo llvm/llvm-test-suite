@@ -1,0 +1,138 @@
+ ==== Case  1 : common case ====
+  STRING = "first,seconds third"
+  SET = ", :;"
+ 
+   ---- Test 1 - 1: SPLIT without BACK ----
+      "first"
+      "seconds"
+      "third"
+   ---- Test 1 - 2: SPLIT with BACK=.FALSE. ----
+      "first"
+      "seconds"
+      "third"
+   ---- Test 1 - 3: SPLIT with BACK=.TRUE. ----
+      "third"
+      "seconds"
+      "first"
+ ==== Case  2 : first and last characters are delimiters ====
+  STRING = ",first,seconds third;"
+  SET = ", :;"
+ 
+   ---- Test 2 - 1: SPLIT without BACK ----
+      ""
+      "first"
+      "seconds"
+      "third"
+      ""
+   ---- Test 2 - 2: SPLIT with BACK=.FALSE. ----
+      ""
+      "first"
+      "seconds"
+      "third"
+      ""
+   ---- Test 2 - 3: SPLIT with BACK=.TRUE. ----
+      ""
+      "third"
+      "seconds"
+      "first"
+      ""
+ ==== Case  3 : multiple delimiters in a row ====
+  STRING = ",first,seconds; ,:;third,"
+  SET = ", :;"
+ 
+   ---- Test 3 - 1: SPLIT without BACK ----
+      ""
+      "first"
+      "seconds"
+      ""
+      ""
+      ""
+      ""
+      "third"
+      ""
+   ---- Test 3 - 2: SPLIT with BACK=.FALSE. ----
+      ""
+      "first"
+      "seconds"
+      ""
+      ""
+      ""
+      ""
+      "third"
+      ""
+   ---- Test 3 - 3: SPLIT with BACK=.TRUE. ----
+      ""
+      "third"
+      ""
+      ""
+      ""
+      ""
+      "seconds"
+      "first"
+      ""
+ ==== Case  4 : the last token is the longest ====
+  STRING = ",first,seconds;third_third"
+  SET = ", :;"
+ 
+   ---- Test 4 - 1: SPLIT without BACK ----
+      ""
+      "first"
+      "seconds"
+      "third_third"
+   ---- Test 4 - 2: SPLIT with BACK=.FALSE. ----
+      ""
+      "first"
+      "seconds"
+      "third_third"
+   ---- Test 4 - 3: SPLIT with BACK=.TRUE. ----
+      "third_third"
+      "seconds"
+      "first"
+      ""
+ ==== Case  5 : SET is zero size ====
+  STRING = ",first,seconds;third_third"
+  SET = ""
+ 
+   ---- Test 5 - 1: SPLIT without BACK ----
+      ",first,seconds;third_third"
+   ---- Test 5 - 2: SPLIT with BACK=.FALSE. ----
+      ",first,seconds;third_third"
+   ---- Test 5 - 3: SPLIT with BACK=.TRUE. ----
+      ",first,seconds;third_third"
+ ==== Case  6 : one character tokens ====
+  STRING = "f,s;t"
+  SET = ", :;"
+ 
+   ---- Test 6 - 1: SPLIT without BACK ----
+      "f"
+      "s"
+      "t"
+   ---- Test 6 - 2: SPLIT with BACK=.FALSE. ----
+      "f"
+      "s"
+      "t"
+   ---- Test 6 - 3: SPLIT with BACK=.TRUE. ----
+      "t"
+      "s"
+      "f"
+ ==== Case  7 : STRING is zero size ====
+  STRING = ""
+  SET = ", :;"
+ 
+   ---- Test 7 - 1: SPLIT without BACK ----
+      ""
+   ---- Test 7 - 2: SPLIT with BACK=.FALSE. ----
+      ""
+   ---- Test 7 - 3: SPLIT with BACK=.TRUE. ----
+      ""
+ ==== Case  8 : both STRING and SET are zero size ====
+  STRING = ""
+  SET = ""
+ 
+   ---- Test 8 - 1: SPLIT without BACK ----
+      ""
+   ---- Test 8 - 2: SPLIT with BACK=.FALSE. ----
+      ""
+   ---- Test 8 - 3: SPLIT with BACK=.TRUE. ----
+      ""
+exit 0
