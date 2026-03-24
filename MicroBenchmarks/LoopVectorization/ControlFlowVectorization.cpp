@@ -6,15 +6,15 @@
 
 #define ITERATIONS 100000
 
-template <typename T> using CFVFunc = void (*)(T *, unsigned);
+template <typename T> using ControlFlowLoopFunc = void (*)(T *, unsigned);
 
-// Define conditional increment loop with given stride.
-#define DEF_COND_INC_LOOP(name, stride)                                        \
+// Define conditional loop with given branch taken frequency.
+#define DEF_COND_LOOP(name, branch_every_N)                                    \
   template <typename T>                                                        \
   __attribute__((noinline)) static void run_##name##_autovec(T *A,             \
                                                              unsigned N) {     \
     for (unsigned i = 0; i < N; i++) {                                         \
-      if (i % stride == 0) {                                                   \
+      if (i % branch_every_N == 0) {                                           \
         A[i] = A[i] + 1;                                                       \
       }                                                                        \
     }                                                                          \
@@ -22,15 +22,15 @@ template <typename T> using CFVFunc = void (*)(T *, unsigned);
   template <typename T>                                                        \
   __attribute__((noinline)) static void run_##name##_novec(T *A, unsigned N) { \
     _Pragma("clang loop vectorize(disable) interleave(disable)")               \
-    for (unsigned i = 0; i < N; i++) {                                         \
-      if (i % stride == 0) {                                                   \
+    for (unsigned i =0; i < N; i++) {                                          \
+      if (i % branch_every_N == 0) {                                           \
         A[i] = A[i] + 1;                                                       \
       }                                                                        \
     }                                                                          \
   }
 
-// Define conditional increment by value loop.
-#define DEF_COND_INC_VALUE_LOOP(name, marker)                                  \
+// Define conditional loop with taken frequency by data equals to marker.
+#define DEF_COND_VALUE_LOOP(name, marker)                                      \
   template <typename T>                                                        \
   __attribute__((noinline)) static void run_##name##_autovec(T *A,             \
                                                              unsigned N) {     \
@@ -52,30 +52,30 @@ template <typename T> using CFVFunc = void (*)(T *, unsigned);
 
 // Define unconditional increment loop.
 template <typename T>
-__attribute__((noinline)) static void run_uncond_inc_autovec(T *A, unsigned N) {
+__attribute__((noinline)) static void run_uncond_autovec(T *A, unsigned N) {
   for (unsigned i = 0; i < N; i++) {
     A[i] = A[i] + 1;
   }
 }
 
 template <typename T>
-__attribute__((noinline)) static void run_uncond_inc_novec(T *A, unsigned N) {
+__attribute__((noinline)) static void run_uncond_novec(T *A, unsigned N) {
   _Pragma("clang loop vectorize(disable) interleave(disable)")
   for (unsigned i = 0; i < N; i++) {
     A[i] = A[i] + 1;
   }
 }
 
-// Define loops with different strides.
-// Stride 16 usually big enough to accross single vector which can test if
-// control-flow-vectorization is profitable on these loops.
-DEF_COND_INC_LOOP(cond_inc_stride_16, 16)
-DEF_COND_INC_LOOP(cond_inc_stride_32, 32)
-DEF_COND_INC_LOOP(cond_inc_stride_64, 64)
-DEF_COND_INC_LOOP(cond_inc_stride_128, 128)
+DEF_COND_LOOP(cond_every_1_iter, 1)
+DEF_COND_LOOP(cond_every_2_iter, 2)
+DEF_COND_LOOP(cond_every_4_iter, 4)
+DEF_COND_LOOP(cond_every_8_iter, 8)
+DEF_COND_LOOP(cond_every_16_iter, 16)
+DEF_COND_LOOP(cond_every_32_iter, 32)
+DEF_COND_LOOP(cond_every_64_iter, 64)
 
-// Conditional increment by value.
-DEF_COND_INC_VALUE_LOOP(cond_inc_by_value, 40)
+// Branch taken by value
+DEF_COND_VALUE_LOOP(cond_by_value, 100)
 
 // Initialize array with random numbers.
 template <typename T> static void init_data(T *A) {
@@ -89,8 +89,9 @@ template <typename T> static void init_data(T *A) {
 // Benchmark vectorized version.
 template <typename T>
 static void __attribute__((always_inline))
-benchmark_cfv_autovec(benchmark::State &state, CFVFunc<T> VecFn,
-                      CFVFunc<T> NoVecFn) {
+benchmark_control_flow_loop_autovec(benchmark::State &state,
+                                   ControlFlowLoopFunc<T> VecFn,
+                                   ControlFlowLoopFunc<T> NoVecFn) {
   std::unique_ptr<T[]> A(new T[ITERATIONS]);
   std::unique_ptr<T[]> A_vec(new T[ITERATIONS]);
   std::unique_ptr<T[]> A_novec(new T[ITERATIONS]);
@@ -124,7 +125,8 @@ benchmark_cfv_autovec(benchmark::State &state, CFVFunc<T> VecFn,
 // Benchmark version with vectorization disabled.
 template <typename T>
 static void __attribute__((always_inline))
-benchmark_cfv_novec(benchmark::State &state, CFVFunc<T> NoVecFn) {
+benchmark_control_flow_loop_novec(benchmark::State &state,
+                                 ControlFlowLoopFunc<T> NoVecFn) {
   std::unique_ptr<T[]> A(new T[ITERATIONS]);
   std::unique_ptr<T[]> A_work(new T[ITERATIONS]);
   init_data(&A[0]);
@@ -137,41 +139,43 @@ benchmark_cfv_novec(benchmark::State &state, CFVFunc<T> NoVecFn) {
   }
 }
 
-#define BENCHMARK_CFV_CASE(name, ty)                                           \
+#define BENCHMARK_CONTROL_FLOW_VEC_CASE(name, ty)                              \
   void BENCHMARK_##name##_autovec_##ty##_(benchmark::State &state) {           \
-    benchmark_cfv_autovec<ty>(state, run_##name##_autovec, run_##name##_novec);\
+    benchmark_control_flow_loop_autovec<ty>(state, run_##name##_autovec,        \
+                                           run_##name##_novec);                \
   }                                                                            \
   BENCHMARK(BENCHMARK_##name##_autovec_##ty##_)->Unit(benchmark::kNanosecond); \
                                                                                \
   void BENCHMARK_##name##_novec_##ty##_(benchmark::State &state) {             \
-    benchmark_cfv_novec<ty>(state, run_##name##_novec);                        \
+    benchmark_control_flow_loop_novec<ty>(state, run_##name##_novec);           \
   }                                                                            \
   BENCHMARK(BENCHMARK_##name##_novec_##ty##_)->Unit(benchmark::kNanosecond);
 
 // Unconditional increment benchmark.
 #define BENCHMARK_UNCOND_CASE(ty)                                              \
-  void BENCHMARK_uncond_inc_autovec_##ty##_(benchmark::State &state) {         \
-    benchmark_cfv_autovec<ty>(state, run_uncond_inc_autovec,                   \
-                              run_uncond_inc_novec);                           \
+  void BENCHMARK_uncond_autovec_##ty##_(benchmark::State &state) {             \
+    benchmark_control_flow_loop_autovec<ty>(state, run_uncond_autovec,          \
+                                           run_uncond_novec);                  \
   }                                                                            \
-  BENCHMARK(BENCHMARK_uncond_inc_autovec_##ty##_)                              \
-      ->Unit(benchmark::kNanosecond);                                          \
+  BENCHMARK(BENCHMARK_uncond_autovec_##ty##_)->Unit(benchmark::kNanosecond);   \
                                                                                \
-  void BENCHMARK_uncond_inc_novec_##ty##_(benchmark::State &state) {           \
-    benchmark_cfv_novec<ty>(state, run_uncond_inc_novec);                      \
+  void BENCHMARK_uncond_novec_##ty##_(benchmark::State &state) {               \
+    benchmark_control_flow_loop_novec<ty>(state, run_uncond_novec);             \
   }                                                                            \
-  BENCHMARK(BENCHMARK_uncond_inc_novec_##ty##_)->Unit(benchmark::kNanosecond);
+  BENCHMARK(BENCHMARK_uncond_novec_##ty##_)->Unit(benchmark::kNanosecond);
 
-// Add benchmarks for all variants.
-#define ADD_CFV_BENCHMARKS(ty)                                                 \
+// Add benchmarks for all branch frequency variants.
+#define ADD_CONTROL_FLOW_VEC_BENCHMARKS(ty)                                    \
   BENCHMARK_UNCOND_CASE(ty)                                                    \
-  BENCHMARK_CFV_CASE(cond_inc_stride_16, ty)                                   \
-  BENCHMARK_CFV_CASE(cond_inc_stride_32, ty)                                   \
-  BENCHMARK_CFV_CASE(cond_inc_stride_64, ty)                                   \
-  BENCHMARK_CFV_CASE(cond_inc_stride_128, ty)                                  \
-  BENCHMARK_CFV_CASE(cond_inc_by_value, ty)
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_1_iter, ty)                       \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_2_iter, ty)                       \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_4_iter, ty)                       \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_8_iter, ty)                       \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_16_iter, ty)                      \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_32_iter, ty)                      \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_every_64_iter, ty)                      \
+  BENCHMARK_CONTROL_FLOW_VEC_CASE(cond_by_value, ty)
 
-ADD_CFV_BENCHMARKS(int64_t)
-ADD_CFV_BENCHMARKS(int32_t)
-ADD_CFV_BENCHMARKS(int16_t)
-
+ADD_CONTROL_FLOW_VEC_BENCHMARKS(int64_t)
+ADD_CONTROL_FLOW_VEC_BENCHMARKS(int32_t)
+ADD_CONTROL_FLOW_VEC_BENCHMARKS(int16_t)
