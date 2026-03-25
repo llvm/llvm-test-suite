@@ -214,10 +214,10 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_nam
 
     stat_col_names = []
     if coef_var:
-        stat_col_names.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
+        stat_col_names += [f'cv_{lhs_name}', f'cv_{rhs_name}']
     else:
-        stat_col_names.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
-    stat_col_names.extend(['t-value', 'p-value', 'significant'])
+        stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
+    stat_col_names += ['t-value', 'p-value', 'significant']
 
     return stats_dict, stat_col_names
 
