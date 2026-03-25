@@ -185,8 +185,8 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_nam
                     lhs_mean = lhs_values.mean()
                     rhs_mean = rhs_values.mean()
                     stats_dict[metric][program] = {
-                        f'cv_{lhs_name}': lhs_std / lhs_mean if lhs_mean != 0 else float('inf'),
-                        f'cv_{rhs_name}': rhs_std / rhs_mean if rhs_mean != 0 else float('inf'),
+                        f'cv_{lhs_name}': lhs_std / lhs_mean if lhs_mean != 0 else float('nan'),
+                        f'cv_{rhs_name}': rhs_std / rhs_mean if rhs_mean != 0 else float('nan'),
                     }
                 else:
                     stats_dict[metric][program] = {
