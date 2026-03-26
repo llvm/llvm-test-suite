@@ -84,6 +84,9 @@ static const char *g_target_redirect_stderr = 0;
 /* \brief If non-zero, append exit status at end of output file. */
 static int g_append_exitstats = 0;
 
+/* \brief If non-zero, report maxrss in summary file and non-POSIX output. */
+static int g_report_maxrss = 0;
+
 #ifdef _WIN32
 /* \brief If platform does not define rlim_t type, then define it as int. */
 typedef int rlim_t;
@@ -254,6 +257,7 @@ static int monitor_child_process(double start_time) {
   int res, status;
 #ifndef _WIN32
   struct rusage usage;
+  unsigned long maxrss_bytes = 0;
 
   /* If we are running with a timeout, set up an alarm now. */
   if (g_timeout_in_seconds) {
@@ -286,6 +290,15 @@ static int monitor_child_process(double start_time) {
   }
   user_time = (double) usage.ru_utime.tv_sec + usage.ru_utime.tv_usec/1000000.0;
   sys_time = (double) usage.ru_stime.tv_sec + usage.ru_stime.tv_usec/1000000.0;
+
+  /* Extract max resident set size and normalize to bytes on supported platforms. */
+#if defined(__APPLE__)
+  /* Apple reports max RSS in bytes */
+  maxrss_bytes = (unsigned long) usage.ru_maxrss;
+#elif defined(__linux__)
+  /* Linux reports max RSS in KiB */
+  maxrss_bytes = (unsigned long) usage.ru_maxrss * 1024;
+#endif
 
   /* If the process was signalled, report a more interesting status. */
   int exit_status;
@@ -390,8 +403,18 @@ static int monitor_child_process(double start_time) {
       fprintf(stderr, "real %12.4f\nuser %12.4f\nsys  %12.4f\n",
               real_time, user_time, sys_time);
     } else {
-      fprintf(stderr, "%12.4f real %12.4f user %12.4f sys\n",
-              real_time, user_time, sys_time);
+      if (g_report_maxrss)
+#if defined(__APPLE__) || defined(__linux__)
+        fprintf(stderr, "%12.4f real %12.4f user %12.4f sys %12lu maxrss\n",
+                real_time, user_time, sys_time, maxrss_bytes);
+#else
+        /* Silently ignored on unsupported platforms */
+        fprintf(stderr, "%12.4f real %12.4f user %12.4f sys\n",
+                real_time, user_time, sys_time);
+#endif
+      else
+        fprintf(stderr, "%12.4f real %12.4f user %12.4f sys\n",
+                real_time, user_time, sys_time);
     }
   } else {
     /* Otherwise, write the summary data in a simple parsable format. */
@@ -405,6 +428,10 @@ static int monitor_child_process(double start_time) {
     fprintf(fp, "%-10s %.4f\n", "real", real_time);
     fprintf(fp, "%-10s %.4f\n", "user", user_time);
     fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
+#if defined(__APPLE__) || defined(__linux__)
+    if (g_report_maxrss)
+      fprintf(fp, "%-10s %lu\n", "maxrss", maxrss_bytes);
+#endif
     fclose(fp);
   }
 #ifdef _WIN32
@@ -804,6 +831,9 @@ static void usage(int is_error) {
           (WRAPPED
            "Limit the maximum number of simultaneous processes "
            "the target can use.\n"));
+  fprintf(stderr, "  %-20s %s", "--report-maxrss",
+          WRAPPED
+          "Report maximum resident set size (Currently Apple/Linux only, silently ignored on unsupported platforms).\n");
   _exit(is_error);
 }
 
@@ -883,6 +913,11 @@ int main(int argc, char * const argv[]) {
 
     if (streq(arg, "--append-exitstatus")) {
       g_append_exitstats = 1;
+      continue;
+    }
+
+    if (streq(arg, "--report-maxrss")) {
+      g_report_maxrss = 1;
       continue;
     }
 
