@@ -130,6 +130,7 @@ def merge_values(values, merge_function):
 def get_values(values, lhs_name=None, rhs_name=None):
     exclude_cols = ["diff", "t-value", "p-value", "significant"]
     exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
+    exclude_cols.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
     values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
@@ -162,7 +163,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, lhs_name, rhs_name):
+def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_name):
     stats_dict = {}
 
     for metric in metrics:
@@ -178,24 +179,47 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, lhs_name, rhs_name):
 
             # Compute t-test if we have enough samples
             if len(lhs_values) >= 2 and len(rhs_values) >= 2:
-                stats_dict[metric][program] = {
-                    f'std_{lhs_name}': lhs_values.std(ddof=1),
-                    f'std_{rhs_name}': rhs_values.std(ddof=1),
-                }
+                lhs_std = lhs_values.std(ddof=1)
+                rhs_std = rhs_values.std(ddof=1)
+                if coef_var:
+                    lhs_mean = lhs_values.mean()
+                    rhs_mean = rhs_values.mean()
+                    stats_dict[metric][program] = {
+                        f'cv_{lhs_name}': lhs_std / lhs_mean if lhs_mean != 0 else float('nan'),
+                        f'cv_{rhs_name}': rhs_std / rhs_mean if rhs_mean != 0 else float('nan'),
+                    }
+                else:
+                    stats_dict[metric][program] = {
+                        f'std_{lhs_name}': lhs_std,
+                        f'std_{rhs_name}': rhs_std,
+                    }
                 t_stat, p_val = stats.ttest_ind(lhs_values, rhs_values)
                 stats_dict[metric][program]['t-value'] = t_stat
                 stats_dict[metric][program]['p-value'] = p_val
                 stats_dict[metric][program]['significant'] = "Y" if p_val < alpha else "N"
             else:
-                stats_dict[metric][program] = {
-                    f'std_{lhs_name}': float('nan'),
-                    f'std_{rhs_name}': float('nan'),
-                    't-value': float('nan'),
-                    'p-value': float('nan'),
-                    'significant': ""
-                }
+                if coef_var:
+                    stats_dict[metric][program] = {
+                        f'cv_{lhs_name}': float('nan'),
+                        f'cv_{rhs_name}': float('nan')
+                    }
+                else:
+                    stats_dict[metric][program] = {
+                        f'std_{lhs_name}': float('nan'),
+                        f'std_{rhs_name}': float('nan')
+                    }
+                stats_dict[metric][program]['t-value'] = float('nan')
+                stats_dict[metric][program]['p-value'] = float('nan')
+                stats_dict[metric][program]['significant'] = ""
 
-    return stats_dict
+    stat_col_names = []
+    if coef_var:
+        stat_col_names += [f'cv_{lhs_name}', f'cv_{rhs_name}']
+    else:
+        stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
+    stat_col_names += ['t-value', 'p-value', 'significant']
+
+    return stats_dict, stat_col_names
 
 
 def add_precomputed_statistics(data, stats_dict, stat_col_names):
@@ -369,6 +393,10 @@ def print_result(
             formatters[(m, f'std_{lhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
         if (m, f'std_{rhs_name}') in dataout.columns:
             formatters[(m, f'std_{rhs_name}')] = lambda x: "%.3f" % x if not pd.isna(x) else ""
+        if (m, f'cv_{lhs_name}') in dataout.columns:
+            formatters[(m, f'cv_{lhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
+        if (m, f'cv_{rhs_name}') in dataout.columns:
+            formatters[(m, f'cv_{rhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -419,6 +447,7 @@ def print_result(
     print(out)
     exclude_from_summary = ["t-value", "p-value", "significant"]
     exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
+    exclude_from_summary.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -528,6 +557,13 @@ def main():
         default=False,
         help="Show only significant results when used with --statistics",
     )
+    parser.add_argument(
+        "--coefficient-variation",
+        action="store_true",
+        dest="coefficient_variation",
+        default=False,
+        help="Compute relative coefficient of variation (%%) rather than absolute stddev",
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -567,13 +603,13 @@ def main():
         # Compute statistics on raw data before merging (if requested)
         if config.statistics:
             metrics_for_stats = config.metrics if len(config.metrics) > 0 else get_default_metric(lhs_d, rhs_d)
-            stats_dict = compute_statistics(
+            stats_dict, stat_col_names = compute_statistics(
                 lhs_d, rhs_d, metrics_for_stats,
                 alpha=config.alpha,
+                coef_var=config.coefficient_variation,
                 lhs_name=config.lhs_name,
                 rhs_name=config.rhs_name
             )
-            stat_col_names = [f'std_{config.lhs_name}', f'std_{config.rhs_name}', 't-value', 'p-value', 'significant']
 
         # Merge data
         lhs_merged = merge_values(lhs_d, config.merge_function)
