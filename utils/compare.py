@@ -163,7 +163,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_name):
+def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_name):
     stats_dict = {}
 
     for metric in metrics:
@@ -181,7 +181,7 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_nam
             if len(lhs_values) >= 2 and len(rhs_values) >= 2:
                 lhs_std = lhs_values.std(ddof=1)
                 rhs_std = rhs_values.std(ddof=1)
-                if coef_var:
+                if coeff_var:
                     lhs_mean = lhs_values.mean()
                     rhs_mean = rhs_values.mean()
                     stats_dict[metric][program] = {
@@ -198,7 +198,7 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_nam
                 stats_dict[metric][program]['p-value'] = p_val
                 stats_dict[metric][program]['significant'] = "Y" if p_val < alpha else "N"
             else:
-                if coef_var:
+                if coeff_var:
                     stats_dict[metric][program] = {
                         f'cv_{lhs_name}': float('nan'),
                         f'cv_{rhs_name}': float('nan')
@@ -213,7 +213,7 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coef_var, lhs_name, rhs_nam
                 stats_dict[metric][program]['significant'] = ""
 
     stat_col_names = []
-    if coef_var:
+    if coeff_var:
         stat_col_names += [f'cv_{lhs_name}', f'cv_{rhs_name}']
     else:
         stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
@@ -606,7 +606,7 @@ def main():
             stats_dict, stat_col_names = compute_statistics(
                 lhs_d, rhs_d, metrics_for_stats,
                 alpha=config.alpha,
-                coef_var=config.coefficient_variation,
+                coeff_var=config.coefficient_variation,
                 lhs_name=config.lhs_name,
                 rhs_name=config.rhs_name
             )
