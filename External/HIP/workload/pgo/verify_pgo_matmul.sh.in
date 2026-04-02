@@ -1,0 +1,13 @@
+#!/bin/bash
+# Verify the PGO matmul test output.
+# The test passes if the full PGO pipeline completed successfully
+# (correctness verified, all steps ran). Performance difference is
+# reported for information only.
+
+if grep -q "PGO test PASSED" "$1"; then
+    exit 0
+fi
+
+echo "PGO pipeline did not complete:"
+cat "$1"
+exit 1
