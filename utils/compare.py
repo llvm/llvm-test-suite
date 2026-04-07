@@ -411,7 +411,9 @@ def print_result(
         if (m, f'cv_{rhs_name}') in dataout.columns:
             formatters[(m, f'cv_{rhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
         if (m, "diff_ci") in dataout.columns:
-            formatters[(m, "diff_ci")] = lambda x: "[%4.1f%%, %4.1f%%]" % (x[0] * 100, x[1] * 100) if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
+            formatters[(m, "diff_ci")] = lambda x: \
+                "[%4.1f%%, %4.1f%%]" % (x[0] * 100, x[1] * 100) \
+                if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
