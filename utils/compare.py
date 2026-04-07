@@ -128,7 +128,7 @@ def merge_values(values, merge_function):
 
 
 def get_values(values, lhs_name=None, rhs_name=None):
-    exclude_cols = ["diff", "t-value", "p-value", "significant", "ci_lower", "ci_upper"]
+    exclude_cols = ["diff", "t-value", "p-value", "significant", "diff_ci"]
     exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     exclude_cols.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
     values = values[[c for c in values.columns if c not in exclude_cols]]
@@ -163,7 +163,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_name):
+def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_name, confidence_interval=False):
     stats_dict = {}
 
     for metric in metrics:
@@ -198,16 +198,16 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
                 stats_dict[metric][program]['p-value'] = result.pvalue
                 stats_dict[metric][program]['significant'] = "Y" if result.pvalue < alpha else "N"
 
-                ci_abs = result.confidence_interval(1 - alpha)
-                if lhs_mean != 0:
-                    # CI is for mean(lhs)-mean(rhs); negate for rhs-lhs
-                    ci_lo = -ci_abs.high / lhs_mean
-                    ci_hi = -ci_abs.low / lhs_mean
-                else:
-                    ci_lo = float('nan')
-                    ci_hi = float('nan')
-                stats_dict[metric][program]['ci_lower'] = ci_lo
-                stats_dict[metric][program]['ci_upper'] = ci_hi
+                if confidence_interval:
+                    ci_abs = result.confidence_interval(1 - alpha)
+                    if lhs_mean != 0:
+                        # CI is for mean(lhs)-mean(rhs); negate for rhs-lhs
+                        ci_lo = -ci_abs.high / lhs_mean
+                        ci_hi = -ci_abs.low / lhs_mean
+                    else:
+                        ci_lo = float('nan')
+                        ci_hi = float('nan')
+                    stats_dict[metric][program]['diff_ci'] = (ci_lo, ci_hi)
             else:
                 if coeff_var:
                     stats_dict[metric][program] = {
@@ -222,8 +222,6 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
                 stats_dict[metric][program]['t-value'] = float('nan')
                 stats_dict[metric][program]['p-value'] = float('nan')
                 stats_dict[metric][program]['significant'] = ""
-                stats_dict[metric][program]['ci_lower'] = float('nan')
-                stats_dict[metric][program]['ci_upper'] = float('nan')
 
     stat_col_names = []
     if coeff_var:
@@ -231,7 +229,8 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
     else:
         stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
     stat_col_names += ['t-value', 'p-value', 'significant']
-    stat_col_names += ['ci_lower', 'ci_upper']
+    if confidence_interval:
+        stat_col_names += ['diff_ci']
 
     return stats_dict, stat_col_names
 
@@ -411,10 +410,8 @@ def print_result(
             formatters[(m, f'cv_{lhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
         if (m, f'cv_{rhs_name}') in dataout.columns:
             formatters[(m, f'cv_{rhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
-        if (m, "ci_lower") in dataout.columns:
-            formatters[(m, "ci_lower")] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
-        if (m, "ci_upper") in dataout.columns:
-            formatters[(m, "ci_upper")] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
+        if (m, "diff_ci") in dataout.columns:
+            formatters[(m, "diff_ci")] = lambda x: "[%4.1f%%, %4.1f%%]" % (x[0] * 100, x[1] * 100) if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -466,7 +463,7 @@ def print_result(
     exclude_from_summary = ["t-value", "p-value", "significant"]
     exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
     exclude_from_summary.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
-    exclude_from_summary.extend(['ci_lower', 'ci_upper'])
+    exclude_from_summary.extend(['diff_ci'])
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -561,7 +558,7 @@ def main():
         action="store_true",
         dest="statistics",
         default=False,
-        help="Add statistical analysis columns (std, t-value, p-value, significance, confidence intervals)",
+        help="Add statistical analysis columns (std, t-value, p-value, significance)",
     )
     parser.add_argument(
         "--alpha",
@@ -582,6 +579,13 @@ def main():
         dest="coefficient_variation",
         default=False,
         help="Compute relative coefficient of variation (%%) rather than absolute stddev",
+    )
+    parser.add_argument(
+        "--confidence-interval",
+        action="store_true",
+        dest="confidence_interval",
+        default=False,
+        help="Add confidence interval column (requires --statistics)",
     )
     config = parser.parse_args()
 
@@ -628,6 +632,7 @@ def main():
                 coeff_var=config.coefficient_variation,
                 lhs_name=config.lhs_name,
                 rhs_name=config.rhs_name,
+                confidence_interval=config.confidence_interval,
             )
 
         # Merge data
