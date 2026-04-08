@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include <hip/hip_runtime.h>
 
@@ -41,9 +42,9 @@ void f64_cmp_chain_host(const uint8_t *sel, const double *x, double *y) {
 }
 
 int main(void) {
-  uint8_t *sel = (uint8_t *)malloc(N * sizeof(uint8_t));
-  double *x = (double *)malloc(N * sizeof(double));
-  double *y = (double *)malloc(N * sizeof(double));
+  auto sel = std::make_unique<uint8_t[]>(N);
+  auto x = std::make_unique<double[]>(N);
+  auto y = std::make_unique<double[]>(N);
 
   // Initialize inputs
   for (size_t i = 0; i < N; ++i) {
@@ -56,22 +57,24 @@ int main(void) {
   double *d_x;
   double *d_y;
   HIP_CHECK(hipMalloc((void **)&d_sel, N * sizeof(uint8_t)));
-  HIP_CHECK(hipMemcpy(d_sel, sel, N * sizeof(uint8_t), hipMemcpyHostToDevice));
+  HIP_CHECK(
+      hipMemcpy(d_sel, sel.get(), N * sizeof(uint8_t), hipMemcpyHostToDevice));
   HIP_CHECK(hipMalloc((void **)&d_x, N * sizeof(double)));
-  HIP_CHECK(hipMemcpy(d_x, x, N * sizeof(double), hipMemcpyHostToDevice));
+  HIP_CHECK(hipMemcpy(d_x, x.get(), N * sizeof(double), hipMemcpyHostToDevice));
   HIP_CHECK(hipMalloc((void **)&d_y, N * sizeof(double)));
-  HIP_CHECK(hipMemcpy(d_y, y, N * sizeof(double), hipMemcpyHostToDevice));
+  HIP_CHECK(hipMemcpy(d_y, y.get(), N * sizeof(double), hipMemcpyHostToDevice));
 
   // CPU implementation
-  f64_cmp_chain_host(sel, x, y);
+  f64_cmp_chain_host(sel.get(), x.get(), y.get());
 
   // GPU implementation
   f64_cmp_chain<<<(N + 255) / 256, 256>>>(d_sel, d_x, d_y);
 
   // Copy GPU result
-  double *h_y = (double *)malloc(N * sizeof(double));
+  auto h_y = std::make_unique<double[]>(N);
   HIP_CHECK(hipDeviceSynchronize());
-  HIP_CHECK(hipMemcpy(h_y, d_y, N * sizeof(double), hipMemcpyDeviceToHost));
+  HIP_CHECK(
+      hipMemcpy(h_y.get(), d_y, N * sizeof(double), hipMemcpyDeviceToHost));
 
   // Verify results
   int errs = 0;
@@ -84,10 +87,6 @@ int main(void) {
   else
     std::cout << "PASSED!\n";
 
-  free(sel);
-  free(x);
-  free(y);
-  free(h_y);
   HIP_CHECK(hipFree(d_sel));
   HIP_CHECK(hipFree(d_x));
   HIP_CHECK(hipFree(d_y));
