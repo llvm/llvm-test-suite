@@ -24,7 +24,7 @@ program main
 
   do i=1,nnn
      !$omp task depend(out:aaa(i))
-     call usleep(100000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
+     call usleep(10000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
      aaa(i) = 1
      !$omp end task
   end do
@@ -35,7 +35,7 @@ program main
   do i=1,nnn
      bbb(i) = aaa(i) + 1
   end do
-  call usleep(100000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
+  call usleep(10000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
   do i=1,nnn
      bbb(i) = bbb(i) + 1
   end do
@@ -44,7 +44,7 @@ program main
   do i=1,nnn
      !$omp task depend(in:bbb(i)) depend(out:ccc(i))
      ccc(i) = bbb(i) + 1
-     call usleep(100000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
+     call usleep(10000) ! pause here to ensure we catch issues if the subsequent dependent task is scheduled early
      ccc(i) = ccc(i) + 1
      !$omp end task
   end do
