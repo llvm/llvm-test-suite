@@ -128,9 +128,12 @@ def merge_values(values, merge_function):
 
 
 def get_values(values, lhs_name=None, rhs_name=None):
-    exclude_cols = ["diff", "t-value", "p-value", "significant", "diff_ci"]
-    exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
-    exclude_cols.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
+    exclude_cols = [
+        "diff", "t-value", "p-value", "significant",
+        f'std_{lhs_name}', f'std_{rhs_name}',
+        f'cv_{lhs_name}', f'cv_{rhs_name}',
+        "diff_ci_rel", "diff_ci_abs",
+    ]
     values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
@@ -163,7 +166,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_name, confidence_interval=False):
+def compute_statistics(lhs_d, rhs_d, lhs_name, rhs_name, metrics, alpha, coeff_var, diff_conf_int):
     stats_dict = {}
 
     for metric in metrics:
@@ -193,21 +196,26 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
                         f'std_{lhs_name}': lhs_std,
                         f'std_{rhs_name}': rhs_std,
                     }
-                result = stats.ttest_ind(lhs_values, rhs_values)
-                stats_dict[metric][program]['t-value'] = result.statistic
-                stats_dict[metric][program]['p-value'] = result.pvalue
-                stats_dict[metric][program]['significant'] = "Y" if result.pvalue < alpha else "N"
+                ttest = stats.ttest_ind(lhs_values, rhs_values)
+                stats_dict[metric][program]['t-value'] = ttest.statistic
+                stats_dict[metric][program]['p-value'] = ttest.pvalue
+                stats_dict[metric][program]['significant'] = "Y" if ttest.pvalue < alpha else "N"
 
-                if confidence_interval:
-                    ci_abs = result.confidence_interval(1 - alpha)
-                    if lhs_mean != 0:
-                        # CI is for mean(lhs)-mean(rhs); negate for rhs-lhs
-                        ci_lo = -ci_abs.high / lhs_mean
-                        ci_hi = -ci_abs.low / lhs_mean
+                if diff_conf_int:
+                    ci = ttest.confidence_interval(1 - alpha)
+                    # CI is for mean(lhs)-mean(rhs); negate for rhs-lhs
+                    abs_lo = -ci.high
+                    abs_hi = -ci.low
+                    if diff_conf_int == "relative":
+                        if lhs_mean != 0:
+                            ci_lo = abs_lo / lhs_mean
+                            ci_hi = abs_hi / lhs_mean
+                        else:
+                            ci_lo = float('nan')
+                            ci_hi = float('nan')
+                        stats_dict[metric][program]['diff_ci_rel'] = (ci_lo, ci_hi)
                     else:
-                        ci_lo = float('nan')
-                        ci_hi = float('nan')
-                    stats_dict[metric][program]['diff_ci'] = (ci_lo, ci_hi)
+                        stats_dict[metric][program]['diff_ci_abs'] = (abs_lo, abs_hi)
             else:
                 if coeff_var:
                     stats_dict[metric][program] = {
@@ -229,8 +237,10 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
     else:
         stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
     stat_col_names += ['t-value', 'p-value', 'significant']
-    if confidence_interval:
-        stat_col_names += ['diff_ci']
+    if diff_conf_int == "relative":
+        stat_col_names += ['diff_ci_rel']
+    elif diff_conf_int == "absolute":
+        stat_col_names += ['diff_ci_abs']
 
     return stats_dict, stat_col_names
 
@@ -410,9 +420,13 @@ def print_result(
             formatters[(m, f'cv_{lhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
         if (m, f'cv_{rhs_name}') in dataout.columns:
             formatters[(m, f'cv_{rhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
-        if (m, "diff_ci") in dataout.columns:
-            formatters[(m, "diff_ci")] = lambda x: \
+        if (m, "diff_ci_rel") in dataout.columns:
+            formatters[(m, "diff_ci_rel")] = lambda x: \
                 "[%4.1f%%, %4.1f%%]" % (x[0] * 100, x[1] * 100) \
+                if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
+        if (m, "diff_ci_abs") in dataout.columns:
+            formatters[(m, "diff_ci_abs")] = lambda x: \
+                "[%4.3f, %4.3f]" % (x[0], x[1]) \
                 if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
@@ -462,10 +476,12 @@ def print_result(
         formatters=formatters,
     )
     print(out)
-    exclude_from_summary = ["t-value", "p-value", "significant"]
-    exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
-    exclude_from_summary.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
-    exclude_from_summary.extend(['diff_ci'])
+    exclude_from_summary = [
+        "t-value", "p-value", "significant",
+        f'std_{lhs_name}', f'std_{rhs_name}',
+        f'cv_{lhs_name}', f'cv_{rhs_name}',
+        'diff_ci_rel', 'diff_ci_abs',
+    ]
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -583,11 +599,13 @@ def main():
         help="Compute relative coefficient of variation (%%) rather than absolute stddev",
     )
     parser.add_argument(
-        "--confidence-interval",
-        action="store_true",
-        dest="confidence_interval",
-        default=False,
-        help="Add confidence interval column (requires --statistics)",
+        "--diff-confidence-interval",
+        choices=["relative", "absolute"],
+        nargs="?",
+        const="relative",
+        default=None,
+        dest="diff_confidence_interval",
+        help="Show confidence interval for the difference (default: relative)",
     )
     config = parser.parse_args()
 
@@ -629,12 +647,13 @@ def main():
         if config.statistics:
             metrics_for_stats = config.metrics if len(config.metrics) > 0 else get_default_metric(lhs_d, rhs_d)
             stats_dict, stat_col_names = compute_statistics(
-                lhs_d, rhs_d, metrics_for_stats,
-                alpha=config.alpha,
-                coeff_var=config.coefficient_variation,
+                lhs_d, rhs_d,
                 lhs_name=config.lhs_name,
                 rhs_name=config.rhs_name,
-                confidence_interval=config.confidence_interval,
+                metrics=metrics_for_stats,
+                alpha=config.alpha,
+                coeff_var=config.coefficient_variation,
+                diff_conf_int=config.diff_confidence_interval,
             )
 
         # Merge data
