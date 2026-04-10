@@ -184,6 +184,20 @@ option(TEST_SUITE_EXTERNALIZE_DEBUGINFO
       "Generate dSYM files for executables (Darwin only)"
       OFF)
 
+option(TEST_SUITE_SAMPLE_PROFILE_USE
+      "Add -fprofile-sample-use for each benchmark using profiles from TEST_SUITE_SAMPLE_PROFILE_DIR"
+      OFF)
+set(TEST_SUITE_SAMPLE_PROFILE_DIR "" CACHE PATH
+    "Directory containing <target>.spgo sample profile files")
+if(TEST_SUITE_SAMPLE_PROFILE_USE)
+  if("${TEST_SUITE_SAMPLE_PROFILE_DIR}" STREQUAL "")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_USE requires TEST_SUITE_SAMPLE_PROFILE_DIR to be set")
+  endif()
+  if(NOT EXISTS "${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_DIR does not exist: ${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+  endif()
+endif()
+
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
 # the user specified CMAKE_C_FLAGS etc. need not be changed.
