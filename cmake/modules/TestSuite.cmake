@@ -53,6 +53,11 @@ function(llvm_test_executable_no_test target)
   # Note that we cannot use target_link_libraries() here because that one
   # only interprets inputs starting with '-' as flags.
   append_target_flags(LINK_LIBRARIES ${target} ${LDFLAGS})
+  # Apply per-target compile flags if defined. Set CUSTOM_TARGET_COMPILE_FLAGS_<target>
+  # to a CMake list of flags to add compile flags for a specific target only.
+  if(DEFINED CUSTOM_TARGET_COMPILE_FLAGS_${target})
+    append_target_flags(COMPILE_FLAGS ${target} ${CUSTOM_TARGET_COMPILE_FLAGS_${target}})
+  endif()
   set(target_path ${CMAKE_CURRENT_BINARY_DIR}/${target})
   if(TEST_SUITE_PROFILE_USE)
     append_target_flags(COMPILE_FLAGS ${target} -fprofile-instr-use=${target_path}.profdata)
