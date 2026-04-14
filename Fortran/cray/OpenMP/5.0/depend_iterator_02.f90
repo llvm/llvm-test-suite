@@ -2,8 +2,8 @@
 ! an apparent dependence between two tasks, but at runtime the
 ! iterators are empty so there is no actual dependence.  The test
 ! ensures the tasks are actually allowed to run concurrently, and it
-! will deadlock otherwise.  This test is not guaranteed to pass for
-! all OpenMP implementations, but it is expected to pass for CCE.
+! will deadlock otherwise. This test is not guaranteed to pass for all
+! OpenMP implementations, but it is expected to pass for CCE and flang.
 
 program main
   use omp_lib
