@@ -63,6 +63,22 @@ function(llvm_test_executable_no_test target)
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   test_suite_add_build_dependencies(${target})
 
+  if(TEST_SUITE_EXTERNALIZE_DEBUGINFO AND APPLE)
+    if(CMAKE_C_FLAGS MATCHES "-flto"
+      OR CMAKE_CXX_FLAGS MATCHES "-flto"
+      OR CMAKE_C_FLAGS_RELEASE MATCHES "-flto"
+      OR CMAKE_CXX_FLAGS_RELEASE MATCHES "-flto")
+      set(lto_object ${CMAKE_CURRENT_BINARY_DIR}/${target}-lto.o)
+      set_property(TARGET ${target} APPEND_STRING PROPERTY
+        LINK_FLAGS " -Wl,-object_path_lto,${lto_object}")
+    endif()
+    if(NOT CMAKE_DSYMUTIL)
+      set(CMAKE_DSYMUTIL xcrun dsymutil)
+    endif()
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_DSYMUTIL} $<TARGET_FILE:${target}>)
+  endif()
+
   if(TEST_SUITE_LLVM_SIZE)
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND ${TEST_SUITE_LLVM_SIZE} --format=sysv $<SHELL_PATH:$<TARGET_FILE:${target}>>
