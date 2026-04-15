@@ -6,8 +6,8 @@
 ! OpenMP implementations, but it is expected to pass for CCE and flang.
 
 program main
-  use omp_lib
   implicit none
+  external :: omp_set_dynamic, omp_set_num_threads
   integer :: lll,uuu,sss,aaa(2)
 
   lll = 1
