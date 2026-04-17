@@ -1,7 +1,7 @@
 ! Test for conditional expressions (Fortran 2023)
 !
 ! Constructors subject to a conditional expression should not be
-! evaluated when the controling condition is not satistified.
+! evaluated when the controlling condition is not satisfied.
 
 module M_condexpr_scalar_call_02
 contains

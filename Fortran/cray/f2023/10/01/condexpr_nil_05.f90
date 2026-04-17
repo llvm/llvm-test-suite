@@ -17,7 +17,7 @@ contains
        if ( present(X) ) then
           A = X
        else
-          A = 99.0
+          A = 99
        endif
      end subroutine test2
 
