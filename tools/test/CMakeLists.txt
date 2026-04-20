@@ -2,6 +2,8 @@
 # without the source directory.
 configure_file(test_not.py test_not.py
   COPYONLY)
+configure_file(test_maxrss.py test_maxrss.py
+  COPYONLY)
 configure_file(fpcmp-input1 fpcmp-input1
   COPYONLY)
 configure_file(fpcmp-input2 fpcmp-input2
@@ -29,6 +31,12 @@ llvm_test_executable_no_test(check_env check_env.c)
 add_dependencies(check_env not)
 llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_not.py" "$<TARGET_FILE:not>" "$<TARGET_FILE:check_env>")
 llvm_add_test_For_target(check_env)
+
+# Check that timeit --report-maxrss reports a valid max RSS value.
+llvm_test_executable_no_test(alloc_mem alloc_mem.c)
+add_dependencies(alloc_mem timeit-target)
+llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_maxrss.py" "$<TARGET_FILE:timeit-target>" "$<TARGET_FILE:alloc_mem>")
+llvm_add_test_for_target(alloc_mem)
 
 # Check that fpcmp can handle decimal numbers ending with a period correctly.
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:fpcmp-target>" "-a" "0.03" "-r" "0.03" "-i" "%b/test/fpcmp-input1" "%b/test/fpcmp-input2")
