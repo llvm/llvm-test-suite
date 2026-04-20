@@ -13,7 +13,7 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
 
   # Add targets for all tests with forced tail folding.
   list(APPEND CXXFLAGS
-    "-mllvm" "-prefer-predicate-over-epilogue=predicate-dont-vectorize"
+    "-mllvm" "-tail-folding-policy=must-fold-tail"
     "-mllvm" "-force-tail-folding-style=data"
   )
   llvm_vectorizer_variant("tfactivelanemask")
@@ -21,7 +21,7 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
   # Add targets for all tests with forced tail folding using data without lane mask.
   set(CXXFLAGS ${BASE_CXXFLAGS})
   list(APPEND CXXFLAGS
-    "-mllvm" "-prefer-predicate-over-epilogue=predicate-dont-vectorize"
+    "-mllvm" "-tail-folding-policy=must-fold-tail"
     "-mllvm" "-force-tail-folding-style=data-without-lane-mask"
   )
   llvm_vectorizer_variant("tf")
@@ -37,7 +37,7 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
   set(CXXFLAGS ${BASE_CXXFLAGS})
   list(APPEND CXXFLAGS
     "-mllvm" "-force-target-instruction-cost=1"
-    "-mllvm" "-prefer-predicate-over-epilogue=predicate-dont-vectorize"
+    "-mllvm" "-tail-folding-policy=must-fold-tail"
     "-mllvm" "-force-tail-folding-style=data"
   )
   llvm_vectorizer_variant("tfactivelanemask-ftic")
@@ -46,7 +46,7 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
   set(CXXFLAGS ${BASE_CXXFLAGS})
   list(APPEND CXXFLAGS
     "-mllvm" "-force-target-instruction-cost=1"
-    "-mllvm" "-prefer-predicate-over-epilogue=predicate-dont-vectorize"
+    "-mllvm" "-tail-folding-policy=must-fold-tail"
     "-mllvm" "-force-tail-folding-style=data-without-lane-mask"
   )
   llvm_vectorizer_variant("tf-ftic")
