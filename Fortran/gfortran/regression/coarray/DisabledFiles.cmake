@@ -79,6 +79,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   select_type_1.f90
   select_type_3.f90
   sizeof_1.f90
+
+  # unimplemented: non-ALLOCATABLE SAVE Coarray outside the main program
+  submodule_1.f90
+  registering_1.f90
+  
+  # unimplemented: Coarray with an allocatable direct component and/or requiring finalization
+  alloc_comp_9.f90
+  alloc_comp_10.f90
 )
 
 # Some tests in the suite may be unsupported for one reason or another.
@@ -172,6 +180,10 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # codimension_2a.f90 and codimension_2b.f90. This is almost certainly a bug
   # in the build files in llvm-test-suite/Fortran/gfortran.
   codimension_2.f90
+  
+  # Need to pass -fcoarray to enable coarray declaration
+  pr93671.f90
+  proc_pointer_assign_1.f90
 )
 
 # These tests fail at runtime when they should pass.

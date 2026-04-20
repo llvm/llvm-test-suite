@@ -235,6 +235,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_allocate_5.f08
   coarray_alloc_with_implicit_sync_1.f90
   coarray_alloc_with_implicit_sync_2.f90
+  coarray_data_1.f90
   coarray_lib_alloc_1.f90
   coarray_lib_alloc_2.f90
   coarray_lib_alloc_3.f90
