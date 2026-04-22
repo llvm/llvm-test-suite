@@ -87,6 +87,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: Coarray with an allocatable direct component and/or requiring finalization
   alloc_comp_9.f90
   alloc_comp_10.f90
+  ptr_comp_5.f08
 )
 
 # Some tests in the suite may be unsupported for one reason or another.

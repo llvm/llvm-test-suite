@@ -228,11 +228,15 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   associate_37.f90
   coarray_12.f90
   coarray_19.f90
+  coarray_21.f90
+  coarray_23.f90
   coarray_25.f90
   coarray_30.f90
+  coarray_46.f90
   coarray_allocate_2.f08
   coarray_allocate_3.f08
   coarray_allocate_5.f08
+  coarray_alloc_comp_4.f08
   coarray_alloc_with_implicit_sync_1.f90
   coarray_alloc_with_implicit_sync_2.f90
   coarray_data_1.f90
@@ -243,6 +247,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_lock_7.f90
   coarray_poly_4.f90
   intent_out_7.f90
+  pr71688.f90
+  pr90002.f90
+  pr95827.f90
 
   # unimplemented: coarray in procedure interface
   coarray_29_1.f90
