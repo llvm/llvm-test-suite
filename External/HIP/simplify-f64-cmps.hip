@@ -19,11 +19,7 @@ template <typename To, typename From>
 __host__ __device__ To bitcast(From from) {
   static_assert(sizeof(To) == sizeof(From) && "invalid bitcast");
   To result;
-#ifdef __HIP_DEVICE_COMPILE__
   memcpy(&result, &from, sizeof(To));
-#else
-  std::memcpy(&result, &from, sizeof(To));
-#endif
   return result;
 }
 
