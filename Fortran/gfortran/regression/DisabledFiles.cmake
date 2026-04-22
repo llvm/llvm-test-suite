@@ -1011,7 +1011,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   allocate_error_8.f90
   do_concurrent_12.f90
   do_concurrent_15.f90
-  empty_derived_type_2.f90
   interface_51.f90
   interface_52.f90
   proc_ptr_56.f90

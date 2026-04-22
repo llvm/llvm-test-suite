@@ -139,3 +139,7 @@
 # on big endian target.
 "unsigned_21.f90":
   disabled_on: ["powerpc-*-aix"]
+
+# Flang now diagnoses empty BIND(C) derived types as errors.
+"empty_derived_type.f90":
+  xfail: true
