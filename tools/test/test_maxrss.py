@@ -7,7 +7,7 @@ import subprocess
 import sys
 import tempfile
 
-ALLOC_MiB = 32
+ALLOC_MiB = 128
 
 timeit = sys.argv[1]
 alloc_mem = sys.argv[2]
