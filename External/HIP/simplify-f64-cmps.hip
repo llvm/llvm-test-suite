@@ -30,26 +30,40 @@ inline __host__ __device__ double fix_lo32(double x, uint32_t lo32) {
 
 inline __host__ __device__ double force_nnan(double x) {
   uint64_t x_bits = bitcast<uint64_t>(x);
-  return bitcast<double>(x_bits & 0xBFFFFFFF'00000000ull);
+  return bitcast<double>(x_bits & 0xBFFFFFFF'FFFFFFFFull);
 }
 
-struct ConstLo32Z {
+template <uint32_t a, uint32_t b> struct ConstLo32Z {
+  static constexpr uint64_t a64 = static_cast<uint64_t>(a) << 32;
+  static constexpr uint64_t b64 = static_cast<uint64_t>(b) << 32;
+
   static __host__ __device__ bool check(double x, double y) {
     bool sel = bitcast<uint64_t>(y) >> 52 == 0;
-    double split = sel ? 1.0 : 4.0;
+    double split = sel ? bitcast<double>(a64) : bitcast<double>(b64);
+
     // lower 32 bits of split are always zero, so comparison can be reduced to
     // an integral comparison of upper 32 bits
-    return fabs(x) < split;
-  }
+    return fabs(x) < force_nnan(fabs(split));
+  };
 };
 
-struct KnownLo32Z {
+struct XKnownLo32Z {
   static __host__ __device__ bool check(double x, double y) {
     double absx_lo32z = fix_lo32(fabs(x), 0);
 
     // lower 32 bits of x are known to be zero, so comparison can be truncated
     // to upper 32 bits
     return absx_lo32z < force_nnan(fabs(y));
+  }
+};
+
+struct YKnownLo32Z {
+  static __host__ __device__ bool check(double x, double y) {
+    double absy_knownlo32z = fix_lo32(fabs(y), 0);
+
+    // lower 32 bits of y are always zero, so comparison can be reduced to an
+    // integral comparison of upper 32 bits
+    return fabs(x) < force_nnan(absy_knownlo32z);
   }
 };
 
@@ -106,7 +120,7 @@ int run_test(const char *test, const double *x, double *y, double *y_res,
   return errs;
 }
 
-#define TEST(Impl)                                                             \
+#define TEST(Impl...)                                                          \
   run_test<Impl>(#Impl, x.get(), y.get(), y_res.get(), d_x, d_y)
 
 int main(void) {
@@ -128,8 +142,11 @@ int main(void) {
 
   int errs = 0;
 
-  errs += TEST(ConstLo32Z);
-  errs += TEST(KnownLo32Z);
+  errs += TEST(ConstLo32Z<0x3FF0'0000, 0x4010'0000>);
+  errs += TEST(ConstLo32Z<0x3FE0'0000, 0x7FF0'0000>);
+  errs += TEST(ConstLo32Z<0x0000'0000, 0x3FFF'FFFF>);
+  errs += TEST(XKnownLo32Z);
+  errs += TEST(YKnownLo32Z);
   errs += TEST(EqualLo32);
 
   if (errs == 0)
