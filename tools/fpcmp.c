@@ -212,12 +212,6 @@ char *load_file(const char *path, long *size_out) {
     exit(2);
   }
 
-  /* Avoid malloc(0). */
-  if (size == 0) {
-    *size_out = 0;
-    return 0;
-  }
-
   /* Allocate a buffer for the data. */
   data = malloc(size + 1);
   if (!data) {
@@ -228,7 +222,7 @@ char *load_file(const char *path, long *size_out) {
 
   /* Read in the file contents. */
   data[size] = 0;
-  if (fread(data, size, 1, fp) != 1) {
+  if (size != 0 && fread(data, size, 1, fp) != 1) {
     fprintf(stderr, "%s: error: unable to read data for '%s'\n",
             g_program, path);
     exit(2);
