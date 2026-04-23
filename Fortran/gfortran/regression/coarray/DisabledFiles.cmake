@@ -87,7 +87,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: Coarray with an allocatable direct component and/or requiring finalization
   alloc_comp_9.f90
   alloc_comp_10.f90
-  ptr_comp_5.f08
 )
 
 # Some tests in the suite may be unsupported for one reason or another.
@@ -185,6 +184,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # Need to pass -fcoarray to enable coarray declaration
   pr93671.f90
   proc_pointer_assign_1.f90
+  ptr_comp_5.f08
 )
 
 # These tests fail at runtime when they should pass.
