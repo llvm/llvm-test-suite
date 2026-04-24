@@ -251,7 +251,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   pr90002.f90
   pr95827.f90
 
-  # unimplemented: nCoarray with an allocatable direct component and/or requiring finalization
+  # unimplemented: Coarray with an allocatable direct component and/or requiring finalization
   coarray_46.f90
   coarray_alloc_comp_4.f08
 
