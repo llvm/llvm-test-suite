@@ -369,6 +369,7 @@ def format_relative_diff(value):
 
 def print_result(
     d,
+    split_by_metric,
     limit_output=True,
     shorten_names=True,
     minimal_names=False,
@@ -467,21 +468,37 @@ def print_result(
 
     pd.set_option("display.max_colwidth", 0)
     pd.set_option("display.width", 0)
-    # Print an empty value instead of NaN (for the geomean row).
-    out = dataout.to_string(
-        index=False,
-        justify="left",
-        na_rep="",
-        float_format=float_format,
-        formatters=formatters,
-    )
-    print(out)
+
     exclude_from_summary = [
         "t-value", "p-value", "significant",
         f'std_{lhs_name}', f'std_{rhs_name}',
         f'cv_{lhs_name}', f'cv_{rhs_name}',
         'diff_ci_rel', 'diff_ci_abs',
     ]
+
+    # Print an empty value instead of NaN (for the geomean row).
+    if split_by_metric:
+        for m in metrics:
+            metric_data = dataout[["Program", m]]
+            out = metric_data.to_string(
+                index=False,
+                justify="left",
+                na_rep="",
+                float_format=float_format,
+                formatters=formatters,
+            )
+            print(f"{out}\n")
+    else:
+        out = dataout.to_string(
+            index=False,
+            justify="left",
+            na_rep="",
+            float_format=float_format,
+            formatters=formatters,
+        )
+        print(out)
+
+    # Print a summary pivoted by metric
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -498,6 +515,11 @@ def main():
         dest="patterns",
         default=[],
         help="Show only results whose program name matches any of the specified regexes.",
+    )
+    parser.add_argument(
+        "--split-by-metric",
+        action="store_true",
+        help="Split the output view vertically by metric, to fit more columns on smaller screens",
     )
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
@@ -746,6 +768,7 @@ def main():
     limit_output = (not config.all) and (not config.full)
     print_result(
         data,
+        config.split_by_metric,
         limit_output,
         shorten_names,
         config.minimal_names,
