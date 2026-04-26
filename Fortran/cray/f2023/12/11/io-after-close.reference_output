@@ -1,0 +1,5 @@
+k after OPEN:          45
+k after CLOSE:          55
+iostat after read:           0  k:          65
+iostat after write:           0  k:          65
+FAIL
