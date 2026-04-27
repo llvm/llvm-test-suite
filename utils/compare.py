@@ -367,6 +367,55 @@ def format_relative_diff(value):
         return "%-5d" % value
 
 
+def _is_improvement(diff_val, metric):
+    if pd.isna(diff_val):
+        return None
+    if "score" in metric.lower():
+        return diff_val > 0
+    return diff_val < 0
+
+
+def _colorize_rows(output, dataout, metrics, use_color):
+    if not use_color:
+        return output
+    GREEN = "\033[32m"
+    RED = "\033[31m"
+    RESET = "\033[0m"
+
+    metric = metrics[0]
+    has_sig = (metric, "significant") in dataout.columns
+    has_diff = (metric, "diff") in dataout.columns
+    if not has_sig or not has_diff:
+        return output
+
+    lines = output.split("\n")
+    n_header = dataout.columns.nlevels if hasattr(dataout.columns, 'nlevels') else 1
+    if len(lines) <= n_header:
+        return output
+    header_lines = lines[:n_header]
+    result_lines = lines[n_header:]
+
+    sig_values = list(dataout[(metric, "significant")])
+    diff_values = list(dataout[(metric, "diff")])
+
+    colored = list(header_lines)
+    row_idx = 0
+    for line in result_lines:
+        stripped = line.strip()
+        if not stripped:
+            colored.append(line)
+            continue
+        if row_idx < len(sig_values) and sig_values[row_idx] == "Y":
+            improvement = _is_improvement(diff_values[row_idx], metric)
+            if improvement is True:
+                line = GREEN + line + RESET
+            elif improvement is False:
+                line = RED + line + RESET
+        row_idx += 1
+        colored.append(line)
+    return "\n".join(colored)
+
+
 def print_result(
     d,
     split_by_metric,
@@ -379,7 +428,8 @@ def print_result(
     absolute_diff=False,
     lhs_name="lhs",
     rhs_name="rhs",
-    only_significant=False
+    only_significant=False,
+    use_color=False,
 ):
     metrics = d.columns.levels[0]
     if sort_by_abs:
@@ -487,6 +537,7 @@ def print_result(
                 float_format=float_format,
                 formatters=formatters,
             )
+            out = _colorize_rows(out, dataout, [m], use_color)
             print(f"{out}\n")
     else:
         out = dataout.to_string(
@@ -496,6 +547,7 @@ def print_result(
             float_format=float_format,
             formatters=formatters,
         )
+        out = _colorize_rows(out, dataout, metrics, use_color)
         print(out)
 
     # Print a summary pivoted by metric
@@ -628,6 +680,12 @@ def main():
         default=None,
         dest="diff_confidence_interval",
         help="Show confidence interval for the difference (default: relative)",
+    )
+    parser.add_argument(
+        "--color",
+        choices=["auto", "always", "never"],
+        default="auto",
+        help="Color significant results green/red (default: auto-detect TTY)",
     )
     config = parser.parse_args()
 
@@ -762,6 +820,14 @@ def main():
     if len(config.files) == 1:
         sortkey = data.columns.levels[1][0]
 
+    # Resolve color setting
+    if config.color == "auto":
+        use_color = sys.stdout.isatty() and config.statistics
+    elif config.color == "always":
+        use_color = config.statistics
+    else:
+        use_color = False
+
     # Print data
     print("")
     shorten_names = not config.full
@@ -779,6 +845,7 @@ def main():
         config.lhs_name,
         config.rhs_name,
         config.only_significant,
+        use_color,
     )
 
 
