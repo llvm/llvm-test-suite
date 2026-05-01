@@ -40,9 +40,12 @@ def parse(context, filename):
     runscript = []
     verifyscript = []
     metricscripts = {}
+    arch = None
     # Note that we keep both "RUN" and "RUN:" in the list to stay compatible
     # with older lit versions.
     keywords = [
+        "ARCH:",
+        "ARCH",
         "PREPARE:",
         "PREPARE",
         "RUN:",
@@ -55,7 +58,9 @@ def parse(context, filename):
     for line_number, command_type, ln in parseIntegratedTestScriptCommands(
         filename, keywords
     ):
-        if command_type.startswith("PREPARE"):
+        if command_type.startswith("ARCH"):
+            arch = ln.strip()
+        elif command_type.startswith("PREPARE"):
             _parseShellCommand(preparescript, ln)
         elif command_type.startswith("RUN"):
             _parseShellCommand(runscript, ln)
@@ -100,6 +105,7 @@ def parse(context, filename):
     context.parsed_runscript = runscript
     context.parsed_verifyscript = verifyscript
     context.parsed_metricscripts = metricscripts
+    context.arch = arch
     context.executable = shellcommand.getMainExecutable(context)
     if not context.executable:
         logging.error("Could not determine executable name in %s" % filename)

@@ -25,6 +25,9 @@ def _mutateCommandLine(context, commandline):
         args += ["--limit-file-size", "209715200"]
         args += ["--limit-rss-size", "838860800"]
 
+    if getattr(context, "arch", None):
+        args += ["-arch", context.arch]
+
     workdir = os.path.normpath(cmd.workdir) if cmd.workdir is not None else None
 
     if not config.traditional_output:
