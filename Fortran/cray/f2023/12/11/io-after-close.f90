@@ -49,5 +49,5 @@ program io_after_close
     print *, 'FAIL'
   end if
 
-end io_after_close
+end program io_after_close
 
