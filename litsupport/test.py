@@ -11,7 +11,6 @@ import litsupport.testfile
 import litsupport.testplan
 import os
 import pathlib
-import subprocess
 
 
 # The ResultCode constructor has been changed recently in lit.  An additional parameter has ben added, which
@@ -42,25 +41,6 @@ class TestSuiteTest(lit.formats.ShTest):
         pathlib.Path(tmpBase).parent.mkdir(parents=True, exist_ok=True)
         context = litsupport.testplan.TestContext(test, litConfig, tmpDir, tmpBase)
         litsupport.testfile.parse(context, test.getSourcePath())
-
-        # If the test targets a specific Mach-O slice, check that the target
-        # machine can run it before doing any further work.
-        if getattr(context, "arch", None):
-            macho_arch = os.path.normpath(
-                "%s/tools/macho_arch-target" % config.test_source_root
-            )
-            if os.path.exists(macho_arch):
-                r = subprocess.run(
-                    [macho_arch, "--is-supported", context.arch],
-                    capture_output=True,
-                )
-                if r.returncode != 0:
-                    # FIXME: this should be lit.Test.UNSUPPORTED, but lnt
-                    # doesn't support that result code yet.
-                    return lit.Test.Result(
-                        lit.Test.XFAIL,
-                        "Architecture '%s' not supported on this target" % context.arch,
-                    )
 
         plan = litsupport.testplan.TestPlan()
 

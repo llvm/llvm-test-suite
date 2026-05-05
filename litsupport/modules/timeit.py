@@ -3,6 +3,9 @@ from litsupport import testplan
 import os
 import re
 
+# Must match EXITCODE_EXEC_BADARCH in tools/timeit.c
+_EXITCODE_EXEC_BADARCH = 70
+
 
 def _mutateCommandLine(context, commandline):
     timefile = os.path.normpath(context.tmpBase + ".time")
@@ -94,6 +97,8 @@ def mutatePlan(context, plan):
     plan.metric_collectors.append(
         lambda context: _collectTime(context, context.timefiles)
     )
+    if getattr(context, "arch", None):
+        plan.unsupported_exit_codes.append(_EXITCODE_EXEC_BADARCH)
 
 
 def getUserTimeFromContents(contents):

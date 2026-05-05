@@ -1,9 +1,12 @@
 """Test that timeit -arch correctly selects Mach-O slices on macOS.
 
-Usage: test_arch.py <timeit> <macho_arch>
+Usage: test_arch.py <timeit> <exe>
 """
 import subprocess
 import sys
+
+# Must match EXITCODE_EXEC_BADARCH in tools/timeit.c
+_EXITCODE_EXEC_BADARCH = 70
 
 
 def test_valid_arches(timeit, exe):
@@ -15,12 +18,12 @@ def test_valid_arches(timeit, exe):
         sys.exit(1)
 
     for arch in lipo.stdout.split():
-        if subprocess.run([exe, "--is-supported", arch], capture_output=True).returncode != 0:
-            print(f"skipping {arch}: not supported on this host")
-            continue
         cmd = [timeit, "-arch", arch, exe]
         print(" ".join(cmd))
         result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == _EXITCODE_EXEC_BADARCH:
+            print(f"skipping {arch}: not supported on this machine")
+            continue
         if result.returncode != 0:
             print(f"timeit -arch {arch} exited with {result.returncode}")
             print(result.stderr)
@@ -44,7 +47,7 @@ def test_invalid_arch(timeit, exe):
 
 if __name__ == "__main__":
     timeit = sys.argv[1]
-    macho_arch = sys.argv[2]
+    exe = sys.argv[2]
 
-    test_valid_arches(timeit, macho_arch)
-    test_invalid_arch(timeit, macho_arch)
+    test_valid_arches(timeit, exe)
+    test_invalid_arch(timeit, exe)
