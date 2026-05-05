@@ -41,6 +41,7 @@ enum ExitCode {
   EXITCODE_EXEC_FAILURE = 67,
   EXITCODE_EXEC_NOENTRY = 127,
   EXITCODE_EXEC_NOPERMISSION = 126,
+  EXITCODE_EXEC_BADARCH = 70,
 
   /* \brief Indicates that we were unexpectedly signalled(). */
   EXITCODE_SIGNALLED = 68,
@@ -766,6 +767,8 @@ static int execute_target_process(char *const argv[]) {
         return EXITCODE_EXEC_NOENTRY;
       case EACCES:
         return EXITCODE_EXEC_NOPERMISSION;
+      case EBADARCH:
+        return EXITCODE_EXEC_BADARCH;
       default:
         return EXITCODE_EXEC_FAILURE;
       }
