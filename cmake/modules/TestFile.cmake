@@ -114,22 +114,6 @@ function(llvm_add_test testfile executable)
 endfunction()
 
 function(llvm_add_test_for_target target)
-  list(LENGTH TEST_SUITE_RUN_ARCHS _num_run_archs)
-  if(_num_run_archs GREATER 1)
-    # Multiple run archs: emit one suffixed .test file per arch.
-    string(REPLACE "$EXECUTABLE$" "%S/$<TARGET_FILE_NAME:${target}>" _script "${TESTSCRIPT}")
-    foreach(_arch IN LISTS TEST_SUITE_RUN_ARCHS)
-      file(GENERATE
-        OUTPUT "$<TARGET_FILE:${target}>.${_arch}.test"
-        CONTENT "ARCH: ${_arch}\n${_script}")
-    endforeach()
-  else()
-    # Zero or one run arch: emit the normal unsuffixed .test file, preserving
-    # name stability in LNT.
-    if(_num_run_archs EQUAL 1)
-      set(TESTSCRIPT "ARCH: ${TEST_SUITE_RUN_ARCHS}\n${TESTSCRIPT}")
-    endif()
-    llvm_add_test($<TARGET_FILE:${target}>.test %S/$<TARGET_FILE_NAME:${target}>)
-  endif()
+  llvm_add_test($<TARGET_FILE:${target}>.test %S/$<TARGET_FILE_NAME:${target}>)
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
