@@ -36,9 +36,12 @@ try:
         print("maxrss line not found in summary:\n%s" % contents)
         sys.exit(1)
 
-    expected_min = ALLOC_MiB * 1024 * 1024
-    if maxrss < expected_min:
-        print("maxrss too low: %d < %d" % (maxrss, expected_min))
+    # The absolute value of maxrss reported by the OS is not strictly reliable,
+    # thus we conservatively just check we could capture any number > 0, and not
+    # a number that is strictly larger than ALLOC_MiB * 1024 * 1024, for example.
+    # See: https://github.com/llvm/llvm-test-suite/pull/373
+    if not maxrss > 0:
+        print("maxrss is zero")
         sys.exit(1)
 
 finally:
