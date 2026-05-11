@@ -41,3 +41,21 @@ else()
 endif()
 
 add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
+
+if(APPLE)
+  add_executable(macho_arch-target ${CMAKE_CURRENT_SOURCE_DIR}/macho_arch.c)
+  llvm_codesign(macho_arch-target)
+  add_executable(build-macho_arch-target ALIAS macho_arch-target)
+  # Ensure that macho_arch is built with at least arm64;arm64e, plus whatever
+  # was already in CMAKE_OSX_ARCHITECTURES.
+  set(_macho_arch_archs ${CMAKE_OSX_ARCHITECTURES} arm64 arm64e)
+  list(REMOVE_DUPLICATES _macho_arch_archs)
+  set_target_properties(macho_arch-target PROPERTIES OSX_ARCHITECTURES "${_macho_arch_archs}")
+  set(_macho_arch_arch_flags)
+  foreach(_arch IN LISTS _macho_arch_archs)
+    list(APPEND _macho_arch_arch_flags -arch ${_arch})
+  endforeach()
+  llvm_add_host_executable(build-macho_arch macho_arch macho_arch.c
+    CPPFLAGS ${_macho_arch_arch_flags}
+    LDFLAGS ${_macho_arch_arch_flags})
+endif()
