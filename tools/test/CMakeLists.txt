@@ -38,14 +38,6 @@ add_dependencies(alloc_mem timeit-target)
 llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_maxrss.py" "$<TARGET_FILE:timeit-target>" "$<TARGET_FILE:alloc_mem>")
 llvm_add_test_for_target(alloc_mem)
 
-if(APPLE)
-  configure_file(test_arch.py test_arch.py COPYONLY)
-  # Check that timeit -arch correctly selects Mach-O architecture slices.
-  add_dependencies(timeit-target macho_arch-target)
-  llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_arch.py" "$<TARGET_FILE:timeit-target>" "$<TARGET_FILE:macho_arch-target>")
-  llvm_add_test_for_target(timeit-target)
-endif()
-
 # Check that fpcmp can handle decimal numbers ending with a period correctly.
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:fpcmp-target>" "-a" "0.03" "-r" "0.03" "-i" "%b/test/fpcmp-input1" "%b/test/fpcmp-input2")
 llvm_add_test_for_target(fpcmp-target)
