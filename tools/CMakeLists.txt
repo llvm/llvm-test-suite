@@ -44,6 +44,11 @@ add_executable(not ${CMAKE_CURRENT_SOURCE_DIR}/not.cpp)
 
 if(APPLE)
   add_executable(macho_arch-target ${CMAKE_CURRENT_SOURCE_DIR}/macho_arch.c)
+  # Avoid a problem with old host tools on Green Dragon, where the Xcode 16.2
+  # lipo doesn't know how to read the bitcode from the just-built llvm23.0-based
+  # clang, by turning off LTO.
+  target_compile_options(macho_arch-target PRIVATE -fno-lto)
+  target_link_options(macho_arch-target PRIVATE -fno-lto)
   llvm_codesign(macho_arch-target)
   add_executable(build-macho_arch-target ALIAS macho_arch-target)
   # Ensure that macho_arch is built with at least arm64;arm64e, plus whatever
