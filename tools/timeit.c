@@ -26,7 +26,10 @@
 
 #ifdef __APPLE__
 #include <mach/machine.h>
+#if __has_include(<mach-o/utils.h>)
 #include <mach-o/utils.h>
+#define HAVE_MACHO_UTILS 1
+#endif
 #include <spawn.h>
 extern char **environ;
 #endif
@@ -746,7 +749,8 @@ static int execute_target_process(char *const argv[]) {
   }
 
 #ifdef __APPLE__
-  if (/*macho_cpu_type_for_arch_name*/__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
+#ifdef HAVE_MACHO_UTILS
+  if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
     if (g_arch_slice) {
       cpu_type_t cpu_type = 0;
       cpu_subtype_t cpu_subtype = 0;
@@ -773,10 +777,15 @@ static int execute_target_process(char *const argv[]) {
         return EXITCODE_EXEC_FAILURE;
       }
     }
-  } else if (g_arch_slice) {
-    fprintf(stderr, "%s: warning: -arch ignored (requires macOS 13.0, iOS 16.0, tvOS 16.0, or watchOS 9.0)\n",
-            g_program_name);
+  } else {
+#endif
+    if (g_arch_slice) {
+      fprintf(stderr, "%s: warning: -arch ignored (requires macOS 13.0, iOS 16.0, tvOS 16.0, or watchOS 9.0)\n",
+              g_program_name);
+    }
+#ifdef HAVE_MACHO_UTILS
   }
+#endif
 #endif
 
   execvp(argv[0], argv);

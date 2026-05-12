@@ -8,10 +8,14 @@
 \*===----------------------------------------------------------------------===*/
 
 #include <mach-o/ldsyms.h>
+#if __has_include(<mach-o/utils.h>)
 #include <mach-o/utils.h>
+#define HAVE_MACHO_UTILS 1
+#endif
 #include <stdio.h>
 
 int main(int argc, const char **argv) {
+#ifdef HAVE_MACHO_UTILS
   if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
     const char *arch_name = macho_arch_name_for_mach_header(NULL);
     if (!arch_name) {
@@ -21,6 +25,7 @@ int main(int argc, const char **argv) {
     printf("%s\n", arch_name);
     return 0;
   }
+#endif
   fprintf(stderr, "error: requires macOS 13.0, iOS 16.0, tvOS 16.0, or watchOS 9.0\n");
   return 1;
 }
