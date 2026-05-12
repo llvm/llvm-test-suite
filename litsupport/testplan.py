@@ -25,6 +25,7 @@ class TestPlan(object):
         self.profile_files = []
         self.profilescript = []
         self.profilecollectscript = []
+        self.unsupported_exit_codes = []
 
 
 def mutateScript(context, script, mutator):
@@ -105,6 +106,9 @@ def _executePlan(context, plan):
     # Execute RUN: part of the test.
     _, _, exitCode, _ = _executeScript(context, plan.runscript, "run")
     if exitCode != 0:
+        if exitCode in plan.unsupported_exit_codes:
+            # FIXME: lit does not have a lit.Test.UNSUPPORTED yet
+            return lit.Test.XFAIL
         return lit.Test.FAIL
 
     # Execute VERIFY: part of the test.
