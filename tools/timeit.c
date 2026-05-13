@@ -24,16 +24,6 @@
 #include <sys/wait.h>
 #endif
 
-#ifdef __APPLE__
-#include <mach/machine.h>
-#if __has_include(<mach-o/utils.h>)
-#include <mach-o/utils.h>
-#define HAVE_MACHO_UTILS 1
-#endif
-#include <spawn.h>
-extern char **environ;
-#endif
-
 /* Enumeration for our exit status codes. */
 enum ExitCode {
   /* \brief Indicates a failure monitoring the target. */
@@ -44,7 +34,6 @@ enum ExitCode {
   EXITCODE_EXEC_FAILURE = 67,
   EXITCODE_EXEC_NOENTRY = 127,
   EXITCODE_EXEC_NOPERMISSION = 126,
-  EXITCODE_EXEC_BADARCH = 70,
 
   /* \brief Indicates that we were unexpectedly signalled(). */
   EXITCODE_SIGNALLED = 68,
@@ -97,11 +86,6 @@ static int g_append_exitstats = 0;
 
 /* \brief If non-zero, report maxrss in summary file and non-POSIX output. */
 static int g_report_maxrss = 0;
-
-#ifdef __APPLE__
-/* \brief If non-null, run the target as this architecture slice. */
-static const char *g_arch_slice = 0;
-#endif
 
 #ifdef _WIN32
 /* \brief If platform does not define rlim_t type, then define it as int. */
@@ -748,46 +732,6 @@ static int execute_target_process(char *const argv[]) {
     }
   }
 
-#ifdef __APPLE__
-#ifdef HAVE_MACHO_UTILS
-  if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
-    if (g_arch_slice) {
-      cpu_type_t cpu_type = 0;
-      cpu_subtype_t cpu_subtype = 0;
-      if (!macho_cpu_type_for_arch_name(g_arch_slice, &cpu_type, &cpu_subtype)) {
-        fprintf(stderr, "%s: error: unknown arch '%s'\n", g_program_name,
-                g_arch_slice);
-        return EXITCODE_EXEC_FAILURE;
-      }
-      posix_spawnattr_t spawnattr;
-      posix_spawnattr_init(&spawnattr);
-      posix_spawnattr_setflags(&spawnattr, POSIX_SPAWN_SETEXEC);
-      posix_spawnattr_setarchpref_np(&spawnattr, 1, &cpu_type, &cpu_subtype, NULL);
-      int err = posix_spawn(NULL, argv[0], NULL, &spawnattr, argv, environ);
-      posix_spawnattr_destroy(&spawnattr);
-      fprintf(stderr, "posix_spawn: %s\n", strerror(err));
-      switch (err) {
-      case ENOENT:
-        return EXITCODE_EXEC_NOENTRY;
-      case EACCES:
-        return EXITCODE_EXEC_NOPERMISSION;
-      case EBADARCH:
-        return EXITCODE_EXEC_BADARCH;
-      default:
-        return EXITCODE_EXEC_FAILURE;
-      }
-    }
-  } else {
-#endif
-    if (g_arch_slice) {
-      fprintf(stderr, "%s: warning: -arch ignored (requires macOS 13.0, iOS 16.0, tvOS 16.0, or watchOS 9.0)\n",
-              g_program_name);
-    }
-#ifdef HAVE_MACHO_UTILS
-  }
-#endif
-#endif
-
   execvp(argv[0], argv);
   perror("execv");
 
@@ -890,10 +834,6 @@ static void usage(int is_error) {
   fprintf(stderr, "  %-20s %s", "--report-maxrss",
           WRAPPED
           "Report maximum resident set size (Currently Apple/Linux only, silently ignored on unsupported platforms).\n");
-#ifdef __APPLE__
-  fprintf(stderr, "  %-20s %s", "-arch <arch>",
-          "Execute the target as the given Mach-O arch slice.\n");
-#endif
   _exit(is_error);
 }
 
@@ -980,17 +920,6 @@ int main(int argc, char * const argv[]) {
       g_report_maxrss = 1;
       continue;
     }
-
-#ifdef __APPLE__
-    if (streq(arg, "-arch")) {
-      if (i + 1 == argc) {
-        fprintf(stderr, "error: %s argument requires an option\n", arg);
-        usage(/*is_error=*/1);
-      }
-      g_arch_slice = argv[++i];
-      continue;
-    }
-#endif
 
     if (streq(arg, "-c") || streq(arg, "--chdir")) {
       if (i + 1 == argc) {

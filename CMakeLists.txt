@@ -53,14 +53,6 @@ if(TEST_SUITE_FORTRAN)
 endif()
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_ARCH_FLAGS}")
 
-# Architectures to run tests as. Defaults to CMAKE_OSX_ARCHITECTURES so that
-# fat binaries are tested on every slice they were built for. Set to a single
-# arch to run only that slice (test names are unsuffixed); set to multiple
-# arches to run a separate test per slice (test names are suffixed with the
-# arch, e.g. foo.arm64.test, foo.arm64e.test).
-set(TEST_SUITE_RUN_ARCHS "${CMAKE_OSX_ARCHITECTURES}" CACHE STRING
-    "Semicolon-separated list of Mach-O arch slices to run tests as.")
-
 set(LLVM_CODESIGNING_IDENTITY "" CACHE STRING
   "Sign executables and dylibs with the given identity or skip if empty (Darwin Only)")
 

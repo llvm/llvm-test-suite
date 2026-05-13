@@ -41,7 +41,6 @@ class TestSuiteTest(lit.formats.ShTest):
         pathlib.Path(tmpBase).parent.mkdir(parents=True, exist_ok=True)
         context = litsupport.testplan.TestContext(test, litConfig, tmpDir, tmpBase)
         litsupport.testfile.parse(context, test.getSourcePath())
-
         plan = litsupport.testplan.TestPlan()
 
         # Report missing test executables.
