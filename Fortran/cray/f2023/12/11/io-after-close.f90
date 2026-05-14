@@ -24,7 +24,7 @@ program io_after_close
   print *, 'k after CLOSE:', k
   ok = ok .and. (k == 55)
 
-  read(5, err=520, iostat=n) l
+  read(5, end=520, err=520, iostat=n) l
    k = 65
    goto 523
 520 continue
