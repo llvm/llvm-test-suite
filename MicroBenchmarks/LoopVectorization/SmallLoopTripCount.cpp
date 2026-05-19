@@ -31,7 +31,8 @@ NOINLINE void loopTc5Scalar(const Ty *__restrict A, Ty *__restrict B) {
 }
 
 template <typename Ty>
-NOINLINE void loopTc5I64InterleaveCount2Vector(const Ty *__restrict A, Ty *__restrict B) {
+NOINLINE void loopTc5I64InterleaveCount2Vector(const Ty *__restrict A,
+                                               Ty *__restrict B) {
   LOOP_INTERLEAVE_COUNT_2
   for (uint64_t I = 0; I != 5; ++I)
     B[I] = A[I] + static_cast<Ty>(1);
@@ -72,12 +73,12 @@ NOINLINE void loopTc3Scalar(const Ty *__restrict A, Ty *__restrict B) {
 }
 
 template <typename Ty>
-NOINLINE void loopTc3I64InterleaveCount2Vector(const Ty *__restrict A, Ty *__restrict B) {
+NOINLINE void loopTc3I64InterleaveCount2Vector(const Ty *__restrict A,
+                                               Ty *__restrict B) {
   LOOP_INTERLEAVE_COUNT_2
   for (uint64_t I = 0; I != 3; ++I)
     B[I] = A[I] + static_cast<Ty>(1);
 }
-
 
 template <typename Ty> using KernelFn = void (*)(const Ty *, Ty *);
 
@@ -109,9 +110,10 @@ template <typename Ty> void benchTc5Scalar(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State, loopTc5Scalar<Ty>);
 }
 
-template <typename Ty> void benchTc5I64InterleaveCount2Vector(benchmark::State &State) {
+template <typename Ty>
+void benchTc5I64InterleaveCount2Vector(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State,
-                                          loopTc5I64InterleaveCount2Vector<Ty>);
+                                    loopTc5I64InterleaveCount2Vector<Ty>);
 }
 
 template <typename Ty>
@@ -132,9 +134,10 @@ template <typename Ty> void benchTc3Scalar(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State, loopTc3Scalar<Ty>);
 }
 
-template <typename Ty> void benchTc3I64InterleaveCount2Vector(benchmark::State &State) {
+template <typename Ty>
+void benchTc3I64InterleaveCount2Vector(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State,
-                                          loopTc3I64InterleaveCount2Vector<Ty>);
+                                    loopTc3I64InterleaveCount2Vector<Ty>);
 }
 
 BENCHMARK_TEMPLATE(benchTc5Vector, uint8_t)->Name("tc5/i8/vector");
@@ -145,9 +148,12 @@ BENCHMARK_TEMPLATE(benchTc5Vector, uint32_t)->Name("tc5/i32/vector");
 BENCHMARK_TEMPLATE(benchTc5Scalar, uint32_t)->Name("tc5/i32/scalar");
 BENCHMARK_TEMPLATE(benchTc5Vector, uint64_t)->Name("tc5/i64/vector");
 BENCHMARK_TEMPLATE(benchTc5Scalar, uint64_t)->Name("tc5/i64/scalar");
-BENCHMARK_TEMPLATE(benchTc5I64InterleaveCount2Vector, uint64_t)->Name("tc5/i64/ic2/vector");
-BENCHMARK_TEMPLATE(benchTc5ScalarizedDivVector, uint64_t)->Name("tc5/i64/scalarized-div/vector");
-BENCHMARK_TEMPLATE(benchTc5ScalarizedDivScalar, uint64_t)->Name("tc5/i64/scalarized-div/scalar");
+BENCHMARK_TEMPLATE(benchTc5I64InterleaveCount2Vector, uint64_t)
+    ->Name("tc5/i64/ic2/vector");
+BENCHMARK_TEMPLATE(benchTc5ScalarizedDivVector, uint64_t)
+    ->Name("tc5/i64/scalarized-div/vector");
+BENCHMARK_TEMPLATE(benchTc5ScalarizedDivScalar, uint64_t)
+    ->Name("tc5/i64/scalarized-div/scalar");
 
 BENCHMARK_TEMPLATE(benchTc3Vector, uint8_t)->Name("tc3/i8/vector");
 BENCHMARK_TEMPLATE(benchTc3Scalar, uint8_t)->Name("tc3/i8/scalar");
@@ -157,4 +163,5 @@ BENCHMARK_TEMPLATE(benchTc3Vector, uint32_t)->Name("tc3/i32/vector");
 BENCHMARK_TEMPLATE(benchTc3Scalar, uint32_t)->Name("tc3/i32/scalar");
 BENCHMARK_TEMPLATE(benchTc3Vector, uint64_t)->Name("tc3/i64/vector");
 BENCHMARK_TEMPLATE(benchTc3Scalar, uint64_t)->Name("tc3/i64/scalar");
-BENCHMARK_TEMPLATE(benchTc3I64InterleaveCount2Vector, uint64_t)->Name("tc3/i64/ic2/vector");
+BENCHMARK_TEMPLATE(benchTc3I64InterleaveCount2Vector, uint64_t)
+    ->Name("tc3/i64/ic2/vector");
