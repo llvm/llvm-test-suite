@@ -4933,6 +4933,7 @@ run;findloc_6.f90;;;;
 run;findloc_8.f90;;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;float_1.f90;;;;
 run;flush_1.f90;;;;
+run;fmt_b_1.f90;;;;
 run;fmt_bz_bn.f;;;;
 run;fmt_bz_bn_err.f;;;;
 run;fmt_cache_1.f;;;;
