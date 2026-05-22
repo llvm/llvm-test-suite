@@ -215,9 +215,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # non-scalar, or non-variable
   fmt_nonchar_2.f90
 
-  # unimplemented: BOZ
-  boz_bge.f90
-
   # unimplemented: coarray address
   coarray_39.f90
   coarray_dependency_1.f90
