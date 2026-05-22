@@ -295,7 +295,7 @@ static int monitor_child_process(double start_time) {
 #if defined(__APPLE__)
   /* Apple reports max RSS in bytes */
   maxrss_bytes = (unsigned long) usage.ru_maxrss;
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(_AIX)
   /* Linux reports max RSS in KiB */
   maxrss_bytes = (unsigned long) usage.ru_maxrss * 1024;
 #endif
@@ -404,7 +404,7 @@ static int monitor_child_process(double start_time) {
               real_time, user_time, sys_time);
     } else {
       if (g_report_maxrss)
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(_AIX)
         fprintf(stderr, "%12.4f real %12.4f user %12.4f sys %12lu maxrss\n",
                 real_time, user_time, sys_time, maxrss_bytes);
 #else
@@ -428,7 +428,7 @@ static int monitor_child_process(double start_time) {
     fprintf(fp, "%-10s %.4f\n", "real", real_time);
     fprintf(fp, "%-10s %.4f\n", "user", user_time);
     fprintf(fp, "%-10s %.4f\n", "sys", sys_time);
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(_AIX)
     if (g_report_maxrss)
       fprintf(fp, "%-10s %lu\n", "maxrss", maxrss_bytes);
 #endif
