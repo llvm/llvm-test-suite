@@ -296,7 +296,7 @@ static int monitor_child_process(double start_time) {
   /* Apple reports max RSS in bytes */
   maxrss_bytes = (unsigned long) usage.ru_maxrss;
 #elif defined(__linux__) || defined(_AIX)
-  /* Linux reports max RSS in KiB */
+  /* Linux and AIX report max RSS in KiB */
   maxrss_bytes = (unsigned long) usage.ru_maxrss * 1024;
 #endif
 
