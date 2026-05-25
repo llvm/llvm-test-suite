@@ -324,8 +324,9 @@ add_subdirectory(litsupport)
 option(TEST_SUITE_REPORT_COMPILE_MAX_RSS
        "Report max RSS for compile/link time (Apple/Linux only)" OFF)
 
-if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
-  message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux, ignored on this platform")
+if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"
+                                                     OR CMAKE_SYSTEM_NAME STREQUAL "AIX"))
+  message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux/AIX, ignored on this platform")
 endif()
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME
