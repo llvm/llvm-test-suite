@@ -64,16 +64,21 @@ function(llvm_test_executable_no_test target)
   test_suite_add_build_dependencies(${target})
 
   if(TEST_SUITE_EXTERNALIZE_DEBUGINFO AND APPLE)
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
     if(CMAKE_C_FLAGS MATCHES "-flto"
       OR CMAKE_CXX_FLAGS MATCHES "-flto"
-      OR CMAKE_C_FLAGS_RELEASE MATCHES "-flto"
-      OR CMAKE_CXX_FLAGS_RELEASE MATCHES "-flto")
+      OR CMAKE_C_FLAGS_${uppercase_CMAKE_BUILD_TYPE} MATCHES "-flto"
+      OR CMAKE_CXX_FLAGS_${uppercase_CMAKE_BUILD_TYPE} MATCHES "-flto")
       set(lto_object ${CMAKE_CURRENT_BINARY_DIR}/${target}-lto.o)
       set_property(TARGET ${target} APPEND_STRING PROPERTY
         LINK_FLAGS " -Wl,-object_path_lto,${lto_object}")
     endif()
     if(NOT CMAKE_DSYMUTIL)
-      set(CMAKE_DSYMUTIL xcrun dsymutil)
+      execute_process(
+        COMMAND xcrun -f dsymutil
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE CMAKE_DSYMUTIL
+      )
     endif()
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND ${CMAKE_DSYMUTIL} $<TARGET_FILE:${target}>)
