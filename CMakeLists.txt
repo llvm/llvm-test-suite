@@ -180,6 +180,10 @@ option(TEST_SUITE_PROFILE_USE
       "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
       OFF)
 
+option(TEST_SUITE_EXTERNALIZE_DEBUGINFO
+      "Generate dSYM files for executables (Darwin only)"
+      OFF)
+
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
 # the user specified CMAKE_C_FLAGS etc. need not be changed.
