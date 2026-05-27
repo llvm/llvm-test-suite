@@ -1,5 +1,3 @@
-! { dg-do run }
-!
 ! extension allows B edit descriptors for logical input/output
 !
   program fmt_b_1
