@@ -8,6 +8,22 @@ get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
 # Include Catch tests integration module
+
+# Find Python interpreter for running llvm-lit
+# The llvm-lit script may have a hardcoded Python version in its shebang
+# (e.g., #!/usr/bin/python3.10) that may not be available on all systems.
+# We explicitly invoke llvm-lit with the detected Python interpreter.
+find_package(Python3 COMPONENTS Interpreter)
+
+if(Python3_FOUND)
+  set(HIP_TEST_SUITE_LIT ${Python3_EXECUTABLE} ${TEST_SUITE_LIT})
+  set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
+  message(STATUS "HIP tests will use Python: ${Python3_EXECUTABLE}")
+else()
+  set(HIP_TEST_SUITE_LIT ${TEST_SUITE_LIT})
+  set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
+  message(WARNING "Python3 not found, HIP tests may fail if llvm-lit has wrong shebang")
+endif()
 include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
 # Inspired from create_one_local_test. Runs hipify on the TestSource and then compiles it.
@@ -153,7 +169,7 @@ function(create_hip_test VariantSuffix)
   endif()
 
   add_custom_target(check-hip-simple-${VariantSuffix}
-    COMMAND ${TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
+    COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
             ${VARIANT_SIMPLE_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS hip-tests-simple-${VariantSuffix}

@@ -600,6 +600,8 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
 
     # Create wrapper script that runs LIT then shows summary
     # Set template variables
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+    set(TEST_SUITE_LIT_BINARY "${HIP_TEST_SUITE_LIT_BINARY}")
     set(LIT_VERBOSITY_FLAGS "${_lit_verbosity_flags}")
     string(REPLACE ";" " " TEST_LIST "${_subdir_variant_tests}")
     set(SUMMARY_SCRIPT "${_summary_script}")
