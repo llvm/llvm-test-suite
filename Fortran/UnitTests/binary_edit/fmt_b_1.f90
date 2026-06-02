@@ -1,6 +1,7 @@
 ! extension allows B edit descriptors for logical input/output
 !
   program fmt_b_1
+    integer :: ios
     logical :: x, y, z
     logical, parameter :: f = .false., t = .true.
     character(len=64) :: s
@@ -75,7 +76,7 @@
     write (s,'(2B1)') t, f
     if (s .ne. '10') stop 24
     x = .false.
-    x = .true.
+    y = .true.
     read (s,'(2B1)') x, y
     if (x .neqv. .true.) stop 25
     if (y .neqv. .false.) stop 26
@@ -91,7 +92,7 @@
     write (s,'(2B2)') t, f
     if (s .ne. ' 1 0') stop 30
     x = .false.
-    x = .true.
+    y = .true.
     read (s,'(2B2)') x, y
     if (x .neqv. .true.) stop 31
     if (y .neqv. .false.) stop 32
@@ -135,4 +136,20 @@
     if (x .neqv. .true.) stop 46
     if (y .neqv. .false.) stop 47
     if (z .neqv. .true.) stop 48
+
+    s = '.0'
+    read (s, '(B2)', iostat=ios) x
+    if (ios .eq. 0) stop 49     ! '.' must be rejected for B
+    s = '.T'
+    read (s, '(B2)', iostat=ios) x
+    if (ios .eq. 0) stop 50
+    s = '.F'
+    read (s, '(B2)', iostat=ios) x
+    if (ios .eq. 0) stop 51
+    s = 'X'
+    read (s, '(B1)', iostat=ios) x
+    if (ios .eq. 0) stop 52     ! invalid binary char must be rejected
+    s = '2'
+    read (s, '(B1)', iostat=ios) x
+    if (ios .eq. 0) stop 53     ! '2' is not a binary digit
   end program fmt_b_1
