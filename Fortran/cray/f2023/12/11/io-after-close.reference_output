@@ -1,5 +1,5 @@
-k after OPEN:          45
-k after CLOSE:          55
-iostat after read:         125  k:          66
-iostat after write:         125  k:          66
-PASS
+ k after OPEN: 45
+ k after CLOSE: 55
+ iostat after read: 1042  k: 66
+ iostat after write: 1042  k: 66
+ PASS

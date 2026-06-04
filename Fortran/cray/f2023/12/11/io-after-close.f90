@@ -1,12 +1,13 @@
 program io_after_close
 
   implicit none
-  integer :: n, k, l
+  integer :: n, k, l, iounit
   logical :: ok
 
   ok = .true.
 
-  open(5, err=500, iostat=n)
+  open(newunit=iounit, file='test_io.dat', status='replace', &
+       form='unformatted', err=500, iostat=n)
    k = 45
    goto 505
 500 continue
@@ -15,7 +16,9 @@ program io_after_close
   print *, 'k after OPEN:', k
   ok = ok .and. (k == 45)
 
-  close(5, err=510, iostat=n)
+  write(iounit) 123
+
+  close(iounit, err=510, iostat=n)
    k = 55
    goto 515
 510 continue
@@ -24,7 +27,7 @@ program io_after_close
   print *, 'k after CLOSE:', k
   ok = ok .and. (k == 55)
 
-  read(5, end=520, err=520, iostat=n) l
+  read(iounit, end=520, err=520, iostat=n) l
    k = 65
    goto 523
 520 continue
@@ -34,7 +37,7 @@ program io_after_close
   ok = ok .and. (k == 66)
 
   l = 34
-  write(5, err=525, iostat=n) l
+  write(iounit, err=525, iostat=n) l
    k = 65
    goto 528
 525 continue
