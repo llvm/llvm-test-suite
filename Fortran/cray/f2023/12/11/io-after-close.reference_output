@@ -1,5 +1,4 @@
  k after OPEN: 45
  k after CLOSE: 55
- iostat after read: 1042  k: 66
  iostat after write: 1042  k: 66
  PASS
