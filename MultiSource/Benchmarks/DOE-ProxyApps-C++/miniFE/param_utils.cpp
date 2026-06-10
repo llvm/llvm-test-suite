@@ -35,7 +35,8 @@ namespace Mantevo {
 //-------------------------------------------------------------
 void read_args_into_string(int argc, char** argv, std::string& arg_string)
 {
-  arg_string = argv[0];
+  // Fix argument parsing to exclude argv[0] and prevent false detection of parameters in program path.
+  arg_string = "";
   for(int i=1; i<argc; ++i) {
     arg_string += " " + std::string(argv[i]);
   }
