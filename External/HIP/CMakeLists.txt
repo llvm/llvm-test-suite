@@ -4,6 +4,13 @@ include(External)
 include(GPUTestVariant)
 llvm_externals_find(TEST_SUITE_HIP_ROOT "hip" "HIP prerequisites")
 message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
+
+# Shared home for tool-managed, network-reconstructible artifacts (downloaded or
+# generated dependencies). Everything under here is safe to delete and is not
+# user-provided. Lives outside the build dir so it survives `rm -rf build/`.
+set(TEST_SUITE_HIP_MANAGED_DIR "${TEST_SUITE_HIP_ROOT}/managed" CACHE PATH
+    "Root for tool-managed HIP test dependencies (safe to delete)")
+message(STATUS "TEST_SUITE_HIP_MANAGED_DIR: ${TEST_SUITE_HIP_MANAGED_DIR}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
@@ -294,6 +301,7 @@ macro(create_hip_tests)
   if (EXTERNAL_HIP_TESTS_KOKKOS)
     set(EXTERNAL_HIP_TESTS_KOKKOS_TAG "4.5.01" CACHE STRING "Kokkos tag to download and test")
     ExternalProject_Add(TestKokkosHIP
+      PREFIX          ${TEST_SUITE_HIP_MANAGED_DIR}/kokkos
       GIT_REPOSITORY  https://github.com/kokkos/kokkos.git
       GIT_TAG         ${EXTERNAL_HIP_TESTS_KOKKOS_TAG}
       CMAKE_ARGS      -DCMAKE_BUILD_TYPE=Release
