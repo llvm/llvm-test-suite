@@ -13,7 +13,7 @@ option(EXTERNAL_HIP_TESTS_GINKGO "Download, build, and test Ginkgo HIP backend" 
 option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
 
 # Options to enable / disable specific test categories
-option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" OFF)
+option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" ON)
 
 # Include Catch tests integration module
 include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
