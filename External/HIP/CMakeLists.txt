@@ -7,7 +7,16 @@ message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
+# Options for enabling tests for external projects (Kokkos, Ginkgo, rocPRIM)
+option(EXTERNAL_HIP_TESTS_KOKKOS "Download, build, and test Kokkos HIP backend" OFF)
+option(EXTERNAL_HIP_TESTS_GINKGO "Download, build, and test Ginkgo HIP backend" OFF)
+option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
+
+# Options to enable / disable specific test categories
+option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" OFF)
+
 # Include Catch tests integration module
+include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
 # Find Python interpreter for running llvm-lit
 # The llvm-lit script may have a hardcoded Python version in its shebang
@@ -24,7 +33,6 @@ else()
   set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
   message(WARNING "Python3 not found, HIP tests may fail if llvm-lit has wrong shebang")
 endif()
-include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
 # Get rocm-libraries commit from TheRock (for version alignment)
 function(get_therock_rocm_libraries_version OUT_VAR)
