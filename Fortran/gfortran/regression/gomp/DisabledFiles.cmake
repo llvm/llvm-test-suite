@@ -337,6 +337,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Must be a constant value
   target2.f90
 
+  # Assumed-size arrays cannot be arguments to DEPEND clause
+  pr80918.f90
+
   # bad character ('{') in Fortran token
   declare-variant-10.f90
   declare-variant-11.f90
