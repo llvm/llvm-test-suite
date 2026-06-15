@@ -58,10 +58,44 @@ function(llvm_test_executable_no_test target)
     append_target_flags(COMPILE_FLAGS ${target} -fprofile-instr-use=${target_path}.profdata)
     append_target_flags(LINK_LIBRARIES ${target} -fprofile-instr-use=${target_path}.profdata)
   endif()
+  if(TEST_SUITE_SAMPLE_PROFILE_USE)
+    set(spgo_file "${TEST_SUITE_SAMPLE_PROFILE_DIR}/${target}.spgo")
+    if(EXISTS "${spgo_file}")
+      append_target_flags(COMPILE_FLAGS ${target} -fprofile-sample-use=${spgo_file})
+      append_target_flags(LINK_LIBRARIES ${target} -fprofile-sample-use=${spgo_file})
+      get_target_property(_spgo_srcs ${target} SOURCES)
+      foreach(_src ${_spgo_srcs})
+        set_property(SOURCE ${_src} APPEND PROPERTY OBJECT_DEPENDS "${spgo_file}")
+      endforeach()
+    else()
+      message(WARNING "No sample profile found for ${target}: ${spgo_file}")
+    endif()
+  endif()
 
   llvm_codesign(${target})
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   test_suite_add_build_dependencies(${target})
+
+  if(TEST_SUITE_EXTERNALIZE_DEBUGINFO AND APPLE)
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
+    if(CMAKE_C_FLAGS MATCHES "-flto"
+      OR CMAKE_CXX_FLAGS MATCHES "-flto"
+      OR CMAKE_C_FLAGS_${uppercase_CMAKE_BUILD_TYPE} MATCHES "-flto"
+      OR CMAKE_CXX_FLAGS_${uppercase_CMAKE_BUILD_TYPE} MATCHES "-flto")
+      set(lto_object ${CMAKE_CURRENT_BINARY_DIR}/${target}-lto.o)
+      set_property(TARGET ${target} APPEND_STRING PROPERTY
+        LINK_FLAGS " -Wl,-object_path_lto,${lto_object}")
+    endif()
+    if(NOT CMAKE_DSYMUTIL)
+      execute_process(
+        COMMAND xcrun -f dsymutil
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE CMAKE_DSYMUTIL
+      )
+    endif()
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_DSYMUTIL} $<TARGET_FILE:${target}>)
+  endif()
 
   if(TEST_SUITE_LLVM_SIZE)
     add_custom_command(TARGET ${target} POST_BUILD

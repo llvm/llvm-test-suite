@@ -128,9 +128,12 @@ def merge_values(values, merge_function):
 
 
 def get_values(values, lhs_name=None, rhs_name=None):
-    exclude_cols = ["diff", "t-value", "p-value", "significant"]
-    exclude_cols.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
-    exclude_cols.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
+    exclude_cols = [
+        "diff", "t-value", "p-value", "significant",
+        f'std_{lhs_name}', f'std_{rhs_name}',
+        f'cv_{lhs_name}', f'cv_{rhs_name}',
+        "diff_ci_rel", "diff_ci_abs",
+    ]
     values = values[[c for c in values.columns if c not in exclude_cols]]
     has_two_runs = len(values.columns) == 2
     if has_two_runs:
@@ -163,7 +166,7 @@ def add_diff_column(metric, values, absolute_diff=False):
     return values
 
 
-def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_name):
+def compute_statistics(lhs_d, rhs_d, lhs_name, rhs_name, metrics, alpha, coeff_var, diff_conf_int):
     stats_dict = {}
 
     for metric in metrics:
@@ -181,9 +184,9 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
             if len(lhs_values) >= 2 and len(rhs_values) >= 2:
                 lhs_std = lhs_values.std(ddof=1)
                 rhs_std = rhs_values.std(ddof=1)
+                lhs_mean = lhs_values.mean()
+                rhs_mean = rhs_values.mean()
                 if coeff_var:
-                    lhs_mean = lhs_values.mean()
-                    rhs_mean = rhs_values.mean()
                     stats_dict[metric][program] = {
                         f'cv_{lhs_name}': lhs_std / lhs_mean if lhs_mean != 0 else float('nan'),
                         f'cv_{rhs_name}': rhs_std / rhs_mean if rhs_mean != 0 else float('nan'),
@@ -193,10 +196,26 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
                         f'std_{lhs_name}': lhs_std,
                         f'std_{rhs_name}': rhs_std,
                     }
-                t_stat, p_val = stats.ttest_ind(lhs_values, rhs_values)
-                stats_dict[metric][program]['t-value'] = t_stat
-                stats_dict[metric][program]['p-value'] = p_val
-                stats_dict[metric][program]['significant'] = "Y" if p_val < alpha else "N"
+                ttest = stats.ttest_ind(lhs_values, rhs_values)
+                stats_dict[metric][program]['t-value'] = ttest.statistic
+                stats_dict[metric][program]['p-value'] = ttest.pvalue
+                stats_dict[metric][program]['significant'] = "Y" if ttest.pvalue < alpha else "N"
+
+                if diff_conf_int:
+                    ci = ttest.confidence_interval(1 - alpha)
+                    # CI is for mean(lhs)-mean(rhs); negate for rhs-lhs
+                    abs_lo = -ci.high
+                    abs_hi = -ci.low
+                    if diff_conf_int == "relative":
+                        if lhs_mean != 0:
+                            ci_lo = abs_lo / lhs_mean
+                            ci_hi = abs_hi / lhs_mean
+                        else:
+                            ci_lo = float('nan')
+                            ci_hi = float('nan')
+                        stats_dict[metric][program]['diff_ci_rel'] = (ci_lo, ci_hi)
+                    else:
+                        stats_dict[metric][program]['diff_ci_abs'] = (abs_lo, abs_hi)
             else:
                 if coeff_var:
                     stats_dict[metric][program] = {
@@ -218,6 +237,10 @@ def compute_statistics(lhs_d, rhs_d, metrics, alpha, coeff_var, lhs_name, rhs_na
     else:
         stat_col_names += [f'std_{lhs_name}', f'std_{rhs_name}']
     stat_col_names += ['t-value', 'p-value', 'significant']
+    if diff_conf_int == "relative":
+        stat_col_names += ['diff_ci_rel']
+    elif diff_conf_int == "absolute":
+        stat_col_names += ['diff_ci_abs']
 
     return stats_dict, stat_col_names
 
@@ -346,6 +369,7 @@ def format_relative_diff(value):
 
 def print_result(
     d,
+    split_by_metric,
     limit_output=True,
     shorten_names=True,
     minimal_names=False,
@@ -397,6 +421,14 @@ def print_result(
             formatters[(m, f'cv_{lhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
         if (m, f'cv_{rhs_name}') in dataout.columns:
             formatters[(m, f'cv_{rhs_name}')] = lambda x: "%4.1f%%" % (x * 100) if not pd.isna(x) else ""
+        if (m, "diff_ci_rel") in dataout.columns:
+            formatters[(m, "diff_ci_rel")] = lambda x: \
+                "[%4.1f%%, %4.1f%%]" % (x[0] * 100, x[1] * 100) \
+                if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
+        if (m, "diff_ci_abs") in dataout.columns:
+            formatters[(m, "diff_ci_abs")] = lambda x: \
+                "[%4.3f, %4.3f]" % (x[0], x[1]) \
+                if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -436,18 +468,37 @@ def print_result(
 
     pd.set_option("display.max_colwidth", 0)
     pd.set_option("display.width", 0)
+
+    exclude_from_summary = [
+        "t-value", "p-value", "significant",
+        f'std_{lhs_name}', f'std_{rhs_name}',
+        f'cv_{lhs_name}', f'cv_{rhs_name}',
+        'diff_ci_rel', 'diff_ci_abs',
+    ]
+
     # Print an empty value instead of NaN (for the geomean row).
-    out = dataout.to_string(
-        index=False,
-        justify="left",
-        na_rep="",
-        float_format=float_format,
-        formatters=formatters,
-    )
-    print(out)
-    exclude_from_summary = ["t-value", "p-value", "significant"]
-    exclude_from_summary.extend([f'std_{lhs_name}', f'std_{rhs_name}'])
-    exclude_from_summary.extend([f'cv_{lhs_name}', f'cv_{rhs_name}'])
+    if split_by_metric:
+        for m in metrics:
+            metric_data = dataout[["Program", m]]
+            out = metric_data.to_string(
+                index=False,
+                justify="left",
+                na_rep="",
+                float_format=float_format,
+                formatters=formatters,
+            )
+            print(f"{out}\n")
+    else:
+        out = dataout.to_string(
+            index=False,
+            justify="left",
+            na_rep="",
+            float_format=float_format,
+            formatters=formatters,
+        )
+        print(out)
+
+    # Print a summary pivoted by metric
     d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
     print(d_summary.describe())
 
@@ -464,6 +515,11 @@ def main():
         dest="patterns",
         default=[],
         help="Show only results whose program name matches any of the specified regexes.",
+    )
+    parser.add_argument(
+        "--split-by-metric",
+        action="store_true",
+        help="Split the output view vertically by metric, to fit more columns on smaller screens",
     )
     parser.add_argument(
         "--nodiff", action="store_false", dest="show_diff", default=None
@@ -564,6 +620,15 @@ def main():
         default=False,
         help="Compute relative coefficient of variation (%%) rather than absolute stddev",
     )
+    parser.add_argument(
+        "--diff-confidence-interval",
+        choices=["relative", "absolute"],
+        nargs="?",
+        const="relative",
+        default=None,
+        dest="diff_confidence_interval",
+        help="Show confidence interval for the difference (default: relative)",
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -604,11 +669,13 @@ def main():
         if config.statistics:
             metrics_for_stats = config.metrics if len(config.metrics) > 0 else get_default_metric(lhs_d, rhs_d)
             stats_dict, stat_col_names = compute_statistics(
-                lhs_d, rhs_d, metrics_for_stats,
+                lhs_d, rhs_d,
+                lhs_name=config.lhs_name,
+                rhs_name=config.rhs_name,
+                metrics=metrics_for_stats,
                 alpha=config.alpha,
                 coeff_var=config.coefficient_variation,
-                lhs_name=config.lhs_name,
-                rhs_name=config.rhs_name
+                diff_conf_int=config.diff_confidence_interval,
             )
 
         # Merge data
@@ -701,6 +768,7 @@ def main():
     limit_output = (not config.all) and (not config.full)
     print_result(
         data,
+        config.split_by_metric,
         limit_output,
         shorten_names,
         config.minimal_names,

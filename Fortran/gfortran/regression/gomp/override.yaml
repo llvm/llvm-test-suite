@@ -1,0 +1,7 @@
+---
+# OpenMP ALLOCATE support landed in flang, so these are expected to pass.
+"allocate-15.f90":
+  xfail: false
+
+"allocate-16.f90":
+  xfail: false

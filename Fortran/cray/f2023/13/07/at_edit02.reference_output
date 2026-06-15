@@ -1,0 +1,21 @@
+PASS: internal write
+PASS: FORMAT stmt
+PASS: 3AT repeat
+PASS: AT with T5
+PASS: substring
+PASS: allocatable
+PASS: internal blanks
+PASS: literal len 1
+PASS: literal len 2
+PASS: literal len 3
+PASS: alloc trailing blanks
+PASS: internal round-trip
+PASS: kind=2 trim
+PASS: kind=4 trim
+PASS: kind=4 blanks
+PASS: kind=2 leading blanks
+PASS: kind=4 internal blanks
+PASS: newline rec 1
+PASS: newline rec 2
+Result: 19 passed, 0 failed
+exit 0

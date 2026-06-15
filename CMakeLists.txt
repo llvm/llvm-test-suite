@@ -180,6 +180,24 @@ option(TEST_SUITE_PROFILE_USE
       "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
       OFF)
 
+option(TEST_SUITE_EXTERNALIZE_DEBUGINFO
+      "Generate dSYM files for executables (Darwin only)"
+      OFF)
+
+option(TEST_SUITE_SAMPLE_PROFILE_USE
+      "Add -fprofile-sample-use for each benchmark using profiles from TEST_SUITE_SAMPLE_PROFILE_DIR"
+      OFF)
+set(TEST_SUITE_SAMPLE_PROFILE_DIR "" CACHE PATH
+    "Directory containing <target>.spgo sample profile files")
+if(TEST_SUITE_SAMPLE_PROFILE_USE)
+  if("${TEST_SUITE_SAMPLE_PROFILE_DIR}" STREQUAL "")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_USE requires TEST_SUITE_SAMPLE_PROFILE_DIR to be set")
+  endif()
+  if(NOT EXISTS "${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_DIR does not exist: ${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+  endif()
+endif()
+
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
 # the user specified CMAKE_C_FLAGS etc. need not be changed.
@@ -321,13 +339,28 @@ endif()
 
 add_subdirectory(litsupport)
 
+option(TEST_SUITE_REPORT_COMPILE_MAX_RSS
+       "Report max RSS for compile/link time (Apple/Linux only)" OFF)
+
+if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"
+                                                     OR CMAKE_SYSTEM_NAME STREQUAL "AIX"))
+  message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux/AIX, ignored on this platform")
+endif()
+
 option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" ON)
-if(TEST_SUITE_COLLECT_COMPILE_TIME)
-  set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
-  set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
-  set(CMAKE_C_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_C_LINK_EXECUTABLE}")
-  set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
+
+if (TEST_SUITE_COLLECT_COMPILE_TIME)
+  set(TIMEIT_CMD_PREFIX "${CMAKE_BINARY_DIR}/tools/timeit")
+
+  if (TEST_SUITE_REPORT_COMPILE_MAX_RSS)
+    string(APPEND TIMEIT_CMD_PREFIX " --report-maxrss")
+  endif()
+
+  set(CMAKE_C_COMPILE_OBJECT "${TIMEIT_CMD_PREFIX} --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
+  set(CMAKE_CXX_COMPILE_OBJECT "${TIMEIT_CMD_PREFIX} --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
+  set(CMAKE_C_LINK_EXECUTABLE "${TIMEIT_CMD_PREFIX} --summary <TARGET>.link.time ${CMAKE_C_LINK_EXECUTABLE}")
+  set(CMAKE_CXX_LINK_EXECUTABLE "${TIMEIT_CMD_PREFIX} --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
 endif()
 
 if (CMAKE_EXPORT_COMPILE_COMMANDS STREQUAL "")

@@ -8,7 +8,83 @@ get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
 # Include Catch tests integration module
+
+# Find Python interpreter for running llvm-lit
+# The llvm-lit script may have a hardcoded Python version in its shebang
+# (e.g., #!/usr/bin/python3.10) that may not be available on all systems.
+# We explicitly invoke llvm-lit with the detected Python interpreter.
+find_package(Python3 COMPONENTS Interpreter)
+
+if(Python3_FOUND)
+  set(HIP_TEST_SUITE_LIT ${Python3_EXECUTABLE} ${TEST_SUITE_LIT})
+  set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
+  message(STATUS "HIP tests will use Python: ${Python3_EXECUTABLE}")
+else()
+  set(HIP_TEST_SUITE_LIT ${TEST_SUITE_LIT})
+  set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
+  message(WARNING "Python3 not found, HIP tests may fail if llvm-lit has wrong shebang")
+endif()
 include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
+
+# Get rocm-libraries commit from TheRock (for version alignment)
+function(get_therock_rocm_libraries_version OUT_VAR)
+  set(THEROCK_LOCAL_DEV_PATH "/tmp/TheRock" CACHE PATH "Local TheRock for dev")
+  set(THEROCK_REPO_URL "https://github.com/ROCm/TheRock.git" CACHE STRING "TheRock URL")
+  set(THEROCK_BRANCH "main" CACHE STRING "TheRock branch")
+
+  # Check if we have a local development copy
+  if(EXISTS "${THEROCK_LOCAL_DEV_PATH}/.git")
+    message(STATUS "Using local TheRock: ${THEROCK_LOCAL_DEV_PATH}")
+    set(_therock_path "${THEROCK_LOCAL_DEV_PATH}")
+  else()
+    # CI path: use shallow clone in build directory
+    set(_therock_path "${CMAKE_BINARY_DIR}/_deps/therock-metadata")
+
+    if(EXISTS "${_therock_path}/.git")
+      message(STATUS "Updating cached TheRock metadata...")
+      execute_process(
+        COMMAND git -C "${_therock_path}" fetch --depth=1 origin ${THEROCK_BRANCH}
+        RESULT_VARIABLE _fetch_result
+        OUTPUT_QUIET ERROR_QUIET
+      )
+      if(_fetch_result EQUAL 0)
+        execute_process(
+          COMMAND git -C "${_therock_path}" reset --hard FETCH_HEAD
+          OUTPUT_QUIET ERROR_QUIET
+        )
+      endif()
+    else()
+      message(STATUS "Cloning TheRock metadata (shallow, ~100KB)...")
+      file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/_deps")
+      execute_process(
+        COMMAND git clone --depth=1 --filter=blob:none --no-checkout
+                ${THEROCK_REPO_URL} "${_therock_path}"
+        OUTPUT_QUIET ERROR_QUIET
+        COMMAND_ERROR_IS_FATAL ANY
+      )
+      execute_process(
+        COMMAND git -C "${_therock_path}" checkout ${THEROCK_BRANCH} -- .gitmodules
+        OUTPUT_QUIET ERROR_QUIET
+        COMMAND_ERROR_IS_FATAL ANY
+      )
+    endif()
+  endif()
+
+  # Extract rocm-libraries commit reference
+  execute_process(
+    COMMAND git -C "${_therock_path}" ls-tree HEAD rocm-libraries
+    OUTPUT_VARIABLE _tree_output
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _result
+  )
+
+  if(NOT _result EQUAL 0)
+    message(FATAL_ERROR "Failed to query rocm-libraries version from TheRock")
+  endif()
+
+  string(REGEX MATCH "commit ([0-9a-f]+)" _ "${_tree_output}")
+  set(${OUT_VAR} "${CMAKE_MATCH_1}" PARENT_SCOPE)
+endfunction()
 
 # Inspired from create_one_local_test. Runs hipify on the TestSource and then compiles it.
 # Search for the reference files next to TestSource.
@@ -77,6 +153,8 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS split-kernel-args)
   list(APPEND HIP_LOCAL_TESTS builtin-logb-scalbn)
   list(APPEND HIP_LOCAL_TESTS simplify-f64-cmps)
+  list(APPEND HIP_LOCAL_TESTS fast-i24-div-path)
+  list(APPEND HIP_LOCAL_TESTS udivrem24)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
@@ -154,7 +232,7 @@ function(create_hip_test VariantSuffix)
   endif()
 
   add_custom_target(check-hip-simple-${VariantSuffix}
-    COMMAND ${TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
+    COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
             ${VARIANT_SIMPLE_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS hip-tests-simple-${VariantSuffix}
@@ -260,21 +338,65 @@ macro(create_hip_tests)
   endif()
 
   if (EXTERNAL_HIP_TESTS_ROCPRIM)
-    ExternalProject_Add(BuildRocPrim
-      GIT_REPOSITORY      https://github.com/ROCm/rocPRIM.git
-      GIT_TAG             ae4d27e # Staging for ROCm 6.4
-      CMAKE_ARGS          -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-                          -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-                          -DCMAKE_HIP_COMPILER=${CMAKE_CXX_COMPILER}
-                          -DBUILD_TEST=ON
-                          -DAMDGPU_TARGETS="${AMDGPU_ARCHS}"
-                          -DCMAKE_BUILD_TYPE=Release
-      INSTALL_COMMAND    ""
-      TEST_COMMAND       ""
-      )
+    # Get rocm-libraries version from TheRock
+    get_therock_rocm_libraries_version(_rocm_libraries_commit)
+    message(STATUS "Using rocm-libraries commit: ${_rocm_libraries_commit}")
+    set(ROCPRIM_TESTS_PARALLELISM "16" CACHE STRING "-j Argument to ctest")
 
-    add_custom_target(build-rocprim DEPENDS BuildRocPrim)
+    include(FetchContent)
+    # XXX: Can we reduce what is being downloaded here using somewhat simple mechanisms?
+    FetchContent_Declare(
+      rocm-libraries
+      GIT_REPOSITORY https://github.com/ROCm/rocm-libraries.git
+      GIT_TAG        ${_rocm_libraries_commit}
+    )
 
+    # Download rocm-libraries but don't configure yet
+    FetchContent_GetProperties(rocm-libraries)
+    if(NOT rocm-libraries_POPULATED)
+      FetchContent_Populate(rocm-libraries)
+
+      # Patch rocprim test/CMakeLists.txt to use PROJECT_SOURCE_DIR instead of CMAKE_SOURCE_DIR
+      # This fixes the issue where CMAKE_SOURCE_DIR points to llvm-test-suite instead of rocprim
+      # If not patched, enabling tests will fail during configure with a missing file
+      file(READ "${rocm-libraries_SOURCE_DIR}/projects/rocprim/test/CMakeLists.txt" _rocprim_test_cmake)
+      string(REPLACE "\${CMAKE_SOURCE_DIR}/test/" "\${PROJECT_SOURCE_DIR}/test/" _rocprim_test_cmake "${_rocprim_test_cmake}")
+      string(REPLACE "\${CMAKE_SOURCE_DIR}/rtest." "\${PROJECT_SOURCE_DIR}/rtest." _rocprim_test_cmake "${_rocprim_test_cmake}")
+      file(WRITE "${rocm-libraries_SOURCE_DIR}/projects/rocprim/test/CMakeLists.txt" "${_rocprim_test_cmake}")
+    endif()
+
+    # Configure rocPRIM as isolated external project (like Kokkos/Ginkgo pattern)
+    ExternalProject_Add(rocprim-external
+      SOURCE_DIR      ${rocm-libraries_SOURCE_DIR}/projects/rocprim
+      BINARY_DIR      ${rocm-libraries_BINARY_DIR}/rocprim
+      CMAKE_ARGS      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                      -DCMAKE_HIP_COMPILER=${CMAKE_CXX_COMPILER}
+                      -DGPU_TARGETS=${AMDGPU_ARCHS}
+                      -DBUILD_TEST=ON
+                      -DBUILD_BENCHMARK=OFF
+                      -DBUILD_EXAMPLE=OFF
+                      -DCMAKE_BUILD_TYPE=Release
+                      -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+      BUILD_COMMAND   ""  # Don't build during configure
+      INSTALL_COMMAND ""
+      TEST_COMMAND    ""
+    )
+
+    # Standalone target to build all rocPRIM tests
+    add_custom_target(build-rocprim
+      COMMAND ${CMAKE_COMMAND} --build ${rocm-libraries_BINARY_DIR}/rocprim
+      DEPENDS rocprim-external
+      COMMENT "Building all rocPRIM tests"
+    )
+
+    # Standalone target to run rocPRIM tests
+    add_custom_target(test-rocprim
+	    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -j ${ROCPRIM_TESTS_PARALLELISM}
+      WORKING_DIRECTORY ${rocm-libraries_BINARY_DIR}/rocprim
+      DEPENDS build-rocprim
+      COMMENT "Running rocPRIM tests"
+    )
   endif()
 
   # Build all HIP tests (simple + catch if enabled)

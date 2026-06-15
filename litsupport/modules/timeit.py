@@ -93,13 +93,6 @@ def mutatePlan(context, plan):
     )
 
 
-def getUserTime(filename):
-    """Extract the user time from a .time file produced by timeit"""
-    with open(filename) as fd:
-        contents = fd.read()
-        return getUserTimeFromContents(contents)
-
-
 def getUserTimeFromContents(contents):
     from_bytes = lambda s: s.decode("utf-8") if type(s) == bytes else s
     lines = [from_bytes(l) for l in contents.splitlines()]
@@ -108,3 +101,13 @@ def getUserTimeFromContents(contents):
 
     m = re.match(r"user\s+([0-9.]+)", line[0])
     return float(m.group(1))
+
+
+def getMaxRSSFromContents(contents):
+    from_bytes = lambda s: s.decode("utf-8") if type(s) == bytes else s
+    lines = [from_bytes(l) for l in contents.splitlines()]
+    line = [line for line in lines if line.startswith("maxrss")]
+    if len(line) == 0:
+        return 0
+    m = re.match(r"maxrss\s+([0-9]+)", line[0])
+    return int(m.group(1))
