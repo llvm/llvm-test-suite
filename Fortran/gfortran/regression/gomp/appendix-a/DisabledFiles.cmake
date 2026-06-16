@@ -17,7 +17,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests pass when they should fail.
   #
   a.23.4.f90
-  a.31.3.f90
 )
 
 # There are currently no failing files.

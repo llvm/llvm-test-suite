@@ -1,4 +1,3 @@
-
 #===------------------------------------------------------------------------===#
 #
 # Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -20,7 +19,4 @@ set(SKIPPED_FILES "")
 file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These tests fail to compile when compilation is expected to succeed.
   vect-8-epilogue.F90
-
-  # The cause of failure of this test needs to be investigated
-  pr49955.f
 )
