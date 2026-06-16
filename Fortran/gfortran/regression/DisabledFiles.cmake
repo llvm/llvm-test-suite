@@ -934,6 +934,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   utf8_3.f03
   widechar_IO_4.f90
   zero_sized_1.f90
+  do_check_1.f90
   random_3.f90
 
   # ---------------------------------------------------------------------------

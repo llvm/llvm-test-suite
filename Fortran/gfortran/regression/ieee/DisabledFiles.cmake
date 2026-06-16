@@ -50,6 +50,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # conditionally enabling them if libquadmath is available.
 
   ieee_9.f90
+
+  # IEEE arithmetic exceptions signaled: INVALID
+  comparisons_3.F90
 )
 
 # There are currently no failing files.
