@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 
   // Generate all combinations
   int idx = 0;
-  for (int i = 0; i < num_divisors; i++) {
+  for (int i = 0; i < num_dividends; i++) {
     for (int j = 0; j < num_divisors; j++) {
       h_all_dividends[idx] = (h_dividends[i] << SHIFT_AMOUNT) >> SHIFT_AMOUNT;
       h_all_divisors[idx] = (h_divisors[j] << SHIFT_AMOUNT) >> SHIFT_AMOUNT;
