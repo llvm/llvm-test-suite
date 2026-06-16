@@ -387,8 +387,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   polymorphic-mapping-5.f90
   pr33439.f90
   pr78866-2.f90
-  # This test should not be expected to fail now that metadirective lowering
-  # is implemented.
   metadirective-8.f90
 
   # These tests fail, but the cause of their failure needs to be investigated.
