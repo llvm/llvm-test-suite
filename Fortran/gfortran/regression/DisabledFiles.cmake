@@ -183,6 +183,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: procedure components
   proc_ptr_24.f90
+  structure_constructor_11.f90
 
   # unimplemented: procedure pointer results
   pr39695_1.f90
@@ -1722,6 +1723,20 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # Require -fcheck=pointer.
   pointer_check_6.f90
+
+  # These files require the __truncsfbf2 intrinsic that is not available
+  # before GCC 13. Alternatively, it requires compiler-rt to be built and a
+  # command line option provided to instruct the compiler to use it. Currently,
+  # we do not support either a version check on GCC or require that compiler-rt
+  # be built, so these are disabled. See:
+  #
+  # https://github.com/llvm/llvm-test-suite/pull/143#discussion_r1689462248
+  #
+  fmt_en.f90
+  fmt_en_rd.f90
+  fmt_en_rn.f90
+  fmt_en_ru.f90
+  fmt_en_rz.f90
 
   # The causes of failure of these tests need to be investigated
   PR113061.f90
