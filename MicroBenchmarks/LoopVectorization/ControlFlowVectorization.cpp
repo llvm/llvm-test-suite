@@ -6,25 +6,27 @@
 
 #define ITERATIONS 100000
 
-template <typename T> using ControlFlowLoopFunc = void (*)(T *, unsigned);
+template <typename T> using ControlFlowLoopFunc = void (*)(T *, T *, unsigned);
 
 // Define conditional loop with given branch taken frequency.
 #define DEF_COND_LOOP(name, branch_every_N)                                    \
   template <typename T>                                                        \
-  __attribute__((noinline)) static void run_##name##_autovec(T *A,             \
+  __attribute__((noinline)) static void run_##name##_autovec(T *A, T *Output,  \
                                                              unsigned N) {     \
     for (unsigned i = 0; i < N; i++) {                                         \
       if (i % branch_every_N == 0) {                                           \
-        A[i] = A[i] + 1;                                                       \
+        Output[i] = A[i] + 1;                                                  \
       }                                                                        \
     }                                                                          \
   }                                                                            \
   template <typename T>                                                        \
-  __attribute__((noinline)) static void run_##name##_novec(T *A, unsigned N) { \
-    _Pragma("clang loop vectorize(disable) interleave(disable)")               \
-    for (unsigned i =0; i < N; i++) {                                          \
+  __attribute__((noinline)) static void run_##name##_novec(T *A, T *Output,    \
+                                                           unsigned N) {       \
+    _Pragma(                                                                   \
+        "clang loop vectorize(disable) interleave(disable)")                   \
+    for (unsigned i = 0; i < N; i++) {                                         \
       if (i % branch_every_N == 0) {                                           \
-        A[i] = A[i] + 1;                                                       \
+        Output[i] = A[i] + 1;                                                  \
       }                                                                        \
     }                                                                          \
   }
@@ -32,37 +34,41 @@ template <typename T> using ControlFlowLoopFunc = void (*)(T *, unsigned);
 // Define conditional loop with taken frequency by data equals to marker.
 #define DEF_COND_VALUE_LOOP(name, marker)                                      \
   template <typename T>                                                        \
-  __attribute__((noinline)) static void run_##name##_autovec(T *A,             \
+  __attribute__((noinline)) static void run_##name##_autovec(T *A, T *Output,  \
                                                              unsigned N) {     \
     for (unsigned i = 0; i < N; i++) {                                         \
       if (A[i] == marker) {                                                    \
-        A[i] = A[i] + 1;                                                       \
+        Output[i] = A[i] + 1;                                                  \
       }                                                                        \
     }                                                                          \
   }                                                                            \
   template <typename T>                                                        \
-  __attribute__((noinline)) static void run_##name##_novec(T *A, unsigned N) { \
-    _Pragma("clang loop vectorize(disable) interleave(disable)")               \
+  __attribute__((noinline)) static void run_##name##_novec(T *A, T *Output,    \
+                                                           unsigned N) {       \
+    _Pragma(                                                                   \
+        "clang loop vectorize(disable) interleave(disable)")                   \
     for (unsigned i = 0; i < N; i++) {                                         \
       if (A[i] == marker) {                                                    \
-        A[i] = A[i] + 1;                                                       \
+        Output[i] = A[i] + 1;                                                  \
       }                                                                        \
     }                                                                          \
   }
 
 // Define unconditional increment loop.
 template <typename T>
-__attribute__((noinline)) static void run_uncond_autovec(T *A, unsigned N) {
+__attribute__((noinline)) static void run_uncond_autovec(T *A, T *Output,
+                                                         unsigned N) {
   for (unsigned i = 0; i < N; i++) {
-    A[i] = A[i] + 1;
+    Output[i] = A[i] + 1;
   }
 }
 
 template <typename T>
-__attribute__((noinline)) static void run_uncond_novec(T *A, unsigned N) {
+__attribute__((noinline)) static void run_uncond_novec(T *A, T *Output,
+                                                       unsigned N) {
   _Pragma("clang loop vectorize(disable) interleave(disable)")
   for (unsigned i = 0; i < N; i++) {
-    A[i] = A[i] + 1;
+    Output[i] = A[i] + 1;
   }
 }
 
@@ -93,21 +99,19 @@ benchmark_control_flow_loop_autovec(benchmark::State &state,
                                    ControlFlowLoopFunc<T> VecFn,
                                    ControlFlowLoopFunc<T> NoVecFn) {
   std::unique_ptr<T[]> A(new T[ITERATIONS]);
-  std::unique_ptr<T[]> A_vec(new T[ITERATIONS]);
-  std::unique_ptr<T[]> A_novec(new T[ITERATIONS]);
+  std::unique_ptr<T[]> Output_vec(new T[ITERATIONS]);
+  std::unique_ptr<T[]> Output_novec(new T[ITERATIONS]);
   init_data(&A[0]);
 
 #ifdef BENCH_AND_VERIFY
   // Verify the vectorized and scalar versions produce the same results.
   {
-    std::copy(&A[0], &A[0] + ITERATIONS, &A_vec[0]);
-    std::copy(&A[0], &A[0] + ITERATIONS, &A_novec[0]);
-    VecFn(&A_vec[0], ITERATIONS);
-    NoVecFn(&A_novec[0], ITERATIONS);
+    VecFn(&A[0], &Output_vec[0], ITERATIONS);
+    NoVecFn(&A[0], &Output_novec[0], ITERATIONS);
     for (unsigned i = 0; i < ITERATIONS; i++) {
-      if (A_vec[i] != A_novec[i]) {
+      if (Output_vec[i] != Output_novec[i]) {
         std::cerr << "ERROR: vectorization result different at index " << i
-                  << "; " << A_vec[i] << " != " << A_novec[i] << "\n";
+                  << "; " << Output_vec[i] << " != " << Output_novec[i] << "\n";
         exit(1);
       }
     }
@@ -115,9 +119,9 @@ benchmark_control_flow_loop_autovec(benchmark::State &state,
 #endif
 
   for (auto _ : state) {
-    std::copy(&A[0], &A[0] + ITERATIONS, &A_vec[0]);
-    VecFn(&A_vec[0], ITERATIONS);
-    benchmark::DoNotOptimize(A_vec);
+    VecFn(&A[0], &Output_vec[0], ITERATIONS);
+    benchmark::DoNotOptimize(A);
+    benchmark::DoNotOptimize(Output_vec);
     benchmark::ClobberMemory();
   }
 }
@@ -128,13 +132,13 @@ static void __attribute__((always_inline))
 benchmark_control_flow_loop_novec(benchmark::State &state,
                                  ControlFlowLoopFunc<T> NoVecFn) {
   std::unique_ptr<T[]> A(new T[ITERATIONS]);
-  std::unique_ptr<T[]> A_work(new T[ITERATIONS]);
+  std::unique_ptr<T[]> Output(new T[ITERATIONS]);
   init_data(&A[0]);
 
   for (auto _ : state) {
-    std::copy(&A[0], &A[0] + ITERATIONS, &A_work[0]);
-    NoVecFn(&A_work[0], ITERATIONS);
-    benchmark::DoNotOptimize(A_work);
+    NoVecFn(&A[0], &Output[0], ITERATIONS);
+    benchmark::DoNotOptimize(A);
+    benchmark::DoNotOptimize(Output);
     benchmark::ClobberMemory();
   }
 }
