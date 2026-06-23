@@ -1,0 +1,4 @@
+ k after OPEN: 45
+ k after ENDFILE: 55
+ iostat after write: 1017  k: 66
+ PASS
