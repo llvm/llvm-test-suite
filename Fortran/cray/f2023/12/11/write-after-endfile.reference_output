@@ -1,4 +1,5 @@
  k after OPEN: 45
  k after ENDFILE: 55
- iostat after write: 1017  k: 66
+ k after WRITE: 66
  PASS
+exit 0

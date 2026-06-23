@@ -29,16 +29,18 @@ program write_after_endfile
   ok = ok .and. (k == 55)
 
   ! A WRITE after ENDFILE is an error.  With ERR= and IOSTAT= present,
-  ! the runtime must set IOSTAT and branch to the ERR= label instead of
-  ! aborting.  Before this fix the error was raised too early and the
-  ! program crashed rather than taking the ERR= branch.
+  ! the runtime must set IOSTAT (nonzero) and branch to the ERR= label
+  ! instead of aborting.  Before this fix the error was raised too early
+  ! and the program crashed rather than taking the ERR= branch.  The exact
+  ! IOSTAT value is processor-dependent, so the test only checks that an
+  ! error was signaled (n /= 0), not its specific value.
   write(iounit, err=525, iostat=n) 456
    k = 65
    goto 528
 525 continue
    k = 66
 528 continue
-  print *, 'iostat after write:', n, ' k:', k
+  print *, 'k after WRITE:', k
   ok = ok .and. (k == 66) .and. (n /= 0)
 
   if (ok) then
