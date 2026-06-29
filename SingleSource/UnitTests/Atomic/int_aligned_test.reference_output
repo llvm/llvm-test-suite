@@ -1,0 +1,8 @@
+Testing aligned uint32_t
+Testing aligned uint64_t
+Testing aligned int32_t
+Testing aligned int64_t
+Testing aligned __uint128_t
+Testing aligned __int128_t
+PASSED
+exit 0
