@@ -3,9 +3,6 @@
 
 #define GENPOLY -24575
 
-// sample consists of random hand-picked values.
-static const unsigned sample[] = {0, 1, 11, 16, 129, 142, 196, 255};
-
 static NOINLINE uint16_t crc_loop(uint16_t crc_initval, uint32_t data) {
   uint16_t crc = crc_initval;
 
@@ -15,6 +12,6 @@ static NOINLINE uint16_t crc_loop(uint16_t crc_initval, uint32_t data) {
 }
 
 int main() {
-  PRINT_RESULTS(crc_loop, sample);
+  PRINT_RESULTS(crc_loop);
   return 0;
 }

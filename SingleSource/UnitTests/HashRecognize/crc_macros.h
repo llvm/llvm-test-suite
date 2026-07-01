@@ -27,14 +27,10 @@
     }                                                                          \
   }
 
-#define PRINT_RESULTS(fn, sample)                                              \
+// sample consists of random hand-picked values.
+#define PRINT_RESULTS(fn)                                                      \
   {                                                                            \
+    static const unsigned sample[] = {0, 1, 11, 16, 129, 142, 196, 255};       \
     for (size_t i = 0; i < LEN(sample); ++i)                                   \
       printf("%u\n", (unsigned)fn(sample[i], sample[LEN(sample) - 1 - i]));    \
-  }
-
-#define PRINT_RESULTS_NODATA(fn, sample)                                       \
-  {                                                                            \
-    for (size_t i = 0; i < LEN(sample); ++i)                                   \
-      printf("%u\n", (unsigned)fn(sample[i]));                                 \
   }

@@ -3,10 +3,7 @@
 
 #define GENPOLY -24575
 
-// sample consists of random hand-picked values.
-static const unsigned sample[] = {0, 1, 11, 16, 129, 142, 196, 255};
-
-static NOINLINE uint16_t crc_loop(uint16_t crc_initval) {
+static NOINLINE uint16_t crc_loop(uint16_t crc_initval, unsigned data) {
   uint16_t crc = crc_initval;
 
   // This loop will be optimized by HashRecognize.
@@ -18,6 +15,6 @@ static NOINLINE uint16_t crc_loop(uint16_t crc_initval) {
 }
 
 int main() {
-  PRINT_RESULTS_NODATA(crc_loop, sample);
+  PRINT_RESULTS(crc_loop);
   return 0;
 }
