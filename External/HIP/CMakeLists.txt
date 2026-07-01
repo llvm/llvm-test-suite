@@ -140,6 +140,9 @@ macro(create_local_hip_tests VariantSuffix)
   # Set per-source compilation/link options
   set_source_files_properties(with-fopenmp.hip PROPERTIES
     COMPILE_FLAGS -fopenmp)
+  # Use GlobalISel for device compilation
+  set_source_files_properties(s-bitreplicate.hip PROPERTIES
+    COMPILE_FLAGS "-fno-offload-lto -Xarch_device -fglobal-isel")
   # TODO: Add the flag after the kernel argument splitting pass is enabled.
   #set_source_files_properties(split-kernel-args.hip PROPERTIES
   #  COMPILE_FLAGS "-mllvm -amdgpu-enable-split-kernel-args")
@@ -156,6 +159,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS fast-i24-div-path)
   list(APPEND HIP_LOCAL_TESTS udivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem24)
+  list(APPEND HIP_LOCAL_TESTS s-bitreplicate)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
