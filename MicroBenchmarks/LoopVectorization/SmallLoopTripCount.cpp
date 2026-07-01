@@ -97,6 +97,22 @@ NOINLINE void loopTc3SelectionScalar(const Ty *__restrict A, Ty *__restrict B) {
 }
 
 template <typename Ty>
+NOINLINE void loopTc5PowerVector(const Ty *__restrict A, Ty *__restrict B) {
+  LOOP_VECTORIZE_ENABLE
+  for (int i = 0; i < 5; i++) {
+    B[i] ^= A[i];
+  }
+}
+
+template <typename Ty>
+NOINLINE void loopTc5PowerScalar(const Ty *__restrict A, Ty *__restrict B) {
+  LOOP_VECTORIZE_DISABLE
+  for (int i = 0; i < 5; i++) {
+    B[i] ^= A[i];
+  }
+}
+
+template <typename Ty>
 NOINLINE void loopTc5ModulusVector(const Ty *__restrict A, Ty *__restrict B) {
   LOOP_VECTORIZE_ENABLE
   for (int i = 0; i < 5; i++) {
@@ -182,6 +198,14 @@ void benchloopTc3SelectionScalar(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State, loopTc3SelectionScalar<Ty>);
 }
 
+template <typename Ty> void benchloopTC5PowerVector(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc5PowerVector<Ty>);
+}
+
+template <typename Ty> void benchloopTC5PowerScalar(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc5PowerScalar<Ty>);
+}
+
 template <typename Ty> void benchloopTc5ModulusVector(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State, loopTc5ModulusVector<Ty>);
 }
@@ -223,6 +247,12 @@ BENCHMARK_TEMPLATE(benchloopTc3SelectionVector, int16_t)
     ->Name("tc3Selection/i16/vector");
 BENCHMARK_TEMPLATE(benchloopTc3SelectionScalar, int16_t)
     ->Name("tc3Selection/i16/scalar");
+BENCHMARK_TEMPLATE(benchloopTC5PowerVector, int8_t)->Name("tc5Power/i8/vector");
+BENCHMARK_TEMPLATE(benchloopTC5PowerScalar, int8_t)->Name("tc5Power/i8/scalar");
+BENCHMARK_TEMPLATE(benchloopTC5PowerVector, int16_t)
+    ->Name("tc5Power/i16/vector");
+BENCHMARK_TEMPLATE(benchloopTC5PowerScalar, int16_t)
+    ->Name("tc5Power/i16/scalar");
 BENCHMARK_TEMPLATE(benchloopTc5ModulusVector, int32_t)
     ->Name("tc5Modulus/i32/vector");
 BENCHMARK_TEMPLATE(benchloopTc5ModulusScalar, int32_t)
