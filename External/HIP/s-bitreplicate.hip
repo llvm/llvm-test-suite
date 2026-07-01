@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <memory>
 
 // Execution test for the divergent lowering of s_bitreplicate (bit i -> bits
 // 2i, 2i+1), which can be expanded on VALU via perm and shifts.
@@ -37,15 +38,15 @@ int main() {
   const int N = 4096;
   const size_t bytes = N * sizeof(uint64_t);
 
-  uint64_t *d_out;
+  uint64_t *d_out = nullptr;
   HIP_CHECK(hipMalloc((void **)&d_out, bytes));
 
   const int threads = 256;
   bitreplicate_kernel<<<(N + threads - 1) / threads, threads>>>(d_out, N);
   HIP_CHECK(hipDeviceSynchronize());
 
-  uint64_t *h_out = (uint64_t *)malloc(bytes);
-  HIP_CHECK(hipMemcpy(h_out, d_out, bytes, hipMemcpyDeviceToHost));
+  auto h_out = std::make_unique<uint64_t[]>(N);
+  HIP_CHECK(hipMemcpy(h_out.get(), d_out, bytes, hipMemcpyDeviceToHost));
 
   int errors = 0;
   for (int i = 0; i < N; ++i) {
@@ -64,7 +65,6 @@ int main() {
   else
     printf("PASSED!\n");
 
-  free(h_out);
   HIP_CHECK(hipFree(d_out));
   return errors;
 }
