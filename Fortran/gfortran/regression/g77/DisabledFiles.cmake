@@ -29,6 +29,5 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 # These tests fail when they are expected to pass.
 file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # These tests are expected to fail to compile, but compilation succeeds.
-  19990218-0.f
   970625-2.f
 )

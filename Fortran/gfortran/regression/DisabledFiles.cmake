@@ -168,9 +168,7 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   ISO_Fortran_binding_3.f90
   PR100911.f90
   PR100915.f90
-  interface_49.f90
   sizeof_6.f90
-  unlimited_polymorphic_1.f03
 
   # unimplemented: ASYNCHRONOUS in procedure interface
   asynchronous_3.f03
@@ -188,7 +186,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   structure_constructor_11.f90
 
   # unimplemented: procedure pointer results
-  pointer_check_5.f90
   pr39695_1.f90
   pr63797.f90
 
@@ -202,14 +199,12 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: BIND(C) module variable linkage
   binding_label_tests_10.f03
   binding_label_tests_13.f03
-  proc_ptr_8.f90
 
   # unimplemented: allocatable components in derived type assignment
   pr50769.f90
 
   # unimplemented: passing dynamically optional argument to elemental procedures
   bounds_check_fail_2.f90
-  elemental_optional_args_6.f90
 
   # unimplemented: io-control-spec contains a reference to a non-integer,
   # non-scalar, or non-variable
@@ -314,9 +309,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_collectives_12.f90
   pr96737.f90
 
-  # unimplemented: intrinsic: sind
-  dec_math_2.f90
-
   # unimplemented: intrinsic: stopped_images
   coarray_stopped_images_1.f08
 
@@ -413,7 +405,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # These tests are NYI: support for polymorphic types; when polymorphic
   # type support is enabled by option, they pass.  Delete these when
   # polymorphic types are enabled by default.
-  class_allocate_15.f90
   dtio_27.f90
   submodule_6.f08
 )
@@ -433,32 +424,8 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they trigger internal compiler errors.
   #
 
-  # These still crash with flang-new when compiling in this test
-  # environment, but are usually successful when run manually.
-  bind_c_dts_2.f03
-  c_funloc_tests.f03
-  c_funloc_tests_3.f03
-  c_funloc_tests_4.f03
-  c_f_pointer_shape_tests_5.f90
-  c_f_pointer_tests_4.f90
-  c_loc_test.f90
-  c_loc_tests_2.f03
-  c_loc_test_20.f90
-  c_ptr_tests_14.f90
-  deferred_character_10.f90
-  iso_c_binding_rename_2.f03
-  logical_temp_io.f90
-  logical_temp_io_kind8.f90
-  pr35983.f90
-  pr43866.f90
-  pr71764.f90
-  pr88611.f90
-  repack_arrays_1.f90
-
   # Categorize and debug further
   c_funptr_1.f90 # needs "win32_types" module
-  c_funptr_1_mod.f90 # needs "win32_types" module
-  c_kind_params.f90 # runtime failure detected in test
   coarray_allocate_6.f08 # NYI: allocation of coarray
   coarray_alloc_comp_3.f08 # NYI: allocation of coarray
   coarray_alloc_comp_6.f08 # NYI: lowering coarray reference
@@ -467,7 +434,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   coarray_lib_alloc_4.f90 # NYI: allocation of coarray
   coarray_poly_9.f90 # NYI: allocation of coarray
   winapi.f90 # needs -lkernel32 and target *-*-cygwin*
-  widechar_11.f90 # No ASSIGNMENT matches TYPE(c_ptr) and TYPE(__builtin_c_ptr)
 
   # error: not a constant derived type expression
   coarray_42.f90
@@ -513,12 +479,8 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # a scope with IMPLICIT NONE(EXTERNAL)
   bind-c-contiguous-3.f90
 
-  # error: Assumed type argument requires an explicit interface
-  assumed_type_2a.f90
-
   # error: No intrinsic or user-defined ASSIGNMENT(=) matches operand types
   # 'TYPE 1' and 'TYPE 2'
-  assumed_type_18.f90
   dec-comparison-complex_1.f90
   dec-comparison-complex_2.f90
   dec-comparison-int_1.f90
@@ -535,7 +497,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   hollerith4.f90
   hollerith6.f90
   pdt_23.f03
-  value_optional_2.f90
 
   # error: Operands of .AND. must be LOGICAL; have 'TYPE 1' and 'TYPE 2'
   dec_bitwise_ops_1.f90
@@ -652,9 +613,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: '[SYM]' is not a known intrinsic procedure
   gamma_1.f90
   specifics_1.f90
-
-  # error: Must be a constant value
-  transfer_simplify_12.f90
 
   # error: COMMON block was not lowered before its usage
   test_common_binding_labels.f03
@@ -791,9 +749,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # These tests are skipped because they cause flang to crash.
 
   # Assertion `ty.isa<fir::RecordType>()' failed
-  c_assoc.f90
   equiv_7.f90
-  iso_c_binding_rename_1.f03
 
   # --------------------------------------------------------------------------
   #
@@ -847,9 +803,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # DejaGNU directives to conditionally disable such tests, they are always
   # disabled until we can conditionally run such tests
   selected_logical_kind_3.f90
-
-  # error: Only -std=f2018 is allowed currently.
-  continuation_19.f
 
   # error: Must be a constant value
   pdt_33.f03
@@ -913,7 +866,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   matmul_bounds_8.f90
   merge_char_3.f90
   module_nan.f90
-  namelist_87.f90
   nan_2.f90 # depend on MIN/MAX(1.,NaN) folding to 1.; f18 & Intel return NaN.
   negative_unit_int8.f # depends on 64-bit unit numbers or something?
   no_range_check_1.f90
@@ -929,7 +881,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pr17286.f90
   pr17706.f90 # depends on -fno-sign-zero option
   pr59700.f90
-  pr71523_2.f90
   pr88052.f90
   pr96436_3.f90
   pr96436_4.f90
@@ -1148,7 +1099,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   c_loc_tests_4.f03
   c_sizeof_2.f90
   char_length_1.f90
-  coarray_5.f90
   common_20.f90
   complex_intrinsic_4.f90
   complex_intrinsic_6.f90
@@ -1429,8 +1379,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   oldstyle_2.f90
   # integer, parameter :: dp = kind(1.0_dp)
   recursive_parameter_1.f90
-  # Statement function cannot be a dummy argument
-  stfunc_2.f90
   # Statement function argument implicit type doesn't match later explicit type
   stfunc_3.f90
   # Assumed-length CHARACTER cannot be VALUE
@@ -1465,12 +1413,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   d_lines_3.f
   # "0include" not recognized as INCLUDE line with 0 in column 6
   include_12.f
-  # Invalid specification expression: reference to impure function 'iargc' -- might as well consider it to be pure
-  pr71085.f90
   # No explicit type declared for 'f'
   pr91945.f90
-  # error: No explicit type declared for 'arg4'
-  unused_artificial_dummies_1.f90
 
   # Invalid specification expression: reference to OPTIONAL dummy argument
   allocatable_length_2.f90
@@ -1490,11 +1434,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Valid error: ALLOCATABLE coarray '...' may not be associated with INTENT(OUT) dummy argument '...='
   coarray_lib_token_2.f90
   intent_out_11.f90
-  # Valid error "The type of 'n' has already been implicitly declared" on   "implicit NONE; integer :: a(n); integer (kind=1), intent(in) :: n"
-  directive_unroll_1.f90
-  directive_unroll_2.f90
+  # Valid error "unknown argument: '-fdisable-tree-cunroll'"
   directive_unroll_3.f90
-  directive_unroll_4.f90
   # Valid error: Result of ENTRY is not compatible with result of containing function
   entry_17.f90
   # Just bad syntax:   READ ('(') // 'A)', var  -- note transposed ) and final quote
@@ -1507,8 +1448,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   interface_8.f90
   # Valid error: Dimension 1 of left-hand side has extent 2, but right-hand side has extent 3
   iso_fortran_env_7.f90
-  # Valid error: Invalid specification expression: reference to local entity '...'
-  pr79315.f90
   pr95090.f90
   # Valid error: An array component of an interoperable type must have at least one element
   pr105954.f90
@@ -1625,7 +1564,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   associate_32.f03
   inline_matmul_1.f90
   maxloc_bounds_5.f90
-  ptr_func_assign_1.f08
 
   # Tests looking for runtime errors (e.g., bound checks). Correctly
   # caught by flang runtime, but not caught with Flang optimizations,
@@ -1654,15 +1592,8 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pack_bounds_1.f90
   spread_bounds_1.f90
 
-  # Bad test, assigning an 11 elements array to a 12 elements array.
-  transfer_array_intrinsic_4.f90
-
   # Bad test; reads 0.D99999 from a file; every other Fortran works
   io_err_1.f90
-
-  # Fails at runtime with a valid I/O error due to INQUIRE(IOLENGTH=n)
-  # being used on a derived type with defined unformatted output.
-  dtio_16.f90
 
   # Fail at runtime due to dependence on gfortran's specific IOSTAT=
   # error code numbers or IOMSG= error message texts.
@@ -1751,11 +1682,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   fmt_zero_width.f90
   list_directed_large.f90
 
-  # Depends on gfortran padding Hollerith with blanks up to even 32-bit words.
-  # gfortran & nvfortran do so; ifort/ifx, NAG, and f18 pad with zeroes; XLF
-  # doesn't pad at all.
-  hollerith8.f90
-
   # Depends on gfortran returning a nonstandard "UNSPECIFIED" result for
   # INQUIRE(..., POSITION=).
   inquire_5.f90
@@ -1773,10 +1699,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # all other Fortran compilers, and (debatably) the standard, allow it.
   iostat_5.f90
 
-  # Depends on gfortran emitting "Infinity" for formatted output;
-  # some compilers, including f18, emit "Inf".
-  large_real_kind_1.f90
-
   # gfortran allows pointers to be associated with zero sized entities.
   # flang doesn't allow it per F2023, 16.9.20, p5, case (v)-(vi)
   pointer_init_8.f90
@@ -1790,9 +1712,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   init_flag_3.f90
   init_flag_4.f90
   init_flag_5.f90
-  init_flag_6.f90
   init_flag_7.f90
-  init_flag_9.f90
 
   # Require -fno-realloc-lhs or similar.
   realloc_on_assign_21.f90
@@ -1822,10 +1742,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   PR113061.f90
   allocate_with_source_29.f90
   boz_8.f90
-  continuation_18.f90
   data_initialized_4.f90
-  data_pointer_3.f90
-  date_and_time_2.f90
   interface_50.f90
   interface_procedure_1.f90
   iso_fortran_env_9.f90
@@ -1835,25 +1752,16 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   pdt_34.f03
   pdt_35.f03
   pr112407b.f90
-  pr114883.f90
-  pr25623-2.f90
-  pr25623.f90
-  pr43984.f90
   pr88624.f90
   pr99368.f90
-  reshape_10.f90
   selected_logical_kind_2.f90
   submodule_3.f08
   submodule_33.f08
   unsigned_21_be.f90
-  achar_2.f90
   allocate_with_source_30.f90
-  allocate_with_source_31.f90
-  backslash_1.f90
   bound_11.f90
   bounds_check_fail_6.f90
   bounds_check_fail_7.f90
-  internal_dummy_2.f08
   iso_fortran_env_8.f90
   optional_absent_12.f90
   pr103389.f90
