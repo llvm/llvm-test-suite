@@ -348,7 +348,7 @@ if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQU
 endif()
 
 option(TEST_SUITE_COLLECT_DEBUGIFY_LOC_COVERAGE
-       "Check for missing debug location coverage (requires Clang with DebugLoc origin-tracking enabled)" ON)
+       "Check for missing debug location coverage (requires Clang with DebugLoc origin-tracking enabled)" OFF)
 
 if (TEST_SUITE_COLLECT_DEBUGIFY_LOC_COVERAGE)
   set(DEBUGIFY_ORIGIN_REPORT_PATH "${CMAKE_BINARY_DIR}/debugify-report.json")
