@@ -374,6 +374,7 @@ def print_result(
     shorten_names=True,
     minimal_names=False,
     show_diff_column=True,
+    only_changed=False,
     sortkey="diff",
     sort_by_abs=True,
     absolute_diff=False,
@@ -429,6 +430,16 @@ def print_result(
             formatters[(m, "diff_ci_abs")] = lambda x: \
                 "[%4.3f, %4.3f]" % (x[0], x[1]) \
                 if isinstance(x, tuple) and not (pd.isna(x[0]) or pd.isna(x[1])) else ""
+
+    # Filter out rows where the metrics are the same across all results.
+    if only_changed:
+        changed = pd.Series(False, index=dataout.index)
+        for metric in metrics:
+            v0, v1 = get_values(dataout[metric], lhs_name, rhs_name)
+            equal = v0.eq(v1) | (v0.isna() & v1.isna())
+            changed |= ~equal
+        dataout = dataout[changed]
+
     # Turn index into a column so we can format it...
     formatted_program = dataout.index.to_series()
     if shorten_names:
@@ -629,6 +640,13 @@ def main():
         dest="diff_confidence_interval",
         help="Show confidence interval for the difference (default: relative)",
     )
+    parser.add_argument(
+        "--only-changed",
+        action="store_true",
+        dest="only_changed",
+        default=False,
+        help="Show only results where a metric has changed"
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -773,6 +791,7 @@ def main():
         shorten_names,
         config.minimal_names,
         config.show_diff,
+        config.only_changed,
         sortkey,
         config.no_abs_sort,
         config.absolute_diff,
