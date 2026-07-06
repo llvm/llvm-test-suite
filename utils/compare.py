@@ -26,8 +26,7 @@ def read_lit_json(filename):
     info_columns = ["hash"]
     # Pass1: Figure out metrics (= the column index)
     if "tests" not in jsondata:
-        print("%s: Could not find toplevel 'tests' key" % filename,
-              file=sys.stderr)
+        print("%s: Could not find toplevel 'tests' key" % filename, file=sys.stderr)
         sys.exit(1)
     for test in jsondata["tests"]:
         name = test.get("name")
@@ -38,8 +37,10 @@ def read_lit_json(filename):
             sys.stderr.write("Error: Multiple tests with name '%s'\n" % name)
             sys.exit(1)
         if "metrics" not in test:
-            print("Warning: '%s' has no metrics, skipping!" % test["name"],
-                  file=sys.stderr)
+            print(
+                "Warning: '%s' has no metrics, skipping!" % test["name"],
+                file=sys.stderr,
+            )
             continue
         names.add(name)
         for name in test["metrics"].keys():
@@ -518,8 +519,7 @@ def print_result(
             print(out)
 
         # Print a summary pivoted by metric
-        d_summary = d.drop(columns=exclude_from_summary, level=1,
-                           errors='ignore')
+        d_summary = d.drop(columns=exclude_from_summary, level=1, errors="ignore")
         print(d_summary.describe())
 
 
