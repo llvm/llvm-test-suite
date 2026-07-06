@@ -658,8 +658,9 @@ def main():
     )
     parser.add_argument(
         "--format",
-        choices=['csv', 'md'],
-        help="Output results in a specific format. Requires the tabulate pacakge.",
+        choices=["text", "csv", "md"],
+        default="text",
+        help="Output results in a specific format. csv and md require the tabulate package.",
     )
     config = parser.parse_args()
 
