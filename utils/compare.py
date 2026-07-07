@@ -26,7 +26,7 @@ def read_lit_json(filename):
     info_columns = ["hash"]
     # Pass1: Figure out metrics (= the column index)
     if "tests" not in jsondata:
-        print("%s: Could not find toplevel 'tests' key")
+        print("%s: Could not find toplevel 'tests' key" % filename, file=sys.stderr)
         sys.exit(1)
     for test in jsondata["tests"]:
         name = test.get("name")
@@ -37,7 +37,10 @@ def read_lit_json(filename):
             sys.stderr.write("Error: Multiple tests with name '%s'\n" % name)
             sys.exit(1)
         if "metrics" not in test:
-            print("Warning: '%s' has no metrics, skipping!" % test["name"])
+            print(
+                "Warning: '%s' has no metrics, skipping!" % test["name"],
+                file=sys.stderr,
+            )
             continue
         names.add(name)
         for name in test["metrics"].keys():
@@ -319,7 +322,7 @@ def print_filter_stats(reason, before, after):
     n_after = len(after.groupby(level=1))
     n_filtered = n_before - n_after
     if n_filtered != 0:
-        print("%s: %s (filtered out)" % (reason, n_filtered))
+        print("%s: %s (filtered out)" % (reason, n_filtered), file=sys.stderr)
 
 
 # Truncate a string to a maximum length by keeping a prefix, a suffix and ...
@@ -380,7 +383,8 @@ def print_result(
     absolute_diff=False,
     lhs_name="lhs",
     rhs_name="rhs",
-    only_significant=False
+    only_significant=False,
+    format=None,
 ):
     metrics = d.columns.levels[0]
     if sort_by_abs:
@@ -487,31 +491,36 @@ def print_result(
         'diff_ci_rel', 'diff_ci_abs',
     ]
 
-    # Print an empty value instead of NaN (for the geomean row).
-    if split_by_metric:
-        for m in metrics:
-            metric_data = dataout[["Program", m]]
-            out = metric_data.to_string(
+    if format == "md":
+        dataout.to_markdown(buf=sys.stdout, index=False)
+    elif format == "csv":
+        dataout.to_csv(sys.stdout, index=False)
+    else:
+        # Print an empty value instead of NaN (for the geomean row).
+        if split_by_metric:
+            for m in metrics:
+                metric_data = dataout[["Program", m]]
+                out = metric_data.to_string(
+                    index=False,
+                    justify="left",
+                    na_rep="",
+                    float_format=float_format,
+                    formatters=formatters,
+                )
+                print(f"{out}\n")
+        else:
+            out = dataout.to_string(
                 index=False,
                 justify="left",
                 na_rep="",
                 float_format=float_format,
                 formatters=formatters,
             )
-            print(f"{out}\n")
-    else:
-        out = dataout.to_string(
-            index=False,
-            justify="left",
-            na_rep="",
-            float_format=float_format,
-            formatters=formatters,
-        )
-        print(out)
+            print(out)
 
-    # Print a summary pivoted by metric
-    d_summary = d.drop(columns=exclude_from_summary, level=1, errors='ignore')
-    print(d_summary.describe())
+        # Print a summary pivoted by metric
+        d_summary = d.drop(columns=exclude_from_summary, level=1, errors="ignore")
+        print(d_summary.describe())
 
 
 def main():
@@ -647,6 +656,12 @@ def main():
         default=False,
         help="Show only results where a metric has changed"
     )
+    parser.add_argument(
+        "--format",
+        choices=["text", "csv", "md"],
+        default="text",
+        help="Output results in a specific format. csv and md require the tabulate package.",
+    )
     config = parser.parse_args()
 
     if config.show_diff is None:
@@ -730,7 +745,7 @@ def main():
     # Filter data
     proggroup = data.groupby(level=1)
     initial_size = len(proggroup.indices)
-    print("Tests: %s" % (initial_size,))
+    print("Tests: %s" % (initial_size,), file=sys.stderr)
     if config.filter_failed and hasattr(data, "Exec"):
         newdata = filter_failed(data)
         print_filter_stats("Failed", data, newdata)
@@ -760,10 +775,10 @@ def main():
         data = newdata
     final_size = len(data.groupby(level=1))
     if final_size != initial_size:
-        print("Remaining: %d" % (final_size,))
+        print("Remaining: %d" % (final_size,), file=sys.stderr)
 
     # Reduce / add columns
-    print("Metric: %s" % (",".join(metrics),))
+    print("Metric: %s" % (",".join(metrics),), file=sys.stderr)
     if len(metrics) > 0:
         data = data[metrics]
 
@@ -781,7 +796,7 @@ def main():
         sortkey = data.columns.levels[1][0]
 
     # Print data
-    print("")
+    print("", file=sys.stderr)
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
     print_result(
@@ -798,6 +813,7 @@ def main():
         config.lhs_name,
         config.rhs_name,
         config.only_significant,
+        config.format,
     )
 
 
