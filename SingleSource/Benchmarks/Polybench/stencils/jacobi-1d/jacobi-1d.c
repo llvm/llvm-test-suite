@@ -23,6 +23,10 @@
 
 
 /* Array initialization. */
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_1D(A,N,n),
@@ -37,6 +41,9 @@ void init_array (int n,
 	B[i] = ((DATA_TYPE) i+ 3) / n;
       }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -82,6 +89,10 @@ void kernel_jacobi_1d(int tsteps,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static void
 kernel_jacobi_1d_StrictFP(int tsteps,
                                 int n,
@@ -99,6 +110,9 @@ kernel_jacobi_1d_StrictFP(int tsteps,
 	A[i] = 0.33333 * (B[i-1] + B[i] + B[i + 1]);
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */

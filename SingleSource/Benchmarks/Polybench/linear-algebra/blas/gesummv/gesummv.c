@@ -22,6 +22,10 @@
 
 
 /* Array initialization. */
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void init_array(int n,
 		DATA_TYPE *alpha,
@@ -44,6 +48,9 @@ void init_array(int n,
       }
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -97,6 +104,10 @@ void kernel_gesummv(int n,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void kernel_gesummv_StrictFP(int n,
                              DATA_TYPE alpha,
@@ -122,6 +133,9 @@ void kernel_gesummv_StrictFP(int n,
       y[i] = alpha * tmp[i] + beta * y[i];
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */

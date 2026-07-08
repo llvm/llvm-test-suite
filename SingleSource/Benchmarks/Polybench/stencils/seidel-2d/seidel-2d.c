@@ -23,6 +23,10 @@
 
 
 /* Array initialization. */
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
@@ -34,6 +38,9 @@ void init_array (int n,
     for (j = 0; j < n; j++)
       A[i][j] = ((DATA_TYPE) i*(j+2) + 2) / n;
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -79,6 +86,10 @@ void kernel_seidel_2d(int tsteps,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static void
 kernel_seidel_2d_StrictFP(int tsteps,
                           int n,
@@ -94,6 +105,9 @@ kernel_seidel_2d_StrictFP(int tsteps,
 		   + A[i][j-1] + A[i][j] + A[i][j+1]
 		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/SCALAR_VAL(9.0);
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */

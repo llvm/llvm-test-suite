@@ -23,6 +23,10 @@
 
 
 /* Array initialization. */
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void init_array(int m, int n,
 		DATA_TYPE POLYBENCH_2D(A,M,N,m,n),
@@ -41,6 +45,9 @@ void init_array(int m, int n,
     for (j = 0; j < n; j++)
       R[i][j] = 0.0;
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -116,6 +123,10 @@ void kernel_gramschmidt(int m, int n,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static void
 kernel_gramschmidt_StrictFP(int m, int n,
                             DATA_TYPE POLYBENCH_2D(A,M,N,m,n),
@@ -145,6 +156,9 @@ kernel_gramschmidt_StrictFP(int m, int n,
 	}
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */

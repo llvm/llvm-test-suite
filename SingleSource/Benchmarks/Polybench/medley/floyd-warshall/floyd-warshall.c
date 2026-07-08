@@ -23,6 +23,10 @@
 
 
 /* Array initialization. */
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(path,N,N,n,n))
@@ -37,6 +41,9 @@ void init_array (int n,
          path[i][j] = 999;
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -82,6 +89,10 @@ void kernel_floyd_warshall(int n,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 static void
 kernel_floyd_warshall_StrictFP(int n, DATA_TYPE POLYBENCH_2D(path,N,N,n,n))
 {
@@ -96,6 +107,9 @@ kernel_floyd_warshall_StrictFP(int n, DATA_TYPE POLYBENCH_2D(path,N,N,n,n))
 	    path[i][j] : path[i][k] + path[k][j];
     }
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC pop_options
+#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */
