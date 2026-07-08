@@ -140,10 +140,6 @@ macro(create_local_hip_tests VariantSuffix)
   # Set per-source compilation/link options
   set_source_files_properties(with-fopenmp.hip PROPERTIES
     COMPILE_FLAGS -fopenmp)
-  # FIXME: Ideally GlobalISel should be enabled for the whole HIP suite and not
-  # just s-bitreplicate test.
-  set_source_files_properties(s-bitreplicate.hip PROPERTIES
-    COMPILE_FLAGS "-fno-offload-lto -Xarch_device -fglobal-isel")
   # TODO: Add the flag after the kernel argument splitting pass is enabled.
   #set_source_files_properties(split-kernel-args.hip PROPERTIES
   #  COMPILE_FLAGS "-mllvm -amdgpu-enable-split-kernel-args")
