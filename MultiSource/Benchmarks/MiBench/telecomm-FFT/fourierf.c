@@ -168,6 +168,13 @@ void fft_float (
     }
 }
 
+// GCC doesn't support the FP_CONTRACT pragma.
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC optimize ("fp-contract=off")
+#else
+#pragma STDC FP_CONTRACT OFF
+#endif
+
 void fft_float_StrictFP (
     unsigned  NumSamples,
     int       InverseTransform,
@@ -176,7 +183,6 @@ void fft_float_StrictFP (
     float    *RealOut,
     float    *ImagOut )
 {
-#pragma STDC FP_CONTRACT OFF
     unsigned NumBits;    /* Number of bits needed to store indices */
     unsigned i, j, k, n;
     unsigned BlockSize, BlockEnd;
