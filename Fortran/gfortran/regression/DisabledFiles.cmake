@@ -1653,6 +1653,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   maxloc_bounds_8.f90
   pack_bounds_1.f90
   spread_bounds_1.f90
+  bounds_check_fail_3.f90
 
   # Bad test, assigning an 11 elements array to a 12 elements array.
   transfer_array_intrinsic_4.f90
