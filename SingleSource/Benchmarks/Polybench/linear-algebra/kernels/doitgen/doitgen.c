@@ -75,10 +75,6 @@ void print_array(int nr, int nq, int np,
 
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC push_options
-#pragma GCC optimize ("fp-contract=off")
-#endif
 void kernel_doitgen(int nr, int nq, int np,
 		    DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
 		    DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
@@ -105,6 +101,10 @@ void kernel_doitgen(int nr, int nq, int np,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize ("fp-contract=off")
+#endif
 void kernel_doitgen_StrictFP(int nr, int nq, int np,
 		    DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
 		    DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
