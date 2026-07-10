@@ -1633,6 +1633,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Until https://github.com/orgs/llvm/projects/12?pane=issue&itemId=29048733
   # is implemented, they can only pass at -O0:
   all_bounds_1.f90
+  bounds_check_fail_3.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
   eoshift_bounds_1.f90
