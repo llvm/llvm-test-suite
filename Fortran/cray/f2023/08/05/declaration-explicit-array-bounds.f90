@@ -10,6 +10,7 @@
 !  10. Implied-do + array slices + arithmetic in bounds
 !  11. Vector subscripts in bounds expressions
 !  12. Block construct re-evaluation — bounds from enclosing scope
+!  13. Zero-size bounds array — rank 0 (scalar)
 
 module helpers
   implicit none
@@ -48,10 +49,12 @@ program declaration_explicit_array_bounds
   call test_implied_do_slice_arith()
   call test_vector_subscript()
   call test_block_reeval()
+  call test_zero_size_scalar()
 
   print *, ""
   print *, "RESULTS:", pass_count, "passed,", fail_count, "failed"
   if (fail_count > 0) stop 1
+  ! stop 2
 
 contains
 
@@ -269,6 +272,38 @@ contains
       end block
     end do
     call report("block_reeval")
+  end subroutine
+
+  ! 13. Zero-size bounds array declares a scalar (rank 0), not an array
+  subroutine test_zero_size_scalar()
+    ok = .true.
+    call check_zero_size_scalar()
+    call report("zero_size_scalar")
+  end subroutine
+
+  subroutine check_zero_size_scalar()
+    integer, parameter :: nobounds(0) = [integer ::]
+    ! rank of the entity = size of the bounds array = 0 -> scalar
+    integer :: a(nobounds)
+    integer :: b([integer::] : nobounds)
+    integer :: c(999 : [integer::])
+    integer :: d(nobounds : 999)
+    if ((rank(a) /= 0) .or. &
+        (rank(b) /= 0) .or. &
+        (rank(c) /= 0) .or. &
+        (rank(d) /= 0)) then
+      ok = .false.
+    endif
+    a = 42            ! must behave as a scalar
+    b = 43
+    c = 44
+    d = 45
+    if ((a /= 42) .or. &
+        (b /= 43) .or. &
+        (c /= 44) .or. &
+        (d /= 45)) then
+      ok = .false.
+    endif
   end subroutine
 
 end program declaration_explicit_array_bounds
