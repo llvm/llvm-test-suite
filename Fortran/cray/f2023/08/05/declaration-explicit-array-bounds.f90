@@ -11,6 +11,10 @@
 !  11. Vector subscripts in bounds expressions
 !  12. Block construct re-evaluation — bounds from enclosing scope
 !  13. Zero-size bounds array — rank 0 (scalar)
+!  14. Upper < lower — valid zero-size array (nonzero rank)
+!  15. Negative bounds values
+!  16. Bounds fixed at entry — clobbering the source doesn't change them
+!  17. Constant (PARAMETER) bounds array — compile-time folding path
 
 module helpers
   implicit none
@@ -50,11 +54,14 @@ program declaration_explicit_array_bounds
   call test_vector_subscript()
   call test_block_reeval()
   call test_zero_size_scalar()
+  call test_ub_lt_lb_zero_size()
+  call test_negative_bounds()
+  call test_bounds_invariance()
+  call test_param_bounds()
 
   print *, ""
   print *, "RESULTS:", pass_count, "passed,", fail_count, "failed"
   if (fail_count > 0) stop 1
-  ! stop 2
 
 contains
 
@@ -304,6 +311,76 @@ contains
         (d /= 45)) then
       ok = .false.
     endif
+  end subroutine
+
+  ! 14. Upper bound < lower bound in one dimension: a valid zero-size array
+  !     that still has nonzero rank (rank != size).
+  subroutine test_ub_lt_lb_zero_size()
+    ok = .true.
+    call check_ub_lt_lb_zero_size([2, 5], [1, 8])
+    call report("ub_lt_lb_zero_size")
+  end subroutine
+
+  subroutine check_ub_lt_lb_zero_size(lb, ub)
+    integer, intent(in) :: lb(2), ub(2)
+    ! dim 1: lb=2, ub=1 -> extent 0;  dim 2: lb=5, ub=8 -> extent 4
+    integer :: a(lb:ub)
+    if (size(a) /= 0) ok = .false.
+    if (size(a, 1) /= 0) ok = .false.
+    if (size(a, 2) /= 4) ok = .false.
+    if (any(shape(a) /= [0, 4])) ok = .false.
+  end subroutine
+
+  ! 15. Negative bound values, including element access at negative indices.
+  subroutine test_negative_bounds()
+    ok = .true.
+    call check_negative_bounds([-3, -10], [-1, -2])
+    call report("negative_bounds")
+  end subroutine
+
+  subroutine check_negative_bounds(lb, ub)
+    integer, intent(in) :: lb(2), ub(2)
+    ! dim 1: -3:-1 -> extent 3;  dim 2: -10:-2 -> extent 9
+    integer :: a(lb:ub)
+    if (any(lbound(a) /= [-3, -10])) ok = .false.
+    if (any(ubound(a) /= [-1, -2])) ok = .false.
+    if (size(a, 1) /= 3) ok = .false.
+    if (size(a, 2) /= 9) ok = .false.
+    a = 0
+    a(-3, -10) = 1
+    a(-1, -2) = 2
+    if (a(-3, -10) /= 1) ok = .false.
+    if (a(-1, -2) /= 2) ok = .false.
+  end subroutine
+
+  ! 16. Bounds are evaluated once on entry to the scope; redefining the
+  !     variable they came from afterward must not change the array.
+  subroutine test_bounds_invariance()
+    integer :: bnds(2)
+    ok = .true.
+    bnds = [3, 4]
+    block
+      integer :: a(bnds)      ! bounds captured on BLOCK entry: 3 x 4
+      bnds = [99, 99]         ! clobber the source after 'a' exists
+      if (size(a, 1) /= 3) ok = .false.
+      if (size(a, 2) /= 4) ok = .false.
+      if (size(a) /= 12) ok = .false.
+    end block
+    call report("bounds_invariance")
+  end subroutine
+
+  ! 17. Constant (PARAMETER) bounds arrays exercise the compile-time
+  !     constant-folding path rather than runtime extraction.
+  subroutine test_param_bounds()
+    integer, parameter :: lb(2) = [2, 3]
+    integer, parameter :: ub(2) = [4, 7]
+    integer :: a(lb:ub)
+    ok = .true.
+    if (any(lbound(a) /= [2, 3])) ok = .false.
+    if (any(ubound(a) /= [4, 7])) ok = .false.
+    if (size(a, 1) /= 3) ok = .false.
+    if (size(a, 2) /= 5) ok = .false.
+    call report("param_bounds")
   end subroutine
 
 end program declaration_explicit_array_bounds
