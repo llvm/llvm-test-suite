@@ -425,6 +425,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # This test should not be expected to fail now that metadirective lowering
   # is implemented.
   metadirective-8.f90
+  declare-variant-6.f90 # See https://github.com/llvm/llvm-test-suite/pull/447
 
   # These tests fail, but the cause of their failure needs to be investigated.
   allocate-10.f90
