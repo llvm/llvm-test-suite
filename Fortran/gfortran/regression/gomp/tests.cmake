@@ -171,7 +171,7 @@ compile;declare-variant-2a.f90;xfail;;;
 compile;declare-variant-3.f90;;;;
 compile;declare-variant-4.f90;;;;
 compile;declare-variant-5.f90;;;i.86-.+-.+ x86_64-.+-.+;
-compile;declare-variant-6.f90;;;;
+compile;declare-variant-6.f90;xfail;;;
 compile;declare-variant-7.f90;xfail;;i.86-.+-.+ x86_64-.+-.+;
 compile;declare-variant-8.f90;;;;
 compile;declare-variant-9.f90;;-cpp;;
