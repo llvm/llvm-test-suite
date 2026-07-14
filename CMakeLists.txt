@@ -347,6 +347,17 @@ if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQU
   message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux/AIX, ignored on this platform")
 endif()
 
+option(TEST_SUITE_COLLECT_DEBUGIFY_LOC_COVERAGE
+       "Check for missing debug location coverage (requires Clang with DebugLoc origin-tracking enabled)" OFF)
+
+if (TEST_SUITE_COLLECT_DEBUGIFY_LOC_COVERAGE)
+  set(DEBUGIFY_ORIGIN_REPORT_PATH "${CMAKE_BINARY_DIR}/debugify-report.json")
+  set(DEBUGIFY_CMD_PREFIX "${CMAKE_SOURCE_DIR}/DebugifyCompilerWrapper.py ${DEBUGIFY_ORIGIN_REPORT_PATH}")
+
+  set(CMAKE_C_COMPILE_OBJECT "${DEBUGIFY_CMD_PREFIX} ${CMAKE_C_COMPILE_OBJECT}")
+  set(CMAKE_CXX_COMPILE_OBJECT "${DEBUGIFY_CMD_PREFIX} ${CMAKE_CXX_COMPILE_OBJECT}")
+endif()
+
 option(TEST_SUITE_COLLECT_COMPILE_TIME
        "Measure compile time by wrapping compiler invocations in timeit" ON)
 
