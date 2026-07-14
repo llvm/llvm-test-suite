@@ -5,6 +5,8 @@ if(ARCH MATCHES "x86" OR ARCH MATCHES "riscv" OR
   add_subdirectory(gcc-c-torture)
 endif()
 
+add_subdirectory(musttail)
+
 list(APPEND LDFLAGS -lm)
 list(APPEND CFLAGS -Wno-implicit-int)
 list(APPEND CFLAGS -Wno-error=incompatible-pointer-types)
