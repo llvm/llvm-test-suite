@@ -35,6 +35,13 @@
 #include <unistd.h>
 #include <math.h>
 
+// GCC doesn't support the FP_CONTRACT pragma.
+#if defined(__GNUC__) && !defined(__clang__)
+#define GCC_FP_CONTRACT_OFF __attribute__((optimize("fp-contract=off")))
+#else
+#define GCC_FP_CONTRACT_OFF
+#endif
+
 /* 
 This implementation is derived from the StreamIt implementation,
 rather than from the PCA VSIPL-based implementation.  It is intended
@@ -432,15 +439,10 @@ void Detector(int beam, float *data, float *output)
   }
 }
 
-// GCC doesn't support the FP_CONTRACT pragma.
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC optimize ("fp-contract=off")
-#else
-#pragma STDC FP_CONTRACT OFF
-#endif
-
+GCC_FP_CONTRACT_OFF
 void begin_StrictFP(void)
 {
+#pragma STDC FP_CONTRACT OFF
   struct BeamFirData coarse_fir_data[NUM_CHANNELS];
   struct BeamFirData fine_fir_data[NUM_CHANNELS];
   struct BeamFirData mf_fir_data[NUM_BEAMS];
@@ -504,8 +506,10 @@ void begin_StrictFP(void)
     }
 }
 
+GCC_FP_CONTRACT_OFF
 void InputGenerate_StrictFP(int channel, float *inputs, int n)
 {
+#pragma STDC FP_CONTRACT OFF
   int i;
   for (i = 0; i < n; i++)
   {
@@ -531,8 +535,10 @@ void InputGenerate_StrictFP(int channel, float *inputs, int n)
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFirSetup_StrictFP(struct BeamFirData *data, int n)
 {
+#pragma STDC FP_CONTRACT OFF
   int i, j;
 
   data->len = n;
@@ -559,10 +565,12 @@ void BeamFirSetup_StrictFP(struct BeamFirData *data, int n)
 #endif
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFirFilter_StrictFP(struct BeamFirData *data,
                             int input_length, int decimation_ratio,
                             float *in, float *out)
 {
+#pragma STDC FP_CONTRACT OFF
   /* Input must be exactly 2*decimation_ratio long; output must be
    * exactly 2 long. */
   float real_curr = 0;
@@ -606,8 +614,10 @@ void BeamFirFilter_StrictFP(struct BeamFirData *data,
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFormWeights_StrictFP(int beam, float *weights)
 {
+#pragma STDC FP_CONTRACT OFF
   int i;
   for (i = 0; i < NUM_CHANNELS; i++)
   {
@@ -627,9 +637,11 @@ void BeamFormWeights_StrictFP(int beam, float *weights)
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamForm_StrictFP(int beam, const float *weights, const float *input,
                        float *output)
 {
+#pragma STDC FP_CONTRACT OFF
   /* 2*NUM_CHANNELS inputs and weights; 2 outputs. */
   float real_curr = 0;
   float imag_curr = 0;
@@ -643,16 +655,20 @@ void BeamForm_StrictFP(int beam, const float *weights, const float *input,
   output[1] = imag_curr;
 }
 
+GCC_FP_CONTRACT_OFF
 void Magnitude_StrictFP(float *in, float *out, int n)
 {
+#pragma STDC FP_CONTRACT OFF
   int i;
   /* Should be 2n inputs, n outputs. */
   for (i = 0; i < n; i++)
     out[i] = sqrt(in[2*i]*in[2*i] + in[2*i+1]*in[2*i+1]);
 }
 
+GCC_FP_CONTRACT_OFF
 void Detector_StrictFP(int beam, float *data, float *output)
 {
+#pragma STDC FP_CONTRACT OFF
   int sample;
   /* Should be exactly NUM_POST_DEC_2 samples. */
   for (sample = 0; sample < NUM_POST_DEC_2; sample++)
