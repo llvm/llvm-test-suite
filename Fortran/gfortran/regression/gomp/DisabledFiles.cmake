@@ -30,27 +30,21 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   depend-iterator-1.f90
 
   # unimplemented: Construct enclosing do loop
-  combined-if.f90
-  openmp-simd-6.f90
   pr107214-7.f90
   pr79154-2.f90
-  pr82568.f90
   schedule-modifiers-1.f90
 
   # unimplemented: array sections not supported for task depend
   depend-4.f90
 
   # unimplemented: OpenMP Block construct clause
-  pr71758.f90
   pr81887.f90
-  target-device-2.f90
 
   # unimplemented: OMPD_target_data MapOperand BoxType
   pr107214.f90
 
   # unimplemented: Unhandled block directive
   pr39152.f90
-  pr95869.f90
 
   # unimplemented: OpenMPDeclarativeAllocate
   allocate-pinned-1.f90
@@ -74,24 +68,14 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: NONTEMPORAL clause in SIMD construct
   nontemporal-1.f90
 
-  # unimplemented: LINEAR clause in SIMD construct
-  pr89027.f90
-
   # unimplemented: clause ALLOCATE in TARGET construct
   allocate-clause.f90
-
-  # unimplemented: non-rectangular canonical loop nests
-  canonical-loop-1.f90
-  pr85313.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # error: the update operation inside the region must be a binary operation and
   # that update operation must have the region argument as an operand
   atomic-12.f90
-
-  # error: address must dereference to value type
-  omp_atomic2.f90
 
   # error: SemanticsContext::FindScope(): invalid source location
   target-device-ancestor-4.f90
@@ -120,7 +104,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
 
   # expected end of line
   affinity-1.f90
-  cancel-3.f90
   clauses-1.f90
   declare-simd-4.f90
   declare-target-4.f90
@@ -209,9 +192,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   all-memory-2.f90
   masked-1.f90
   masked-combined-1.f90
-  masked-taskloop.f90
   nothing-1.f90
-  num-teams-1.f90
   num-teams-2.f90
   openmp-simd-7.f90
   pr103695.f90
@@ -265,7 +246,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # expected 'MASTER'
   nowait-2.f90
   nowait-5.f90
-  strictly-structured-block-1.f90
 
   # expected 'SINGLE'
   nowait-3.f90
@@ -277,21 +257,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # declarations
   order-1.f90
 
-  # expected 'PARALLEL DO'
-  pr102431.f90
-
-  # expected 'TARGET TEAMS DISTRIBUTE'
-  pr107214-4.f90
-
-  # expected 'TYPE'
-  pr77665.f90
-
   # 'b1' appears in more than one data-sharing clause on the same OpenMP
   # directive
   allocate-1.f90
-
-  # COPYPRIVATE variable is not PRIVATE or THREADPRIVATE in outer context
-  copyprivate-1.f90
 
   # Internal: no symbol found for
   declare-simd-2.f90
@@ -419,23 +387,14 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   polymorphic-mapping-5.f90
   pr33439.f90
   pr78866-2.f90
-  reduction3.f90
-  sharing-3.f90
-  linear-5.f90 # Re-enable this test when default OpenMP version = 5.2
-  # This test should not be expected to fail now that metadirective lowering
-  # is implemented.
   metadirective-8.f90
   declare-variant-6.f90 # See https://github.com/llvm/llvm-test-suite/pull/447
 
   # These tests fail, but the cause of their failure needs to be investigated.
-  allocate-10.f90
-  allocate-13.f90
-  allocate-13a.f90
   allocate-5.f90
   allocate-8.f90
   c_ptr_tests_20.f90
   declare-target-indirect-2.f90
-  defaultmap-8.f90
   defaultmap-9.f90
   depobj-3.f90
   inner-loops-1.f90
@@ -460,13 +419,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   unroll-1.f90
   unroll-2.f90
   unroll-3.f90
-  unroll-4.f90
   unroll-5.f90
   unroll-7.f90
   unroll-8.f90
   unroll-9.f90
   unroll-inner-loop-1.f90
-  unroll-no-clause-1.f90
   unroll-non-rect-1.f90
   unroll-non-rect-2.f90
   unroll-simd-1.f90

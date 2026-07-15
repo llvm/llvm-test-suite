@@ -184,7 +184,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   nested-reductions-2-kernels.f90
   nested-reductions-2-parallel.f90
   pr71704.f90
-  routine-intrinsic-1.f
   specification-part.f90
   uninit-if-clause.f95
 
