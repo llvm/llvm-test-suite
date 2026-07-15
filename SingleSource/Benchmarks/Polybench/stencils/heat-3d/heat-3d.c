@@ -22,10 +22,7 @@
 
 
 /* Array initialization. */
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC push_options
-#pragma GCC optimize ("fp-contract=off")
-#endif
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_3D(A,N,N,N,n,n,n),
@@ -39,9 +36,6 @@ void init_array (int n,
       for (k = 0; k < n; k++)
         A[i][j][k] = B[i][j][k] = (DATA_TYPE) (i + j + (n-k))* 10 / (n);
 }
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC pop_options
-#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -107,10 +101,7 @@ void kernel_heat_3d(int tsteps,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC push_options
-#pragma GCC optimize ("fp-contract=off")
-#endif
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void kernel_heat_3d_StrictFP(int tsteps,
 		      int n,
@@ -144,9 +135,6 @@ void kernel_heat_3d_StrictFP(int tsteps,
     }
 
 }
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC pop_options
-#endif
 
 /* Return 0 when one of the elements of arrays A and B do not match within the
    allowed FP_ABSTOLERANCE.  Return 1 when all elements match.  */

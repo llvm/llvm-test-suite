@@ -23,10 +23,7 @@
 
 
 /* Array initialization. */
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC push_options
-#pragma GCC optimize ("fp-contract=off")
-#endif
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void init_array (int n,
 		 DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
@@ -61,9 +58,6 @@ void init_array (int n,
   POLYBENCH_FREE_ARRAY(B);
 
 }
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC pop_options
-#endif
 
 
 /* DCE code. Must scan the entire live-out data.
@@ -114,10 +108,7 @@ void kernel_lu(int n,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC push_options
-#pragma GCC optimize ("fp-contract=off")
-#endif
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static void
 kernel_lu_StrictFP(int n,
                    DATA_TYPE POLYBENCH_2D(A,N,N,n,n))
@@ -139,9 +130,6 @@ kernel_lu_StrictFP(int n,
     }
   }
 }
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC pop_options
-#endif
 
 static inline int
 check_FP(int n,
