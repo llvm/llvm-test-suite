@@ -73,3 +73,43 @@ macro(create_one_local_test Name FileGlob
                           "${VariantCPPFLAGS}" "${VariantLibs}")
 endmacro()
 
+# Create test variants based on .options file.
+# If <Name>.options exists, create one test per line in the file
+# Each line specifies additional compilation flags
+# Inputs: Name, File, Offload, Suffix, CPPFLAGS, Libs
+macro(create_local_tests_with_options Name FileGlob
+                                         VariantOffload VariantSuffix
+                                         VariantCPPFLAGS VariantLibs)
+  set(OptionsFile "${CMAKE_CURRENT_SOURCE_DIR}/${Name}.options")
+
+  if(NOT EXISTS "${OptionsFile}")
+    # No .options file - create single test with no additional options
+    create_one_local_test(${Name} ${FileGlob}
+                          ${VariantOffload} ${VariantSuffix}
+                          "${VariantCPPFLAGS}" "${VariantLibs}")
+  else()
+    # Read .options file and create one test per option line
+    file(STRINGS "${OptionsFile}" FileLines)
+    set(_variant_index 0)
+    foreach(Line IN LISTS FileLines)
+      # Skip comments
+      if(NOT Line MATCHES "^#")
+        # Parse options into a list and concatenate with VariantCPPFLAGS
+        set(_combined_flags ${VariantCPPFLAGS})
+        separate_arguments(_parsed_options UNIX_COMMAND "${Line}")
+        list(APPEND _combined_flags ${_parsed_options})
+
+        # Create unique name with variant index
+        set(_test_name "${Name}-${_variant_index}")
+
+        # Call create_one_local_test with combined flags
+        create_one_local_test(${_test_name} ${FileGlob}
+                              ${VariantOffload} ${VariantSuffix}
+                              "${_combined_flags}" "${VariantLibs}")
+
+        math(EXPR _variant_index "${_variant_index} + 1")
+      endif()
+    endforeach()
+  endif()
+endmacro()
+

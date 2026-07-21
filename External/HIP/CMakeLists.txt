@@ -177,7 +177,8 @@ macro(create_local_hip_tests VariantSuffix)
         COMPILE_FLAGS "-xhip -mfma")
     endif()
 
-    create_one_local_test(${_hip_test} ${test_source}
+    # Create one test for each option set in the <_hip_test>.options file.
+    create_local_tests_with_options(${_hip_test} ${test_source}
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()
