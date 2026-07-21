@@ -5,6 +5,3 @@
 
 "allocate-16.f90":
   xfail: false
-
-"imperfect2.f90":
-  xfail: false
