@@ -226,7 +226,7 @@ compile;if-1.f90;;;;
 compile;imperfect-gotos.f90;xfail;;;
 compile;imperfect-invalid-scope.f90;xfail;;;
 compile;imperfect1.f90;xfail;;;
-compile;imperfect2.f90;xfail;;;
+compile;imperfect2.f90;;;;
 compile;imperfect3.f90;xfail;;;
 compile;imperfect4.f90;xfail;;;
 compile;imperfect5.f90;xfail;;;
