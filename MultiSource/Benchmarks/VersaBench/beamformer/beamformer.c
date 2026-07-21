@@ -35,6 +35,13 @@
 #include <unistd.h>
 #include <math.h>
 
+// GCC doesn't support the FP_CONTRACT pragma.
+#if defined(__GNUC__) && !defined(__clang__)
+#define GCC_FP_CONTRACT_OFF __attribute__((optimize("fp-contract=off")))
+#else
+#define GCC_FP_CONTRACT_OFF
+#endif
+
 /* 
 This implementation is derived from the StreamIt implementation,
 rather than from the PCA VSIPL-based implementation.  It is intended
@@ -432,6 +439,7 @@ void Detector(int beam, float *data, float *output)
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void begin_StrictFP(void)
 {
 #pragma STDC FP_CONTRACT OFF
@@ -498,6 +506,7 @@ void begin_StrictFP(void)
     }
 }
 
+GCC_FP_CONTRACT_OFF
 void InputGenerate_StrictFP(int channel, float *inputs, int n)
 {
 #pragma STDC FP_CONTRACT OFF
@@ -526,6 +535,7 @@ void InputGenerate_StrictFP(int channel, float *inputs, int n)
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFirSetup_StrictFP(struct BeamFirData *data, int n)
 {
 #pragma STDC FP_CONTRACT OFF
@@ -555,6 +565,7 @@ void BeamFirSetup_StrictFP(struct BeamFirData *data, int n)
 #endif
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFirFilter_StrictFP(struct BeamFirData *data,
                             int input_length, int decimation_ratio,
                             float *in, float *out)
@@ -603,6 +614,7 @@ void BeamFirFilter_StrictFP(struct BeamFirData *data,
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamFormWeights_StrictFP(int beam, float *weights)
 {
 #pragma STDC FP_CONTRACT OFF
@@ -625,6 +637,7 @@ void BeamFormWeights_StrictFP(int beam, float *weights)
   }
 }
 
+GCC_FP_CONTRACT_OFF
 void BeamForm_StrictFP(int beam, const float *weights, const float *input,
                        float *output)
 {
@@ -642,6 +655,7 @@ void BeamForm_StrictFP(int beam, const float *weights, const float *input,
   output[1] = imag_curr;
 }
 
+GCC_FP_CONTRACT_OFF
 void Magnitude_StrictFP(float *in, float *out, int n)
 {
 #pragma STDC FP_CONTRACT OFF
@@ -651,6 +665,7 @@ void Magnitude_StrictFP(float *in, float *out, int n)
     out[i] = sqrt(in[2*i]*in[2*i] + in[2*i+1]*in[2*i+1]);
 }
 
+GCC_FP_CONTRACT_OFF
 void Detector_StrictFP(int beam, float *data, float *output)
 {
 #pragma STDC FP_CONTRACT OFF

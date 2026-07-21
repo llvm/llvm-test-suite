@@ -73,6 +73,12 @@
 #  define POLYBENCH_RESTRICT
 # endif
 
+# if defined(__GNUC__) && !defined(__clang__)
+#  define POLYBENCH_GCC_FP_CONTRACT_OFF __attribute__((optimize("fp-contract=off")))
+# else
+#  define POLYBENCH_GCC_FP_CONTRACT_OFF
+# endif
+
 /* Macros to reference an array. Generic for heap and stack arrays
    (C99).  Each array dimensionality has his own macro, to be used at
    declaration or as a function argument.

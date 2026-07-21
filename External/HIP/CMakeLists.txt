@@ -155,6 +155,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS simplify-f64-cmps)
   list(APPEND HIP_LOCAL_TESTS fast-i24-div-path)
   list(APPEND HIP_LOCAL_TESTS sdiv64_32)
+  list(APPEND HIP_LOCAL_TESTS sdivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem24)
 

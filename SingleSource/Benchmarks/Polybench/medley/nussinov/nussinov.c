@@ -27,6 +27,7 @@ typedef char base;
 #define max_score(s1, s2) ((s1 >= s2) ? s1 : s2)
 
 /* Array initialization. */
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void init_array (int n,
                  base POLYBENCH_1D(seq,N,n),
@@ -108,6 +109,7 @@ void kernel_nussinov(int n, base POLYBENCH_1D(seq,N,n),
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void kernel_nussinov_StrictFP(int n, base POLYBENCH_1D(seq,N,n),
 			   DATA_TYPE POLYBENCH_2D(table,N,N,n,n))
