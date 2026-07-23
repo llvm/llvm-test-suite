@@ -35,8 +35,19 @@ macro(create_one_local_test_f Name FileGlob FilterRegex
     llvm_test_run()
     set(REFERENCE_OUTPUT)
     # Verify reference output if it exists.
+    # First try variant-specific reference output (e.g., test-0.reference_output)
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
       set(REFERENCE_OUTPUT ${Name}.reference_output)
+    else()
+      # Fall back to base reference output (e.g., test.reference_output)
+      # Extract base name by removing -<digit> suffix from variant names
+      string(REGEX REPLACE "-[0-9]+$" "" BaseName "${Name}")
+      if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${BaseName}.reference_output)
+        set(REFERENCE_OUTPUT ${BaseName}.reference_output)
+      endif()
+    endif()
+
+    if(REFERENCE_OUTPUT)
       llvm_test_verify(WORKDIR %S
         %b/${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
       )
