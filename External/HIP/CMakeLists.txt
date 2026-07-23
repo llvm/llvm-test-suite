@@ -7,7 +7,16 @@ message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
+# Options for enabling tests for external projects (Kokkos, Ginkgo, rocPRIM)
+option(EXTERNAL_HIP_TESTS_KOKKOS "Download, build, and test Kokkos HIP backend" OFF)
+option(EXTERNAL_HIP_TESTS_GINKGO "Download, build, and test Ginkgo HIP backend" OFF)
+option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
+
+# Options to enable / disable specific test categories
+option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" ON)
+
 # Include Catch tests integration module
+include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
 # Find Python interpreter for running llvm-lit
 # The llvm-lit script may have a hardcoded Python version in its shebang
@@ -24,7 +33,6 @@ else()
   set(HIP_TEST_SUITE_LIT_BINARY ${TEST_SUITE_LIT})
   message(WARNING "Python3 not found, HIP tests may fail if llvm-lit has wrong shebang")
 endif()
-include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
 # Get rocm-libraries commit from TheRock (for version alignment)
 function(get_therock_rocm_libraries_version OUT_VAR)
@@ -97,7 +105,7 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
   add_custom_command(OUTPUT ${_hip_src}
                      COMMAND ${HIPIFY_EXE} "${_cuda_src}" -o "${_hip_src}"
                      DEPENDS "${_cuda_src}")
-  add_custom_target(${_hipify_target} DEPENDS ${_hip_src})
+  add_custom_target(${_hipify_target}-${VariantSuffix} DEPENDS ${_hip_src})
 
   set(_executable ${TestName}-${VariantSuffix})
   set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
@@ -125,7 +133,7 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
   # For the HIP case, we set a huge number and assume that the latest C++
   # standard version is supported by the library.
   target_compile_definitions(${_executable} PRIVATE STDLIB_VERSION=9999)
-  add_dependencies(${_executable} ${_hipify_target})
+  add_dependencies(${_executable} ${_hipify_target}-${VariantSuffix})
   if(VariantLibs)
     target_link_libraries(${_executable} ${VariantLibs})
   endif()
@@ -204,16 +212,18 @@ macro(create_local_hip_tests VariantSuffix)
       message(WARNING "hipify-perl not found for ROCm installation in ${_RocmPath}.")
   endif()
 
-  # Add test for Blender.
-  configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
-  configure_file(workload/blender/verify_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_blender.sh @ONLY)
-  file(COPY utils/log_data.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-  file(COPY utils/compare_image.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-  file(COPY utils/requirements.txt DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-  llvm_test_run(EXECUTABLE "/bin/bash" "test_blender.sh")
-  llvm_test_verify(/bin/bash verify_blender.sh %o)
-  llvm_add_test(blender.test test_blender.sh)
-  list(APPEND VARIANT_SIMPLE_TEST_TARGETS blender.test)
+  if (HIP_ENABLE_BLENDER_TEST)
+    # Add test for Blender.
+    configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
+    configure_file(workload/blender/verify_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_blender.sh @ONLY)
+    file(COPY utils/log_data.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    file(COPY utils/compare_image.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    file(COPY utils/requirements.txt DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    llvm_test_run(EXECUTABLE "/bin/bash" "test_blender.sh")
+    llvm_test_verify(/bin/bash verify_blender.sh %o)
+    llvm_add_test(blender.test test_blender.sh)
+    list(APPEND VARIANT_SIMPLE_TEST_TARGETS blender.test)
+  endif()
 endmacro()
 
 function(create_hip_test VariantSuffix)
