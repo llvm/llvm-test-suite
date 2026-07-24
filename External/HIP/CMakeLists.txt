@@ -157,6 +157,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS sdivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem24)
+  list(APPEND HIP_LOCAL_TESTS multi_output)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
