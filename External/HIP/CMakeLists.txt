@@ -158,6 +158,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS sdivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem24)
+  list(APPEND HIP_LOCAL_TESTS pgo-tiled-matmul)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
@@ -202,6 +203,43 @@ macro(create_local_hip_tests VariantSuffix)
       endforeach()
   else()
       message(WARNING "hipify-perl not found for ROCm installation in ${_RocmPath}.")
+  endif()
+
+  # The PGO pipeline needs both the host ROCm collector and the AMDGPU
+  # instrumentation runtime.
+  execute_process(
+    COMMAND ${CMAKE_CXX_COMPILER} --print-runtime-dir
+    RESULT_VARIABLE _hip_host_runtime_result
+    OUTPUT_VARIABLE _hip_host_runtime_dir
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET)
+  execute_process(
+    COMMAND ${CMAKE_CXX_COMPILER} --target=amdgcn-amd-amdhsa --print-runtime-dir
+    RESULT_VARIABLE _hip_device_runtime_result
+    OUTPUT_VARIABLE _hip_device_runtime_dir
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET)
+  file(GLOB _hip_profile_rocm_libraries
+    "${_hip_host_runtime_dir}/libclang_rt.profile_rocm*.a"
+    "${_hip_host_runtime_dir}/clang_rt.profile_rocm*.lib")
+  file(GLOB _hip_device_profile_libraries
+    "${_hip_device_runtime_dir}/libclang_rt.profile.a"
+    "${_hip_device_runtime_dir}/libclang_rt.profile-amdgcn*.a")
+  list(LENGTH _hip_profile_rocm_libraries _hip_profile_rocm_count)
+  list(LENGTH _hip_device_profile_libraries _hip_device_profile_count)
+
+  if(_hip_host_runtime_result EQUAL 0 AND
+     _hip_device_runtime_result EQUAL 0 AND
+     _hip_profile_rocm_count GREATER 0 AND
+     _hip_device_profile_count GREATER 0)
+    configure_file(workload/pgo/test_pgo_matmul.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_pgo_matmul.sh @ONLY)
+    configure_file(workload/pgo/verify_pgo_matmul.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_pgo_matmul.sh @ONLY)
+    llvm_test_run(EXECUTABLE "/bin/bash" "test_pgo_matmul.sh")
+    llvm_test_verify(/bin/bash verify_pgo_matmul.sh %o)
+    llvm_add_test(pgo-tiled-matmul-pipeline.test test_pgo_matmul.sh)
+    list(APPEND VARIANT_SIMPLE_TEST_TARGETS pgo-tiled-matmul-pipeline.test)
+  else()
+    message(STATUS "Skipping pgo-tiled-matmul-pipeline: host ROCm and AMDGPU profile runtimes are required")
   endif()
 
   # Add test for Blender.
