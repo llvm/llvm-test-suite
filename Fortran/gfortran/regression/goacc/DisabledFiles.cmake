@@ -16,6 +16,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   privatization-1-compute.f90
   privatization-1-compute-loop.f90
 
+  # unimplemented: OpenACC Cache construct not lowered yet
+  cache-1.f95
+
   # unimplemented: OpenACC Routine construct not lowered yet
   classify-routine.f95
   classify-routine-nohost.f95
