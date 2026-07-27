@@ -158,6 +158,7 @@ macro(create_local_hip_tests VariantSuffix)
   list(APPEND HIP_LOCAL_TESTS sdivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem23)
   list(APPEND HIP_LOCAL_TESTS udivrem24)
+  list(APPEND HIP_LOCAL_TESTS multi_output)
 
   list(APPEND HIP_LOCAL_TESTS InOneWeekend)
   list(APPEND HIP_LOCAL_TESTS TheNextWeek)
@@ -178,7 +179,8 @@ macro(create_local_hip_tests VariantSuffix)
         COMPILE_FLAGS "-xhip -mfma")
     endif()
 
-    create_one_local_test(${_hip_test} ${test_source}
+    # Create one test for each option set in the <_hip_test>.options file.
+    create_local_tests_with_options(${_hip_test} ${test_source}
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()

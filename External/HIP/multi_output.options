@@ -1,0 +1,21 @@
+# multi_output-0.reference_output does not exist match the default multi_output.reference_output
+-O0 -DMSG="\"PASSED!\"
+# multi_output-1.reference_output does not exist match the default multi_output.reference_output
+-O1 -DMSG="\"PASSED!\"
+# multi_output-2.reference_output does not exist match the default multi_output.reference_output
+-O2 -DMSG="\"PASSED!\"
+# multi_output-3.reference_output does not exist match the default multi_output.reference_output
+-O3 -DMSG="\"PASSED!\"
+#
+#
+#
+# multi_output-4.reference_output exists. Match it.
+-O0 -DMSG="\"Tongguo\"
+# multi_output-5.reference_output exists. Match it.
+-O1 -DMSG="\"Bestanden\"
+# multi_output-6.reference_output exists. Match it.
+-O2 -DMSG="\"Sdal\"
+# multi_output-7.reference_output exists. Match it.
+-O3 -DMSG="\"Aprobada\"
+# multi_output-8.reference_output exists. Match it.
+-Os -DMSG="\"Reussi\"

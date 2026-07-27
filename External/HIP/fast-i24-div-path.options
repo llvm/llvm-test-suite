@@ -1,0 +1,4 @@
+# Test LowerDIVREMToFloat in AMDGPUISelLowering.cpp
+-O0
+# Test expandDivRemToFloatImpl in AMDGPUCodeGenPrepare.cpp
+-O3
