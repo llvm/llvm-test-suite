@@ -97,6 +97,40 @@ NOINLINE void loopTc3SelectionScalar(const Ty *__restrict A, Ty *__restrict B) {
 }
 
 template <typename Ty>
+NOINLINE void loopTc5SelectionVector(const Ty *__restrict A, Ty *__restrict B) {
+  LOOP_VECTORIZE_ENABLE
+  for (int i = 0; i < 5; i++) {
+    B[i] = B[i] < A[i] ? B[i] : A[i];
+  }
+}
+
+template <typename Ty>
+NOINLINE void loopTc5SelectionScalar(const Ty *__restrict A, Ty *__restrict B) {
+  LOOP_VECTORIZE_DISABLE
+  for (int i = 0; i < 5; i++) {
+    B[i] = B[i] < A[i] ? B[i] : A[i];
+  }
+}
+
+template <typename Ty>
+NOINLINE void loopTc3BitwiseXOrVector(const Ty *__restrict A,
+                                      Ty *__restrict B) {
+  LOOP_VECTORIZE_ENABLE
+  for (int i = 0; i < 3; i++) {
+    B[i] ^= A[i];
+  }
+}
+
+template <typename Ty>
+NOINLINE void loopTc3BitwiseXOrScalar(const Ty *__restrict A,
+                                      Ty *__restrict B) {
+  LOOP_VECTORIZE_DISABLE
+  for (int i = 0; i < 3; i++) {
+    B[i] ^= A[i];
+  }
+}
+
+template <typename Ty>
 NOINLINE void loopTc5BitwiseXOrVector(const Ty *__restrict A,
                                       Ty *__restrict B) {
   LOOP_VECTORIZE_ENABLE
@@ -201,6 +235,26 @@ void benchloopTc3SelectionScalar(benchmark::State &State) {
 }
 
 template <typename Ty>
+void benchloopTc5SelectionVector(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc5SelectionVector<Ty>);
+}
+
+template <typename Ty>
+void benchloopTc5SelectionScalar(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc5SelectionScalar<Ty>);
+}
+
+template <typename Ty>
+void benchloopTC3BitwiseXOrVector(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc3BitwiseXOrVector<Ty>);
+}
+
+template <typename Ty>
+void benchloopTC3BitwiseXOrScalar(benchmark::State &State) {
+  runBenchForSmallLoopTripCount<Ty>(State, loopTc3BitwiseXOrScalar<Ty>);
+}
+
+template <typename Ty>
 void benchloopTC5BitwiseXOrVector(benchmark::State &State) {
   runBenchForSmallLoopTripCount<Ty>(State, loopTc5BitwiseXOrVector<Ty>);
 }
@@ -251,6 +305,22 @@ BENCHMARK_TEMPLATE(benchloopTc3SelectionVector, int16_t)
     ->Name("tc3Selection/i16/vector");
 BENCHMARK_TEMPLATE(benchloopTc3SelectionScalar, int16_t)
     ->Name("tc3Selection/i16/scalar");
+BENCHMARK_TEMPLATE(benchloopTc5SelectionVector, int8_t)
+    ->Name("tc5Selection/i8/vector");
+BENCHMARK_TEMPLATE(benchloopTc5SelectionScalar, int8_t)
+    ->Name("tc5Selection/i8/scalar");
+BENCHMARK_TEMPLATE(benchloopTc5SelectionVector, int16_t)
+    ->Name("tc5Selection/i16/vector");
+BENCHMARK_TEMPLATE(benchloopTc5SelectionScalar, int16_t)
+    ->Name("tc5Selection/i16/scalar");
+BENCHMARK_TEMPLATE(benchloopTC3BitwiseXOrVector, int8_t)
+    ->Name("tc3BitwideXor/i8/vector");
+BENCHMARK_TEMPLATE(benchloopTC3BitwiseXOrScalar, int8_t)
+    ->Name("tc3BitwideXor/i8/scalar");
+BENCHMARK_TEMPLATE(benchloopTC3BitwiseXOrVector, int16_t)
+    ->Name("tc3BitwideXor/i16/vector");
+BENCHMARK_TEMPLATE(benchloopTC3BitwiseXOrScalar, int16_t)
+    ->Name("tc3BitwideXor/i16/scalar");
 BENCHMARK_TEMPLATE(benchloopTC5BitwiseXOrVector, int8_t)
     ->Name("tc5BitwideXor/i8/vector");
 BENCHMARK_TEMPLATE(benchloopTC5BitwiseXOrScalar, int8_t)
