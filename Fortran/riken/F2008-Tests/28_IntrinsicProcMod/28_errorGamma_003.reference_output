@@ -1,0 +1,3 @@
+ erfc_scaled(x32): OK
+ erfc_scaled(x64): OK
+exit 0

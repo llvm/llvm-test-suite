@@ -1,0 +1,6 @@
+position:   1    4
+position(back:false):   1    4
+ kind=int32:  4
+position(back:true) :   3    4
+ kind=int64:  8
+exit 0

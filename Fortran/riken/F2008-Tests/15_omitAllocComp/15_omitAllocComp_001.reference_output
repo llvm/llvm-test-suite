@@ -1,0 +1,5 @@
+ t1%i =  1
+ allocated =  F
+ t2%i =  2
+ allocated =  F
+exit 0

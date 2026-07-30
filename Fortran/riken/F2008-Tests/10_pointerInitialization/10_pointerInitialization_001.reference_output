@@ -1,0 +1,4 @@
+ top%x = 100
+ b = 3 4 5
+ tmp = def
+exit 0
