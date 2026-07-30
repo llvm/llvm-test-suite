@@ -49,6 +49,10 @@ init__real_count(s32bit player)
   }
 }
 
+static s32bit ansi_c_lcg(s32bit x) {
+  return (1103515245*x + 12345) & 0x7fffffff;
+}
+
 extern void
 initialize_solver()
 {
@@ -60,10 +64,11 @@ initialize_solver()
     g_trans_table = calloc(HASHSIZE,sizeof(Hash_Entry));
   
     // initialize zobrist values
-    srandom(1);
+    s32bit r = 1;
     for(i=1; i<31; i++) {
       for(j=1; j<31; j++) {
-        g_zobrist[i][j] = random() & HASHMASK;
+        r = ansi_c_lcg(r);
+        g_zobrist[i][j] = r & HASHMASK;
       }
     }
 
