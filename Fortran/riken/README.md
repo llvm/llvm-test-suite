@@ -32,9 +32,9 @@ F2008-Tests/
   to compile. **These are currently excluded from the build** (filtered out
   in each directory's `CMakeLists.txt` via
   `list(FILTER _sources EXCLUDE REGEX "_c[0-9]+\\.f90$")`), because
-  `llvm_singlesource()` only supports build-and-run tests. Wiring these up
-  needs a "compile is expected to fail" helper, along the lines of
-  `gfortran_add_compile_test()` in `Fortran/gfortran/CMakeLists.txt`.
+  `llvm_singlesource()` only supports build-and-run tests. See
+  "Error-case (`_cNNN`) tests: prior art and future plan" below for how this
+  should be wired up when someone picks it up.
 
 ## Status
 This has now been validated end-to-end against both gfortran and a real
@@ -95,7 +95,7 @@ gfortran, so these are real findings rather than open questions:
   invocation used to build it and isn't a portable, pinnable expectation.
 - `_cNNN` sources (220 files): negative/error tests expecting a compile-time
   diagnostic; `llvm_singlesource()` only supports build-and-run tests (see
-  the Naming convention section above).
+  the Naming convention section above, and the dedicated section below).
 
 Separately, `27_stopExt`'s `CMakeLists.txt` conditionally adds
 `-fno-backtrace` (only for `CMAKE_Fortran_COMPILER_ID STREQUAL "GNU"`)
@@ -111,6 +111,71 @@ transcription (i.e. the original test author's own assumption about flang's
 behavior) didn't match reality - `nan(f0.0)` actually prints `NaN` on this
 flang, not empty. The `.reference_output` now reflects the real, verified
 flang output.
+
+### Error-case (`_cNNN`) tests: prior art and future plan
+Before designing a "compile is expected to fail" helper for the 220 `_cNNN`
+sources, it's worth looking at how `Fortran/gfortran` itself resolved the
+exact same question when it was first integrated -
+[discourse.llvm.org/t/add-gfortran-tests-to-llvm-test-suite/69408](https://discourse.llvm.org/t/add-gfortran-tests-to-llvm-test-suite/69408).
+That thread is directly relevant, not just a loose analogy: it's the design
+discussion for the very `gfortran_add_compile_test()` helper this README
+already points to.
+
+Key takeaways from that thread:
+- gfortran's own "compile" tests (i.e. tests that check the compiler's
+  diagnostic output, as opposed to "execute" tests that check runtime
+  behavior) were **deliberately left out** of the initial integration, and
+  as of this writing (the thread is from 2023) still are - only "execute"
+  tests were ever wired up. lenary (who did the equivalent GCC C torture
+  suite integration): *"For C, we did not, because the test suite is really
+  about compilation+execution. We did say we'd revisit this and never got
+  around to it."*
+- Precise diagnostic-message checking was considered and consciously
+  deferred, not because it's impossible, but because it wasn't judged worth
+  the effort relative to execute tests: *"I think it's fine we don't check
+  error messages, to be honest ... Maybe this is something for later, and
+  it's best to start with just the execution tests which have a clearer
+  path to pass/fail."*
+- The actual `gfortran_add_compile_test()` that got merged reflects this: it
+  does **not** use `FileCheck` or match diagnostic text at all. It only
+  checks whether the compiler's diagnostic output is empty or non-empty
+  (`llvm_test_verify(%b/not ${DIFFPROG} <empty-file> <captured-diagnostics>)`
+  for the `expect_error` case) - i.e. "did *some* error get reported", not
+  "did the *right* error get reported".
+- lenary also noted a structural limitation of this test-suite: *"LLVM test
+  suite isn't set up to differentiate between 'compile failure' and
+  'execute failure'"* - both just show up as a failed lit test either way.
+
+**Implication for `_cNNN`**: the current "skip these for now" stance in this
+integration isn't an ad hoc shortcut - it reproduces the same conclusion the
+authors of `Fortran/gfortran` itself reached when they hit the identical
+question. When this is picked up, the recommended approach is:
+1. Reuse the `gfortran_add_compile_test()` pattern as-is (build-time
+   compile via `add_custom_command`, a shared dummy executable as the "thing
+   lit runs", `llvm_test_verify()` diffing the captured diagnostics against
+   an empty reference). Don't build a new FileCheck-based, exact-message
+   verifier - that was explicitly weighed and passed over upstream, and it
+   also matches this integration's own earlier decision not to do dual
+   `%flang`/`%gfortran` checking.
+2. The original `! RUN:`/`! CHECK-FLANG:`/`! CHECK-GFORT:` lines in `_cNNN`
+   sources can be stripped the same way they already were for `_NNN`
+   sources when wiring them into CMake - they're lit/FileCheck-era
+   directives that a `gfortran_add_compile_test()`-style helper doesn't
+   consume, and (unlike the GCC/gfortran torture suites, which are
+   GPL-licensed upstream sources lenary was careful not to modify) these are
+   RIKEN's own test sources, so there's no license reason to keep them
+   byte-for-byte identical to the original.
+3. When actually building each `_cNNN` file against real flang, sort the
+   result into the same two buckets this README already uses for `_NNN`:
+   flang produces *some* diagnostic (wire it up as a normal expect-error
+   pass), or flang unexpectedly *accepts* the code (a real conformance gap -
+   file it alongside the "Confirmed real flang issues" entries above rather
+   than silently treating it as a pass).
+
+This is not urgent: the upstream `Fortran/gfortran` "compile tests" work has
+sat untouched for the ~2+ years since that thread, suggesting execute-only
+coverage is considered acceptable in practice. Revisit `_cNNN` opportunistically,
+not as a blocker for the rest of this integration.
 
 ## Running the tests
 Configure the test-suite with Fortran enabled and point
