@@ -14,6 +14,7 @@ llvm_test_executable(LoopVectorizationBenchmarks
   main.cpp
   MathFunctions.cpp
   RuntimeChecks.cpp
+  SmallLoopTripCount.cpp
   VectorOperations.cpp
   EarlyExit.cpp
 )
