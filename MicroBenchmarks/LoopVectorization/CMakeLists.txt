@@ -11,6 +11,7 @@ llvm_test_run()
 
 llvm_test_executable(LoopVectorizationBenchmarks
   ConditionalScalarAssignment.cpp
+  Histograms.cpp
   main.cpp
   MathFunctions.cpp
   RuntimeChecks.cpp
