@@ -102,7 +102,27 @@ Separately, `27_stopExt`'s `CMakeLists.txt` conditionally adds
 because gfortran's runtime prints a non-deterministic address backtrace on
 `ERROR STOP` unless told not to; flang has no such behavior so this does not
 affect a real flang build. All 5 `27_stopExt` `_NNN` tests are confirmed
-passing against real flang.
+passing against real flang under `llvm-lit` (see the `NO_STOP_MESSAGE` note
+below - that's the environment they need to pass in).
+
+`27_stopExt_004.reference_output` needed a fix after it was independently
+verified end-to-end via `llvm-lit`: `Fortran/lit.local.cfg` sets
+`config.environment["NO_STOP_MESSAGE"] = "1"` for everything under
+`Fortran/` (see `Fortran/Readme.txt` for the rationale), and flang's runtime
+only honors that variable for a plain `STOP '<character message>'` - it
+drops the `Fortran STOP: ` prefix in that one case, but still prints it for
+`STOP <integer code>` and for `ERROR STOP` (character or integer). The
+original reference_output for `27_stopExt_004.f90` (`stop msg` with a
+character stop-code) was captured by running the built binary directly,
+bypassing lit's environment, so it recorded `Fortran STOP: Err999` instead
+of the `Err999` that actually appears once `NO_STOP_MESSAGE=1` is in effect.
+The other four `27_stopExt` tests (`_001`/`_002`: integer `STOP`; `_003`:
+integer `ERROR STOP`; `_005`: character `ERROR STOP`) are unaffected, since
+`NO_STOP_MESSAGE` doesn't change their output. Lesson: for anything that
+touches `STOP`/`ERROR STOP` message text, generate and verify
+`.reference_output` by actually running the test through `llvm-lit`, not by
+executing the built binary standalone - the lit environment (here,
+`NO_STOP_MESSAGE`) can change the output.
 
 Also worth noting: `22_g0EditDescriptor_001.reference_output` was originally
 hand-transcribed from the test's `! FLANG:`-prefixed `CHECK` comments (see
