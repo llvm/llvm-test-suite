@@ -8,7 +8,7 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
     set(BASE_CFLAGS ${CFLAGS})
 
     list(APPEND CFLAGS "-mllvm" "-disable-loop-idiom-hashrecognize")
-    llvm_singlesource(PREFIX "no-hr-")
+    llvm_singlesource(PREFIX "no-hr-" DEST_SUFFIX "-no-hr")
     set(CFLAGS ${BASE_CFLAGS})
   endif()
 endif()
