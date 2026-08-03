@@ -1,7 +1,7 @@
 ! Flang NAMELIST extension: an assignment to a scalar item may omit its
 ! value (e.g. `l_flag=`, immediately followed by the next name-value
 ! pair or the group terminator), leaving the item's current value
-! unchanged.  F2023 13.11.3.2 requires a value token to follow the `=`,
+! unchanged.  F2023 13.11.2 p1 requires a value token to follow the `=`,
 ! but nvfortran and gfortran accept the empty form as "keep current
 ! value".  See flang/docs/Extensions.md.
 !
