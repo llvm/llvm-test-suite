@@ -14,4 +14,6 @@ endfunction()
 
 if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
   llvm_hashrecognize_variant("no-hr" "-disable-loop-idiom-hashrecognize")
+  llvm_hashrecognize_variant("table" "-loop-idiom-crc-strategy=table")
+  llvm_hashrecognize_variant("clmul" "-loop-idiom-crc-strategy=clmul")
 endif()
