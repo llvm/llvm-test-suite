@@ -4,6 +4,7 @@ import hashlib
 import logging
 import os
 import platform
+import tempfile
 
 
 def compute(context):
@@ -13,17 +14,25 @@ def compute(context):
     try:
         # AIX, z/OS, and Darwin's and Solaris' "strip" don't support these arguments.
         if platform.system() != 'OS/390' and platform.system() != 'AIX' and platform.system() != "Darwin" and platform.system() != "SunOS":
-            stripped_executable = executable + ".stripped"
-            testplan.check_call(
-                [
-                    context.config.strip_tool,
-                    "--remove-section=.comment",
-                    "--remove-section='.note*'",
-                    "-o",
-                    stripped_executable,
-                    executable,
-                ]
-            )
+            # Use a unique temporary file per call to avoid race conditions
+            # when multiple tests access or modify the same file concurrently.
+            # Limits errors from concurrent access or deletion by other workers.
+            fd, stripped_executable = tempfile.mkstemp(suffix=".stripped")
+            os.close(fd)
+            try:
+                testplan.check_call(
+                    [
+                        context.config.strip_tool,
+                        "--remove-section=.comment",
+                        "--remove-section='.note*'",
+                        "-o",
+                        stripped_executable,
+                        executable,
+                    ]
+                )
+            except Exception:
+                os.remove(stripped_executable)
+                raise
             executable = stripped_executable
 
         h = hashlib.md5()
