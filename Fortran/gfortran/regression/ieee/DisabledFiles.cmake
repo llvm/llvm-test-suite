@@ -15,16 +15,12 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
 # assertions in flang.
 file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: assumed rank in procedure interface
-  ieee_1.F90
   large_3.F90
-  modes_1.f90
 
   # unimplemented: intrinsic module procedure: [SYM]
   fma_1.f90
-  ieee_11.F90
   ieee_2.f90
   ieee_3.f90
-  ieee_4.f90
   large_2.f90
   rounding_1.f90
   rounding_3.f90
@@ -35,10 +31,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
 # These tests are disabled because they cause flang to crash.
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
-  # error: No specific subroutine of generic '[SYM]' matches the actual
-  # arguments
-  ieee_6.f90
-
   # error: missing mandatory 'p=' argument
   ieee_7.f90
 
@@ -47,10 +39,6 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   # error: unexpected typeless constant value
   ieee_10.f90
-  ieee_5.f90
-  intrinsics_1.f90
-  intrinsics_2.F90
-  underflow_1.f90
 
   # error: Actual argument for 'mold=' has bad type 'UNSIGNED'
   out_of_range.f90
@@ -63,18 +51,8 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
 
   ieee_9.f90
 
-  # --------------------------------------------------------------------------
-  #
-  # These tests cause linker errors with undefined references to ieee_*
-  # functions. This may be a configuration issue, but disable it for now until
-  # that can be determined.
-  comparisons_1.f90
-  comparisons_2.f90
+  # IEEE arithmetic exceptions signaled: INVALID
   comparisons_3.F90
-  minmax_1.f90
-  minmax_2.f90
-  minmax_3.f90
-  minmax_4.f90
 )
 
 # There are currently no failing files.
