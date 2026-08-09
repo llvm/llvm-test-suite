@@ -1,0 +1,39 @@
+OpenCL Tests
+==========
+
+OpenCL tests are enabled if cmake is invoked with
+-DTEST_SUITE_EXTERNALS_DIR=<externals path> and specified externals directory contains at least one ROCm installation.
+
+Expected externals directory structure:
+Externals/
+  opencl/
+    opencl[-version]/ -- OpenCL compiler installation, which should, at the very least, have the following components:
+      include/CL/ -- header files including opencl.h 
+      bin/ -- binaries including clang/clang++ (and clinfo for convenience)
+      lib/ -- libraries including libOpenCL.so and implementation specifics (like libamdocl64.so, libhsa-runtime64.so, librocprofiler-register.so, libamd_comgr.so.2)
+      lib/clang/NN/include/ -- some clang related inclues and libs
+      lib/clang/NN/lib/ -- libclang_rt.builtins-x86_64.a
+
+[export AMDGPU_ARCHS=gfx906;gfx908                 # List of AMDGPU archs to compile, not used at the moment]
+export EXTERNAL_DIR=/your/Externals/path           # Path to Exteranls with the OpenCL compiler
+export CLANG_DIR=/your/clang/bin                   # Path to llvm-test-suite build
+export TEST_SUITE_DIR=/path/to/test-suite-sources  # Path to llvm-test-suite sources
+
+Configure, build and run tests:
+
+```
+$ mkdir build-llvm-test-suite
+$ cd build-llvm-test-suite
+
+$ export EXTERNAL_DIR=/repos/Temp/LlvmTestSuite/Externals
+$ export TEST_SUITE_DIR=/repos/llvm-test-suite
+$ export CLANG_DIR=$EXTERNAL_DIR/opencl/opencl-6.3.0-14740
+
+$ cmake -G Ninja -DTEST_SUITE_EXTERNALS_DIR=$EXTERNAL_DIR -DAMDGPU_ARCHS=$AMDGPU_ARCHS -DCMAKE_CXX_COMPILER="$CLANG_DIR/bin/amdclang++" -DCMAKE_C_COMPILER="$CLANG_DIR/bin/amdclang" $TEST_SUITE_DIR 
+
+$ ninja opencl-tests-simple             # To build all the tests
+$ ninja opencl-tests-simple-HelloWorld  # To build a apecific test
+$ ninja check-opencl-simple             # To build & run all the tests
+$ ninja check-opencl-simple-HelloWorld  # To build & run a specific test
+```
+
