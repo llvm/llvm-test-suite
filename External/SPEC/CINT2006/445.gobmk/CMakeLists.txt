@@ -1,6 +1,14 @@
 list(APPEND CPPFLAGS -DWANT_STDC_PROTO)
 list(APPEND LDFLAGS -lm)
 
+include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag(-fwrapv-pointer
+                        HAVE_CXX_FLAG_FWRAPV_POINTER)
+if(HAVE_CXX_FLAG_FWRAPV_POINTER)
+  add_compile_options(-fwrapv-pointer)
+endif()
+
 set(Source "")
 foreach(dir IN ITEMS
         src/sgf src/engine src/interface src/patterns src/utils src)
