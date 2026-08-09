@@ -1,0 +1,52 @@
+OpenACC Validation & Verification Suite
+https://github.com/OpenACCUserGroup/OpenACCV-V
+
+This directory contains a CMakeLists.txt for the OpenACC
+Validation and Verification Suite so it can be built as part
+of the LLVM test-suite. Its sources are not part of the test-suite but
+have to be fetched separately from https://github.com/OpenACCUserGroup/OpenACCV-V
+
+The sources are expected either in ${TEST_SUITE_OpenACCVV_ROOT} or
+where TEST_SUITE_OpenACCVV_ROOT is CMake configure variables. If none of
+them are set, it will look into
+${CMAKE_SOURCE_DIR}/Extern/External/OpenACC_vv where
+CMAKE_SOURCE_DIR is the root directory of the test-suite sources.
+
+The CMakeLists.txt will search for all C 、C++ and Fortran source files of the
+OpenACC V&V suite, compile and run them. That is, running llvm-lit
+(or "make check") will require a compatible accelerator on the running
+machine.
+
+OpenACC support is autodetected by CMake, but clang requires additional
+flags to enable offloading. An example run is:
+
+$ cd /path/to/llvm-test-suit
+$ mkdir build
+$ cd build
+$ cmake -GNinja  -DTEST_SUITE_FORTRAN=ON                               \
+   -DTEST_SUITE_BENCHMARKING_ONLY=OFF                                  \
+   -DTEST_SUITE_RUN_BENCHMARKS=ON                                      \
+   -DTEST_SUITE_COLLECT_STATS=OFF                                      \
+   -DTEST_SUITE_SUBDIRS="External/OpenACCV_V"                          \
+   -DCMAKE_BUILD_TYPE=Release                                          \
+   -DTEST_SUITE_OpenACCVV_ROOT=/path/to/OpenACCV_V                     \
+   -DTEST_SUITE_COLLECT_CODE_SIZE=OFF                                  \
+   -DTEST_SUITE_LIT=${HOME}/path/to/llvm-project/build/bin/llvm-lit    \
+   -DCMAKE_C_COMPILER=${HOME}/install/llvm/bin/clang                   \
+   -DCMAKE_CXX_COMPILER=${HOME}/install/llvm/bin/clang++               \
+   -DCMAKE_Fortran_COMPILER=${HOME}/install/llvm/bin/flang             \
+   -DTEST_SUITE_OFFLOADING_FLAGS="-lm;-foffload='-lm';"		       \
+   -DTEST_SUITE_OFFLOADING_LDFLAGS="-lm;-foffload='-lm';"    	       \
+   ../ 
+
+To make:
+$ LD_LIBRARY_PATH=${HOME}/install/llvm-project/release/lib 
+$ ninja check
+
+To run:
+The test results are saved in the reule file
+$ llvm-lit -svj1 --shuffle --xunit-xml-output=result-xunit.xml .
+
+Attention:
+ Because find_package(OpenACC) is used in this test case, attempting to execute this test case requires cmake version >= 3.25
+ take a closer look at FindOpenACC in cmake:https://cmake.org/cmake/help/latest/module/FindOpenACC.html
