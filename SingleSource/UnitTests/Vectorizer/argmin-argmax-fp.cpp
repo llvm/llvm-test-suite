@@ -148,6 +148,8 @@
              "_fmax_add_start_0_inc_2")                                        \
   T_FMINIMUM("minimum", M, I, 0, 1, std::numeric_limits<M>::max(), 0,          \
              "_fminimum_start_0")                                              \
+  T_FMINIMUM("minimum", M, I, 0, 1, std::numeric_limits<M>::quiet_NaN(), 0,    \
+             "_fminimum_start_nan")                                            \
   T_FMINIMUM("minimum", M, I, 0, 1, std::numeric_limits<M>::infinity(), 0,     \
              "_fminimum_start_inf")                                            \
   T_FMINIMUM("minimum", M, I, 0, 1, M(-0.0), 0, "_fminimum_start_neg_zero")    \
@@ -160,6 +162,8 @@
              "_fmaximum_start_0")                                              \
   T_FMAXIMUM("maximum", M, I, 0, 1, -std::numeric_limits<M>::infinity(), 0,    \
              "_fmaximum_start_neg_inf")                                        \
+  T_FMAXIMUM("maximum", M, I, 0, 1, std::numeric_limits<M>::quiet_NaN(), 0,    \
+             "_fmaximum_start_nan")                                            \
   T_FMAXIMUM("maximum", M, I, 0, 1, M(-0.0), 0, "_fmaximum_start_neg_zero")    \
   T_FMAXIMUM("maximum", M, I, 0, 1, M(0.0), 0, "_fmaximum_start_pos_zero")     \
   T_FMAXIMUM("maximum", M, I, 0, 2, std::numeric_limits<M>::lowest(), 0,       \
