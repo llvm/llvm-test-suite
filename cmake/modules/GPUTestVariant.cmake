@@ -35,14 +35,35 @@ macro(create_one_local_test_f Name FileGlob FilterRegex
     llvm_test_run()
     set(REFERENCE_OUTPUT)
     # Verify reference output if it exists.
+    # First try test-option-specific reference output (e.g., test-0.reference_output)
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
       set(REFERENCE_OUTPUT ${Name}.reference_output)
+      # Test-option-specific reference output: the filename already includes the test
+      # option number, so we only need VariantSuffix to distinguish GPU configurations
+      set(ReferenceSuffix "-${VariantSuffix}")
+    else()
+      # Fall back to base reference output (e.g., test.reference_output)
+      # Extract base name by removing -<digit> suffix from variant names
+      string(REGEX REPLACE "-[0-9]+$" "" BaseName "${Name}")
+      if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${BaseName}.reference_output)
+        set(REFERENCE_OUTPUT ${BaseName}.reference_output)
+        # Multiple test option variants share the same base reference output file.
+        # Include the test option number in the suffix to avoid race condition where
+        # parallel builds try to create the same symlink (e.g., test-0, test-1, test-2
+        # all trying to create test.reference_output-hip-7.1.1).
+        # Extract the test option number from Name (e.g., "multi_output-0" -> "0")
+        string(REGEX MATCH "[0-9]+$" NameSuffix "${Name}")
+        set(ReferenceSuffix "-${NameSuffix}-${VariantSuffix}")
+      endif()
+    endif()
+
+    if(REFERENCE_OUTPUT)
       llvm_test_verify(WORKDIR %S
-        %b/${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
+        %b/${FPCMP} %o ${REFERENCE_OUTPUT}${ReferenceSuffix}
       )
       llvm_test_executable(${_executable} ${_sources})
       llvm_test_data(${_executable}
-                     DEST_SUFFIX "-${VariantSuffix}"
+                     DEST_SUFFIX "${ReferenceSuffix}"
                      ${REFERENCE_OUTPUT})
     else()
       llvm_test_executable(${_executable} ${_sources})
@@ -71,5 +92,45 @@ macro(create_one_local_test Name FileGlob
   create_one_local_test_f(${Name} ${FileGlob} ".*"
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
+endmacro()
+
+# Create test variants based on .options file.
+# If <Name>.options exists, create one test per line in the file
+# Each line specifies additional compilation flags
+# Inputs: Name, File, Offload, Suffix, CPPFLAGS, Libs
+macro(create_local_tests_with_options Name FileGlob
+                                         VariantOffload VariantSuffix
+                                         VariantCPPFLAGS VariantLibs)
+  set(OptionsFile "${CMAKE_CURRENT_SOURCE_DIR}/${Name}.options")
+
+  if(NOT EXISTS "${OptionsFile}")
+    # No .options file - create single test with no additional options
+    create_one_local_test(${Name} ${FileGlob}
+                          ${VariantOffload} ${VariantSuffix}
+                          "${VariantCPPFLAGS}" "${VariantLibs}")
+  else()
+    # Read .options file and create one test per option line
+    file(STRINGS "${OptionsFile}" FileLines)
+    set(_variant_index 0)
+    foreach(Line IN LISTS FileLines)
+      # Skip comments
+      if(NOT Line MATCHES "^#")
+        # Parse options into a list and concatenate with VariantCPPFLAGS
+        set(_combined_flags ${VariantCPPFLAGS})
+        separate_arguments(_parsed_options UNIX_COMMAND "${Line}")
+        list(APPEND _combined_flags ${_parsed_options})
+
+        # Create unique name with variant index
+        set(_test_name "${Name}-${_variant_index}")
+
+        # Call create_one_local_test with combined flags
+        create_one_local_test(${_test_name} ${FileGlob}
+                              ${VariantOffload} ${VariantSuffix}
+                              "${_combined_flags}" "${VariantLibs}")
+
+        math(EXPR _variant_index "${_variant_index} + 1")
+      endif()
+    endforeach()
+  endif()
 endmacro()
 

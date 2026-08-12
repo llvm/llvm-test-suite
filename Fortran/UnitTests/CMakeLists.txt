@@ -7,3 +7,4 @@ add_subdirectory(execute_command_line)
 add_subdirectory(fcvs21_f95) # NIST Fortran Compiler Validation Suite
 add_subdirectory(finalization)
 add_subdirectory(fp_conversions)
+add_subdirectory(namelist)
