@@ -256,7 +256,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   set(_output_path_regular "${_output_dir}/${_exe_name_regular}")
 
   add_custom_command(
-    OUTPUT "${_output_path_regular}"
+    OUTPUT "${_output_path_regular}-${VARIANT_SUFFIX}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
     COMMAND ${CMAKE_CXX_COMPILER}
       -DNO_GENERIC_TARGET_ONLY_TEST
@@ -265,7 +265,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
-      -o "${_output_path_regular}"
+      -o "${_output_path_regular}-${VARIANT_SUFFIX}"
       --hip-path=${ROCM_PATH}
       --rocm-path=${ROCM_PATH}
       --hip-link
@@ -285,7 +285,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   set(_output_path_compressed "${_output_dir}/${_exe_name_compressed}")
 
   add_custom_command(
-    OUTPUT "${_output_path_compressed}"
+    OUTPUT "${_output_path_compressed}-${VARIANT_SUFFIX}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
     COMMAND ${CMAKE_CXX_COMPILER}
       -DNO_GENERIC_TARGET_ONLY_TEST
@@ -296,7 +296,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
-      -o "${_output_path_compressed}"
+      -o "${_output_path_compressed}-${VARIANT_SUFFIX}"
       --hip-path=${ROCM_PATH}
       --rocm-path=${ROCM_PATH}
       --hip-link
@@ -313,11 +313,11 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
 
   # Create custom targets for these executables
   add_custom_target(hipSquareGenericTargetOnly-${VARIANT_SUFFIX}
-    DEPENDS "${_output_path_regular}"
+    DEPENDS "${_output_path_regular}-${VARIANT_SUFFIX}"
   )
 
   add_custom_target(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
-    DEPENDS "${_output_path_compressed}"
+    DEPENDS "${_output_path_compressed}-${VARIANT_SUFFIX}"
   )
 
   # Make the main test executable depend on these
