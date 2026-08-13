@@ -6,13 +6,16 @@
 static NOINLINE uint16_t crc_loop(uint16_t crc_initval, uint8_t data) {
   uint16_t crc = crc_initval;
 
-  // This carry-based loop will be optimized by HashRecognize.
+  // This alternate spelling applies the polynomial and carry updates separately.
+  // Keeping their conditions distinct allows InstCombine to canonicalize the bit
+  // test to 'trunc x16 to i1' before folding the updates into a single select,
+  // which HashRecognize must recognize.
   for (uint8_t i = 0; i < 8; ++i) {
-    uint8_t x16 = (uint8_t)((data & 1) ^ ((uint8_t)crc & 1));
+    uint8_t x16 = (data & 1) ^ (crc & 1);
     data >>= 1;
-    uint8_t carry = (x16 == 1) ? 1 : 0;
     crc = (x16 == 1) ? (crc ^ GENPOLY) : crc;
     crc >>= 1;
+    uint8_t carry = x16 == 1; // separate carry needed to force 'trunc to i1' canonicalization.
     if (carry)
       crc |= 0x8000;
   }
