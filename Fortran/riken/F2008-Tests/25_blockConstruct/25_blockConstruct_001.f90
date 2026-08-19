@@ -15,7 +15,6 @@ program sample
     block
         integer :: i
         real :: a(n)
-        print "(a, *(f6.2))", "a :before =", a
         do i = 1,n
             a(i) = 2.5 * i
         end do
