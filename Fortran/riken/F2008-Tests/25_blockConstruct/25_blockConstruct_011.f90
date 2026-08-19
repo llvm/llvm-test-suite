@@ -13,7 +13,7 @@ subroutine sub
     integer :: n1, n10, n100, n1000, n10000
     integer :: i
 
-    open(10, file="data.bin", form="unformatted")
+    open(10, file="data011.bin", form="unformatted")
     write(10) (i*3,i=1,10000)
     close(10)
 
@@ -21,7 +21,7 @@ subroutine sub
         integer, asynchronous :: buf(10000)
         integer :: id1
 
-        open(20, file="data.bin", asynchronous="yes", form="unformatted")
+        open(20, file="data011.bin", asynchronous="yes", form="unformatted")
         read(20, asynchronous="yes", id=id1) buf
 
         call sub2()
