@@ -15,8 +15,23 @@ def _getCompileTime(context):
     link_time = 0.0
     compile_maxrss = 0
     link_maxrss = 0
-    dir = os.path.dirname(context.test.getFilePath())
-    for path, subdirs, files in os.walk(dir):
+    test_dir = os.path.dirname(context.test.getFilePath())
+    if context.config.single_source:
+        # SingleSource mode: multiple tests share a directory; the prefix
+        # already restricts matches to this test's files.
+        walk_dir = test_dir
+    else:
+        # Normal mode: each test has its own CMakeFiles/<exe>.dir/ subdirectory.
+        exe_name = os.path.basename(context.executable)
+        walk_dir = os.path.join(test_dir, "CMakeFiles", exe_name + ".dir")
+        if not os.path.isdir(walk_dir):
+            return {
+                "compile_time": compile_time,
+                "link_time": link_time,
+                "compile_maxrss": compile_maxrss,
+                "link_maxrss": link_maxrss,
+            }
+    for path, subdirs, files in os.walk(walk_dir):
         for file in files:
             if file.endswith(".o.time") and file.startswith(prefix):
                 fullpath = os.path.join(path, file)
