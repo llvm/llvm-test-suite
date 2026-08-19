@@ -47,6 +47,5 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   getarg_1.f90
 
   intrinsic_sr_kind.f90
-  nan_inf_fmt.f90
   random_2.f90
 )
