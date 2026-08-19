@@ -149,6 +149,11 @@ endif()
 option(TEST_SUITE_USE_IR_PGO
   "Use IR PGO instrumentation (requires TEST_SUITE_PROFILE_GENERATE)" OFF)
 
+# Directory tree holding the `<target>.profdata` files written by
+# TEST_SUITE_PROFILE_GENERATE and read by TEST_SUITE_PROFILE_USE.
+set(TEST_SUITE_PROFILE_DIR "" CACHE PATH
+    "Directory tree containing <target>.profdata instrumentation profiles")
+
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
 option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" OFF)
@@ -160,6 +165,10 @@ if(TEST_SUITE_PROFILE_GENERATE)
   if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
     message(FATAL_ERROR "llvm-profdata not found.
 Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
+  endif()
+
+  if(NOT "${TEST_SUITE_PROFILE_DIR}" STREQUAL "")
+    file(MAKE_DIRECTORY "${TEST_SUITE_PROFILE_DIR}")
   endif()
 
   set(TEST_SUITE_PROFILE_GENERATE "True")
@@ -179,6 +188,10 @@ endif()
 option(TEST_SUITE_PROFILE_USE
       "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
       OFF)
+if(TEST_SUITE_PROFILE_USE AND NOT "${TEST_SUITE_PROFILE_DIR}" STREQUAL ""
+   AND NOT EXISTS "${TEST_SUITE_PROFILE_DIR}")
+  message(FATAL_ERROR "TEST_SUITE_PROFILE_DIR does not exist: ${TEST_SUITE_PROFILE_DIR}")
+endif()
 
 option(TEST_SUITE_EXTERNALIZE_DEBUGINFO
       "Generate dSYM files for executables (Darwin only)"
