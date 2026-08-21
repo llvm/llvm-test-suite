@@ -21,10 +21,10 @@ def _mutateScript(context, script):
 
 def _profdataPath(context):
     """Return the path of the merged profile of the benchmark under test."""
+    relpath = os.path.splitext(os.path.join(*context.test.path_in_suite))[0]
     profile_dir = getattr(context.config, "profile_dir", "")
     if not profile_dir:
-        return context.executable + ".profdata"
-    relpath = os.path.relpath(context.executable, context.test.suite.exec_root)
+        return os.path.join(context.test.suite.exec_root, relpath) + ".profdata"
     profdatafile = os.path.join(profile_dir, relpath + ".profdata")
     os.makedirs(os.path.dirname(profdatafile), exist_ok=True)
     return profdatafile
