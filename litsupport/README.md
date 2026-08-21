@@ -72,7 +72,7 @@ code; typical examples are:
   `-fprofile-instr-generate` and enables the `profilegen` module that runs
   `llvm-profdata` after running the benchmarks. To use LLVM IR PGO instead of
   the clang frontend's PGO feature, set `-DTEST_SUITE_USE_IR_PGO=On`. Custom
-  profile directory can be sepcified with `-DTEST_SUITE_PROFILE_DIR=<dir>`.
+  profile directory can be specified with `-DTEST_SUITE_PROFILE_DIR=<dir>`.
 
 Available modules are found in the `litsupport/modules` directory.
 

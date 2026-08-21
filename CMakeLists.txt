@@ -151,6 +151,7 @@ option(TEST_SUITE_USE_IR_PGO
 
 # Directory tree holding the `<target>.profdata` files written by
 # TEST_SUITE_PROFILE_GENERATE and read by TEST_SUITE_PROFILE_USE.
+# By default, profiles are written alongside the executables.
 set(TEST_SUITE_PROFILE_DIR "" CACHE PATH
     "Directory tree containing <target>.profdata instrumentation profiles")
 
@@ -186,7 +187,7 @@ else()
 endif()
 
 option(TEST_SUITE_PROFILE_USE
-      "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
+      "Add appropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
       OFF)
 if(TEST_SUITE_PROFILE_USE AND NOT "${TEST_SUITE_PROFILE_DIR}" STREQUAL ""
    AND NOT EXISTS "${TEST_SUITE_PROFILE_DIR}")
