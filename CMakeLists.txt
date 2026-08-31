@@ -320,6 +320,7 @@ if(ARCH STREQUAL "PowerPC")
 endif()
 
 find_program(TEST_SUITE_LIT NAMES "lit" "llvm-lit")
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 set(TEST_SUITE_LIT_FLAGS "-sv" CACHE STRING "Flags used when running lit")
 mark_as_advanced(TEST_SUITE_LIT TEST_SUITE_LIT_FLAGS)
 mark_as_advanced(TEST_SUITE_LIT)
