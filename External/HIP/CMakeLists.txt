@@ -93,9 +93,7 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
   set(_hip_src "${TestName}.hip")
   set(_hipify_target "${TestName}-hipify")
 
-  # -xhip must follow the -x c++ that CMP0119 injects alongside LANGUAGE; see gpu_glob.
-  set_source_files_properties(${_hip_src} PROPERTIES
-    LANGUAGE CXX COMPILE_OPTIONS "-xhip")
+  set_source_files_properties(${_hip_src} PROPERTIES LANGUAGE CXX)
   add_custom_command(OUTPUT ${_hip_src}
                      COMMAND ${HIPIFY_EXE} "${_cuda_src}" -o "${_hip_src}"
                      DEPENDS "${_cuda_src}")
@@ -176,9 +174,10 @@ macro(create_local_hip_tests VariantSuffix)
       file(GLOB REF_PPM_FILES "workload/ray-tracing/${_hip_test}/*.ppm")
       file(COPY ${REF_PPM_FILES} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       set(test_source "workload/ray-tracing/${_hip_test}/main.cc")
-      # need -mfma to enable FMA in host code
+      # need -mfma to enable FMA in host code. -xhip comes from _HIP_CPPFLAGS;
+      # main.cc has no LANGUAGE property, so nothing injects a competing -x.
       set_source_files_properties(${test_source} PROPERTIES
-        COMPILE_FLAGS "-xhip -mfma")
+        COMPILE_FLAGS "-mfma")
     endif()
 
     # Create one test for each option set in the <_hip_test>.options file.
@@ -286,7 +285,7 @@ macro(create_hip_tests)
     get_version(_RocmVersion ${_RocmPath})
     set(_HIP_Suffix "hip-${_RocmVersion}")
     # Set up HIP test flags
-    set(_HIP_CPPFLAGS --rocm-path=${_RocmPath})
+    set(_HIP_CPPFLAGS --rocm-path=${_RocmPath} -xhip)
     set(_HIP_LDFLAGS --rocm-path=${_RocmPath} --hip-link -rtlib=compiler-rt -unwindlib=libgcc -frtlib-add-rpath)
 
     # Unset these for each iteration of rocm path.
