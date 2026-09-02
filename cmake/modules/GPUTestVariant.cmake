@@ -17,12 +17,13 @@ endmacro (get_version)
 # files found.
 # Under CMP0119 (NEW since our minimum is CMake 3.20), LANGUAGE also injects an
 # explicit -x c++, which suppresses clang's extension-based selection of the
-# CUDA/HIP toolchain. The offload language is re-asserted per target via
-# -xcuda/-xhip in the variant CPPFLAGS, which land after the injected -x c++.
+# CUDA/HIP toolchain. We set -xhip/-xcuda on a per-target basis to ensure correct
+# compilation.
 macro(gpu_glob Var)
   file(GLOB FileList ${ARGN})
   foreach(File IN LISTS FileList)
     if(${File} MATCHES ".*\.cu$" OR ${File} MATCHES ".*\.hip$")
+      # TODO: Investigate on how to correctly use language HIP/CUDA here instead.
       set_source_files_properties(${File} PROPERTIES LANGUAGE CXX)
     endif()
   endforeach()
@@ -137,4 +138,3 @@ macro(create_local_tests_with_options Name FileGlob
     endforeach()
   endif()
 endmacro()
-
