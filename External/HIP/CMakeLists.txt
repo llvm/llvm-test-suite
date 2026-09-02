@@ -93,7 +93,9 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
   set(_hip_src "${TestName}.hip")
   set(_hipify_target "${TestName}-hipify")
 
-  set_source_files_properties(${_hip_src} PROPERTIES LANGUAGE CXX)
+  # -xhip must follow the -x c++ that CMP0119 injects alongside LANGUAGE; see gpu_glob.
+  set_source_files_properties(${_hip_src} PROPERTIES
+    LANGUAGE CXX COMPILE_OPTIONS "-xhip")
   add_custom_command(OUTPUT ${_hip_src}
                      COMMAND ${HIPIFY_EXE} "${_cuda_src}" -o "${_hip_src}"
                      DEPENDS "${_cuda_src}")

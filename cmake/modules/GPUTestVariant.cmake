@@ -15,11 +15,19 @@ endmacro (get_version)
 # Helper function to glob CUDA source files and set LANGUAGE property
 # to CXX on each of them. Sets Var in parent scope to the list of
 # files found.
+# Under CMP0119 (NEW since our minimum is CMake 3.20), LANGUAGE also injects an
+# explicit -x c++, which suppresses clang's extension-based selection of the
+# CUDA/HIP toolchain and leaves the offload headers unreachable. Re-assert the
+# offload language after it; the last -x on the command line wins.
 macro(gpu_glob Var)
   file(GLOB FileList ${ARGN})
   foreach(File IN LISTS FileList)
-    if(${File} MATCHES ".*\.cu$" OR ${File} MATCHES ".*\.hip$")
-      set_source_files_properties(${File} PROPERTIES LANGUAGE CXX)
+    if(${File} MATCHES ".*\.cu$")
+      set_source_files_properties(${File} PROPERTIES
+        LANGUAGE CXX COMPILE_OPTIONS "-xcuda")
+    elseif(${File} MATCHES ".*\.hip$")
+      set_source_files_properties(${File} PROPERTIES
+        LANGUAGE CXX COMPILE_OPTIONS "-xhip")
     endif()
   endforeach()
   set(${Var} ${FileList})
