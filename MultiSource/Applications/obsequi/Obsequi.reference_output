@@ -136,10 +136,10 @@ alpha 0, beta 5000.
 cutoffs depth 1: (56) 0 - 0 0 0 0 0 >0.
 The value is -5 at a depth of 1.
 Nodes: 56.
-Move (2,1), value 5000: 2,023,301.
+Move (2,1), value 5000: 2,023,432.
 alpha -5000, beta 5000.
 Winner found: 5000.
-1356 2450 1316053 104829.
+1356 2449 1316027 104839.
 
 cutoffs depth 1: (1) 0 - 0 0 0 0 0 >0.
 cutoffs depth 2: (52) 52 - 52 0 0 0 0 >0.
@@ -148,19 +148,19 @@ cutoffs depth 4: (1263) 728 - 728 0 0 0 0 >0.
 cutoffs depth 5: (728) 0 - 0 0 0 0 0 >0.
 cutoffs depth 6: (21651) 9812 - 9810 1 1 0 0 >0.
 cutoffs depth 7: (9815) 3 - 2 0 0 0 1 >0.
-cutoffs depth 8: (160368) 38732 - 38714 14 4 0 0 >0.
-cutoffs depth 9: (38807) 50 - 39 6 5 0 0 >0.
-cutoffs depth 10: (631941) 86758 - 86673 52 10 2 2 >19.
-cutoffs depth 11: (87924) 775 - 634 85 19 21 10 >6.
-cutoffs depth 12: (771767) 55353 - 54840 256 82 15 64 >96.
-cutoffs depth 13: (64920) 3921 - 3389 387 124 16 5 >0.
-cutoffs depth 14: (187771) 7691 - 6649 766 123 44 105 >4.
-cutoffs depth 15: (24493) 3183 - 2950 210 13 7 3 >0.
-cutoffs depth 16: (14596) 1814 - 1786 26 0 0 2 >0.
-cutoffs depth 17: (5052) 559 - 523 33 3 0 0 >0.
+cutoffs depth 8: (160464) 38725 - 38707 14 4 0 0 >0.
+cutoffs depth 9: (38800) 50 - 39 6 5 0 0 >0.
+cutoffs depth 10: (631893) 86794 - 86709 52 10 2 2 >19.
+cutoffs depth 11: (87960) 775 - 634 85 19 21 10 >6.
+cutoffs depth 12: (771839) 55370 - 54856 257 82 15 64 >96.
+cutoffs depth 13: (64938) 3921 - 3389 387 124 16 5 >0.
+cutoffs depth 14: (187745) 7681 - 6638 767 123 44 105 >4.
+cutoffs depth 15: (24484) 3183 - 2950 210 13 7 3 >0.
+cutoffs depth 16: (14596) 1813 - 1785 26 0 0 2 >0.
+cutoffs depth 17: (5051) 559 - 523 33 3 0 0 >0.
 cutoffs depth 18: (1699) 181 - 167 9 5 0 0 >0.
 cutoffs depth 19: (326) 34 - 34 0 0 0 0 >0.
 cutoffs depth 20: (73) 2 - 2 0 0 0 0 >0.
 cutoffs depth 21: (2) 0 - 0 0 0 0 0 >0.
-winner V, move (1,2), nodes 2,023,301.
+winner V, move (1,2), nodes 2,023,432.
 exit 0

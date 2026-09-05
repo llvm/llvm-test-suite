@@ -76,7 +76,7 @@ static char Rcs_Id[] =
 #include "msgs.h"
 #include <signal.h>
 
-#if defined(__GLIBC__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
+#if defined(_POSIX_VERSION) || defined(__FreeBSD__) || defined(__NetBSD__) || \
     defined(__OpenBSD__) || defined(__APPLE__) || \
     (defined(__sun__) && defined(__svr4__))
 #include <termios.h>
