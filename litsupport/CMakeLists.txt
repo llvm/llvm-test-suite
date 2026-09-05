@@ -15,6 +15,7 @@ set(LITSUPPORT_FILES
   modules/microbenchmark.py
   modules/perf.py
   modules/profilegen.py
+  modules/qemulog.py
   modules/remote.py
   modules/run.py
   modules/run_under.py
