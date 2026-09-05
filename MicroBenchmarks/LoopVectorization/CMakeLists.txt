@@ -10,6 +10,7 @@ endif()
 llvm_test_run()
 
 llvm_test_executable(LoopVectorizationBenchmarks
+  ControlFlowVectorization.cpp
   ConditionalScalarAssignment.cpp
   main.cpp
   MathFunctions.cpp
