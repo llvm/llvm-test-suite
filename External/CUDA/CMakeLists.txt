@@ -330,7 +330,7 @@ macro(create_cuda_tests)
   foreach(_CudaPath ${CUDA_PATHS})
     get_version(_CudaVersion ${_CudaPath})
     set(_Cuda_Suffix "cuda-${_CudaVersion}")
-    set(_Cuda_CPPFLAGS --cuda-path=${_CudaPath} -I${_CudaPath}/include)
+    set(_Cuda_CPPFLAGS --cuda-path=${_CudaPath} -I${_CudaPath}/include -xcuda)
     # clear the list of GPUs to compile for.
     set(_CudaArchFlags)
     set(_CudaArchList)

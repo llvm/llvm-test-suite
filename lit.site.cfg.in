@@ -12,6 +12,7 @@ config.user_mode_emulation = @TEST_SUITE_USER_MODE_EMULATION@
 config.strip_tool = "@CMAKE_STRIP@"
 config.profile_generate = @TEST_SUITE_PROFILE_GENERATE@
 config.llvm_profdata = "@TEST_SUITE_LLVM_PROFDATA@"
+config.profile_dir = "@TEST_SUITE_PROFILE_DIR@"
 config.test_modules = "@LIT_MODULES@".split(";")
 
 lit_config.load_config(config, os.path.join(_directory, "lit.cfg"))
