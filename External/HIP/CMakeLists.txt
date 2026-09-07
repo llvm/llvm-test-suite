@@ -161,9 +161,8 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
   list(APPEND VARIANT_HIPIFY_TEST_TARGETS ${_executable}.test)
 endmacro()
 
-# Create targets for HIP tests that are part of the test suite.
-macro(create_local_hip_tests VariantSuffix)
-  set(VariantOffload "hip")
+# Create targets for the HIP tests built from the in-tree External/HIP sources.
+macro(create_simple_hip_tests VariantSuffix)
   # Set per-source compilation/link options
   set_source_files_properties(with-fopenmp.hip PROPERTIES
     COMPILE_FLAGS -fopenmp)
@@ -212,44 +211,64 @@ macro(create_local_hip_tests VariantSuffix)
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()
+endmacro()
 
-  if(ENABLE_HIP_HIPIFY_TESTS)
-    list(APPEND CUDA_LOCAL_TESTS algorithm)
-    list(APPEND CUDA_LOCAL_TESTS cmath)
-    list(APPEND CUDA_LOCAL_TESTS complex)
-    list(APPEND CUDA_LOCAL_TESTS math_h)
-    list(APPEND CUDA_LOCAL_TESTS new)
+# Create targets for the HIP tests hipified from the External/CUDA sources.
+macro(create_hipify_hip_tests VariantSuffix)
+  list(APPEND CUDA_LOCAL_TESTS algorithm)
+  list(APPEND CUDA_LOCAL_TESTS cmath)
+  list(APPEND CUDA_LOCAL_TESTS complex)
+  list(APPEND CUDA_LOCAL_TESTS math_h)
+  list(APPEND CUDA_LOCAL_TESTS new)
 
-    find_program(HIPIFY_EXE
-                 NAME hipify-perl
-                 PATHS ${_RocmPath}/bin)
+  find_program(HIPIFY_EXE
+               NAME hipify-perl
+               PATHS ${_RocmPath}/bin)
 
-    if(NOT HIPIFY_EXE)
-      message(FATAL_ERROR
-        "ENABLE_HIP_HIPIFY_TESTS is ON but hipify-perl was not found for the "
-        "ROCm installation in ${_RocmPath}. Install it, or configure with "
-        "-DENABLE_HIP_HIPIFY_TESTS=OFF.")
-    endif()
-
-    foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
-      set(_cuda_src "${CMAKE_CURRENT_SOURCE_DIR}/../CUDA/${_cuda_test}.cu")
-      create_one_hipify_cuda_test(${_cuda_test} ${_cuda_src}
-        ${VariantOffload} ${VariantSuffix}
-        "${VariantCPPFLAGS}" "${VariantLibs}")
-    endforeach()
+  if(NOT HIPIFY_EXE)
+    message(FATAL_ERROR
+      "ENABLE_HIP_HIPIFY_TESTS is ON but hipify-perl was not found for the "
+      "ROCm installation in ${_RocmPath}. Install it, or configure with "
+      "-DENABLE_HIP_HIPIFY_TESTS=OFF.")
   endif()
 
+  foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
+    set(_cuda_src "${CMAKE_CURRENT_SOURCE_DIR}/../CUDA/${_cuda_test}.cu")
+    create_one_hipify_cuda_test(${_cuda_test} ${_cuda_src}
+      ${VariantOffload} ${VariantSuffix}
+      "${VariantCPPFLAGS}" "${VariantLibs}")
+  endforeach()
+endmacro()
+
+# Create the target for the Blender rendering test.
+macro(create_blender_hip_test VariantSuffix)
+  # Add test for Blender.
+  configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
+  configure_file(workload/blender/verify_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_blender.sh @ONLY)
+  file(COPY utils/log_data.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  file(COPY utils/compare_image.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  file(COPY utils/requirements.txt DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  llvm_test_run(EXECUTABLE "/bin/bash" "test_blender.sh")
+  llvm_test_verify(/bin/bash verify_blender.sh %o)
+  llvm_add_test(blender.test test_blender.sh)
+  list(APPEND VARIANT_SIMPLE_TEST_TARGETS blender.test)
+endmacro()
+
+# Create every enabled group of HIP tests for one ROCm variant.
+#
+# These are macros rather than functions on purpose: each one appends to the
+# VARIANT_*_TEST_TARGETS lists that create_hip_test() hands to llvm-lit, and
+# macros run in their caller's scope.
+# TODO: once the minimum CMake version reaches 3.25, block(PROPAGATE ...) lets
+# these be functions with the shared lists propagated explicitly.
+macro(create_local_hip_tests VariantSuffix)
+  set(VariantOffload "hip")
+  create_simple_hip_tests(${VariantSuffix})
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    create_hipify_hip_tests(${VariantSuffix})
+  endif()
   if (HIP_ENABLE_BLENDER_TEST)
-    # Add test for Blender.
-    configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
-    configure_file(workload/blender/verify_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_blender.sh @ONLY)
-    file(COPY utils/log_data.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-    file(COPY utils/compare_image.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-    file(COPY utils/requirements.txt DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-    llvm_test_run(EXECUTABLE "/bin/bash" "test_blender.sh")
-    llvm_test_verify(/bin/bash verify_blender.sh %o)
-    llvm_add_test(blender.test test_blender.sh)
-    list(APPEND VARIANT_SIMPLE_TEST_TARGETS blender.test)
+    create_blender_hip_test(${VariantSuffix})
   endif()
 endmacro()
 
