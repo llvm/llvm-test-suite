@@ -19,9 +19,6 @@ option(EXTERNAL_HIP_TESTS_KOKKOS "Download, build, and test Kokkos HIP backend" 
 option(EXTERNAL_HIP_TESTS_GINKGO "Download, build, and test Ginkgo HIP backend" OFF)
 option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
 
-# Options to enable / disable specific test categories
-option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" ON)
-
 # HIP test groups.
 #
 # Every group of HIP tests is gated by its own ENABLE_HIP_<GROUP>_TESTS cache
@@ -35,6 +32,10 @@ option(ENABLE_HIP_HIPIFY_TESTS
        "Enable the HIP tests hipified from the External/CUDA sources" ON)
 option(ENABLE_HIP_CATCH_TESTS
        "Enable the HIP tests built on the Catch2 framework" OFF)
+option(ENABLE_HIP_BLENDER_TESTS
+       "Enable the HIP Blender rendering test" OFF)
+option(HIP_BLENDER_ALWAYS_SHOW_LOG
+       "Print the Blender test log even when the test passes" OFF)
 
 if (ENABLE_HIP_CATCH_TESTS)
   # Include Catch tests integration module
@@ -246,7 +247,28 @@ endmacro()
 
 # Create the target for the Blender rendering test.
 macro(create_blender_hip_test VariantSuffix)
-  # Add test for Blender.
+  # The same two things test_blender.sh checks before it decides to run. Both
+  # can be pointed elsewhere at run time with HIP_BLENDER_TEST_BIN_DIR and
+  # HIP_BLENDER_TEST_SCENES_DIR, so this only validates the default layout.
+  if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/blender/blender")
+    message(FATAL_ERROR
+      "ENABLE_HIP_BLENDER_TESTS is ON but no Blender executable was found at "
+      "${TEST_SUITE_HIP_ROOT}/blender/blender. Install Blender there, or "
+      "configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
+  endif()
+  if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt")
+    message(FATAL_ERROR
+      "ENABLE_HIP_BLENDER_TESTS is ON but no scene list was found at "
+      "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt. Stage the demo scenes "
+      "there, or configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
+  endif()
+
+  if(HIP_BLENDER_ALWAYS_SHOW_LOG)
+    set(HIP_BLENDER_SHOW_LOG_ON_PASS 1)
+  else()
+    set(HIP_BLENDER_SHOW_LOG_ON_PASS 0)
+  endif()
+
   configure_file(workload/blender/test_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_blender.sh @ONLY)
   configure_file(workload/blender/verify_blender.sh.in ${CMAKE_CURRENT_BINARY_DIR}/verify_blender.sh @ONLY)
   file(COPY utils/log_data.py DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -255,7 +277,7 @@ macro(create_blender_hip_test VariantSuffix)
   llvm_test_run(EXECUTABLE "/bin/bash" "test_blender.sh")
   llvm_test_verify(/bin/bash verify_blender.sh %o)
   llvm_add_test(blender.test test_blender.sh)
-  list(APPEND VARIANT_SIMPLE_TEST_TARGETS blender.test)
+  list(APPEND VARIANT_BLENDER_TEST_TARGETS blender.test)
 endmacro()
 
 # Create every enabled group of HIP tests for one ROCm variant.
@@ -269,12 +291,12 @@ macro(create_local_hip_tests VariantSuffix)
   set(VariantOffload "hip")
   if(ENABLE_HIP_SIMPLE_TESTS)
     create_simple_hip_tests(${VariantSuffix})
-    if (HIP_ENABLE_BLENDER_TEST)
-      create_blender_hip_test(${VariantSuffix})
-    endif()
   endif()
   if(ENABLE_HIP_HIPIFY_TESTS)
     create_hipify_hip_tests(${VariantSuffix})
+  endif()
+  if(ENABLE_HIP_BLENDER_TESTS)
+    create_blender_hip_test(${VariantSuffix})
   endif()
 endmacro()
 
@@ -299,11 +321,18 @@ function(create_hip_test VariantSuffix)
   set(HIP_LIT_FLAGS "-v")
   set(HIP_SIMPLE_LIT_FLAGS ${HIP_LIT_FLAGS})
   set(HIP_HIPIFY_LIT_FLAGS ${HIP_LIT_FLAGS})
+  set(HIP_BLENDER_LIT_FLAGS ${HIP_LIT_FLAGS})
+  if (HIP_BLENDER_ALWAYS_SHOW_LOG)
+    # lit only prints the output of failing tests unless asked for all of it.
+    list(APPEND HIP_BLENDER_LIT_FLAGS -a)
+  endif()
   if (HIP_EXPORT_XUNIT_XML)
     list(APPEND HIP_SIMPLE_LIT_FLAGS
          --xunit-xml-output hip-results-${VariantSuffix}.xml)
     list(APPEND HIP_HIPIFY_LIT_FLAGS
          --xunit-xml-output hip-results-hipify-${VariantSuffix}.xml)
+    list(APPEND HIP_BLENDER_LIT_FLAGS
+         --xunit-xml-output hip-results-blender-${VariantSuffix}.xml)
   endif()
 
   if(ENABLE_HIP_SIMPLE_TESTS)
@@ -326,6 +355,15 @@ function(create_hip_test VariantSuffix)
       DEPENDS hip-tests-hipify-${VariantSuffix}
       USES_TERMINAL)
     add_dependencies(check-hip-hipify check-hip-hipify-${VariantSuffix})
+  endif()
+
+  if(ENABLE_HIP_BLENDER_TESTS)
+    add_custom_target(check-hip-blender-${VariantSuffix}
+      COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_BLENDER_LIT_FLAGS}
+              ${VARIANT_BLENDER_TEST_TARGETS}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      USES_TERMINAL)
+    add_dependencies(check-hip-blender check-hip-blender-${VariantSuffix})
   endif()
 
   # Integrate Catch tests for this variant (if enabled)
@@ -366,10 +404,16 @@ macro(create_hip_tests)
       COMMENT "Run all hipified HIP tests")
   endif()
 
-
   if (ENABLE_HIP_CATCH_TESTS)
     # Initialize Catch tests framework
     initialize_catch_tests()
+  endif()
+
+  # The Blender test drives an already-installed Blender, so it has nothing to
+  # build and gets a run target only.
+  if(ENABLE_HIP_BLENDER_TESTS)
+    add_custom_target(check-hip-blender
+      COMMENT "Run the HIP Blender test")
   endif()
 
   if(NOT AMDGPU_ARCHS)
@@ -517,12 +561,15 @@ macro(create_hip_tests)
     list(APPEND _hip_all_build_targets hip-tests-catch)
     list(APPEND _hip_all_check_targets check-hip-catch)
   endif()
+  if(ENABLE_HIP_BLENDER_TESTS)
+    list(APPEND _hip_all_check_targets check-hip-blender)
+  endif()
 
   add_custom_target(hip-tests-all DEPENDS ${_hip_all_build_targets}
     COMMENT "Build all enabled HIP tests.")
   add_custom_target(check-hip-all DEPENDS ${_hip_all_check_targets}
     COMMENT "Run all enabled HIP tests.")
-  message(STATUS "Enabled HIP test targets: ${_hip_all_build_targets}")
+  message(STATUS "Enabled HIP test targets: ${_hip_all_check_targets}")
 
   file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endmacro(create_hip_tests)

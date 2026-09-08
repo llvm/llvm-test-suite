@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Set to 1 by -DHIP_BLENDER_ALWAYS_SHOW_LOG=ON; overridable per run.
+show_log_on_pass=${HIP_BLENDER_ALWAYS_SHOW_LOG:-@HIP_BLENDER_SHOW_LOG_ON_PASS@}
+
 grep "Blender test passes" $1
 ret=$?
-if [[ $ret -ne 0 ]]; then
+if [[ $ret -ne 0 || $show_log_on_pass -ne 0 ]]; then
   cat $1
 fi
 if grep "Skip HIP Blender test since no blender or test scenes found" $1; then
