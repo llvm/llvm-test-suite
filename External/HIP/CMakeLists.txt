@@ -14,11 +14,6 @@ message(STATUS "TEST_SUITE_HIP_MANAGED_DIR: ${TEST_SUITE_HIP_MANAGED_DIR}")
 get_filename_component(HIP_CLANG_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
 message(STATUS "HIP_CLANG_PATH: ${HIP_CLANG_PATH}")
 
-# Options for enabling tests for external projects (Kokkos, Ginkgo, rocPRIM)
-option(EXTERNAL_HIP_TESTS_KOKKOS "Download, build, and test Kokkos HIP backend" OFF)
-option(EXTERNAL_HIP_TESTS_GINKGO "Download, build, and test Ginkgo HIP backend" OFF)
-option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
-
 # HIP test groups.
 #
 # Every group of HIP tests is gated by its own ENABLE_HIP_<GROUP>_TESTS cache
@@ -41,16 +36,10 @@ option(HIP_BLENDER_ALLOW_RUNTIME_OVERRIDE
 
 # The suites below are third-party projects fetched and built on the side, so
 # they keep their own build-<name> / test-<name> targets rather than joining the
-# hip-tests-* / check-hip-* pairs. They are named to match the switches above;
-# the older EXTERNAL_HIP_TESTS_* spellings they forward to keep working.
+# hip-tests-* / check-hip-* pairs.
 option(ENABLE_HIP_KOKKOS_TESTS  "Enable the Kokkos HIP tests"  OFF)
 option(ENABLE_HIP_GINKGO_TESTS  "Enable the Ginkgo HIP tests"  OFF)
 option(ENABLE_HIP_ROCPRIM_TESTS "Enable the rocPRIM HIP tests" OFF)
-foreach(_hip_ext_suite KOKKOS GINKGO ROCPRIM)
-  if(ENABLE_HIP_${_hip_ext_suite}_TESTS)
-    set(EXTERNAL_HIP_TESTS_${_hip_ext_suite} ON)
-  endif()
-endforeach()
 
 if (ENABLE_HIP_CATCH_TESTS)
   # Include Catch tests integration module
@@ -456,7 +445,7 @@ macro(create_hip_tests)
     create_hip_test(${_HIP_Suffix})
   endforeach()
 
-  if (EXTERNAL_HIP_TESTS_KOKKOS)
+  if (ENABLE_HIP_KOKKOS_TESTS)
     set(EXTERNAL_HIP_TESTS_KOKKOS_TAG "4.5.01" CACHE STRING "Kokkos tag to download and test")
     ExternalProject_Add(TestKokkosHIP
       PREFIX          ${TEST_SUITE_HIP_MANAGED_DIR}/kokkos
@@ -478,7 +467,7 @@ macro(create_hip_tests)
     add_custom_target(test-kokkos ${CMAKE_COMMAND} -E env GTEST_FILTER=-hip.atomics:hip.bit_manip_bit_ceil "ctest" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-kokkos)
   endif()
 
-  if (EXTERNAL_HIP_TESTS_GINKGO)
+  if (ENABLE_HIP_GINKGO_TESTS)
     set(EXTERNAL_HIP_TESTS_GINKGO_TAG "v1.9.0" CACHE STRING "Ginkgo tag to download and test")
     ExternalProject_Add(TestGinkgoHIP
       GIT_REPOSITORY  https://github.com/ginkgo-project/ginkgo.git
@@ -500,7 +489,7 @@ macro(create_hip_tests)
     add_custom_target(test-ginkgo COMMAND "ctest" "-R hip" WORKING_DIRECTORY "${BINARY_DIR}" DEPENDS build-ginkgo)
   endif()
 
-  if (EXTERNAL_HIP_TESTS_ROCPRIM)
+  if (ENABLE_HIP_ROCPRIM_TESTS)
     # Get rocm-libraries version from TheRock
     get_therock_rocm_libraries_version(_rocm_libraries_commit)
     message(STATUS "Using rocm-libraries commit: ${_rocm_libraries_commit}")
