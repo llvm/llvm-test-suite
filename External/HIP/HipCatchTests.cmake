@@ -224,7 +224,11 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
 
   # Use shared generic target architecture flags from module scope
   set(_source_file "${TEST_DIR}/${TEST_BASENAME}.cc")
-  set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests")
+  # The main test spawns these helpers by their bare basename (see
+  # hipSquareGenericTarget.cc), so the file names must stay unsuffixed. Give each
+  # variant its own directory instead, otherwise parallel ROCm versions would
+  # declare two rules generating the same output path.
+  set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/generic-${VARIANT_SUFFIX}")
 
   # Common source files
   set(_common_sources
@@ -256,7 +260,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   set(_output_path_regular "${_output_dir}/${_exe_name_regular}")
 
   add_custom_command(
-    OUTPUT "${_output_path_regular}-${VARIANT_SUFFIX}"
+    OUTPUT "${_output_path_regular}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
     COMMAND ${CMAKE_CXX_COMPILER}
       -DNO_GENERIC_TARGET_ONLY_TEST
@@ -265,7 +269,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
-      -o "${_output_path_regular}-${VARIANT_SUFFIX}"
+      -o "${_output_path_regular}"
       --hip-path=${ROCM_PATH}
       --rocm-path=${ROCM_PATH}
       --hip-link
@@ -285,7 +289,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   set(_output_path_compressed "${_output_dir}/${_exe_name_compressed}")
 
   add_custom_command(
-    OUTPUT "${_output_path_compressed}-${VARIANT_SUFFIX}"
+    OUTPUT "${_output_path_compressed}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${_output_dir}"
     COMMAND ${CMAKE_CXX_COMPILER}
       -DNO_GENERIC_TARGET_ONLY_TEST
@@ -296,7 +300,7 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -w
       ${HIP_GENERIC_TARGET_ARCHS}
       ${_common_sources}
-      -o "${_output_path_compressed}-${VARIANT_SUFFIX}"
+      -o "${_output_path_compressed}"
       --hip-path=${ROCM_PATH}
       --rocm-path=${ROCM_PATH}
       --hip-link
@@ -313,11 +317,11 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
 
   # Create custom targets for these executables
   add_custom_target(hipSquareGenericTargetOnly-${VARIANT_SUFFIX}
-    DEPENDS "${_output_path_regular}-${VARIANT_SUFFIX}"
+    DEPENDS "${_output_path_regular}"
   )
 
   add_custom_target(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
-    DEPENDS "${_output_path_compressed}-${VARIANT_SUFFIX}"
+    DEPENDS "${_output_path_compressed}"
   )
 
   # Make the main test executable depend on these
@@ -468,12 +472,14 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # Special handling for hipSquareGenericTarget:
   # The test spawns helper executables (hipSquareGenericTargetOnly, etc.) using relative
   # paths like "./hipSquareGenericTargetOnly". For this to work, the test must run from
-  # the catch_tests directory where both the main test and helpers are located.
+  # the per-variant generic-${VARIANT_SUFFIX} directory holding those helpers, so the
+  # main executable one level up is reached via "../".
   # WORKDIR causes LIT to cd into the directory before executing the test.
   if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
     # Use WORKDIR to change directory before running (parsed as "cd DIR ; executable")
     # %S expands to source directory (where .test file is located)
-    llvm_test_run(WORKDIR "%S/catch_tests" EXECUTABLE "./${_test_exe}" "--reporter" "console")
+    llvm_test_run(WORKDIR "%S/catch_tests/generic-${VARIANT_SUFFIX}"
+                  EXECUTABLE "../${_test_exe}" "--reporter" "console")
   else()
     llvm_test_run(EXECUTABLE "catch_tests/${_test_exe}" "--reporter" "console")
   endif()
