@@ -95,6 +95,12 @@
 "nint_2.f90":
   disabled_on: ["powerpc-*-aix"]
 
+# Is expected to be compiled with -fcheck=all, which we do not support yet.
+# Can be run at -O0 without -fcheck=all, but at -O1 and above it produces
+# an infinite loop calling _FortranAProgramEndStatement.
+"pointer_check_12.f90":
+  disabled_on: ["aarch64-*-*", "loongarch64-*-*", "ppc64le-*-*", "powerpc-*-*"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This

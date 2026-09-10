@@ -5719,7 +5719,7 @@ run;pointer_assign_9.f90;;;;
 run;pointer_check_1.f90;xfail;;;
 run;pointer_check_10.f90;xfail;;;
 run;pointer_check_11.f90;xfail;;;
-run;pointer_check_12.f90;xfail;;;
+run;pointer_check_12.f90;xfail;;;aarch64-.+-.+ loongarch64-.+-.+ ppc64le-.+-.+ powerpc-.+-.+
 run;pointer_check_14.f90;;;;
 run;pointer_check_2.f90;xfail;;;
 run;pointer_check_3.f90;xfail;;;
