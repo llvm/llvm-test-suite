@@ -1,0 +1,3 @@
+ hypot(x32, y32): OK
+ hypot(x64, y64): OK
+exit 0
