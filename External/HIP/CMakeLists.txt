@@ -36,6 +36,8 @@ option(ENABLE_HIP_BLENDER_TESTS
        "Enable the HIP Blender rendering test" OFF)
 option(HIP_BLENDER_ALWAYS_SHOW_LOG
        "Print the Blender test log even when the test passes" OFF)
+option(HIP_BLENDER_ALLOW_RUNTIME_OVERRIDE
+       "Do not fail if the Blender test binary or scene list is not found at the default location" OFF)
 
 if (ENABLE_HIP_CATCH_TESTS)
   # Include Catch tests integration module
@@ -247,20 +249,22 @@ endmacro()
 
 # Create the target for the Blender rendering test.
 macro(create_blender_hip_test VariantSuffix)
-  # The same two things test_blender.sh checks before it decides to run. Both
-  # can be pointed elsewhere at run time with HIP_BLENDER_TEST_BIN_DIR and
-  # HIP_BLENDER_TEST_SCENES_DIR, so this only validates the default layout.
-  if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/blender/blender")
-    message(FATAL_ERROR
-      "ENABLE_HIP_BLENDER_TESTS is ON but no Blender executable was found at "
-      "${TEST_SUITE_HIP_ROOT}/blender/blender. Install Blender there, or "
-      "configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
-  endif()
-  if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt")
-    message(FATAL_ERROR
-      "ENABLE_HIP_BLENDER_TESTS is ON but no scene list was found at "
-      "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt. Stage the demo scenes "
-      "there, or configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
+  if (NOT HIP_BLENDER_ALLOW_RUNTIME_OVERRIDE)
+    # The same two things test_blender.sh checks before it decides to run. Both
+    # can be pointed elsewhere at run time with HIP_BLENDER_TEST_BIN_DIR and
+    # HIP_BLENDER_TEST_SCENES_DIR, so this only validates the default layout.
+    if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/blender/blender")
+      message(FATAL_ERROR
+        "ENABLE_HIP_BLENDER_TESTS is ON but no Blender executable was found at "
+        "${TEST_SUITE_HIP_ROOT}/blender/blender. Install Blender there, or "
+        "configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
+    endif()
+    if(NOT EXISTS "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt")
+      message(FATAL_ERROR
+        "ENABLE_HIP_BLENDER_TESTS is ON but no scene list was found at "
+        "${TEST_SUITE_HIP_ROOT}/Blender_Scenes/scenes.txt. Stage the demo scenes "
+        "there, or configure with -DENABLE_HIP_BLENDER_TESTS=OFF.")
+    endif()
   endif()
 
   if(HIP_BLENDER_ALWAYS_SHOW_LOG)
