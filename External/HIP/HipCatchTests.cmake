@@ -4,9 +4,6 @@
 include(CMakeParseArguments)
 
 # Global variables for Catch test configuration.
-# ENABLE_HIP_CATCH_TESTS itself is declared alongside the other HIP test group
-# switches in External/HIP/CMakeLists.txt; the variables below tune this group
-# once it is enabled.
 set(CATCH_TEST_CATEGORIES "unit" CACHE STRING "Semicolon-separated list of test categories to include (unit;stress;performance;perftests)")
 set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdirectories to include (e.g., compiler;memory;stream). Empty means all subdirectories within enabled categories.")
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")
