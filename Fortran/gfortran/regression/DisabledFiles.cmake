@@ -1008,7 +1008,14 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   io_real_boz_5.f90
   namelist_96.f90 # real data for integer NAMELIST input
   no_unit_error_1.f90
-  pointer_check_10.f90
+
+  # Have UB, they run until they crash.
+  pointer_check_1.f90
+  pointer_check_2.f90
+  pointer_check_3.f90
+  pointer_check_4.f90
+
+  pointer_check_10.f90 # Expects an error in f2003 mode, which Flang does not support.
   pointer_check_11.f90 # test exhibits UB, sometimes at O3 it hangs forever
   pointer_check_12.f90 # test exhibits UB, sometimes at O3 it hangs forever
   pointer_remapping_6.f08
