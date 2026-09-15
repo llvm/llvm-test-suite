@@ -22,9 +22,9 @@ Currently included test categories:
 
 3. **clang++**: ROCm's clang++ compiler for building HIP code
 
-4. **Catch2 v2.13.10+**: Obtained automatically via:
-   - **System installation**: If Catch2 >= 2.13.10 is installed, it will be used
-   - **FetchContent**: If not found, CMake will download Catch2 v2.13.10 from GitHub at configure time (requires internet connection for first build)
+4. **Catch2 v3.8.1+**: Obtained automatically via:
+   - **System installation**: If Catch2 >= 3.8.1 is installed, it will be used
+   - **FetchContent**: If not found, CMake will download the Catch2 v3.8.1 release tarball from GitHub at configure time (requires internet connection for first build)
 
 ## Quick Start
 
@@ -626,15 +626,17 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 **Solutions**:
 1. **Install Catch2 system-wide** (recommended for offline builds):
    ```bash
-   # Ubuntu/Debian
-   sudo apt install catch2
-
-   # Or build from source (exact version)
-   git clone -b v2.13.10 https://github.com/catchorg/Catch2.git
+   # Build from source. Distribution packages are often older than 3.8.1
+   # (Ubuntu 22.04 ships 2.13.8, for example), and find_package rejects
+   # them, so CMake falls back to downloading anyway.
+   git clone -b v3.8.1 https://github.com/catchorg/Catch2.git
    cd Catch2
-   cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local
+   cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_TESTING=OFF
    cmake --build build
    sudo cmake --install build
+
+   # A distribution package works only if it is >= 3.8.1, e.g.
+   #   sudo apt install catch2 && dpkg -s catch2 | grep Version
    ```
 
 2. **Ensure internet connectivity** during first CMake configure. Subsequent builds use the cached download.

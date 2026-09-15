@@ -40,24 +40,38 @@ set(HIP_GENERIC_TARGET_ARCHS
 # Local paths for Catch test infrastructure
 set(HIP_CATCH_TESTS_DIR "${CMAKE_CURRENT_LIST_DIR}/catch")
 
-# Try to find system-installed Catch2 v2.13.10+
-# Note: v2.13.10 is used because v2.13.4 has glibc 2.34+ incompatibility (MINSIGSTKSZ issue)
-find_package(Catch2 2.13.10 QUIET)
+# Try to find system-installed Catch2 v3.8.1+, matching the version hip-tests uses.
+find_package(Catch2 3.8.1 QUIET)
 
 if(Catch2_FOUND)
   message(STATUS "Using system Catch2: ${Catch2_DIR}")
-  get_target_property(CATCH2_INCLUDE_PATH Catch2::Catch2 INTERFACE_INCLUDE_DIRECTORIES)
 else()
-  message(STATUS "Catch2 >= 2.13.10 not found on system, fetching v2.13.10...")
+  message(STATUS "Catch2 >= 3.8.1 not found on system, fetching v3.8.1...")
   include(FetchContent)
+  # Release tarball rather than a clone: the shallow clone pulls ~13MB, of which
+  # ~8MB is .git history that is discarded immediately.
+  #
+  # The tarball and unpacked sources go to TEST_SUITE_HIP_MANAGED_DIR so they
+  # survive `rm -rf build/` instead of being re-downloaded. BINARY_DIR is left in
+  # the build tree on purpose: the compiled objects depend on the toolchain and
+  # build type, so sharing one across configurations would let them clobber
+  # each other.
   FetchContent_Declare(
     Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG        v2.13.10
-    GIT_SHALLOW    TRUE
+    URL          https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.1.tar.gz
+    URL_HASH     SHA256=18b3f70ac80fccc340d8c6ff0f339b2ae64944782f8d2fca2bd705cf47cadb79
+    DOWNLOAD_DIR ${TEST_SUITE_HIP_MANAGED_DIR}/catch2/download
+    SOURCE_DIR   ${TEST_SUITE_HIP_MANAGED_DIR}/catch2/src
   )
   FetchContent_MakeAvailable(Catch2)
-  set(CATCH2_INCLUDE_PATH "${catch2_SOURCE_DIR}/single_include/catch2")
+  # The test-suite rewrites CMAKE_CXX_COMPILE_OBJECT to wrap compiles in
+  # tools/timeit, and that applies to Catch2's targets too. Nothing else orders
+  # them against timeit, so they can race it on a clean build tree.
+  foreach(_catch2_target Catch2 Catch2WithMain)
+    if(TARGET ${_catch2_target} AND TARGET build-timeit)
+      add_dependencies(${_catch2_target} build-timeit)
+    endif()
+  endforeach()
 endif()
 
 set(CATCH2_FOUND TRUE)
@@ -94,7 +108,6 @@ function(validate_catch_tests_infrastructure)
   endforeach()
 
   message(STATUS "Using local Catch test infrastructure: ${HIP_CATCH_TESTS_DIR}")
-  message(STATUS "Catch2 include path: ${CATCH2_INCLUDE_PATH}")
 endfunction()
 
 # Function to discover test sources from hip-tests
@@ -238,11 +251,15 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
     "${HIP_CATCH_TESTS_DIR}/hipTestMain/main.cc"
   )
 
-  # Common include directories
+  # Common include directories. Catch2's are read off the target, since in the
+  # FetchContent case they are BUILD_INTERFACE generator expressions that cannot
+  # be resolved at configure time. The separator must be $<SEMICOLON> rather than
+  # a literal ';', which would split this string into list elements here instead
+  # of surviving to COMMAND_EXPAND_LISTS below.
   set(_include_flags
     "-I${ROCM_PATH}/include"
     "-I${HIP_CATCH_TESTS_DIR}/include"
-    "-I${CATCH2_INCLUDE_PATH}"
+    "-I$<JOIN:$<TARGET_PROPERTY:Catch2::Catch2,INTERFACE_INCLUDE_DIRECTORIES>,$<SEMICOLON>-I>"
     "-I${HIP_CATCH_TESTS_DIR}/external/picojson"
   )
 
@@ -277,11 +294,18 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -unwindlib=libgcc
       -frtlib-add-rpath
       ${_include_flags}
+      # Link Catch2 by -L/-l rather than by path: -x hip above applies to every
+      # following input file, and would make clang compile the archive as HIP
+      # source. The base name comes from the target so that it picks up
+      # DEBUG_POSTFIX, which makes the library libCatch2d in Debug builds.
+      -L$<TARGET_FILE_DIR:Catch2::Catch2>
+      -l$<TARGET_FILE_BASE_NAME:Catch2::Catch2>
       ${_libfs_flag}
     DEPENDS ${_common_sources}
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Building ${_exe_name_regular} for ${VARIANT_SUFFIX}"
     VERBATIM
+    COMMAND_EXPAND_LISTS
   )
 
   # 2. Build hipSquareGenericTargetOnlyCompressed (compressed fatbin with generic targets only)
@@ -308,11 +332,15 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -unwindlib=libgcc
       -frtlib-add-rpath
       ${_include_flags}
+      # See the note on linking Catch2 in the regular build above.
+      -L$<TARGET_FILE_DIR:Catch2::Catch2>
+      -l$<TARGET_FILE_BASE_NAME:Catch2::Catch2>
       ${_libfs_flag}
     DEPENDS ${_common_sources}
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Building ${_exe_name_compressed} for ${VARIANT_SUFFIX}"
     VERBATIM
+    COMMAND_EXPAND_LISTS
   )
 
   # Create custom targets for these executables
@@ -323,6 +351,13 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   add_custom_target(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
     DEPENDS "${_output_path_compressed}"
   )
+
+  # Catch2 v3 is a compiled library, so it must exist before the raw compiler
+  # invocations above can link it. Only needed when it is built in-tree.
+  if(TARGET Catch2)
+    add_dependencies(hipSquareGenericTargetOnly-${VARIANT_SUFFIX} Catch2)
+    add_dependencies(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX} Catch2)
+  endif()
 
   # Make the main test executable depend on these
   set(_main_test_exe "catch_unit_compiler_${TEST_BASENAME}-${VARIANT_SUFFIX}")
@@ -390,9 +425,8 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/catch_tests"
   )
 
-  # Include directories
+  # Include directories (Catch2's come from the linked target below)
   target_include_directories(${_test_exe} PRIVATE
-    ${CATCH2_INCLUDE_PATH}
     "${HIP_CATCH_TESTS_DIR}/include"
     "${HIP_CATCH_TESTS_DIR}/external/picojson"
   )
@@ -455,6 +489,7 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
 
   # Link libraries
   target_link_libraries(${_test_exe} PRIVATE
+    Catch2::Catch2
     ${VariantLibs}
     stdc++fs
     dl
