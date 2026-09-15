@@ -31,6 +31,8 @@ option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blende
 # off contribute no targets at all.
 option(ENABLE_HIP_HIPIFY_TESTS
        "Enable the HIP tests hipified from the External/CUDA sources" ON)
+option(ENABLE_HIP_CATCH_TESTS
+       "Enable the HIP tests built on the Catch2 framework" OFF)
 
 # Include Catch tests integration module
 include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
