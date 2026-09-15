@@ -22,6 +22,16 @@ option(EXTERNAL_HIP_TESTS_ROCPRIM "Download, build, and test rocPRIM" OFF)
 # Options to enable / disable specific test categories
 option(HIP_ENABLE_BLENDER_TEST "Enable Blender ray-tracing test (requires Blender 3.4+ and Python dependencies)" ON)
 
+# HIP test groups.
+#
+# Every group of HIP tests is gated by its own ENABLE_HIP_<GROUP>_TESTS cache
+# variable and owns a hip-tests-<group> / check-hip-<group> target pair. A group
+# that is enabled validates its prerequisites while configuring and fails there
+# if they are missing, instead of quietly contributing no tests. Groups that are
+# off contribute no targets at all.
+option(ENABLE_HIP_HIPIFY_TESTS
+       "Enable the HIP tests hipified from the External/CUDA sources" ON)
+
 # Include Catch tests integration module
 include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
 
@@ -145,8 +155,8 @@ macro(create_one_hipify_cuda_test TestName TestSource VairantOffload VariantSuff
     target_link_libraries(${_executable} ${VariantLibs})
   endif()
 
-  add_dependencies(hip-tests-simple-${VariantSuffix} ${_executable})
-  list(APPEND VARIANT_SIMPLE_TEST_TARGETS ${_executable}.test)
+  add_dependencies(hip-tests-hipify-${VariantSuffix} ${_executable})
+  list(APPEND VARIANT_HIPIFY_TEST_TARGETS ${_executable}.test)
 endmacro()
 
 # Create targets for HIP tests that are part of the test suite.
@@ -201,25 +211,30 @@ macro(create_local_hip_tests VariantSuffix)
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()
 
-  list(APPEND CUDA_LOCAL_TESTS algorithm)
-  list(APPEND CUDA_LOCAL_TESTS cmath)
-  list(APPEND CUDA_LOCAL_TESTS complex)
-  list(APPEND CUDA_LOCAL_TESTS math_h)
-  list(APPEND CUDA_LOCAL_TESTS new)
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    list(APPEND CUDA_LOCAL_TESTS algorithm)
+    list(APPEND CUDA_LOCAL_TESTS cmath)
+    list(APPEND CUDA_LOCAL_TESTS complex)
+    list(APPEND CUDA_LOCAL_TESTS math_h)
+    list(APPEND CUDA_LOCAL_TESTS new)
 
-  find_program(HIPIFY_EXE
-               NAME hipify-perl
-               PATHS ${_RocmPath}/bin)
+    find_program(HIPIFY_EXE
+                 NAME hipify-perl
+                 PATHS ${_RocmPath}/bin)
 
-  if(HIPIFY_EXE)
-      foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
-        set(_cuda_src "${CMAKE_CURRENT_SOURCE_DIR}/../CUDA/${_cuda_test}.cu")
-        create_one_hipify_cuda_test(${_cuda_test} ${_cuda_src}
-          ${VariantOffload} ${VariantSuffix}
-          "${VariantCPPFLAGS}" "${VariantLibs}")
-      endforeach()
-  else()
-      message(WARNING "hipify-perl not found for ROCm installation in ${_RocmPath}.")
+    if(NOT HIPIFY_EXE)
+      message(FATAL_ERROR
+        "ENABLE_HIP_HIPIFY_TESTS is ON but hipify-perl was not found for the "
+        "ROCm installation in ${_RocmPath}. Install it, or configure with "
+        "-DENABLE_HIP_HIPIFY_TESTS=OFF.")
+    endif()
+
+    foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
+      set(_cuda_src "${CMAKE_CURRENT_SOURCE_DIR}/../CUDA/${_cuda_test}.cu")
+      create_one_hipify_cuda_test(${_cuda_test} ${_cuda_src}
+        ${VariantOffload} ${VariantSuffix}
+        "${VariantCPPFLAGS}" "${VariantLibs}")
+    endforeach()
   endif()
 
   if (HIP_ENABLE_BLENDER_TEST)
@@ -240,6 +255,10 @@ function(create_hip_test VariantSuffix)
   message(STATUS "Creating HIP test variant ${VariantSuffix}")
   add_custom_target(hip-tests-simple-${VariantSuffix}
     COMMENT "Build HIP test variant ${VariantSuffix}")
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    add_custom_target(hip-tests-hipify-${VariantSuffix}
+      COMMENT "Build hipified HIP test variant ${VariantSuffix}")
+  endif()
 
   set(VariantCPPFLAGS ${_HIP_CPPFLAGS})
   set(VariantLibs ${_HIP_Libs})
@@ -250,17 +269,33 @@ function(create_hip_test VariantSuffix)
 
   # Enable verbose output for running HIP tests.
   set(HIP_LIT_FLAGS "-v")
+  set(HIP_SIMPLE_LIT_FLAGS ${HIP_LIT_FLAGS})
+  set(HIP_HIPIFY_LIT_FLAGS ${HIP_LIT_FLAGS})
   if (HIP_EXPORT_XUNIT_XML)
-    list(APPEND HIP_LIT_FLAGS --xunit-xml-output hip-results-${VariantSuffix}.xml)
+    list(APPEND HIP_SIMPLE_LIT_FLAGS
+         --xunit-xml-output hip-results-${VariantSuffix}.xml)
+    list(APPEND HIP_HIPIFY_LIT_FLAGS
+         --xunit-xml-output hip-results-hipify-${VariantSuffix}.xml)
   endif()
 
   add_custom_target(check-hip-simple-${VariantSuffix}
-    COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_LIT_FLAGS}
+    COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_SIMPLE_LIT_FLAGS}
             ${VARIANT_SIMPLE_TEST_TARGETS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS hip-tests-simple-${VariantSuffix}
     USES_TERMINAL)
   add_dependencies(check-hip-simple check-hip-simple-${VariantSuffix})
+
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    add_dependencies(hip-tests-hipify hip-tests-hipify-${VariantSuffix})
+    add_custom_target(check-hip-hipify-${VariantSuffix}
+      COMMAND ${HIP_TEST_SUITE_LIT} ${HIP_HIPIFY_LIT_FLAGS}
+              ${VARIANT_HIPIFY_TEST_TARGETS}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS hip-tests-hipify-${VariantSuffix}
+      USES_TERMINAL)
+    add_dependencies(check-hip-hipify check-hip-hipify-${VariantSuffix})
+  endif()
 
   # Integrate Catch tests for this variant (if enabled)
   if(ENABLE_HIP_CATCH_TESTS)
@@ -290,6 +325,13 @@ macro(create_hip_tests)
     COMMENT "Build all simple HIP tests")
   add_custom_target(check-hip-simple
     COMMENT "Run all simple HIP tests")
+
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    add_custom_target(hip-tests-hipify
+      COMMENT "Build all hipified HIP tests")
+    add_custom_target(check-hip-hipify
+      COMMENT "Run all hipified HIP tests")
+  endif()
 
   # Initialize Catch tests framework
   initialize_catch_tests()
@@ -423,14 +465,24 @@ macro(create_hip_tests)
     )
   endif()
 
-  # Build all HIP tests (simple + catch if enabled)
-  if(ENABLE_HIP_CATCH_TESTS)
-    add_custom_target(hip-tests-all DEPENDS hip-tests-simple hip-tests-catch
-      COMMENT "Build all HIP tests (simple + catch).")
-  else()
-    add_custom_target(hip-tests-all DEPENDS hip-tests-simple
-      COMMENT "Build all HIP tests (simple only, catch disabled).")
+  # Aggregate every enabled group. Groups that are off contribute no targets, so
+  # they are simply absent from these dependency lists.
+  set(_hip_all_build_targets hip-tests-simple)
+  set(_hip_all_check_targets check-hip-simple)
+  if(ENABLE_HIP_HIPIFY_TESTS)
+    list(APPEND _hip_all_build_targets hip-tests-hipify)
+    list(APPEND _hip_all_check_targets check-hip-hipify)
   endif()
+  if(ENABLE_HIP_CATCH_TESTS)
+    list(APPEND _hip_all_build_targets hip-tests-catch)
+    list(APPEND _hip_all_check_targets check-hip-catch)
+  endif()
+
+  add_custom_target(hip-tests-all DEPENDS ${_hip_all_build_targets}
+    COMMENT "Build all enabled HIP tests.")
+  add_custom_target(check-hip-all DEPENDS ${_hip_all_check_targets}
+    COMMENT "Run all enabled HIP tests.")
+  message(STATUS "Enabled HIP test targets: ${_hip_all_build_targets}")
 
   file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endmacro(create_hip_tests)
