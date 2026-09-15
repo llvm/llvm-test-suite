@@ -80,16 +80,11 @@ function(llvm_test_executable_no_test target)
   test_suite_add_build_dependencies(${target})
 
   if(TEST_SUITE_COLLECT_COMPILE_TIME)
-    set(_agg_maxrss_flag "")
-    if(TEST_SUITE_REPORT_COMPILE_MAX_RSS)
-      set(_agg_maxrss_flag "--maxrss")
-    endif()
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND ${Python3_EXECUTABLE}
               ${CMAKE_SOURCE_DIR}/litsupport/aggregate-compile-time.py
               $<TARGET_FILE_NAME:${target}>
               $<TARGET_FILE_DIR:${target}>
-              ${_agg_maxrss_flag}
       COMMENT "Aggregating compile/link times for ${target}"
     )
   endif()
