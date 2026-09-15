@@ -34,8 +34,10 @@ option(ENABLE_HIP_HIPIFY_TESTS
 option(ENABLE_HIP_CATCH_TESTS
        "Enable the HIP tests built on the Catch2 framework" OFF)
 
-# Include Catch tests integration module
-include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
+if (ENABLE_HIP_CATCH_TESTS)
+  # Include Catch tests integration module
+  include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTests.cmake)
+endif()
 
 # Find Python interpreter for running llvm-lit
 # The llvm-lit script may have a hardcoded Python version in its shebang
@@ -335,8 +337,11 @@ macro(create_hip_tests)
       COMMENT "Run all hipified HIP tests")
   endif()
 
-  # Initialize Catch tests framework
-  initialize_catch_tests()
+
+  if (ENABLE_HIP_CATCH_TESTS)
+    # Initialize Catch tests framework
+    initialize_catch_tests()
+  endif()
 
   if(NOT AMDGPU_ARCHS)
     list(APPEND AMDGPU_ARCHS "gfx906;gfx90a;gfx1030;gfx1100;gfx1201;gfx942;gfx950;native")
