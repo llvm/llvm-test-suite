@@ -1,0 +1,24 @@
+# The command inferred from lapack.test is the Python process driving the test,
+# not one of the binaries whose contents determine the LAPACK result.
+config.previous_results = None
+
+# Code size, executable hashes, compile-time data, and profiling of Python are
+# not meaningful LAPACK measurements.
+config.test_modules = [
+    module for module in config.test_modules if module in ("run", "timeit")
+]
+
+unsupported_reasons = []
+if "@CMAKE_CROSSCOMPILING@" == "TRUE":
+    unsupported_reasons.append("cross-compiling")
+if getattr(config, "remote_host", ""):
+    unsupported_reasons.append("remote execution")
+if getattr(config, "user_mode_emulation", False):
+    unsupported_reasons.append("user-mode emulation")
+
+if unsupported_reasons:
+    config.unsupported = True
+    reasons_str = ", ".join(unsupported_reasons)
+    lit_config.note(
+        f"Skipping LAPACK: {reasons_str} is unsupported"
+    )

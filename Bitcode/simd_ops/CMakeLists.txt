@@ -4,6 +4,12 @@ SET_SOURCE_FILES_PROPERTIES(${uosources} PROPERTIES LANGUAGE CXX)
 file(GLOB scalar_sources ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_scalar_tests/*.bc)
 SET_SOURCE_FILES_PROPERTIES(${scalar_sources} PROPERTIES LANGUAGE CXX)
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_halide_runtime.bc PROPERTIES LANGUAGE CXX)
+# -xir must follow the -x c++ that CMP0119 injects alongside LANGUAGE CXX.
+set_property(SOURCE
+  ${uosources}
+  ${scalar_sources}
+  ${CMAKE_CURRENT_SOURCE_DIR}/${ARCH}_halide_runtime.bc
+  APPEND PROPERTY COMPILE_OPTIONS "-xir")
 
 find_package(Threads)
 list(APPEND LDFLAGS ${CMAKE_THREAD_LIBS_INIT})

@@ -9,32 +9,32 @@ configure_file(fpcmp-input1 fpcmp-input1
 configure_file(fpcmp-input2 fpcmp-input2
   COPYONLY)
 
-llvm_test_executable_no_test(ret1 ret1.c)
+llvm_test_executable_no_test(ret1 ret1.c NO_PGO)
 add_dependencies(ret1 not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "$<TARGET_FILE:ret1>")
 llvm_add_test_for_target(ret1)
 
-llvm_test_executable_no_test(ret0 ret0.c)
+llvm_test_executable_no_test(ret0 ret0.c NO_PGO)
 add_dependencies(ret0 not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "$<TARGET_FILE:not>" "$<TARGET_FILE:ret0>")
 llvm_add_test_for_target(ret0)
 
 # Check that expected crashes are handled correctly.
-llvm_test_executable_no_test(abrt abort.c)
+llvm_test_executable_no_test(abrt abort.c NO_PGO)
 add_dependencies(abrt not)
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:not>" "--crash" "$<TARGET_FILE:abrt>")
 llvm_add_test_for_target(abrt)
 
 # Check that not passes environment variables to the called executable.
 find_package(Python COMPONENTS Interpreter)
-llvm_test_executable_no_test(check_env check_env.c)
+llvm_test_executable_no_test(check_env check_env.c NO_PGO)
 add_dependencies(check_env not)
 llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_not.py" "$<TARGET_FILE:not>" "$<TARGET_FILE:check_env>")
 llvm_add_test_For_target(check_env)
 
 # Check that timeit --report-maxrss reports a valid max RSS value.
 if(TARGET timeit-target)
-  llvm_test_executable_no_test(alloc_mem alloc_mem.c)
+  llvm_test_executable_no_test(alloc_mem alloc_mem.c NO_PGO)
   add_dependencies(alloc_mem timeit-target)
   llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_maxrss.py" "$<TARGET_FILE:timeit-target>" "$<TARGET_FILE:alloc_mem>")
   llvm_add_test_for_target(alloc_mem)
