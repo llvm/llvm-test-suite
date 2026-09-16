@@ -5,9 +5,22 @@ include(GPUTestVariant)
 llvm_externals_find(TEST_SUITE_HIP_ROOT "hip" "HIP prerequisites")
 message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 
+# Bail out before anything else runs, as the other External suites do. Without
+# this, paths derived from TEST_SUITE_HIP_ROOT below resolve against an empty
+# string, which is how TEST_SUITE_HIP_MANAGED_DIR once ended up as "/managed" on
+# builders that have no HIP prerequisites.
+if(NOT TEST_SUITE_HIP_ROOT)
+  message(STATUS "Skipping HIP tests because external sources not specified")
+  return()
+endif()
+
 # Shared home for tool-managed, network-reconstructible artifacts (downloaded or
 # generated dependencies). Everything under here is safe to delete and is not
 # user-provided. Lives outside the build dir so it survives `rm -rf build/`.
+#
+# The default sits inside the externals tree, which therefore has to be writable
+# for the components that download into it. Override it if that tree is
+# read-only or shared between concurrent builds.
 set(TEST_SUITE_HIP_MANAGED_DIR "${TEST_SUITE_HIP_ROOT}/managed" CACHE PATH
     "Root for tool-managed HIP test dependencies (safe to delete)")
 message(STATUS "TEST_SUITE_HIP_MANAGED_DIR: ${TEST_SUITE_HIP_MANAGED_DIR}")
@@ -578,6 +591,4 @@ macro(create_hip_tests)
   file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endmacro(create_hip_tests)
 
-if(TEST_SUITE_HIP_ROOT)
-  create_hip_tests()
-endif()
+create_hip_tests()
