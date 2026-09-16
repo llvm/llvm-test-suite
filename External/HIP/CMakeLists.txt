@@ -3,7 +3,6 @@ include(ExternalProject)
 include(External)
 include(GPUTestVariant)
 llvm_externals_find(TEST_SUITE_HIP_ROOT "hip" "HIP prerequisites")
-message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 
 # Bail out before anything else runs, as the other External suites do. Without
 # this, paths derived from TEST_SUITE_HIP_ROOT below resolve against an empty
@@ -13,6 +12,8 @@ if(NOT TEST_SUITE_HIP_ROOT)
   message(STATUS "Skipping HIP tests because external sources not specified")
   return()
 endif()
+
+message(STATUS "TEST_SUITE_HIP_ROOT: ${TEST_SUITE_HIP_ROOT}")
 
 # Shared home for tool-managed, network-reconstructible artifacts (downloaded or
 # generated dependencies). Everything under here is safe to delete and is not
