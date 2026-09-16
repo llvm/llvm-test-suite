@@ -476,6 +476,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr69739.f90
   typebound_call_32.f90
 
+  # Triggers UB in flang https://github.com/llvm/llvm-project/issues/224030.
+  enum_f10.f90
+
   # --------------------------------------------------------------------------
   #
   # These tests are skipped because they result in a compile error. This may
