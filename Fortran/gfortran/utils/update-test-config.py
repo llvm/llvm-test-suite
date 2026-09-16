@@ -390,10 +390,10 @@ def get_lines(filepath: str) -> list[str]:
     lines = []
     try:
         encoding = get_encoding(filepath)
-        with open(filepath, 'r', encoding = encoding) as f:
+        with open(filepath, 'r', encoding = encoding, errors = 'ignore') as f:
             lines = f.readlines()
-    except:
-        warning('Could not open file: {}', os.path.basename(filepath))
+    except Exception as e:
+        warning('Could not open file: {} ({})', filepath, e)
     finally:
         return lines
 
