@@ -26,6 +26,17 @@ Currently included test categories:
    - **System installation**: If Catch2 >= 3.8.1 is installed, it will be used
    - **FetchContent**: If not found, CMake will download the Catch2 v3.8.1 release tarball from GitHub at configure time (requires internet connection for first build)
 
+5. **A writable `TEST_SUITE_HIP_MANAGED_DIR`**: The downloaded tarball and its
+   unpacked sources are cached here so they survive `rm -rf build/`. It defaults
+   to `${TEST_SUITE_HIP_ROOT}/managed`, which is inside the externals tree, so
+   that tree must be writable when Catch2 is downloaded rather than found on the
+   system. Override it if the externals tree is read-only or shared between
+   concurrent builds:
+
+   ```bash
+   cmake -DTEST_SUITE_HIP_MANAGED_DIR=/path/to/writable/dir ...
+   ```
+
 ## Quick Start
 
 ### Basic Configuration
