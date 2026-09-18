@@ -3,6 +3,7 @@
 # source directory is not available.
 set(LITSUPPORT_FILES
   __init__.py
+  aggregate-compile-time.py
   shellcommand.py
   testfile.py
   testplan.py
