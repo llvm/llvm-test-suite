@@ -1,0 +1,19 @@
+integer(g0) = -123
+integer(i0) = -123
+real(g0) = 12.34
+real(g15.7) =    12.34000    
+real(g0.4) = 12.34
+real(g15.4) =       12.34    
+complex(g0) = (1.5,3.7)
+complex(g15.7) = (   1.500000    ,   3.700000    )
+complex(g0.4) = (1.500,3.700)
+complex(g15.4) = (      1.500    ,      3.700    )
+logocal(g0) = T
+logocal(l1) = T
+character(g0) = ABC  
+character(a) = ABC  
+inf(g0) = Inf
+inf(f0.0) = Inf
+nan(g0) = NaN
+nan(f0.0) = NaN
+exit 0

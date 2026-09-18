@@ -1,0 +1,3 @@
+ gamma(x32): OK
+ gamma(x64): OK
+exit 0

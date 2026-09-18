@@ -1,0 +1,2 @@
+ iostat_inquire_internal_unit: OK
+exit 0

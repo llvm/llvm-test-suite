@@ -1,0 +1,6 @@
+ str1 = x, length = 1
+ str2 = abcdefghij, length = 10
+ str3 = 123456578901234, length = 15
+ str4 = abcdefghijklmnopqrst, length = 20
+ str5 = klmnopqrst, length = 10
+exit 0
