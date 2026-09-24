@@ -1,5 +1,5 @@
 add_subdirectory(C++11)
+add_subdirectory(Float)
 if(ARCH STREQUAL "Mips")
   add_subdirectory(Mips)
 endif()
-add_subdirectory(Float)
