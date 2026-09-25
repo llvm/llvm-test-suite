@@ -46,4 +46,343 @@ Checking 1 read, 1 write, nested loop (decreasing outer iv, matching trip counts
 Checking 2 reads, 1 write, nested loop (decreasing outer iv, matching trip counts), uint8_t
 Checking 2 reads, 1 write, nested loop (decreasing outer iv, matching trip counts), uint32_t
 Checking 2 reads, 1 write, nested loop (decreasing outer iv, matching trip counts), uint64_t
+Checking 1D 5-point stencil, uint8_t, strides -16 and 0
+Checking 1D 5-point stencil, uint8_t, strides -1 and 0
+Checking 1D 5-point stencil, uint8_t, strides 0 and 0
+Checking 1D 5-point stencil, uint8_t, strides 1 and 0
+Checking 1D 5-point stencil, uint8_t, strides 2 and 0
+Checking 1D 5-point stencil, uint8_t, strides 7 and 0
+Checking 1D 5-point stencil, uint8_t, strides 16 and 0
+Checking 1D 5-point stencil, uint8_t, strides 64 and 0
+Checking 1D 5-point stencil, uint8_t, strides 100 and 0
+Checking 1D 5-point stencil, uint32_t, strides -16 and 0
+Checking 1D 5-point stencil, uint32_t, strides -1 and 0
+Checking 1D 5-point stencil, uint32_t, strides 0 and 0
+Checking 1D 5-point stencil, uint32_t, strides 1 and 0
+Checking 1D 5-point stencil, uint32_t, strides 2 and 0
+Checking 1D 5-point stencil, uint32_t, strides 7 and 0
+Checking 1D 5-point stencil, uint32_t, strides 16 and 0
+Checking 1D 5-point stencil, uint32_t, strides 64 and 0
+Checking 1D 5-point stencil, uint32_t, strides 100 and 0
+Checking 1D 5-point stencil, uint64_t, strides -16 and 0
+Checking 1D 5-point stencil, uint64_t, strides -1 and 0
+Checking 1D 5-point stencil, uint64_t, strides 0 and 0
+Checking 1D 5-point stencil, uint64_t, strides 1 and 0
+Checking 1D 5-point stencil, uint64_t, strides 2 and 0
+Checking 1D 5-point stencil, uint64_t, strides 7 and 0
+Checking 1D 5-point stencil, uint64_t, strides 16 and 0
+Checking 1D 5-point stencil, uint64_t, strides 64 and 0
+Checking 1D 5-point stencil, uint64_t, strides 100 and 0
+Checking stencil with scaled stride, uint8_t, strides -16 and 0
+Checking stencil with scaled stride, uint8_t, strides -1 and 0
+Checking stencil with scaled stride, uint8_t, strides 0 and 0
+Checking stencil with scaled stride, uint8_t, strides 1 and 0
+Checking stencil with scaled stride, uint8_t, strides 2 and 0
+Checking stencil with scaled stride, uint8_t, strides 7 and 0
+Checking stencil with scaled stride, uint8_t, strides 16 and 0
+Checking stencil with scaled stride, uint8_t, strides 64 and 0
+Checking stencil with scaled stride, uint8_t, strides 100 and 0
+Checking stencil with scaled stride, uint32_t, strides -16 and 0
+Checking stencil with scaled stride, uint32_t, strides -1 and 0
+Checking stencil with scaled stride, uint32_t, strides 0 and 0
+Checking stencil with scaled stride, uint32_t, strides 1 and 0
+Checking stencil with scaled stride, uint32_t, strides 2 and 0
+Checking stencil with scaled stride, uint32_t, strides 7 and 0
+Checking stencil with scaled stride, uint32_t, strides 16 and 0
+Checking stencil with scaled stride, uint32_t, strides 64 and 0
+Checking stencil with scaled stride, uint32_t, strides 100 and 0
+Checking stencil with scaled stride, uint64_t, strides -16 and 0
+Checking stencil with scaled stride, uint64_t, strides -1 and 0
+Checking stencil with scaled stride, uint64_t, strides 0 and 0
+Checking stencil with scaled stride, uint64_t, strides 1 and 0
+Checking stencil with scaled stride, uint64_t, strides 2 and 0
+Checking stencil with scaled stride, uint64_t, strides 7 and 0
+Checking stencil with scaled stride, uint64_t, strides 16 and 0
+Checking stencil with scaled stride, uint64_t, strides 64 and 0
+Checking stencil with scaled stride, uint64_t, strides 100 and 0
+Checking 3D-style stencil with two strides, uint8_t, strides 1 and 2
+Checking 3D-style stencil with two strides, uint8_t, strides 2 and 1
+Checking 3D-style stencil with two strides, uint8_t, strides 7 and 16
+Checking 3D-style stencil with two strides, uint8_t, strides 16 and 7
+Checking 3D-style stencil with two strides, uint8_t, strides 16 and 100
+Checking 3D-style stencil with two strides, uint8_t, strides 100 and 16
+Checking 3D-style stencil with two strides, uint8_t, strides 64 and 64
+Checking 3D-style stencil with two strides, uint8_t, strides -7 and 16
+Checking 3D-style stencil with two strides, uint8_t, strides 16 and -7
+Checking 3D-style stencil with two strides, uint8_t, strides -7 and -16
+Checking 3D-style stencil with two strides, uint8_t, strides 0 and 16
+Checking 3D-style stencil with two strides, uint8_t, strides 16 and 0
+Checking 3D-style stencil with two strides, uint8_t, strides 0 and 0
+Checking 3D-style stencil with two strides, uint32_t, strides 1 and 2
+Checking 3D-style stencil with two strides, uint32_t, strides 2 and 1
+Checking 3D-style stencil with two strides, uint32_t, strides 7 and 16
+Checking 3D-style stencil with two strides, uint32_t, strides 16 and 7
+Checking 3D-style stencil with two strides, uint32_t, strides 16 and 100
+Checking 3D-style stencil with two strides, uint32_t, strides 100 and 16
+Checking 3D-style stencil with two strides, uint32_t, strides 64 and 64
+Checking 3D-style stencil with two strides, uint32_t, strides -7 and 16
+Checking 3D-style stencil with two strides, uint32_t, strides 16 and -7
+Checking 3D-style stencil with two strides, uint32_t, strides -7 and -16
+Checking 3D-style stencil with two strides, uint32_t, strides 0 and 16
+Checking 3D-style stencil with two strides, uint32_t, strides 16 and 0
+Checking 3D-style stencil with two strides, uint32_t, strides 0 and 0
+Checking 3D-style stencil with two strides, uint64_t, strides 1 and 2
+Checking 3D-style stencil with two strides, uint64_t, strides 2 and 1
+Checking 3D-style stencil with two strides, uint64_t, strides 7 and 16
+Checking 3D-style stencil with two strides, uint64_t, strides 16 and 7
+Checking 3D-style stencil with two strides, uint64_t, strides 16 and 100
+Checking 3D-style stencil with two strides, uint64_t, strides 100 and 16
+Checking 3D-style stencil with two strides, uint64_t, strides 64 and 64
+Checking 3D-style stencil with two strides, uint64_t, strides -7 and 16
+Checking 3D-style stencil with two strides, uint64_t, strides 16 and -7
+Checking 3D-style stencil with two strides, uint64_t, strides -7 and -16
+Checking 3D-style stencil with two strides, uint64_t, strides 0 and 16
+Checking 3D-style stencil with two strides, uint64_t, strides 16 and 0
+Checking 3D-style stencil with two strides, uint64_t, strides 0 and 0
+Checking stencil with two scaled strides, uint8_t, strides 1 and 2
+Checking stencil with two scaled strides, uint8_t, strides 2 and 1
+Checking stencil with two scaled strides, uint8_t, strides 7 and 16
+Checking stencil with two scaled strides, uint8_t, strides 16 and 7
+Checking stencil with two scaled strides, uint8_t, strides 16 and 100
+Checking stencil with two scaled strides, uint8_t, strides 100 and 16
+Checking stencil with two scaled strides, uint8_t, strides 64 and 64
+Checking stencil with two scaled strides, uint8_t, strides -7 and 16
+Checking stencil with two scaled strides, uint8_t, strides 16 and -7
+Checking stencil with two scaled strides, uint8_t, strides -7 and -16
+Checking stencil with two scaled strides, uint8_t, strides 0 and 16
+Checking stencil with two scaled strides, uint8_t, strides 16 and 0
+Checking stencil with two scaled strides, uint8_t, strides 0 and 0
+Checking stencil with two scaled strides, uint32_t, strides 1 and 2
+Checking stencil with two scaled strides, uint32_t, strides 2 and 1
+Checking stencil with two scaled strides, uint32_t, strides 7 and 16
+Checking stencil with two scaled strides, uint32_t, strides 16 and 7
+Checking stencil with two scaled strides, uint32_t, strides 16 and 100
+Checking stencil with two scaled strides, uint32_t, strides 100 and 16
+Checking stencil with two scaled strides, uint32_t, strides 64 and 64
+Checking stencil with two scaled strides, uint32_t, strides -7 and 16
+Checking stencil with two scaled strides, uint32_t, strides 16 and -7
+Checking stencil with two scaled strides, uint32_t, strides -7 and -16
+Checking stencil with two scaled strides, uint32_t, strides 0 and 16
+Checking stencil with two scaled strides, uint32_t, strides 16 and 0
+Checking stencil with two scaled strides, uint32_t, strides 0 and 0
+Checking stencil with two scaled strides, uint64_t, strides 1 and 2
+Checking stencil with two scaled strides, uint64_t, strides 2 and 1
+Checking stencil with two scaled strides, uint64_t, strides 7 and 16
+Checking stencil with two scaled strides, uint64_t, strides 16 and 7
+Checking stencil with two scaled strides, uint64_t, strides 16 and 100
+Checking stencil with two scaled strides, uint64_t, strides 100 and 16
+Checking stencil with two scaled strides, uint64_t, strides 64 and 64
+Checking stencil with two scaled strides, uint64_t, strides -7 and 16
+Checking stencil with two scaled strides, uint64_t, strides 16 and -7
+Checking stencil with two scaled strides, uint64_t, strides -7 and -16
+Checking stencil with two scaled strides, uint64_t, strides 0 and 16
+Checking stencil with two scaled strides, uint64_t, strides 16 and 0
+Checking stencil with two scaled strides, uint64_t, strides 0 and 0
+Checking reverse stencil, uint8_t, strides -16 and 0
+Checking reverse stencil, uint8_t, strides -1 and 0
+Checking reverse stencil, uint8_t, strides 0 and 0
+Checking reverse stencil, uint8_t, strides 1 and 0
+Checking reverse stencil, uint8_t, strides 2 and 0
+Checking reverse stencil, uint8_t, strides 7 and 0
+Checking reverse stencil, uint8_t, strides 16 and 0
+Checking reverse stencil, uint8_t, strides 64 and 0
+Checking reverse stencil, uint8_t, strides 100 and 0
+Checking reverse stencil, uint32_t, strides -16 and 0
+Checking reverse stencil, uint32_t, strides -1 and 0
+Checking reverse stencil, uint32_t, strides 0 and 0
+Checking reverse stencil, uint32_t, strides 1 and 0
+Checking reverse stencil, uint32_t, strides 2 and 0
+Checking reverse stencil, uint32_t, strides 7 and 0
+Checking reverse stencil, uint32_t, strides 16 and 0
+Checking reverse stencil, uint32_t, strides 64 and 0
+Checking reverse stencil, uint32_t, strides 100 and 0
+Checking reverse stencil, uint64_t, strides -16 and 0
+Checking reverse stencil, uint64_t, strides -1 and 0
+Checking reverse stencil, uint64_t, strides 0 and 0
+Checking reverse stencil, uint64_t, strides 1 and 0
+Checking reverse stencil, uint64_t, strides 2 and 0
+Checking reverse stencil, uint64_t, strides 7 and 0
+Checking reverse stencil, uint64_t, strides 16 and 0
+Checking reverse stencil, uint64_t, strides 64 and 0
+Checking reverse stencil, uint64_t, strides 100 and 0
+Checking one-sided stencil, uint8_t, strides -16 and 0
+Checking one-sided stencil, uint8_t, strides -1 and 0
+Checking one-sided stencil, uint8_t, strides 0 and 0
+Checking one-sided stencil, uint8_t, strides 1 and 0
+Checking one-sided stencil, uint8_t, strides 2 and 0
+Checking one-sided stencil, uint8_t, strides 7 and 0
+Checking one-sided stencil, uint8_t, strides 16 and 0
+Checking one-sided stencil, uint8_t, strides 64 and 0
+Checking one-sided stencil, uint8_t, strides 100 and 0
+Checking one-sided stencil, uint32_t, strides -16 and 0
+Checking one-sided stencil, uint32_t, strides -1 and 0
+Checking one-sided stencil, uint32_t, strides 0 and 0
+Checking one-sided stencil, uint32_t, strides 1 and 0
+Checking one-sided stencil, uint32_t, strides 2 and 0
+Checking one-sided stencil, uint32_t, strides 7 and 0
+Checking one-sided stencil, uint32_t, strides 16 and 0
+Checking one-sided stencil, uint32_t, strides 64 and 0
+Checking one-sided stencil, uint32_t, strides 100 and 0
+Checking one-sided stencil, uint64_t, strides -16 and 0
+Checking one-sided stencil, uint64_t, strides -1 and 0
+Checking one-sided stencil, uint64_t, strides 0 and 0
+Checking one-sided stencil, uint64_t, strides 1 and 0
+Checking one-sided stencil, uint64_t, strides 2 and 0
+Checking one-sided stencil, uint64_t, strides 7 and 0
+Checking one-sided stencil, uint64_t, strides 16 and 0
+Checking one-sided stencil, uint64_t, strides 64 and 0
+Checking one-sided stencil, uint64_t, strides 100 and 0
+Checking negative one-sided stencil, uint8_t, strides -16 and 0
+Checking negative one-sided stencil, uint8_t, strides -1 and 0
+Checking negative one-sided stencil, uint8_t, strides 0 and 0
+Checking negative one-sided stencil, uint8_t, strides 1 and 0
+Checking negative one-sided stencil, uint8_t, strides 2 and 0
+Checking negative one-sided stencil, uint8_t, strides 7 and 0
+Checking negative one-sided stencil, uint8_t, strides 16 and 0
+Checking negative one-sided stencil, uint8_t, strides 64 and 0
+Checking negative one-sided stencil, uint8_t, strides 100 and 0
+Checking negative one-sided stencil, uint32_t, strides -16 and 0
+Checking negative one-sided stencil, uint32_t, strides -1 and 0
+Checking negative one-sided stencil, uint32_t, strides 0 and 0
+Checking negative one-sided stencil, uint32_t, strides 1 and 0
+Checking negative one-sided stencil, uint32_t, strides 2 and 0
+Checking negative one-sided stencil, uint32_t, strides 7 and 0
+Checking negative one-sided stencil, uint32_t, strides 16 and 0
+Checking negative one-sided stencil, uint32_t, strides 64 and 0
+Checking negative one-sided stencil, uint32_t, strides 100 and 0
+Checking negative one-sided stencil, uint64_t, strides -16 and 0
+Checking negative one-sided stencil, uint64_t, strides -1 and 0
+Checking negative one-sided stencil, uint64_t, strides 0 and 0
+Checking negative one-sided stencil, uint64_t, strides 1 and 0
+Checking negative one-sided stencil, uint64_t, strides 2 and 0
+Checking negative one-sided stencil, uint64_t, strides 7 and 0
+Checking negative one-sided stencil, uint64_t, strides 16 and 0
+Checking negative one-sided stencil, uint64_t, strides 64 and 0
+Checking negative one-sided stencil, uint64_t, strides 100 and 0
+Checking stencil with mixed offsets, uint8_t, strides 1 and 2
+Checking stencil with mixed offsets, uint8_t, strides 2 and 1
+Checking stencil with mixed offsets, uint8_t, strides 7 and 16
+Checking stencil with mixed offsets, uint8_t, strides 16 and 7
+Checking stencil with mixed offsets, uint8_t, strides 16 and 100
+Checking stencil with mixed offsets, uint8_t, strides 100 and 16
+Checking stencil with mixed offsets, uint8_t, strides 64 and 64
+Checking stencil with mixed offsets, uint8_t, strides -7 and 16
+Checking stencil with mixed offsets, uint8_t, strides 16 and -7
+Checking stencil with mixed offsets, uint8_t, strides -7 and -16
+Checking stencil with mixed offsets, uint8_t, strides 0 and 16
+Checking stencil with mixed offsets, uint8_t, strides 16 and 0
+Checking stencil with mixed offsets, uint8_t, strides 0 and 0
+Checking stencil with mixed offsets, uint32_t, strides 1 and 2
+Checking stencil with mixed offsets, uint32_t, strides 2 and 1
+Checking stencil with mixed offsets, uint32_t, strides 7 and 16
+Checking stencil with mixed offsets, uint32_t, strides 16 and 7
+Checking stencil with mixed offsets, uint32_t, strides 16 and 100
+Checking stencil with mixed offsets, uint32_t, strides 100 and 16
+Checking stencil with mixed offsets, uint32_t, strides 64 and 64
+Checking stencil with mixed offsets, uint32_t, strides -7 and 16
+Checking stencil with mixed offsets, uint32_t, strides 16 and -7
+Checking stencil with mixed offsets, uint32_t, strides -7 and -16
+Checking stencil with mixed offsets, uint32_t, strides 0 and 16
+Checking stencil with mixed offsets, uint32_t, strides 16 and 0
+Checking stencil with mixed offsets, uint32_t, strides 0 and 0
+Checking stencil with mixed offsets, uint64_t, strides 1 and 2
+Checking stencil with mixed offsets, uint64_t, strides 2 and 1
+Checking stencil with mixed offsets, uint64_t, strides 7 and 16
+Checking stencil with mixed offsets, uint64_t, strides 16 and 7
+Checking stencil with mixed offsets, uint64_t, strides 16 and 100
+Checking stencil with mixed offsets, uint64_t, strides 100 and 16
+Checking stencil with mixed offsets, uint64_t, strides 64 and 64
+Checking stencil with mixed offsets, uint64_t, strides -7 and 16
+Checking stencil with mixed offsets, uint64_t, strides 16 and -7
+Checking stencil with mixed offsets, uint64_t, strides -7 and -16
+Checking stencil with mixed offsets, uint64_t, strides 0 and 16
+Checking stencil with mixed offsets, uint64_t, strides 16 and 0
+Checking stencil with mixed offsets, uint64_t, strides 0 and 0
+Checking stencil with predicated reads, uint8_t, strides -16 and 0
+Checking stencil with predicated reads, uint8_t, strides -1 and 0
+Checking stencil with predicated reads, uint8_t, strides 0 and 0
+Checking stencil with predicated reads, uint8_t, strides 1 and 0
+Checking stencil with predicated reads, uint8_t, strides 2 and 0
+Checking stencil with predicated reads, uint8_t, strides 7 and 0
+Checking stencil with predicated reads, uint8_t, strides 16 and 0
+Checking stencil with predicated reads, uint8_t, strides 64 and 0
+Checking stencil with predicated reads, uint8_t, strides 100 and 0
+Checking stencil with predicated reads, uint32_t, strides -16 and 0
+Checking stencil with predicated reads, uint32_t, strides -1 and 0
+Checking stencil with predicated reads, uint32_t, strides 0 and 0
+Checking stencil with predicated reads, uint32_t, strides 1 and 0
+Checking stencil with predicated reads, uint32_t, strides 2 and 0
+Checking stencil with predicated reads, uint32_t, strides 7 and 0
+Checking stencil with predicated reads, uint32_t, strides 16 and 0
+Checking stencil with predicated reads, uint32_t, strides 64 and 0
+Checking stencil with predicated reads, uint32_t, strides 100 and 0
+Checking stencil with predicated reads, uint64_t, strides -16 and 0
+Checking stencil with predicated reads, uint64_t, strides -1 and 0
+Checking stencil with predicated reads, uint64_t, strides 0 and 0
+Checking stencil with predicated reads, uint64_t, strides 1 and 0
+Checking stencil with predicated reads, uint64_t, strides 2 and 0
+Checking stencil with predicated reads, uint64_t, strides 7 and 0
+Checking stencil with predicated reads, uint64_t, strides 16 and 0
+Checking stencil with predicated reads, uint64_t, strides 64 and 0
+Checking stencil with predicated reads, uint64_t, strides 100 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides -128 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides -16 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides -1 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides 0 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides 1 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides 16 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides 100 and 0
+Checking scaled stencil, int8_t stride, uint8_t, strides 127 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides -128 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides -16 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides -1 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides 0 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides 1 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides 16 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides 100 and 0
+Checking scaled stencil, int8_t stride, uint32_t, strides 127 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides -128 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides -16 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides -1 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides 0 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides 1 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides 16 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides 100 and 0
+Checking scaled stencil, int8_t stride, uint64_t, strides 127 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides -16 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides -1 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides 0 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides 1 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides 16 and 0
+Checking scaled stencil, int32_t stride, uint8_t, strides 100 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides -16 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides -1 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides 0 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides 1 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides 16 and 0
+Checking scaled stencil, int32_t stride, uint32_t, strides 100 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides -16 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides -1 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides 0 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides 1 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides 16 and 0
+Checking scaled stencil, int32_t stride, uint64_t, strides 100 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides -16 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides -1 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides 0 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides 1 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides 16 and 0
+Checking scaled stencil, int64_t stride, uint8_t, strides 100 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides -16 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides -1 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides 0 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides 1 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides 16 and 0
+Checking scaled stencil, int64_t stride, uint32_t, strides 100 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides -16 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides -1 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides 0 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides 1 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides 16 and 0
+Checking scaled stencil, int64_t stride, uint64_t, strides 100 and 0
 exit 0
