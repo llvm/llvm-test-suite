@@ -1,0 +1,6 @@
+ int8: OK
+ int16: OK
+ int32: OK
+ int64: OK
+ integer_kinds: OK
+exit 0
