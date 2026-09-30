@@ -1,4 +1,5 @@
 ! { dg-do compile }
+! { dg-additional-options "-fopenmp-version=50" }
 
 module omp_lib_kinds
   use iso_c_binding, only: c_int, c_intptr_t

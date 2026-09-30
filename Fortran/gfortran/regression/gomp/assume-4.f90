@@ -1,5 +1,5 @@
 ! { dg-do compile }
-! { dg-options "-fopenmp -O2 -fdump-tree-original -fdump-tree-optimized" }
+! { dg-options "-fopenmp -O2 -fdump-tree-original -fdump-tree-optimized -fopenmp-version=51" }
 ! { dg-final { scan-tree-dump-times ".ASSUME \\(i_lower_bound \\(\\) < i\\);" 1 "original" } }
 ! { dg-final { scan-tree-dump-times ".ASSUME \\(TARGET_EXPR <D.\[0-9\]+, D.\[0-9\]+ = j_upper_bound \\(\\);" 1 "original" } }
 ! { dg-final { scan-tree-dump-times "__builtin_free" 1 "original" } }

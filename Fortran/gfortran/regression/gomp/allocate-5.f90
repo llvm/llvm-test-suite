@@ -1,4 +1,4 @@
-! { dg-additional-options "-fopenmp-allocators" }
+! { dg-additional-options "-fopenmp-version=51" }
 module my_omp_lib
   use iso_c_binding, only: c_intptr_t
   !use omp_lib

@@ -1,5 +1,5 @@
 ! { dg-do compile }
-! { dg-additional-options "-fdump-tree-original" }
+! { dg-additional-options "-fdump-tree-original -fopenmp-version=50" }
 
 ! { dg-final { scan-tree-dump-times "#pragma omp atomic relaxed" 4 "original" } }
 ! { dg-final { scan-tree-dump-times "#pragma omp atomic release" 4 "original" } }

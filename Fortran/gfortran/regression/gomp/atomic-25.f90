@@ -1,4 +1,5 @@
 ! { dg-do compile }
+! { dg-additional-options "-fopenmp-version=51" }
 
 module m
 use iso_fortran_env
