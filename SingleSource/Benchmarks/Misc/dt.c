@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#ifdef __MVS__
+#include "MVSSupport.h"
+#endif
 
 enum {
   ITERATIONS = 131072,
@@ -31,8 +34,13 @@ int main(int argc, char *argv[]) {
   double	*dvec1, *dvec2;
   long i;
 
-  posix_memalign((void**)&dvec1, 16, size * sizeof(double));
-  posix_memalign((void**)&dvec2, 16, size * sizeof(double));
+  #ifdef __MVS__
+    dvec1 = (double *)allocateAlignedMemory(size*sizeof(double), 16);
+    dvec2 = (double *)allocateAlignedMemory(size*sizeof(double), 16);
+  #else
+    posix_memalign((void**)&dvec1, 16, size * sizeof(double));
+    posix_memalign((void**)&dvec2, 16, size * sizeof(double));
+  #endif
 
   printf( " %i iterations of each test. ", ITERATIONS );
   printf( " inner loop / array size %i.\n", size );

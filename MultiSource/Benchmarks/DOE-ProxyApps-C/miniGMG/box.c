@@ -11,6 +11,9 @@
 //------------------------------------------------------------------------------------------------------------------------------
 #include "defines.h"
 #include "box.h"
+#ifdef __MVS__
+#include "MVSSupport.h"
+#endif
 //------------------------------------------------------------------------------------------------------------------------------
 int RandomPadding=-1;
 //------------------------------------------------------------------------------------------------------------------------------
@@ -57,17 +60,29 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 
 
   // allocate pointers to grids and grids themselves
-  posix_memalign((void**)&(box->grids),64,box->numGrids*sizeof(double*));  
+  #ifdef __MVS__
+    box->grids = (double **)allocateAlignedMemory(box->numGrids*sizeof(double*), 64);
+  #else
+    posix_memalign((void**)&(box->grids),64,box->numGrids*sizeof(double*));
+  #endif
   memory_allocated += box->numGrids*sizeof(double*);
 #if 0
   int g;for(g=0;g<box->numGrids;g++){
-    posix_memalign((void**)&(box->grids[g]),64,box->volume*sizeof(double));
+    #ifdef __MVS__
+      box->grids[g] = (double *)allocateAlignedMemory(box->volume*sizeof(double), 64);
+    #else
+      posix_memalign((void**)&(box->grids[g]),64,box->volume*sizeof(double));
+    #endif
     memset(box->grids[g],0,box->volume*sizeof(double));
     memory_allocated += box->volume*sizeof(double);
   }
 #else
   double * tmpbuf;
-  posix_memalign((void**)&tmpbuf,64,box->volume*box->numGrids*sizeof(double));
+  #ifdef __MVS__
+    tmpbuf = (double *)allocateAlignedMemory(box->volume*box->numGrids*sizeof(double), 64);
+  #else
+    posix_memalign((void**)&tmpbuf,64,box->volume*box->numGrids*sizeof(double));
+  #endif
   memset(    tmpbuf,0,box->volume*box->numGrids*sizeof(double));
   memory_allocated += box->volume*box->numGrids*sizeof(double);
   int g;for(g=0;g<box->numGrids;g++){
@@ -77,13 +92,18 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 #endif
 
   // allocate RedBlackMask array for a plane...
-  posix_memalign((void**)&(box->RedBlack_64bMask),64,box->plane*sizeof(uint64_t));
+  #ifdef __MVS__
+    box->RedBlack_64bMask = (uint64_t *)allocateAlignedMemory(box->plane*sizeof(uint64_t), 64);
+    box->RedBlack_FP[0] = (double *)allocateAlignedMemory(box->plane*sizeof(double), 64);
+    box->RedBlack_FP[1] = (double *)allocateAlignedMemory(box->plane*sizeof(double), 64);
+  #else
+    posix_memalign((void**)&(box->RedBlack_64bMask),64,box->plane*sizeof(uint64_t));
                     memset(box->RedBlack_64bMask,  0,box->plane*sizeof(uint64_t));
                                  memory_allocated += box->plane*sizeof(uint64_t);
-  posix_memalign((void**)&(box->RedBlack_FP[0]  ),64,box->plane*sizeof(double  ));
+    posix_memalign((void**)&(box->RedBlack_FP[0]  ),64,box->plane*sizeof(double  ));
                     memset(box->RedBlack_FP[0]  ,  0,box->plane*sizeof(double  ));
                                  memory_allocated += box->plane*sizeof(double  );
-  posix_memalign((void**)&(box->RedBlack_FP[1]  ),64,box->plane*sizeof(double  ));
+    posix_memalign((void**)&(box->RedBlack_FP[1]  ),64,box->plane*sizeof(double  ));
                     memset(box->RedBlack_FP[1]  ,  0,box->plane*sizeof(double  ));
                                  memory_allocated += box->plane*sizeof(double  );
 
@@ -96,6 +116,7 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
     if((i^j)&0x1)box->RedBlack_FP[0][ij]=1.0;else box->RedBlack_FP[0][ij]=0.0;
     if((i^j)&0x1)box->RedBlack_FP[1][ij]=0.0;else box->RedBlack_FP[1][ij]=1.0;
   }}
+  #endif
   // done...
   return(memory_allocated);
 }
@@ -103,12 +124,24 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 void destroy_box(box_type *box){
 #if 0
   int g;for(g=0;g<box->numGrids;g++){
-    free(box->grids[g]);
+    #ifdef __MVS__
+      freeAlignedMemory(box->grids[g]);
+    #else
+      free(box->grids[g]);
+    #endif
   }
 #else
-  free(box->grids[0]);
+  #ifdef __MVS__
+    freeAlignedMemory(box->grids[0]);
+  #else
+    free(box->grids[0]);
+  #endif
 #endif
-  free(box->grids);
+  #ifdef __MVS__
+    freeAlignedMemory(box->grids);
+  #else
+    free(box->grids);
+  #endif
 }
 
 

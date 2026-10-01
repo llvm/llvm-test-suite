@@ -88,10 +88,18 @@
 */
 # ifndef POLYBENCH_STACK_ARRAYS
 #  define POLYBENCH_ARRAY(x) *x
+#  ifndef __MVS__
 #  ifdef POLYBENCH_ENABLE_INTARRAY_PAD
 #   define POLYBENCH_FREE_ARRAY(x) polybench_free_data((void*)x);
 #  else
 #   define POLYBENCH_FREE_ARRAY(x) free((void*)x);
+#  endif
+#  else
+#  ifdef POLYBENCH_ENABLE_INTARRAY_PAD
+#   define POLYBENCH_FREE_ARRAY(x) polybench_free_data(((void**)x)[-1]);
+#  else
+#   define POLYBENCH_FREE_ARRAY(x) free(((void**)x)[-1]);
+#  endif
 #  endif
 #  define POLYBENCH_DECL_VAR(x) (*x)
 # else
@@ -279,6 +287,9 @@ extern void polybench_prepare_instruments();
 #include <math.h>
 #ifdef _OPENMP
 # include <omp.h>
+#endif
+#ifdef __MVS__
+# include "MVSSupport.h"
 #endif
 
 #if defined(POLYBENCH_PAPI)
@@ -778,12 +789,20 @@ xmalloc(size_t alloc_sz)
   /* By default, post-pad the arrays. Safe behavior, but likely useless. */
   polybench_inter_array_padding_sz += POLYBENCH_INTER_ARRAY_PADDING_FACTOR;
   size_t padded_sz = alloc_sz + polybench_inter_array_padding_sz;
+#ifdef __MVS__
+  ret = allocateAlignedMemory(alloc_sz, 32);
+  if(! ret) {
+    fprintf(stderr, "[PolyBench] allocateAlignedMemory: cannot allocate aligned memory on MVS");
+    exit (1);
+  }
+#else
   int err = posix_memalign (&ret, 4096, padded_sz);
   if (! ret || err)
     {
       fprintf (stderr, "[PolyBench] posix_memalign: cannot allocate memory");
       exit (1);
     }
+#endif
   /* Safeguard: this is invoked only if polybench.c has been compiled
      with inter-array padding support from polybench.h. If so, move
      the starting address of the allocation and return it to the
