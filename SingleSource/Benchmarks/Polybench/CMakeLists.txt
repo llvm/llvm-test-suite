@@ -1,3 +1,6 @@
+if (TARGET_OS STREQUAL "OS390")
+  list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/MVS)
+endif()
 list(APPEND LDFLAGS -lm)
 list(APPEND CPPFLAGS -Wno-error=incompatible-pointer-types)
 add_subdirectory(datamining)
