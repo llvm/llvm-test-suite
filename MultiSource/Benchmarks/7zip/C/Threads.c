@@ -11,7 +11,12 @@
 
 #include <errno.h>
 
-#if defined(__linux__) 
+#ifdef __MVS__
+#include <assert.h>
+#include <stdint.h>
+#endif
+
+#if defined(__linux__)
 #define PTHREAD_MUTEX_ERRORCHECK PTHREAD_MUTEX_ERRORCHECK_NP
 #endif
 
@@ -228,7 +233,18 @@ WRes Thread_Close(CThread *thread)
     if (!thread->_created) return SZ_OK;
     
     pthread_detach(thread->_tid);
+#ifdef __MVS__
+    // On z/OS, pthread_t is typedef as char __[0x08].
+    // If pthread_t is not 8 bytes, memcpy may not copy the Id correctly.
+    static_assert(sizeof(pthread_t) == sizeof(uint64_t),
+                  "Thread ID size not 64 bits!");
+    pthread_t tmpThread;
+    uint64_t tmpNum = 0;
+    memcpy(&tmpThread, &tmpNum, sizeof(tmpThread));
+    thread->_tid = tmpThread;
+#else
     thread->_tid = 0;
+#endif
     thread->_created = 0;
     return SZ_OK;
 }

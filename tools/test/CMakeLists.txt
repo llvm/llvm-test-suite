@@ -33,7 +33,8 @@ llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_not.py" "$<TARGET_FI
 llvm_add_test_For_target(check_env)
 
 # Check that timeit --report-maxrss reports a valid max RSS value.
-if(TARGET timeit-target)
+# Not supported on z/OS.
+if(TARGET timeit-target AND NOT CMAKE_SYSTEM_NAME MATCHES "OS390")
   llvm_test_executable_no_test(alloc_mem alloc_mem.c NO_PGO)
   add_dependencies(alloc_mem timeit-target)
   llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_maxrss.py" "$<TARGET_FILE:timeit-target>" "$<TARGET_FILE:alloc_mem>")

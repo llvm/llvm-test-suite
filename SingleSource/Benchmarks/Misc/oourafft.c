@@ -4,7 +4,7 @@
 #include <stdlib.h>
 /* memalign */
 #if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
-    !defined(__OpenBSD__) && !defined(_AIX)
+    !defined(__OpenBSD__) && !defined(_AIX) && !defined(__MVS__)
 #include <malloc.h>
 #endif
 
@@ -41,7 +41,7 @@ int main()
   /* Prepare aux data */
   /* Darwin always 16-byte aligns malloc data */
 #if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
-    !defined(__OpenBSD__) && !defined(_AIX)
+    !defined(__OpenBSD__) && !defined(_AIX) && !defined(__MVS__)
   ip = memalign(16, sqrt(N)*sizeof(int));
   w  = memalign(16, 2*N*5/4*sizeof(double));
 #else
@@ -53,7 +53,7 @@ int main()
   /* Allocate buffers */
   /* Darwin always 16-byte aligns malloc data */
 #if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
-    !defined(__OpenBSD__) && !defined(_AIX)
+    !defined(__OpenBSD__) && !defined(_AIX) && !defined(__MVS__)
   ref = memalign(16, 2*N*sizeof(double));
   cmp = memalign(16, 2*N*sizeof(double));
   src = memalign(16, 2*N*sizeof(double));
