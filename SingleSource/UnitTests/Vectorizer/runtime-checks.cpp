@@ -1,9 +1,13 @@
+#include <algorithm>
+#include <cstdlib>
 #include <functional>
+#include <initializer_list>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <random>
 #include <stdint.h>
+#include <utility>
 
 #include "common.h"
 
@@ -153,6 +157,86 @@ static void checkOverlappingMemoryTwoRuntimeChecksNested(Fn4Ty<Ty> ScalarFn,
     CheckWithOffsetSecond(i);
 }
 
+#define DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(Loop)                              \
+  auto ScalarFn = [](auto *Out, auto *In, unsigned TC, auto S1, auto S2) {     \
+    _Pragma("clang loop vectorize(disable) interleave_count(1)") Loop          \
+  };                                                                           \
+  auto VectorFn = [](auto *Out, auto *In, unsigned TC, auto S1, auto S2) {     \
+    _Pragma("clang loop vectorize(enable)") Loop                               \
+  };
+
+template <typename Ty, typename StrideTy>
+using StencilFnTy =
+    std::function<void(Ty *, Ty *, unsigned, StrideTy, StrideTy)>;
+
+template <typename Ty, typename StrideTy>
+static void checkOverlappingMemoryStencil(StencilFnTy<Ty, StrideTy> ScalarFn,
+                                         StencilFnTy<Ty, StrideTy> VectorFn,
+                                         const char *Name, StrideTy S1,
+                                         StrideTy S2) {
+  std::cout << "Checking " << Name << ", strides " << +S1 << " and " << +S2
+            << "\n";
+
+  unsigned N = 100;
+  // Conservative bound on the read offsets for the stencil loops below.
+  unsigned Reach = 2 * (std::abs(long(S1)) + std::abs(long(S2))) + 1;
+  // Cover all possible overlap and include disjoint accesses. Test at least
+  // offsets -100 to 100.
+  int MaxOffset = std::max(100u, Reach + N + 2);
+  // The buffer must hold Out at every offset and every read of In.
+  unsigned Margin = MaxOffset + N;
+  unsigned NumArrayElements = 2 * Margin + 1;
+  std::unique_ptr<Ty[]> Input(new Ty[NumArrayElements]);
+  std::unique_ptr<Ty[]> Reference(new Ty[NumArrayElements]);
+  std::unique_ptr<Ty[]> ToCheck(new Ty[NumArrayElements]);
+  init_data(Input, NumArrayElements);
+
+  auto CheckWithOffset = [&](int Offset, unsigned TC) {
+    for (unsigned i = 0; i < NumArrayElements; i++) {
+      Reference[i] = Input[i];
+      ToCheck[i] = Input[i];
+    }
+
+    // Run scalar function to generate reference output.
+    Ty *ReferenceStart = &Reference[Margin];
+    ScalarFn(ReferenceStart + Offset, ReferenceStart, TC, S1, S2);
+
+    // Run vector function to generate output to check.
+    Ty *StartPtr = &ToCheck[Margin];
+    callThroughOptnone(VectorFn, StartPtr + Offset, StartPtr, TC, S1, S2);
+
+    // Compare scalar and vector output.
+    check(Reference, ToCheck, NumArrayElements, Offset);
+  };
+
+  // Include empty and short loops as well as a non-multiple tail. The strides
+  // and trip count stay runtime arguments of the vector function.
+  for (unsigned TC : {0u, 1u, 2u, 7u, N - 1, N})
+    for (int Offset = -MaxOffset; Offset <= MaxOffset; Offset++)
+      CheckWithOffset(Offset, TC);
+}
+
+// Check one element type with one stride. The loops get 0 as their second stride
+// and do not use it.
+template <typename Ty, typename StrideTy, typename ScalarFnTy,
+          typename VectorFnTy>
+static void checkOneStride(ScalarFnTy ScalarFn, VectorFnTy VectorFn,
+                          const char *Name,
+                          std::initializer_list<StrideTy> Strides) {
+  for (StrideTy S : Strides)
+    checkOverlappingMemoryStencil<Ty, StrideTy>(ScalarFn, VectorFn, Name, S,
+                                              StrideTy(0));
+}
+
+// Check one element type with two strides.
+template <typename Ty, typename StrideTy, typename ScalarFnTy,
+          typename VectorFnTy>
+static void checkTwoStrides(
+    ScalarFnTy ScalarFn, VectorFnTy VectorFn, const char *Name,
+    std::initializer_list<std::pair<StrideTy, StrideTy>> Strides) {
+  for (auto [S1, S2] : Strides)
+    checkOverlappingMemoryStencil<Ty, StrideTy>(ScalarFn, VectorFn, Name, S1, S2);
+}
 
 int main(void) {
   rng = std::mt19937(15);
@@ -373,6 +457,194 @@ int main(void) {
         ScalarFn, VectorFn, 100, 100, "2 reads, 1 write, nested loop (decreasing outer iv, matching trip counts), uint32_t");
     checkOverlappingMemoryTwoRuntimeChecksNested<uint64_t>(
         ScalarFn, VectorFn, 100, 100, "2 reads, 1 write, nested loop (decreasing outer iv, matching trip counts), uint64_t");
+  }
+
+  const std::initializer_list<long> Strides = {-16, -1, 0, 1, 2, 7, 16, 64, 100};
+  const std::initializer_list<std::pair<long, long>> StridePairs = {
+      {1, 2},   {2, 1},   {7, 16},   {16, 7}, {16, 100}, {100, 16}, {64, 64},
+      {-7, 16}, {16, -7}, {-7, -16}, {0, 16}, {16, 0},   {0, 0}};
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - S1] + In[i - 1] + In[i] + In[i + 1] + In[i + S1];
+    );
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "1D 5-point stencil, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "1D 5-point stencil, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "1D 5-point stencil, uint64_t", Strides);
+  }
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - 2 * S1] + In[i - S1] + In[i] + In[i + S1] +
+                 In[i + 2 * S1];
+    );
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "stencil with scaled stride, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "stencil with scaled stride, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "stencil with scaled stride, uint64_t", Strides);
+  }
+
+  {
+    // A 3D-style stencil. S1 is the row size and S2 is the plane size.
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - S2 - S1] + In[i - S2] + In[i - S2 + S1] + In[i - S1] +
+                 In[i] + In[i + S1] + In[i + S2 - S1] + In[i + S2] +
+                 In[i + S2 + S1];
+    );
+    checkTwoStrides<uint8_t>(
+        ScalarFn, VectorFn, "3D-style stencil with two strides, uint8_t",
+        StridePairs);
+    checkTwoStrides<uint32_t>(
+        ScalarFn, VectorFn, "3D-style stencil with two strides, uint32_t",
+        StridePairs);
+    checkTwoStrides<uint64_t>(
+        ScalarFn, VectorFn, "3D-style stencil with two strides, uint64_t",
+        StridePairs);
+  }
+
+  {
+    // Either In[i - 2 * S1] or In[i - 2 * S2] can be the lowest read. It
+    // depends on the strides at runtime. In the same way, either In[i + 2 * S1]
+    // or In[i + 2 * S2] can be the highest read.
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - 2 * S2] + In[i - 2 * S1] + In[i - S2] + In[i - S1] +
+                 In[i] + In[i + S1] + In[i + S2] + In[i + 2 * S1] +
+                 In[i + 2 * S2];
+    );
+    checkTwoStrides<uint8_t>(
+        ScalarFn, VectorFn, "stencil with two scaled strides, uint8_t",
+        StridePairs);
+    checkTwoStrides<uint32_t>(
+        ScalarFn, VectorFn, "stencil with two scaled strides, uint32_t",
+        StridePairs);
+    checkTwoStrides<uint64_t>(
+        ScalarFn, VectorFn, "stencil with two scaled strides, uint64_t",
+        StridePairs);
+  }
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      // Convert before subtracting so TC == 0 starts at -1.
+      for (int64_t i = int64_t(TC) - 1; i >= 0; --i)
+        Out[i] = In[i - S1] + In[i - 1] + In[i] + In[i + 1] + In[i + S1];
+    );
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "reverse stencil, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "reverse stencil, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "reverse stencil, uint64_t", Strides);
+  }
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i] + In[i + S1] + In[i + 2 * S1];
+    );
+    // Positive and negative S1 give forward-only and backward-only windows.
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "one-sided stencil, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "one-sided stencil, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "one-sided stencil, uint64_t", Strides);
+  }
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i] + In[i - S1] + In[i - 2 * S1];
+    );
+    // Positive S1 gives a backward-only window.
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "negative one-sided stencil, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "negative one-sided stencil, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "negative one-sided stencil, uint64_t", Strides);
+  }
+
+  {
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - 2 * S1 - 1] + In[i - S1 - 1] + In[i] +
+                 In[i + S1 + 1] + In[i + 2 * S1 + 1] + In[i + S2 - 1];
+    );
+    checkTwoStrides<uint8_t>(
+        ScalarFn, VectorFn, "stencil with mixed offsets, uint8_t", StridePairs);
+    checkTwoStrides<uint32_t>(
+        ScalarFn, VectorFn, "stencil with mixed offsets, uint32_t",
+        StridePairs);
+    checkTwoStrides<uint64_t>(
+        ScalarFn, VectorFn, "stencil with mixed offsets, uint64_t",
+        StridePairs);
+  }
+
+  {
+    // Predicated reads make stencil merging bail out at compile time.
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++) {
+        if (i % 3 != 0)
+          Out[i] = In[i - S1] + In[i] + In[i + S1];
+      }
+    );
+    checkOneStride<uint8_t>(
+        ScalarFn, VectorFn, "stencil with predicated reads, uint8_t", Strides);
+    checkOneStride<uint32_t>(
+        ScalarFn, VectorFn, "stencil with predicated reads, uint32_t", Strides);
+    checkOneStride<uint64_t>(
+        ScalarFn, VectorFn, "stencil with predicated reads, uint64_t", Strides);
+  }
+
+  {
+    // Use signed strides of different widths with ordinary integer promotions.
+    DEFINE_SCALAR_AND_VECTOR_STENCIL_FN(
+      for (int64_t i = 0; i < TC; i++)
+        Out[i] = In[i - 2 * S1] + In[i - S1] + In[i] + In[i + S1] +
+                 In[i + 2 * S1];
+    );
+    const std::initializer_list<int8_t> I8Strides = {
+        -128, -16, -1, 0, 1, 16, 100, 127};
+    checkOneStride<uint8_t, int8_t>(
+        ScalarFn, VectorFn, "scaled stencil, int8_t stride, uint8_t",
+        I8Strides);
+    checkOneStride<uint32_t, int8_t>(
+        ScalarFn, VectorFn, "scaled stencil, int8_t stride, uint32_t",
+        I8Strides);
+    checkOneStride<uint64_t, int8_t>(
+        ScalarFn, VectorFn, "scaled stencil, int8_t stride, uint64_t",
+        I8Strides);
+
+    const std::initializer_list<int32_t> I32Strides = {-16, -1, 0, 1, 16, 100};
+    checkOneStride<uint8_t, int32_t>(
+        ScalarFn, VectorFn, "scaled stencil, int32_t stride, uint8_t",
+        I32Strides);
+    checkOneStride<uint32_t, int32_t>(
+        ScalarFn, VectorFn, "scaled stencil, int32_t stride, uint32_t",
+        I32Strides);
+    checkOneStride<uint64_t, int32_t>(
+        ScalarFn, VectorFn, "scaled stencil, int32_t stride, uint64_t",
+        I32Strides);
+
+    const std::initializer_list<int64_t> I64Strides = {-16, -1, 0, 1, 16, 100};
+    checkOneStride<uint8_t, int64_t>(
+        ScalarFn, VectorFn, "scaled stencil, int64_t stride, uint8_t",
+        I64Strides);
+    checkOneStride<uint32_t, int64_t>(
+        ScalarFn, VectorFn, "scaled stencil, int64_t stride, uint32_t",
+        I64Strides);
+    checkOneStride<uint64_t, int64_t>(
+        ScalarFn, VectorFn, "scaled stencil, int64_t stride, uint64_t",
+        I64Strides);
   }
 
   return 0;

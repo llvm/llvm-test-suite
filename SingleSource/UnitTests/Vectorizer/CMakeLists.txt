@@ -64,5 +64,19 @@ if ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
   )
   llvm_vectorizer_variant("tf-ftic")
 
+  # Add a variant of the runtime-check tests with forced stencil merging.
+  # Skip it if the compiler does not support the option.
+  check_cxx_compiler_flag("-mllvm -stencil-runtime-check-merge=force"
+                          HAS_STENCIL_RUNTIME_CHECK_MERGE)
+  if (HAS_STENCIL_RUNTIME_CHECK_MERGE)
+    set(CXXFLAGS ${BASE_CXXFLAGS})
+    list(APPEND CXXFLAGS
+      "-mllvm" "-stencil-runtime-check-merge=force"
+    )
+    set(Source runtime-checks.cpp)
+    llvm_vectorizer_variant("stencilmerge")
+    unset(Source)
+  endif()
+
   set(CXXFLAGS ${BASE_CXXFLAGS})
 endif()

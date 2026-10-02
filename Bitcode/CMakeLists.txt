@@ -11,9 +11,9 @@ if(TEST_SUITE_ENABLE_BITCODE_TESTS)
   add_subdirectory(Benchmarks)
   if(NOT TEST_SUITE_BENCHMARKING_ONLY)
     add_subdirectory(Regression)
-    # ARM temporarily disabled because since https://github.com/llvm/llvm-project/pull/224012
-    # clang rejects the target layout.
-    if(ARCH STREQUAL "x86" OR ARCH STREQUAL "AArch64")
+    # Disabled for Apple platforms, since the bitcode's baked-in datalayout is
+    # incompatible with Mach-O platforms.
+    if((ARCH STREQUAL "x86" OR ARCH STREQUAL "AArch64" OR ARCH STREQUAL "ARM") AND NOT APPLE)
       add_subdirectory(simd_ops)
     endif()
   endif()
