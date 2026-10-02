@@ -656,14 +656,12 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 
 **Error**: `No test sources found in category/subdir`
 
-**Solution**: The CMakeLists.txt parser may have failed. This can happen if:
-- The test category doesn't exist in your hip-tests version
-- The CMakeLists.txt format is not recognized
-
-Check available test categories:
+**Solution**: The directory has no entry in `HipCatchTestLists.cmake` and no `.cc` files to fall back on. Check which directories are vendored:
 ```bash
-ls /path/to/hip-tests/catch/
+ls External/HIP/catch/unit/
 ```
+
+If a source named in `HipCatchTestLists.cmake` is missing, for example after a sync renamed it, configuration stops with `listed source not found`. Update the entry to match the directory.
 
 ### Compilation Errors
 
@@ -682,6 +680,8 @@ The framework consists of:
    - Test category discovery
    - Test executable creation (one per `.cc` source file)
    - LIT integration
+
+   Per-directory test lists live in **HipCatchTestLists.cmake** (see [Porting a Test Directory](#porting-a-test-directory)).
 
 2. **Modified CMakeLists.txt**: Integration points in the main HIP test CMakeLists.txt:
    - Initialization in `create_hip_tests()`
@@ -711,6 +711,28 @@ To add support for additional test categories:
    ```
    llvm-test-suite/External/HIP/catch/mycategory/
    ```
+
+### Porting a Test Directory
+
+Copy the directory unchanged from upstream `projects/hip-tests/catch/`, together with any shared headers from `include/` that its tests include. Then give it an entry in `HipCatchTestLists.cmake`:
+
+```cmake
+declare_catch_test_dir(unit kernel
+  SOURCES
+    hipEmptyKernel.cc
+    hipGridLaunch.cc
+    hipKernelStackSize.cc
+  # Disabled for amd_linux in upstream config/configs/unit/kernel.yaml
+  EXCLUDE_TESTS
+    Unit_KernelStackSize
+    Unit_hipGridLaunch_ExceedMaxGridDim_Negative
+)
+```
+
+- `SOURCES` names the `.cc` files that upstream's `CMakeLists.txt` builds as tests, in its `TEST_SRC` lists. Other `.cc` files in the directory, such as sources fed to hiprtc as data, stay unlisted and are not built. A directory without an entry builds every `.cc` file it contains.
+- `EXCLUDE_TESTS` names the test cases whose `disabled:` list in upstream's `config/configs/unit/<subdir>.yaml` includes `amd_linux`. Upstream applies that YAML through `ENABLE_YAML_TAGS`, which this build does not use, so without an entry those tests run. Names must match exactly, because Catch2 silently ignores a name that matches nothing; recheck the YAML on every sync.
+
+Excluded test cases are passed to each executable in the directory as `exclude:<name>` test specs, and the summary reports them as `Excluded`. If every test case in a file would be excluded, leave the file out of `SOURCES` instead: a run that selects no tests fails.
 
 ## Performance Considerations
 
@@ -768,6 +790,8 @@ External/HIP/catch/
 
 # Note: Catch2 is obtained via find_package or FetchContent, not vendored
 ```
+
+The per-directory test lists are in `External/HIP/HipCatchTestLists.cmake`, outside `catch/`, so that `catch/` stays a straight copy of upstream.
 
 **Note**: The `kernels/` directory is not needed for `unit/compiler` tests. These tests define kernels inline using `__global__` functions.
 
