@@ -477,7 +477,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   typebound_call_32.f90
 
   # Triggers UB in flang https://github.com/llvm/llvm-project/issues/224030.
-  enum_f10.f90
+  enum_10.f90
 
   # --------------------------------------------------------------------------
   #
