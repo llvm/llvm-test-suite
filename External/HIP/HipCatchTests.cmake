@@ -89,6 +89,44 @@ define_property(GLOBAL PROPERTY CATCH_SUBDIR_TARGETS_CREATED
   BRIEF_DOCS "List of category-subdir pairs for which aggregated targets have been created"
   FULL_DOCS "Prevents duplicate target creation for subdirectory-level aggregated targets")
 
+# Function to record the test list for one catch/ directory, see HipCatchTestLists.cmake
+# Arguments:
+#   CATEGORY      - Test category (unit, stress, etc.)
+#   SUBDIR        - Subdirectory name
+#   SOURCES       - .cc files that each build one test executable
+#   EXCLUDE_TESTS - Test case names to skip in every executable of the directory
+function(declare_catch_test_dir CATEGORY SUBDIR)
+  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE_TESTS" ${ARGN})
+  if(NOT ARG_SOURCES)
+    message(FATAL_ERROR "declare_catch_test_dir(${CATEGORY} ${SUBDIR}): no SOURCES given")
+  endif()
+  foreach(_src ${ARG_SOURCES})
+    if(NOT EXISTS "${HIP_CATCH_TESTS_DIR}/${CATEGORY}/${SUBDIR}/${_src}")
+      message(FATAL_ERROR "declare_catch_test_dir(${CATEGORY} ${SUBDIR}): listed source not found: ${_src}")
+    endif()
+  endforeach()
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_SOURCES" "${ARG_SOURCES}")
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS" "${ARG_EXCLUDE_TESTS}")
+endfunction()
+
+# Function to turn a directory's EXCLUDE_TESTS into Catch2 test specs
+# Uses "exclude:" rather than "~" because RUN lines go through a shell, where
+# a leading "~" is subject to tilde expansion.
+# Arguments:
+#   OUT_VAR  - Variable to receive the list of test specs
+#   CATEGORY - Test category (unit, stress, etc.)
+#   SUBDIR   - Subdirectory name
+function(get_catch_exclude_args OUT_VAR CATEGORY SUBDIR)
+  get_property(_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS")
+  set(_args "")
+  foreach(_name ${_tests})
+    list(APPEND _args "exclude:${_name}")
+  endforeach()
+  set(${OUT_VAR} "${_args}" PARENT_SCOPE)
+endfunction()
+
+include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTestLists.cmake)
+
 # Function to validate Catch test infrastructure
 function(validate_catch_tests_infrastructure)
   set(_required_paths
@@ -502,6 +540,7 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # Register with LIT
   # Use console reporter for consistent output parsing in summary scripts
   # Console reporter outputs: "test cases: X | Y passed | Z failed"
+  # The directory's EXCLUDE_TESTS follow as Catch2 test specs.
   #
   # Special handling for hipSquareGenericTarget:
   # The test spawns helper executables (hipSquareGenericTargetOnly, etc.) using relative
@@ -509,13 +548,14 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # the per-variant generic-${VARIANT_SUFFIX} directory holding those helpers, so the
   # main executable one level up is reached via "../".
   # WORKDIR causes LIT to cd into the directory before executing the test.
+  get_catch_exclude_args(_exclude_args "${CATEGORY}" "${SUBDIR}")
   if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
     # Use WORKDIR to change directory before running (parsed as "cd DIR ; executable")
     # %S expands to source directory (where .test file is located)
     llvm_test_run(WORKDIR "%S/catch_tests/generic-${VARIANT_SUFFIX}"
-                  EXECUTABLE "../${_test_exe}" "--reporter" "console")
+                  EXECUTABLE "../${_test_exe}" "--reporter" "console" ${_exclude_args})
   else()
-    llvm_test_run(EXECUTABLE "catch_tests/${_test_exe}" "--reporter" "console")
+    llvm_test_run(EXECUTABLE "catch_tests/${_test_exe}" "--reporter" "console" ${_exclude_args})
   endif()
 
   # Add verification to check if test passed
@@ -577,8 +617,12 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
   # Wire dependencies: category variant target depends on subdirectory variant target
   add_dependencies(hip-tests-catch-${CATEGORY}-${VARIANT_SUFFIX} hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX})
 
-  # Discover test sources directly from .cc files
-  file(GLOB _test_sources RELATIVE "${_test_dir}" "${_test_dir}/*.cc")
+  # Use the directory's SOURCES from HipCatchTestLists.cmake, falling back to
+  # every .cc file for a directory without an entry there
+  get_property(_test_sources GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_SOURCES")
+  if(NOT _test_sources)
+    file(GLOB _test_sources RELATIVE "${_test_dir}" "${_test_dir}/*.cc")
+  endif()
 
   if(NOT _test_sources)
     message(STATUS "No test sources found in ${CATEGORY}/${SUBDIR}, skipping")
@@ -586,6 +630,10 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
   endif()
 
   message(STATUS "Discovered test sources in ${CATEGORY}/${SUBDIR}: ${_test_sources}")
+  get_property(_exclude_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS")
+  if(_exclude_tests)
+    message(STATUS "Excluded test cases in ${CATEGORY}/${SUBDIR}: ${_exclude_tests}")
+  endif()
 
   # Create a separate test executable for each source file
   # This allows LIT to report statistics for each individual test
@@ -630,6 +678,8 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
     set(CATCH_CATEGORY ${CATEGORY})
     set(CATCH_SUBDIR ${SUBDIR})
     set(CATCH_VARIANT_SUFFIX ${VARIANT_SUFFIX})
+    get_catch_exclude_args(_exclude_args "${CATEGORY}" "${SUBDIR}")
+    string(REPLACE ";" " " CATCH_EXCLUDE_ARGS "${_exclude_args}")
     set(_summary_script "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/summary_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
     configure_file(
       "${CMAKE_CURRENT_SOURCE_DIR}/catch_summary_template.sh.in"
