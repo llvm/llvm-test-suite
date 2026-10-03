@@ -408,6 +408,11 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   dispatch-5.f90
   dispatch-7.f90
 
+  # REQUIRES applies to a compilation unit, which in Fortran is a program unit
+  # gfortran expects an error when not all program units in a file have the
+  # same requires directives.
+  requires-8.f90
+
   #
   # These tests are marked as failing because the compilation succeeds when it
   # is expected to fail.
