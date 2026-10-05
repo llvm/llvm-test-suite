@@ -1,0 +1,287 @@
+// Copyright 2012 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef GPU_COMMAND_BUFFER_SERVICE_COMMON_DECODER_H_
+#define GPU_COMMAND_BUFFER_SERVICE_COMMON_DECODER_H_
+
+#include <stddef.h>
+#include <stdint.h>
+
+#include <map>
+#include <memory>
+#include <optional>
+#include <string>
+#include <type_traits>
+#include <vector>
+
+#include "base/containers/heap_array.h"
+#include "base/containers/span.h"
+#include "base/memory/raw_ptr.h"
+#include "gpu/command_buffer/common/buffer.h"
+#include "gpu/command_buffer/common/cmd_buffer_common.h"
+#include "gpu/command_buffer/common/constants.h"
+#include "gpu/command_buffer/service/gpu_command_buffer_service_export.h"
+
+// Forwardly declare a few GL types to avoid including GL header files.
+using GLsizei = int;
+using GLint = int;
+
+namespace gpu {
+
+class CommandBufferServiceBase;
+class DecoderClient;
+
+// This class is a helper base class for implementing the common parts of the
+// o3d/gl2 command buffer decoder.
+class GPU_COMMAND_BUFFER_SERVICE_EXPORT CommonDecoder {
+ public:
+  using Error = error::Error;
+
+  static constexpr unsigned int kMaxStackDepth = 32;
+
+  // A bucket is a buffer to help collect memory across a command buffer. When
+  // creating a command buffer implementation of an existing API, sometimes that
+  // API has functions that take a pointer to data.  A good example is OpenGL's
+  // glBufferData. Because the data is separated between client and service,
+  // there are 2 ways to get this data across. 1 is to put all the data in
+  // shared memory. The problem with this is the data can be arbitarily large
+  // and the host OS may not support that much shared memory. Another solution
+  // is to shuffle memory across a little bit at a time, collecting it on the
+  // service side and when it is all there then call glBufferData. Buckets
+  // implement this second solution. Using the common commands, SetBucketSize,
+  // SetBucketData, SetBucketDataImmediate the client can fill a bucket. It can
+  // then call a command that uses that bucket (like BufferDataBucket in the
+  // GLES2 command buffer implementation).
+  //
+  // If you are designing an API from scratch you can avoid this need for
+  // Buckets by making your API always take an offset and a size
+  // similar to glBufferSubData.
+  //
+  // Buckets also help pass strings to/from the service. To return a string of
+  // arbitary size, the service puts the string in a bucket. The client can
+  // then query the size of a bucket and request sections of the bucket to
+  // be passed across shared memory.
+  class GPU_COMMAND_BUFFER_SERVICE_EXPORT Bucket {
+   public:
+    Bucket();
+
+    Bucket(const Bucket&) = delete;
+    Bucket& operator=(const Bucket&) = delete;
+
+    ~Bucket();
+
+    size_t size() const {
+      return size_;
+    }
+
+    // Gets a span over a section of the bucket, reinterpreted as `count`
+    // elements of type `T` starting at byte `offset`. Returns an empty span if
+    // the range is out of bounds. `T` must be trivially copyable.
+    template <typename T>
+    base::span<T> GetDataAsSpan(size_t offset, size_t count) {
+      static_assert(std::is_trivially_copyable_v<T>);
+      base::span<uint8_t> bytes = GetDataAsByteSpan(offset, count * sizeof(T));
+      // The bucket's storage is a raw byte buffer, so reinterpret_span() is the
+      // intended safe conversion here. It CHECKs alignment and that the byte
+      // size is a multiple of sizeof(T).
+      return base::subtle::reinterpret_span<T>(bytes);
+    }
+
+    // Gets a writable byte span over a section of the bucket. Returns an empty
+    // span if offset or size is out of range.
+    base::span<uint8_t> GetDataAsByteSpan(size_t offset, size_t size);
+
+    // Sets the size of the bucket.
+    void SetSize(size_t size);
+
+    // Sets a part of the bucket.
+    // Returns false if `offset` or `src.size()` is out of range.
+    bool SetData(base::span<const volatile uint8_t> src, size_t offset);
+
+    // Sets the bucket data from a string. Strings are passed NULL terminated to
+    // distinguish between empty string and no string.
+    void SetFromString(const char* str);
+
+    // Gets the bucket data as a string. Strings are passed NULL terminated to
+    // distrinquish between empty string and no string. Returns False if there
+    // is no string.
+    bool GetAsString(std::string* str);
+
+    // Gets the bucket data as strings.
+    // On success, the number of strings are in |_count|, the string data are
+    // in |_string|, and string sizes are in |_length|..
+    bool GetAsStrings(GLsizei* _count,
+                      std::vector<char*>* _string,
+                      std::vector<GLint>* _length);
+
+   private:
+    bool OffsetSizeValid(size_t offset, size_t size) const;
+
+    size_t size_;
+    base::HeapArray<uint8_t> data_;
+  };
+
+  explicit CommonDecoder(DecoderClient* client,
+                         CommandBufferServiceBase* command_buffer_service);
+
+  CommonDecoder(const CommonDecoder&) = delete;
+  CommonDecoder& operator=(const CommonDecoder&) = delete;
+
+  ~CommonDecoder();
+
+  CommandBufferServiceBase* command_buffer_service() const {
+    return command_buffer_service_;
+  }
+
+  DecoderClient* client() const { return client_; }
+
+  // Sets the maximum size for buckets.
+  void set_max_bucket_size(size_t max_bucket_size) {
+    max_bucket_size_ = max_bucket_size;
+  }
+
+  // Creates a bucket. If the bucket already exists returns that bucket.
+  Bucket* CreateBucket(uint32_t bucket_id);
+
+  // Gets a bucket. Returns nullptr if the bucket does not exist.
+  Bucket* GetBucket(uint32_t bucket_id) const;
+
+  // Gets the address of shared memory data, given a shared memory ID and an
+  // offset. Also checks that the size is consistent with the shared memory
+  // size.
+  // Parameters:
+  //   shm_id: the id of the shared memory buffer.
+  //   offset: the offset of the data in the shared memory buffer.
+  //   size: the size of the data.
+  // Returns:
+  //   nullptr if shm_id isn't a valid shared memory buffer ID or if the size
+  //   check fails. Return a pointer to the data otherwise.
+  void* GetAddressAndCheckSize(unsigned int shm_id,
+                               unsigned int offset,
+                               unsigned int size);
+
+  // Typed version of GetAddressAndCheckSize.
+  template <typename T>
+  T GetSharedMemoryAs(unsigned int shm_id, unsigned int offset,
+                      unsigned int size) {
+    return static_cast<T>(GetAddressAndCheckSize(shm_id, offset, size));
+  }
+
+  template <typename T = uint8_t>
+  std::optional<base::span<T>> GetSharedMemoryAsSpan(uint32_t shm_id,
+                                                     uint32_t offset,
+                                                     size_t element_count) {
+    // Prevent integer overflow exploits on large element counts.
+    base::CheckedNumeric<uint32_t> checked_size_in_bytes =
+        base::CheckedNumeric<size_t>(element_count) * sizeof(T);
+    uint32_t size_in_bytes;
+    if (!checked_size_in_bytes.AssignIfValid(&size_in_bytes)) {
+      return std::nullopt;
+    }
+
+    std::optional<base::span<uint8_t>> byte_span =
+        GetSharedMemoryAsByteSpan(shm_id, offset, size_in_bytes);
+    if (!byte_span.has_value()) {
+      return std::nullopt;
+    }
+
+    // Protect against partial reads or out-of-bounds shared memory access.
+    if (byte_span->size_bytes() != size_in_bytes) {
+      return std::nullopt;
+    }
+
+    // Allow valid zero-count draw calls to pass without triggering alignment
+    // checks.
+    if (element_count == 0) {
+      return base::span<T>();
+    }
+
+    // Prevent undefined behavior from unaligned hardware memory access.
+    if (reinterpret_cast<uintptr_t>(byte_span->data()) % alignof(T) != 0) {
+      return std::nullopt;
+    }
+
+    return base::subtle::reinterpret_span<T>(*byte_span);
+  }
+
+  void* GetAddressAndSize(unsigned int shm_id,
+                          unsigned int offset,
+                          unsigned int minimum_size,
+                          unsigned int* size);
+
+  template <typename T>
+  T GetSharedMemoryAndSizeAs(unsigned int shm_id,
+                             unsigned int offset,
+                             unsigned int minimum_size,
+                             unsigned int* size) {
+    return static_cast<T>(
+        GetAddressAndSize(shm_id, offset, minimum_size, size));
+  }
+
+  unsigned int GetSharedMemorySize(unsigned int shm_id, unsigned int offset);
+
+  // Get the actual shared memory buffer.
+  scoped_refptr<gpu::Buffer> GetSharedMemoryBuffer(unsigned int shm_id);
+
+ protected:
+  // Executes a common command.
+  // Parameters:
+  //    command: the command index.
+  //    arg_count: the number of CommandBufferEntry arguments.
+  //    cmd_data: the command data.
+  // Returns:
+  //   error::kNoError if no error was found, one of
+  //   error::Error otherwise.
+  error::Error DoCommonCommand(unsigned int command,
+                               unsigned int arg_count,
+                               const volatile void* cmd_data);
+
+  // Gets an name for a common command.
+  const char* GetCommonCommandName(cmd::CommandId command_id) const;
+
+  // Exit the command processing loop to allow context preemption and GPU
+  // watchdog checks in CommandExecutor().
+  virtual void ExitCommandProcessingEarly() {}
+
+ private:
+  // Generate a member function prototype for each command in an automated and
+  // typesafe way.
+#define COMMON_COMMAND_BUFFER_CMD_OP(name)                \
+  error::Error Handle##name(uint32_t immediate_data_size, \
+                            const volatile void* data);
+
+  COMMON_COMMAND_BUFFER_CMDS(COMMON_COMMAND_BUFFER_CMD_OP)
+
+  #undef COMMON_COMMAND_BUFFER_CMD_OP
+
+  std::optional<base::span<uint8_t>> GetSharedMemoryAsByteSpan(
+      uint32_t shm_id,
+      uint32_t offset,
+      uint32_t size_in_bytes);
+
+  raw_ptr<CommandBufferServiceBase, DanglingUntriaged> command_buffer_service_;
+  raw_ptr<DecoderClient, DanglingUntriaged> client_;
+  size_t max_bucket_size_;
+
+  using BucketMap = std::map<uint32_t, std::unique_ptr<Bucket>>;
+  BucketMap buckets_;
+
+  using CmdHandler = Error (CommonDecoder::*)(uint32_t immediate_data_size,
+                                              const volatile void* data);
+
+  // A struct to hold info about each command.
+  struct CommandInfo {
+    CmdHandler cmd_handler;
+    uint8_t arg_flags;   // How to handle the arguments for this command
+    uint8_t cmd_flags;   // How to handle this command
+    uint16_t arg_count;  // How many arguments are expected for this command.
+  };
+
+  // A table of CommandInfo for all the commands.
+  static const CommandInfo command_info[];
+};
+
+}  // namespace gpu
+
+#endif  // GPU_COMMAND_BUFFER_SERVICE_COMMON_DECODER_H_

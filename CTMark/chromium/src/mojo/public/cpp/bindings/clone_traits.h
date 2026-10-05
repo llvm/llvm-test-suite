@@ -1,0 +1,98 @@
+// Copyright 2017 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef MOJO_PUBLIC_CPP_BINDINGS_CLONE_TRAITS_H_
+#define MOJO_PUBLIC_CPP_BINDINGS_CLONE_TRAITS_H_
+
+#include <concepts>
+#include <deque>
+#include <optional>
+#include <type_traits>
+#include <utility>
+#include <vector>
+
+#include "base/containers/circular_deque.h"
+#include "base/containers/flat_map.h"
+#include "mojo/public/cpp/bindings/lib/template_util.h"
+
+namespace mojo {
+
+template <typename T>
+T Clone(const T& input);
+
+template <typename T>
+struct CloneTraits {
+  static_assert(sizeof(T), "T must be a complete type.");
+  static T Clone(const T& input) {
+    if constexpr (requires {
+                    { input.Clone() } -> std::same_as<T>;
+                  }) {
+      return input.Clone();
+    } else if constexpr (std::copyable<T>) {
+      return input;
+    } else {
+      static_assert(
+          false,
+          "T is not copyable and has no Clone() method, so the default "
+          "mojo::CloneTraits cannot be used; please make sure to include the "
+          "header that defines the mojo::CloneTraits<T> specialization");
+    }
+  }
+};
+
+template <typename T>
+struct CloneTraits<std::optional<T>> {
+  static std::optional<T> Clone(const std::optional<T>& input) {
+    if (!input) {
+      return std::nullopt;
+    }
+
+    return std::optional<T>(mojo::Clone(*input));
+  }
+};
+
+template <typename T>
+struct CloneTraits<std::vector<T>> {
+  static std::vector<T> Clone(const std::vector<T>& input) {
+    std::vector<T> result;
+    result.reserve(input.size());
+    for (const auto& element : input) {
+      result.push_back(mojo::Clone(element));
+    }
+
+    return result;
+  }
+};
+
+template <typename T>
+struct CloneTraits<base::circular_deque<T>> {
+  static base::circular_deque<T> Clone(const base::circular_deque<T>& input) {
+    base::circular_deque<T> result;
+    for (const auto& element : input) {
+      result.push_back(mojo::Clone(element));
+    }
+    return result;
+  }
+};
+
+template <typename K, typename V>
+struct CloneTraits<base::flat_map<K, V>> {
+  static base::flat_map<K, V> Clone(const base::flat_map<K, V>& input) {
+    base::flat_map<K, V> result;
+    for (const auto& element : input) {
+      result.insert(std::make_pair(mojo::Clone(element.first),
+                                   mojo::Clone(element.second)));
+    }
+    return result;
+  }
+};
+
+template <typename T>
+T Clone(const T& input) {
+  return CloneTraits<T>::Clone(input);
+}
+
+}  // namespace mojo
+
+#endif  // MOJO_PUBLIC_CPP_BINDINGS_CLONE_TRAITS_H_

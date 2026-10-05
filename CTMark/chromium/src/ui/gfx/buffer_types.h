@@ -1,0 +1,44 @@
+// Copyright 2015 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef UI_GFX_BUFFER_TYPES_H_
+#define UI_GFX_BUFFER_TYPES_H_
+
+#include <stdint.h>
+
+namespace gfx {
+
+// The usage mode affects how a buffer can be used. Only buffers created with
+// *_CPU_READ_WRITE_* can be mapped into the client's address space and accessed
+// by the CPU.
+// *_VDA_WRITE is for cases where a video decode accelerator writes into the
+// buffers.
+// PROTECTED_* are for HW protected buffers that cannot be read by the CPU and
+// can only be read in protected GPU contexts or scanned out to overlays.
+// At present, SCANOUT implies GPU_READ_WRITE. This doesn't apply to other
+// SCANOUT_* values.
+
+// TODO(reveman): Add GPU_READ_WRITE for use-cases where SCANOUT is not
+// required.
+enum class BufferUsage {
+  GPU_READ,
+  SCANOUT,
+  // SCANOUT_CAMERA_READ_WRITE implies CPU_READ_WRITE.
+  SCANOUT_CAMERA_READ_WRITE,
+  CAMERA_AND_CPU_READ_WRITE,
+  SCANOUT_CPU_READ_WRITE,
+  SCANOUT_VDA_WRITE,
+  PROTECTED_SCANOUT,
+  PROTECTED_SCANOUT_VDA_WRITE,
+  GPU_READ_CPU_READ_WRITE,
+  SCANOUT_VEA_CPU_READ,
+  SCANOUT_FRONT_RENDERING,
+  VEA_READ_CAMERA_AND_CPU_READ_WRITE,
+
+  LAST = VEA_READ_CAMERA_AND_CPU_READ_WRITE
+};
+
+}  // namespace gfx
+
+#endif  // UI_GFX_BUFFER_TYPES_H_

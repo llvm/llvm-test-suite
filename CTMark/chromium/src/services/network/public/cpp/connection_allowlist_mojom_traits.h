@@ -1,0 +1,110 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef SERVICES_NETWORK_PUBLIC_CPP_CONNECTION_ALLOWLIST_MOJOM_TRAITS_H_
+#define SERVICES_NETWORK_PUBLIC_CPP_CONNECTION_ALLOWLIST_MOJOM_TRAITS_H_
+
+#include "base/component_export.h"
+#include "base/notreached.h"
+#include "mojo/public/cpp/base/unguessable_token_mojom_traits.h"
+#include "mojo/public/cpp/bindings/struct_traits.h"
+#include "services/network/public/cpp/connection_allowlist.h"
+#include "services/network/public/mojom/connection_allowlist.mojom-shared.h"
+#include "url/mojom/url_gurl_mojom_traits.h"
+
+namespace mojo {
+
+namespace {
+using RedirectBehavior = network::ConnectionAllowlist::RedirectBehavior;
+using WebRtcBehavior = network::ConnectionAllowlist::WebRtcBehavior;
+}  // namespace
+
+template <>
+struct COMPONENT_EXPORT(NETWORK_CPP_CONNECTION_ALLOWLIST)
+    StructTraits<network::mojom::ConnectionAllowlistDataView,
+                 network::ConnectionAllowlist> {
+  static const std::vector<std::string>& allowlist(
+      const network::ConnectionAllowlist& allowlist) {
+    return allowlist.allowlist;
+  }
+
+  static const std::optional<std::string>& reporting_endpoint(
+      const network::ConnectionAllowlist& allowlist) {
+    return allowlist.reporting_endpoint;
+  }
+
+  static const std::vector<network::mojom::ConnectionAllowlistIssue>& issues(
+      const network::ConnectionAllowlist& allowlist) {
+    return allowlist.issues;
+  }
+
+  static network::mojom::RedirectBehavior redirect_behavior(
+      const network::ConnectionAllowlist& allowlist) {
+    switch (allowlist.redirect_behavior) {
+      case RedirectBehavior::kAllow:
+        return network::mojom::RedirectBehavior::kAllow;
+      case RedirectBehavior::kBlock:
+        return network::mojom::RedirectBehavior::kBlock;
+      default:
+        NOTREACHED();
+    }
+  }
+
+  static network::mojom::WebRtcBehavior webrtc_behavior(
+      const network::ConnectionAllowlist& allowlist) {
+    switch (allowlist.webrtc_behavior) {
+      case WebRtcBehavior::kAllow:
+        return network::mojom::WebRtcBehavior::kAllow;
+      case WebRtcBehavior::kBlock:
+        return network::mojom::WebRtcBehavior::kBlock;
+      default:
+        NOTREACHED();
+    }
+  }
+
+  static bool match_response_origin(
+      const network::ConnectionAllowlist& allowlist) {
+    return allowlist.match_response_origin;
+  }
+
+  static const std::string& serialized_value(
+      const network::ConnectionAllowlist& allowlist) {
+    return allowlist.serialized_value;
+  }
+
+  static bool Read(network::mojom::ConnectionAllowlistDataView data,
+                   network::ConnectionAllowlist* out);
+};
+
+template <>
+struct COMPONENT_EXPORT(NETWORK_CPP_CONNECTION_ALLOWLIST)
+    StructTraits<network::mojom::ConnectionAllowlistsDataView,
+                 network::ConnectionAllowlists> {
+  static const GURL& response_url(
+      const network::ConnectionAllowlists& allowlists) {
+    return allowlists.response_url;
+  }
+
+  static const std::optional<network::ConnectionAllowlist>& enforced(
+      const network::ConnectionAllowlists& allowlists) {
+    return allowlists.enforced;
+  }
+
+  static const std::optional<network::ConnectionAllowlist>& report_only(
+      const network::ConnectionAllowlists& allowlists) {
+    return allowlists.report_only;
+  }
+
+  static const std::optional<base::UnguessableToken>& reporting_source(
+      const network::ConnectionAllowlists& allowlists) {
+    return allowlists.reporting_source;
+  }
+
+  static bool Read(network::mojom::ConnectionAllowlistsDataView data,
+                   network::ConnectionAllowlists* out);
+};
+
+}  // namespace mojo
+
+#endif  // SERVICES_NETWORK_PUBLIC_CPP_CONNECTION_ALLOWLIST_MOJOM_TRAITS_H_

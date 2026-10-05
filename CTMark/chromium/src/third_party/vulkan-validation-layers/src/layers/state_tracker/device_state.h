@@ -1,0 +1,127 @@
+/* Copyright (c) 2015-2026 The Khronos Group Inc.
+ * Copyright (c) 2015-2026 Valve Corporation
+ * Copyright (c) 2015-2026 LunarG, Inc.
+ * Copyright (C) 2015-2026 Google Inc.
+ * Modifications Copyright (C) 2020 Advanced Micro Devices, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#pragma once
+#include "state_tracker/state_object.h"
+#include "generated/error_location_helper.h"
+#include <vulkan/utility/vk_safe_struct.hpp>
+#include <vector>
+
+class QueueFamilyPerfCounters {
+  public:
+    std::vector<VkPerformanceCounterKHR> counters;
+};
+
+class SurfacelessQueryState {
+  public:
+    std::vector<vku::safe_VkSurfaceFormat2KHR> formats;
+    std::vector<VkPresentModeKHR> present_modes;
+    vku::safe_VkSurfaceCapabilities2KHR capabilities;
+};
+
+namespace vvl {
+
+// The order here means something, the CallState value can only go to a higher value
+enum class CallState {
+    Uncalled = 0,      // Function has not been called
+    QueryCount = 1,    // Function called once to query a count
+    QueryDetails = 2,  // Function called w/ a count to query details
+};
+
+class PhysicalDevice : public StateObject {
+  public:
+    uint32_t queue_family_known_count = 1;  // spec implies one QF must always be supported
+    const std::vector<VkQueueFamilyProperties> queue_family_properties;
+    const VkQueueFlags supported_queues;
+    uint32_t surface_formats_count = 0;
+    // This is a special case not to use SpecialSupported because it is required at an instance level
+    bool has_maintenance9 = false;
+
+    // Map of queue family index to QueueFamilyPerfCounters
+    vvl::unordered_map<uint32_t, std::unique_ptr<QueueFamilyPerfCounters>> perf_counters;
+
+    // Surfaceless Query extension needs 'global' surface_state data
+    SurfacelessQueryState surfaceless_query_state{};
+
+    // VK_ARM_data_graph
+    struct DataGraph {
+        // helper struct used to index properties and formats for data graph engine/queue pairs
+        struct QueueAndEngine {
+            uint32_t queue_index{};
+            VkPhysicalDeviceDataGraphProcessingEngineARM engine{VK_PHYSICAL_DEVICE_DATA_GRAPH_PROCESSING_ENGINE_TYPE_DEFAULT_ARM,
+                                                                false};
+
+            bool operator==(const QueueAndEngine& other) const {
+                return queue_index == other.queue_index && engine.type == other.engine.type &&
+                       engine.isForeign == other.engine.isForeign;
+            };
+            struct hash {
+                size_t operator()(const QueueAndEngine& value) const {
+                    hash_util::HashCombiner hc;
+                    hc << value.queue_index << value.engine.type << value.engine.isForeign;
+                    return hc.Value();
+                }
+            };
+        };
+
+        template <typename T>
+        using QueueAndEngineMap = vvl::unordered_map<QueueAndEngine, T, QueueAndEngine::hash>;
+
+        vvl::unordered_map<uint32_t, std::vector<VkQueueFamilyDataGraphPropertiesARM>> queue_family_properties;
+        QueueAndEngineMap<VkQueueFamilyDataGraphOpticalFlowPropertiesARM> optical_flow_properties;
+        QueueAndEngineMap<VkQueueFamilyDataGraphTOSAPropertiesARM> tosa_properties;
+        struct OpticalFlowFormats {
+            QueueAndEngineMap<vvl::unordered_set<VkFormat>> input;   // VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_INPUT_BIT_ARM
+            QueueAndEngineMap<vvl::unordered_set<VkFormat>> output;  // VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_OUTPUT_BIT_ARM
+            QueueAndEngineMap<vvl::unordered_set<VkFormat>> cost;    // VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_COST_BIT_ARM
+        } optical_flow_formats;
+    } data_graph;
+
+    PhysicalDevice(VkPhysicalDevice handle);
+
+    VkPhysicalDevice VkHandle() const { return handle_.Cast<VkPhysicalDevice>(); }
+
+    void SetCallState(vvl::Func func, CallState new_state);
+    void SetCallState(vvl::Func func, bool has_ptr);
+    CallState GetCallState(vvl::Func func) const;
+    bool WasUncalled(vvl::Func func) const;
+    bool WasCalled(vvl::Func func) const;
+
+  private:
+    // Multiple threads can be querying GetPhysicalDevice type functions
+    // We, as VVL, use this time to update things on the first query, so we need to make sure things are thread safe
+    // We could use concurrent_unordered_map, but not with the currently limited interface
+    mutable std::shared_mutex call_state_lock_;
+    vvl::unordered_map<Func, CallState> call_state_;
+
+    const std::vector<VkQueueFamilyProperties> GetQueueFamilyProps(VkPhysicalDevice phys_dev);
+    VkQueueFlags GetSupportedQueues();
+};
+
+class DisplayMode : public StateObject {
+  public:
+    const VkPhysicalDevice physical_device;
+    const VkDisplayKHR display;
+
+    DisplayMode(VkDisplayModeKHR handle, VkPhysicalDevice physical_device, VkDisplayKHR display)
+        : StateObject(handle, kVulkanObjectTypeDisplayModeKHR), physical_device(physical_device), display(display) {}
+
+    VkDisplayModeKHR VkHandle() const { return handle_.Cast<VkDisplayModeKHR>(); }
+};
+
+}  // namespace vvl

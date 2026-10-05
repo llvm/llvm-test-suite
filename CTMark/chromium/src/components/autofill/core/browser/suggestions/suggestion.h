@@ -1,0 +1,738 @@
+// Copyright 2014 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_H_
+#define COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_H_
+
+#include <stdint.h>
+
+#include <map>
+#include <optional>
+#include <ostream>
+#include <string>
+#include <string_view>
+#include <type_traits>
+#include <variant>
+#include <vector>
+
+#include "base/check.h"
+#include "base/containers/span.h"
+#include "base/dcheck_is_on.h"
+#include "base/feature.h"
+#include "base/feature_list.h"
+#include "base/memory/raw_ptr.h"
+#include "base/types/strong_alias.h"
+#include "build/build_config.h"
+#include "components/autofill/core/browser/data_model/autofill_ai/entity_instance.h"
+#include "components/autofill/core/browser/data_model/payments/bnpl_issuer.h"
+#include "components/autofill/core/browser/data_model/payments/iban.h"
+#include "components/autofill/core/browser/field_types.h"
+#include "components/autofill/core/browser/integrators/at_memory/memory_data_type.h"
+#include "components/autofill/core/browser/suggestions/suggestion_type.h"
+#include "components/autofill/core/browser/webdata/autocomplete/autocomplete_entry.h"
+#include "components/autofill/core/browser/webdata/autocomplete/autocomplete_table_label_sensitive.h"
+#include "components/autofill/core/common/autofill_payments_features.h"
+#include "ui/gfx/image/image.h"
+#include "ui/gfx/range/range.h"
+#include "url/gurl.h"
+
+#if BUILDFLAG(IS_ANDROID)
+#include "base/android/scoped_java_ref.h"
+#endif  // BUILDFLAG(IS_ANDROID)
+
+namespace autofill {
+
+// The index that will be used to filter suggestions for showing them in tabbed
+// panes in the suggestion bubble.
+using SuggestionTabIndex = base::StrongAlias<struct SuggestionTabIndexTag, int>;
+
+// The index of the default suggestion tab which all suggestions should be
+// displayed in unless specified otherwise in `Suggestion::tab_index`.
+inline constexpr SuggestionTabIndex kDefaultSuggestionTabIndex(0);
+
+struct Suggestion {
+  struct PasswordSuggestionDetails {
+    std::u16string username;
+    std::u16string password;
+    // Password used in the recovery flow initiated after failed password
+    // change.
+    std::optional<std::u16string> backup_password;
+    // The signon realm of the password. Unlike the `display_signon_realm`, it
+    // is not necessarily user friendly/readable, but rather has the raw
+    // `PasswordForm::signon_realm` value.
+    std::optional<std::string> signon_realm;
+    // Stores either the password signon realm or the Android app name for which
+    // the password was saved.
+    std::optional<std::u16string> display_signon_realm;
+    // Indicates if the suggestions represents a credential for which we are
+    // unsure if it belongs to the current website, and thus should show a
+    // confirmation popup when filling the credential. For manual fallback
+    // suggestions, this is set to `false` if they represent exact, strongly
+    // affiliated or PSL matches, and `true` for all others (such as
+    // grouped/weakly affiliated matches). For backup suggestions, this is set
+    // to `true` if they represent a grouped match.
+    bool is_cross_domain = false;
+
+    PasswordSuggestionDetails();
+    PasswordSuggestionDetails(std::u16string_view username,
+                              std::u16string_view password,
+                              std::string_view signon_realm,
+                              std::u16string_view display_signon_realm,
+                              bool is_cross_domain);
+    // Used to construct the payload of a backup password suggestion.
+    PasswordSuggestionDetails(std::u16string_view username,
+                              std::u16string_view password,
+                              std::u16string_view backup_password,
+                              std::string_view signon_realm,
+                              bool is_cross_domain);
+    PasswordSuggestionDetails(const PasswordSuggestionDetails&);
+    PasswordSuggestionDetails(PasswordSuggestionDetails&&);
+    PasswordSuggestionDetails& operator=(const PasswordSuggestionDetails&);
+    PasswordSuggestionDetails& operator=(PasswordSuggestionDetails&&);
+    virtual ~PasswordSuggestionDetails();
+
+    friend bool operator==(const PasswordSuggestionDetails&,
+                           const PasswordSuggestionDetails&) = default;
+  };
+
+  // Citation linking a substring range of a suggestion's main text to a source
+  // URL.
+  struct PersonalContextSourceCitation final {
+    PersonalContextSourceCitation();
+    PersonalContextSourceCitation(GURL url, gfx::Range range);
+    PersonalContextSourceCitation(const PersonalContextSourceCitation&);
+    PersonalContextSourceCitation(PersonalContextSourceCitation&&);
+    PersonalContextSourceCitation& operator=(
+        const PersonalContextSourceCitation&);
+    PersonalContextSourceCitation& operator=(PersonalContextSourceCitation&&);
+    ~PersonalContextSourceCitation();
+
+    friend bool operator==(const PersonalContextSourceCitation&,
+                           const PersonalContextSourceCitation&) = default;
+
+    // Destination URL to navigate to when the citation link is clicked.
+    GURL url;
+    // Character range in `Suggestion::main_text.value` corresponding to the
+    // citation badge link.
+    gfx::Range range;
+  };
+
+  struct AutofillAiPayload final {
+    AutofillAiPayload();
+    explicit AutofillAiPayload(EntityInstance::EntityId guid,
+                               bool requires_server_fetch = false);
+    AutofillAiPayload(EntityInstance::EntityId guid,
+                      std::vector<PersonalContextSourceCitation> citations,
+                      bool requires_server_fetch = false);
+    AutofillAiPayload(const AutofillAiPayload&);
+    AutofillAiPayload(AutofillAiPayload&&);
+    AutofillAiPayload& operator=(const AutofillAiPayload&);
+    AutofillAiPayload& operator=(AutofillAiPayload&&);
+    ~AutofillAiPayload();
+
+#if BUILDFLAG(IS_ANDROID)
+    base::android::ScopedJavaLocalRef<jobject> CreateJavaObject() const;
+#endif  // BUILDFLAG(IS_ANDROID)
+
+    friend bool operator==(const AutofillAiPayload&,
+                           const AutofillAiPayload&) = default;
+
+    EntityInstance::EntityId guid;
+
+    // Citations to sources from which the entity was extracted.
+    std::vector<PersonalContextSourceCitation> citations;
+
+    // Whether selecting this suggestion requires fetching data from a server.
+    // E.g. retrieving masked credentials.
+    bool requires_server_fetch = false;
+  };
+
+  using Guid = base::StrongAlias<class GuidTag, std::string>;
+
+  struct PaymentsPayload final {
+    PaymentsPayload();
+    PaymentsPayload(std::u16string main_text_content_description,
+                    bool should_display_terms_available,
+                    Guid guid);
+    PaymentsPayload(const PaymentsPayload&);
+    PaymentsPayload(PaymentsPayload&&);
+    PaymentsPayload& operator=(const PaymentsPayload&);
+    PaymentsPayload& operator=(PaymentsPayload&&);
+    ~PaymentsPayload();
+
+#if BUILDFLAG(IS_ANDROID)
+    base::android::ScopedJavaLocalRef<jobject> CreateJavaObject() const;
+#endif  // BUILDFLAG(IS_ANDROID)
+
+    friend bool operator==(const PaymentsPayload&,
+                           const PaymentsPayload&) = default;
+
+    // Value to be announced for the suggestion's `main_text`.
+    std::u16string main_text_content_description;
+
+    // If true, the user will be presented with a "Terms apply for card
+    // benefits" message below the suggestions list on TTF for mobile.
+    bool should_display_terms_available = false;
+
+    // Payments method identifier associated with suggestion.
+    Guid guid;
+
+    // The amount of the payment as extracted from the page. For example, used
+    // for BNPL suggestions to confirm the amount is in the supported range for
+    // a BNPL provider.
+    std::optional<uint64_t> extracted_amount_in_micros;
+  };
+
+  struct AutofillProfilePayload final {
+    AutofillProfilePayload();
+    explicit AutofillProfilePayload(Guid guid);
+    AutofillProfilePayload(const AutofillProfilePayload&);
+    AutofillProfilePayload(AutofillProfilePayload&&);
+    AutofillProfilePayload& operator=(const AutofillProfilePayload&);
+    AutofillProfilePayload& operator=(AutofillProfilePayload&&);
+    ~AutofillProfilePayload();
+
+#if BUILDFLAG(IS_ANDROID)
+    base::android::ScopedJavaLocalRef<jobject> CreateJavaObject() const;
+#endif  // BUILDFLAG(IS_ANDROID)
+
+    friend bool operator==(const AutofillProfilePayload&,
+                           const AutofillProfilePayload&) = default;
+
+    // Address profile identifier.
+    Guid guid;
+  };
+
+  struct IdentityCredentialPayload final {
+    IdentityCredentialPayload();
+    IdentityCredentialPayload(
+        GURL config_url,
+        std::string account_id,
+        const std::map<FieldType, std::u16string>& fields);
+    IdentityCredentialPayload(const IdentityCredentialPayload&);
+    IdentityCredentialPayload(IdentityCredentialPayload&&);
+    IdentityCredentialPayload& operator=(const IdentityCredentialPayload&);
+    IdentityCredentialPayload& operator=(IdentityCredentialPayload&&);
+    ~IdentityCredentialPayload();
+
+    friend bool operator==(const IdentityCredentialPayload&,
+                           const IdentityCredentialPayload&) = default;
+
+    // The IdP's configURL as defined here:
+    // https://w3c-fedid.github.io/FedCM/#dom-identityproviderconfig-configurl
+    GURL config_url;
+    // The account ID as defined here:
+    // https://w3c-fedid.github.io/FedCM/#dom-identityprovideraccount-id
+    std::string account_id;
+    // The field values of the account profile available to autofill.
+    std::map<FieldType, std::u16string> fields;
+  };
+
+  struct AtMemoryPayload final {
+    // `std::string` is used to store the `CreditCard::guid_`.
+    // TODO(crbug.com/505251083): Replace `std::string` with `CreditCard::Guid`
+    // once its added.
+    using Identifier = std::variant<std::monostate,
+                                    Iban::Guid,
+                                    Iban::InstrumentId,
+                                    std::string,
+                                    EntityInstance::EntityId>;
+
+    AtMemoryPayload();
+    // `value` is the value to be shown in the suggestion UI and the preview.
+    AtMemoryPayload(std::u16string value, MemoryDataType memory_data_type);
+    AtMemoryPayload(const AtMemoryPayload&);
+    AtMemoryPayload(AtMemoryPayload&&);
+    AtMemoryPayload& operator=(const AtMemoryPayload&);
+    AtMemoryPayload& operator=(AtMemoryPayload&&);
+    ~AtMemoryPayload();
+
+#if BUILDFLAG(IS_ANDROID)
+    base::android::ScopedJavaLocalRef<jobject> CreateJavaObject() const;
+#endif  // BUILDFLAG(IS_ANDROID)
+
+    friend bool operator==(const AtMemoryPayload&,
+                           const AtMemoryPayload&) = default;
+
+    // Text to fill in the trigger field upon accepting the suggestion.
+    std::u16string value;
+
+    // Human-readable type name of the entry.
+    std::u16string type_name;
+
+    // The identifier for the entry (e.g. IBAN Guid or InstrumentId).
+    Identifier identifier;
+
+    // The memory data type of the entry.
+    MemoryDataType memory_data_type = MemoryDataType::kUnknown;
+
+    // Whether the entry is sourced from `PersonalContextService`.
+    bool is_personal_context_sourced = false;
+
+    // The data sources that provided the entry.
+    std::underlying_type_t<MemoryEntrySourceType> sources_bitmask = 0;
+  };
+
+  struct OpenGeminiPayload final {
+    OpenGeminiPayload();
+    explicit OpenGeminiPayload(std::u16string prompt);
+    OpenGeminiPayload(const OpenGeminiPayload&);
+    OpenGeminiPayload(OpenGeminiPayload&&);
+    OpenGeminiPayload& operator=(const OpenGeminiPayload&);
+    OpenGeminiPayload& operator=(OpenGeminiPayload&&);
+    ~OpenGeminiPayload();
+
+    friend bool operator==(const OpenGeminiPayload&,
+                           const OpenGeminiPayload&) = default;
+
+    // The prompt to pass to Gemini when opening it.
+    std::u16string prompt;
+  };
+
+  using IsLoading = base::StrongAlias<class IsLoadingTag, bool>;
+  using InstrumentId = base::StrongAlias<class InstrumentIdTag, uint64_t>;
+  // TODO(crbug.com/477689220): Directly use BnplIssuer and remove the alias.
+  using BnplIssuer = base::StrongAlias<class BnplIssuerTag, BnplIssuer>;
+  using Payload = std::variant<Guid,
+                               InstrumentId,
+                               AutofillProfilePayload,
+                               GURL,
+                               PasswordSuggestionDetails,
+                               AutofillAiPayload,
+                               PaymentsPayload,
+                               IdentityCredentialPayload,
+                               AutocompleteEntry,
+                               BnplIssuer,
+                               AtMemoryPayload,
+                               OpenGeminiPayload,
+                               AutocompleteSearchResultLabelSensitive>;
+
+  // This struct is used to provide password suggestions with custom icons,
+  // using the favicon of the website associated with the credentials. While
+  // the favicon loads, the icon from `Suggestion::icon` will be used as
+  // a placeholder.
+  struct FaviconDetails {
+    GURL domain_url;
+
+    // Whether the favicon can be requested from a Google server. Only set to
+    // `true` if the user's association with the domain is already known to
+    // Google, e.g., because the user is syncing a credential for that domain.
+    bool can_be_requested_from_google = false;
+
+    friend bool operator==(const FaviconDetails&,
+                           const FaviconDetails&) = default;
+  };
+
+  // This struct is used to provide data for monochrome icons that are rendered
+  // when there is no loyalty card program logo available.
+  struct LetterMonochromeIcon {
+    explicit LetterMonochromeIcon(std::u16string monogram_text)
+        : monogram_text(monogram_text) {}
+
+    friend bool operator==(const LetterMonochromeIcon&,
+                           const LetterMonochromeIcon&) = default;
+
+    // `monogram_text` is a std::u16string in order to support 2 letter
+    // monograms.
+    std::u16string monogram_text;
+  };
+
+  // This struct is used to provide the In-Product-Help bubble. It contains both
+  // the feature and possibly params. Feature is for showing the suggestion and
+  // params is needed for runtime texts.
+  struct IPHMetadata {
+    IPHMetadata();
+    explicit IPHMetadata(const base::Feature* feature,
+                         std::vector<std::u16string> iph_params = {});
+    IPHMetadata(const IPHMetadata& iph_metadata);
+    IPHMetadata(IPHMetadata&& iph_metadata);
+    IPHMetadata& operator=(const IPHMetadata& iph_metadata);
+    IPHMetadata& operator=(IPHMetadata&& iph_metadata);
+    ~IPHMetadata();
+
+    bool operator==(const IPHMetadata& b) const = default;
+    auto operator<=>(const IPHMetadata& b) const = default;
+
+    // The In-Product-Help feature that should be shown for the suggestion.
+    // Present when a suggestion that will display an IPH bubble is created.
+    raw_ptr<const base::Feature> feature = nullptr;
+
+    // IPH params needed for runtime text replacements in the suggestion's IPH
+    // bubble. Present when runtime texts need to be modified. It is empty when
+    // the IPH strings has no placeholders.
+    std::vector<std::u16string> iph_params;
+  };
+
+  // This type is used to specify custom icons by providing a URL to the icon.
+  // Used on Android only where `gfx::Image` (`custom_icon` alternative) is
+  // not supported.
+  using CustomIconUrl = base::StrongAlias<class CustomIconUrlTag, GURL>;
+
+  // The text information shown on the UI layer for a Suggestion.
+  struct Text {
+    using IsPrimary = base::StrongAlias<class IsPrimaryTag, bool>;
+    using ShouldTruncate = base::StrongAlias<class ShouldTruncateTag, bool>;
+
+    Text();
+    explicit Text(std::u16string value,
+                  IsPrimary is_primary = IsPrimary(false),
+                  ShouldTruncate should_truncate = ShouldTruncate(false));
+    Text(const Text& other);
+    Text(Text&& other);
+    Text& operator=(const Text& other);
+    Text& operator=(Text&& other);
+    ~Text();
+    bool operator==(const Suggestion::Text& text) const = default;
+
+    // The text value to be shown.
+    std::u16string value;
+
+    // Whether the text should be shown with a primary style.
+    IsPrimary is_primary = IsPrimary(false);
+
+    // Whether the text should be truncated if the bubble width is limited.
+    ShouldTruncate should_truncate = ShouldTruncate(false);
+  };
+
+  enum class Icon {
+    // kNoIcon is kept at the top of the list.
+    kNoIcon,
+
+    // 1P Google services start
+    kGmail,
+    kGoogleCalendar,
+    kGooglePhotos,
+    // 1P Google services end
+
+    // Address profile icons start
+    kHome,
+    kWork,
+    // Address profile icons end
+
+    // Generic icons start
+    kAccount,
+    kAndroidMessages,
+    kClose,
+    kCode,
+    kDelete,
+    kDevice,
+    kEdit,
+    kEmail,
+    kError,
+    kFlight,
+    kFlightSpark,
+    kGlobe,
+    kGoogle,
+    kGoogleMonochrome,
+    kGooglePasswordManager,
+    kGooglePay,
+    kGoogleWallet,
+    kGoogleWalletMonochrome,
+    kIdCard,
+    kIdCard2,
+    kIdCard2Spark,
+    kIdCardSpark,
+    kKey,
+    kLocation,
+    kLocationSpark,
+    kLoyalty,
+    kMagic,
+    kOfferTag,
+    kOrder,
+    kOrderSpark,
+    kPassport,
+    kPassportSpark,
+    kPenSpark,
+    kPersonCheck,
+    kQuestionMark,
+    kRecoveryPassword,
+    kSadTab,
+    kScanCreditCard,
+    kSettings,
+    kShipment,
+    kShipmentSpark,
+    kSpark,
+    kTextSpark,
+    kUndo,
+    kVehicle,
+    kVehicleSpark,
+    // Generic icons end
+
+    // Payment method icons start
+    kCardGeneric,
+    kCardGenericSpark,
+    // A vector representation of the generic card icon, which is used when a
+    // vector icon is preferred over a raster image (e.g., in the AtMemory UI
+    // on both Android and Desktop). In contrast, kCardGeneric maps to a raster
+    // image.
+    kCardGenericVector,
+    kCardAmericanExpress,
+    kCardDiners,
+    kCardDiscover,
+    kCardElo,
+    kCardJCB,
+    kCardMasterCard,
+    kCardMir,
+    kCardTroy,
+    kCardUnionPay,
+    kCardVerve,
+    kCardVisa,
+    kIban,
+    kBnplGeneric,
+    kBnplAffirm,
+    kBnplAfterpay,
+    kBnplKlarna,
+    kBnplZip,
+    kSaveAndFill,
+    // Payment method icons end
+  };
+
+  // This enum is used to control filtration of suggestions (see it's used in
+  // the `PopupViewViews` search bar and `AutofillPopupControllerImpl` where
+  // the logic is implemented) by explicitly marking special suggestions at
+  // creation.
+  enum class FiltrationPolicy {
+    // Suggestions, that are normally filtered. The match is highlighted on
+    // the UI and those that don't match are removed from the list.
+    kFilterable,
+
+    // Suggestions, that are excluded from filtration by always disappearing
+    // from the list as soon as any filter is applied (in other words, these
+    // suggestion don't match any filter except the empty one).
+    kPresentOnlyWithoutFilter,
+
+    // Suggestions, that are excluded from filtration by always staying in
+    // in the list (basically, these suggestions ignore filter).
+    kStatic,
+  };
+
+  // Describes the behavioral interaction contract of a suggestion: whether it
+  // can be selected/focused and whether it can be accepted (clicked/filled).
+  //
+  // GENERATED_JAVA_ENUM_PACKAGE: org.chromium.components.autofill
+  enum class Acceptability {
+    // The suggestion can be selected and accepted.
+    kSelectableAndAcceptable,
+    // The suggestion can be selected, but cannot be accepted (i.e. trying to
+    // accept it is ignored by the UI controller).
+    kSelectableButUnacceptable,
+    // The suggestion cannot be selected/focused and cannot be accepted.
+    kUnselectableAndUnacceptable,
+  };
+
+  explicit Suggestion(SuggestionType type);
+  Suggestion(std::u16string main_text, SuggestionType type);
+  // Constructor for unit tests.
+  Suggestion(std::u16string main_text,
+             std::u16string label,
+             Icon icon,
+             SuggestionType type);
+  Suggestion(std::u16string_view main_text,
+             std::vector<std::vector<Text>> labels,
+             Icon icon,
+             SuggestionType type);
+  Suggestion(std::u16string_view main_text,
+             base::span<const std::u16string> minor_text_labels,
+             std::u16string_view label,
+             Icon icon,
+             SuggestionType type);
+  Suggestion(const Suggestion& other);
+  Suggestion(Suggestion&& other);
+  Suggestion& operator=(const Suggestion& other);
+  Suggestion& operator=(Suggestion&& other);
+  ~Suggestion();
+
+  template <typename T>
+  T GetPayload() const {
+#if DCHECK_IS_ON()
+    DCHECK(Invariant());
+#endif
+    return std::holds_alternative<T>(payload) ? std::get<T>(payload) : T{};
+  }
+
+#if DCHECK_IS_ON()
+  bool Invariant() const {
+    switch (type) {
+      case SuggestionType::kIdentityCredential:
+        return std::holds_alternative<IdentityCredentialPayload>(payload);
+      case SuggestionType::kPasswordEntry:
+        // Manual fallback password suggestions store the password to preview or
+        // fill in the suggestion's payload.
+        // TODO(crbug.com/333992198): Use `PasswordSuggestionDetails` only for
+        // all suggestions with `SuggestionType::kPasswordEntry`.
+        return std::holds_alternative<Guid>(payload) ||
+               std::holds_alternative<PasswordSuggestionDetails>(payload);
+      case SuggestionType::kFillPassword:
+      case SuggestionType::kPasswordFieldByFieldFilling:
+      case SuggestionType::kViewPasswordDetails:
+      case SuggestionType::kBackupPasswordEntry:
+      case SuggestionType::kTroubleSigningInEntry:
+        return std::holds_alternative<PasswordSuggestionDetails>(payload);
+      case SuggestionType::kSeePromoCodeDetails:
+        return std::holds_alternative<GURL>(payload);
+      case SuggestionType::kIbanEntry:
+        return std::holds_alternative<Guid>(payload) ||
+               std::holds_alternative<InstrumentId>(payload);
+      case SuggestionType::kFillAutofillAi:
+      case SuggestionType::kRemoveAutofillAi:
+      case SuggestionType::kAutofillAiSourceAttribution:
+        return std::holds_alternative<AutofillAiPayload>(payload);
+      case SuggestionType::kCreditCardEntry:
+      case SuggestionType::kVirtualCreditCardEntry:
+        // TODO(crbug.com/367434234): Use `PaymentsPayload` for all credit card
+        // suggestions. Only Touch-To-Fill credit card suggestions currently
+        // use this.
+        return std::holds_alternative<Guid>(payload) ||
+               std::holds_alternative<PaymentsPayload>(payload);
+      case SuggestionType::kBnplEntry:
+        if (base::FeatureList::IsEnabled(
+                features::kAutofillEnablePayNowPayLaterTabs)) {
+          return std::holds_alternative<BnplIssuer>(payload) ||
+                 std::holds_alternative<PaymentsPayload>(payload);
+        }
+        return std::holds_alternative<PaymentsPayload>(payload);
+      case SuggestionType::kAtMemorySearchResult:
+        return std::holds_alternative<AtMemoryPayload>(payload);
+      case SuggestionType::kAtMemoryOpenGemini:
+        return std::holds_alternative<OpenGeminiPayload>(payload);
+      case SuggestionType::kDevtoolsTestAddressEntry:
+      default:
+        return std::holds_alternative<Guid>(payload) ||
+               std::holds_alternative<AutofillProfilePayload>(payload);
+    }
+  }
+#endif
+
+  friend bool operator==(const Suggestion&, const Suggestion&) = default;
+
+  // Payload generated by the backend layer. This payload contains the
+  // information required for further actions after the suggestion is
+  // selected/accepted. Depending on the suggestion type, this may contain a
+  // profile GUID, a destination URL, or some other specialized Payload variant.
+  Payload payload;
+
+  // Determines popup identifier for the suggestion.
+  SuggestionType type;
+
+  // The index of the tab in which the suggestion is shown in.
+  // This index is used to filter suggestions into separate tabs
+  // when they are displayed within a tabbed pane.
+  // Note: Suggestions are typically shown in a single list.
+  // Displaying suggestions in tabbed panes is enabled only for specific cases,
+  // for example, the "Pay Now"/"Pay Later" tabs.
+  SuggestionTabIndex tab_index = kDefaultSuggestionTabIndex;
+
+  // The texts that will be displayed on the first line in a suggestion. The
+  // order of showing the two texts on the first line depends on whether it is
+  // in RTL languages. The `main_text` includes the text value to be filled in
+  // the form, while `minor_texts` includes other supplementary text values
+  // to be shown also on the first line.
+  Text main_text;
+  std::vector<Text> minor_texts;
+
+  // The secondary texts displayed in a suggestion. The labels are presented as
+  // a N*M matrix, and the position of the text in the matrix decides where the
+  // text will be shown on the UI. (e.g. The text labels[1][2] will be shown on
+  // the second line, third column in the grid view of label).
+  std::vector<std::vector<Text>> labels;
+
+  // Used only for passwords to:
+  // 1. show the credential signon realm if applicable
+  // 2. show the obfuscated backup password in a password recovery flow.
+  // 3. show a "recovery" string next to the backup credential when displaying
+  // backups alongside the primary credentials.
+  // Also used to display an extra line of information if two line display is
+  // enabled.
+  std::u16string additional_label;
+
+  // Whether the additional label is aligned to the right (or left in RTL).
+  bool additional_label_alignment_right = false;
+
+  // This field outlines various methods for specifying the custom icon.
+  // Depending on the use case and platform, it can be a `gfx::Image` instance
+  // or imply more complex semantic of fetching the icon (see `CustomIconUrl`,
+  // `LetterMonochromeIcon` and `FaviconDetails` docs for details).
+  std::variant<gfx::Image, CustomIconUrl, FaviconDetails, LetterMonochromeIcon>
+      custom_icon;
+
+  // The children of this suggestion. If present, the autofill popup will have
+  // submenus.
+  std::vector<Suggestion> children;
+#if BUILDFLAG(IS_ANDROID)
+  // TODO(crbug.com/346469807): Remove once strings are passed directly.
+  std::u16string iph_description_text;
+#endif  // BUILDFLAG(IS_ANDROID)
+
+  // This is the icon which is shown on the side of a suggestion.
+  // If |custom_icon| is empty, the fallback built-in icon.
+  Icon icon = Icon::kNoIcon;
+
+  // An icon that appears after the suggestion in the suggestion view. For
+  // passwords, this icon string shows whether the suggestion originates from
+  // local or account store. It is also used on the settings entry for the
+  // credit card Autofill popup to indicate if all credit cards are server
+  // cards. It also holds Google Password Manager icon on the settings entry for
+  // the passwords Autofill popup.
+  Icon trailing_icon = Icon::kNoIcon;
+
+  // Whether suggestion was interacted with and is now in a loading state.
+  IsLoading is_loading = IsLoading(false);
+
+  // The metadata needed for showing the In-Product-Help bubble.
+  // TODO(crbug.com/369472865): Make this an std::optional<>.
+  IPHMetadata iph_metadata;
+
+  // The feature for the new badge if one is supposed to be shown. Currently
+  // available only on Desktop.
+  raw_ptr<const base::Feature> feature_for_new_badge = nullptr;
+
+  // If specified, this text will be played back as voice over for a11y.
+  std::optional<std::u16string> voice_over;
+
+  // If specified, this text will be played back if the user accepts this
+  // suggestion. Announcing messages in response to user actions is discouraged
+  // on Android, this message has no effect on that platform.
+  // TODO: crbug.com/467577615 - Redesign accessibility labels on Android so
+  // that they better reflect the information that's going to be filled in the
+  // form.
+  std::optional<std::u16string> acceptance_a11y_announcement;
+
+  // When `type` is
+  // `SuggestionType::k(Address|CreditCard)FieldByFieldFilling` or
+  // `SuggestionType::kAddressEntryOnTyping`, specifies the `FieldType` used to
+  // build the suggestion's `main_text`.
+  std::optional<FieldType> field_by_field_filling_type_used;
+
+  // Used by `SuggestionType::kLoadingThrobber` to determine the size of the
+  // loading suggestion. It represents the number of suggestions (assumed to be
+  // two-line suggestions) expected to load to provide a smoother UI transition.
+  std::optional<int> expected_number_of_suggestions;
+
+  // How the suggestion should be handled by the filtration logic, see the enum
+  // values doc for details.
+  // Now used for filtering manually triggered password suggestions only and
+  // has no effect on other suggestions.
+  FiltrationPolicy filtration_policy = FiltrationPolicy::kFilterable;
+
+  // The acceptability of the suggestion, see the enum values doc for details.
+  // Note that even if `acceptability` is `kSelectableAndAcceptable`, some
+  // `SuggestionType` are still not acceptable. See `IsAcceptable()` for
+  // details.
+  Acceptability acceptability = Acceptability::kSelectableAndAcceptable;
+
+  // Returns whether the user is able to preview the suggestion by hovering on
+  // it or accept it by clicking on it. Checks both whether the suggestion type
+  // is acceptable (i.e. not a separator, title, etc.) and whether
+  // `acceptability == Acceptability::kSelectableAndAcceptable`.
+  bool IsAcceptable() const;
+
+  // Returns whether the user is able to focus or select the suggestion.
+  bool IsSelectable() const;
+};
+
+void PrintTo(const Suggestion& suggestion, std::ostream* os);
+
+}  // namespace autofill
+
+#endif  // COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_H_
