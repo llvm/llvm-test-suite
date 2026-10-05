@@ -1,0 +1,104 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef COMPONENTS_METRICS_METRICS_FEATURES_H_
+#define COMPONENTS_METRICS_METRICS_FEATURES_H_
+
+#include "base/feature_list.h"
+#include "build/build_config.h"
+
+namespace metrics::features {
+
+// This can be used to disable structured metrics as a whole.
+BASE_DECLARE_FEATURE(kStructuredMetrics);
+
+// Determines whether to schedule a flush of persistent histogram memory
+// immediately after writing a system profile to it.
+BASE_DECLARE_FEATURE(kFlushPersistentSystemProfileOnWrite);
+
+// Controls whether to use a double-buffered shared memory minidump user stream
+// for SystemProfileProto instead of CrashpadInfo heap pointers.
+BASE_DECLARE_FEATURE(kSharedMemorySystemProfileMinidump);
+
+// Determines whether to always flush Local State immediately after an UMA/UKM
+// log upload. If this is disabled, Local State is only immediately flushed
+// after an upload if this is a mobile platform and the browser is in the
+// background.
+BASE_DECLARE_FEATURE(kReportingServiceAlwaysFlush);
+
+// Controls trimming for metrics logs. This feature allows tuning of the log
+// trimming behaviour via serverside parameters. Do not remove. See
+// components/metrics/metrics_service_client.cc and
+// components/metrics/unsent_log_store.cc.
+// Note: On Android WebView, while this feature still controls whether trimming
+// is enabled, a separate feature controls the trimming parameters themselves,
+// as they have different defaults than Android Chrome.
+// See: android_webview/browser/metrics/aw_metrics_service_client.cc
+BASE_DECLARE_FEATURE(kMetricsLogTrimming);
+
+#if BUILDFLAG(IS_ANDROID)
+// If enabled, disables the mechanism where when foregrounding, the
+// ReportingService backoff will be reset so that uploads are scheduled normally
+// again.
+// Context: In crbug.com/420459511, it was discovered that starting from Android
+// 15, apps cannot issue network requests from the background (they will fail).
+// This resulted in the ReportingService being throttled due to the backoff
+// logic, with uploads being scheduled very far ahead in the future (up to 24h).
+// During this time, periodic ongoing logs stop getting created. Even if there
+// are other scenarios where logs get created (upon backgrounding and
+// foregrounding), those simply accumulate on disk since no logs are being
+// uploaded. This can eventually lead to log trimming which in turn leads to
+// data loss.
+// Additional context: This feature is intended to disable this band-aid
+// mechanism, as we've implemented a better solution through JobScheduler in
+// crbug.com/445735421.
+BASE_DECLARE_FEATURE(kNoResetMetricsUploadBackoffOnForeground);
+
+// Controls whether various metrics services (UMA, UKM, etc.) should upload logs
+// through a JobScheduler on Android.
+BASE_DECLARE_FEATURE(kMetricsLogJobSchedulerUpload);
+
+// When enabled, when the Android OS requests a background upload task to be
+// stopped (e.g. due to the device being under pressure), the ReportingService
+// will increase the backoff interval for the next upload. Only has an effect if
+// `kMetricsLogJobSchedulerUpload` above is also enabled.
+BASE_DECLARE_FEATURE(kMetricsLogJobSchedulerUploadBackoffOnStopTask);
+#endif  // BUILDFLAG(IS_ANDROID)
+
+// Creates the ProfileMetricsService, which can be used to log per-profile UMA
+// histograms.
+// Enabled by default - intended as a kill-switch.
+BASE_DECLARE_FEATURE(kPerProfileMetrics);
+
+// Consolidates the application locale logic in MetricsServiceClient.
+BASE_DECLARE_FEATURE(kConsolidateMetricsServiceLocales);
+
+// Restructures the metrics privacy settings into a three-state model [kNone,
+// kBasic, kAdvanced].
+BASE_DECLARE_FEATURE(kRestructureMetricsConsentSettings);
+
+// No-op features for testing runtime mutability.
+BASE_DECLARE_FEATURE(kNoopRuntimeMutableFeatureDefaultEnabled);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutableFeatureVariationsEnabled);
+
+// No-op features for testing all runtime mutable state transitions and
+// saturation.
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable1);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable2);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable3);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable4);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable5);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable6);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable7);
+BASE_DECLARE_FEATURE(kNoopRuntimeMutable8);
+
+// Enables log rotation and uploading in the background on iOS.
+BASE_DECLARE_FEATURE(kIOSBackgroundMetrics);
+
+// Enables the no-op runtime mutable features with the FeatureList.
+void EnableNoopRuntimeMutableFeatures(base::FeatureList* feature_list);
+
+}  // namespace metrics::features
+
+#endif  // COMPONENTS_METRICS_METRICS_FEATURES_H_
