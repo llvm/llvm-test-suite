@@ -208,6 +208,7 @@ unsupported_options = [
     '-fno-strict-aliasing',
     '-fno-trapping-math',
     '-fnon-call-exceptions',
+    '-fopenmp-allocators',
     '-fopenmp-simd',
     '-fopt-info-optimized-omp',
     '-fopt-info-vec-optimized',
@@ -849,10 +850,10 @@ def parse_override_file(filename: str) -> dict:
             if not isinstance(attr, str):
                 error('Attribute "{}" in key "{}" must be a string', attr, main)
 
-            # We could, in principle, allow 'disabled_on' and 'enabled_on' to be
-            # strings. For now, force them to be lists even if they contain only
-            # a single element. Empty lists are allowed, even if they are
-            # somewhat useless.
+            # We could, in principle, allow 'disabled_on', 'enabled_on', and
+            # 'compile_flags' to be strings. For now, force them to be lists
+            # even if they contain only a single element. Empty lists are
+            # allowed, even if they are somewhat useless.
             if attr == 'disabled_on':
                 if not isinstance(val, list):
                     type_error(attr, main, 'array')
@@ -862,6 +863,9 @@ def parse_override_file(filename: str) -> dict:
             elif attr == 'xfail':
                 if not isinstance(val, bool):
                     type_error(attr, main, 'boolean')
+            elif attr == 'compile_flags':
+                if not isinstance(val, list):
+                    type_error(attr, main, 'array')
             else:
                 error('Unknown attribute "{}" in key "{}"', attr, main)
 
@@ -923,6 +927,11 @@ def override_xfail(xfail: bool, t: Test) -> None:
     message('Overriding "xfail" in {}', t.sources[0])
     t.xfail = xfail
 
+# Append flags to the options property of the test.
+def append_flags(flags: list[str], t: Test) -> None:
+    message('Adding flags to {}', t.sources[0])
+    t.options.extend(flags)
+
 # Override the properties of the test based on the attributes from the override
 # file.
 def override_test(attrs: dict, t: Test) -> None:
@@ -933,6 +942,8 @@ def override_test(attrs: dict, t: Test) -> None:
             override_enabled_on(val, t)
         elif attr == 'xfail':
             override_xfail(val, t)
+        elif attr == 'compile_flags':
+            append_flags(val, t)
         else:
             error('Unknown attribute "{}" in key "{}"', attr, main)
 
