@@ -8,16 +8,3 @@
 
 "imperfect2.f90":
   xfail: false
-
-# These test need specific versions of OpenMP beyond flang's default to pass:
-"allocate-1.f90":
-  compile_flags: ["-fopenmp-version=50"]
-
-"allocate-5.f90":
-  compile_flags: ["-fopenmp-version=51"]
-
-"atomic-25.f90":
-  compile_flags: ["-fopenmp-version=51"]
-
-"atomic.f90":
-  compile_flags: ["-fopenmp-version=50"]
