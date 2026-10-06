@@ -29,7 +29,8 @@ set(HIP_GENERIC_TARGET_ARCHS
   "--offload-arch=gfx9-generic"
   "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
   "--offload-arch=gfx9-4-generic:sramecc-:xnack-"
-  "--offload-arch=gfx9-4-generic:xnack+"
+  "--offload-arch=gfx9-4-generic:sramecc+:xnack+"
+  "--offload-arch=gfx9-4-generic:sramecc-:xnack+"
   "--offload-arch=gfx10-1-generic"
   "--offload-arch=gfx10-3-generic"
   "--offload-arch=gfx11-generic"
@@ -131,7 +132,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTestLists.cmake)
 function(validate_catch_tests_infrastructure)
   set(_required_paths
     "${HIP_CATCH_TESTS_DIR}/unit/compiler"
-    "${HIP_CATCH_TESTS_DIR}/external/picojson/picojson.h"
     "${HIP_CATCH_TESTS_DIR}/hipTestMain"
     "${HIP_CATCH_TESTS_DIR}/include"
   )
@@ -297,7 +297,6 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
     "-I${ROCM_PATH}/include"
     "-I${HIP_CATCH_TESTS_DIR}/include"
     "-I$<JOIN:$<TARGET_PROPERTY:Catch2::Catch2,INTERFACE_INCLUDE_DIRECTORIES>,$<SEMICOLON>-I>"
-    "-I${HIP_CATCH_TESTS_DIR}/external/picojson"
   )
 
   # Determine library linking flags
@@ -465,7 +464,6 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
   # Include directories (Catch2's come from the linked target below)
   target_include_directories(${_test_exe} PRIVATE
     "${HIP_CATCH_TESTS_DIR}/include"
-    "${HIP_CATCH_TESTS_DIR}/external/picojson"
   )
 
   # Add HIP runtime includes

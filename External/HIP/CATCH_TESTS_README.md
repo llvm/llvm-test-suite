@@ -768,6 +768,7 @@ The Catch test infrastructure is located in `External/HIP/catch/`:
 
 ```
 External/HIP/catch/
+├── LICENSE.txt             # MIT license covering everything below
 ├── unit/                    # Unit test category
 │   └── compiler/           # Compiler test subdirectory
 │       ├── hipClassKernel.cc
@@ -779,14 +780,13 @@ External/HIP/catch/
 │   ├── hip_test_context.hh
 │   ├── hip_test_features.hh
 │   ├── hip_test_filesystem.hh
+│   ├── hip_test_level.hh
+│   ├── hip_test_params.hh
 │   └── cmd_options.hh
-├── hipTestMain/            # Test framework main files
-│   ├── main.cc
-│   ├── hip_test_context.cc
-│   └── hip_test_features.cc
-└── external/               # Third-party libraries
-    └── picojson/
-        └── picojson.h      # JSON parser (vendored)
+└── hipTestMain/            # Test framework main files
+    ├── main.cc
+    ├── hip_test_context.cc
+    └── hip_test_features.cc
 
 # Note: Catch2 is obtained via find_package or FetchContent, not vendored
 ```
@@ -794,6 +794,12 @@ External/HIP/catch/
 The per-directory test lists are in `External/HIP/HipCatchTestLists.cmake`, outside `catch/`, so that `catch/` stays a straight copy of upstream.
 
 **Note**: The `kernels/` directory is not needed for `unit/compiler` tests. These tests define kernels inline using `__global__` functions.
+
+**Provenance**: Everything under `catch/` is copied verbatim from
+[hip-tests](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) and is MIT
+licensed. The sources carry `SPDX-License-Identifier: MIT`; the full text is in
+`catch/LICENSE.txt`, taken from the hip-tests repository root. Keep these files byte-identical to
+upstream so that re-syncing stays a straight copy.
 
 ## References
 
