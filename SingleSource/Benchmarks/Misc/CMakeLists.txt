@@ -1,9 +1,5 @@
 include(CheckSymbolExists)
 
-if (TARGET_OS STREQUAL "OS390")
-  list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/MVS -std=c11)
-endif()
-
 list(APPEND LDFLAGS -lm )
 list(APPEND CFLAGS -Wno-implicit-int)
 set(FP_TOLERANCE 0.001)

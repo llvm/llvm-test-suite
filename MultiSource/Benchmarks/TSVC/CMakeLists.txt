@@ -1,8 +1,4 @@
 
-if (TARGET_OS STREQUAL "OS390")
-  list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/MVS)
-endif()
-
 # Expect exact numeric results. However, the libc printf implementation emits
 # 'E' in scientific notation, while the reference output contains 'e'.
 set(FP_ABSTOLERANCE 0.0)

@@ -18,9 +18,6 @@
 
 #include<sys/types.h>
 #include<sys/stat.h>
-#ifdef __MVS__
-#include "MVSSupport.h"
-#endif
 
 //#define LCALS_OMP_MEM_INIT
 #undef LCALS_OMP_MEM_INIT
@@ -2202,37 +2199,21 @@ void freeLoopData()
    //  De-allocate 1D loop length Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_1D_Real_arrays; ++i) {
-#ifdef __MVS__
- #if defined(USE_PTR_CLASS)
-      freeAlignedMemory( s_loop_data->array_1D_Real[i].get() );
- #else
-      freeAlignedMemory( s_loop_data->array_1D_Real[i] );
- #endif
-#else
  #if defined(USE_PTR_CLASS)
       free( s_loop_data->array_1D_Real[i].get() );
  #else
       free( s_loop_data->array_1D_Real[i] );
  #endif
-#endif
    }
 
    //
    //  De-allocate 1D loop length X 4 Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_1D_Nx4_Real_arrays; ++i) {
-#ifdef __MVS__
- #if defined(USE_PTR_CLASS)
-      freeAlignedMemory( s_loop_data->array_1D_Nx4_Real[i].get() );
- #else
-      freeAlignedMemory( s_loop_data->array_1D_Nx4_Real[i] );
- #endif
-#else
-  #if defined(USE_PTR_CLASS)
+#if defined(USE_PTR_CLASS)
       free( s_loop_data->array_1D_Nx4_Real[i].get() );
-  #else
+#else
       free( s_loop_data->array_1D_Nx4_Real[i] );
-  #endif
 #endif
    }
 
@@ -2240,11 +2221,8 @@ void freeLoopData()
    //  De-allocate 1D loop length Indx arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_1D_Indx_arrays; ++i) {
-#ifdef __MVS__
-      freeAlignedMemory( s_loop_data->array_1D_Indx[i] );
-#else
       free( s_loop_data->array_1D_Indx[i] );
-#endif
+
    }
 
    //
@@ -2262,19 +2240,10 @@ void freeLoopData()
    //  De-allocate 2D 7 X loop length Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_2D_7xN_Real_arrays; ++i) {
-#ifdef __MVS__
- #if defined(USE_PTR_CLASS)
-      freeAlignedMemory( s_loop_data->array_2D_7xN_Real[i][0].get() );
- #else
-      freeAlignedMemory( s_loop_data->array_2D_7xN_Real[i][0] );
- #endif
-
-#else
- #if defined(USE_PTR_CLASS)
+#if defined(USE_PTR_CLASS)
       free( s_loop_data->array_2D_7xN_Real[i][0].get() );
- #else
+#else
       free( s_loop_data->array_2D_7xN_Real[i][0] );
- #endif
 #endif
       delete [] s_loop_data->array_2D_7xN_Real[i]; 
    }
@@ -2283,19 +2252,11 @@ void freeLoopData()
    //  De-allocate 2D 64 X 64 Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_2D_64x64_Real_arrays; ++i) {
-#ifdef __MVS__
- #if defined(USE_PTR_CLASS)
-      freeAlignedMemory( s_loop_data->array_2D_64x64_Real[i][0].get() );
- #else
-      freeAlignedMemory( s_loop_data->array_2D_64x64_Real[i][0] );
- #endif
-#else
  #if defined(USE_PTR_CLASS)
       free( s_loop_data->array_2D_64x64_Real[i][0].get() );
  #else
       free( s_loop_data->array_2D_64x64_Real[i][0] );
  #endif
-#endif
       delete [] s_loop_data->array_2D_64x64_Real[i]; 
    }
 
@@ -2303,19 +2264,11 @@ void freeLoopData()
    //  De-allocate and initialize 3D 2 X loop length X 4 Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_3D_2xNx4_Real_arrays; ++i) {
-#ifdef __MVS__
- #if defined(USE_PTR_CLASS)
-      freeAlignedMemory( s_loop_data->array_3D_2xNx4_Real[i][0][0].get() );
- #else
-      freeAlignedMemory( s_loop_data->array_3D_2xNx4_Real[i][0][0] );
- #endif
-#else
  #if defined(USE_PTR_CLASS)
       free( s_loop_data->array_3D_2xNx4_Real[i][0][0].get() );
  #else
       free( s_loop_data->array_3D_2xNx4_Real[i][0][0] );
  #endif
-#endif
       for (Index_type k = 0; k < 2; ++k) {
          delete [] s_loop_data->array_3D_2xNx4_Real[i][k]; 
       }
@@ -2343,11 +2296,8 @@ Real_ptr allocAndInitData(LoopData::RealArray& ra, Index_type len)
 {
    Real_ptr data = 0;
 
-   #ifdef __MVS__
-      data = (Real_ptr) allocateAlignedMemory(len*sizeof(Real_type), LCALS_DATA_ALIGN);
-   #else
       posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Real_type) );
-   #endif
+
 
    ra.data = data;
    ra.len = len;
@@ -2360,11 +2310,8 @@ Real_ptr allocAndInitData(LoopData::RealArray& ra, Index_type len)
 Index_type* allocAndInitData(LoopData::IndxArray& ia, Index_type len)
 {
    Index_type* data = 0;
-   #ifdef __MVS__
-      data = (Index_type *) allocateAlignedMemory(len*sizeof(Real_type), LCALS_DATA_ALIGN);
-   #else
       posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Index_type) );
-   #endif
+
    ia.data = data;
    ia.len = len;
 

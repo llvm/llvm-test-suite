@@ -1,6 +1,3 @@
-if (TARGET_OS STREQUAL "OS390")
-  list(APPEND CFLAGS -I ${CMAKE_SOURCE_DIR}/MVS)
-endif()
 add_subdirectory(SubsetARawLoops)
 add_subdirectory(SubsetALambdaLoops)
 add_subdirectory(SubsetBRawLoops)
