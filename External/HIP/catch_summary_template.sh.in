@@ -7,8 +7,10 @@
 #   @CATCH_CATEGORY@ - test category (unit, stress, etc.)
 #   @CATCH_SUBDIR@ - subdirectory name (compiler, etc.)
 #   @CATCH_VARIANT_SUFFIX@ - variant suffix (hip-7.2.0, etc.)
+#   @CATCH_EXCLUDE_ARGS@ - Catch2 test specs for the directory's EXCLUDE_TESTS
 
 cd @CMAKE_CURRENT_BINARY_DIR@
+EXCLUDE_ARGS="@CATCH_EXCLUDE_ARGS@"
 echo ""
 echo "========================================"
 echo "Detailed Test Summary:"
@@ -18,6 +20,7 @@ PASSED_TESTS=0
 FAILED_TESTS=0
 SKIPPED_TESTS=0
 CRASHED_TESTS=0
+EXCLUDED_TESTS=0
 # Arrays to track test names for triage
 FAILED_LIST=""
 SKIPPED_LIST=""
@@ -26,10 +29,15 @@ for test in catch_tests/catch_@CATCH_CATEGORY@_@CATCH_SUBDIR@_*-@CATCH_VARIANT_S
   if [ -x "$test" ]; then
     TOTAL_FILES=$((TOTAL_FILES + 1))
     TEST_BASENAME=$(basename "$test")
-    # Get test names from --list-tests
-    LIST_OUTPUT=$("$test" --list-tests 2>&1)
+    # Get test names from --list-tests, with the same exclusions the test run uses
+    LIST_OUTPUT=$("$test" --list-tests $EXCLUDE_ARGS 2>&1)
     FILE_TOTAL=$(echo "$LIST_OUTPUT" | tail -1 | grep -o '^[0-9]*' || echo 0)
     TOTAL_TESTS=$((TOTAL_TESTS + FILE_TOTAL))
+    if [ -n "$EXCLUDE_ARGS" ]; then
+      ALL_OUTPUT=$("$test" --list-tests 2>&1)
+      ALL_TOTAL=$(echo "$ALL_OUTPUT" | tail -1 | grep -o '^[0-9]*' || echo 0)
+      EXCLUDED_TESTS=$((EXCLUDED_TESTS + ALL_TOTAL - FILE_TOTAL))
+    fi
     # Extract individual test names (lines starting with spaces after 'All available test cases:')
     TEST_NAMES=$(echo "$LIST_OUTPUT" | grep '^  ' | sed 's/^  //')
     # Parse the corresponding .test.out file for results
@@ -164,6 +172,9 @@ if [ $SKIPPED_TESTS -gt 0 ]; then
 fi
 if [ $CRASHED_TESTS -gt 0 ]; then
   echo "  Crashed/Error: $CRASHED_TESTS"
+fi
+if [ $EXCLUDED_TESTS -gt 0 ]; then
+  echo "  Excluded: $EXCLUDED_TESTS (EXCLUDE_TESTS in HipCatchTestLists.cmake)"
 fi
 # Print triage lists
 if [ -n "$FAILED_LIST" ]; then
