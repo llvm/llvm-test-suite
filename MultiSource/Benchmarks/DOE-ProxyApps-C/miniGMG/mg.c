@@ -19,7 +19,6 @@
 #include "mg.h"
 #include "operators.h"
 #include "solver.h"
-#endif
 //------------------------------------------------------------------------------------------------------------------------------
 int create_subdomain(subdomain_type * box, int subdomain_low_i, int subdomain_low_j, int subdomain_low_k,
                                        int subdomain_dim_i, int subdomain_dim_j, int subdomain_dim_k, 
