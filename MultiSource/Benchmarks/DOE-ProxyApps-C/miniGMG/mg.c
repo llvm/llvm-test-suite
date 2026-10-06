@@ -19,8 +19,6 @@
 #include "mg.h"
 #include "operators.h"
 #include "solver.h"
-#ifdef __MVS__
-#include "MVSSupport.h"
 #endif
 //------------------------------------------------------------------------------------------------------------------------------
 int create_subdomain(subdomain_type * box, int subdomain_low_i, int subdomain_low_j, int subdomain_low_k,
@@ -36,11 +34,7 @@ int create_subdomain(subdomain_type * box, int subdomain_low_i, int subdomain_lo
   box->dim.i = subdomain_dim_i;
   box->dim.j = subdomain_dim_j;
   box->dim.k = subdomain_dim_k;
-  #ifdef __MVS__
-    box->levels = (box_type *)allocateAlignedMemory(numLevels*sizeof(box_type), 64);
-  #else
     posix_memalign((void**)&(box->levels),64,numLevels*sizeof(box_type));
-  #endif
   memory_allocated += numLevels*sizeof(box_type);
   for(level=0;level<numLevels;level++){
                           int numGridsActual = numGrids;
@@ -57,11 +51,7 @@ void destroy_subdomain(subdomain_type * box){
   for(level=0;level<box->numLevels;level++){
     destroy_box(&box->levels[level]);
   }
-  #ifdef __MVS__
-    freeAlignedMemory(box->levels);
-  #else
     free(box->levels);
-  #endif
 }
 
 
@@ -137,11 +127,7 @@ int create_domain(domain_type * domain,
   domain->subdomains_in.j          = subdomains_per_rank_in_j*ranks_in_j;
   domain->subdomains_in.k          = subdomains_per_rank_in_k*ranks_in_k;
   domain->subdomains_per_rank      = subdomains_per_rank_in_i*subdomains_per_rank_in_j*subdomains_per_rank_in_k;
-  #ifdef __MVS__
-    domain->subdomains = (subdomain_type *)allocateAlignedMemory(domain->subdomains_per_rank*sizeof(subdomain_type), 64);
-  #else
     posix_memalign((void**)&(domain->subdomains),64,domain->subdomains_per_rank*sizeof(subdomain_type));
-  #endif
   memory_allocated+=domain->subdomains_per_rank*sizeof(subdomain_type);
 
   domain->dim.i                = domain->subdomains_in.i * subdomain_dim_i;
@@ -217,13 +203,8 @@ int create_domain(domain_type * domain,
     if(di==0)bufSize*=domain->subdomains_per_rank_in.i*subdomain_dim_i;else bufSize*=ghosts;
     if(dj==0)bufSize*=domain->subdomains_per_rank_in.j*subdomain_dim_j;else bufSize*=ghosts;
     if(dk==0)bufSize*=domain->subdomains_per_rank_in.k*subdomain_dim_k;else bufSize*=ghosts;
-    #ifdef __MVS__
-      domain->send_buffer[n] = (double *)allocateAlignedMemory(bufSize*sizeof(double), 64);
-      domain->recv_buffer[n] = (double *)allocateAlignedMemory(bufSize*sizeof(double), 64);
-    #else
       posix_memalign((void**)&(domain->send_buffer[n]),64,bufSize*sizeof(double));
       posix_memalign((void**)&(domain->recv_buffer[n]),64,bufSize*sizeof(double));
-    #endif
                         memset(domain->send_buffer[n],0,bufSize*sizeof(double));
                         memset(domain->recv_buffer[n],0,bufSize*sizeof(double));
                                       memory_allocated+=bufSize*sizeof(double);
@@ -516,11 +497,7 @@ void destroy_domain(domain_type * domain){
   int box;for(box=0;box<domain->subdomains_per_rank;box++){
     destroy_subdomain(&domain->subdomains[box]);
   }
-  #ifdef __MVS__
-    freeAlignedMemory(domain->subdomains);
-  #else
     free(domain->subdomains);
-  #endif
   // FIX, free buffer_copies, etc...
   if(domain->rank==0){printf("done\n");fflush(stdout);}
 }
