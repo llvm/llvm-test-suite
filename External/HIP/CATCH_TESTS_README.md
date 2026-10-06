@@ -714,7 +714,9 @@ To add support for additional test categories:
 
 ### Porting a Test Directory
 
-Copy the directory unchanged from upstream `projects/hip-tests/catch/`, together with any shared headers from `include/` that its tests include. Then give it an entry in `HipCatchTestLists.cmake`:
+Upstream is `projects/hip-tests/catch/` in [ROCm/rocm-systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) on `develop`. The standalone [ROCm/hip-tests](https://github.com/ROCm/hip-tests) repository is only a partial mirror of it, with different sources and YAML configs, so don't port from there.
+
+Copy the directory unchanged from upstream, together with any shared headers from `include/` that its tests include. Then give it an entry in `HipCatchTestLists.cmake`:
 
 ```cmake
 declare_catch_test_dir(unit kernel
@@ -796,9 +798,9 @@ The per-directory test lists are in `External/HIP/HipCatchTestLists.cmake`, outs
 **Note**: The `kernels/` directory is not needed for `unit/compiler` tests. These tests define kernels inline using `__global__` functions.
 
 **Provenance**: Everything under `catch/` is copied verbatim from
-[hip-tests](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) and is MIT
-licensed. The sources carry `SPDX-License-Identifier: MIT`; the full text is in
-`catch/LICENSE.txt`, taken from the hip-tests repository root. Keep these files byte-identical to
+`projects/hip-tests` in [ROCm/rocm-systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests)
+and is MIT licensed. The sources carry `SPDX-License-Identifier: MIT`; the full text is in
+`catch/LICENSE.txt`, a copy of `projects/hip-tests/LICENSE.md`. Keep these files byte-identical to
 upstream so that re-syncing stays a straight copy.
 
 ## References
