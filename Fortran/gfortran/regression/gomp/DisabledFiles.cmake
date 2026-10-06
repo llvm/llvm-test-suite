@@ -83,6 +83,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: non-rectangular canonical loop nests
   canonical-loop-1.f90
   pr85313.f90
+
+  # unimplemented: assumption clauses on the assumes directive
+  allocate-5.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
@@ -297,9 +300,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   is_device_ptr-1.f90
   is_device_ptr-3.f90
   pr83977.f90
-
-  # unimplemented: assumption clauses on the assumes directive
-  allocate-5.f90
 
   # The type of 'var_1' has already been implicitly declared
   declare-target-1.f90
