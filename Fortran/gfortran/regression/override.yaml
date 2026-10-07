@@ -95,6 +95,10 @@
 "nint_2.f90":
   disabled_on: ["powerpc-*-aix"]
 
+# disable for PPC (https://github.com/llvm/llvm-project/issues/229834)
+"c_char_tests_5.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This
