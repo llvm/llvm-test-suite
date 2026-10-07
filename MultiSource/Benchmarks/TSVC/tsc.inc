@@ -47,9 +47,6 @@ static int digits = digits_default;
 #define TESTS 0xFFFFFFFF
 #endif
 
-#ifdef __MVS__
-#include "MVSSupport.h"
-#endif
 
 #include "tests.h"
 
@@ -5547,11 +5544,7 @@ int vbor()
 #endif // TESTS & CONTROL_LOOPS
 
 void set(int* ip, TYPE* s1, TYPE* s2){
-        #ifdef __MVS__
-          xx = (TYPE *) allocateAlignedMemory(LEN*sizeof(TYPE), ALIGNMENT);
-        #else
           posix_memalign((void **) &xx, ALIGNMENT, LEN*sizeof(TYPE));
-        #endif
 	printf("\n");
 	for (int i = 0; i < LEN; i = i+5){
 		ip[i]	= (i+4);
@@ -5585,11 +5578,7 @@ int main(int argc, char *argv[]){
 	int* ip;
 	TYPE s1,s2;
 
-        #ifdef __MVS__
-          ip = (int *) allocateAlignedMemory(LEN*sizeof(TYPE), ALIGNMENT);
-        #else
           posix_memalign((void **) &ip, ALIGNMENT, LEN*sizeof(TYPE));
-        #endif
 
         if (argc > 1)
           ntimes = atoi(argv[1]);
