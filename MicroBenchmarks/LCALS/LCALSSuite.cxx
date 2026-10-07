@@ -2199,11 +2199,11 @@ void freeLoopData()
    //  De-allocate 1D loop length Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_1D_Real_arrays; ++i) {
- #if defined(USE_PTR_CLASS)
+#if defined(USE_PTR_CLASS)
       free( s_loop_data->array_1D_Real[i].get() );
- #else
+#else
       free( s_loop_data->array_1D_Real[i] );
- #endif
+#endif
    }
 
    //
@@ -2222,7 +2222,6 @@ void freeLoopData()
    //
    for (unsigned i = 0; i < s_loop_data->s_num_1D_Indx_arrays; ++i) {
       free( s_loop_data->array_1D_Indx[i] );
-
    }
 
    //
@@ -2252,11 +2251,11 @@ void freeLoopData()
    //  De-allocate 2D 64 X 64 Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_2D_64x64_Real_arrays; ++i) {
- #if defined(USE_PTR_CLASS)
+#if defined(USE_PTR_CLASS)
       free( s_loop_data->array_2D_64x64_Real[i][0].get() );
- #else
+#else
       free( s_loop_data->array_2D_64x64_Real[i][0] );
- #endif
+#endif
       delete [] s_loop_data->array_2D_64x64_Real[i]; 
    }
 
@@ -2264,11 +2263,11 @@ void freeLoopData()
    //  De-allocate and initialize 3D 2 X loop length X 4 Real arrays.
    //
    for (unsigned i = 0; i < s_loop_data->s_num_3D_2xNx4_Real_arrays; ++i) {
- #if defined(USE_PTR_CLASS)
+#if defined(USE_PTR_CLASS)
       free( s_loop_data->array_3D_2xNx4_Real[i][0][0].get() );
- #else
+#else
       free( s_loop_data->array_3D_2xNx4_Real[i][0][0] );
- #endif
+#endif
       for (Index_type k = 0; k < 2; ++k) {
          delete [] s_loop_data->array_3D_2xNx4_Real[i][k]; 
       }
@@ -2294,13 +2293,10 @@ namespace {
 //
 Real_ptr allocAndInitData(LoopData::RealArray& ra, Index_type len)
 {
-   Real_ptr data = 0;
-
-      posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Real_type) );
-
-
+   Real_ptr data = 0; 
+   posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Real_type) );
    ra.data = data;
-   ra.len = len;
+   ra.len = len; 
 
    initData(ra);
 
@@ -2310,8 +2306,7 @@ Real_ptr allocAndInitData(LoopData::RealArray& ra, Index_type len)
 Index_type* allocAndInitData(LoopData::IndxArray& ia, Index_type len)
 {
    Index_type* data = 0;
-      posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Index_type) );
-
+   posix_memalign( (void **)&data, LCALS_DATA_ALIGN, len*sizeof(Index_type) );
    ia.data = data;
    ia.len = len;
 

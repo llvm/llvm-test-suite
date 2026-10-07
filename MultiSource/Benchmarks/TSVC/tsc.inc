@@ -47,7 +47,6 @@ static int digits = digits_default;
 #define TESTS 0xFFFFFFFF
 #endif
 
-
 #include "tests.h"
 
 #define lll LEN
@@ -5544,7 +5543,7 @@ int vbor()
 #endif // TESTS & CONTROL_LOOPS
 
 void set(int* ip, TYPE* s1, TYPE* s2){
-          posix_memalign((void **) &xx, ALIGNMENT, LEN*sizeof(TYPE));
+        posix_memalign((void **) &xx, ALIGNMENT, LEN*sizeof(TYPE));
 	printf("\n");
 	for (int i = 0; i < LEN; i = i+5){
 		ip[i]	= (i+4);
@@ -5578,7 +5577,7 @@ int main(int argc, char *argv[]){
 	int* ip;
 	TYPE s1,s2;
 
-          posix_memalign((void **) &ip, ALIGNMENT, LEN*sizeof(TYPE));
+        posix_memalign((void **) &ip, ALIGNMENT, LEN*sizeof(TYPE));
 
         if (argc > 1)
           ntimes = atoi(argv[1]);

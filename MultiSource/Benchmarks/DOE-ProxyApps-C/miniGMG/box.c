@@ -57,17 +57,17 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 
 
   // allocate pointers to grids and grids themselves
-    posix_memalign((void**)&(box->grids),64,box->numGrids*sizeof(double*));
+  posix_memalign((void**)&(box->grids),64,box->numGrids*sizeof(double*));  
   memory_allocated += box->numGrids*sizeof(double*);
 #if 0
   int g;for(g=0;g<box->numGrids;g++){
-      posix_memalign((void**)&(box->grids[g]),64,box->volume*sizeof(double));
+    posix_memalign((void**)&(box->grids[g]),64,box->volume*sizeof(double));
     memset(box->grids[g],0,box->volume*sizeof(double));
     memory_allocated += box->volume*sizeof(double);
   }
 #else
   double * tmpbuf;
-    posix_memalign((void**)&tmpbuf,64,box->volume*box->numGrids*sizeof(double));
+  posix_memalign((void**)&tmpbuf,64,box->volume*box->numGrids*sizeof(double));
   memset(    tmpbuf,0,box->volume*box->numGrids*sizeof(double));
   memory_allocated += box->volume*box->numGrids*sizeof(double);
   int g;for(g=0;g<box->numGrids;g++){
@@ -77,13 +77,13 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 #endif
 
   // allocate RedBlackMask array for a plane...
-    posix_memalign((void**)&(box->RedBlack_64bMask),64,box->plane*sizeof(uint64_t));
+  posix_memalign((void**)&(box->RedBlack_64bMask),64,box->plane*sizeof(uint64_t));
                     memset(box->RedBlack_64bMask,  0,box->plane*sizeof(uint64_t));
                                  memory_allocated += box->plane*sizeof(uint64_t);
-    posix_memalign((void**)&(box->RedBlack_FP[0]  ),64,box->plane*sizeof(double  ));
+  posix_memalign((void**)&(box->RedBlack_FP[0]  ),64,box->plane*sizeof(double  ));
                     memset(box->RedBlack_FP[0]  ,  0,box->plane*sizeof(double  ));
                                  memory_allocated += box->plane*sizeof(double  );
-    posix_memalign((void**)&(box->RedBlack_FP[1]  ),64,box->plane*sizeof(double  ));
+  posix_memalign((void**)&(box->RedBlack_FP[1]  ),64,box->plane*sizeof(double  ));
                     memset(box->RedBlack_FP[1]  ,  0,box->plane*sizeof(double  ));
                                  memory_allocated += box->plane*sizeof(double  );
 
@@ -103,12 +103,12 @@ int create_box(box_type *box, int numGrids, int low_i, int low_j, int low_k, int
 void destroy_box(box_type *box){
 #if 0
   int g;for(g=0;g<box->numGrids;g++){
-      free(box->grids[g]);
+    free(box->grids[g]);
   }
 #else
-    free(box->grids[0]);
+  free(box->grids[0]);
 #endif
-    free(box->grids);
+  free(box->grids);
 }
 
 

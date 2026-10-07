@@ -280,6 +280,7 @@ extern void polybench_prepare_instruments();
 #ifdef _OPENMP
 # include <omp.h>
 #endif
+
 #if defined(POLYBENCH_PAPI)
 # undef POLYBENCH_PAPI
 # include "polybench.h"
