@@ -76,11 +76,15 @@ def _mutateScript(context, script):
 
 
 def _collectTime(context, timefiles, metric_name="exec_time"):
-    time = 0.0
+    total_time = 0.0
+    metrics = {}
     for timefile in timefiles:
         filecontent = context.read_result_file(context, timefile)
-        time += getUserTimeFromContents(filecontent)
-    return {metric_name: time}
+        time = getUserTimeFromContents(filecontent)
+        metrics["%s.%s" % (metric_name, os.path.basename(timefile))] = time
+        total_time += time
+    metrics[metric_name] = total_time
+    return metrics
 
 
 def mutatePlan(context, plan):
