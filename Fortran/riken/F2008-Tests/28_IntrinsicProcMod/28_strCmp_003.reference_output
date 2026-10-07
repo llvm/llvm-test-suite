@@ -1,0 +1,5 @@
+ LLE('ONE','TWO') = T
+ LLE('ONE  ','ONE') = T
+ LLE('ONE','ONE  ') = T
+ LLE('', '') = T
+exit 0
