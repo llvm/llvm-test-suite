@@ -83,6 +83,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # unimplemented: non-rectangular canonical loop nests
   canonical-loop-1.f90
   pr85313.f90
+
+  # unimplemented: assumption clauses on the assumes directive
+  allocate-5.f90
 )
 
 file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
@@ -227,8 +230,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   assume-1.f90
   assume-3.f90
   assume-4.f90
-  atomic-25.f90
-  atomic.f90
   openmp-simd-8.f90
 
   # expected 'END ATOMIC'
@@ -447,10 +448,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   declare-variant-6.f90 # See https://github.com/llvm/llvm-test-suite/pull/447
 
   # These tests fail, but the cause of their failure needs to be investigated.
-  allocate-10.f90
-  allocate-13.f90
-  allocate-13a.f90
-  allocate-5.f90
   allocate-8.f90
   c_ptr_tests_20.f90
   declare-target-indirect-2.f90
