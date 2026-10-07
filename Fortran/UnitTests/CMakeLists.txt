@@ -8,3 +8,4 @@ add_subdirectory(fcvs21_f95) # NIST Fortran Compiler Validation Suite
 add_subdirectory(finalization)
 add_subdirectory(fp_conversions)
 add_subdirectory(namelist)
+add_subdirectory(bind-c-value)
