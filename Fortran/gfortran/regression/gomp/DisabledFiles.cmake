@@ -454,7 +454,6 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   defaultmap-8.f90
   defaultmap-9.f90
   depobj-3.f90
-  detach-1.f90
   inner-loops-1.f90
   map-10.f90
   map-12.f90
