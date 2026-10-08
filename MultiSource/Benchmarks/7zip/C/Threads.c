@@ -234,7 +234,7 @@ WRes Thread_Close(CThread *thread)
     
     pthread_detach(thread->_tid);
 #ifdef __MVS__
-    // On z/OS, pthread_t is typedef as char __[0x08].
+    // pthread_t is a struct on z/OS.
     // If pthread_t is not 8 bytes, memcpy may not copy the Id correctly.
     static_assert(sizeof(pthread_t) == sizeof(uint64_t),
                   "Thread ID size not 64 bits!");
