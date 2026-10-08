@@ -238,10 +238,7 @@ WRes Thread_Close(CThread *thread)
     // If pthread_t is not 8 bytes, memcpy may not copy the Id correctly.
     static_assert(sizeof(pthread_t) == sizeof(uint64_t),
                   "Thread ID size not 64 bits!");
-    pthread_t tmpThread;
-    uint64_t tmpNum = 0;
-    memcpy(&tmpThread, &tmpNum, sizeof(tmpThread));
-    thread->_tid = tmpThread;
+    memset(&thread->_tid, 0, sizeof(pthread_t));
 #else
     thread->_tid = 0;
 #endif
