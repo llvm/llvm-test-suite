@@ -235,7 +235,7 @@ WRes Thread_Close(CThread *thread)
     pthread_detach(thread->_tid);
 #ifdef __MVS__
     // On z/OS, pthread_t is not an integer type.
-    // If pthread_t is not 8 bytes, memcpy may not copy the Id correctly.
+    // If pthread_t is not 8 bytes, memset may not copy the Id correctly.
     static_assert(sizeof(pthread_t) == sizeof(uint64_t),
                   "Thread ID size not 64 bits!");
     memset(&thread->_tid, 0, sizeof(pthread_t));
