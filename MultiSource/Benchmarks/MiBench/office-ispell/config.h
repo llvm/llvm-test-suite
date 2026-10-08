@@ -851,7 +851,7 @@
 #ifdef O_BINARY
 #define MSDOS_BINARY_OPEN   O_BINARY
 #else /* O_BINARY */
-#define MSDOS_BINARY_OPEN   O_RDONLY
+#define MSDOS_BINARY_OPEN   0
 #endif /* O_BINARY */
 #endif /* MSDOS_BINARY_OPEN */
 
