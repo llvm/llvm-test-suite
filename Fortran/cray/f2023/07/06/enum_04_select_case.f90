@@ -267,7 +267,7 @@ program enum_04_select_case
   ! --- A SELECT CASE that drives a state machine using NEXT.
   w = w1
   taken = 0
-  do
+  do j = 1, int(huge(w)) + 1
     select case (w)
     case (w1:w5)
       taken = taken + 1

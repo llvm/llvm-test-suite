@@ -342,11 +342,11 @@ program enum_07_procedures
   end do
 
   ! --- Two enumeration types passed to one procedure.
-  a = v_one
-  w = w3
+  a = v_two
+  w = w5
   call swap_pair(a, w)
-  call check_int(int(a), 1, 'first argument of the mixed-type procedure')
-  call check_int(int(w), 3, 'second argument of the mixed-type procedure')
+  call check_int(int(a), 3, 'first argument of the mixed-type procedure')
+  call check_int(int(w), 4, 'second argument of the mixed-type procedure')
 
   if (nfail == 0) then
     print '(A)', 'PASS enum_07_procedures'

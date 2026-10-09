@@ -75,10 +75,10 @@ contains
 
   integer function secret_walk() result(total)
     type(secret) :: s
-    integer :: stat
+    integer :: stat, i
     total = 0
     s = secret(1)
-    do
+    do i = 1, int(huge(s))
       total = total + int(s)
       if (s == huge(s)) exit
       s = next(s, stat)

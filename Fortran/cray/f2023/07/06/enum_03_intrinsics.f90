@@ -20,7 +20,7 @@
 !                              is the preceding enumerator and STAT is
 !                              assigned zero
 !   16.9.110 Case (v)          INT (A) is the ordinal position of A
-!   16.9.139 MERGE             any type, used here to guard a NEXT/PREVIOUS
+!   16.9.139 MERGE             any type, selecting a NEXT/PREVIOUS result
 !
 ! NOTE on STAT: 16.9.151 and 16.9.164 state that if STAT would have been
 ! assigned a nonzero value but is not present, error termination is initiated.
@@ -101,6 +101,7 @@ program enum_03_intrinsics
   type(solo) :: s
   integer :: stat, stats(4)
   integer :: i, ordinals(4), count_visited
+  logical :: walk_done
 
   ! 10.1.12 (7): HUGE of an enumeration type is a constant expression.
   type(v_value), parameter :: last_v = huge(v_one)
@@ -198,8 +199,9 @@ program enum_03_intrinsics
   ! --- The enumeration walk of the 7.6.2 NOTE, with STAT supplied so that the
   ! final NEXT does not initiate error termination (16.9.151).
   count_visited = 0
+  walk_done = .false.
   z = v_value(1)
-  do
+  do i = 1, size(ordinals)
     count_visited = count_visited + 1
     ordinals(count_visited) = int(z)
     if (z == huge(z)) then
@@ -208,11 +210,13 @@ program enum_03_intrinsics
     nz = next(z, stat)
     if (z == nz) then
       call check_true(stat > 0, 'walk terminates with a positive STAT')
+      walk_done = .true.
       exit
     end if
     call check_int(stat, 0, 'walk STAT is zero before the end')
     z = nz
   end do
+  call check_true(walk_done, 'walk reached the last enumerator')
   call check_int(count_visited, 4, 'every enumerator visited once')
   call check_true(all(ordinals == [1, 2, 3, 4]), 'walk visits ordinals in order')
 
@@ -236,13 +240,17 @@ program enum_03_intrinsics
   call check_int(sum(int(arr)), 10, 'INT results used arithmetically')
 
   ! --- The intrinsics compose with MERGE and with the relational operators.
-  x = v_four
-  y = merge(x, next(x, stat), x == huge(x))
-  call check_true(y == v_four, 'MERGE guarding NEXT at the end of the type')
+  x = v_two
+  y = merge(x, next(x), x == huge(x))
+  call check_true(y == v_three, 'MERGE selecting NEXT with a false mask')
+  y = merge(x, next(x), x == v_two)
+  call check_true(y == v_two, 'MERGE selecting the source with a true mask')
 
-  x = v_one
-  y = merge(x, previous(x, stat), x == v_value(1))
-  call check_true(y == v_one, 'MERGE guarding PREVIOUS at the start')
+  x = v_three
+  y = merge(x, previous(x), x == v_value(1))
+  call check_true(y == v_two, 'MERGE selecting PREVIOUS with a false mask')
+  y = merge(x, previous(x), x > v_one)
+  call check_true(y == v_three, 'MERGE selecting the source with a true mask')
 
   if (nfail == 0) then
     print '(A)', 'PASS enum_03_intrinsics'

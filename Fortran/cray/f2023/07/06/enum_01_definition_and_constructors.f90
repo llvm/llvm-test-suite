@@ -57,7 +57,9 @@ module enum_def_mod
     type(w_value) :: w = w1
   end type
 
-  integer, parameter :: ik = selected_int_kind(9)
+  ! Non-default kinds, so that an ignored KIND= argument is detectable.
+  integer, parameter :: ik = selected_int_kind(18)
+  integer, parameter :: sk = selected_int_kind(2)
 
   integer :: nfail = 0
 
@@ -146,8 +148,11 @@ program enum_01_definition_and_constructors
   call check_int(int(only_value), 1, 'ordinal of only_value')
 
   ! 16.9.110: INT accepts a KIND argument; the ordinal position is unchanged.
-  call check_int(int(int(v_three, kind=ik)), 3, 'INT with KIND=')
-  call check_true(int(v_three, kind=ik) == 3_ik, 'INT with KIND= result kind')
+  call check_int(int(int(v_three, kind=ik)), 3, 'INT with KIND= value')
+  call check_int(kind(int(v_three, kind=ik)), ik, 'INT with KIND= result kind')
+  call check_int(int(int(v_four, kind=sk)), 4, 'INT with small KIND= value')
+  call check_int(kind(int(v_four, kind=sk)), sk, &
+      'INT with small KIND= result kind')
 
   ! --- 7.6.2 p3: an enumerator is a scalar named constant of the type, so it
   ! may be assigned to a variable of that type (10.2.1.2 Table 10.8).
