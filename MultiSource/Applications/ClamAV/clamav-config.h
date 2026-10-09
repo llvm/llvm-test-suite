@@ -163,7 +163,9 @@
 /* #define HAVE_INTTYPES_H 1 */
 
 /* in_addr_t is defined */
-/* #define HAVE_IN_ADDR_T 1 */
+#if defined(__MVS__) && defined(__i_addr)
+#define HAVE_IN_ADDR_T 1
+#endif
 
 /* in_port_t is defined */
 /* #define HAVE_IN_PORT_T 1 */
@@ -247,7 +249,9 @@
 /* #define HAVE_STRERROR_R 1 */
 
 /* Define to 1 if you have the <strings.h> header file. */
-/* #define HAVE_STRINGS_H 1 */
+#if defined(__MVS__)
+#define HAVE_STRINGS_H 1
+#endif
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
@@ -271,7 +275,9 @@
 #define HAVE_SYS_MMAN_H 1
 
 /* Define to 1 if you have the <sys/param.h> header file. */
+#ifndef __MVS__
 #define HAVE_SYS_PARAM_H 1
+#endif
 
 /* "have <sys/select.h>" */
 /* #undef HAVE_SYS_SELECT_H */

@@ -29,7 +29,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#ifndef __MVS__
 #include <sys/param.h>
+#endif
 #include <sys/times.h>
 #include <sys/types.h>
 #include <time.h>

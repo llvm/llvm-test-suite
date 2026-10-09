@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#ifdef __MVS__
+#include <strings.h>
+#endif
 
 #include <libhexx.h>
 

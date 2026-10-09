@@ -321,6 +321,15 @@ if(ARCH MATCHES "SystemZ")
     20030323-1.c
   )
 
+  if(TARGET_OS STREQUAL "OS390")
+    file(GLOB SystemZZOSTestsToSkip CONFIGURE_DEPENDS
+      # error: Only aliases to functions are supported in GOFF.
+      alias-2.c
+      alias-4.c
+    )
+    list(APPEND SystemZTestsToSkip ${SystemZZOSTestsToSkip})
+  endif()
+
   list(APPEND TestsToSkip ${SystemZTestsToSkip})
 endif()
 

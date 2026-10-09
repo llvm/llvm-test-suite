@@ -8,8 +8,10 @@
  * Portions from Vorbize, (c) Kenneth Arnold <kcarnold@yahoo.com>
  * and libvorbis examples, (c) Monty <monty@xiph.org>
  */
+#ifndef __MVS__
 #if __has_include(<alloca.h>)
 #include <alloca.h>
+#endif
 #endif
 #include <assert.h>
 #include <ctype.h>
@@ -130,6 +132,10 @@ extern int _getopt_internal (int ___argc, char *const *___argv,
 
 #define __CONFIG_TYPES_H__
 
+#ifdef __MVS__
+typedef uint16_t u_int16_t;
+typedef uint32_t u_int32_t;
+#endif
 /* these are filled in by configure */
 typedef int16_t ogg_int16_t;
 typedef uint16_t ogg_uint16_t;
