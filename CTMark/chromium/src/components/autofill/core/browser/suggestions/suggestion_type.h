@@ -1,0 +1,262 @@
+// Copyright 2014 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_TYPE_H_
+#define COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_TYPE_H_
+
+#include <ostream>
+#include <string>
+#include <string_view>
+
+namespace autofill {
+
+// This enum defines item identifiers for Autofill suggestion controller.
+//
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+//
+// To add a new entry `kSampleEntry` add it to the appropriate section of the
+// enum (not necessarily at the end). Set its value to the current `kMaxValue`
+// and increase `kMaxValue` by 1.
+//
+// GENERATED_JAVA_ENUM_PACKAGE: org.chromium.components.autofill
+//
+// LINT.IfChange(SuggestionType)
+enum class SuggestionType {
+  // Autocomplete suggestions.
+  kAutocompleteEntry = 0,
+
+  // Autofill profile suggestions.
+  // Fill the whole for the current address. On Desktop, it is triggered from
+  // the main (i.e. root popup) suggestion.
+  kAddressEntry = 1,
+  // kFillFullAddress = 2, // DEPRECATED
+  // kFillFullName = 3, // DEPRECATED
+  // kFillEverythingFromAddressProfile = 4, // DEPRECATED
+  // kFillFullPhoneNumber = 5, // DEPRECATED
+  // kFillFullEmail = 6, // DEPRECATED
+  kAddressFieldByFieldFilling = 7,
+  // kEditAddressProfile = 8, // DEPRECATED
+  // kDeleteAddressProfile = 9, // DEPRECATED
+  // Display a suggestion containing address profile data based on prefix
+  // matching, regardless of the type of the field.
+  kAddressEntryOnTyping = 63,
+
+  kManageAddress = 10,
+  kManageAutofillAi = 64,
+  kManageAutofillAiIdentityDocs = 75,
+  kManageAutofillAiShopping = 91,
+  kManageAutofillAiTravel = 76,
+  kManageCreditCard = 11,
+  kManageIban = 12,
+  // kManagePlusAddress = 13, // DEPRECATED
+  kManageLoyaltyCard = 68,
+
+  // Compose popup suggestion shown when no Compose session exists.
+  kComposeProactiveNudge = 14,
+  // Compose popup suggestion shown when there is an existing Compose session.
+  kComposeResumeNudge = 15,
+  // Compose popup suggestion shown after the Compose dialog closes.
+  kComposeSavedStateNotification = 16,
+  // Compose sub-menu suggestions
+  kComposeDisable = 17,
+  kComposeGoToSettings = 18,
+  kComposeNeverShowOnThisSiteAgain = 19,
+
+  // Datalist suggestions.
+  kDatalistEntry = 20,
+
+  // Password related suggestion. Fills a password credential.
+  kPasswordEntry = 21,
+  // Password related suggestion. Fills a backup password credential.
+  kBackupPasswordEntry = 70,
+  // Password related suggestion. Opens a new suggestion bubble with a single
+  // kBackupPasswordEntry.
+  kTroubleSigningInEntry = 71,
+  // Password related suggestion. Opens management UI for passwords and/or
+  // passkeys.
+  kAllSavedPasswordsEntry = 22,
+  // Password related suggestion. Generates a password for the field.
+  kGeneratePasswordEntry = 23,
+  // Password related suggestion. Displays the option to enable credentials from
+  // the account storage.
+  // Deprecated: kPasswordAccountStorageOptIn = 25,
+  // Password related suggestion. Displays the option to enable password
+  // generation and saving in the account storage.
+  // Deprecated: kPasswordAccountStorageOptInAndGenerate = 26,
+  // Password related suggestion. Displays a password from the account storage.
+  kAccountStoragePasswordEntry = 27,
+  // Password related suggestion. Displays the option to re-signin to enable the
+  // account storage.
+  // Deprecated: kPasswordAccountStorageReSignin = 28,
+  // Password related suggestion. Displays that there is no fillable credentials
+  // after opting into the account storage.
+  // Deprecated: kPasswordAccountStorageEmpty = 29,
+  // Password sub-popup suggestion. Fills the username from the manual fallback
+  // entry.
+  kPasswordFieldByFieldFilling = 30,
+  // Password sub-popup suggestion. Fills the password from the manual fallback
+  // entry.
+  kFillPassword = 31,
+  // Password sub-popup suggestion. Triggers the password details view from the
+  // manual fallback entry.
+  kViewPasswordDetails = 32,
+  // Footer suggestion. Non-interactable, free-form, multiline text.
+  kFreeformFooter = 72,
+
+  // Payment suggestions.
+  // kShowAccountCards = 24, // DEPRECATED
+  kCreditCardEntry = 33,
+  kInsecureContextPaymentDisabledMessage = 34,
+  kScanCreditCard = 35,
+  kVirtualCreditCardEntry = 36,
+  // kCreditCardFieldByFieldFilling = 37, // DEPRECATED
+  kIbanEntry = 38,
+  kBnplEntry = 61,
+  kSaveAndFillCreditCardEntry = 62,
+
+  // Plus address suggestions.
+  // kCreateNewPlusAddress = 39, // DEPRECATED
+  // kCreateNewPlusAddressInline = 52, // DEPRECATED
+  // kFillExistingPlusAddress = 40, // DEPRECATED
+  // kPlusAddressError = 57, // DEPRECATED
+
+  // Promotion suggestions.
+  kMerchantPromoCodeEntry = 41,
+  kSeePromoCodeDetails = 42,
+
+  // Federated profiles suggestions.
+  kIdentityCredential = 66,
+
+  // Loyalty card suggestions.
+  kLoyaltyCardEntry = 67,
+
+  // All loyalty card suggestions.
+  kAllLoyaltyCardsEntry = 73,
+
+  // Home & Work suggestions.
+  // kHomeAndWorkAddressEntry = 69, // DEPRECATED
+
+  // Webauthn suggestions.
+  kWebauthnCredential = 43,
+  kWebauthnSignInWithAnotherDevice = 44,
+  kWebauthnPasskeyQrCode = 86,
+
+  // One time password suggestions.
+  kOneTimePasswordEntry = 74,
+
+  // Other suggestions.
+  kTitle = 45,
+  kSeparator = 46,
+  kUndo = 47,
+  // kMixedFormMessage = 48, // DEPRECATED
+
+  // Top level suggestion rendered when test addresses are available. Shown only
+  // when DevTools is open.
+  kDevtoolsTestAddresses = 49,
+  // Test address option that specifies a full address for a country
+  // so that users can test their form with it.
+  kDevtoolsTestAddressEntry = 50,
+  // Test address option that gives users feedback about what the
+  // suggestions with country names as main text mean.
+  kDevtoolsTestAddressByCountry = 51,
+
+  // kRetrieveAutofillAi = 53, // DEPRECATED
+  // kAutofillAiLoadingState = 54, // DEPRECATED
+  // Autofill AI filling suggestion.
+  kFillAutofillAi = 55,
+  // kAutofillAiFeedback = 56, // DEPRECATED
+  // kPredictionImprovementsDetails = 58, // DEPRECATED
+  // kAutofillAiError = 59, // DEPRECATED
+  // kEditAutofillAiData = 60, // DEPRECATED
+
+  // kPendingStateSignin suggestion is displayed when the user is in the pending
+  // state. On click the user will be directed to sign in.
+  kPendingStateSignin = 65,
+
+  // Throbber suggestion to indicate loading state.
+  kLoadingThrobber = 77,
+
+  // Memory search result for AtMemory feature.
+  kAtMemorySearchResult = 78,
+
+  // Buy-Now-Pay-Later footnote suggestion to display the privacy notice with
+  // bold and link text.
+  kBnplFootnote = 79,
+
+  // Shows a suggestion after a period of inactivity to encourage the user to
+  // use AtMemory (opens AtMemory UI when clicked).
+  kAtMemoryInactivityNudge = 80,
+
+  // Static button in Autocomplete menu prompting use of AtMemory.
+  kAutocompleteAtMemoryButton = 81,
+
+  // Suggestion to open Gemini in the sidebar.
+  kAtMemoryOpenGemini = 82,
+
+  // Suggestion to display when AtMemory search fails to connect to the server.
+  kAtMemoryNoConnection = 83,
+
+  // Suggestion that triggers AtMemory search when accepted.
+  kAtMemorySearchAffordance = 84,
+
+  // Personal context notice. This is a footer note rather than a real
+  // selectable suggestion.
+  kPersonalContextNotice = 85,
+
+  // Suggestion shown when fetching Ambient Autofill suggestions is in progress.
+  kFetchingAmbientData = 87,
+
+  // Suggestion to display when AtMemory search fails due to an unexpected or
+  // generic error.
+  kAtMemoryGenericError = 88,
+
+  // Maximize Credit Card Benefits suggestion that, when clicked, prompts Gemini
+  // to recommend credit cards for autofill
+  kMaximizeCreditCardBenefitsEntry = 89,
+
+  // Fallback suggestion to open a subpopup displaying other orders.
+  kAutofillAiOtherOrders = 90,
+
+  // A suggestion shown to users as a notice about the usage of private
+  // inference.
+  kAutofillAiPrivateInferenceNotice = 92,
+
+  // Suggestion to open the enhanced autofill settings page.
+  kManageEnhancedAutofill = 93,
+
+  // Suggestion to display the AI disclosure for AtMemory.
+  kAtMemoryAiDisclosure = 94,
+
+  // Fallback suggestion to open a subpopup displaying other shipments.
+  kAutofillAiOtherShipments = 95,
+
+  // Suggestion displaying source attribution for AtMemory search results.
+  kAtMemorySourceAttribution = 96,
+
+  // Suggestion shown in the fetching state of AtMemory.
+  kAtMemoryFetching = 97,
+
+  // Option in the child submenu of an Autofill AI suggestion to remove this
+  // info.
+  kRemoveAutofillAi = 98,
+
+  // Option in the child submenu of an Autofill AI suggestion showing specific
+  // entity source info.
+  kAutofillAiSourceAttribution = 99,
+
+  // Next ID: 100
+
+  kMaxValue = kAutofillAiSourceAttribution
+};
+// LINT.ThenChange(/tools/metrics/histograms/metadata/autofill/enums.xml:SuggestionType)
+
+std::string_view SuggestionTypeToStringView(SuggestionType type);
+std::string SuggestionTypeToString(SuggestionType type);
+
+std::ostream& operator<<(std::ostream& os, SuggestionType type);
+
+}  // namespace autofill
+
+#endif  // COMPONENTS_AUTOFILL_CORE_BROWSER_SUGGESTIONS_SUGGESTION_TYPE_H_

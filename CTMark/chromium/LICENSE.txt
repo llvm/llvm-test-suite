@@ -1,0 +1,62 @@
+# Licenses
+
+The files in src/ come from Chromium and the projects below, under these licenses.
+The license files are copied to licenses/, in the same layout as src/.
+
+| directory in src/ | files | license | license files |
+|---|---|---|---|
+| (Chromium) | 3268 | BSD-3-Clause | licenses/LICENSE |
+| base/third_party/icu | 1 | Unicode-DFS-2016, ICU | licenses/base/third_party/icu/LICENSE |
+| buildtools | 2 | BSD-3-Clause | licenses/buildtools/LICENSE |
+| mojo/public | 286 | BSD-3-Clause | licenses/mojo/public/LICENSE |
+| third_party/abseil-cpp | 155 | Apache-2.0 | licenses/third_party/abseil-cpp/LICENSE |
+| third_party/angle | 150 | BSD-3-Clause | licenses/third_party/angle/LICENSE |
+| third_party/angle/src/common/base | 14 | BSD-3-Clause | licenses/LICENSE |
+| third_party/angle/src/common/third_party/xxhash | 1 | BSD-2-Clause | licenses/third_party/angle/src/common/third_party/xxhash/LICENSE |
+| third_party/blink | 1961 | BSD-2-Clause, BSD-3-Clause, LGPL-2.0-or-later, LGPL-2.1-or-later | licenses/third_party/blink/LICENSE_FOR_ABOUT_CREDITS |
+| third_party/boringssl | 65 | Apache-2.0, BSD-3-Clause | licenses/third_party/boringssl/src/LICENSE |
+| third_party/crashpad | 1 | Apache-2.0 | licenses/third_party/crashpad/crashpad/LICENSE |
+| third_party/cros_system_api | 53 | BSD-3-Clause | licenses/third_party/cros_system_api/LICENSE |
+| third_party/dawn | 11 | BSD-3-Clause | licenses/third_party/dawn/LICENSE |
+| third_party/fp16 | 4 | MIT | licenses/third_party/fp16/LICENSE |
+| third_party/googletest | 1 | BSD-3-Clause | licenses/third_party/googletest/src/LICENSE |
+| third_party/icu | 81 | MIT | licenses/third_party/icu/LICENSE |
+| third_party/inspector_protocol | 10 | BSD-3-Clause | licenses/third_party/inspector_protocol/LICENSE |
+| third_party/khronos | 10 | MIT, SGI-B-2.0 | licenses/third_party/khronos/LICENSE |
+| third_party/libc++ | 936 | NCSA, Apache-with-LLVM-Exception, MIT | licenses/third_party/libc++/src/LICENSE.TXT |
+| third_party/libjpeg_turbo | 9 | IJG, BSD-3-Clause | licenses/third_party/libjpeg_turbo/LICENSE.md.chromium |
+| third_party/liburlpattern | 1 | MIT | licenses/third_party/liburlpattern/LICENSE |
+| third_party/metrics_proto | 22 | BSD-3-Clause | licenses/third_party/metrics_proto/LICENSE |
+| third_party/opus | 29 | Opus-Patent-BSD-3-Clause | licenses/third_party/opus/src/COPYING |
+| third_party/pdfium | 61 | BSD-3-Clause | licenses/third_party/pdfium/LICENSE |
+| third_party/perfetto | 89 | blessing, BSD-3-Clause, Apache-2.0 | licenses/third_party/perfetto/LICENSE |
+| third_party/protobuf | 51 | BSD-3-Clause | licenses/third_party/protobuf/LICENSE |
+| third_party/pthreadpool | 1 | BSD-2-Clause | licenses/third_party/pthreadpool/src/LICENSE |
+| third_party/rapidhash | 1 | BSD-2-Clause | licenses/third_party/rapidhash/LICENSE |
+| third_party/simdutf | 1 | MIT | licenses/third_party/simdutf/LICENSE |
+| third_party/skia | 224 | BSD-3-Clause | licenses/third_party/skia/LICENSE |
+| third_party/skia/modules/skcms | 2 | BSD-3-Clause | licenses/third_party/skia/modules/skcms/LICENSE |
+| third_party/swiftshader | 38 | Apache-2.0 | licenses/third_party/swiftshader/LICENSE.txt |
+| third_party/vulkan-headers | 20 | Apache-2.0 | licenses/third_party/vulkan-headers/LICENSE.txt |
+| third_party/vulkan-utility-libraries | 5 | Apache-2.0 | licenses/third_party/vulkan-utility-libraries/src/LICENSE.md |
+| third_party/vulkan-validation-layers | 52 | Apache-2.0, MIT, BSL-1.0 | licenses/third_party/vulkan-validation-layers/src/LICENSE.txt |
+| third_party/wayland | 5 | MIT | licenses/third_party/wayland/src/COPYING |
+| third_party/wayland-protocols | 1 | MIT | licenses/third_party/wayland-protocols/src/COPYING |
+| third_party/webrtc | 12 | BSD-3-Clause | licenses/third_party/webrtc/LICENSE |
+| third_party/webrtc_overrides | 1 | BSD-3-Clause | licenses/third_party/webrtc_overrides/LICENSE |
+| third_party/xnnpack | 87 | BSD-3-Clause | licenses/third_party/xnnpack/src/LICENSE |
+| url/third_party/mozilla | 1 | BSD-3-Clause, MPL-1.1 | licenses/url/third_party/mozilla/LICENSE.txt |
+| v8 | 521 | BSD-3-Clause | licenses/v8/LICENSE |
+| v8/third_party/rapidhash-v8 | 2 | BSD-2-Clause | licenses/v8/third_party/rapidhash-v8/LICENSE |
+
+Headers from the Debian bullseye sysroot (`src/build/linux/debian_bullseye_amd64-sysroot`), by Debian package. The sysroot doesn't include the packages' copyright files; the headers carry their own license notices.
+
+| package | files | license |
+|---|---|---|
+| libc6-dev | 174 | LGPL-2.1-or-later (GNU C Library) |
+| libdbus-1-dev | 18 | AFL-2.1 OR GPL-2.0-or-later (D-Bus) |
+| libglib2.0-dev | 249 | LGPL-2.1-or-later (GLib) |
+| libx11-dev | 1 | MIT (X.Org) |
+| libxcb1-dev | 2 | MIT (X.Org) |
+| linux-libc-dev | 23 | GPL-2.0-only WITH Linux-syscall-note (Linux UAPI headers) |
+| x11proto-dev | 3 | MIT (X.Org) |

@@ -1,0 +1,388 @@
+// Copyright 2018 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef SERVICES_NETWORK_PUBLIC_CPP_FEATURES_H_
+#define SERVICES_NETWORK_PUBLIC_CPP_FEATURES_H_
+
+#include <string>
+
+#include "base/component_export.h"
+#include "base/feature_list.h"
+#include "base/metrics/field_trial_params.h"
+#include "base/time/time.h"
+
+namespace url {
+class Origin;
+}  // namespace url
+
+namespace network::features {
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBlockAcceptClientHints);
+// Note: Do not use BASE_DECLARE_FEATURE_PARAM macro as this is called only once
+// per process to construct a static local instance.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+extern const base::FeatureParam<std::string> kBlockAcceptClientHintsBlockedSite;
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+bool ShouldBlockAcceptClientHintsFor(const url::Origin& origin);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kNetworkErrorLogging);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kReporting);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kThrottleDelayable);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDelayRequestsOnMultiplexedConnections);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kPauseBrowserInitiatedHeavyTrafficForP2P);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kProactivelyThrottleLowPriorityRequests);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCrossOriginOpenerPolicy);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCrossOriginOpenerPolicyByDefault);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCoopNoopenerAllowPopups);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kSplitAuthCacheByNetworkIsolationKey);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDnsOverHttpsUpgrade);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kMaskedDomainList);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(std::string, kMaskedDomainListExperimentalVersion);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kSplitMaskedDomainList);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kMdnsResponderGeneratedNameListing);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kOpaqueResponseBlockingErrorsForAllFetches);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kAcceptCHFrame);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kOffloadAcceptCHFrameCheck);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kAcceptCHFrameOffloadNotAllowedHints);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kAlwaysGenerateNotAllowedClientHints);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kAcceptCHOffloadWithRedirect);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kAcceptCHOffloadForSubframe);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCorsNonWildcardRequestHeadersSupport);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCorsPreflightCacheKeyTaintedOrigin);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kOmitCorsClientCert);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kRestrictFrameDestinationsToNavigate);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kReduceAcceptLanguage);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kReduceAcceptLanguageHTTP);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(base::TimeDelta, kReduceAcceptLanguageCacheDuration);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kReduceAcceptLanguageCount);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kMaxAcceptLanguage);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kLocalNetworkAccessChecks);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kLocalNetworkAccessChecksWarn);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kLocalNetworkAccessChecksWebRTC);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kURLLoaderUseProvidedResponseBodyStream);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kLocalNetworkAccessChecksWebRTCLoopbackOnly);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kLocalNetworkAccessChecksWebSockets);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kLocalNetworkAccessChecksWebTransport);
+
+// If enabled, then the network service will parse the Cookie-Indices header.
+// This does not currently control changing cache behavior according to the
+// value of this header.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCookieIndicesHeader);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCompressionDictionaryTransport);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kPreloadedDictionaryConditionalUse);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCompressionDictionaryTTL);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kIntegrityPolicyScript);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kRendererSideContentDecoding);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kRendererSideContentDecodingPipeSize);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kRendererSideContentDecodingForNavigation);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(
+    bool,
+    kRendererSideContentDecodingForceMojoFailureForTesting);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDocumentIsolationPolicy);
+
+// Should connection allowlists be enforced?
+// https://github.com/mikewest/anti-exfil
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kConnectionAllowlists);
+
+// To actually use the prefetch results, it's also necessary to enable
+// kNetworkContextPrefetchUseCache, below.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kNetworkContextPrefetch);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kNetworkContextPrefetchUseMatches);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCloneDevToolsConnectionOnlyIfRequested);
+
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDeprecateUnload);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDeprecateUnloadByAllowList);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDeprecateUnloadByBucket);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kDeprecateUnloadPercent);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kDeprecateUnloadBucket);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(std::string, kDeprecateUnloadAllowlist);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kFrameTopHeader);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kFrameAncestorsHeader);
+
+// Updates the request body, headers, and referrer policy for CORS
+// redirects, following 4.4. HTTP-redirect fetch:
+// https://fetch.spec.whatwg.org/#http-redirect-fetch
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kUpdateRequestForCorsRedirect);
+
+// https://crbug.com/513518289
+// When enabled, CorsURLLoader handles CORS redirects in-place via
+// network_loader_->FollowRedirect() rather than restarting the request via
+// StartRequest().
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kAvoidCorsURLLoaderRestartOnRedirect);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBrowsingTopics);
+
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kIncreaseCookieAccessCacheSize);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kCookieAccessCacheSize);
+
+// If enabled, permissions policies relevant to a request are populated on
+// `network:ResourceRequest`.
+//
+// Note: Policies are not guaranteed to be added on every path. If
+// `PermissionsPolicy` on the request is nullopt, you need to set it somewhere.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kPopulatePermissionsPolicyOnRequest);
+
+// If enabled and `kPopulatePermissionsPolicyOnRequest` is also enabled, storage
+// access headers will respect the "storage-access" permissions policy when
+// calculating storage access status.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kStorageAccessHeadersRespectPermissionsPolicy);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCSPScriptSrcV2);
+
+// When enabled, allowlisting script urls and scripts used in eval via hashes
+// will be supported in script-src.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCSPScriptSrcHashesInV1);
+
+// When enabled, fetches for "pervasive" resources that match one of the
+// configured patterns will use a shared, single-keyed cache.
+// See https://chromestatus.com/feature/5202380930678784
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCacheSharingForPervasiveResources);
+
+// When enabled along with kCacheSharingForPervasiveResources, pervasive
+// shared dictionaries are supported via an unpartitioned, single-keyed store.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kPervasiveSharedDictionaries);
+
+// When enabled, sends SameSite=Lax cookies for FedCM requests in addition to
+// SameSite=None.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kSendSameSiteLaxForFedCM);
+
+// When enabled, disk-based shared dictionaries will use a memory cache to
+// keep frequently used dictionaries in memory.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kSharedDictionaryCache);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(size_t, kSharedDictionaryCacheSize);
+
+// Maximum size of dictionaries that are allowed to be stored in the cache.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(size_t, kSharedDictionaryCacheMaxSizeBytes);
+
+// When enabled, the network service will restrict the early matching and
+// loading of compression dictionaries. By default, it will start an async
+// task to find a matching compression dictionary and start to load it even
+// before checking if the resource is in the cache (in which case a dictionary
+// is not needed and the extra work is wasteful).
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCompressionDictionaryLimitEarlyMatching);
+
+// When enabled, Network Service Task Scheduler is enabled on the Network
+// Service's IO Thread.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kNetworkServiceTaskScheduler);
+
+// These parameters control whether the Network Service Task Scheduler is used
+// for specific classes.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kNetworkServiceTaskSchedulerResourceScheduler);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(bool, kNetworkServiceTaskSchedulerURLLoader);
+
+// When enabled, URLLoader in Network Service check header consistency for the
+// ServiceWorker SyntheticResponse.
+// TODO(crbug.com/447039330): This is temporary for the SyntheticResponse
+// experiment and will be removed after standardization.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kServiceWorkerSyntheticResponseHeaderCheck);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(std::string,
+                           kServiceWorkerSyntheticResponseIgnoredHeaders);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(
+    bool,
+    kServiceWorkerSyntheticResponseReportInconsistentHeader);
+
+// When enabled the browser process will start an UnexportableKeyService proxy
+// service that can be used by other processes. It will also make the network
+// process start using the proxy. This is needed for example when implementing
+// DBSC for macOS, since access to the Secure Enclave requires higher privileges
+// than what the network process has.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kUseUnexportableKeyServiceInBrowserProcess);
+
+// When enabled, allows redirects to unsafe schemes (like data:) for fetch()
+// requests with redirect mode "manual". The redirect URL is censored to
+// "data:," for security.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kAllowUnsafeRedirectSchemesForManualMode);
+
+// A base feature to hold parameters for Durable Messages infrastructure.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDurableMessages);
+
+// Global limit for all durable messages
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(int, kDurableMessagesGlobalBufferSize);
+
+// If enabled, the forbidden header checks for requests can be bypassed. This is
+// the network service side of the feature. The renderer side uses this same
+// feature via the cors::IsBypassRequestForbiddenHeadersCheckEnabled() function.
+//
+// This feature allows specific contexts to bypass the standard forbidden header
+// restrictions (currently only for the 'Origin' header) if they have explicit
+// permission to access the target URL. The bypass occurs only if the request's
+// initiator origin is allowed to access the target URL via the security
+// policy's origin access lists.
+//
+// For example, this enables chromium extensions with appropriate host
+// permissions to override this header in fetch requests initiated from
+// background pages or extension service workers. It does not apply to requests
+// initiated from content scripts or user scripts.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBypassRequestForbiddenHeadersCheck);
+
+// When enabled, the network service will prohibit invalid modifications to the
+// Origin header in CorsURLLoader::FollowRedirect.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBlockInvalidOriginHeaderModificationOnRedirect);
+
+// When enabled, the network service will prohibit invalid Origin headers in
+// CorsURLLoader::StartRequest.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBlockInvalidOriginHeader);
+
+// If enabled, the variations headers for allowlisted domains will be included
+// in the Reporting API uploads.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kReportingApiEnableVariationsHeaders);
+
+// When enabled, NetworkContext, and all mojoms passed through it, will receive
+// IPCs directly without the intermediate I/O thread hop. This is relevant when
+// the NetworkService is run in the browser process (i.e. on Android).
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kNetworkContextDirectReceiver);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+bool ShouldBindNetworkContextDirectReceiver();
+
+// When enabled, creates the NetworkContext on a background thread pool to avoid
+// being blocked by the busy main thread.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kCreateNetworkContextNonBlocking);
+
+// Delays the initial DoH probe. When enabled, the delay is determined by
+// kDelayInitialDohProbeTimeoutParam. When disabled, the probe is activated
+// immediately.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDelayInitialDohProbeTimeout);
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE_PARAM(base::TimeDelta, kDelayInitialDohProbeTimeoutParam);
+
+// When enabled, sending to a multicast address via Direct Sockets requires the
+// 'direct-sockets-multicast' Permissions Policy.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kDirectSocketsUdpSendRequireMulticastPermissionPolicy);
+
+// Enables validating browser-initiated file upload requests from the network
+// service.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBrowserInitiatedFileUploadValidation);
+
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kSafeRevalidation);
+
+// When enabled, binds URLLoaderFactory Mojo receiver to a high priority task
+// runner.
+COMPONENT_EXPORT(NETWORK_CPP_FLAGS_AND_SWITCHES)
+BASE_DECLARE_FEATURE(kBindURLLoaderFactoryToHighPriorityTaskRunner);
+
+}  // namespace network::features
+
+#endif  // SERVICES_NETWORK_PUBLIC_CPP_FEATURES_H_

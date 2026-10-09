@@ -1,0 +1,281 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef COMPONENTS_PASSWORD_MANAGER_CORE_BROWSER_ACTOR_LOGIN_ACTOR_LOGIN_TYPES_H_
+#define COMPONENTS_PASSWORD_MANAGER_CORE_BROWSER_ACTOR_LOGIN_ACTOR_LOGIN_TYPES_H_
+
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "base/callback_list.h"
+#include "base/containers/span.h"
+#include "base/functional/callback_forward.h"
+#include "base/types/expected.h"
+#include "base/types/id_type.h"
+#include "base/types/strong_alias.h"
+#include "components/actor/public/mojom/actor_types.mojom-shared.h"
+#include "components/optimization_guide/proto/features/actor_login.pb.h"
+#include "ui/gfx/image/image.h"
+#include "url/gurl.h"
+#include "url/origin.h"
+
+namespace actor_login {
+
+enum CredentialType {
+  kPassword,
+  kFederated,
+};
+
+struct FederationDetail {
+  FederationDetail();
+
+  FederationDetail(const FederationDetail&);
+  FederationDetail(FederationDetail&&);
+  FederationDetail& operator=(const FederationDetail&);
+  FederationDetail& operator=(FederationDetail&&);
+
+  ~FederationDetail();
+
+  // The `Origin` of the identity provider.
+  url::Origin idp_origin;
+
+  // The account ID provided by the identity provider.
+  std::string account_id;
+
+  // The picture for the account provided by the identity provider.
+  gfx::Image account_picture;
+
+  // An icon of the identity provider.
+  gfx::Image brand_icon;
+
+#if defined(UNIT_TEST)
+  friend bool operator==(const FederationDetail&,
+                         const FederationDetail&) = default;
+#endif
+};
+
+struct Credential {
+  Credential();
+
+  Credential(const Credential& other);
+  Credential(Credential&& other);
+
+  Credential& operator=(const Credential& credential);
+  Credential& operator=(Credential&& credential);
+
+  ~Credential();
+
+  // A unique identifier for this credential. Used for internal tracking.
+  // Should not be displayed to the user.
+  using Id = base::IdType32<Credential>;
+  Id id;
+
+  // The username associated with the credential.
+  // This could be an email address or a username used to identify the user
+  // during the login process. It is unique for this `source_site_or_app`.
+  // It may be an empty string if the credential has no associated username.
+  // For federated credentials, this is the user's email, if used by the
+  // identity provider, otherwise the account display identifier (not the
+  // display name).
+  // This field may be presented to the user.
+  // Callers are responsible for formatting strings for display.
+  std::u16string username;
+
+  // The original website or application for which this credential was saved in
+  // GPM. This field may be presented to the user.
+  // For federated credentials, this is the site of the identity provider
+  // formatted for display.
+  std::u16string source_site_or_app;
+
+  // The signon realm for which this credential was saved. This value is not
+  // formatted for display, and is only intended for internal use. Only relevant
+  // for password credentials.
+  std::string signon_realm;
+
+  // The origin for which this credential was requested.
+  url::Origin request_origin;
+
+  // The value of `request_origin` formatted for display to the user.
+  std::u16string display_origin;
+
+  // The type of the credential used for the login process.
+  // It may be presented to a user if mapped to a user-friendly localized
+  // descriptor string.
+  CredentialType type = kPassword;
+
+  // Signal of whether any sign-in fields were seen on the page, or if APIs
+  // associated with this `CredentialType` report that this login is available
+  // on the provided Tab.
+  bool immediatelyAvailableToLogin = false;
+
+  // Whether the user has granted persistent permission for this credential to
+  // be used on `request_origin`.
+  bool has_persistent_permission = false;
+
+  // Only set if `type` is `kFederated`.
+  std::optional<FederationDetail> federation_detail;
+
+#if defined(UNIT_TEST)
+  // An exact equality comparison of all the fields is only useful for tests.
+  friend bool operator==(const Credential&, const Credential&) = default;
+#endif
+};
+
+enum class ActorLoginError {
+  // Only one request at a time is allowed per `WebContents` (i.e per tab)
+  kServiceBusy,
+  // The provided `TabInterface` was invalid (e.g. no associated `WebContents`
+  // was loaded, or tab is no longer present)
+  kInvalidTabInterface,
+  // Filling is disallowed (e.g. because of a policy)
+  kFillingNotAllowed,
+  // The feature is disabled.
+  kFeatureDisabled,
+};
+
+// Translates `ActorLoginError` to `actor::mojom::ActionResultCode`.
+actor::mojom::ActionResultCode LoginErrorToActorResult(
+    ActorLoginError login_error);
+
+using CredentialsOrError =
+    base::expected<std::vector<Credential>, ActorLoginError>;
+using CredentialsOrErrorReply = base::OnceCallback<void(CredentialsOrError)>;
+
+enum class LoginStatusResult {
+  // Either there was only a username field in the form, or only
+  // the username field was filled successfully.
+  kSuccessUsernameFilled,
+  // Either there was only a password field in the form, or only
+  // the password field was filled successfully.
+  kSuccessPasswordFilled,
+  // Both username and password fields were filled successfully.
+  kSuccessUsernameAndPasswordFilled,
+  // The page has no signin form. Note: Cross-origin iframes aren't
+  // supported.
+  kErrorNoSigninForm,
+  // The provided credential is not a saved match for the site on which
+  // login was triggered.
+  kErrorInvalidCredential,
+  // Neither the username, nor the password field could be filled.
+  kErrorNoFillableFields,
+  // Returned if the task is in a background tab and filling requires device
+  // reauth. The user needs to focus that tab first.
+  kErrorDeviceReauthRequired,
+  // Returned if the device re-authentication fails.
+  kErrorDeviceReauthFailed,
+  // Returned if the page navigated away while filling was pending.
+  kErrorPageChangedDuringFilling,
+
+  // Attempt login statuses using federated credentials.
+  //
+  // Federated login was successful.
+  kSuccessFederated,
+  // Encountered continuation flow.
+  kErrorFederatedContinuation,
+  // Federated login failed because the account is not logged in.
+  kErrorFederatedAccountNotLoggedIn,
+  // Federated login failed because the account is a sign-up.
+  kErrorFederatedAccountIsSignUp,
+  // Federated login failed because the account is not available.
+  kErrorFederatedAccountNotAvailable,
+  // Federated login failed because the IdP returned an error.
+  kErrorFederatedIdpReturnedError,
+  // Federated login failed because of a network error.
+  kErrorFederatedIdpNetworkError,
+  // Federated login failed because the token request was aborted.
+  kErrorFederatedTokenRequestAborted,
+  // Federated login failed because the frame is not active.
+  kErrorFederatedFrameNotActive,
+  // Federated login failed because the expected account is not present.
+  kErrorFederatedExpectedAccountNotPresent,
+  // Federated login failed because of a timeout.
+  kErrorFederatedTimeout,
+  // Federated login requires a button click to trigger sign in.
+  kRequiresButtonClick,
+};
+
+// Translates `LoginStatusResult` to `actor::mojom::ActionResultCode`.
+actor::mojom::ActionResultCode LoginResultToActorResult(
+    LoginStatusResult login_result);
+
+using FrameFillingStartedCallback =
+    base::OnceCallback<void(base::span<const int> global_frame_ids)>;
+using LoginStatusResultOrError =
+    base::expected<LoginStatusResult, ActorLoginError>;
+using LoginStatusResultOrErrorReply =
+    base::OnceCallback<void(LoginStatusResultOrError)>;
+using LoginStatusResultCallback = base::OnceCallback<void(LoginStatusResult)>;
+
+// C++ enum copy of `GetCredentialsOutcome` in `actor_login.proto`.
+enum class GetCredentialsOutcomeMqls {
+  kUnspecified,
+  kNoCredentials,
+  kSignInFormExists,
+  kNoSignInForm,
+  kFillingNotAllowed,
+};
+
+optimization_guide::proto::
+    ActorLoginQuality_GetCredentialsDetails_GetCredentialsOutcome
+    OutcomeEnumToProtoType(GetCredentialsOutcomeMqls outcome);
+
+enum class PermissionDetailsMqls {
+  kUnknown,
+  kHasPermanentPermission,
+  kNoPermanentPermission,
+};
+
+optimization_guide::proto::
+    ActorLoginQuality_GetCredentialsDetails_PermissionDetails
+    PermissionEnumToProtoType(PermissionDetailsMqls permission);
+
+// C++ enum copy of `AttemptLoginOutcome` in `actor_login.proto`.
+enum class AttemptLoginOutcomeMqls {
+  kUnspecified,
+  kSuccess,
+  kNoSignInForm,
+  kInvalidCredential,
+  kNoFillableFields,
+  kDisallowedOrigin,
+  kReauthRequired,
+  kReauthFailed,
+  kFederatedSuccess,
+  kFederatedContinuation,
+  kFederatedAccountNotLoggedIn,
+  kFederatedAccountIsSignUp,
+  kFederatedAccountIsNotAvailable,
+  kFederatedIdpReturnedError,
+  kFederatedIdpNetworkError,
+  kFederatedTokenRequestAborted,
+  kFederatedFrameNotActive,
+  kFederatedExpectedAccountNotPresent,
+  kFederatedTimeout,
+  kFillingNotAllowed,
+  kFillingInterruptedByPageChange,
+};
+
+optimization_guide::proto::
+    ActorLoginQuality_AttemptLoginDetails_AttemptLoginOutcome
+    OutcomeEnumToProtoType(AttemptLoginOutcomeMqls outcome);
+
+// For federated logins, outcomes can be delayed until after the AttemptLogin
+// operation completes. This interface allows password_manager to be informed of
+// these outcomes as they impact its own state.
+class ActionSequenceDelegate {
+ public:
+  virtual ~ActionSequenceDelegate() = default;
+
+  // Registers a callback to be called when the current action sequence ends
+  // along with whether it was successful.
+  virtual base::CallbackListSubscription RegisterActionSequenceEnded(
+      base::OnceCallback<void(bool /* success */)> callback) = 0;
+
+  // Reports the outcome of a federated login attempt.
+  virtual void OnFederatedLoginOutcome(LoginStatusResult result) = 0;
+};
+
+}  // namespace actor_login
+
+#endif  // COMPONENTS_PASSWORD_MANAGER_CORE_BROWSER_ACTOR_LOGIN_ACTOR_LOGIN_TYPES_H_

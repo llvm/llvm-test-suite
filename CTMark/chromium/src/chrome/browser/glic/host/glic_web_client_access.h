@@ -1,0 +1,70 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef CHROME_BROWSER_GLIC_HOST_GLIC_WEB_CLIENT_ACCESS_H_
+#define CHROME_BROWSER_GLIC_HOST_GLIC_WEB_CLIENT_ACCESS_H_
+
+// Interface to the glic web client, provided by the glic WebUI.
+#include "base/functional/callback_forward.h"
+#include "base/memory/weak_ptr.h"
+#include "chrome/browser/actor/actor_task_delegate.h"
+#include "chrome/browser/glic/host/glic.mojom.h"
+#include "chrome/browser/glic/host/glic_webui.mojom.h"
+#include "components/autofill/core/browser/integrators/actor/actor_form_filling_types.h"
+#include "url/origin.h"
+
+namespace glic {
+
+// Access to the glic web client, from outside of the WebUI handler.
+class GlicWebClientAccess {
+ public:
+  virtual ~GlicWebClientAccess() = default;
+  virtual mojom::WebClient* web_client() = 0;
+  virtual mojom::WebClientState web_client_state() const = 0;
+
+  using PanelWillOpenCallback = mojom::WebClient::NotifyPanelWillOpenCallback;
+
+  // Informs the web client that the panel will open. The panel should not be
+  // shown until `done` is called.
+  virtual void PanelWillOpen(mojom::PanelOpeningDataPtr panel_opening_data,
+                             PanelWillOpenCallback done) = 0;
+
+  // Informs the web client the panel was closed (no longer visible). The web
+  // client should not be destroyed until after `done` is called.
+  virtual void PanelWasClosed(base::OnceClosure done) = 0;
+
+  // Requests the web client to stop microphone recording.
+  virtual void StopMicrophone(base::OnceClosure done) = 0;
+
+  // Informs the client that the state of the panel has changed.
+  virtual void PanelStateChanged(
+      const glic::mojom::PanelState& panel_state) = 0;
+
+  virtual void NotifyInstanceActivationChanged(bool is_active) = 0;
+
+  // Informs the web client when the user starts and finishes dragging to resize
+  // the panel.
+  virtual void ManualResizeChanged(bool resizing) = 0;
+
+  // Informs the web client that additional context is available.
+  virtual void NotifyAdditionalContext(mojom::AdditionalContextPtr context) = 0;
+
+  virtual void FloatingPanelCanAttachChanged(bool can_attach) = 0;
+
+  // Informs the web client that an actor task list row was clicked.
+  virtual void NotifyActorTaskListRowClicked(int32_t task_id) = 0;
+
+  // Informs the web client that the browser wants to invoke Glic.
+  virtual void Invoke(mojom::InvokeOptionsPtr options,
+                      base::OnceClosure callback) = 0;
+
+  // Simulates a user input submission.
+  virtual void OnUserInputSubmittedForTesting(
+      mojom::WebClientMode mode,
+      mojom::PromptType prompt_type) = 0;
+};
+
+}  // namespace glic
+
+#endif  // CHROME_BROWSER_GLIC_HOST_GLIC_WEB_CLIENT_ACCESS_H_
