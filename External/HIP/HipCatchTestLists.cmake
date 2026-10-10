@@ -9,8 +9,10 @@
 # for amd_linux in config/configs/unit/<subdir>.yaml. Upstream applies that
 # YAML through ENABLE_YAML_TAGS, which this build does not use. Names must
 # match exactly: Catch2 silently ignores one that matches nothing, so recheck
-# the YAML on every sync. A file whose test cases would all be excluded belongs
-# out of SOURCES instead, because a run that selects no tests fails.
+# the YAML on every sync. The name of a templated test case also covers every
+# instance of it, which Catch2 registers as "<name> - <type>". A file whose
+# test cases would all be excluded belongs out of SOURCES instead, because a
+# run that selects no tests fails.
 
 declare_catch_test_dir(unit compiler
   SOURCES

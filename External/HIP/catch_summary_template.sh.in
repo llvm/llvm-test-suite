@@ -7,10 +7,11 @@
 #   @CATCH_CATEGORY@ - test category (unit, stress, etc.)
 #   @CATCH_SUBDIR@ - subdirectory name (compiler, etc.)
 #   @CATCH_VARIANT_SUFFIX@ - variant suffix (hip-7.2.0, etc.)
-#   @CATCH_EXCLUDE_ARGS@ - Catch2 test specs for the directory's EXCLUDE_TESTS
+#   @CATCH_EXCLUDE_ARGS@ - Catch2 test specs for the directory's EXCLUDE_TESTS,
+#                          shell-quoted as on the RUN lines
 
 cd @CMAKE_CURRENT_BINARY_DIR@
-EXCLUDE_ARGS="@CATCH_EXCLUDE_ARGS@"
+EXCLUDE_ARGS=(@CATCH_EXCLUDE_ARGS@)
 echo ""
 echo "========================================"
 echo "Detailed Test Summary:"
@@ -30,10 +31,10 @@ for test in catch_tests/catch_@CATCH_CATEGORY@_@CATCH_SUBDIR@_*-@CATCH_VARIANT_S
     TOTAL_FILES=$((TOTAL_FILES + 1))
     TEST_BASENAME=$(basename "$test")
     # Get test names from --list-tests, with the same exclusions the test run uses
-    LIST_OUTPUT=$("$test" --list-tests $EXCLUDE_ARGS 2>&1)
+    LIST_OUTPUT=$("$test" --list-tests "${EXCLUDE_ARGS[@]}" 2>&1)
     FILE_TOTAL=$(echo "$LIST_OUTPUT" | tail -1 | grep -o '^[0-9]*' || echo 0)
     TOTAL_TESTS=$((TOTAL_TESTS + FILE_TOTAL))
-    if [ -n "$EXCLUDE_ARGS" ]; then
+    if [ ${#EXCLUDE_ARGS[@]} -gt 0 ]; then
       ALL_OUTPUT=$("$test" --list-tests 2>&1)
       ALL_TOTAL=$(echo "$ALL_OUTPUT" | tail -1 | grep -o '^[0-9]*' || echo 0)
       EXCLUDED_TESTS=$((EXCLUDED_TESTS + ALL_TOTAL - FILE_TOTAL))
