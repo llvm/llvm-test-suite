@@ -111,8 +111,11 @@ function(declare_catch_test_dir CATEGORY SUBDIR)
 endfunction()
 
 # Function to turn a directory's EXCLUDE_TESTS into Catch2 test specs
-# Uses "exclude:" rather than "~" because RUN lines go through a shell, where
-# a leading "~" is subject to tilde expansion.
+# Each name becomes two specs: the name itself, and "<name> - *" for the
+# instances Catch2 registers for a templated test case, which are named
+# "<name> - <type>". The second spec is single-quoted because RUN lines go
+# through a shell; for the same reason "exclude:" is used rather than "~",
+# which a shell may tilde-expand.
 # Arguments:
 #   OUT_VAR  - Variable to receive the list of test specs
 #   CATEGORY - Test category (unit, stress, etc.)
@@ -121,7 +124,7 @@ function(get_catch_exclude_args OUT_VAR CATEGORY SUBDIR)
   get_property(_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS")
   set(_args "")
   foreach(_name ${_tests})
-    list(APPEND _args "exclude:${_name}")
+    list(APPEND _args "exclude:${_name}" "'exclude:${_name} - *'")
   endforeach()
   set(${OUT_VAR} "${_args}" PARENT_SCOPE)
 endfunction()

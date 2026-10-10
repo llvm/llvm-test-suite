@@ -732,9 +732,9 @@ declare_catch_test_dir(unit kernel
 ```
 
 - `SOURCES` names the `.cc` files that upstream's `CMakeLists.txt` builds as tests, in its `TEST_SRC` lists. Other `.cc` files in the directory, such as sources fed to hiprtc as data, stay unlisted and are not built. A directory without an entry builds every `.cc` file it contains.
-- `EXCLUDE_TESTS` names the test cases whose `disabled:` list in upstream's `config/configs/unit/<subdir>.yaml` includes `amd_linux`. Upstream applies that YAML through `ENABLE_YAML_TAGS`, which this build does not use, so without an entry those tests run. Names must match exactly, because Catch2 silently ignores a name that matches nothing; recheck the YAML on every sync.
+- `EXCLUDE_TESTS` names the test cases whose `disabled:` list in upstream's `config/configs/unit/<subdir>.yaml` includes `amd_linux`. Upstream applies that YAML through `ENABLE_YAML_TAGS`, which this build does not use, so without an entry those tests run. Names must match exactly, because Catch2 silently ignores a name that matches nothing; recheck the YAML on every sync. The name of a templated test case also covers every instance of it, which Catch2 registers as `<name> - <type>`.
 
-Excluded test cases are passed to each executable in the directory as `exclude:<name>` test specs, and the summary reports them as `Excluded`. If every test case in a file would be excluded, leave the file out of `SOURCES` instead: a run that selects no tests fails.
+Excluded test cases are passed to each executable in the directory as `exclude:<name>` and `exclude:<name> - *` test specs, and the summary reports them as `Excluded`, counting each template instance. If every test case in a file would be excluded, leave the file out of `SOURCES` instead: a run that selects no tests fails.
 
 ## Performance Considerations
 
