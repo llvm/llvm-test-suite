@@ -1,0 +1,3 @@
+ erfc(x32): OK
+ erfc(x64): OK
+exit 0

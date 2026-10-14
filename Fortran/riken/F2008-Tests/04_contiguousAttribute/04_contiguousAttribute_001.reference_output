@@ -1,0 +1,21 @@
+ Actual arg.: real(real32) :: a(:)
+ Dummy arg. : real(real32) :: x(:)
+   distance between x(1) and x(2): 4
+ Dummy arg. : real(real32), contiguous :: x(:)
+   distance between x(1) and x(2): 4
+ 
+ Actual arg.: real(real32) :: a(ix(:))
+ Dummy arg. : real(real32) :: x(:)
+   distance between x(1) and x(2): 4
+ Dummy arg. : real(real32), contiguous :: x(:)
+   distance between x(1) and x(2): 4
+ 
+ Actual arg.: real(real32) :: b(2:9,1:5)
+ Dummy arg. : real(real32) :: x(:,:)
+   distance between x(1,1) and x(2,1): 4
+   distance between x(1,1) and x(1,2): 40
+ Dummy arg. : real(real32), contiguous :: x(:,:)
+   distance between x(1,1) and x(2,1): 4
+   distance between x(1,1) and x(1,2): 32
+ 
+exit 0

@@ -1,0 +1,5 @@
+ real32: OK
+ real64: OK
+ real128: OK
+ real_kinds: OK
+exit 0
