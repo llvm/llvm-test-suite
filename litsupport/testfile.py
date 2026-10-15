@@ -79,6 +79,10 @@ def parse(context, filename):
                 "Test has unterminated RUN/VERIFY lines " + "(ending with '\\')"
             )
 
+    # Keep the RUN lines as written in the test file, before substitutions
+    # introduce machine-specific paths.
+    context.raw_runscript = list(runscript)
+
     # Apply the usual lit substitutions (%s, %S, %p, %T, ...)
     outfile = context.tmpBase + ".out"
     substitutions = getDefaultSubstitutions(
