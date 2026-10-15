@@ -1,2 +1,2 @@
-PASS enum_08_polymorphic
+PASS enumeration_08_polymorphic: 38 checks
 exit 0

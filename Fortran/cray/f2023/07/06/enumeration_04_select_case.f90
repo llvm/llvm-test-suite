@@ -23,7 +23,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_case_mod
+module enumeration_case_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -41,14 +41,16 @@ module enum_case_mod
   type(w_value), parameter :: w_last = wendsentinel
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_04: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_04: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -57,8 +59,9 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_04: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_04: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -108,13 +111,15 @@ contains
       classify_ctor = 3
     case (w_last)
       classify_ctor = 4
+    case default
+      classify_ctor = 0
     end select
   end function classify_ctor
 
-end module enum_case_mod
+end module enumeration_case_mod
 
-program enum_04_select_case
-  use enum_case_mod
+program enumeration_04_select_case
+  use enumeration_case_mod
   implicit none
 
   type(w_value) :: w
@@ -280,10 +285,10 @@ program enum_04_select_case
   call check_true(w == wendsentinel, 'state machine stops at the sentinel')
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_04_select_case'
+    print '(A,I0,A)', 'PASS enumeration_04_select_case: ', nchecks, ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_04: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_04: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_04_select_case
+end program enumeration_04_select_case

@@ -1,2 +1,2 @@
-PASS enum_05_formatted_io
+PASS enumeration_05_formatted_io: 56 checks
 exit 0

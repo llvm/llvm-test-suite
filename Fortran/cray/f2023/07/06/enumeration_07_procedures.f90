@@ -13,18 +13,25 @@
 !                       function result
 !   15.5.2.4            an actual argument and its dummy argument shall have
 !                       the same declared type
-!   15.8                elemental procedures with dummy arguments of
+!   15.9                elemental procedures with dummy arguments of
 !                       enumeration type
 !   10.2.1.2 Table 10.8 intrinsic assignment from the same enumeration type
 !   16.9.96/151/164     HUGE, NEXT, and PREVIOUS applied to dummy arguments
 !   16.9.110 Case (v)   INT (A) is the ordinal position of A
+!   7.1.5 p3            the intrinsic operations of an enumeration type can be
+!                       augmented with operations defined by the program
+!   15.4.3.4.2          defined operations with enumeration operands, using
+!                       intrinsic operator symbols and a defined-unary-op
+!   15.4.3.4.3          defined assignment to an enumeration variable from a
+!                       different enumeration type and from an integer, which
+!                       Table 10.8 does not permit as intrinsic assignment
 !
 ! On success the program prints "PASS ..." and exits with status zero; on
 ! failure it writes diagnostics to the error unit and terminates with a
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_proc_mod
+module enumeration_proc_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -45,15 +52,35 @@ module enum_proc_mod
     module procedure ordinal_of_w
   end interface ordinal_of
 
+  interface operator(+)
+    module procedure v_plus_int
+    module procedure int_plus_v
+  end interface operator(+)
+
+  interface operator(-)
+    module procedure v_minus_v
+  end interface operator(-)
+
+  interface operator(.ord.)
+    module procedure v_ord
+  end interface operator(.ord.)
+
+  interface assignment(=)
+    module procedure assign_w_to_v
+    module procedure assign_int_to_v
+  end interface assignment(=)
+
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_07: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_07: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -62,8 +89,9 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_07: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_07: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -127,7 +155,7 @@ contains
     res = next(a, stat)
   end function successor_or_self
 
-  ! --- An ELEMENTAL function (15.8).
+  ! --- An ELEMENTAL function (15.9).
   elemental function shifted(a, by) result(res)
     type(v_value), intent(in) :: a
     integer, intent(in) :: by
@@ -233,10 +261,47 @@ contains
     w = w_value(int(tv) + 2)
   end subroutine swap_pair
 
-end module enum_proc_mod
+  ! --- Specific procedures of the defined operators and assignment.
+  function v_plus_int(a, n) result(res)
+    type(v_value), intent(in) :: a
+    integer, intent(in) :: n
+    type(v_value) :: res
+    res = v_value(max(1, min(int(a) + n, int(huge(a)))))
+  end function v_plus_int
 
-program enum_07_procedures
-  use enum_proc_mod
+  function int_plus_v(n, a) result(res)
+    integer, intent(in) :: n
+    type(v_value), intent(in) :: a
+    type(v_value) :: res
+    res = v_plus_int(a, n)
+  end function int_plus_v
+
+  integer function v_minus_v(a, b)
+    type(v_value), intent(in) :: a, b
+    v_minus_v = int(a) - int(b)
+  end function v_minus_v
+
+  integer function v_ord(a)
+    type(v_value), intent(in) :: a
+    v_ord = int(a)
+  end function v_ord
+
+  subroutine assign_w_to_v(v, w)
+    type(v_value), intent(out) :: v
+    type(w_value), intent(in) :: w
+    v = v_value(min(int(w), int(huge(v))))
+  end subroutine assign_w_to_v
+
+  elemental subroutine assign_int_to_v(v, n)
+    type(v_value), intent(out) :: v
+    integer, intent(in) :: n
+    v = v_value(n)
+  end subroutine assign_int_to_v
+
+end module enumeration_proc_mod
+
+program enumeration_07_procedures
+  use enumeration_proc_mod
   implicit none
 
   type(v_value) :: a, b
@@ -291,7 +356,7 @@ program enum_07_procedures
     call check_true(.false., 'function result as a case expression')
   end select
 
-  ! --- Elemental procedures (15.8).
+  ! --- Elemental procedures (15.9).
   out = shifted(arr, 1)
   call check_true(all(int(out) == [2, 3, 4, 4]), 'elemental function on an array')
 
@@ -348,11 +413,33 @@ program enum_07_procedures
   call check_int(int(a), 3, 'first argument of the mixed-type procedure')
   call check_int(int(w), 4, 'second argument of the mixed-type procedure')
 
+  ! --- Defined operations on enumeration operands (7.1.5 p3, 15.4.3.4.2).
+  call check_true(v_one + 2 == v_three, 'defined + (enumeration, integer)')
+  call check_true(1 + v_two == v_three, 'defined + (integer, enumeration)')
+  call check_true(v_three + 5 == v_four, 'defined + clamped at the end')
+  call check_int(v_four - v_one, 3, 'defined - (enumeration, enumeration)')
+  call check_int(v_one - v_four, -3, 'defined - with a negative result')
+  call check_int(.ord. v_three, 3, 'defined unary operator')
+  call check_int(.ord. (v_one + 1), 2, 'defined operations composed')
+
+  ! --- Defined assignment to an enumeration variable (15.4.3.4.3).
+  a = w3
+  call check_int(int(a), 3, 'defined assignment from another enumeration')
+  a = wendsentinel
+  call check_int(int(a), 4, 'defined assignment clamped at the end')
+  a = 2
+  call check_int(int(a), 2, 'defined assignment from an integer')
+  out = [4, 3, 2, 1]
+  call check_true(all(int(out) == [4, 3, 2, 1]), &
+      'elemental defined assignment from an integer array')
+  a = v_one
+  call check_int(int(a), 1, 'intrinsic assignment alongside the generic')
+
   if (nfail == 0) then
-    print '(A)', 'PASS enum_07_procedures'
+    print '(A,I0,A)', 'PASS enumeration_07_procedures: ', nchecks, ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_07: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_07: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_07_procedures
+end program enumeration_07_procedures

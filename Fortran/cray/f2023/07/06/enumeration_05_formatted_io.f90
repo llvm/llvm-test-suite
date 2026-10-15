@@ -32,7 +32,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_io_mod
+module enumeration_io_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -53,14 +53,16 @@ module enum_io_mod
   end type
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_05: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_05: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -69,8 +71,9 @@ contains
   subroutine check_string(actual, expected, label)
     character(len=*), intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(7A)') 'FAIL: enum_05: ', label, ': expected "', &
+      write (error_unit, '(7A)') 'FAIL: enumeration_05: ', label, ': expected "', &
           expected, '", got "', actual, '"'
       nfail = nfail + 1
     end if
@@ -79,8 +82,9 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_05: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_05: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -102,10 +106,10 @@ contains
 1   format(1X, 'v ordinal is ', I0, ', w ordinal is ', I0)
   end subroutine showme_to_string
 
-end module enum_io_mod
+end module enumeration_io_mod
 
-program enum_05_formatted_io
-  use enum_io_mod
+program enumeration_05_formatted_io
+  use enumeration_io_mod
   implicit none
 
   type(v_value) :: x, y, arr(4), back(4)
@@ -295,10 +299,10 @@ program enum_05_formatted_io
   call check_true(all(int(back) == int(arr)), 'array internal file input')
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_05_formatted_io'
+    print '(A,I0,A)', 'PASS enumeration_05_formatted_io: ', nchecks, ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_05: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_05: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_05_formatted_io
+end program enumeration_05_formatted_io

@@ -21,6 +21,11 @@
 !                              assigned zero
 !   16.9.110 Case (v)          INT (A) is the ordinal position of A
 !   16.9.139 MERGE             any type, selecting a NEXT/PREVIOUS result
+!   16.2.1 p1                  intrinsic procedures may be invoked with
+!                              argument keywords (A=, STAT=, X=)
+!   10.1.12 (6),(7)            HUGE and INT in a constant array bound
+!   10.1.11 p2 (9),(12)        HUGE and INT in the specification expression
+!                              of an automatic array bound
 !
 ! NOTE on STAT: 16.9.151 and 16.9.164 state that if STAT would have been
 ! assigned a nonzero value but is not present, error termination is initiated.
@@ -33,7 +38,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_intrin_mod
+module enumeration_intrin_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -51,14 +56,16 @@ module enum_intrin_mod
   end enumeration type solo
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_03: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_03: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -67,8 +74,9 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_03: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_03: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -87,10 +95,17 @@ contains
     res = huge(dummy)
   end function last_of_array
 
-end module enum_intrin_mod
+  integer function table_size(dummy)
+    type(v_value), intent(in) :: dummy
+    type(v_value) :: table(int(huge(dummy)))
+    table = dummy
+    table_size = size(table)
+  end function table_size
 
-program enum_03_intrinsics
-  use enum_intrin_mod
+end module enumeration_intrin_mod
+
+program enumeration_03_intrinsics
+  use enumeration_intrin_mod
   implicit none
 
   type(v_value) :: x, y, z, nz
@@ -103,8 +118,10 @@ program enum_03_intrinsics
   integer :: i, ordinals(4), count_visited
   logical :: walk_done
 
-  ! 10.1.12 (7): HUGE of an enumeration type is a constant expression.
+  ! 10.1.12 (6): HUGE of an enumeration type is a constant expression, because
+  ! it is a specification inquiry (10.1.11 p3 (1): an intrinsic inquiry function).
   type(v_value), parameter :: last_v = huge(v_one)
+  type(v_value) :: table(int(huge(v_one)))
 
   ! --- 16.9.96 HUGE: the last enumerator of the type.
   call check_int(int(huge(v_one)), 4, 'HUGE of an enumerator')
@@ -127,6 +144,10 @@ program enum_03_intrinsics
   ! HUGE applies to every enumeration type independently.
   call check_int(int(huge(first_of_two)), 2, 'HUGE of a two-value type')
   call check_int(int(huge(only_value)), 1, 'HUGE of a one-value type')
+
+  ! HUGE in an array bound.
+  call check_int(size(table), 4, 'HUGE in a constant array bound')
+  call check_int(table_size(v_two), 4, 'HUGE in an automatic array bound')
 
   ! --- 16.9.151 NEXT: the following enumerator.
   call check_true(next(v_one) == v_two, 'NEXT (v_one)')
@@ -177,6 +198,36 @@ program enum_03_intrinsics
   p = previous(first_of_two, stat)
   call check_int(int(p), 1, 'PREVIOUS of the first of two')
   call check_true(stat > 0, 'PREVIOUS STAT for the first of two')
+
+  ! --- 16.2.1 p1: argument keywords, in and out of positional order.
+  call check_true(huge(x=v_two) == v_four, 'HUGE (X=)')
+  call check_true(next(a=v_two) == v_three, 'NEXT (A=)')
+  call check_true(previous(a=v_two) == v_one, 'PREVIOUS (A=)')
+
+  stat = -1
+  y = next(a=v_one, stat=stat)
+  call check_true(y == v_two, 'NEXT (A=, STAT=) result')
+  call check_int(stat, 0, 'NEXT (A=, STAT=) STAT')
+
+  stat = -1
+  y = next(stat=stat, a=v_four)
+  call check_true(y == v_four, 'NEXT (STAT=, A=) result at the end')
+  call check_true(stat > 0, 'NEXT (STAT=, A=) STAT at the end')
+
+  stat = -1
+  y = previous(a=v_four, stat=stat)
+  call check_true(y == v_three, 'PREVIOUS (A=, STAT=) result')
+  call check_int(stat, 0, 'PREVIOUS (A=, STAT=) STAT')
+
+  stat = -1
+  y = previous(stat=stat, a=v_one)
+  call check_true(y == v_one, 'PREVIOUS (STAT=, A=) result at the start')
+  call check_true(stat > 0, 'PREVIOUS (STAT=, A=) STAT at the start')
+
+  stat = -1
+  y = next(v_two, stat=stat)
+  call check_true(y == v_three, 'NEXT with a positional A and STAT=')
+  call check_int(stat, 0, 'NEXT with a positional A and STAT= STAT')
 
   ! --- NEXT and PREVIOUS are inverses away from the ends of the type.
   do i = 2, 3
@@ -253,10 +304,10 @@ program enum_03_intrinsics
   call check_true(y == v_three, 'MERGE selecting the source with a true mask')
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_03_intrinsics'
+    print '(A,I0,A)', 'PASS enumeration_03_intrinsics: ', nchecks, ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_03: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_03: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_03_intrinsics
+end program enumeration_03_intrinsics

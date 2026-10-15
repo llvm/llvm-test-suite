@@ -15,9 +15,14 @@
 !   7.6.2 R771/p5       an enumeration constructor produces the value whose
 !                       ordinal position is the value of the scalar-int-expr
 !   7.3.2.2 p2          TYPE (enumeration-type-spec) in a declaration
+!   7.3.2.1 R703/p3     TYPEOF (data-ref) specifies the declared type of an
+!                       enumerator or a variable of enumeration type
+!   7.3.2.1 C709        TYPEOF in a component definition statement
 !   7.6.2 NOTE          an enumeration type can be used to declare components
-!   8.4 R848/C887/C888  enumeration-constructor as a data-stmt-constant
-!   10.1.12 (4)(5)      enumeration constructor in a constant expression
+!   8.4                 explicit initialization in an entity-decl
+!   8.6.7 R848          enumeration-constructor as a data-stmt-constant,
+!                       with C887 and C888
+!   10.1.12 (5)         enumeration constructor in a constant expression
 !   10.2.1.2 Table 10.8 intrinsic assignment from the same enumeration type
 !   16.9.110 Case (v)   INT (A) is the ordinal position of A
 !
@@ -29,7 +34,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_def_mod
+module enumeration_def_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -57,11 +62,16 @@ module enum_def_mod
     type(w_value) :: w = w1
   end type
 
+  type :: holder
+    typeof(v_one) :: c = v_three
+  end type
+
   ! Non-default kinds, so that an ignored KIND= argument is detectable.
   integer, parameter :: ik = selected_int_kind(18)
   integer, parameter :: sk = selected_int_kind(2)
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
@@ -75,8 +85,9 @@ contains
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_01: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_01: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -85,16 +96,17 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_01: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_01: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
 
-end module enum_def_mod
+end module enumeration_def_mod
 
-program enum_01_definition_and_constructors
-  use enum_def_mod
+program enumeration_01_definition_and_constructors
+  use enumeration_def_mod
   implicit none
 
   ! 7.3.2.2 p2: declarations that reference a previously defined enumeration
@@ -115,7 +127,11 @@ program enum_01_definition_and_constructors
   type(v_value) :: typed_ctor(2) = [v_value :: v_four, v_three]
   type(v_value) :: assigned(4)
 
-  ! 8.4 R848/C887/C888: data-stmt-constants that are an enumerator (a scalar
+  typeof(v_one) :: t_enumerator
+  typeof(x) :: t_variable(2)
+  type(holder) :: h
+
+  ! 8.6.7 R848/C887/C888: data-stmt-constants that are an enumerator (a scalar
   ! constant) and an enumeration constructor.
   type(v_value) :: d1, d2, d3(2)
   data d1/v_three/
@@ -201,7 +217,7 @@ program enum_01_definition_and_constructors
   call check_int(int(p_list(2)), 2, 'PARAMETER array element 2')
   call check_int(int(p_list(3)), 1, 'PARAMETER array element 3')
 
-  ! --- DATA statement initialization (8.4 R848).
+  ! --- DATA statement initialization (8.6.7 R848).
   call check_ordinal(d1, 3, 'DATA with an enumerator')
   call check_ordinal(d2, 4, 'DATA with a constructor')
   call check_int(int(d3(1)), 1, 'DATA array element 1')
@@ -242,6 +258,16 @@ program enum_01_definition_and_constructors
   pair_keyword%v = v_one
   call check_int(int(pair_keyword%v), 1, 'assignment to a component')
 
+  ! --- TYPEOF (7.3.2.1 p3).  check_ordinal has a TYPE (v_value) dummy
+  ! argument, so each actual below must be of that same type (15.5.2.4).
+  t_enumerator = v_four
+  call check_ordinal(t_enumerator, 4, 'TYPEOF of an enumerator')
+  t_variable = [v_two, x]
+  call check_ordinal(t_variable(1), 2, 'TYPEOF of a variable, element 1')
+  call check_ordinal(t_variable(2), 1, 'TYPEOF of a variable, element 2')
+  call check_true(t_enumerator > t_variable(1), 'TYPEOF entities compared')
+  call check_ordinal(h%c, 3, 'default-initialized TYPEOF component')
+
   ! --- ALLOCATE with an enumeration type-spec (7.3.1 R702) and with SOURCE=.
   allocate (v_value :: alloc_scalar)
   alloc_scalar = v_three
@@ -273,10 +299,11 @@ program enum_01_definition_and_constructors
   end block
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_01_definition_and_constructors'
+    print '(A,I0,A)', 'PASS enumeration_01_definition_and_constructors: ', nchecks, &
+        ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_01: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_01: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_01_definition_and_constructors
+end program enumeration_01_definition_and_constructors

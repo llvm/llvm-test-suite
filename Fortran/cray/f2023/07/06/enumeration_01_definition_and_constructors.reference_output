@@ -1,2 +1,2 @@
-PASS enum_01_definition_and_constructors
+PASS enumeration_01_definition_and_constructors: 72 checks
 exit 0

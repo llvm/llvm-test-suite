@@ -24,7 +24,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_public_mod
+module enumeration_public_mod
   implicit none
 
   ! An explicit PUBLIC access-spec on the enumeration-type-stmt.  The
@@ -85,9 +85,9 @@ contains
     end do
   end function secret_walk
 
-end module enum_public_mod
+end module enumeration_public_mod
 
-module enum_private_mod
+module enumeration_private_mod
   implicit none
   ! The module default is private accessibility; individual identifiers are
   ! exported by an access-stmt (8.6.1 R830).
@@ -115,17 +115,18 @@ contains
     is_midweek = d >= tue .and. d <= thu
   end function is_midweek
 
-end module enum_private_mod
+end module enumeration_private_mod
 
-program enum_06_accessibility_and_use
+program enumeration_06_accessibility_and_use
   ! 14.2.2 p6/p7: several USE statements for one module are cumulative, and a
   ! rename gives an accessible entity an additional local identifier.
-  use enum_public_mod, only: colour, red, green, blue
-  use enum_public_mod, only: shade, light, dark
-  use enum_public_mod, only: channel, ch_left, ch_right
-  use enum_public_mod, only: get_centre, centre_ordinal, secret_count, secret_walk
-  use enum_public_mod, only: hue => colour, crimson => red, azure => blue
-  use enum_private_mod
+  use enumeration_public_mod, only: colour, red, green, blue
+  use enumeration_public_mod, only: shade, light, dark
+  use enumeration_public_mod, only: channel, ch_left, ch_right
+  use enumeration_public_mod, only: get_centre, centre_ordinal, &
+      secret_count, secret_walk
+  use enumeration_public_mod, only: hue => colour, crimson => red, azure => blue
+  use enumeration_private_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -135,9 +136,11 @@ program enum_06_accessibility_and_use
   type(hue) :: h
   type(weekday) :: d
   integer :: nfail
+  integer :: nchecks
   integer :: i
 
   nfail = 0
+  nchecks = 0
 
   ! --- A public type and its default-public enumerators.
   c = red
@@ -217,9 +220,10 @@ program enum_06_accessibility_and_use
   call check_int(internal_ordinal(), 3, 'host associated enumerator')
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_06_accessibility_and_use'
+    print '(A,I0,A)', 'PASS enumeration_06_accessibility_and_use: ', nchecks, &
+        ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_06: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_06: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
@@ -234,8 +238,9 @@ contains
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_06: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_06: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -244,10 +249,11 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_06: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_06: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
 
-end program enum_06_accessibility_and_use
+end program enumeration_06_accessibility_and_use

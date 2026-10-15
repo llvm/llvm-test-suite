@@ -22,7 +22,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_rel_mod
+module enumeration_rel_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -31,14 +31,16 @@ module enum_rel_mod
   end enumeration type level
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_02: expected .TRUE. for ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_02: expected .TRUE. for ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -46,8 +48,9 @@ contains
   subroutine check_false(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_02: expected .FALSE. for ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_02: expected .FALSE. for ', label
       nfail = nfail + 1
     end if
   end subroutine check_false
@@ -55,17 +58,18 @@ contains
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_02: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_02: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
   end subroutine check_int
 
-end module enum_rel_mod
+end module enumeration_rel_mod
 
-program enum_02_relational_operations
-  use enum_rel_mod
+program enumeration_02_relational_operations
+  use enumeration_rel_mod
   implicit none
 
   type(level) :: a, b
@@ -196,9 +200,10 @@ program enum_02_relational_operations
   call check_int(int(b), 4, 'largest value found')
 
   if (nfail == 0) then
-    print '(A)', 'PASS enum_02_relational_operations'
+    print '(A,I0,A)', 'PASS enumeration_02_relational_operations: ', nchecks, &
+        ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_02: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_02: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
@@ -208,8 +213,9 @@ contains
     logical, intent(in) :: actual, expected
     character(len=*), intent(in) :: op
     integer, intent(in) :: i, j
+    nchecks = nchecks + 1
     if (actual .neqv. expected) then
-      write (error_unit, '(3A,I0,A,I0,A,L1,A,L1)') 'FAIL: enum_02: ', op, &
+      write (error_unit, '(3A,I0,A,I0,A,L1,A,L1)') 'FAIL: enumeration_02: ', op, &
           ' with ordinals ', i, ',', j, ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -230,4 +236,4 @@ contains
     end do
   end subroutine sort_levels
 
-end program enum_02_relational_operations
+end program enumeration_02_relational_operations

@@ -10,6 +10,8 @@
 !                       types and INTEGER are distinct dynamic types
 !   7.3.2.3             CLASS(*) is unlimited polymorphic and may have any
 !                       dynamic type
+!   7.3.2.1 C708/p3     CLASSOF (data-ref) of an enumeration entity declares a
+!                       polymorphic dummy argument or allocatable variable
 !   9.7.1.1             ALLOCATE with SOURCE= or MOLD= establishes the
 !                       dynamic type of an unlimited polymorphic object
 !   10.2.1.3            intrinsic assignment to an allocatable polymorphic
@@ -26,7 +28,7 @@
 ! nonzero status.
 ! ---------------------------------------------------------------------------
 
-module enum_poly_mod
+module enumeration_poly_mod
   use iso_fortran_env, only: error_unit
   implicit none
 
@@ -40,14 +42,16 @@ module enum_poly_mod
   end enumeration type w_value
 
   integer :: nfail = 0
+  integer :: nchecks = 0
 
 contains
 
   subroutine check_int(actual, expected, label)
     integer, intent(in) :: actual, expected
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (actual /= expected) then
-      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enum_08: ', label, &
+      write (error_unit, '(3A,I0,A,I0)') 'FAIL: enumeration_08: ', label, &
           ': expected ', expected, ', got ', actual
       nfail = nfail + 1
     end if
@@ -56,8 +60,9 @@ contains
   subroutine check_true(condition, label)
     logical, intent(in) :: condition
     character(len=*), intent(in) :: label
+    nchecks = nchecks + 1
     if (.not. condition) then
-      write (error_unit, '(2A)') 'FAIL: enum_08: ', label
+      write (error_unit, '(2A)') 'FAIL: enumeration_08: ', label
       nfail = nfail + 1
     end if
   end subroutine check_true
@@ -84,6 +89,16 @@ contains
     end select
   end function classify
 
+  ! A CLASSOF entity is polymorphic, so it may be a SELECT TYPE selector.
+  integer function classof_ordinal(x)
+    classof(v_one), intent(in) :: x
+    classof_ordinal = -1
+    select type (x)
+    type is (v_value)
+      classof_ordinal = int(x)
+    end select
+  end function classof_ordinal
+
   ! Advance an enumeration value held by a CLASS(*) dummy argument.
   subroutine advance_any(x)
     class(*), intent(inout) :: x
@@ -95,15 +110,16 @@ contains
     end select
   end subroutine advance_any
 
-end module enum_poly_mod
+end module enumeration_poly_mod
 
-program enum_08_polymorphic
-  use enum_poly_mod
+program enumeration_08_polymorphic
+  use enumeration_poly_mod
   implicit none
 
   class(*), allocatable :: u, ua(:)
   class(*), pointer :: p
   type(v_value), target :: tv
+  classof(tv), allocatable :: cv
   type(w_value) :: wv
   type(v_value) :: arr(4) = [v_one, v_two, v_three, v_four]
   integer :: val, i
@@ -141,15 +157,17 @@ program enum_08_polymorphic
   call check_int(val, 2, 'SOURCE= w_value ordinal')
   deallocate (u)
 
-  ! --- ALLOCATE with MOLD= establishes only the dynamic type.
+  ! --- ALLOCATE with MOLD= establishes only the dynamic type; the value is
+  ! undefined (9.2 p2), so it is referenced only after it is defined.
   allocate (u, mold=w1)
-  call check_int(classify(u, val), 2, 'MOLD= w_value dynamic type')
   select type (u)
   type is (w_value)
     u = w4
+    call check_int(classify(u, val), 2, 'MOLD= w_value after definition')
+    call check_int(val, 4, 'MOLD= w_value value defined in SELECT TYPE')
+  class default
+    call check_true(.false., 'MOLD= w_value not selected by TYPE IS')
   end select
-  call check_int(classify(u, val), 2, 'MOLD= w_value after definition')
-  call check_int(val, 4, 'MOLD= w_value value defined in SELECT TYPE')
   deallocate (u)
 
   ! --- Intrinsic assignment to an allocatable CLASS(*) variable sets, and
@@ -199,11 +217,25 @@ program enum_08_polymorphic
   call check_int(classify(wv, val), 2, 'sentinel selects w_value')
   call check_int(val, 6, 'sentinel ordinal')
 
+  ! --- CLASSOF dummy argument and allocatable variable (7.3.2.1 p3).
+  call check_int(classof_ordinal(v_two), 2, 'CLASSOF dummy, enumerator actual')
+  allocate (cv, source=v_three)
+  call check_int(classof_ordinal(cv), 3, 'CLASSOF dummy, CLASSOF actual')
+  call check_int(classify(cv, val), 1, 'CLASSOF variable dynamic type')
+  call check_int(val, 3, 'CLASSOF variable ordinal')
+  select type (cv)
+  type is (v_value)
+    call check_true(cv == v_three, 'CLASSOF variable selected by TYPE IS')
+  class default
+    call check_true(.false., 'CLASSOF variable not selected by TYPE IS')
+  end select
+  deallocate (cv)
+
   if (nfail == 0) then
-    print '(A)', 'PASS enum_08_polymorphic'
+    print '(A,I0,A)', 'PASS enumeration_08_polymorphic: ', nchecks, ' checks'
   else
-    write (error_unit, '(A,I0,A)') 'enum_08: ', nfail, ' check(s) failed'
+    write (error_unit, '(A,I0,A)') 'enumeration_08: ', nfail, ' check(s) failed'
     error stop 1
   end if
 
-end program enum_08_polymorphic
+end program enumeration_08_polymorphic
