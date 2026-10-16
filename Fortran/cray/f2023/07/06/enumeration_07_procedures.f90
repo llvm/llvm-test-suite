@@ -429,8 +429,8 @@ program enumeration_07_procedures
   call check_int(int(a), 4, 'defined assignment clamped at the end')
   a = 2
   call check_int(int(a), 2, 'defined assignment from an integer')
-  out = [4, 3, 2, 1]
-  call check_true(all(int(out) == [4, 3, 2, 1]), &
+  out = [1, 2, 3, 4]
+  call check_true(all(int(out) == [1, 2, 3, 4]), &
       'elemental defined assignment from an integer array')
   a = v_one
   call check_int(int(a), 1, 'intrinsic assignment alongside the generic')
