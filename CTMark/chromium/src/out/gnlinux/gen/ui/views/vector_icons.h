@@ -1,0 +1,88 @@
+// Copyright 2017 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// vector_icons.h.template is used to generate vector_icons.h. Edit the former
+// rather than the latter.
+
+#ifndef UI_VIEWS_VECTOR_ICONS_H_
+#define UI_VIEWS_VECTOR_ICONS_H_
+
+#include "ui/views/views_export.h"
+
+namespace gfx {
+struct VectorIcon;
+}
+
+#define VECTOR_ICON_TEMPLATE_H(icon_name) \
+VIEWS_EXPORT extern const gfx::VectorIcon icon_name;
+
+namespace views {
+
+VECTOR_ICON_TEMPLATE_H(kAccountBoxIcon)
+VECTOR_ICON_TEMPLATE_H(kAccountBoxOldIcon)
+VECTOR_ICON_TEMPLATE_H(kArrowDropDownIcon)
+VECTOR_ICON_TEMPLATE_H(kArrowDropDownOldIcon)
+VECTOR_ICON_TEMPLATE_H(kArrowDropUpIcon)
+VECTOR_ICON_TEMPLATE_H(kArrowOutwardIcon)
+VECTOR_ICON_TEMPLATE_H(kCancelIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckBoxFilledIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckBoxOutlineBlankIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckSmallIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckboxActiveOldIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckboxCheckCr2023OldIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckboxCustomIcon)
+VECTOR_ICON_TEMPLATE_H(kCheckboxNormalOldIcon)
+VECTOR_ICON_TEMPLATE_H(kCircleIcon)
+VECTOR_ICON_TEMPLATE_H(kCloseIcon)
+VECTOR_ICON_TEMPLATE_H(kCloseOldIcon)
+VECTOR_ICON_TEMPLATE_H(kDeleteIcon)
+VECTOR_ICON_TEMPLATE_H(kDragGeneralSelectionCustomIcon)
+VECTOR_ICON_TEMPLATE_H(kEyeCrossedOldIcon)
+VECTOR_ICON_TEMPLATE_H(kEyeCrossedRefreshOldIcon)
+VECTOR_ICON_TEMPLATE_H(kEyeOldIcon)
+VECTOR_ICON_TEMPLATE_H(kEyeRefreshOldIcon)
+VECTOR_ICON_TEMPLATE_H(kHighDensityIcon)
+VECTOR_ICON_TEMPLATE_H(kIcCloseOldIcon)
+VECTOR_ICON_TEMPLATE_H(kIncognitoIcon)
+VECTOR_ICON_TEMPLATE_H(kInfoIcon)
+VECTOR_ICON_TEMPLATE_H(kInfoChromeRefreshOldIcon)
+VECTOR_ICON_TEMPLATE_H(kInfoOldIcon)
+VECTOR_ICON_TEMPLATE_H(kKeepIcon)
+VECTOR_ICON_TEMPLATE_H(kKeepFilledIcon)
+VECTOR_ICON_TEMPLATE_H(kLaunchOldIcon)
+VECTOR_ICON_TEMPLATE_H(kLinuxHighDensityOldIcon)
+VECTOR_ICON_TEMPLATE_H(kLinuxLowDensityOldIcon)
+VECTOR_ICON_TEMPLATE_H(kLowDensityIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuCheckOldIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuCloseCustomIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuOpenIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuOpenOldIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuRadioEmptyOldIcon)
+VECTOR_ICON_TEMPLATE_H(kMenuRadioSelectedOldIcon)
+VECTOR_ICON_TEMPLATE_H(kMoreHorizIcon)
+VECTOR_ICON_TEMPLATE_H(kNewIncognitoWindowOldIcon)
+VECTOR_ICON_TEMPLATE_H(kNewTabOldIcon)
+VECTOR_ICON_TEMPLATE_H(kNewWindowIcon)
+VECTOR_ICON_TEMPLATE_H(kNewWindowOldIcon)
+VECTOR_ICON_TEMPLATE_H(kOpenInNewIcon)
+VECTOR_ICON_TEMPLATE_H(kOpenOldIcon)
+VECTOR_ICON_TEMPLATE_H(kOptionsOldIcon)
+VECTOR_ICON_TEMPLATE_H(kPinOldIcon)
+VECTOR_ICON_TEMPLATE_H(kRadioButtonActiveOldIcon)
+VECTOR_ICON_TEMPLATE_H(kRadioButtonCheckedIcon)
+VECTOR_ICON_TEMPLATE_H(kRadioButtonNormalOldIcon)
+VECTOR_ICON_TEMPLATE_H(kTabIcon)
+VECTOR_ICON_TEMPLATE_H(kUninstallOldIcon)
+VECTOR_ICON_TEMPLATE_H(kUnpinOldIcon)
+VECTOR_ICON_TEMPLATE_H(kVisibilityIcon)
+VECTOR_ICON_TEMPLATE_H(kVisibilityFilledIcon)
+VECTOR_ICON_TEMPLATE_H(kVisibilityOffIcon)
+VECTOR_ICON_TEMPLATE_H(kVisibilityOffFilledIcon)
+
+}
+
+#undef VECTOR_ICON_TEMPLATE_H
+
+#endif  // UI_VIEWS_VECTOR_ICONS_H_
