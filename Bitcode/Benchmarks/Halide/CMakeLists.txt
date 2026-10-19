@@ -18,7 +18,9 @@ macro(test_img_data target img)
   llvm_test_data(${target} output/${img}_out.bytes)
 endmacro()
 
-if(ARCH STREQUAL "x86")
+# Disabled for Apple platforms, since the bitcode's baked-in datalayout is
+# incompatible with Mach-O platforms.
+if(ARCH STREQUAL "x86" AND NOT APPLE)
   add_subdirectory(local_laplacian)
   add_subdirectory(bilateral_grid)
   add_subdirectory(blur)
