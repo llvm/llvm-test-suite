@@ -173,7 +173,7 @@ program loop_versioning_unit_slices
   rank2_expected(4:5, 1:2) = reshape([69., 70., 71., 72.], [2, 2])
   if (any(rank2_values /= rank2_expected)) error stop 14
 
-  ! Section/Section/Section validates the generalized retained-dimension
+  ! Section/Scalar/Section validates the generalized retained-dimension
   ! formula with eight-byte elements and non-one dynamic lower bounds. The
   ! facerec procedures above cover trailing scalar coordinates separately.
   generalized_values = -1.0_8
