@@ -1,0 +1,9 @@
+ present(z) =  F
+ sum 1: 15
+ present(z) =  T
+ sum 2: 45
+ present(z) =  F
+ sum 3: 15
+ present(z) =  T
+ sum 4: 115
+exit 0

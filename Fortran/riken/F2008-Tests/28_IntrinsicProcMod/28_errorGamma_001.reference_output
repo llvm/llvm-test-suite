@@ -1,0 +1,3 @@
+ erf(x32): OK
+ erf(x64): OK
+exit 0
