@@ -87,16 +87,6 @@ function(llvm_test_executable_no_test target)
   set_property(GLOBAL APPEND PROPERTY TEST_SUITE_TARGETS ${target})
   test_suite_add_build_dependencies(${target})
 
-  if(TEST_SUITE_COLLECT_COMPILE_TIME)
-    add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND ${Python3_EXECUTABLE}
-              ${CMAKE_SOURCE_DIR}/litsupport/aggregate-compile-time.py
-              $<TARGET_FILE_NAME:${target}>
-              $<TARGET_FILE_DIR:${target}>
-      COMMENT "Aggregating compile/link times for ${target}"
-    )
-  endif()
-
   if(TEST_SUITE_EXTERNALIZE_DEBUGINFO AND APPLE)
     string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
     if(CMAKE_C_FLAGS MATCHES "-flto"
@@ -166,6 +156,21 @@ function(test_suite_add_build_dependencies target)
     build-fpcmp
     build-fpcmp-target
     build-litsupport
+  )
+endfunction()
+
+# Write co-located path-list files that compiletime.py reads
+function(llvm_test_write_time_lists target)
+  if(NOT TEST_SUITE_COLLECT_COMPILE_TIME)
+    return()
+  endif()
+  file(GENERATE
+    OUTPUT "$<TARGET_FILE:${target}>.o.time.list"
+    CONTENT "$<$<BOOL:$<TARGET_OBJECTS:${target}>>:$<JOIN:$<TARGET_OBJECTS:${target}>,.time\n>.time\n>"
+  )
+  file(GENERATE
+    OUTPUT "$<TARGET_FILE:${target}>.link.time.list"
+    CONTENT "$<TARGET_FILE:${target}>.link.time\n"
   )
 endfunction()
 
