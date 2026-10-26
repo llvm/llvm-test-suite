@@ -1,0 +1,78 @@
+# Test --build-dir option with --build and --exec modes
+
+# Test 1: --build with --build-dir to create a build in a custom location
+# RUN: rm -rf %t.SANDBOX %t.CUSTOM_BUILD
+# RUN: mkdir -p %t.CUSTOM_BUILD
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --build \
+# RUN:     --build-dir %t.CUSTOM_BUILD/mybuild \
+# RUN:     > %t.build.log 2> %t.build.err
+# RUN: filecheck --check-prefix CHECK-BUILD-CUSTOM < %t.build.err %s
+# CHECK-BUILD-CUSTOM: Building tests (--build mode)...
+# CHECK-BUILD-CUSTOM: Build complete. Build directory: {{.*}}CUSTOM_BUILD/mybuild
+# CHECK-BUILD-CUSTOM: Use --exec --build-dir {{.*}}CUSTOM_BUILD/mybuild to run tests.
+
+# Verify that build files were created in the custom location
+# RUN: test -f %t.CUSTOM_BUILD/mybuild/CMakeCache.txt
+
+# Test 2: --exec with --build-dir using the custom build location
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.CUSTOM_BUILD/mybuild \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --output %t.exec.report \
+# RUN:     > %t.exec.log 2> %t.exec.err
+# RUN: filecheck --check-prefix CHECK-EXEC-CUSTOM < %t.exec.err %s
+# CHECK-EXEC-CUSTOM-NOT: Configuring
+# CHECK-EXEC-CUSTOM-NOT: Building
+# CHECK-EXEC-CUSTOM: Testing
+
+# Verify that report was created in the custom build directory
+# RUN: test -f %t.CUSTOM_BUILD/mybuild/report.json
+
+# Test 3: Error case - --exec with --build-dir pointing to non-existent directory should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.NONEXISTENT \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.err1.log 2> %t.err1.err
+# RUN: filecheck --check-prefix CHECK-ERR-NONEXISTENT < %t.err1.err %s
+# CHECK-ERR-NONEXISTENT: --build-dir does not exist
+
+# Test 4: Error case - --exec with --build-dir pointing to unconfigured directory should fail
+# RUN: rm -rf %t.UNCONFIGURED
+# RUN: mkdir -p %t.UNCONFIGURED
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.UNCONFIGURED \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.err2.log 2> %t.err2.err
+# RUN: filecheck --check-prefix CHECK-ERR-UNCONFIGURED < %t.err2.err %s
+# CHECK-ERR-UNCONFIGURED: --build-dir is not a configured build
+
+# Test 5: --exec with --build-dir and --only-test (tuple conversion test)
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.CUSTOM_BUILD/mybuild \
+# RUN:     --only-test SingleSource \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.exec-only.log 2> %t.exec-only.err
+# RUN: filecheck --check-prefix CHECK-EXEC-ONLY < %t.exec-only.err %s
+# CHECK-EXEC-ONLY: Testing

@@ -1,0 +1,86 @@
+#!/bin/bash
+
+CMAKE_SRC_DIR="notfound"
+DUMP_VARS=false
+CMAKE_C_COMPILER=""
+CMAKE_CXX_COMPILER=""
+CMAKE_C_COMPILER_TARGET="notfound"
+
+while test $# -gt 0
+do
+  if [[ $1 == "-C" ]]; then
+    # If we passed a cache, just drop it and look like cmake.
+    echo "Cmake Cache $2"
+    shift
+    shift
+  elif [[ $1 == -D* ]]; then
+    # handle -D arguments to cmake.
+    if [[ $1 == -DCMAKE_C_COMPILER:* ]]; then CMAKE_C_COMPILER=${1#*=}; fi
+    if [[ $1 == -DCMAKE_CXX_COMPILER:* ]]; then CMAKE_CXX_COMPILER=${1#*=}; fi
+    if [[ $1 == -DCMAKE_C_COMPILER_TARGET:* ]]; then CMAKE_C_COMPILER_TARGET=${1#*=}; fi
+    shift
+  elif [[ $1 == -LAH && $2 == -N ]]; then
+    DUMP_VARS=true
+    shift
+    shift
+  elif [[ $1 == --build ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")/fake-make
+    exit $?
+  elif [[ ! -f $1/CMakeLists.txt && ! -f $1/CMakeCache.txt ]]; then
+    # arguments not starting with -D or -C are assumed to point to the cmake
+    # src or build dir
+    exit 1
+  else
+    CMAKE_SRC_DIR=$1
+    # if CMakeCache.txt exists, read in value for compiler
+    if [[ -f $1/CMakeCache.txt ]]; then
+        CMAKE_C_COMPILER=`grep CMAKE_C_COMPILER:FILEPATH= $1/CMakeCache.txt | cut -f2 -d'='`
+        CMAKE_CXX_COMPILER=`grep CMAKE_CXX_COMPILER:FILEPATH= $1/CMakeCache.txt | cut -f2 -d'='`
+        CMAKE_C_COMPILER_TARGET=`grep CMAKE_C_COMPILER_TARGET:STRING= $1/CMakeCache.txt | cut -f2 -d'='`
+    fi
+    shift
+  fi
+done
+
+if [[ $DUMP_VARS == "true" ]]
+then
+  echo CMAKE_C_COMPILER:FILEPATH=$CMAKE_C_COMPILER
+  echo CMAKE_CXX_COMPILER:FILEPATH=$CMAKE_CXX_COMPILER
+  if [[ $CMAKE_C_COMPILER_TARGET != "notfound" ]]; then
+    echo CMAKE_C_COMPILER_TARGET:STRING=$CMAKE_C_COMPILER_TARGET
+  fi
+  echo CMAKE_OBJDUMP:FILEPATH=objdump
+  echo CMAKE_BUILD_TYPE:STRING=RelWithDebInfo
+  echo CMAKE_C_FLAGS:STRING=-O0
+  echo CMAKE_CXX_FLAGS:STRING=
+  echo CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
+  echo CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
+else
+  cp \
+    $CMAKE_SRC_DIR/fake-test \
+    $CMAKE_SRC_DIR/fake-results.json \
+    $CMAKE_SRC_DIR/fake-results-fail-compile.json \
+    $CMAKE_SRC_DIR/fake-results-fail-exec.json \
+    $CMAKE_SRC_DIR/fake-results-profile.json \
+    $CMAKE_SRC_DIR/fake-results-profile-import.json \
+    $CMAKE_SRC_DIR/fake-results.perf_data \
+    .
+  echo "Dummy" > CMakeCache.txt
+  echo CMAKE_C_COMPILER:FILEPATH=$CMAKE_C_COMPILER >> CMakeCache.txt
+  echo CMAKE_CXX_COMPILER:FILEPATH=$CMAKE_CXX_COMPILER >> CMakeCache.txt
+  echo CMAKE_OBJDUMP:FILEPATH=objdump >> CMakeCache.txt
+  if [[ $CMAKE_C_COMPILER_TARGET != "notfound" ]]; then
+    echo CMAKE_C_COMPILER_TARGET:STRING=$CMAKE_C_COMPILER_TARGET >> CMakeCache.txt
+  fi
+  mkdir subtest
+  cp \
+    $CMAKE_SRC_DIR/fake-test \
+    $CMAKE_SRC_DIR/fake-results.json \
+    $CMAKE_SRC_DIR/fake-results-fail-compile.json \
+    $CMAKE_SRC_DIR/fake-results-fail-exec.json \
+    $CMAKE_SRC_DIR/fake-results-profile.json \
+    $CMAKE_SRC_DIR/fake-results-profile-import.json \
+    $CMAKE_SRC_DIR/fake-results.perf_data \
+    subtest
+fi
+exit 0

@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+import argparse, shutil
+parser = argparse.ArgumentParser(description='dummy lit')
+parser.add_argument('-o')
+parser.add_argument('-j', type=int)
+parser.add_argument('bar')
+args, _ = parser.parse_known_args()
+
+shutil.copyfile(args.bar + '/fake-results-profile-import.json', args.o)
+with open(args.o, 'r') as f:
+    report_tmp = f.read()
+    report = report_tmp.replace('${PATH_TO_PROFILE}', args.bar + '/fake-results.perf_data')
+
+with open(args.o, 'w') as f:
+    f.write(report)

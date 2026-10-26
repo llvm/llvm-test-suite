@@ -1,0 +1,23 @@
+{
+    "tests": [
+        {
+            "name": "test-suite :: bar",
+            "elapsed": "1.0",
+            "code": "NOEXE",
+            "metrics": {
+            }
+        },
+        {
+            "name": "test-suite :: foo",
+            "elapsed": "1.0",
+            "code": "PASS",
+            "metrics": {
+                "compile_time": 1.3,
+                "exec_time": 1.4,
+                "score": 1.5,
+                "hash": "xyz",
+                "unknown": "unknown"
+            }
+        }
+    ]
+}
