@@ -414,6 +414,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # same requires directives.
   requires-8.f90
 
+  # Flang requires a MAP directive on TARGET DATA
+  use_device_ptr-1.f90
+
   #
   # These tests are marked as failing because the compilation succeeds when it
   # is expected to fail.
