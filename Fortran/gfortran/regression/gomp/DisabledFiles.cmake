@@ -414,7 +414,9 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # same requires directives.
   requires-8.f90
 
-  # Flang requires a MAP directive on TARGET DATA
+  # Flang requires a MAP directive on TARGET DATA in the default OpenMP
+  # version (i.e. 3.1). The required set was extended in later versions
+  # of the spec.
   use_device_ptr-1.f90
 
   #
