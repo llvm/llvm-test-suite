@@ -4,5 +4,4 @@ CHECK-DAG: FAIL: test-suite :: tests/noverify.test
 CHECK-DAG: FAIL: test-suite :: tests/run_fail.test
 CHECK-DAG: FAIL: test-suite :: tests/verify_fail.test
 CHECK-DAG: PASS: test-suite :: tests/verify_ok.test
-CHECK: Expected Passes
-CHECK: Unexpected Failures
+CHECK: Total Discovered Tests: 6{{$}}
