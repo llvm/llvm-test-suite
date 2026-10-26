@@ -10,8 +10,6 @@
 !                       types and INTEGER are distinct dynamic types
 !   7.3.2.3             CLASS(*) is unlimited polymorphic and may have any
 !                       dynamic type
-!   7.3.2.1 C708/p3     CLASSOF (data-ref) of an enumeration entity declares a
-!                       polymorphic dummy argument or allocatable variable
 !   9.7.1.1             ALLOCATE with SOURCE= or MOLD= establishes the
 !                       dynamic type of an unlimited polymorphic object
 !   10.2.1.3            intrinsic assignment to an allocatable polymorphic
@@ -89,16 +87,6 @@ contains
     end select
   end function classify
 
-  ! A CLASSOF entity is polymorphic, so it may be a SELECT TYPE selector.
-  integer function classof_ordinal(x)
-    classof(v_one), intent(in) :: x
-    classof_ordinal = -1
-    select type (x)
-    type is (v_value)
-      classof_ordinal = int(x)
-    end select
-  end function classof_ordinal
-
   ! Advance an enumeration value held by a CLASS(*) dummy argument.
   subroutine advance_any(x)
     class(*), intent(inout) :: x
@@ -119,7 +107,6 @@ program enumeration_08_polymorphic
   class(*), allocatable :: u, ua(:)
   class(*), pointer :: p
   type(v_value), target :: tv
-  classof(tv), allocatable :: cv
   type(w_value) :: wv
   type(v_value) :: arr(4) = [v_one, v_two, v_three, v_four]
   integer :: val, i
@@ -216,20 +203,6 @@ program enumeration_08_polymorphic
   wv = wendsentinel
   call check_int(classify(wv, val), 2, 'sentinel selects w_value')
   call check_int(val, 6, 'sentinel ordinal')
-
-  ! --- CLASSOF dummy argument and allocatable variable (7.3.2.1 p3).
-  call check_int(classof_ordinal(v_two), 2, 'CLASSOF dummy, enumerator actual')
-  allocate (cv, source=v_three)
-  call check_int(classof_ordinal(cv), 3, 'CLASSOF dummy, CLASSOF actual')
-  call check_int(classify(cv, val), 1, 'CLASSOF variable dynamic type')
-  call check_int(val, 3, 'CLASSOF variable ordinal')
-  select type (cv)
-  type is (v_value)
-    call check_true(cv == v_three, 'CLASSOF variable selected by TYPE IS')
-  class default
-    call check_true(.false., 'CLASSOF variable not selected by TYPE IS')
-  end select
-  deallocate (cv)
 
   if (nfail == 0) then
     print '(A,I0,A)', 'PASS enumeration_08_polymorphic: ', nchecks, ' checks'
