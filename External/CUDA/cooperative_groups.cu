@@ -26,10 +26,10 @@ int main() {
 
 #elif !__has_include(<cuda/std/type_traits>)
 
-// From CUDA 13 on, the headers include libcu++, which is in include/cccl of the
-// toolkit, which Clang does not search yet:
-// https://github.com/llvm/llvm-project/pull/235910. Fail here rather than at
-// compile time, so that the other tests still build.
+// Report missing libcu++ headers as a runtime failure so that the other CUDA
+// tests still build and run. From CUDA 13 on, the cooperative groups headers
+// include libcu++, which the toolkit puts in include/cccl, so it is only found
+// if that directory is on the include path.
 int main() {
   printf("libcu++ not found\n");
   return 1;
