@@ -277,6 +277,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: coarray reference
   coarray_lib_comm_1.f90
+ 
+  # unimplemented: associating coarray entity in associate construct
+  pr88379.f90
 
   # unimplemented: co_max
   coarray_collectives_4.f90
