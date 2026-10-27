@@ -96,8 +96,10 @@ define_property(GLOBAL PROPERTY CATCH_SUBDIR_TARGETS_CREATED
 #   SUBDIR        - Subdirectory name
 #   SOURCES       - .cc files that each build one test executable
 #   EXCLUDE_TESTS - Test case names to skip in every executable of the directory
+#   LINK_LIBS     - ROCm libraries, such as hiprtc, to link into every executable
+#                   of the directory
 function(declare_catch_test_dir CATEGORY SUBDIR)
-  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE_TESTS" ${ARGN})
+  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE_TESTS;LINK_LIBS" ${ARGN})
   if(NOT ARG_SOURCES)
     message(FATAL_ERROR "declare_catch_test_dir(${CATEGORY} ${SUBDIR}): no SOURCES given")
   endif()
@@ -108,6 +110,7 @@ function(declare_catch_test_dir CATEGORY SUBDIR)
   endforeach()
   set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_SOURCES" "${ARG_SOURCES}")
   set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS" "${ARG_EXCLUDE_TESTS}")
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_LINK_LIBS" "${ARG_LINK_LIBS}")
 endfunction()
 
 # Function to turn a directory's EXCLUDE_TESTS into Catch2 test specs
@@ -534,6 +537,17 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     pthread
     rt
   )
+
+  # The directory's LINK_LIBS, taken from this variant's ROCm so that each
+  # variant links its own copy
+  get_property(_link_libs GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_LINK_LIBS")
+  foreach(_lib ${_link_libs})
+    set(_lib_path "${ROCM_PATH}/lib/lib${_lib}.so")
+    if(NOT EXISTS "${_lib_path}")
+      message(FATAL_ERROR "${CATEGORY}/${SUBDIR} needs ${_lib}, but ${_lib_path} does not exist")
+    endif()
+    target_link_libraries(${_test_exe} PRIVATE "${_lib_path}")
+  endforeach()
 
   # Add to subdirectory variant target (lowest level)
   add_dependencies(hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX} ${_test_exe})

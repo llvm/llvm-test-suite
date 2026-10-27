@@ -716,23 +716,25 @@ To add support for additional test categories:
 
 Upstream is `projects/hip-tests/catch/` in [ROCm/rocm-systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) on `develop`. The standalone [ROCm/hip-tests](https://github.com/ROCm/hip-tests) repository is only a partial mirror of it, with different sources and YAML configs, so don't port from there.
 
-Copy the directory unchanged from upstream, together with any shared headers from `include/` that its tests include. Then give it an entry in `HipCatchTestLists.cmake`:
+Copy the directory's sources unchanged from upstream, together with any shared headers from `include/` that its tests include. Upstream's own `CMakeLists.txt` is not copied; this build doesn't use it. Then give the directory an entry in `HipCatchTestLists.cmake`. `unit/device_memory` is a complete example:
 
 ```cmake
-declare_catch_test_dir(unit kernel
+declare_catch_test_dir(unit device_memory
   SOURCES
-    hipEmptyKernel.cc
-    hipGridLaunch.cc
-    hipKernelStackSize.cc
-  # Disabled for amd_linux in upstream config/configs/unit/kernel.yaml
+    memcpy.cc
+    memset.cc
+  # Disabled for amd_linux (gfx94X failures) in upstream
+  # config/configs/unit/device_memory.yaml
   EXCLUDE_TESTS
-    Unit_KernelStackSize
-    Unit_hipGridLaunch_ExceedMaxGridDim_Negative
+    Unit_Device_memcpy_Positive
+  LINK_LIBS
+    hiprtc
 )
 ```
 
 - `SOURCES` names the `.cc` files that upstream's `CMakeLists.txt` builds as tests, in its `TEST_SRC` lists. Other `.cc` files in the directory, such as sources fed to hiprtc as data, stay unlisted and are not built. A directory without an entry builds every `.cc` file it contains.
 - `EXCLUDE_TESTS` names the test cases whose `disabled:` list in upstream's `config/configs/unit/<subdir>.yaml` includes `amd_linux`. Upstream applies that YAML through `ENABLE_YAML_TAGS`, which this build does not use, so without an entry those tests run. Names must match exactly, because Catch2 silently ignores a name that matches nothing; recheck the YAML on every sync. The name of a templated test case also covers every instance of it, which Catch2 registers as `<name> - <type>`.
+- `LINK_LIBS` names the ROCm libraries the tests need, matching `LINKER_LIBS` in upstream's `CMakeLists.txt`. Each one is linked from the ROCm installation of the variant being built, and configuration fails if it is missing. Directories with `*_RTC` test cases need `hiprtc`.
 
 Excluded test cases are passed to each executable in the directory as `exclude:<name>` and `exclude:<name> - *` test specs, and the summary reports them as `Excluded`, counting each template instance. If every test case in a file would be excluded, leave the file out of `SOURCES` instead: a run that selects no tests fails.
 
@@ -772,19 +774,29 @@ The Catch test infrastructure is located in `External/HIP/catch/`:
 External/HIP/catch/
 ├── LICENSE.txt             # MIT license covering everything below
 ├── unit/                    # Unit test category
-│   └── compiler/           # Compiler test subdirectory
-│       ├── hipClassKernel.cc
-│       ├── hipClassKernel.h
-│       ├── hipSquare.cc
-│       └── hipSquareGenericTarget.cc
+│   ├── compiler/           # Compiler test subdirectory
+│   │   ├── hipClassKernel.cc
+│   │   ├── hipClassKernel.h
+│   │   ├── hipSquare.cc
+│   │   └── hipSquareGenericTarget.cc
+│   └── device_memory/      # Device-side memcpy and memset
+│       ├── memcpy.cc
+│       ├── memcpy_negative_kernels.cc      # hiprtc input, not a test
+│       ├── memcpy_negative_kernels_rtc.hh
+│       ├── memset.cc
+│       ├── memset_negative_kernels.cc      # hiprtc input, not a test
+│       └── memset_negative_kernels_rtc.hh
 ├── include/                # Common test headers
+│   ├── hip_array_common.hh
 │   ├── hip_test_common.hh
 │   ├── hip_test_context.hh
 │   ├── hip_test_features.hh
 │   ├── hip_test_filesystem.hh
 │   ├── hip_test_level.hh
 │   ├── hip_test_params.hh
-│   └── cmd_options.hh
+│   ├── cmd_options.hh
+│   ├── resource_guards.hh
+│   └── utils.hh
 └── hipTestMain/            # Test framework main files
     ├── main.cc
     ├── hip_test_context.cc
