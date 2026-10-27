@@ -1,0 +1,11 @@
+#!/bin/bash
+# A fake `lnt` that fails to import a profile, for testing how
+# `run-test-suite.py --use-perf` runs `lnt profile upgrade`.
+#
+# Record the arguments it is run with, one per line, followed by the value of
+# $CMAKE_OBJDUMP, in $FAKE_LNT_LOG. Then print an error and exit with 1.
+
+printf '%s\n' "$@" "CMAKE_OBJDUMP=${CMAKE_OBJDUMP-unset}" > "$FAKE_LNT_LOG"
+
+echo "error: cannot read the profile" >&2
+exit 1

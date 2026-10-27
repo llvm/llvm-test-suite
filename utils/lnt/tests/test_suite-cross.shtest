@@ -1,0 +1,15 @@
+# Check that while cross-compiling, the target architecture is recognized
+# correctly.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cmake-define=CMAKE_C_COMPILER_TARGET:STRING=targetarch-linux-gnu \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.log 2> %t.err || true
+# RUN: filecheck --check-prefix CHECK-CROSS-TARGET < %t.SANDBOX/build/report.json %s
+# CHECK-CROSS-TARGET: "cc_target": "targetarch-linux-gnu"

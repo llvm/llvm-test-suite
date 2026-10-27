@@ -1,0 +1,48 @@
+# Check a run of test-suite using a cmake cache
+# Also make sure we get: compiler defines, cache, other defines on the cmake
+# commandline.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --cmake-cache Release \
+# RUN:     --cmake-define FOO=BAR \
+# RUN:     -D BAR=BAZ \
+# RUN:     &> %t.cmake-cache.log
+
+# Check CMAKE_C_COMPILER and CMAKE_CXX_COMPILER comes first, followed by cmake
+# options. This is verified by checking that:
+# 1) there's 2 cmake compiler definition followed by the -C option
+# 2) each of the cmake compiler definition only accepts the other cmake
+#    compiler definition between cmake and itself
+# RUN: filecheck  --check-prefix CHECK-CACHE1 < %t.cmake-cache.log %s
+# CHECK-CACHE1: Execute: {{.*}}cmake -DCMAKE_C{{(XX)?}}_COMPILER:FILEPATH={{.*}}/FakeCompilers/clang{{(\+\+)?}}-r154331 -DCMAKE_C{{(XX)?}}_COMPILER:FILEPATH={{.*}}/FakeCompilers/clang{{(\+\+)?}}-r154331 -C {{.*}}/Release.cmake
+# RUN: filecheck  --check-prefix CHECK-CACHE2 < %t.cmake-cache.log %s
+# CHECK-CACHE2: Execute: {{.*}}cmake {{(-DCMAKE_CXX_COMPILER:FILEPATH=.*/FakeCompilers/clang\+\+-r154331 )?}}-DCMAKE_C_COMPILER:FILEPATH={{.*}}/FakeCompilers/clang-r154331
+# RUN: filecheck  --check-prefix CHECK-CACHE3 < %t.cmake-cache.log %s
+# CHECK-CACHE3: Execute: {{.*}}cmake {{(-DCMAKE_C_COMPILER:FILEPATH=.*/FakeCompilers/clang-r154331 )?}}-DCMAKE_CXX_COMPILER:FILEPATH={{.*}}/FakeCompilers/clang++-r154331
+
+# RUN: filecheck  --check-prefix CHECK-CACHE4 < %t.cmake-cache.log %s
+# CHECK-CACHE4: Execute: {{.*}}cmake {{(.+ )?}}-DFOO=BAR
+# RUN: filecheck  --check-prefix CHECK-CACHE5 < %t.cmake-cache.log %s
+# CHECK-CACHE5: Execute: {{.*}}cmake {{(.+ )?}}-DBAR=BAZ
+
+# RUN: rm -rf %t.SANDBOX
+# Check a run of test-suite using a invalid cmake cache
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --cmake-cache Debug \
+# RUN:     &> %t.cmake-cache2.err || true
+# RUN: filecheck  --check-prefix CHECK-CACHE6 < %t.cmake-cache2.err %s
+# CHECK-CACHE6: Could not find CMake cache file

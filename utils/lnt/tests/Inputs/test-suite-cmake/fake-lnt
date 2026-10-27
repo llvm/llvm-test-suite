@@ -1,0 +1,13 @@
+#!/bin/bash
+# A fake `lnt`, for testing `run-test-suite.py --submit`.
+#
+# Record the arguments it is run with, one per line, in $FAKE_LNT_LOG, and a
+# copy of the report it is given (its third argument) in $FAKE_LNT_LOG.report.
+# Then print a result URL as `lnt submit` does, and exit with $FAKE_LNT_EXIT
+# (0 by default).
+
+printf '%s\n' "$@" > "$FAKE_LNT_LOG"
+cp "$3" "$FAKE_LNT_LOG.report"
+
+echo http://lnt.example.com/db_default/v4/nts/42
+exit "${FAKE_LNT_EXIT:-0}"

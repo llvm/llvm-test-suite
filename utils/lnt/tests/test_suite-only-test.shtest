@@ -1,0 +1,20 @@
+# Check --only-test
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --only-test subtest \
+# RUN:     --cmake-define one=two \
+# RUN:     --cmake-define three=four \
+# RUN:     --verbose \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-ONLYTEST < %t.err %s
+# CHECK-ONLYTEST: Configuring with {
+# CHECK-ONLYTEST:   one: 'two'
+# CHECK-ONLYTEST:   three: 'four'
+# CHECK-ONLYTEST: Execute: {{.*}}/fake-cmake --build . -t subtest -j 1 -v
