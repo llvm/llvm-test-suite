@@ -60,7 +60,7 @@ int main() {
 
 #else
 
-// A C++ standard which libcu++ does not support; the test is a nop.
+// A C++ standard which libcu++ does not support; the test is a no-op.
 int main() {
   printf("Success!\n");
   return 0;

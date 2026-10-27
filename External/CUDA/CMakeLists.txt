@@ -112,12 +112,8 @@ macro(create_local_cuda_tests VariantSuffix)
                           "${VariantCPPFLAGS}" "${VariantLibs}")
   endforeach()
 
-  # Tests of libcu++, the C++ standard library for device code which ships with
-  # the toolkit, and of cooperative_groups.h, which includes it from CUDA 13 on.
-  # From CUDA 13 on, libcu++ is in include/cccl, which Clang does not search
-  # yet.
-  # TODO: Remove this once Clang searches include/cccl itself:
-  # https://github.com/llvm/llvm-project/pull/235910
+  # From CUDA 13 on, libcu++ is in include/cccl, which Clang does not search.
+  # TODO: Remove once https://github.com/llvm/llvm-project/pull/235910 lands.
   set(_LibcuxxCPPFLAGS ${VariantCPPFLAGS})
   if(EXISTS ${_CudaPath}/include/cccl)
     list(APPEND _LibcuxxCPPFLAGS -isystem${_CudaPath}/include/cccl)
