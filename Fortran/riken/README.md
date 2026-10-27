@@ -10,6 +10,28 @@ time, and its combined stdout/stderr is compared against a
 
 ---
 
+## Origin
+This test set is derived from
+[RIKEN-RCCS/Fortran_tests](https://github.com/RIKEN-RCCS/Fortran_tests)
+(`F2008-Tests/`), a standalone lit/FileCheck-based suite that checks both
+flang and gfortran. It is not a mirror of that repository: the tests have
+been adapted to the test-suite's CMake + `.reference_output` model and to a
+single compiler (`CMAKE_Fortran_COMPILER`), and some of them are excluded or
+gated here (see Status below). The two are maintained separately, and
+changes are carried over by hand when they are relevant here.
+
+- Based on commit `7acf3bb631eb56c34359833273d8cb706e5ff7e9` of
+  RIKEN-RCCS/Fortran_tests.
+- Fixes from its
+  [PR #3](https://github.com/RIKEN-RCCS/Fortran_tests/pull/3) (merge commit
+  `3a97df2faa073d856d7ad20afafb2515e535d104`) have since been incorporated.
+
+`_cNNN` sources are currently kept identical to the corresponding files in
+RIKEN-RCCS/Fortran_tests. `_NNN` sources have their `! RUN:`/`! CHECK:`
+lines removed (the expected output lives in `.reference_output` instead),
+so a change to `CHECK` lines in the original repository has to be
+translated into the `.reference_output` file rather than applied as is.
+
 ## Directory Structure
 ```
 F2008-Tests/
@@ -38,28 +60,20 @@ F2008-Tests/
 
 ## Status
 This has now been validated end-to-end against both gfortran and a real
-`flang` (Homebrew flang 22.1.8, arm64 macOS): 176 of the 194 `_NNN` sources
-build, run, and produce stable output matching their `.reference_output`
-with `CMAKE_Fortran_COMPILER=flang`. The remaining 18 are excluded (see the
+`flang` (Homebrew flang 22.1.8, arm64 macOS; re-run with Homebrew flang
+23.1.4 after incorporating RIKEN-RCCS/Fortran_tests PR #3): 177 of the 194
+`_NNN` sources build, run, and produce stable output matching their
+`.reference_output` with `CMAKE_Fortran_COMPILER=flang`. The remaining 17 are excluded (see the
 `list(REMOVE_ITEM ...)` / `if(NOT RIKEN_HAS_REAL128)` lines with comments in
 the affected `CMakeLists.txt`), for the reasons below.
 
 ### Confirmed real flang issues (worth an upstream report)
 These were re-tested directly against flang, not just inferred from
 gfortran, so these are real findings rather than open questions:
-- `01_submodule_001.f90`: link fails with undefined symbols for the
-  submodule procedures (`__QMalphaPsecond`/`__QMalphaPthird`) when the
-  module, both submodules, and the main program all live in one source
-  file. Looks like a flang codegen/linking bug specific to single-file
-  submodules.
 - `28_constants_003.f90`: link fails with an undefined symbol for
   `iso_fortran_env`'s `CHARACTER_KINDS` array
   (`__QMiso_fortran_envECcharacter_kinds`). Looks like a gap in flang's
   `iso_fortran_env` implementation.
-- `28_selectedRealKind_001.f90` / `28_ieeeSelectedRealKind_001.f90`: flang
-  rejects `SELECTED_REAL_KIND()` / `IEEE_SELECTED_REAL_KIND()` called with
-  zero arguments ("missing mandatory 'p=' argument"); gfortran accepts it
-  (returns the default real kind).
 - `28_bitProcesssing_007.f90`: `MASKL(I, KIND)` with `I` greater than
   `BIT_SIZE(KIND)` is genuinely non-deterministic across repeated runs of
   the *same* flang-built binary (verified by running it several times in a
@@ -78,10 +92,36 @@ gfortran, so these are real findings rather than open questions:
   but not in macOS's libm/libSystem. Likely fine on Linux.
 - `13_typeStatementForIntrinsicTypes_003.f90` / `28_constants_002.f90`: need
   `REAL(16)`/`REAL128`, which this flang build does not support on
-  arm64 macOS. Gated behind the `RIKEN_HAS_REAL128` CMake cache variable
+  arm64 macOS. `28_selectedRealKind_001.f90` /
+  `28_ieeeSelectedRealKind_001.f90` are in the same group: their
+  `(33, 4931)` case returns `16` only when a quad-precision kind exists
+  (this flang returns `-3`); their `.reference_output` records the
+  quad-precision result (`16`, as in the original `CHECK` lines) and has not
+  been verified on such a platform yet. Gated behind the `RIKEN_HAS_REAL128` CMake cache variable
   (probed once in `Fortran/riken/CMakeLists.txt` via
   `CheckFortranSourceCompiles`), so they build automatically wherever the
   configured compiler does support it.
+
+### Previously reported as flang issues, now fixed as test bugs
+RIKEN-RCCS/Fortran_tests PR #3 showed that two entries this README used to
+list as "confirmed flang issues" were actually defects in the tests
+themselves:
+- `01_submodule_001.f90`: the submodule definitions of `second`/`third`
+  lacked the `module` prefix (F2008 11.2.3, 12.6.2.5), so they did not
+  implement the separate module procedures declared in the interface.
+  flang's link error was correct; gfortran accepts it as an extension. With
+  the fix, the test passes on flang and is enabled again.
+- `28_selectedRealKind_001.f90` / `28_ieeeSelectedRealKind_001.f90`: the
+  zero-argument call breaks the "at least one argument shall be present"
+  rule (F2008 13.7.147 / 14.11.18), so flang was right to reject it. That
+  case has moved to the new negative tests `28_selectedRealKind_c005.f90` /
+  `28_ieeeSelectedRealKind_c005.f90`.
+
+PR #3 also deleted `28_storageSize_c002.f90`, which required a segfault for
+a case whose behavior the standard leaves unspecified, and fixed
+`FLANG:`/`GFORT:` lines in `28_bitProcesssing_c005/c006/c009.f90`. Its
+`07_longInt_002.f90` change only touched a `CHECK` line, which this
+integration had already stripped, so nothing needed to change here.
 
 ### Structural gaps (not compiler-specific)
 - `24_recursiveInputOutput_001/002.f90`: reference a fixture file
@@ -93,7 +133,7 @@ gfortran, so these are real findings rather than open questions:
 - `28_addModProc_001.f90`: asserts the text of `COMPILER_OPTIONS()` /
   `COMPILER_VERSION()`, which is inherently tied to the exact compiler
   invocation used to build it and isn't a portable, pinnable expectation.
-- `_cNNN` sources (220 files): negative/error tests expecting a compile-time
+- `_cNNN` sources (221 files): negative/error tests expecting a compile-time
   diagnostic; `llvm_singlesource()` only supports build-and-run tests (see
   the Naming convention section above, and the dedicated section below).
 
@@ -133,7 +173,7 @@ flang, not empty. The `.reference_output` now reflects the real, verified
 flang output.
 
 ### Error-case (`_cNNN`) tests: prior art and future plan
-Before designing a "compile is expected to fail" helper for the 220 `_cNNN`
+Before designing a "compile is expected to fail" helper for the 221 `_cNNN`
 sources, it's worth looking at how `Fortran/gfortran` itself resolved the
 exact same question when it was first integrated -
 [discourse.llvm.org/t/add-gfortran-tests-to-llvm-test-suite/69408](https://discourse.llvm.org/t/add-gfortran-tests-to-llvm-test-suite/69408).

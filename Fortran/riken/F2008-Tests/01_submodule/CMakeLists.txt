@@ -6,9 +6,6 @@
 file(GLOB _sources *.f90)
 list(FILTER _sources EXCLUDE REGEX "_c[0-9]+\\.f90$")
 
-# Excluded for this integration pass:
-list(REMOVE_ITEM _sources ${CMAKE_CURRENT_SOURCE_DIR}/01_submodule_001.f90) # confirmed with real flang: links fail with undefined symbols for the submodule procedures (__QMalphaPsecond/__QMalphaPthird) when the module, both submodules, and the main program all live in one source file. Looks like a real flang bug/limitation in single-file submodule codegen, worth an upstream report
-
 if(_sources)
   set(Source ${_sources})
   llvm_singlesource()

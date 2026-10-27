@@ -16,3 +16,6 @@ end program main
 ! GFORT: 28_bitProcesssing_c005.f90:13:
 ! GFORT-NOT: .f90
 ! GFORT: Error:
+
+! FLANG: 28_bitProcesssing_c005.f90:13:
+! FLANG-SAME: error:

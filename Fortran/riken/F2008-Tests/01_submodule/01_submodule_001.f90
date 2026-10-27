@@ -1,6 +1,3 @@
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-! RUN: %flang %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008:11.2.3 Submodules
 
 
@@ -24,7 +21,7 @@ end module alpha
 
 submodule(alpha) beta
 contains
-  integer function second()
+  module integer function second()
     second = 2
   end function second
 end
@@ -32,7 +29,7 @@ end
 
 submodule(alpha:beta) gamma
 contains
-  integer function third()
+  module integer function third()
     third = 3
   end function third
 end submodule gamma
@@ -43,6 +40,3 @@ program main
 
   print *, first(), second(), third()
 end program main
-  
-
-! CHECK:       1  2  3

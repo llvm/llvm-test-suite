@@ -15,10 +15,10 @@ program main
   print*, shifta(i32,33)
 end program main
 
-! GFORT: 28_bitProcesssing_c009.f90:16:
+! GFORT: 28_bitProcesssing_c009.f90:15:
 ! GFORT-NOT: .f90
 ! GFORT: Error:
 
-! FLANG: 28_bitProcesssing_c009.f90:16:
+! FLANG: 28_bitProcesssing_c009.f90:15:
 ! FLANG-SAME: error:
   
