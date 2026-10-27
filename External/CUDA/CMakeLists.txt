@@ -106,22 +106,12 @@ macro(create_local_cuda_tests VariantSuffix)
   list(APPEND CUDA_LOCAL_TESTS builtin_var)
   list(APPEND CUDA_LOCAL_TESTS test_round)
   list(APPEND CUDA_LOCAL_TESTS fp16_bf16)
+  list(APPEND CUDA_LOCAL_TESTS libcudacxx)
+  list(APPEND CUDA_LOCAL_TESTS cooperative_groups)
   foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
     create_one_local_test(${_cuda_test} ${_cuda_test}.cu
                           ${VariantOffload} ${VariantSuffix}
                           "${VariantCPPFLAGS}" "${VariantLibs}")
-  endforeach()
-
-  # From CUDA 13 on, libcu++ is in include/cccl, which Clang does not search.
-  # TODO: Remove once https://github.com/llvm/llvm-project/pull/235910 lands.
-  set(_LibcuxxCPPFLAGS ${VariantCPPFLAGS})
-  if(EXISTS ${_CudaPath}/include/cccl)
-    list(APPEND _LibcuxxCPPFLAGS -isystem${_CudaPath}/include/cccl)
-  endif()
-  foreach(_cuda_test IN ITEMS libcuxx cooperative_groups)
-    create_one_local_test(${_cuda_test} ${_cuda_test}.cu
-                          ${VariantOffload} ${VariantSuffix}
-                          "${_LibcuxxCPPFLAGS}" "${VariantLibs}")
   endforeach()
 
   # We only need SIMD tests on CUDA-8.0 to verify that our reference is correct
