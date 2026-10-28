@@ -13,6 +13,7 @@ import re
 import multiprocessing
 import getpass
 import types
+import uuid
 
 import datetime
 from collections import defaultdict
@@ -20,12 +21,26 @@ from functools import partial
 import jinja2
 import click
 
+from . import report_v5
 from .compilers import get_cc_info, infer_cxx_compiler
 from .report import FAIL, PASS, XFAIL, Machine, Report, Run, TestSamples
 from .util import (fatal, init_logging, isexecfile, logger, mkdir_p,
                    resolve_command_path, timestamp)
 
 KNOWN_SAMPLE_KEYS = ['compile', 'exec', 'hash', 'score']
+
+# Options that only apply when generating a specific version of the
+# reports. This can be removed once we eventually remove support for
+# generating v1 reports.
+FORMAT_OPTIONS = [
+    ('output', '--output', 'v1'),
+    ('submit_url', '--submit', 'v1'),
+    ('run_order', '--run-order', 'v1'),
+    ('exclude_stat_from_submission', '--exclude-stat-from-submission', 'v1'),
+    ('output_v5', '--output-v5', 'v5'),
+    ('commit', '--commit', 'v5'),
+    ('commit_ordinal', '--commit-ordinal', 'v5'),
+]
 
 XML_REPORT_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
@@ -178,6 +193,9 @@ class TestSuiteTest(object):
         self.compiled = False
         self.trained = False
         self.remote_run = False
+        # The number of times the tests were built, which identifies the build
+        # each lit run tests.
+        self.build_count = 0
 
     def _fatal(self, msg):
         """Exit with an error, as OptionParser.error does."""
@@ -188,6 +206,23 @@ class TestSuiteTest(object):
     def run_test(self):
         opts = self.opts
 
+        # Validate the report options
+        v1 = 'v1' in opts.report_formats
+        v5 = 'v5' in opts.report_formats
+        for attribute, option, report_format in FORMAT_OPTIONS:
+            if report_format not in opts.report_formats and \
+                    getattr(opts, attribute) not in (None, ()):
+                self._fatal("%s requires --report-format %s" %
+                            (option, report_format))
+        if v5:
+            if opts.commit is None:
+                self._fatal("--report-format v5 requires --commit")
+            problem = report_v5.check_name(opts.commit, "--commit")
+            if problem:
+                self._fatal(problem)
+            if opts.exec_interleaved_builds:
+                self._fatal("--report-format v5 cannot be used with "
+                            "--exec-interleaved-builds")
         # Validate build/exec mode options
         if opts.build and opts.exec_mode:
             self._fatal("--build and --exec are mutually exclusive")
@@ -426,11 +461,15 @@ class TestSuiteTest(object):
             opts.label += "__%s__%s" %\
                 (cc_nick, cc_info['cc_target'].split('-')[0])
         logger.info('Using nickname: %r' % opts.label)
+        if v5:
+            problem = report_v5.check_name(opts.label, "The machine name")
+            if problem:
+                self._fatal("%s: %r" % (problem, opts.label))
 
         #  When we can't detect the clang version we use 0 instead. That
         # is a horrible failure mode because all of our data ends up going
         # to order 0.  The user needs to give an order if we can't detect!
-        if opts.run_order is None:
+        if v1 and opts.run_order is None:
             cc_info = self._get_cc_info(cmake_vars)
             if cc_info['inferred_run_order'] == 0:
                 fatal("Cannot detect compiler version. Specify --run-order"
@@ -447,6 +486,7 @@ class TestSuiteTest(object):
         # Now do the actual run.
         reports = []
         json_reports = []
+        builds = []
         # In exec mode, we only run tests, no compilation
         if opts.exec_mode:
             for i in range(opts.exec_multisample):
@@ -456,6 +496,7 @@ class TestSuiteTest(object):
                                                  profile=p)
                 reports.append(run_report)
                 json_reports.append(json_data)
+                builds.append(self.build_count)
         else:
             # Normal mode: build and test
             for i in range(max(opts.exec_multisample, opts.compile_multisample)):
@@ -467,20 +508,35 @@ class TestSuiteTest(object):
                                                  profile=p)
                 reports.append(run_report)
                 json_reports.append(json_data)
+                builds.append(self.build_count)
 
         # Filter execution samples if --drop-exec was specified
-        reports, json_reports = self._filter_exec_samples(reports, json_reports)
+        reports, json_reports, builds = self._filter_exec_samples(
+            reports, json_reports, builds)
 
-        report = self._create_merged_report(reports)
+        if v1:
+            rendered = self._create_merged_report(reports).render()
 
-        # Write the report out so it can be read by the submission tool.
-        report_path = os.path.join(self._base_path, 'report.json')
-        with open(report_path, 'w') as fd:
-            fd.write(report.render())
+            # Write the report out so it can be read by the submission tool.
+            report_path = os.path.join(self._base_path, 'report.json')
+            with open(report_path, 'w') as fd:
+                fd.write(rendered)
 
-        if opts.output:
-            with open(opts.output, 'w') as fd:
-                fd.write(report.render())
+            if opts.output:
+                with open(opts.output, 'w') as fd:
+                    fd.write(rendered)
+
+        if v5:
+            submission = report_v5.build_submission(
+                str(uuid.uuid4()), datetime.datetime.now(datetime.timezone.utc),
+                opts.label, opts.commit, opts.commit_ordinal,
+                self._get_cc_info(cmake_vars), list(zip(json_reports, builds)))
+            rendered = report_v5.render(submission)
+            for path in (os.path.join(self._base_path, 'report.v5.json'),
+                         opts.output_v5):
+                if path:
+                    with open(path, 'w') as fd:
+                        fd.write(rendered)
 
         xml_report_path = os.path.join(self._base_path,
                                        'test-results.xunit.xml')
@@ -653,6 +709,7 @@ class TestSuiteTest(object):
             self._build(self._base_path)
             self._install_benchmark(self._base_path)
             self.compiled = True
+            self.build_count += 1
 
         if skip_lit:
             return None, None
@@ -670,19 +727,19 @@ class TestSuiteTest(object):
         test_samples = sum([r.tests for r in reports], [])
         return Report(machine, run, test_samples)
 
-    def _filter_exec_samples(self, reports, json_reports):
+    def _filter_exec_samples(self, reports, *per_sample):
         """Filter out execution samples based on --drop-exec option.
 
-        Returns filtered (reports, json_reports) tuples.
+        Returns the filtered reports, followed by each list of per_sample,
+        which has one item per report, filtered the same way.
         """
         drop_exec_count = self.opts.drop_exec
 
         if drop_exec_count is None or drop_exec_count == 0 or len(reports) == 0:
-            return reports, json_reports
+            return (reports,) + per_sample
 
         # Drop the first N samples
         filtered_reports = reports[drop_exec_count:]
-        filtered_json_reports = json_reports[drop_exec_count:]
 
         # Log what we're dropping
         if drop_exec_count == 1:
@@ -694,7 +751,8 @@ class TestSuiteTest(object):
         logger.info("Kept %d of %d execution samples after --drop-exec filtering" %
                     (len(filtered_reports), len(reports)))
 
-        return filtered_reports, filtered_json_reports
+        return (filtered_reports,) + tuple(items[drop_exec_count:]
+                                           for items in per_sample)
 
     def _test_suite_dir(self):
         return self.opts.test_suite_root
@@ -1469,13 +1527,28 @@ class TestSuiteTest(object):
 @click.option("--output", "output", metavar="PATH",
               help="write raw report data to PATH (or stdout if '-')",
               default=None)
+@click.option("--report-format", "report_formats", multiple=True,
+              type=click.Choice(['v1', 'v5']), default=['v1'],
+              show_default=True,
+              help="The format of the report: v1 for LNT v4 (report.json), "
+                   "v5 for LNT v5 (report.v5.json). Can be given twice to "
+                   "write both")
+@click.option("--output-v5", "output_v5", metavar="PATH", default=None,
+              help="also write the v5 report to PATH")
+@click.option("--commit", "commit", metavar="VALUE", default=None,
+              help="The commit the v5 report is for, e.g. the git SHA the "
+                   "compiler was built from (required for v5)")
+@click.option("--commit-ordinal", "commit_ordinal", metavar="N",
+              type=click.IntRange(-2**31, 2**31 - 1), default=None,
+              help="The commit's position in the order of commits, in the v5 "
+                   "report. Without it, the commit has no ordinal")
 @click.option("--succinct-compile-output", "succinct",
               help="run CMake without -v", is_flag=True)
 @click.option("-v", "--verbose", "verbose", is_flag=True, default=False,
               help="show verbose test results")
 @click.option("--exclude-stat-from-submission",
               "exclude_stat_from_submission",
-              help="Do not submit the stat of this type",
+              help="Do not submit the stat of this type (v1 only)",
               multiple=True, default=[],
               type=click.Choice(KNOWN_SAMPLE_KEYS))
 @click.option("--single-result", "single_result",
@@ -1509,8 +1582,6 @@ class TestSuiteTest(object):
 @click.option("--select-machine", default='match',
               type=click.Choice(['match', 'update', 'split']),
               help="How to select and create missing machine")
-@click.option("--commit", type=int, help="deprecated/ignored option",
-              expose_value=False)
 def cli_action(*args, **kwargs):
     """Build and run the LLVM test-suite, and write a report for LNT."""
     init_logging()

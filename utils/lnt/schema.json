@@ -1,0 +1,25 @@
+{
+  "name": "llvm_test_suite",
+  "metrics": [
+    {"name": "execution_time", "type": "real", "display_name": "Execution Time", "unit": "seconds", "unit_abbrev": "s", "dashboard": true},
+    {"name": "compile_time", "type": "real", "display_name": "Compile Time", "unit": "seconds", "unit_abbrev": "s", "dashboard": true},
+    {"name": "link_time", "type": "real", "display_name": "Link Time", "unit": "seconds", "unit_abbrev": "s"},
+    {"name": "compile_peak_memory", "type": "integer", "display_name": "Compile Peak Memory", "unit": "bytes", "unit_abbrev": "B"},
+    {"name": "link_peak_memory", "type": "integer", "display_name": "Link Peak Memory", "unit": "bytes", "unit_abbrev": "B"},
+    {"name": "code_size", "type": "integer", "display_name": "Code Size", "unit": "bytes", "unit_abbrev": "B", "dashboard": true},
+    {"name": "binary_size", "type": "integer", "display_name": "Binary Size", "unit": "bytes", "unit_abbrev": "B"},
+    {"name": "score", "type": "real", "display_name": "Score", "bigger_is_better": true},
+    {"name": "hash", "type": "text", "display_name": "Hash"},
+    {"name": "status", "type": "text", "display_name": "Status"}
+  ],
+  "machine_fields": [
+    {"name": "hardware", "type": "text", "searchable": true, "listed": true},
+    {"name": "os", "type": "text", "searchable": true, "listed": true}
+  ],
+  "commit_fields": [],
+  "repository": {
+    "label": "GitHub",
+    "commit_url": "https://github.com/llvm/llvm-project/commit/{commit}",
+    "range_url": "https://github.com/llvm/llvm-project/compare/{from}...{to}"
+  }
+}
