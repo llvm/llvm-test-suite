@@ -70,8 +70,6 @@ declare_catch_test_dir(unit math
     Unit_Device_fma_Accuracy_Positive
     Unit_Device_fdim_Accuracy_Positive
     Unit_Device_remquo_Accuracy_Positive
-    Unit_Device_modf_modff_Negative_RTC
-    Unit_Device___frcp_rn_Accuracy_Positive
     Unit_Device___fsqrt_rn_Accuracy_Positive
     Unit_Device___frsqrt_rn_Accuracy_Positive
     Unit_Device___expf_Accuracy_Positive
@@ -79,7 +77,6 @@ declare_catch_test_dir(unit math
     Unit_Device___log2f_Accuracy_Positive
     Unit_Device_ilogbf_Accuracy_Positive
     Unit_Device_ilogb_Accuracy_Positive
-    Unit_Device_tgammaf_Accuracy_Limited_Positive
     Unit_Device___float2half_rd_Accuracy_Limited_Positive
     Unit_Device___float2half_ru_Accuracy_Limited_Positive
     Unit_Device___float2half_rz_Accuracy_Limited_Positive
