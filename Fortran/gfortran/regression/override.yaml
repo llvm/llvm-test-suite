@@ -143,3 +143,8 @@
 # on big endian target.
 "unsigned_21.f90":
   disabled_on: ["powerpc-*-aix"]
+
+# Flang has implemented F2023's "Using integer arrays to specify the rank
+# and bounds of an array" so there is no compile error.
+"pr101327.f90":
+  xfail: false
