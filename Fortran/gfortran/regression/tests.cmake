@@ -2168,7 +2168,7 @@ compile;pr101121.f;;-Ofast;;
 compile;pr101158.f90;;-O1;;
 compile;pr101264.f90;;-Ofast;;
 compile;pr101267.f90;;-Ofast;;
-compile;pr101327.f90;xfail;;;
+compile;pr101327.f90;;;;
 compile;pr101329.f90;xfail;;;
 compile;pr101514.f90;xfail;;;
 compile;pr101536.f90;xfail;;;
