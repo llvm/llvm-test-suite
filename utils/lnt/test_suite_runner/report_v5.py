@@ -51,9 +51,9 @@ RUN_PARAMETERS = {
 MAX_NAME_LENGTH = 256
 
 
-def check_name(name, what):
-    """Return why `name` cannot name a machine or a commit in LNT v5, which
-    uses them in URLs, or None if it can."""
+def check_url_name(name, what):
+    """Return why `name` cannot be a name that LNT v5 uses in URL paths, i.e.
+    a machine name or a commit value, or None if it can."""
     if not name or len(name) > MAX_NAME_LENGTH:
         return '%s must be 1 to %d characters long' % (
             what, MAX_NAME_LENGTH)
@@ -134,6 +134,8 @@ def build_submission(run_uuid, measured_at, machine, commit, ordinal, cc_info,
 
     tests = []
     for name, test_samples in sorted(samples.items()):
+        # Unlike machine names and commit values, test names can contain '/'
+        # and '%', since they never appear in URL paths.
         if not name or len(name) > MAX_NAME_LENGTH:
             logger.warning('Leaving out %r: test names must be 1 to %d '
                            'characters long' % (name, MAX_NAME_LENGTH))

@@ -217,7 +217,7 @@ class TestSuiteTest(object):
         if v5:
             if opts.commit is None:
                 self._fatal("--report-format v5 requires --commit")
-            problem = report_v5.check_name(opts.commit, "--commit")
+            problem = report_v5.check_url_name(opts.commit, "--commit")
             if problem:
                 self._fatal(problem)
             if opts.exec_interleaved_builds:
@@ -462,7 +462,7 @@ class TestSuiteTest(object):
                 (cc_nick, cc_info['cc_target'].split('-')[0])
         logger.info('Using nickname: %r' % opts.label)
         if v5:
-            problem = report_v5.check_name(opts.label, "The machine name")
+            problem = report_v5.check_url_name(opts.label, "The machine name")
             if problem:
                 self._fatal("%s: %r" % (problem, opts.label))
 
