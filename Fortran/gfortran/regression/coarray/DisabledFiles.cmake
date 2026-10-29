@@ -184,6 +184,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   # Need to pass -fcoarray to enable coarray declaration
   pr93671.f90
   proc_pointer_assign_1.f90
+  ptr_comp_5.f08
 )
 
 # These tests fail at runtime when they should pass.

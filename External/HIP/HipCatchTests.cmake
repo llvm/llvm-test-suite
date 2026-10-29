@@ -3,8 +3,7 @@
 
 include(CMakeParseArguments)
 
-# Global variables for Catch test configuration
-set(ENABLE_HIP_CATCH_TESTS OFF CACHE BOOL "Enable HIP Catch test framework and all catch test targets")
+# Global variables for Catch test configuration.
 set(CATCH_TEST_CATEGORIES "unit" CACHE STRING "Semicolon-separated list of test categories to include (unit;stress;performance;perftests)")
 set(CATCH_TEST_SUBDIRS "" CACHE STRING "Semicolon-separated list of test subdirectories to include (e.g., compiler;memory;stream). Empty means all subdirectories within enabled categories.")
 set(HIP_CATCH_TEST_TIMEOUT 60 CACHE STRING "Timeout for individual Catch tests in seconds")
@@ -30,7 +29,8 @@ set(HIP_GENERIC_TARGET_ARCHS
   "--offload-arch=gfx9-generic"
   "--offload-arch=gfx9-4-generic:sramecc+:xnack-"
   "--offload-arch=gfx9-4-generic:sramecc-:xnack-"
-  "--offload-arch=gfx9-4-generic:xnack+"
+  "--offload-arch=gfx9-4-generic:sramecc+:xnack+"
+  "--offload-arch=gfx9-4-generic:sramecc-:xnack+"
   "--offload-arch=gfx10-1-generic"
   "--offload-arch=gfx10-3-generic"
   "--offload-arch=gfx11-generic"
@@ -40,24 +40,38 @@ set(HIP_GENERIC_TARGET_ARCHS
 # Local paths for Catch test infrastructure
 set(HIP_CATCH_TESTS_DIR "${CMAKE_CURRENT_LIST_DIR}/catch")
 
-# Try to find system-installed Catch2 v2.13.10+
-# Note: v2.13.10 is used because v2.13.4 has glibc 2.34+ incompatibility (MINSIGSTKSZ issue)
-find_package(Catch2 2.13.10 QUIET)
+# Try to find system-installed Catch2 v3.8.1+, matching the version hip-tests uses.
+find_package(Catch2 3.8.1 QUIET)
 
 if(Catch2_FOUND)
   message(STATUS "Using system Catch2: ${Catch2_DIR}")
-  get_target_property(CATCH2_INCLUDE_PATH Catch2::Catch2 INTERFACE_INCLUDE_DIRECTORIES)
 else()
-  message(STATUS "Catch2 >= 2.13.10 not found on system, fetching v2.13.10...")
+  message(STATUS "Catch2 >= 3.8.1 not found on system, fetching v3.8.1...")
   include(FetchContent)
+  # Release tarball rather than a clone: the shallow clone pulls ~13MB, of which
+  # ~8MB is .git history that is discarded immediately.
+  #
+  # The tarball and unpacked sources go to TEST_SUITE_HIP_MANAGED_DIR so they
+  # survive `rm -rf build/` instead of being re-downloaded. BINARY_DIR is left in
+  # the build tree on purpose: the compiled objects depend on the toolchain and
+  # build type, so sharing one across configurations would let them clobber
+  # each other.
   FetchContent_Declare(
     Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG        v2.13.10
-    GIT_SHALLOW    TRUE
+    URL          https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.1.tar.gz
+    URL_HASH     SHA256=18b3f70ac80fccc340d8c6ff0f339b2ae64944782f8d2fca2bd705cf47cadb79
+    DOWNLOAD_DIR ${TEST_SUITE_HIP_MANAGED_DIR}/catch2/download
+    SOURCE_DIR   ${TEST_SUITE_HIP_MANAGED_DIR}/catch2/src
   )
   FetchContent_MakeAvailable(Catch2)
-  set(CATCH2_INCLUDE_PATH "${catch2_SOURCE_DIR}/single_include/catch2")
+  # The test-suite rewrites CMAKE_CXX_COMPILE_OBJECT to wrap compiles in
+  # tools/timeit, and that applies to Catch2's targets too. Nothing else orders
+  # them against timeit, so they can race it on a clean build tree.
+  foreach(_catch2_target Catch2 Catch2WithMain)
+    if(TARGET ${_catch2_target} AND TARGET build-timeit)
+      add_dependencies(${_catch2_target} build-timeit)
+    endif()
+  endforeach()
 endif()
 
 set(CATCH2_FOUND TRUE)
@@ -76,11 +90,54 @@ define_property(GLOBAL PROPERTY CATCH_SUBDIR_TARGETS_CREATED
   BRIEF_DOCS "List of category-subdir pairs for which aggregated targets have been created"
   FULL_DOCS "Prevents duplicate target creation for subdirectory-level aggregated targets")
 
+# Function to record the test list for one catch/ directory, see HipCatchTestLists.cmake
+# Arguments:
+#   CATEGORY      - Test category (unit, stress, etc.)
+#   SUBDIR        - Subdirectory name
+#   SOURCES       - .cc files that each build one test executable
+#   EXCLUDE_TESTS - Test case names to skip in every executable of the directory
+#   LINK_LIBS     - ROCm libraries, such as hiprtc, to link into every executable
+#                   of the directory
+function(declare_catch_test_dir CATEGORY SUBDIR)
+  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE_TESTS;LINK_LIBS" ${ARGN})
+  if(NOT ARG_SOURCES)
+    message(FATAL_ERROR "declare_catch_test_dir(${CATEGORY} ${SUBDIR}): no SOURCES given")
+  endif()
+  foreach(_src ${ARG_SOURCES})
+    if(NOT EXISTS "${HIP_CATCH_TESTS_DIR}/${CATEGORY}/${SUBDIR}/${_src}")
+      message(FATAL_ERROR "declare_catch_test_dir(${CATEGORY} ${SUBDIR}): listed source not found: ${_src}")
+    endif()
+  endforeach()
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_SOURCES" "${ARG_SOURCES}")
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS" "${ARG_EXCLUDE_TESTS}")
+  set_property(GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_LINK_LIBS" "${ARG_LINK_LIBS}")
+endfunction()
+
+# Function to turn a directory's EXCLUDE_TESTS into Catch2 test specs
+# Each name becomes two specs: the name itself, and "<name> - *" for the
+# instances Catch2 registers for a templated test case, which are named
+# "<name> - <type>". The second spec is single-quoted because RUN lines go
+# through a shell; for the same reason "exclude:" is used rather than "~",
+# which a shell may tilde-expand.
+# Arguments:
+#   OUT_VAR  - Variable to receive the list of test specs
+#   CATEGORY - Test category (unit, stress, etc.)
+#   SUBDIR   - Subdirectory name
+function(get_catch_exclude_args OUT_VAR CATEGORY SUBDIR)
+  get_property(_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS")
+  set(_args "")
+  foreach(_name ${_tests})
+    list(APPEND _args "exclude:${_name}" "'exclude:${_name} - *'")
+  endforeach()
+  set(${OUT_VAR} "${_args}" PARENT_SCOPE)
+endfunction()
+
+include(${CMAKE_CURRENT_LIST_DIR}/HipCatchTestLists.cmake)
+
 # Function to validate Catch test infrastructure
 function(validate_catch_tests_infrastructure)
   set(_required_paths
     "${HIP_CATCH_TESTS_DIR}/unit/compiler"
-    "${HIP_CATCH_TESTS_DIR}/external/picojson/picojson.h"
     "${HIP_CATCH_TESTS_DIR}/hipTestMain"
     "${HIP_CATCH_TESTS_DIR}/include"
   )
@@ -94,7 +151,6 @@ function(validate_catch_tests_infrastructure)
   endforeach()
 
   message(STATUS "Using local Catch test infrastructure: ${HIP_CATCH_TESTS_DIR}")
-  message(STATUS "Catch2 include path: ${CATCH2_INCLUDE_PATH}")
 endfunction()
 
 # Function to discover test sources from hip-tests
@@ -224,7 +280,11 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
 
   # Use shared generic target architecture flags from module scope
   set(_source_file "${TEST_DIR}/${TEST_BASENAME}.cc")
-  set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests")
+  # The main test spawns these helpers by their bare basename (see
+  # hipSquareGenericTarget.cc), so the file names must stay unsuffixed. Give each
+  # variant its own directory instead, otherwise parallel ROCm versions would
+  # declare two rules generating the same output path.
+  set(_output_dir "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/generic-${VARIANT_SUFFIX}")
 
   # Common source files
   set(_common_sources
@@ -234,12 +294,15 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
     "${HIP_CATCH_TESTS_DIR}/hipTestMain/main.cc"
   )
 
-  # Common include directories
+  # Common include directories. Catch2's are read off the target, since in the
+  # FetchContent case they are BUILD_INTERFACE generator expressions that cannot
+  # be resolved at configure time. The separator must be $<SEMICOLON> rather than
+  # a literal ';', which would split this string into list elements here instead
+  # of surviving to COMMAND_EXPAND_LISTS below.
   set(_include_flags
     "-I${ROCM_PATH}/include"
     "-I${HIP_CATCH_TESTS_DIR}/include"
-    "-I${CATCH2_INCLUDE_PATH}"
-    "-I${HIP_CATCH_TESTS_DIR}/external/picojson"
+    "-I$<JOIN:$<TARGET_PROPERTY:Catch2::Catch2,INTERFACE_INCLUDE_DIRECTORIES>,$<SEMICOLON>-I>"
   )
 
   # Determine library linking flags
@@ -273,11 +336,18 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -unwindlib=libgcc
       -frtlib-add-rpath
       ${_include_flags}
+      # Link Catch2 by -L/-l rather than by path: -x hip above applies to every
+      # following input file, and would make clang compile the archive as HIP
+      # source. The base name comes from the target so that it picks up
+      # DEBUG_POSTFIX, which makes the library libCatch2d in Debug builds.
+      -L$<TARGET_FILE_DIR:Catch2::Catch2>
+      -l$<TARGET_FILE_BASE_NAME:Catch2::Catch2>
       ${_libfs_flag}
     DEPENDS ${_common_sources}
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Building ${_exe_name_regular} for ${VARIANT_SUFFIX}"
     VERBATIM
+    COMMAND_EXPAND_LISTS
   )
 
   # 2. Build hipSquareGenericTargetOnlyCompressed (compressed fatbin with generic targets only)
@@ -304,11 +374,15 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
       -unwindlib=libgcc
       -frtlib-add-rpath
       ${_include_flags}
+      # See the note on linking Catch2 in the regular build above.
+      -L$<TARGET_FILE_DIR:Catch2::Catch2>
+      -l$<TARGET_FILE_BASE_NAME:Catch2::Catch2>
       ${_libfs_flag}
     DEPENDS ${_common_sources}
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Building ${_exe_name_compressed} for ${VARIANT_SUFFIX}"
     VERBATIM
+    COMMAND_EXPAND_LISTS
   )
 
   # Create custom targets for these executables
@@ -319,6 +393,13 @@ function(create_generic_target_executables TEST_BASENAME TEST_DIR VARIANT_SUFFIX
   add_custom_target(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX}
     DEPENDS "${_output_path_compressed}"
   )
+
+  # Catch2 v3 is a compiled library, so it must exist before the raw compiler
+  # invocations above can link it. Only needed when it is built in-tree.
+  if(TARGET Catch2)
+    add_dependencies(hipSquareGenericTargetOnly-${VARIANT_SUFFIX} Catch2)
+    add_dependencies(hipSquareGenericTargetOnlyCompressed-${VARIANT_SUFFIX} Catch2)
+  endif()
 
   # Make the main test executable depend on these
   set(_main_test_exe "catch_unit_compiler_${TEST_BASENAME}-${VARIANT_SUFFIX}")
@@ -386,11 +467,9 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/catch_tests"
   )
 
-  # Include directories
+  # Include directories (Catch2's come from the linked target below)
   target_include_directories(${_test_exe} PRIVATE
-    ${CATCH2_INCLUDE_PATH}
     "${HIP_CATCH_TESTS_DIR}/include"
-    "${HIP_CATCH_TESTS_DIR}/external/picojson"
   )
 
   # Add HIP runtime includes
@@ -451,6 +530,7 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
 
   # Link libraries
   target_link_libraries(${_test_exe} PRIVATE
+    Catch2::Catch2
     ${VariantLibs}
     stdc++fs
     dl
@@ -458,24 +538,39 @@ macro(create_catch_test_executable TEST_NAME TEST_SOURCES TEST_DIR CATEGORY SUBD
     rt
   )
 
+  # The directory's LINK_LIBS, taken from this variant's ROCm so that each
+  # variant links its own copy
+  get_property(_link_libs GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_LINK_LIBS")
+  foreach(_lib ${_link_libs})
+    set(_lib_path "${ROCM_PATH}/lib/lib${_lib}.so")
+    if(NOT EXISTS "${_lib_path}")
+      message(FATAL_ERROR "${CATEGORY}/${SUBDIR} needs ${_lib}, but ${_lib_path} does not exist")
+    endif()
+    target_link_libraries(${_test_exe} PRIVATE "${_lib_path}")
+  endforeach()
+
   # Add to subdirectory variant target (lowest level)
   add_dependencies(hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX} ${_test_exe})
 
   # Register with LIT
   # Use console reporter for consistent output parsing in summary scripts
   # Console reporter outputs: "test cases: X | Y passed | Z failed"
+  # The directory's EXCLUDE_TESTS follow as Catch2 test specs.
   #
   # Special handling for hipSquareGenericTarget:
   # The test spawns helper executables (hipSquareGenericTargetOnly, etc.) using relative
   # paths like "./hipSquareGenericTargetOnly". For this to work, the test must run from
-  # the catch_tests directory where both the main test and helpers are located.
+  # the per-variant generic-${VARIANT_SUFFIX} directory holding those helpers, so the
+  # main executable one level up is reached via "../".
   # WORKDIR causes LIT to cd into the directory before executing the test.
+  get_catch_exclude_args(_exclude_args "${CATEGORY}" "${SUBDIR}")
   if("${TEST_NAME}" MATCHES "hipSquareGenericTarget")
     # Use WORKDIR to change directory before running (parsed as "cd DIR ; executable")
     # %S expands to source directory (where .test file is located)
-    llvm_test_run(WORKDIR "%S/catch_tests" EXECUTABLE "./${_test_exe}" "--reporter" "console")
+    llvm_test_run(WORKDIR "%S/catch_tests/generic-${VARIANT_SUFFIX}"
+                  EXECUTABLE "../${_test_exe}" "--reporter" "console" ${_exclude_args})
   else()
-    llvm_test_run(EXECUTABLE "catch_tests/${_test_exe}" "--reporter" "console")
+    llvm_test_run(EXECUTABLE "catch_tests/${_test_exe}" "--reporter" "console" ${_exclude_args})
   endif()
 
   # Add verification to check if test passed
@@ -537,8 +632,12 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
   # Wire dependencies: category variant target depends on subdirectory variant target
   add_dependencies(hip-tests-catch-${CATEGORY}-${VARIANT_SUFFIX} hip-tests-catch-${CATEGORY}-${SUBDIR}-${VARIANT_SUFFIX})
 
-  # Discover test sources directly from .cc files
-  file(GLOB _test_sources RELATIVE "${_test_dir}" "${_test_dir}/*.cc")
+  # Use the directory's SOURCES from HipCatchTestLists.cmake, falling back to
+  # every .cc file for a directory without an entry there
+  get_property(_test_sources GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_SOURCES")
+  if(NOT _test_sources)
+    file(GLOB _test_sources RELATIVE "${_test_dir}" "${_test_dir}/*.cc")
+  endif()
 
   if(NOT _test_sources)
     message(STATUS "No test sources found in ${CATEGORY}/${SUBDIR}, skipping")
@@ -546,6 +645,10 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
   endif()
 
   message(STATUS "Discovered test sources in ${CATEGORY}/${SUBDIR}: ${_test_sources}")
+  get_property(_exclude_tests GLOBAL PROPERTY "CATCH_${CATEGORY}_${SUBDIR}_EXCLUDE_TESTS")
+  if(_exclude_tests)
+    message(STATUS "Excluded test cases in ${CATEGORY}/${SUBDIR}: ${_exclude_tests}")
+  endif()
 
   # Create a separate test executable for each source file
   # This allows LIT to report statistics for each individual test
@@ -590,6 +693,8 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
     set(CATCH_CATEGORY ${CATEGORY})
     set(CATCH_SUBDIR ${SUBDIR})
     set(CATCH_VARIANT_SUFFIX ${VARIANT_SUFFIX})
+    get_catch_exclude_args(_exclude_args "${CATEGORY}" "${SUBDIR}")
+    string(REPLACE ";" " " CATCH_EXCLUDE_ARGS "${_exclude_args}")
     set(_summary_script "${CMAKE_CURRENT_BINARY_DIR}/catch_tests/summary_${CATEGORY}_${SUBDIR}_${VARIANT_SUFFIX}.sh")
     configure_file(
       "${CMAKE_CURRENT_SOURCE_DIR}/catch_summary_template.sh.in"
@@ -600,6 +705,8 @@ function(create_catch_tests_for_subdir CATEGORY SUBDIR VARIANT_SUFFIX ROCM_PATH)
 
     # Create wrapper script that runs LIT then shows summary
     # Set template variables
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+    set(TEST_SUITE_LIT_BINARY "${HIP_TEST_SUITE_LIT_BINARY}")
     set(LIT_VERBOSITY_FLAGS "${_lit_verbosity_flags}")
     string(REPLACE ";" " " TEST_LIST "${_subdir_variant_tests}")
     set(SUMMARY_SCRIPT "${_summary_script}")

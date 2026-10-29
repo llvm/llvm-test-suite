@@ -39,7 +39,9 @@
  * what you give them. 
  */
 
+#ifndef __MVS__
 #include <sys/param.h>
+#endif
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#ifndef _AIX
+#if !defined(_AIX) && !defined(__MVS__)
 #include <err.h>
 #endif
 #include <errno.h>

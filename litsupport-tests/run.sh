@@ -5,41 +5,39 @@ rm -rf "$TOP_OUTPUT"
 mkdir -p "$TOP_OUTPUT"
 
 if [ -z "${1:-}" ]; then
-	echo "Usage: $0 /path/to/lit"
+	echo "Usage: $0 /path/to/lit [/path/to/FileCheck]"
 	exit 1
 fi
 LIT="$1"
+FILECHECK="${2:-FileCheck}"
 
-function run_tests {
+cd "$(dirname "$0")"
+
+FAILED=0
+for i in */lit.site.cfg; do
+	DIR="$(dirname $i)"
+	# Each suite's lit.site.cfg refers to paths relative to its own directory.
+	cd "$DIR"
+	echo "===> $DIR"
+
 	OUTPUT="$TOP_OUTPUT/$DIR"
-	LIT_EXE="$1"
-	rm -rf "$OUTPUT"
 	mkdir -p "$OUTPUT"
 
 	LITFLAGS=""
 	if [ -e litflags.txt ]; then
 		LITFLAGS="$(cat litflags.txt)"
 	fi
-	CMD="$LIT_EXE . -j 1 $LITFLAGS -o \"$OUTPUT/result.json\" >& \"$OUTPUT/lit.out\""
+	# lit's exit status is ignored: some suites have tests that fail on purpose.
+	CMD="$LIT . -j 1 $LITFLAGS -o \"$OUTPUT/result.json\" >& \"$OUTPUT/lit.out\""
 	echo "  $CMD"
 	eval $CMD
 	for f in check/*; do
 		BASE="$(basename "$f")"
-		CMD="cat $OUTPUT/$BASE | FileCheck \"$f\""
+		CMD="$FILECHECK \"$f\" < \"$OUTPUT/$BASE\""
 		echo "  $CMD"
-		eval $CMD
+		eval $CMD || FAILED=1
 	done
-}
 
-for i in */lit.site.cfg; do
-	DIR="$(dirname $i)"
-	pushd "$DIR" > /dev/null
-
-	echo "===> $DIR/python2.7"
-	run_tests "python2.7 $LIT"
-
-	echo "===> $DIR/python3"
-	run_tests "python3 $LIT"
-
-	popd > /dev/null
+	cd ..
 done
+exit $FAILED

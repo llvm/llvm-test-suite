@@ -1,5 +1,7 @@
 from litsupport import shellcommand
 from litsupport import testplan
+import hashlib
+import lit.Test
 import os
 import re
 
@@ -75,12 +77,27 @@ def _mutateScript(context, script):
     return testplan.mutateScript(context, script, _mutateCommandLine)
 
 
+def _runLineHash(line):
+    """Short hash of a RUN line, so that per-RUN-line results don't silently
+    get attributed to a different RUN line when lines are inserted, removed or
+    reordered in the test file."""
+    return hashlib.sha256(line.encode("utf-8")).hexdigest()[:8]
+
+
 def _collectTime(context, timefiles, metric_name="exec_time"):
-    time = 0.0
-    for timefile in timefiles:
+    total_time = 0.0
+    assert len(timefiles) == len(context.raw_runscript)
+    for i, (timefile, runline) in enumerate(zip(timefiles, context.raw_runscript)):
         filecontent = context.read_result_file(context, timefile)
-        time += getUserTimeFromContents(filecontent)
-    return {metric_name: time}
+        time = getUserTimeFromContents(filecontent)
+        # Report each RUN line of a multi-RUN-line test as a micro-test result,
+        # e.g. "mytest.test:run0-1a2b3c4d".
+        if len(timefiles) > 1:
+            result = lit.Test.Result(lit.Test.PASS)
+            result.addMetric(metric_name, lit.Test.toMetricValue(time))
+            context.micro_results[f"run{i}-{_runLineHash(runline)}"] = result
+        total_time += time
+    return {metric_name: total_time}
 
 
 def mutatePlan(context, plan):

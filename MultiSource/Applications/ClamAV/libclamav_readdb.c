@@ -1076,7 +1076,7 @@ static int dirent_compare(const struct dirent *a, const struct dirent *b) {
        stat(b->d_name, &b_stat);
        if (a_stat.st_mode < b_stat.st_mode) return -1;
        if (a_stat.st_mode > b_stat.st_mode) return 1;
-#else
+#elif !defined(__MVS__)
 	if (a->d_type < b->d_type) return -1;
 	if (a->d_type > b->d_type) return 1;
 #endif

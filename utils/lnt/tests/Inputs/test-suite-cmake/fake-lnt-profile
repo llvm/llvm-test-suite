@@ -1,0 +1,8 @@
+#!/bin/bash
+# A fake `lnt` that imports a profile, for testing how
+# `run-test-suite.py --use-perf` runs `lnt profile upgrade`.
+#
+# `lnt profile upgrade INPUT OUTPUT` converts INPUT to LNT's profile format;
+# copy it to OUTPUT unchanged instead.
+
+cp "$3" "$4"

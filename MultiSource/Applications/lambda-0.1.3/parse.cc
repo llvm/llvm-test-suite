@@ -24,6 +24,9 @@ http://www.gnu.org/copyleft/gpl.html
 #if HAVE_CONFIG_H
 #  include "config.h"
 #endif
+#ifdef __MVS__
+#include <strings.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>

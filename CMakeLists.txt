@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.4)
+cmake_minimum_required(VERSION 3.20.0)
 
 include(CheckSymbolExists)
 
@@ -149,6 +149,12 @@ endif()
 option(TEST_SUITE_USE_IR_PGO
   "Use IR PGO instrumentation (requires TEST_SUITE_PROFILE_GENERATE)" OFF)
 
+# Directory tree holding the `<target>.profdata` files written by
+# TEST_SUITE_PROFILE_GENERATE and read by TEST_SUITE_PROFILE_USE.
+# By default, profiles are written alongside the executables.
+set(TEST_SUITE_PROFILE_DIR "" CACHE PATH
+    "Directory tree containing <target>.profdata instrumentation profiles")
+
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
 option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" OFF)
@@ -160,6 +166,10 @@ if(TEST_SUITE_PROFILE_GENERATE)
   if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
     message(FATAL_ERROR "llvm-profdata not found.
 Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
+  endif()
+
+  if(NOT "${TEST_SUITE_PROFILE_DIR}" STREQUAL "")
+    file(MAKE_DIRECTORY "${TEST_SUITE_PROFILE_DIR}")
   endif()
 
   set(TEST_SUITE_PROFILE_GENERATE "True")
@@ -177,8 +187,30 @@ else()
 endif()
 
 option(TEST_SUITE_PROFILE_USE
-      "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
+      "Add appropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
       OFF)
+if(TEST_SUITE_PROFILE_USE AND NOT "${TEST_SUITE_PROFILE_DIR}" STREQUAL ""
+   AND NOT EXISTS "${TEST_SUITE_PROFILE_DIR}")
+  message(FATAL_ERROR "TEST_SUITE_PROFILE_DIR does not exist: ${TEST_SUITE_PROFILE_DIR}")
+endif()
+
+option(TEST_SUITE_EXTERNALIZE_DEBUGINFO
+      "Generate dSYM files for executables (Darwin only)"
+      OFF)
+
+option(TEST_SUITE_SAMPLE_PROFILE_USE
+      "Add -fprofile-sample-use for each benchmark using profiles from TEST_SUITE_SAMPLE_PROFILE_DIR"
+      OFF)
+set(TEST_SUITE_SAMPLE_PROFILE_DIR "" CACHE PATH
+    "Directory containing <target>.spgo sample profile files")
+if(TEST_SUITE_SAMPLE_PROFILE_USE)
+  if("${TEST_SUITE_SAMPLE_PROFILE_DIR}" STREQUAL "")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_USE requires TEST_SUITE_SAMPLE_PROFILE_DIR to be set")
+  endif()
+  if(NOT EXISTS "${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+    message(FATAL_ERROR "TEST_SUITE_SAMPLE_PROFILE_DIR does not exist: ${TEST_SUITE_SAMPLE_PROFILE_DIR}")
+  endif()
+endif()
 
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
@@ -258,6 +290,12 @@ if(NOT DEFINED TARGET_OS)
   message(STATUS "Check target operating system - ${CMAKE_SYSTEM_NAME}")
   set(TARGET_OS ${CMAKE_SYSTEM_NAME})
 endif()
+
+if (TARGET_OS STREQUAL "OS390")
+  check_symbol_exists(_LP64 "" ZOS_IS_ZOS64_ENABLED)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_ALL_SOURCE")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ALL_SOURCE")
+endif()
 if(NOT DEFINED ARCH)
   include(DetectArchitecture)
   detect_architecture(ARCH)
@@ -324,8 +362,9 @@ add_subdirectory(litsupport)
 option(TEST_SUITE_REPORT_COMPILE_MAX_RSS
        "Report max RSS for compile/link time (Apple/Linux only)" OFF)
 
-if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
-  message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux, ignored on this platform")
+if (TEST_SUITE_REPORT_COMPILE_MAX_RSS AND NOT (APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"
+                                                     OR CMAKE_SYSTEM_NAME STREQUAL "AIX"))
+  message(WARNING "TEST_SUITE_REPORT_COMPILE_MAX_RSS is only supported on Apple/Linux/AIX, ignored on this platform")
 endif()
 
 option(TEST_SUITE_COLLECT_COMPILE_TIME

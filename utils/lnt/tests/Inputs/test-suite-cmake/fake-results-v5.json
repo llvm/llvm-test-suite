@@ -1,0 +1,44 @@
+{
+    "tests": [
+        {
+            "name": "test-suite :: SingleSource/Benchmarks/Misc/pi.test",
+            "elapsed": "1.0",
+            "code": "PASS",
+            "metrics": {
+                "compile_time": 1.25,
+                "link_time": 0.5,
+                "compile_maxrss": 2048,
+                "link_maxrss": 0,
+                "exec_time": 1.5,
+                "size": 16384,
+                "size..text": 4096,
+                "size..data": 128,
+                "hash": "abc123"
+            }
+        },
+        {
+            "name": "test-suite :: MicroBenchmarks/Foo/foo.test",
+            "elapsed": "2.0",
+            "code": "PASS",
+            "metrics": {
+                "compile_time": 3.0,
+                "size": 32768,
+                "size..text": 8192,
+                "MicroBenchmarks": 1
+            }
+        },
+        {
+            "name": "test-suite :: MicroBenchmarks/Foo/foo.test:BM_Foo/8",
+            "elapsed": "0.0",
+            "code": "PASS",
+            "metrics": {
+                "exec_time": 0.25
+            }
+        },
+        {
+            "name": "test-suite :: SingleSource/Broken/broken.test",
+            "elapsed": "0.0",
+            "code": "NOEXE"
+        }
+    ]
+}

@@ -1,0 +1,64 @@
+# RUN: "@Python3_EXECUTABLE@" "%s"
+
+import pathlib
+import re
+import subprocess
+import sys
+import os
+
+test_file = pathlib.Path(__file__).resolve()
+build_dir = test_file.parent / "lapack-build"
+
+# Run LAPACK tests
+ctest_command = ["@CMAKE_CTEST_COMMAND@", "-V"]
+if "@CMAKE_BUILD_TYPE@":
+    ctest_command += ["-C", "@CMAKE_BUILD_TYPE@"]
+try:
+    ctest_result = subprocess.run(
+        ctest_command,
+        cwd=build_dir,
+        check=False,
+        env={"CTEST_PARALLEL_LEVEL": "@LAPACK_CTEST_PARALLEL_LEVEL@", **os.environ},
+    )
+    ctest_status = ctest_result.returncode
+except OSError as error:
+    print(f"CTest could not start: {error}\n")
+    sys.exit(1)
+
+if ctest_status != 0:
+    print(f"CTest failed with exit code {ctest_status}")
+    sys.exit(ctest_status)
+
+# Verify test output
+try:
+    testing_result = subprocess.run(
+        [sys.executable, "lapack_testing.py", "-n"],
+        cwd=build_dir,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    testing_status = testing_result.returncode
+    testing_output = testing_result.stdout
+except OSError as error:
+    print(f"lapack_testing.py could not start: {error}\n")
+    sys.exit(1)
+
+if testing_status != 0:
+    print(f"LAPACK test command failed with exit code {testing_status}")
+    sys.exit(testing_status)
+
+try:
+    num_errors = sum(map(int, testing_output.split()))
+except ValueError as error:
+    print(f"LAPACK test output is malformed: {testing_output}")
+    sys.exit(1)
+
+if num_errors != 0:
+    # Print the LAPACK error summary if there were errors
+    testing_result = subprocess.run(
+        [sys.executable, "lapack_testing.py", "-e"],
+        cwd=build_dir,
+    )
+    sys.exit(1)
+
+print("LAPACK verification passed")

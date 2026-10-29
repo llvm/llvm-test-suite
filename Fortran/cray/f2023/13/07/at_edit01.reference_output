@@ -1,0 +1,17 @@
+PASS: basic trim
+PASS: exact fit
+PASS: all blanks
+PASS: leading blanks
+PASS: internal blanks
+PASS: single char
+PASS: single blank
+PASS: 2AT repeat
+PASS: AT 1X AT
+PASS: A descriptor
+PASS: AT descriptor
+PASS: longer string
+PASS: multi items
+PASS: leading+internal blanks
+PASS: char literal
+Result: 15 passed, 0 failed
+exit 0

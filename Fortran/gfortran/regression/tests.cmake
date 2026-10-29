@@ -2168,7 +2168,7 @@ compile;pr101121.f;;-Ofast;;
 compile;pr101158.f90;;-O1;;
 compile;pr101264.f90;;-Ofast;;
 compile;pr101267.f90;;-Ofast;;
-compile;pr101327.f90;xfail;;;
+compile;pr101327.f90;;;;
 compile;pr101329.f90;xfail;;;
 compile;pr101514.f90;xfail;;;
 compile;pr101536.f90;xfail;;;
@@ -4243,7 +4243,7 @@ run;c_char_tests.f03 c_char_driver.c;;;;
 run;c_char_tests_2.f03;;;;
 run;c_char_tests_3.f90 c_char_tests_3_c.c;;;;
 run;c_char_tests_4.f90;;;;
-run;c_char_tests_5.f90;;-fbackslash;;
+run;c_char_tests_5.f90;;-fbackslash;;ppc64le-.+-.+ powerpc-.+-.+
 run;c_f_pointer_complex.f03 c_f_pointer_complex_driver.c;;;;ppc64le-.+-.+ powerpc-.+-.+
 run;c_f_pointer_logical.f03 c_f_pointer_logical_driver.c;;;;
 run;c_f_pointer_shape_tests_2.f03 c_f_pointer_shape_tests_2_driver.c;;;;

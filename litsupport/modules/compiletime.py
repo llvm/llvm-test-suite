@@ -25,7 +25,7 @@ def _getCompileTime(context):
                 compile_time += timeit.getUserTimeFromContents(contents)
                 compile_maxrss = max(compile_maxrss,
                                      timeit.getMaxRSSFromContents(contents))
-            if file.endswith(".link.time") and file.startswith(prefix):
+            elif file.endswith(".link.time") and file.startswith(prefix):
                 fullpath = os.path.join(path, file)
                 with open(fullpath) as fd:
                     contents = fd.read()

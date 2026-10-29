@@ -24,6 +24,13 @@
 #include "fourier.h"
 #include "ddcmath.h"
 
+// GCC doesn't support the FP_CONTRACT pragma.
+#if defined(__GNUC__) && !defined(__clang__)
+#define GCC_FP_CONTRACT_OFF __attribute__((optimize("fp-contract=off")))
+#else
+#define GCC_FP_CONTRACT_OFF
+#endif
+
 #define CHECKPOINTER(p)  CheckPointer(p,#p)
 
 const double SinPi4Result = 0x1.6a09e667f3bccp-1;
@@ -168,6 +175,7 @@ void fft_float (
     }
 }
 
+GCC_FP_CONTRACT_OFF
 void fft_float_StrictFP (
     unsigned  NumSamples,
     int       InverseTransform,

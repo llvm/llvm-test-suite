@@ -215,9 +215,6 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   # non-scalar, or non-variable
   fmt_nonchar_2.f90
 
-  # unimplemented: BOZ
-  boz_bge.f90
-
   # unimplemented: coarray address
   coarray_39.f90
   coarray_dependency_1.f90
@@ -244,6 +241,17 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
   coarray_poly_4.f90
   intent_out_7.f90
 
+  # unimplemented: non-ALLOCATABLE SAVE Coarray outside the main program
+  coarray_21.f90
+  coarray_23.f90
+  pr71688.f90
+  pr90002.f90
+  pr95827.f90
+
+  # unimplemented: Coarray with an allocatable direct component and/or requiring finalization
+  coarray_46.f90
+  coarray_alloc_comp_4.f08
+
   # unimplemented: coarray in procedure interface
   coarray_29_1.f90
   coarray_32.f90
@@ -269,6 +277,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: coarray reference
   coarray_lib_comm_1.f90
+ 
+  # unimplemented: associating coarray entity in associate construct
+  pr88379.f90
 
   # unimplemented: co_max
   coarray_collectives_4.f90
@@ -467,6 +478,9 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   pr68078.f90
   pr69739.f90
   typebound_call_32.f90
+
+  # Triggers UB in flang https://github.com/llvm/llvm-project/issues/224030.
+  enum_10.f90
 
   # --------------------------------------------------------------------------
   #
@@ -1000,8 +1014,16 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   io_real_boz_5.f90
   namelist_96.f90 # real data for integer NAMELIST input
   no_unit_error_1.f90
-  pointer_check_10.f90
+
+  # Have UB, they run until they crash.
+  pointer_check_1.f90
+  pointer_check_2.f90
+  pointer_check_3.f90
+  pointer_check_4.f90
+
+  pointer_check_10.f90 # Expects an error in f2003 mode, which Flang does not support.
   pointer_check_11.f90 # test exhibits UB, sometimes at O3 it hangs forever
+  pointer_check_12.f90 # test exhibits UB, sometimes at O3 it hangs forever
   pointer_remapping_6.f08
   unpack_bounds_1.f90
 
@@ -1625,6 +1647,7 @@ file(GLOB FAILING_FILES CONFIGURE_DEPENDS
   # Until https://github.com/orgs/llvm/projects/12?pane=issue&itemId=29048733
   # is implemented, they can only pass at -O0:
   all_bounds_1.f90
+  bounds_check_fail_3.f90
   cshift_bounds_3.f90
   cshift_bounds_4.f90
   eoshift_bounds_1.f90

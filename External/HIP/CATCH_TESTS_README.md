@@ -22,9 +22,20 @@ Currently included test categories:
 
 3. **clang++**: ROCm's clang++ compiler for building HIP code
 
-4. **Catch2 v2.13.10+**: Obtained automatically via:
-   - **System installation**: If Catch2 >= 2.13.10 is installed, it will be used
-   - **FetchContent**: If not found, CMake will download Catch2 v2.13.10 from GitHub at configure time (requires internet connection for first build)
+4. **Catch2 v3.8.1+**: Obtained automatically via:
+   - **System installation**: If Catch2 >= 3.8.1 is installed, it will be used
+   - **FetchContent**: If not found, CMake will download the Catch2 v3.8.1 release tarball from GitHub at configure time (requires internet connection for first build)
+
+5. **A writable `TEST_SUITE_HIP_MANAGED_DIR`**: The downloaded tarball and its
+   unpacked sources are cached here so they survive `rm -rf build/`. It defaults
+   to `${TEST_SUITE_HIP_ROOT}/managed`, which is inside the externals tree, so
+   that tree must be writable when Catch2 is downloaded rather than found on the
+   system. Override it if the externals tree is read-only or shared between
+   concurrent builds:
+
+   ```bash
+   cmake -DTEST_SUITE_HIP_MANAGED_DIR=/path/to/writable/dir ...
+   ```
 
 ## Quick Start
 
@@ -626,15 +637,17 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 **Solutions**:
 1. **Install Catch2 system-wide** (recommended for offline builds):
    ```bash
-   # Ubuntu/Debian
-   sudo apt install catch2
-
-   # Or build from source (exact version)
-   git clone -b v2.13.10 https://github.com/catchorg/Catch2.git
+   # Build from source. Distribution packages are often older than 3.8.1
+   # (Ubuntu 22.04 ships 2.13.8, for example), and find_package rejects
+   # them, so CMake falls back to downloading anyway.
+   git clone -b v3.8.1 https://github.com/catchorg/Catch2.git
    cd Catch2
-   cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local
+   cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_TESTING=OFF
    cmake --build build
    sudo cmake --install build
+
+   # A distribution package works only if it is >= 3.8.1, e.g.
+   #   sudo apt install catch2 && dpkg -s catch2 | grep Version
    ```
 
 2. **Ensure internet connectivity** during first CMake configure. Subsequent builds use the cached download.
@@ -643,14 +656,12 @@ llvm-lit catch_unit_compiler_hipSquare-hip-7.2.0.test
 
 **Error**: `No test sources found in category/subdir`
 
-**Solution**: The CMakeLists.txt parser may have failed. This can happen if:
-- The test category doesn't exist in your hip-tests version
-- The CMakeLists.txt format is not recognized
-
-Check available test categories:
+**Solution**: The directory has no entry in `HipCatchTestLists.cmake` and no `.cc` files to fall back on. Check which directories are vendored:
 ```bash
-ls /path/to/hip-tests/catch/
+ls External/HIP/catch/unit/
 ```
+
+If a source named in `HipCatchTestLists.cmake` is missing, for example after a sync renamed it, configuration stops with `listed source not found`. Update the entry to match the directory.
 
 ### Compilation Errors
 
@@ -669,6 +680,8 @@ The framework consists of:
    - Test category discovery
    - Test executable creation (one per `.cc` source file)
    - LIT integration
+
+   Per-directory test lists live in **HipCatchTestLists.cmake** (see [Porting a Test Directory](#porting-a-test-directory)).
 
 2. **Modified CMakeLists.txt**: Integration points in the main HIP test CMakeLists.txt:
    - Initialization in `create_hip_tests()`
@@ -698,6 +711,32 @@ To add support for additional test categories:
    ```
    llvm-test-suite/External/HIP/catch/mycategory/
    ```
+
+### Porting a Test Directory
+
+Upstream is `projects/hip-tests/catch/` in [ROCm/rocm-systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests) on `develop`. The standalone [ROCm/hip-tests](https://github.com/ROCm/hip-tests) repository is only a partial mirror of it, with different sources and YAML configs, so don't port from there.
+
+Copy the directory's sources unchanged from upstream, together with any shared headers from `include/` that its tests include. Upstream's own `CMakeLists.txt` is not copied; this build doesn't use it. Then give the directory an entry in `HipCatchTestLists.cmake`. `unit/device_memory` is a complete example:
+
+```cmake
+declare_catch_test_dir(unit device_memory
+  SOURCES
+    memcpy.cc
+    memset.cc
+  # Disabled for amd_linux (gfx94X failures) in upstream
+  # config/configs/unit/device_memory.yaml
+  EXCLUDE_TESTS
+    Unit_Device_memcpy_Positive
+  LINK_LIBS
+    hiprtc
+)
+```
+
+- `SOURCES` names the `.cc` files that upstream's `CMakeLists.txt` builds as tests, in its `TEST_SRC` lists. Other `.cc` files in the directory, such as sources fed to hiprtc as data, stay unlisted and are not built. A directory without an entry builds every `.cc` file it contains.
+- `EXCLUDE_TESTS` names the test cases whose `disabled:` list in upstream's `config/configs/unit/<subdir>.yaml` includes `amd_linux`. Upstream applies that YAML through `ENABLE_YAML_TAGS`, which this build does not use, so without an entry those tests run. Names must match exactly, because Catch2 silently ignores a name that matches nothing; recheck the YAML on every sync. The name of a templated test case also covers every instance of it, which Catch2 registers as `<name> - <type>`.
+- `LINK_LIBS` names the ROCm libraries the tests need, matching `LINKER_LIBS` in upstream's `CMakeLists.txt`. Each one is linked from the ROCm installation of the variant being built, and configuration fails if it is missing. Directories with `*_RTC` test cases need `hiprtc`.
+
+Excluded test cases are passed to each executable in the directory as `exclude:<name>` and `exclude:<name> - *` test specs, and the summary reports them as `Excluded`, counting each template instance. If every test case in a file would be excluded, leave the file out of `SOURCES` instead: a run that selects no tests fails.
 
 ## Performance Considerations
 
@@ -733,30 +772,48 @@ The Catch test infrastructure is located in `External/HIP/catch/`:
 
 ```
 External/HIP/catch/
+├── LICENSE.txt             # MIT license covering everything below
 ├── unit/                    # Unit test category
-│   └── compiler/           # Compiler test subdirectory
-│       ├── hipClassKernel.cc
-│       ├── hipClassKernel.h
-│       ├── hipSquare.cc
-│       └── hipSquareGenericTarget.cc
+│   ├── compiler/           # Compiler test subdirectory
+│   │   ├── hipClassKernel.cc
+│   │   ├── hipClassKernel.h
+│   │   ├── hipSquare.cc
+│   │   └── hipSquareGenericTarget.cc
+│   └── device_memory/      # Device-side memcpy and memset
+│       ├── memcpy.cc
+│       ├── memcpy_negative_kernels.cc      # hiprtc input, not a test
+│       ├── memcpy_negative_kernels_rtc.hh
+│       ├── memset.cc
+│       ├── memset_negative_kernels.cc      # hiprtc input, not a test
+│       └── memset_negative_kernels_rtc.hh
 ├── include/                # Common test headers
+│   ├── hip_array_common.hh
 │   ├── hip_test_common.hh
 │   ├── hip_test_context.hh
 │   ├── hip_test_features.hh
 │   ├── hip_test_filesystem.hh
-│   └── cmd_options.hh
-├── hipTestMain/            # Test framework main files
-│   ├── main.cc
-│   ├── hip_test_context.cc
-│   └── hip_test_features.cc
-└── external/               # Third-party libraries
-    └── picojson/
-        └── picojson.h      # JSON parser (vendored)
+│   ├── hip_test_level.hh
+│   ├── hip_test_params.hh
+│   ├── cmd_options.hh
+│   ├── resource_guards.hh
+│   └── utils.hh
+└── hipTestMain/            # Test framework main files
+    ├── main.cc
+    ├── hip_test_context.cc
+    └── hip_test_features.cc
 
 # Note: Catch2 is obtained via find_package or FetchContent, not vendored
 ```
 
+The per-directory test lists are in `External/HIP/HipCatchTestLists.cmake`, outside `catch/`, so that `catch/` stays a straight copy of upstream.
+
 **Note**: The `kernels/` directory is not needed for `unit/compiler` tests. These tests define kernels inline using `__global__` functions.
+
+**Provenance**: Everything under `catch/` is copied verbatim from
+`projects/hip-tests` in [ROCm/rocm-systems](https://github.com/ROCm/rocm-systems/tree/develop/projects/hip-tests)
+and is MIT licensed. The sources carry `SPDX-License-Identifier: MIT`; the full text is in
+`catch/LICENSE.txt`, a copy of `projects/hip-tests/LICENSE.md`. Keep these files byte-identical to
+upstream so that re-syncing stays a straight copy.
 
 ## References
 

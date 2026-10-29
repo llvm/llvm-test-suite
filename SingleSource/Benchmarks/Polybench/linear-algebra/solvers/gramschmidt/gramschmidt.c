@@ -23,6 +23,7 @@
 
 
 /* Array initialization. */
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static
 void init_array(int m, int n,
 		DATA_TYPE POLYBENCH_2D(A,M,N,m,n),
@@ -116,6 +117,7 @@ void kernel_gramschmidt(int m, int n,
 // NOTE: FMA_DISABLED is true for targets where FMA contraction causes
 // discrepancies which cause the accuracy checks to fail.
 // In this case, the test runs with the option -ffp-contract=off
+POLYBENCH_GCC_FP_CONTRACT_OFF
 static void
 kernel_gramschmidt_StrictFP(int m, int n,
                             DATA_TYPE POLYBENCH_2D(A,M,N,m,n),

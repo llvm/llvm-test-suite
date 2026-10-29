@@ -1,0 +1,5 @@
+ k after OPEN: 45
+ k after ENDFILE: 55
+ k after WRITE: 66
+ PASS
+exit 0

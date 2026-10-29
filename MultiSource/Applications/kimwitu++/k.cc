@@ -20,6 +20,9 @@
 #include <string>
 #include <sys/types.h>
 #include <stdlib.h>
+#ifdef __MVS__
+#include <strings.h>
+#endif
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786 )

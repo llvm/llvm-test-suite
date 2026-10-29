@@ -110,6 +110,23 @@ static void checkVectorFunction(Fn2Ty<RetTy, Ty> ScalarFn,
       exit(1);
     }
   }
+
+  // Test with small trip counts to stress tail-folding edge cases where
+  // inactive lanes in the last vector iteration must not update the reduction.
+  for (unsigned SmallN = 1; SmallN <= 16; ++SmallN) {
+    std::unique_ptr<Ty[]> SmallSrc1(new Ty[SmallN]);
+    std::unique_ptr<Ty[]> SmallSrc2(new Ty[SmallN]);
+    for (unsigned I = 0; I != SmallN; ++I) {
+      SmallSrc1[I] = std::numeric_limits<Ty>::max();
+      SmallSrc2[I] = std::numeric_limits<Ty>::min();
+    }
+    auto Reference = ScalarFn(&SmallSrc1[0], &SmallSrc2[0], SmallN);
+    auto ToCheck = VectorFn(&SmallSrc1[0], &SmallSrc2[0], SmallN);
+    if (Reference != ToCheck) {
+      std::cerr << "Miscompare for N=" << SmallN << "\n";
+      exit(1);
+    }
+  }
 }
 
 int main(void) {
@@ -374,6 +391,37 @@ int main(void) {
 	int16_t);
     checkVectorFunction<int16_t, int16_t>(
 	ScalarFn, VectorFn, "findlast_icmp_s16_start_4_iv_start_3");
+  }
+
+  {
+    // Check with decreasing 16-bits induction variable where Rdx gets updated when the condition is false.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int16_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ Rdx, /* FalseVal= */ I,
+	    /* ForCond= */
+	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int16_t)),
+	int16_t);
+    checkVectorFunction<int16_t, int16_t>(
+	ScalarFn, VectorFn,
+	"findlast_icmp_s16_false_update_decreasing_induction");
+  }
+
+  {
+    // Check with decreasing 32-bits induction variable where Rdx gets updated when the condition is false.
+    DEFINE_SCALAR_AND_VECTOR_FN2_TYPE(
+	int32_t Rdx = -1;,
+	DEFINE_FINDLAST_LOOP_BODY(
+	    /* TrueVal= */ Rdx, /* FalseVal= */ I,
+	    /* ForCond= */
+	    DEC_COND(/* End= */ 0, /* Step= */ 1, /* RetTy= */ int32_t)),
+	int32_t);
+    checkVectorFunction<int32_t, int32_t>(
+	ScalarFn, VectorFn,
+	"findlast_icmp_s32_false_update_decreasing_induction");
+    checkVectorFunction<int32_t, float>(
+	ScalarFn, VectorFn,
+	"findlast_fcmp_s32_false_update_decreasing_induction");
   }
 
   return 0;

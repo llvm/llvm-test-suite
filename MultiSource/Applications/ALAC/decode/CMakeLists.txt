@@ -11,6 +11,15 @@ if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "sparc")
   list(APPEND CXXFLAGS -DUNALIGNED_MEM_ACCESS_NOT_SUPPORTED)
 endif()
 
+if(ARCH MATCHES "riscv")
+  include(CheckSymbolExists)
+  check_symbol_exists(__riscv_misaligned_avoid "" RISCV_MISALIGNED_AVOID)
+  if(RISCV_MISALIGNED_AVOID)
+    list(APPEND CFLAGS -DUNALIGNED_MEM_ACCESS_NOT_SUPPORTED)
+    list(APPEND CXXFLAGS -DUNALIGNED_MEM_ACCESS_NOT_SUPPORTED)
+  endif()
+endif()
+
 set(RUN_OPTIONS - - < tune.caf)
 llvm_multisource(alacconvert-decode
   EndianPortable.c
