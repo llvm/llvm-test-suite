@@ -788,7 +788,8 @@ External/HIP/catch/
 │   │   └── memset_negative_kernels_rtc.hh
 │   └── math/               # Device math library (68 files)
 │       ├── casting_*_funcs.cc              # 7 casting test files
-│       ├── *_precision_*.cc                # 5 intrinsics/half-precision tests
+│       ├── *_intrinsics.cc                 # 3 intrinsics tests (double, single, integer)
+│       ├── half_precision_*.cc             # 3 half-precision tests
 │       ├── {log,misc,pow,remainder_and_rounding,root,special,trig}_funcs.cc
 │       ├── *_negative_kernels.cc           # 23 hiprtc input files, not tests
 │       └── *.hh                            # 25 shared headers
