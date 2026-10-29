@@ -779,13 +779,20 @@ External/HIP/catch/
 │   │   ├── hipClassKernel.h
 │   │   ├── hipSquare.cc
 │   │   └── hipSquareGenericTarget.cc
-│   └── device_memory/      # Device-side memcpy and memset
-│       ├── memcpy.cc
-│       ├── memcpy_negative_kernels.cc      # hiprtc input, not a test
-│       ├── memcpy_negative_kernels_rtc.hh
-│       ├── memset.cc
-│       ├── memset_negative_kernels.cc      # hiprtc input, not a test
-│       └── memset_negative_kernels_rtc.hh
+│   ├── device_memory/      # Device-side memcpy and memset
+│   │   ├── memcpy.cc
+│   │   ├── memcpy_negative_kernels.cc      # hiprtc input, not a test
+│   │   ├── memcpy_negative_kernels_rtc.hh
+│   │   ├── memset.cc
+│   │   ├── memset_negative_kernels.cc      # hiprtc input, not a test
+│   │   └── memset_negative_kernels_rtc.hh
+│   └── math/               # Device math library (68 files)
+│       ├── casting_*_funcs.cc              # 7 casting test files
+│       ├── *_intrinsics.cc                 # 3 intrinsics tests (double, single, integer)
+│       ├── half_precision_*.cc             # 3 half-precision tests
+│       ├── {log,misc,pow,remainder_and_rounding,root,special,trig}_funcs.cc
+│       ├── *_negative_kernels.cc           # 23 hiprtc input files, not tests
+│       └── *.hh                            # 25 shared headers
 ├── include/                # Common test headers
 │   ├── hip_array_common.hh
 │   ├── hip_test_common.hh
