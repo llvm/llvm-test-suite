@@ -105,6 +105,9 @@ macro(create_local_cuda_tests VariantSuffix)
   list(APPEND CUDA_LOCAL_TESTS future)
   list(APPEND CUDA_LOCAL_TESTS builtin_var)
   list(APPEND CUDA_LOCAL_TESTS test_round)
+  list(APPEND CUDA_LOCAL_TESTS fp16_bf16)
+  list(APPEND CUDA_LOCAL_TESTS libcudacxx)
+  list(APPEND CUDA_LOCAL_TESTS cooperative_groups)
   foreach(_cuda_test IN LISTS CUDA_LOCAL_TESTS)
     create_one_local_test(${_cuda_test} ${_cuda_test}.cu
                           ${VariantOffload} ${VariantSuffix}
