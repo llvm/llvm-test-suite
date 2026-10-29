@@ -59,6 +59,7 @@ else
   cp \
     $CMAKE_SRC_DIR/fake-test \
     $CMAKE_SRC_DIR/fake-results.json \
+    $CMAKE_SRC_DIR/fake-results-v5.json \
     $CMAKE_SRC_DIR/fake-results-fail-compile.json \
     $CMAKE_SRC_DIR/fake-results-fail-exec.json \
     $CMAKE_SRC_DIR/fake-results-profile.json \
@@ -76,6 +77,7 @@ else
   cp \
     $CMAKE_SRC_DIR/fake-test \
     $CMAKE_SRC_DIR/fake-results.json \
+    $CMAKE_SRC_DIR/fake-results-v5.json \
     $CMAKE_SRC_DIR/fake-results-fail-compile.json \
     $CMAKE_SRC_DIR/fake-results-fail-exec.json \
     $CMAKE_SRC_DIR/fake-results-profile.json \

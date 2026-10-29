@@ -28,3 +28,22 @@ in the build directory.
 
 See `run-test-suite.py --help` for all of the options, and [LNT's documentation](https://llvm.org/docs/lnt/tests.html)
 for more details on running the test-suite with LNT.
+
+## Reports for LNT v5
+
+With `--report-format v5`, the script writes a report for [LNT v5](https://lnt.llvm.org)
+to `report.v5.json` in the build directory. These reports follow the schema in [`schema.json`](schema.json).
+The `--report-format` argument can be passed twice to write reports in both formats.
+
+Since LNT v5 does not infer the commit that a run is associated to, it must be passed
+with `--commit` (e.g. the git SHA of the compiler under test). If the commit should be
+ordered with other commits (e.g. it is a commit on `main`, as opposed to a throwaway
+commit like a PR), its position should be passed with `--commit-ordinal`:
+
+    utils/lnt/run-test-suite.py ... --report-format v5 \
+                                    --commit 0123abc --commit-ordinal 598181
+
+`run-test-suite.py` doesn't submit v5 reports itself. Submit them with `lnt v5 submit`,
+which reads its token from `LNT_TOKEN`:
+
+    lnt v5 submit https://lnt.example.com --suite llvm_test_suite report.v5.json
