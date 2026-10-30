@@ -1,10 +1,25 @@
 #!/usr/bin/env python3
+# A fake lit for testing the report for LNT v5. When given
+# `--param profile=perf`, it also gathers a profile for two of the tests, as
+# lit's perf module does.
 
-import argparse, shutil
+import argparse, json
 parser = argparse.ArgumentParser(description='dummy lit')
 parser.add_argument('-o')
 parser.add_argument('-j', type=int)
+parser.add_argument('--param', action='append', default=[])
 parser.add_argument('bar')
 args, _ = parser.parse_known_args()
 
-shutil.copyfile(args.bar + '/fake-results-v5.json', args.o)
+with open(args.bar + '/fake-results-v5.json') as f:
+    report = json.load(f)
+if 'profile=perf' in args.param:
+    for test in report['tests']:
+        name = test['name'].split('/')[-1]
+        if name in ('pi.test', 'foo.test'):
+            profile = '%s/%s.perf_data' % (args.bar, name[:-len('.test')])
+            with open(profile, 'w') as f:
+                f.write('fake perf data\n')
+            test['metrics']['profile'] = profile
+with open(args.o, 'w') as f:
+    json.dump(report, f)
