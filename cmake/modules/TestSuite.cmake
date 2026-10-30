@@ -159,6 +159,21 @@ function(test_suite_add_build_dependencies target)
   )
 endfunction()
 
+# Write co-located path-list files that compiletime.py reads
+function(llvm_test_write_time_lists target)
+  if(NOT TEST_SUITE_COLLECT_COMPILE_TIME)
+    return()
+  endif()
+  file(GENERATE
+    OUTPUT "$<TARGET_FILE:${target}>.o.time.list"
+    CONTENT "$<$<BOOL:$<TARGET_OBJECTS:${target}>>:$<JOIN:$<TARGET_OBJECTS:${target}>,.time\n>.time\n>"
+  )
+  file(GENERATE
+    OUTPUT "$<TARGET_FILE:${target}>.link.time.list"
+    CONTENT "$<TARGET_FILE:${target}>.link.time\n"
+  )
+endfunction()
+
 # Internal function that transforms a list of flags to a string and appends
 # it to a given property of a target.
 function(append_target_flags propertyname target)
