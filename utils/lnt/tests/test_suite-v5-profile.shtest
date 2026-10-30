@@ -1,0 +1,105 @@
+# Check the profiles in the report for LNT v5, gathered with --use-perf.
+#
+# DEFINE: %{runtest} = \
+# DEFINE:   %{run-test-suite} my-machine \
+# DEFINE:     --sandbox %t.SANDBOX \
+# DEFINE:     --no-timestamp \
+# DEFINE:     --no-auto-name \
+# DEFINE:     --test-suite %S/Inputs/test-suite-cmake \
+# DEFINE:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# DEFINE:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# DEFINE:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# DEFINE:     --use-lit %S/Inputs/test-suite-cmake/fake-lit-v5 \
+# DEFINE:     --use-lnt %S/Inputs/test-suite-cmake/fake-lnt-v5-profile \
+# DEFINE:     --use-perf profile
+# DEFINE: %{profiles} = %{python} -c "import json, sys; \
+# DEFINE:   [print(t['name'], t.get('profile')) \
+# DEFINE:    for t in json.load(open(sys.argv[1]))['tests']]"
+
+# Each profile is converted with `lnt v5 convert-profile`, given the objdump
+# from the CMake cache, and added to its test. A MicroBenchmarks test's profile
+# is the profile of the whole executable. Only the v5 report is written, so the
+# profiles are not imported for the v1 report.
+# RUN: rm -rf %t.SANDBOX %t.log
+# RUN: env FAKE_LNT_LOG=%t.log %{runtest} --report-format v5 --commit abc123 \
+# RUN:     > %t.out 2> %t.err
+# RUN: %{profiles} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-PROFILES --match-full-lines %s
+# RUN: sort %t.log | filecheck --check-prefix CHECK-LOG --match-full-lines %s
+# RUN: not grep 'profile upgrade' %t.log
+# RUN: filecheck --check-prefix CHECK-ERR < %t.err %s
+#
+# CHECK-PROFILES:      MicroBenchmarks/Foo/foo encoded:foo.perf_data
+# CHECK-PROFILES-NEXT: MicroBenchmarks/Foo/foo.test:BM_Foo/8 None
+# CHECK-PROFILES-NEXT: SingleSource/Benchmarks/Misc/pi encoded:pi.perf_data
+# CHECK-PROFILES-NEXT: SingleSource/Broken/broken None
+#
+# CHECK-LOG:      v5 convert-profile --encode --objdump objdump {{.*}}/build/foo.perf_data
+# CHECK-LOG-NEXT: v5 convert-profile --encode --objdump objdump {{.*}}/build/pi.perf_data
+# CHECK-LOG-NEXT: v5 convert-profile --help
+#
+# CHECK-ERR: Converting 2 profiles...
+
+# The profiles are gathered by the first lit run, and converted right after it,
+# before the tests are rebuilt. --drop-exec does not drop them.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --report-format v5 --commit abc123 --compile-multisample 2 \
+# RUN:     --exec-multisample 3 --drop-exec 1 > %t.out 2> %t.err
+# RUN: filecheck --check-prefix CHECK-ORDER < %t.err %s
+# RUN: %{profiles} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-DROPPED --match-full-lines %s
+#
+# CHECK-ORDER:     Building...
+# CHECK-ORDER:     fake-lit-v5 {{.*}} --param profile=perf
+# CHECK-ORDER:     Converting 2 profiles
+# CHECK-ORDER:     Building...
+# CHECK-ORDER-NOT: Converting
+#
+# CHECK-DROPPED: MicroBenchmarks/Foo/foo encoded:foo.perf_data
+# CHECK-DROPPED: SingleSource/Benchmarks/Misc/pi encoded:pi.perf_data
+
+# When both reports are written, the profiles are also imported for the v1
+# report.
+# RUN: rm -rf %t.SANDBOX %t.both.log
+# RUN: env FAKE_LNT_LOG=%t.both.log %{runtest} --report-format v1 \
+# RUN:     --report-format v5 --commit abc123 > %t.out 2> %t.err
+# RUN: sort %t.both.log | filecheck --check-prefix CHECK-BOTH-LOG %s
+# RUN: filecheck --check-prefix CHECK-BOTH-V1 < %t.SANDBOX/build/report.json %s
+# RUN: %{profiles} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-BOTH-V5 --match-full-lines %s
+#
+# CHECK-BOTH-LOG: profile upgrade {{.*}}/build/foo.perf_data
+# CHECK-BOTH-LOG: profile upgrade {{.*}}/build/pi.perf_data
+# CHECK-BOTH-LOG: v5 convert-profile --encode --objdump objdump {{.*}}/build/foo.perf_data
+# CHECK-BOTH-LOG: v5 convert-profile --encode --objdump objdump {{.*}}/build/pi.perf_data
+#
+# CHECK-BOTH-V1: "Name": "nts.SingleSource/Benchmarks/Misc/pi.profile"
+#
+# CHECK-BOTH-V5: SingleSource/Benchmarks/Misc/pi encoded:pi.perf_data
+
+# A profile that cannot be converted is left out of the report.
+# RUN: rm -rf %t.SANDBOX
+# RUN: env FAKE_LNT_MODE=fail %{runtest} --report-format v5 --commit abc123 \
+# RUN:     > %t.out 2> %t.err
+# RUN: %{profiles} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-FAIL-V5 --match-full-lines %s
+#
+# CHECK-FAIL-V5:      MicroBenchmarks/Foo/foo None
+# CHECK-FAIL-V5-NEXT: MicroBenchmarks/Foo/foo.test:BM_Foo/8 None
+# CHECK-FAIL-V5-NEXT: SingleSource/Benchmarks/Misc/pi None
+# CHECK-FAIL-V5-NEXT: SingleSource/Broken/broken None
+
+# An `lnt` that cannot convert profiles for v5 is refused before anything is
+# run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: not env FAKE_LNT_MODE=no-v5 %{runtest} --report-format v5 --commit abc123 \
+# RUN:     > %t.out 2> %t.no-v5.err
+# RUN: filecheck --check-prefix CHECK-NO-V5 < %t.no-v5.err %s
+# RUN: not test -e %t.SANDBOX
+# CHECK-NO-V5: error: {{.*}}fake-lnt-v5-profile cannot convert profiles for the v5 report: `lnt v5 convert-profile` requires llvm-lnt 0.4.20 or later
+#
+# Such an `lnt` is fine for the v1 report.
+# RUN: env FAKE_LNT_MODE=no-v5 %{runtest} --report-format v1 \
+# RUN:     > %t.out 2> %t.err
+# RUN: filecheck --check-prefix CHECK-NO-V5-V1 < %t.SANDBOX/build/report.json %s
+# CHECK-NO-V5-V1: "Name": "nts.SingleSource/Benchmarks/Misc/pi.profile"

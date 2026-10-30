@@ -1,0 +1,47 @@
+#!/bin/bash
+# A fake `lnt`, for testing how `run-test-suite.py --use-perf` runs
+# `lnt v5 convert-profile` (and `lnt profile upgrade`, for the v1 report).
+#
+# Each run appends its arguments, on one line, to $FAKE_LNT_LOG if it is set.
+# `v5 convert-profile --encode ... PROFILE` prints `encoded:` followed by the
+# name of PROFILE's file, unless $FAKE_LNT_MODE says otherwise:
+#   fail:  print an error and exit with 1;
+#   warn:  also print a warning;
+#   sleep: sleep for 30 seconds first;
+#   no-v5: be an `lnt` without `v5`, which refuses `v5` and its commands.
+
+if [ -n "${FAKE_LNT_LOG}" ]; then
+  echo "$*" >> "${FAKE_LNT_LOG}"
+fi
+
+case "$1 $2" in
+  "profile upgrade")
+    cp "$3" "$4"
+    ;;
+  "v5 convert-profile")
+    if [ "${FAKE_LNT_MODE}" = no-v5 ]; then
+      echo "Error: No such command 'v5'." >&2
+      exit 2
+    fi
+    if [ "$3" = --help ]; then
+      exit 0
+    fi
+    case "${FAKE_LNT_MODE}" in
+      fail)
+        echo "error: cannot read the profile" >&2
+        exit 1
+        ;;
+      warn)
+        echo "warning: the profile lists no function" >&2
+        ;;
+      sleep)
+        exec sleep 30
+        ;;
+    esac
+    echo "encoded:$(basename "${@: -1}")"
+    ;;
+  *)
+    echo "unexpected arguments: $*" >&2
+    exit 1
+    ;;
+esac

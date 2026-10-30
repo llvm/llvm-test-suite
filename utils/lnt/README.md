@@ -43,6 +43,10 @@ commit like a PR), its position should be passed with `--commit-ordinal`:
     utils/lnt/run-test-suite.py ... --report-format v5 \
                                     --commit 0123abc --commit-ordinal 598181
 
+With `--use-perf profile` (or `all`), profiles gathered with Linux `perf` are added to the
+report. Note that this requires the LNT command-line tool to be installed and on the `PATH`,
+or located with `--use-lnt`.
+
 `run-test-suite.py` doesn't submit v5 reports itself. Submit them with `lnt v5 submit`,
 which reads its token from `LNT_TOKEN`:
 
