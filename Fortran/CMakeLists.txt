@@ -10,6 +10,7 @@
 add_subdirectory(cray)
 add_subdirectory(UnitTests)
 add_subdirectory(SNAP)
+add_subdirectory(riken)
 
 # The gfortran subdirectory contains tests imported as-is from gfortran's
 # test suite. These have not been widely tested, so they are only enabled for

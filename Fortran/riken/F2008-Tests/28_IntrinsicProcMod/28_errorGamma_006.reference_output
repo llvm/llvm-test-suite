@@ -1,0 +1,3 @@
+ log_gamma(x32): OK
+ log_gamma(x64): OK
+exit 0
