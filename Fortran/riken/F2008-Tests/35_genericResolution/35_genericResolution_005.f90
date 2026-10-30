@@ -1,6 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008 12.4.3.4.5, R1207 C1212, C1213, C1214, C1215
 
 ! ====================

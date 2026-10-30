@@ -1,6 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008 13.7.22 BESSEL J0 (X)
 !             13.7.23 BESSEL J1 (X)
 !             13.7.24 BESSEL JN (N, X) or BESSEL JN (N1, N2, X)

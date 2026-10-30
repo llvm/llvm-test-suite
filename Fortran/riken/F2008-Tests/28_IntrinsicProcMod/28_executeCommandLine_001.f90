@@ -1,18 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: ls test-001.txt
-! RUN: ls test-002.txt
-! RUN: ls test-003.txt
-! RUN: ls test-004.txt
-! RUN: ls test-005.txt
-! RUN: rm test-*.txt
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-! RUN: ls test-001.txt
-! RUN: ls test-002.txt
-! RUN: ls test-003.txt
-! RUN: ls test-004.txt
-! RUN: ls test-005.txt
-! RUN: rm test-*.txt
-
 ! SPEC: F2008 EXECUTE_COMMAND_LINE
 
 program main

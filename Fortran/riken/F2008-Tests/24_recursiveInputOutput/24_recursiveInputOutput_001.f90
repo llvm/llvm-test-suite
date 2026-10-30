@@ -1,6 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008 9.12, R910, R911, R912, R913
 
 ! A-1 Different units

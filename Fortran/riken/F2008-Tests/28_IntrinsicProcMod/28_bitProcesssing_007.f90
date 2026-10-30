@@ -1,6 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008 Masking bits (MASKL,MASKR)
 
 program main

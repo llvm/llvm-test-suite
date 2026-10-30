@@ -1,10 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: ls test-011.txt
-! RUN: rm test-*.txt
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-! RUN: ls test-011.txt
-! RUN: rm test-*.txt
-
 ! SPEC: F2008 EXECUTE_COMMAND_LINE
 
 program main

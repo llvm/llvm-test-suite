@@ -1,12 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: FileCheck --input-file=data6-1.txt %s -check-prefix=EXE1
-! RUN: FileCheck --input-file=data6-2.txt %s -check-prefix=EXE2
-! RUN: FileCheck --input-file=data6-3.txt %s -check-prefix=EXE3
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-! RUN: FileCheck --input-file=data6-1.txt %s -check-prefix=EXE1
-! RUN: FileCheck --input-file=data6-2.txt %s -check-prefix=EXE2
-! RUN: FileCheck --input-file=data6-3.txt %s -check-prefix=EXE3
-
 ! SPEC: F2008 9.12, R910, R911, R912, R913
 
 ! A-1 Different units

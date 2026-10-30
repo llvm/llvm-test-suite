@@ -31,6 +31,9 @@ RIKEN-RCCS/Fortran_tests. `_NNN` sources have their `! RUN:`/`! CHECK:`
 lines removed (the expected output lives in `.reference_output` instead),
 so a change to `CHECK` lines in the original repository has to be
 translated into the `.reference_output` file rather than applied as is.
+The `_NNN` sources excluded from the build (see Status below) have only
+their `! RUN:` lines removed; their `! CHECK:` lines are kept as the
+record of the expected output until they are wired up.
 
 ## Directory Structure
 ```
@@ -130,6 +133,11 @@ integration had already stripped, so nothing needed to change here.
   `28_executeCommandLine_001/002.f90`: verify a side-effect file the program
   writes (or its existence), not just stdout; this needs a custom
   `llvm_test_verify()` step beyond what `llvm_singlesource()` provides.
+  The `! RUN:` lines that described those checks (e.g.
+  `FileCheck --input-file=data3.txt ... -check-prefix=EXE` or
+  `ls test-001.txt`) have been removed from these sources along with the
+  `gfortran` invocations; the original lines are in the same files at
+  commit `7acf3bb` of RIKEN-RCCS/Fortran_tests.
 - `28_addModProc_001.f90`: asserts the text of `COMPILER_OPTIONS()` /
   `COMPILER_VERSION()`, which is inherently tied to the exact compiler
   invocation used to build it and isn't a portable, pinnable expectation.

@@ -1,6 +1,3 @@
-! RUN: %flang %s -o %t && %t | FileCheck %s
-! RUN: %gfortran %s -o %t && %t | FileCheck %s
-
 ! SPEC: F2008:13.8.2.6 COMPILER OPTIONS 13.8.2.7 COMPILER VERSION 
 
 program main
