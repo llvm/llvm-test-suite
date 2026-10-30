@@ -116,5 +116,7 @@ static void benchReductionLoadedStart(benchmark::State &State) {
 
 BENCHMARK_TEMPLATE(benchReductionOuterCarriedStart, uint32_t)->TRIP_COUNTS;
 BENCHMARK_TEMPLATE(benchReductionOuterCarriedStart, float)->TRIP_COUNTS;
+BENCHMARK_TEMPLATE(benchReductionConstantStart, uint32_t)->TRIP_COUNTS;
 BENCHMARK_TEMPLATE(benchReductionConstantStart, float)->TRIP_COUNTS;
+BENCHMARK_TEMPLATE(benchReductionLoadedStart, uint32_t)->TRIP_COUNTS;
 BENCHMARK_TEMPLATE(benchReductionLoadedStart, float)->TRIP_COUNTS;
