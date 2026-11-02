@@ -185,13 +185,18 @@ function(create_thrust_tests VariantSuffix)
 endfunction()
 
 # Create set of tests for a given {CUDA,C++ standard,C++ library} tuple.
-function(create_cuda_test_variant Std VariantSuffix)
+function(create_cuda_test_variant Std VariantSuffix RdcMode)
   message(STATUS "Creating CUDA test variant ${VariantSuffix}")
   add_custom_target(cuda-tests-${VariantSuffix}
     COMMENT "Build CUDA test variant ${VariantSuffix}")
 
   set(VariantLibs ${_Cuda_Libs} ${_Stdlib_Libs})
   set(VariantCPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
+  set(_Cuda_LDFLAGS)
+  if(RdcMode STREQUAL "rdc")
+    list(APPEND VariantCPPFLAGS -fgpu-rdc)
+    list(APPEND _Cuda_LDFLAGS --offload-link --cuda-path=${_CudaPath})
+  endif()
   list(APPEND LDFLAGS ${_Cuda_LDFLAGS} ${_Std_LDFLAGS} ${_Stdlib_LDFLAGS})
 
   # Create a separate test target for simple tests that can be built/tested quickly.
@@ -329,7 +334,6 @@ macro(create_cuda_tests)
     get_version(_CudaVersion ${_CudaPath})
     set(_Cuda_Suffix "cuda-${_CudaVersion}")
     set(_Cuda_CPPFLAGS --cuda-path=${_CudaPath} -I${_CudaPath}/include -xcuda)
-    set(_Cuda_LDFLAGS)
     # clear the list of GPUs to compile for.
     set(_CudaArchFlags)
     set(_CudaArchList)
@@ -347,8 +351,6 @@ macro(create_cuda_tests)
       continue()
     endif()
     list(APPEND _Cuda_CPPFLAGS ${_CudaArchFlags})
-    list(APPEND _Cuda_CPPFLAGS -fgpu-rdc)
-    list(APPEND _Cuda_LDFLAGS --offload-link --cuda-path=${_CudaPath})
 
     set(_Cuda_Libs cudart-${_CudaVersion})
     foreach(_Std IN ITEMS "c++98" "c++11" "c++14" "c++17" "c++20")
@@ -376,7 +378,10 @@ macro(create_cuda_tests)
           list(APPEND _Stdlib_CPPFLAGS -DSTDLIB_VERSION=2014)
         endif()
 
-        create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}")
+        foreach(_RdcMode IN ITEMS no-rdc rdc)
+          create_cuda_test_variant(${_Std}
+            "${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}-${_RdcMode}" ${_RdcMode})
+        endforeach()
       endforeach()
 
       if(HAVE_LIBCXX)
@@ -388,7 +393,10 @@ macro(create_cuda_tests)
             -DSTDLIB_VERSION=2017 -D_ALLOW_UNSUPPORTED_LIBCPP)
         set(_Stdlib_LDFLAGS  -stdlib=libc++)
         set(_Stdlib_Libs libcxx)
-        create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-libc++")
+        foreach(_RdcMode IN ITEMS no-rdc rdc)
+          create_cuda_test_variant(${_Std}
+            "${_Cuda_Suffix}-${_Std_Suffix}-libc++-${_RdcMode}" ${_RdcMode})
+        endforeach()
       endif()
     endforeach()
   endforeach()
