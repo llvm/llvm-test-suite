@@ -184,7 +184,7 @@ function(create_thrust_tests VariantSuffix)
   add_dependencies(cuda-tests-thrust ${_ThrustMainTarget})
 endfunction()
 
-# Create set of tests for a given {CUDA,C++ standard,C++ library} tuple.
+# Create tests for a given {CUDA, C++ standard, C++ library, RDC mode} tuple.
 function(create_cuda_test_variant Std VariantSuffix RdcMode)
   message(STATUS "Creating CUDA test variant ${VariantSuffix}")
   add_custom_target(cuda-tests-${VariantSuffix}
