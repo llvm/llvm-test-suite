@@ -24,6 +24,7 @@ template <typename T> bool compare_array(T *A, T *B) {
       return false;
     }
   }
+  return true;
 };
 
 template <class Tuple, std::size_t... I>
@@ -95,7 +96,7 @@ void __attribute__((always_inline)) benchmark_loop(benchmark::State &state) {
     Bench NoVec;
     Loop.run_autovec();
     NoVec.run_novec();
-    if (Bench::verify_same(Loop, NoVec)) {
+    if (!Bench::verify_same(Loop, NoVec)) {
       std::cerr << "ERROR: autovec result different to scalar loop!\n";
       exit(1);
     }

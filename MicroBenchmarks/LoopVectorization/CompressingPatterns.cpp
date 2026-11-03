@@ -1,4 +1,3 @@
-
 /* ============= Benchmark setup ============= */
 
 #define ITERATIONS 100000
