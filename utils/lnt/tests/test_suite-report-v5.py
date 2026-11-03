@@ -6,7 +6,7 @@
 import datetime
 import json
 
-from test_suite_runner.report_v5 import build_submission, render
+from test_suite_runner.report_v5 import build_submission, profile_paths, render
 
 
 def test(name, code, **metrics):
@@ -21,7 +21,7 @@ first_build = {'tests': [
          score=float('nan'), hash='', **{'size.__text': 8.5}),
     test('A/a.test:BM_A/8', 'PASS', exec_time=0.25),
     test('C/c.test', 'NOEXE'),
-    test(long_name, 'PASS', exec_time=1.0),
+    test(long_name, 'PASS', exec_time=1.0, profile='/build/long.perf_data'),
 ]}
 second_run = {'tests': [
     test('B/b.test', 'FAIL', compile_time=2.0, link_time=0.5, exec_time=1.5,
@@ -46,7 +46,8 @@ submission = build_submission(
     '573af861-8303-4a5b-a643-b8321e0142c4',
     datetime.datetime(2026, 10, 27, 14, 2, 17, tzinfo=datetime.timezone.utc),
     'my-machine', 'abc123', None, cc_info,
-    [(first_build, 1), (second_run, 1), (rebuilt, 2)])
+    [(first_build, 1), (second_run, 1), (rebuilt, 2)],
+    {'B/b': 'cHJvZmlsZQ==', 'D/d': 'dW51c2Vk'})
 
 EXPECTED = {
     'format_version': '5',
@@ -69,8 +70,10 @@ EXPECTED = {
             {'execution_time': 0.25, 'status': 'PASS'},
         ]},
         # The second lit run did not rebuild the tests, so its measurements of
-        # the build are left out. A peak memory of 0 was not measured.
-        {'name': 'B/b', 'samples': [
+        # the build are left out. A peak memory of 0 was not measured. The
+        # test's profile is added to its entry, but not the profile of a test
+        # that has no entry.
+        {'name': 'B/b', 'profile': 'cHJvZmlsZQ==', 'samples': [
             {'binary_size': 100, 'code_size': 50, 'compile_peak_memory': 4096,
              'compile_time': 2.0, 'execution_time': 1.0, 'link_time': 0.5,
              'status': 'PASS'},
@@ -98,6 +101,13 @@ assert json.loads(rendered) == EXPECTED
 # The ordinal is only there when it is given.
 with_ordinal = build_submission(
     '573af861-8303-4a5b-a643-b8321e0142c4', datetime.datetime.now(),
-    'my-machine', 'abc123', 42, {}, [])
+    'my-machine', 'abc123', 42, {}, [], {})
 assert with_ordinal['commit'] == {'value': 'abc123', 'ordinal': 42}
 assert with_ordinal['run_parameters'] == {} and with_ordinal['tests'] == []
+
+# The profiles of a lit run are found by the name of their test in the report.
+assert profile_paths({'tests': [
+    test('A/a.test', 'PASS', exec_time=1.0, profile='/build/a.perf_data'),
+    test('A/a.test:BM_A/8', 'PASS', exec_time=0.25),
+    {'name': 'test-suite :: C/c.test', 'code': 'NOEXE'},
+]}) == {'A/a': '/build/a.perf_data'}

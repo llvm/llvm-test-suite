@@ -1,5 +1,6 @@
 """LLVM test-suite"""
 import base64
+import concurrent.futures
 import subprocess
 import tempfile
 import json
@@ -28,6 +29,9 @@ from .util import (fatal, init_logging, isexecfile, logger, mkdir_p,
                    resolve_command_path, timestamp)
 
 KNOWN_SAMPLE_KEYS = ['compile', 'exec', 'hash', 'score']
+
+# How long converting a single profile for the v5 report may take, in seconds.
+PROFILE_CONVERSION_TIMEOUT = 300
 
 # Options that only apply when generating a specific version of the
 # reports. This can be removed once we eventually remove support for
@@ -125,6 +129,36 @@ def _importProfile(lnt, objdump, name_filename):
         with open(upgraded, 'rb') as f:
             profilefile = base64.b64encode(f.read()).decode('ascii')
     return TestSamples(name + '.profile', [profilefile], str)
+
+
+def _convert_profile_v5(lnt, objdump, filename, timeout):
+    """The profile at `filename`, converted by `lnt v5 convert-profile` to the
+    format expected by v5 submissions. Returns None if it cannot be converted
+    within `timeout` seconds.
+    """
+    if not os.path.exists(filename):
+        logger.warning('Profile %s does not exist' % filename)
+        return None
+
+    cmd = [lnt, 'v5', 'convert-profile', '--encode']
+    if objdump:
+        cmd += ['--objdump', objdump]
+    cmd.append(filename)
+    try:
+        result = subprocess.run(cmd, capture_output=True, encoding='utf-8',
+                                errors='replace', timeout=timeout)
+    except subprocess.TimeoutExpired:
+        logger.warning('Profile %s could not be converted within %d seconds' %
+                       (filename, timeout))
+        return None
+    if result.returncode != 0:
+        logger.warning('Profile %s could not be converted:\n%s' %
+                       (filename, result.stderr))
+        return None
+    if result.stderr:
+        logger.warning('Converting profile %s:\n%s' %
+                       (filename, result.stderr))
+    return result.stdout.strip() or None
 
 
 def _lit_json_to_template(json_reports, template_engine):
@@ -323,6 +357,13 @@ class TestSuiteTest(object):
             if not isexecfile(opts.lnt):
                 self._fatal("LNT tool not found (looked for %s); use "
                             "--use-lnt to name it" % opts.lnt)
+            if v5 and opts.use_perf in ('profile', 'all') and \
+                    subprocess.run([opts.lnt, 'v5', 'convert-profile',
+                                    '--help'],
+                                   capture_output=True).returncode != 0:
+                self._fatal("%s cannot convert profiles for the v5 report: "
+                            "`lnt v5 convert-profile` requires llvm-lnt "
+                            "0.4.20 or later" % opts.lnt)
         if opts.run_under:
             split = shlex.split(opts.run_under)
             split[0] = resolve_command_path(split[0])
@@ -487,6 +528,9 @@ class TestSuiteTest(object):
         reports = []
         json_reports = []
         builds = []
+        # The profiles for the v5 report, converted right after the lit run
+        # that gathers them, before the tests are rebuilt.
+        profiles = {}
         # In exec mode, we only run tests, no compilation
         if opts.exec_mode:
             for i in range(opts.exec_multisample):
@@ -494,6 +538,8 @@ class TestSuiteTest(object):
                 p = i == 0 and opts.use_perf in ('profile', 'all')
                 run_report, json_data = self.run(cmake_vars, compile=False, test=True,
                                                  profile=p)
+                if p and v5:
+                    profiles = self._convert_profiles_v5(json_data, cmake_vars)
                 reports.append(run_report)
                 json_reports.append(json_data)
                 builds.append(self.build_count)
@@ -506,6 +552,8 @@ class TestSuiteTest(object):
                 p = i == 0 and opts.use_perf in ('profile', 'all')
                 run_report, json_data = self.run(cmake_vars, compile=c, test=e,
                                                  profile=p)
+                if p and v5:
+                    profiles = self._convert_profiles_v5(json_data, cmake_vars)
                 reports.append(run_report)
                 json_reports.append(json_data)
                 builds.append(self.build_count)
@@ -530,8 +578,13 @@ class TestSuiteTest(object):
             submission = report_v5.build_submission(
                 str(uuid.uuid4()), datetime.datetime.now(datetime.timezone.utc),
                 opts.label, opts.commit, opts.commit_ordinal,
-                self._get_cc_info(cmake_vars), list(zip(json_reports, builds)))
+                self._get_cc_info(cmake_vars), list(zip(json_reports, builds)),
+                profiles)
             rendered = report_v5.render(submission)
+            if len(rendered) > report_v5.DEFAULT_BODY_LIMIT:
+                logger.warning('The v5 report is %d bytes, more than the %d an '
+                               'LNT v5 instance accepts by default' %
+                               (len(rendered), report_v5.DEFAULT_BODY_LIMIT))
             for path in (os.path.join(self._base_path, 'report.v5.json'),
                          opts.output_v5):
                 if path:
@@ -716,6 +769,20 @@ class TestSuiteTest(object):
 
         data = self._lit(self._base_path, test, profile)
         return self._parse_lit_output(self._base_path, data, cmake_vars), data
+
+    def _convert_profiles_v5(self, json_data, cmake_vars):
+        """The profiles gathered by the lit run whose JSON report is
+        `json_data`, converted for the v5 report, by the name of their test in
+        the report."""
+        paths = report_v5.profile_paths(json_data)
+        logger.info('Converting %d profiles...' % len(paths))
+        convert = partial(_convert_profile_v5, self.opts.lnt,
+                          cmake_vars.get('CMAKE_OBJDUMP'),
+                          timeout=PROFILE_CONVERSION_TIMEOUT)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            converted = list(executor.map(convert, paths.values()))
+        return {name: profile for name, profile in zip(paths, converted)
+                if profile is not None}
 
     def _create_merged_report(self, reports):
         if len(reports) == 1:
@@ -1167,8 +1234,9 @@ class TestSuiteTest(object):
                     TestSamples(name + '.exec.status', [lnt_code]))
                 no_errors = False
 
-        # Now import the profiles in parallel.
-        if profiles_to_import:
+        # Now import the profiles in parallel, for the v1 report. Skip this
+        # when no v1 report is written, since the v5 report doesn't use them.
+        if profiles_to_import and 'v1' in self.opts.report_formats:
             logger.info('Importing %d profiles with %d threads...' %
                         (len(profiles_to_import), multiprocessing.cpu_count()))
             TIMEOUT = 800

@@ -29,6 +29,9 @@ METRICS = {
 # Every sample also has the test's lit result code, e.g. PASS or NOEXE.
 STATUS_METRIC = 'status'
 
+# The metric of a lit test that holds the path of the profile gathered for it.
+PROFILE_METRIC = 'profile'
+
 # The metrics measured when building the tests. The tests are not rebuilt for
 # every lit run, and each lit run reports the measurements of the last build,
 # so they are kept only in the first sample of each build.
@@ -50,6 +53,10 @@ RUN_PARAMETERS = {
 # The longest machine name, commit value or test name a v5 instance accepts.
 MAX_NAME_LENGTH = 256
 
+# The largest request a v5 instance accepts by default, in bytes. The limit is
+# configurable, so a larger report is not necessarily refused.
+DEFAULT_BODY_LIMIT = 128 * 1024 * 1024
+
 
 def check_url_name(name, what):
     """Return why `name` cannot be a name that LNT v5 uses in URL paths, i.e.
@@ -70,6 +77,14 @@ def _test_name(lit_name):
     if name.endswith('.test'):
         name = name[:-len('.test')]
     return name
+
+
+def profile_paths(report):
+    """The paths of the profiles gathered by a lit run, whose JSON report is
+    `report`, by the name of their test in the report."""
+    return {_test_name(test['name']): test['metrics'][PROFILE_METRIC]
+            for test in report['tests']
+            if PROFILE_METRIC in test.get('metrics', {})}
 
 
 def _value(value, kind):
@@ -117,11 +132,14 @@ def _version_line(cc_version):
 
 
 def build_submission(run_uuid, measured_at, machine, commit, ordinal, cc_info,
-                     lit_runs):
+                     lit_runs, profiles):
     """Build the run submission of the lit runs `lit_runs`, a list of
     `(report, build)` pairs: lit's JSON report, and the build it ran the
     tests of, which is the same for the lit runs that did not rebuild the
-    tests. Each lit run is one sample of each of its tests."""
+    tests. Each lit run is one sample of each of its tests.
+
+    `profiles` maps the name of a test in the report to its profile, in the
+    form a test's profile has in a submission."""
     samples = {}
     seen_builds = set()
     for report, build in lit_runs:
@@ -140,7 +158,10 @@ def build_submission(run_uuid, measured_at, machine, commit, ordinal, cc_info,
             logger.warning('Leaving out %r: test names must be 1 to %d '
                            'characters long' % (name, MAX_NAME_LENGTH))
             continue
-        tests.append({'name': name, 'samples': test_samples})
+        test = {'name': name, 'samples': test_samples}
+        if name in profiles:
+            test['profile'] = profiles[name]
+        tests.append(test)
 
     run_parameters = {}
     for key, name in RUN_PARAMETERS.items():
