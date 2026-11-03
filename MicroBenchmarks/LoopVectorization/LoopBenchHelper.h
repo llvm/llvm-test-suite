@@ -114,6 +114,25 @@ void __attribute__((always_inline)) benchmark_loop(benchmark::State &state) {
   }
 }
 
+#define INIT_BLOCK
+#define EXIT_BLOCK
+
+#define DEF_LOOP_BENCH(name, paramTys, args, init, loop, exit)                 \
+  template <typename T>                                                        \
+  struct name : public LoopBenchHelper<name<T>, STRIP_PARENS(paramTys)> {      \
+    static __attribute__((noinline)) auto autovec args {                       \
+      STRIP_PARENS(init);                                                      \
+      STRIP_PARENS(loop);                                                      \
+      exit;                                                                    \
+    }                                                                          \
+    static __attribute__((noinline)) auto novec args {                         \
+      STRIP_PARENS(init);                                                      \
+      _Pragma("clang loop vectorize(disable) interleave(disable)")             \
+          STRIP_PARENS(loop);                                                  \
+      exit;                                                                    \
+    }                                                                          \
+  }
+
 #define BENCHMARK_CASE(name, ty)                                               \
   void BENCHMARK_##name##_autovec_##ty(benchmark::State &state) {              \
     benchmark_loop<name<ty>, /*EnableVec=*/true>(state);                       \

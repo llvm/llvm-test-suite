@@ -3,21 +3,9 @@
 #define ITERATIONS 100000
 
 #include "./LoopBenchHelper.h"
-#define INIT_BLOCK
 
 #define DEF_COMPRESS_LOOP(name, paramTys, args, init, loop)                    \
-  template <typename T>                                                        \
-  struct name : public LoopBenchHelper<name<T>, STRIP_PARENS(paramTys)> {      \
-    static __attribute__((noinline)) void autovec args {                       \
-      STRIP_PARENS(init);                                                      \
-      STRIP_PARENS(loop);                                                      \
-    }                                                                          \
-    static __attribute__((noinline)) void novec args {                         \
-      STRIP_PARENS(init);                                                      \
-      _Pragma("clang loop vectorize(disable) interleave(disable)")             \
-          STRIP_PARENS(loop);                                                  \
-    }                                                                          \
-  }
+  DEF_LOOP_BENCH(name, paramTys, args, init, loop, ({ return; }))
 
 #define DEF_SIMPLE_COMPRESS(name, loop)                                        \
   DEF_COMPRESS_LOOP(                                                           \
