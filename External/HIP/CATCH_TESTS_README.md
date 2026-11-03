@@ -786,6 +786,11 @@ External/HIP/catch/
 │   │   ├── memset.cc
 │   │   ├── memset_negative_kernels.cc      # hiprtc input, not a test
 │   │   └── memset_negative_kernels_rtc.hh
+│   ├── launchBounds/       # __launch_bounds__ attribute
+│   │   ├── launch_bounds.cc
+│   │   ├── launch_bounds_compiler_error_kernels.cc  # compiler input, not a test
+│   │   ├── launch_bounds_negative_kernels_rtc.hh
+│   │   └── launch_bounds_parse_error_kernels.cc     # compiler input, not a test
 │   └── math/               # Device math library (68 files)
 │       ├── casting_*_funcs.cc              # 7 casting test files
 │       ├── *_intrinsics.cc                 # 3 intrinsics tests (double, single, integer)
