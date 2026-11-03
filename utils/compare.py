@@ -698,6 +698,12 @@ def main():
         lhs_d = readmulti(lhs)
         rhs_d = readmulti(rhs)
 
+        lhs_programs = set(lhs_d.index.get_level_values(1))
+        rhs_programs = set(rhs_d.index.get_level_values(1))
+        common_programs = lhs_programs & rhs_programs
+        lhs_d = lhs_d[lhs_d.index.get_level_values(1).isin(common_programs)]
+        rhs_d = rhs_d[rhs_d.index.get_level_values(1).isin(common_programs)]
+
         # Compute statistics on raw data before merging (if requested)
         if config.statistics:
             metrics_for_stats = config.metrics if len(config.metrics) > 0 else get_default_metric(lhs_d, rhs_d)
