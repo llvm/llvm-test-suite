@@ -4,6 +4,7 @@ if(ARCH STREQUAL "Mips" OR (ARCH STREQUAL "AArch64" AND TARGET_OS STREQUAL "Darw
   list(APPEND CPPFLAGS -DCOLLATE=0 -DLOCALE_ON=0)
 endif()
 
+list(APPEND CFLAGS -std=c99)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -x -I data/include -D data/data -F data/font -C data/maps -H data/hyph large.lout)
 
