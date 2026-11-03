@@ -39,14 +39,17 @@ template <typename Base, typename... ParamTys> class LoopBenchHelper {
 public:
   LoopBenchHelper() {
     std::mt19937 rng(12345);
+    // TODO: Come up with a range based on the array type (Ty below).
     std::uniform_int_distribution<int> dist(0, 100);
     // Allocate parameters and init to random (seeded) values.
     std::apply(
         [&](auto &...args) {
           (
               [&] {
+                // TODO: Support scalar values (check the arg is a pointer).
                 using Ty = std::remove_reference_t<decltype(*args)>;
                 args = new Ty[ITERATIONS];
+                // TODO: Handle random float values better than casting an int.
                 for (unsigned i = 0; i < ITERATIONS; ++i)
                   args[i] = static_cast<Ty>(dist(rng));
               }(),
@@ -63,15 +66,15 @@ public:
   }
 
   // Run the vectorized loop.
-  void run_autovec(bool DoNotOpt = false) {
+  auto run_autovec() {
     do_no_optimize();
-    std::apply(Base::autovec, Params);
+    return std::apply(Base::autovec, Params);
   }
 
   // Run the scalar loop.
-  void run_novec() {
+  auto run_novec() {
     do_no_optimize();
-    std::apply(Base::novec, Params);
+    return std::apply(Base::novec, Params);
   }
 
   // Verify two instances of have the same results.
