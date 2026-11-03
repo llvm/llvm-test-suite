@@ -24,9 +24,10 @@ template <typename T> static T refSum(const T *A, int N, T Start) {
   return Start;
 }
 
-template <typename T> static void verify(const char *Name, T Got, T Expected) {
-  if (Got != Expected) {
-    std::cerr << "ERROR: " << Name << ": vectorized result " << Got
+template <typename T>
+static void verify(const char *Name, T Actual, T Expected) {
+  if (Actual != Expected) {
+    std::cerr << "ERROR: " << Name << ": vectorized result " << Actual
               << " != scalar result " << Expected << "\n";
     exit(1);
   }
