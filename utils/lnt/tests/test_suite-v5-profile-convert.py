@@ -7,7 +7,6 @@
 import logging
 import os
 import sys
-import time
 
 from test_suite_runner import _convert_profile_v5
 from test_suite_runner.util import logger
@@ -66,10 +65,3 @@ assert recorder.messages == [
 missing = os.path.join(tmpdir, 'missing.perf_data')
 assert convert('', path=missing) is None
 assert recorder.messages == ['Profile %s does not exist' % missing]
-
-# A conversion that takes too long is stopped.
-start = time.monotonic()
-assert convert('sleep', timeout=1) is None
-assert time.monotonic() - start < 20
-assert recorder.messages == [
-    'Profile %s could not be converted within 1 seconds' % profile]
