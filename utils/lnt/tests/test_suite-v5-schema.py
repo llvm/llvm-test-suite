@@ -13,7 +13,7 @@ TYPES = {float: 'real', int: 'integer', str: 'text'}
 
 with open(sys.argv[1]) as f:
     schema = json.load(f)
-assert schema['name'] == 'llvm_test_suite', schema['name']
+assert schema['name'] == 'test_suite', schema['name']
 
 declared = {metric['name']: metric['type'] for metric in schema['metrics']}
 reported = {name: TYPES[kind] for name, kind in METRICS.values()}

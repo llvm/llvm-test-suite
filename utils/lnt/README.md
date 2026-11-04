@@ -50,4 +50,4 @@ or located with `--use-lnt`.
 `run-test-suite.py` doesn't submit v5 reports itself. Submit them with `lnt v5 submit`,
 which reads its token from `LNT_TOKEN`:
 
-    lnt v5 submit https://lnt.example.com --suite llvm_test_suite report.v5.json
+    lnt v5 submit https://lnt.example.com --project llvm --suite test_suite report.v5.json

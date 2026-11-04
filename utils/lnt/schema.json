@@ -1,5 +1,5 @@
 {
-  "name": "llvm_test_suite",
+  "name": "test_suite",
   "metrics": [
     {"name": "execution_time", "type": "real", "display_name": "Execution Time", "unit": "seconds", "unit_abbrev": "s", "dashboard": true},
     {"name": "compile_time", "type": "real", "display_name": "Compile Time", "unit": "seconds", "unit_abbrev": "s", "dashboard": true},
