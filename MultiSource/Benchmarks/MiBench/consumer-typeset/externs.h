@@ -1485,7 +1485,7 @@ typedef union rec
      FIRST_UNION	ou1;
      SECOND_UNION	ou2;
      THIRD_UNION	ou3;
-     FULL_CHAR		ostring[4];
+     FULL_CHAR		ostring[];
   } os1;
 
   struct closure_type	/* all fields of CLOSURE, both as token and object */
@@ -2487,7 +2487,7 @@ typedef struct back_end_rec {
 }
 
 #define NewWord(x, typ, len, pos)					\
-{ zz_size = sizeof(struct word_type) - 4 + ((len)+1)*sizeof(FULL_CHAR);	\
+{ zz_size = sizeof(struct word_type) + ((len)+1)*sizeof(FULL_CHAR);	\
   /* NB the following line RESETS zz_size */				\
   GetMem(zz_hold, ceiling(zz_size, sizeof(ALIGN)), pos);		\
   checkmem(zz_hold, typ);						\
