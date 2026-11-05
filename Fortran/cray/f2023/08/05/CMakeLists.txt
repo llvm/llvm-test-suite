@@ -5,3 +5,5 @@ set(Source ${_sources})
 llvm_singlesource()
 
 file(COPY lit.local.cfg DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+add_subdirectory(modfile-roundtrip)
