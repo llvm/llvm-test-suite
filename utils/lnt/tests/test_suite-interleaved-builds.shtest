@@ -1,0 +1,111 @@
+# Check interleaved builds feature (--build, --exec, --exec-interleaved-builds)
+
+# Test 1: Build mode
+# RUN: rm -rf %t.SANDBOX-A %t.SANDBOX-B %t.SANDBOX-RESULTS
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-A \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --build \
+# RUN:     > %t.build-a.log 2> %t.build-a.err
+# RUN: filecheck --check-prefix CHECK-BUILD < %t.build-a.err %s
+# CHECK-BUILD: Building tests (--build mode)...
+# CHECK-BUILD: Build complete. Build directory: {{.*}}SANDBOX-A/build
+# CHECK-BUILD: Use --exec --build-dir {{.*}}SANDBOX-A/build to run tests.
+
+# Test 2: Build a second sandbox
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-B \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --build \
+# RUN:     > %t.build-b.log 2> %t.build-b.err
+
+# Test 3: Exec prebuilt with single build
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-RESULTS \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.SANDBOX-A/build \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --output %t.prebuilt.report \
+# RUN:     > %t.prebuilt.log 2> %t.prebuilt.err
+# RUN: filecheck --check-prefix CHECK-PREBUILT < %t.prebuilt.err %s
+# CHECK-PREBUILT-NOT: Configuring
+# CHECK-PREBUILT-NOT: Building
+# CHECK-PREBUILT: Testing
+
+# Test 4: Interleaved builds execution with multisample
+# RUN: rm -rf %t.SANDBOX-RESULTS
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-RESULTS \
+# RUN:     --no-timestamp \
+# RUN:     --exec-interleaved-builds %t.SANDBOX-A/build,%t.SANDBOX-B/build \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --exec-multisample 2 \
+# RUN:     > %t.interleaved.log 2> %t.interleaved.err
+# RUN: filecheck --check-prefix CHECK-INTERLEAVED < %t.interleaved.err %s
+# RUN: filecheck --check-prefix CHECK-REPORT-A < %t.SANDBOX-A/build/report.json %s
+# RUN: filecheck --check-prefix CHECK-REPORT-B < %t.SANDBOX-B/build/report.json %s
+
+# CHECK-INTERLEAVED: Running interleaved builds mode with 2 builds
+# CHECK-INTERLEAVED: Loading build from: {{.*}}SANDBOX-A/build
+# CHECK-INTERLEAVED: Compiler: clang
+# CHECK-INTERLEAVED: Loading build from: {{.*}}SANDBOX-B/build
+# CHECK-INTERLEAVED: Compiler: clang
+# CHECK-INTERLEAVED: Running sample 1 of 2
+# CHECK-INTERLEAVED: Testing build 1/2: {{.*}}SANDBOX-A/build
+# CHECK-INTERLEAVED: Testing build 2/2: {{.*}}SANDBOX-B/build
+# CHECK-INTERLEAVED: Running sample 2 of 2
+# CHECK-INTERLEAVED: Testing build 1/2: {{.*}}SANDBOX-A/build
+# CHECK-INTERLEAVED: Testing build 2/2: {{.*}}SANDBOX-B/build
+# CHECK-INTERLEAVED: Interleaved testing complete. Generating reports...
+# CHECK-INTERLEAVED: Writing report for build: {{.*}}SANDBOX-A/build
+# CHECK-INTERLEAVED: Report: {{.*}}SANDBOX-A/build/report.json
+# CHECK-INTERLEAVED: Writing report for build: {{.*}}SANDBOX-B/build
+# CHECK-INTERLEAVED: Report: {{.*}}SANDBOX-B/build/report.json
+# CHECK-INTERLEAVED: Reports written to each build directory
+
+# Verify reports were created in each build directory
+# CHECK-REPORT-A: "run_order": "154331"
+# CHECK-REPORT-A: "Name": "nts.foo.
+# CHECK-REPORT-B: "run_order": "154331"
+# CHECK-REPORT-B: "Name": "nts.foo.
+
+# Test 5: Verify XML and CSV files were also created
+# RUN: test -f %t.SANDBOX-A/build/test-results.xunit.xml
+# RUN: test -f %t.SANDBOX-A/build/test-results.csv
+# RUN: test -f %t.SANDBOX-B/build/test-results.xunit.xml
+# RUN: test -f %t.SANDBOX-B/build/test-results.csv
+
+# Test 6: Error case - --build with --exec should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --build \
+# RUN:     --exec \
+# RUN:     > %t.err1.log 2> %t.err1.err
+# RUN: filecheck --check-prefix CHECK-ERR1 < %t.err1.err %s
+# CHECK-ERR1: --build and --exec are mutually exclusive
+
+# Test 7: Error case - --exec without --build-dir or --exec-interleaved-builds should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR2 \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.err2.log 2> %t.err2.err
+# RUN: filecheck --check-prefix CHECK-ERR2 < %t.err2.err %s
+# CHECK-ERR2: --exec requires --build-dir (or use --exec-interleaved-builds)

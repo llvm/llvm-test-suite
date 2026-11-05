@@ -277,6 +277,9 @@ file(GLOB UNIMPLEMENTED_FILES CONFIGURE_DEPENDS
 
   # unimplemented: coarray reference
   coarray_lib_comm_1.f90
+ 
+  # unimplemented: associating coarray entity in associate construct
+  pr88379.f90
 
   # unimplemented: co_max
   coarray_collectives_4.f90
@@ -477,7 +480,7 @@ file(GLOB SKIPPED_FILES CONFIGURE_DEPENDS
   typebound_call_32.f90
 
   # Triggers UB in flang https://github.com/llvm/llvm-project/issues/224030.
-  enum_f10.f90
+  enum_10.f90
 
   # --------------------------------------------------------------------------
   #

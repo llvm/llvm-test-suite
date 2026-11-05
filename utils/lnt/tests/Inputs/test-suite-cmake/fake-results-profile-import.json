@@ -1,0 +1,17 @@
+{
+    "tests": [
+        {
+            "name": "test-suite :: bar",
+            "code": "PASS",
+            "elapsed": "1.0",
+            "metrics": {
+                "compile_time": 1.3,
+                "exec_time": 1.4,
+                "score": 1.5,
+                "hash": "xyz",
+                "profile": "${PATH_TO_PROFILE}",
+                "unknown": "unknown"
+            }
+        }
+    ]
+}

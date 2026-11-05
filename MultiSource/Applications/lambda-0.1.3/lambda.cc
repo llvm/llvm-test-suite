@@ -35,7 +35,11 @@ http://www.gnu.org/copyleft/gpl.html
 
 #else
 #include <unistd.h>
+#ifdef __MVS__
+#define MAXPATHLEN FILENAME_MAX
+#else
 #include <sys/param.h>
+#endif
 #endif
 
 static const char *mybasename(const char *str) {

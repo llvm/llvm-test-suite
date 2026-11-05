@@ -1,0 +1,76 @@
+# Check that `run-test-suite.py --submit` submits its report with
+# `lnt submit`, using a fake `lnt` that records how it is run.
+#
+# DEFINE: %{runtest} = \
+# DEFINE:   %{run-test-suite} my-machine \
+# DEFINE:     --sandbox %t.SANDBOX \
+# DEFINE:     --no-timestamp \
+# DEFINE:     --test-suite %S/Inputs/test-suite-cmake \
+# DEFINE:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# DEFINE:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# DEFINE:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# DEFINE:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# DEFINE:     --use-lnt %S/Inputs/test-suite-cmake/fake-lnt
+#
+# RUN: rm -rf %t.SANDBOX %t.*.args*
+
+# The report the run wrote is submitted, with the default submission options,
+# and what `lnt submit` prints is shown, after what the run printed.
+# RUN: env FAKE_LNT_LOG=%t.default.args \
+# RUN:   %{runtest} --submit http://lnt.example.com/db_default/submitRun \
+# RUN:   > %t.default.out 2> %t.default.err
+# RUN: diff %t.default.args.report %t.SANDBOX/build/report.json
+# RUN: filecheck --check-prefix CHECK-DEFAULT --match-full-lines < %t.default.args %s
+# RUN: filecheck --check-prefix CHECK-DEFAULT-OUT < %t.default.out %s
+#
+# CHECK-DEFAULT:      submit
+# CHECK-DEFAULT-NEXT: http://lnt.example.com/db_default/submitRun
+# CHECK-DEFAULT-NEXT: {{.*}}.SANDBOX/build/report.json
+# CHECK-DEFAULT-NEXT: --select-machine
+# CHECK-DEFAULT-NEXT: match
+# CHECK-DEFAULT-NEXT: --merge
+# CHECK-DEFAULT-NEXT: replace
+# CHECK-DEFAULT-NOT:  --verbose
+#
+# CHECK-DEFAULT-OUT: CMAKE_C_COMPILER:FILEPATH={{.*}}
+# CHECK-DEFAULT-OUT: http://lnt.example.com/db_default/v4/nts/42
+
+# --verbose and the submission options are passed on to `lnt submit`, and so
+# is the path of a local instance.
+# RUN: env FAKE_LNT_LOG=%t.verbose.args \
+# RUN:   %{runtest} --submit %t.instance \
+# RUN:     --verbose --merge append --select-machine split \
+# RUN:   > %t.verbose.out 2> %t.verbose.err
+# RUN: filecheck --check-prefix CHECK-VERBOSE --match-full-lines < %t.verbose.args %s
+#
+# CHECK-VERBOSE:      submit
+# CHECK-VERBOSE-NEXT: {{.*}}.instance
+# CHECK-VERBOSE-NEXT: {{.*}}.SANDBOX/build/report.json
+# CHECK-VERBOSE-NEXT: --select-machine
+# CHECK-VERBOSE-NEXT: split
+# CHECK-VERBOSE-NEXT: --merge
+# CHECK-VERBOSE-NEXT: append
+# CHECK-VERBOSE-NEXT: --verbose
+
+# A failed submission makes the run fail, and says how to submit again.
+# RUN: env FAKE_LNT_LOG=%t.failed.args FAKE_LNT_EXIT=1 \
+# RUN:   not %{runtest} --submit http://lnt.example.com/db_default/submitRun \
+# RUN:   > %t.failed.out 2> %t.failed.err
+# RUN: filecheck --check-prefix CHECK-FAILED < %t.failed.err %s
+#
+# CHECK-FAILED: Submitting the report failed. It can be submitted again with: {{.*}}fake-lnt submit http://lnt.example.com/db_default/submitRun {{.*}}.SANDBOX/build/report.json --select-machine match --merge replace
+
+# Without --submit, `lnt` is not run.
+# RUN: env FAKE_LNT_LOG=%t.none.args \
+# RUN:   %{runtest} > %t.none.out 2> %t.none.err
+# RUN: not test -e %t.none.args
+
+# Without the `lnt` tool, --submit is refused before anything is run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: not %{runtest} --use-lnt %t.no-lnt \
+# RUN:     --submit http://lnt.example.com/db_default/submitRun \
+# RUN:   > %t.no-lnt.out 2> %t.no-lnt.err
+# RUN: filecheck --check-prefix CHECK-NO-LNT < %t.no-lnt.err %s
+# RUN: not test -e %t.SANDBOX
+#
+# CHECK-NO-LNT: error: LNT tool not found (looked for {{.*}}.no-lnt); use --use-lnt to name it

@@ -1,0 +1,51 @@
+# Check running with PGO
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit-profile \
+# RUN:     --verbose \
+# RUN:     --pgo \
+# RUN:     > %t.pgo.log 2> %t.pgo.err
+# RUN: filecheck --check-prefix CHECK-PGO < %t.pgo.err %s
+# CHECK-PGO: TEST_SUITE_PROFILE_GENERATE: 'On'
+# CHECK-PGO: TEST_SUITE_PROFILE_GENERATE: 'Off'
+# CHECK-PGO: TEST_SUITE_PROFILE_USE: 'On'
+
+# Check running with PGO and multisampling works.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit-profile \
+# RUN:     --verbose \
+# RUN:     --pgo \
+# RUN:     --exec-multisample 2 \
+# RUN:     > %t.pgo_multi.log 2> %t.pgo_multi.err
+# RUN: filecheck --check-prefix CHECK-PGO-MULTI < %t.pgo_multi.err %s
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_GENERATE: 'On'
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t all
+# CHECK-PGO-MULTI: fake-lit-profile
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_GENERATE: 'Off'
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_USE: 'On'
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t clean
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t all
+# CHECK-PGO-MULTI: fake-lit-profile
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_GENERATE: 'On'
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_USE: 'Off'
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t clean
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t all
+# CHECK-PGO-MULTI: fake-lit-profile
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_GENERATE: 'Off'
+# CHECK-PGO-MULTI: TEST_SUITE_PROFILE_USE: 'On'
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t clean
+# CHECK-PGO-MULTI: Execute: {{.*}}/Inputs/test-suite-cmake/fake-cmake --build {{.*}} -t all
+# CHECK-PGO-MULTI: fake-lit-profile

@@ -1,3 +1,4 @@
-CHECK-DAG: NOCHANGE: test-suite :: tests/unchanged.test
+CHECK-DAG: NOCHANGE: test-suite :: tests/nochange.test
 CHECK-DAG: PASS: test-suite :: tests/normal.test
-CHECK: Expected Passes
+CHECK-DAG: PASS: test-suite :: tests/prepare.test
+CHECK: Total Discovered Tests: 3{{$}}

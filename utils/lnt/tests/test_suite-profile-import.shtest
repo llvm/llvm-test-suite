@@ -1,0 +1,49 @@
+# DEFINE: %{runtest} = \
+# DEFINE:   %{run-test-suite} \
+# DEFINE:     --sandbox %t.SANDBOX \
+# DEFINE:     --no-timestamp \
+# DEFINE:     --test-suite %S/Inputs/test-suite-cmake \
+# DEFINE:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# DEFINE:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# DEFINE:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# DEFINE:     --use-lit %S/Inputs/test-suite-cmake/fake-lit-profile-import
+
+# Check that the profiles gathered with --use-perf are added to the report.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --use-lnt %S/Inputs/test-suite-cmake/fake-lnt-profile \
+# RUN:     --use-perf=all -j2 --verbose > %t.log 2> %t.err
+# RUN: filecheck < %t.SANDBOX/build/report.json %s
+
+# CHECK:      "Tests": [
+# CHECK:      "{{[A-Za-z0-9+/]{20,}=*}}"
+# CHECK-NEXT: ],
+# CHECK-NEXT: "Info": {},
+# CHECK-NEXT: "Name": "nts.bar.profile"
+
+# A profile that `lnt` fails to import is left out of the report, with a
+# warning that shows what `lnt` printed. The profile is imported with
+# `lnt profile upgrade`, given the objdump from the CMake cache.
+# RUN: rm -rf %t.SANDBOX
+# RUN: env FAKE_LNT_LOG=%t.fail.args \
+# RUN:   %{runtest} --use-lnt %S/Inputs/test-suite-cmake/fake-lnt-profile-fails \
+# RUN:     --use-perf=all > %t.fail.log 2> %t.fail.err
+# RUN: filecheck --check-prefix CHECK-FAIL-ARGS --match-full-lines < %t.fail.args %s
+# RUN: filecheck --check-prefix CHECK-FAIL < %t.fail.err %s
+# RUN: filecheck --check-prefix CHECK-FAIL-REPORT < %t.SANDBOX/build/report.json %s
+# CHECK-FAIL-ARGS:      profile
+# CHECK-FAIL-ARGS-NEXT: upgrade
+# CHECK-FAIL-ARGS-NEXT: {{.*}}/fake-results.perf_data
+# CHECK-FAIL-ARGS-NEXT: {{.+}}
+# CHECK-FAIL-ARGS-NEXT: CMAKE_OBJDUMP=objdump
+# CHECK-FAIL:      Profile {{.*}}fake-results.perf_data could not be imported:
+# CHECK-FAIL-NEXT: error: cannot read the profile
+# CHECK-FAIL-REPORT: "Name": "nts.bar.score"
+# CHECK-FAIL-REPORT-NOT: nts.bar.profile
+
+# Without the `lnt` tool, gathering profiles is refused before anything is run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: not %{runtest} --use-lnt %t.no-lnt --use-perf=profile \
+# RUN:   > %t.no-lnt.log 2> %t.no-lnt.err
+# RUN: filecheck --check-prefix CHECK-NO-LNT < %t.no-lnt.err %s
+# RUN: not test -e %t.SANDBOX
+# CHECK-NO-LNT: error: LNT tool not found (looked for {{.*}}.no-lnt); use --use-lnt to name it

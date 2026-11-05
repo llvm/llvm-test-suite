@@ -1,0 +1,45 @@
+#!/bin/bash
+
+if [[ $1 == --build && $2 == . && $3 == -t ]]
+then
+    if [ "$4" == "help" ]
+    then
+        echo "The following are some of the valid targets for this Makefile:
+... all (the default if no target is provided)
+... short_circuit_dtor
+... pointer_method2
+... pointer_member
+... 2003-08-20-EnumSizeProblem
+... BuiltinTypeInfo
+... ofstream_ctor
+... 2003-05-14-expr_stmt
+... 2011-03-28-Bitfield
+... 2008-01-29-ParamAliasesReturn
+... pointer_method
+... global_ctor
+... 2003-06-08-VirtualFunctions
+... Shootout-C++-hash
+... Bubblesort
+... lists
+"
+    elif [ "$4" == "Bubblesort" ]
+    then
+        #  Look like we ran the test and made outputs
+        mkdir -p SingleSource/Benchmarks/Stanford/CMakeFiles/Bubblesort.dir/
+        mkdir -p SingleSource/Benchmarks/Stanford/Bubblesort.dtps
+        touch SingleSource/Benchmarks/Stanford/Bubblesort.dtps/data
+        touch SingleSource/Benchmarks/Stanford/${4}
+        echo "RUN: Bubblesort | grep test" > SingleSource/Benchmarks/Stanford/${4}.test
+        echo "output file" > SingleSource/Benchmarks/Stanford/${4}.s
+        echo "output file" > SingleSource/Benchmarks/Stanford/${4}.i
+        echo "output file" > SingleSource/Benchmarks/Stanford/${4}.bc
+        echo "output file" > SingleSource/Benchmarks/Stanford/CMakeFiles/Bubblesort.dir/${4}.o
+        (>&2 echo "ftime-report data")
+    else
+        echo "Unexpected Argument"
+        exit 1
+    fi
+else
+    source $(dirname "${BASH_SOURCE[0]}")/fake-cmake "$@"
+    exit $?
+fi

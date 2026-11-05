@@ -1,0 +1,186 @@
+# Check the report for LNT v5, written with --report-format v5.
+#
+# DEFINE: %{run} = \
+# DEFINE:   %{run-test-suite} \
+# DEFINE:     --sandbox %t.SANDBOX \
+# DEFINE:     --no-timestamp \
+# DEFINE:     --no-auto-name \
+# DEFINE:     --test-suite %S/Inputs/test-suite-cmake \
+# DEFINE:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# DEFINE:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# DEFINE:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# DEFINE:     --use-lit %S/Inputs/test-suite-cmake/fake-lit-v5
+# DEFINE: %{runtest} = %{run} my-machine
+
+# Only the v5 report is written, on a single line, and also to --output-v5.
+# With two lit runs and a single build, the build's measurements are only in
+# the first sample of each test.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --report-format v5 --commit abc123 --commit-ordinal 42 \
+# RUN:     --exec-multisample 2 --output-v5 %t.v5.json > %t.out 2> %t.err
+# RUN: not test -e %t.SANDBOX/build/report.json
+# RUN: diff %t.v5.json %t.SANDBOX/build/report.v5.json
+# RUN: %{python} -c "import sys; assert len(open(sys.argv[1]).readlines()) == 1" %t.v5.json
+# RUN: %{python} -m json.tool %t.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-V5 --match-full-lines %s
+#
+# CHECK-V5:      {
+# CHECK-V5-NEXT:     "format_version": "5",
+# CHECK-V5-NEXT:     "uuid": "{{[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+}}",
+# CHECK-V5-NEXT:     "measured_at": "{{[0-9]+-[0-9]+-[0-9]+T[0-9]+:[0-9]+:[0-9]+Z}}",
+# CHECK-V5-NEXT:     "machine": {
+# CHECK-V5-NEXT:         "name": "my-machine"
+# CHECK-V5-NEXT:     },
+# CHECK-V5-NEXT:     "commit": {
+# CHECK-V5-NEXT:         "value": "abc123",
+# CHECK-V5-NEXT:         "ordinal": 42
+# CHECK-V5-NEXT:     },
+# CHECK-V5-NEXT:     "run_parameters": {
+# CHECK-V5-NEXT:         "compiler_version": "clang version 3.1 (trunk 154331) (llvm/trunk 154329)",
+# CHECK-V5-NEXT:         "compiler_hash": "{{[0-9a-f]+}}"
+# CHECK-V5-NEXT:     },
+# CHECK-V5-NEXT:     "tests": [
+# CHECK-V5-NEXT:         {
+# CHECK-V5-NEXT:             "name": "MicroBenchmarks/Foo/foo",
+# CHECK-V5-NEXT:             "samples": [
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "binary_size": 32768,
+# CHECK-V5-NEXT:                     "code_size": 8192,
+# CHECK-V5-NEXT:                     "compile_time": 3.0,
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 },
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "binary_size": 32768,
+# CHECK-V5-NEXT:                     "code_size": 8192,
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 }
+# CHECK-V5-NEXT:             ]
+# CHECK-V5-NEXT:         },
+# CHECK-V5-NEXT:         {
+# CHECK-V5-NEXT:             "name": "MicroBenchmarks/Foo/foo.test:BM_Foo/8",
+# CHECK-V5-NEXT:             "samples": [
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "execution_time": 0.25,
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 },
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "execution_time": 0.25,
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 }
+# CHECK-V5-NEXT:             ]
+# CHECK-V5-NEXT:         },
+# CHECK-V5-NEXT:         {
+# CHECK-V5-NEXT:             "name": "SingleSource/Benchmarks/Misc/pi",
+# CHECK-V5-NEXT:             "samples": [
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "binary_size": 16384,
+# CHECK-V5-NEXT:                     "code_size": 4096,
+# CHECK-V5-NEXT:                     "compile_peak_memory": 2048,
+# CHECK-V5-NEXT:                     "compile_time": 1.25,
+# CHECK-V5-NEXT:                     "execution_time": 1.5,
+# CHECK-V5-NEXT:                     "hash": "abc123",
+# CHECK-V5-NEXT:                     "link_time": 0.5,
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 },
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "binary_size": 16384,
+# CHECK-V5-NEXT:                     "code_size": 4096,
+# CHECK-V5-NEXT:                     "execution_time": 1.5,
+# CHECK-V5-NEXT:                     "hash": "abc123",
+# CHECK-V5-NEXT:                     "status": "PASS"
+# CHECK-V5-NEXT:                 }
+# CHECK-V5-NEXT:             ]
+# CHECK-V5-NEXT:         },
+# CHECK-V5-NEXT:         {
+# CHECK-V5-NEXT:             "name": "SingleSource/Broken/broken",
+# CHECK-V5-NEXT:             "samples": [
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "status": "NOEXE"
+# CHECK-V5-NEXT:                 },
+# CHECK-V5-NEXT:                 {
+# CHECK-V5-NEXT:                     "status": "NOEXE"
+# CHECK-V5-NEXT:                 }
+# CHECK-V5-NEXT:             ]
+# CHECK-V5-NEXT:         }
+# CHECK-V5-NEXT:     ]
+# CHECK-V5-NEXT: }
+
+# The build's measurements are in the first sample of each build, which is the
+# first one kept by --drop-exec.
+# DEFINE: %{build-samples} = %{python} -c "import json, sys; \
+# DEFINE:   test = json.load(open(sys.argv[1]))['tests'][2]; \
+# DEFINE:   print(test['name'], ['compile_time' in s for s in test['samples']])"
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --report-format v5 --commit abc123 \
+# RUN:     --compile-multisample 2 --exec-multisample 3 > %t.out 2> %t.err
+# RUN: %{build-samples} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-REBUILT %s
+# CHECK-REBUILT: SingleSource/Benchmarks/Misc/pi [True, True, False]
+#
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --report-format v5 --commit abc123 \
+# RUN:     --exec-multisample 3 --drop-exec 1 > %t.out 2> %t.err
+# RUN: %{build-samples} %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-DROPPED %s
+# CHECK-DROPPED: SingleSource/Benchmarks/Misc/pi [True, False]
+
+# Without --commit-ordinal, the commit has no ordinal. Both reports can be
+# written by the same run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} --report-format v1 --report-format v5 --commit abc123 \
+# RUN:     > %t.both.out 2> %t.both.err
+# RUN: filecheck --check-prefix CHECK-BOTH-V1 < %t.SANDBOX/build/report.json %s
+# RUN: %{python} -m json.tool %t.SANDBOX/build/report.v5.json \
+# RUN:   | filecheck --check-prefix CHECK-BOTH-V5 %s
+#
+# CHECK-BOTH-V1: "Name": "nts.SingleSource/Benchmarks/Misc/pi.exec"
+# CHECK-BOTH-V5:      "commit": {
+# CHECK-BOTH-V5-NEXT:     "value": "abc123"
+# CHECK-BOTH-V5-NEXT: },
+
+# By default, only the v1 report is written.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{runtest} > %t.v1.out 2> %t.v1.err
+# RUN: test -e %t.SANDBOX/build/report.json
+# RUN: not test -e %t.SANDBOX/build/report.v5.json
+
+# Invalid combinations of options are refused before anything is run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: not %{runtest} --report-format v5 2> %t.err
+# RUN: filecheck --check-prefix CHECK-NO-COMMIT < %t.err %s
+# CHECK-NO-COMMIT: error: --report-format v5 requires --commit
+#
+# RUN: not %{runtest} --commit abc123 2> %t.err
+# RUN: filecheck --check-prefix CHECK-COMMIT-V1 < %t.err %s
+# CHECK-COMMIT-V1: error: --commit requires --report-format v5
+#
+# RUN: not %{runtest} --commit-ordinal 1 2> %t.err
+# RUN: filecheck --check-prefix CHECK-ORDINAL-V1 < %t.err %s
+# CHECK-ORDINAL-V1: error: --commit-ordinal requires --report-format v5
+#
+# RUN: not %{runtest} --report-format v5 --commit abc123 \
+# RUN:     --submit http://lnt.example.com/db_default/submitRun 2> %t.err
+# RUN: filecheck --check-prefix CHECK-SUBMIT-V5 < %t.err %s
+# CHECK-SUBMIT-V5: error: --submit requires --report-format v1
+#
+# RUN: not %{runtest} --report-format v5 --commit abc123 --run-order 1 \
+# RUN:     2> %t.err
+# RUN: filecheck --check-prefix CHECK-RUN-ORDER-V5 < %t.err %s
+# CHECK-RUN-ORDER-V5: error: --run-order requires --report-format v1
+#
+# RUN: not %{runtest} --report-format v5 --commit a/b 2> %t.err
+# RUN: filecheck --check-prefix CHECK-BAD-COMMIT < %t.err %s
+# CHECK-BAD-COMMIT: error: --commit cannot contain '/' or '%', or be '.' or '..'
+#
+# RUN: not %{runtest} --report-format v5 --commit abc123 \
+# RUN:     --exec-interleaved-builds %t.SANDBOX 2> %t.err
+# RUN: filecheck --check-prefix CHECK-INTERLEAVED < %t.err %s
+# CHECK-INTERLEAVED: error: --report-format v5 cannot be used with --exec-interleaved-builds
+# RUN: not test -e %t.SANDBOX
+
+# The machine name is checked once it is known, before the tests are built.
+# RUN: not %{run} my%machine --report-format v5 --commit abc123 \
+# RUN:     > %t.out 2> %t.err
+# RUN: filecheck --check-prefix CHECK-BAD-MACHINE < %t.err %s
+# RUN: not grep Building %t.err
+# CHECK-BAD-MACHINE: error: The machine name cannot contain '/' or '%', or be '.' or '..': 'my%machine'

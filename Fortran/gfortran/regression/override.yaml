@@ -95,6 +95,10 @@
 "nint_2.f90":
   disabled_on: ["powerpc-*-aix"]
 
+# disable for PPC (https://github.com/llvm/llvm-project/issues/229834)
+"c_char_tests_5.f90":
+  disabled_on: ["ppc64le-*-*", "powerpc-*-*"]
+
 # ------------------------ PERMANENTLY OVERRIDDEN TESTS ------------------------
 
 # namelist_print_2.f and print_fmt_2.f90 use ```print <namelist name>```. This
@@ -139,3 +143,8 @@
 # on big endian target.
 "unsigned_21.f90":
   disabled_on: ["powerpc-*-aix"]
+
+# Flang has implemented F2023's "Using integer arrays to specify the rank
+# and bounds of an array" so there is no compile error.
+"pr101327.f90":
+  xfail: false

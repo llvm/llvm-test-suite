@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef _AIX
+#if !defined(_AIX) && !defined(__MVS__)
 #include <err.h>
 #endif
 

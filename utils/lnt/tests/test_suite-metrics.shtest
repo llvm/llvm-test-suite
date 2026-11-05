@@ -1,0 +1,20 @@
+# Check that hash, score, compile_time and exec_time get copied into the LNT
+# report.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --verbose \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-METRICS < %t.SANDBOX/build/report.json %s
+# RUN: filecheck --check-prefix CHECK-METRICS2 < %t.SANDBOX/build/report.json %s
+# CHECK-METRICS-DAG: foo.exec
+# CHECK-METRICS-DAG: foo.compile
+# CHECK-METRICS-DAG: foo.score
+# CHECK-METRICS-DAG: foo.hash
+# CHECK-METRICS2-NOT: foo.unknown

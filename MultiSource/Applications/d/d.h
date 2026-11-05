@@ -76,7 +76,8 @@ typedef long long int64;
 typedef unsigned long long uint64;
 typedef short int16;
 typedef unsigned short uint16;
-#if defined(_AIX) && !defined(_ALL_SOURCE)
+#if (defined(_AIX) && !defined(_ALL_SOURCE)) || \
+    (defined(__MVS__) && !defined(_UINT_T))
 typedef uint32 uint;
 #endif
 typedef unsigned long ulong;

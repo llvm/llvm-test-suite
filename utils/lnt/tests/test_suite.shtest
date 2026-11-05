@@ -1,0 +1,72 @@
+# Check a basic test-suite run.
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --output %t.report \
+# RUN:     > %t.out 2> %t.err
+# RUN: diff %t.report %t.SANDBOX/build/report.json
+# RUN: filecheck  --check-prefix CHECK-BASIC < %t.err %s
+# RUN: filecheck  --check-prefix CHECK-REPORT < %t.SANDBOX/build/report.json %s
+# RUN: filecheck  --check-prefix CHECK-XML < %t.SANDBOX/build/test-results.xunit.xml %s
+# RUN: filecheck  --check-prefix CHECK-CSV < %t.SANDBOX/build/test-results.csv %s
+
+# CHECK-REPORT: "no_errors": "True",
+# CHECK-REPORT: "run_order": "154331"
+# CHECK-REPORT: "Name": "nts.foo.compile"
+# CHECK-REPORT: "Name": "nts.foo.exec"
+# CHECK-REPORT: "Name": "nts.foo.hash"
+# CHECK-REPORT: "Name": "nts.foo.score"
+#
+# CHECK-BASIC: Inferred C++ compiler under test
+# CHECK-BASIC: Configuring
+# CHECK-BASIC: Building
+# CHECK-BASIC: Testing
+
+# CHECK-XML: <?xml version="1.0" encoding="UTF-8"?>
+# CHECK-XML: <testsuite name="foo"
+# CHECK-XML:            tests="{{[0-9]+}}"
+# CHECK-XML:            errors="0"
+# CHECK-XML:            failures="0"
+# CHECK-XML:            timestamp="2
+# CHECK-XML:     <testcase classname=""
+# CHECK-XML:               name="foo" time="1.0">
+# CHECK-XML:     </testcase>
+# CHECK-XML: </testsuite>
+
+# CHECK-CSV: Program;CC;CC_Time;Code_Size;CC_Hash;Exec;Exec_Time;Score
+# CHECK-CSV-NEXT: foo//foo;pass;1.3;42.0;xyz;pass;1.4;1.5
+
+# Use the same sandbox again with --no-configure
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --no-configure \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-NOCONF < %t.err %s
+# CHECK-NOCONF-NOT: Configuring
+
+# Use a different sandbox with --no-configure
+# RUN: rm -rf %t.SANDBOX2
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX2 \
+# RUN:     --no-timestamp \
+# RUN:     --no-configure \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-NOCONF2 < %t.err %s
+# CHECK-NOCONF2: Configuring

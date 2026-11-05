@@ -1,0 +1,28 @@
+{
+    "tests": [
+        {
+            "name": "test-suite :: baz",
+            "elapsed": "1.0",
+            "code": "FAIL",
+            "metrics": {
+                "compile_time": 2.3,
+                "exec_time": 3.4,
+                "score": 7.1,
+                "hash": "xyz",
+                "unknown": "unknown"
+            }
+        },
+        {
+            "name": "test-suite :: foo",
+            "elapsed": "1.0",
+            "code": "PASS",
+            "metrics": {
+                "compile_time": 1.3,
+                "exec_time": 1.4,
+                "score": 1.5,
+                "hash": "xyz",
+                "unknown": "unknown"
+            }
+        }
+    ]
+}

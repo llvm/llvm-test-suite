@@ -1,0 +1,12 @@
+# Check a missing --cc on the command line
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     > %t.log 2> %t.err || true
+# RUN: filecheck  --check-prefix CHECK-MISSING-CC < %t.err %s
+# CHECK-MISSING-CC: error: Couldn't find C compiler (). Maybe you should specify --cc?

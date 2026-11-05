@@ -24,7 +24,7 @@
 #include <windows.h>
 #endif
 
-#if defined(__unix__) || defined(__APPLE__)
+#if (defined(__unix__) || defined(__APPLE__)) && !defined(__MVS__)
 #include <spawn.h>
 #include <sys/wait.h>
 #endif
@@ -56,7 +56,7 @@ int main(int argc, char* const* argv) {
 
   int result;
 
-#if defined(__unix__) || defined(__APPLE__)
+#if (defined(__unix__) || defined(__APPLE__)) && !defined(__MVS__)
   pid_t pid;
   extern char** environ;
   if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ))

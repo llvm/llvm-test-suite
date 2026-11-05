@@ -34,6 +34,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#ifdef  HAVE_STRINGS_H
+#include <strings.h>
+#endif
 #include <errno.h>
 #include <stdio.h>
 #include <ctype.h>

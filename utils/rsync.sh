@@ -13,6 +13,9 @@ case $BUILDDIR in
         ;;
 esac
 
+# Normalize path: resolve symlinks to physical path
+BUILDDIR=$(cd "$BUILDDIR" && pwd -P)
+
 RSYNC_FLAGS=""
 RSYNC_FLAGS+=" -a"
 RSYNC_FLAGS+=" --delete --delete-excluded"

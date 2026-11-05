@@ -1,0 +1,17 @@
+## With a couple of cflags
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --cflag '-Wall' \
+# RUN:     --cflag '-mfloat-abi=hard' \
+# RUN:     --cflag '-O3' \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-CFLAG2 < %t.err %s
+# CHECK-CFLAG2: Inferred C++ compiler under test
+# CHECK-CFLAG2: CMAKE_C_FLAGS: '-Wall -mfloat-abi=hard -O3

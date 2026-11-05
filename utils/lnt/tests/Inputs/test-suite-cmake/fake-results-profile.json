@@ -1,0 +1,17 @@
+{
+    "tests": [
+        {
+            "name": "test-suite :: foo",
+            "code": "PASS",
+            "elapsed": "1.0",
+            "metrics": {
+                "compile_time": 1.3,
+                "exec_time": 1.4,
+                "score": 1.5,
+                "hash": "xyz",
+                "profile": "/tmp/I/Do/Not/Exist.perf_data",
+                "unknown": "unknown"
+            }
+        }
+    ]
+}

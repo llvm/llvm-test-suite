@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import argparse, shutil
+parser = argparse.ArgumentParser(description='dummy lit')
+parser.add_argument('-o')
+parser.add_argument('-j', type=int)
+parser.add_argument('bar')
+args, _ = parser.parse_known_args()
+
+shutil.copyfile(args.bar + '/fake-results-profile.json', args.o
+)

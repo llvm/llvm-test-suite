@@ -1,0 +1,128 @@
+# Check --drop-exec feature for filtering execution samples
+# This test verifies that --drop-exec correctly drops first N execution samples
+
+# Test 1: --drop-exec without --exec-multisample should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR1 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --drop-exec 1 \
+# RUN:     > %t.err1.log 2> %t.err1.err
+# RUN: filecheck --check-prefix CHECK-ERR1 < %t.err1.err %s
+# CHECK-ERR1: --drop-exec requires --exec-multisample > 1
+
+# Test 2: --drop-exec with --only-compile should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR2 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --only-compile \
+# RUN:     --drop-exec 1 \
+# RUN:     > %t.err2.log 2> %t.err2.err
+# RUN: filecheck --check-prefix CHECK-ERR2 < %t.err2.err %s
+# CHECK-ERR2: --drop-exec cannot be used with --only-compile
+
+# Test 3: --drop-exec with --build should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR3 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --build \
+# RUN:     --drop-exec 1 \
+# RUN:     > %t.err3.log 2> %t.err3.err
+# RUN: filecheck --check-prefix CHECK-ERR3 < %t.err3.err %s
+# CHECK-ERR3: --drop-exec cannot be used with --build
+
+# Test 4: --drop-exec dropping all samples should fail
+# RUN: not %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-ERR4 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --exec-multisample 2 \
+# RUN:     --drop-exec 2 \
+# RUN:     > %t.err4.log 2> %t.err4.err
+# RUN: filecheck --check-prefix CHECK-ERR4 < %t.err4.err %s
+# CHECK-ERR4: --drop-exec would drop all 2 samples
+
+# Test 5: --drop-exec 1 with 3 samples should work
+# RUN: rm -rf %t.SANDBOX-DROP1
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-DROP1 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --exec-multisample 3 \
+# RUN:     --drop-exec 1 \
+# RUN:     --output %t.drop1.json \
+# RUN:     > %t.drop1.log 2> %t.drop1.err
+# RUN: filecheck --check-prefix CHECK-DROP1 < %t.drop1.err %s
+# CHECK-DROP1: Dropping first execution sample (iteration 0)
+# CHECK-DROP1: Kept 2 of 3 execution samples after --drop-exec filtering
+
+# Test 6: --drop-exec 2 with 5 samples should work
+# RUN: rm -rf %t.SANDBOX-DROP2
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-DROP2 \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --exec-multisample 5 \
+# RUN:     --drop-exec 2 \
+# RUN:     --output %t.drop2.json \
+# RUN:     > %t.drop2.log 2> %t.drop2.err
+# RUN: filecheck --check-prefix CHECK-DROP2 < %t.drop2.err %s
+# CHECK-DROP2: Dropping first 2 execution samples (iterations 0-1)
+# CHECK-DROP2: Kept 3 of 5 execution samples after --drop-exec filtering
+
+# Test 7: --drop-exec with test-prebuilt mode
+# First build
+# RUN: rm -rf %t.SANDBOX-BUILD-PREBUILT
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-BUILD-PREBUILT \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --build \
+# RUN:     > %t.build-prebuilt.log 2> %t.build-prebuilt.err
+
+# Now test prebuilt with --drop-exec
+# RUN: rm -rf %t.SANDBOX-PREBUILT-TEST
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX-PREBUILT-TEST \
+# RUN:     --no-timestamp \
+# RUN:     --exec \
+# RUN:     --build-dir %t.SANDBOX-BUILD-PREBUILT/build \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --exec-multisample 3 \
+# RUN:     --drop-exec 1 \
+# RUN:     --output %t.prebuilt-drop.json \
+# RUN:     > %t.prebuilt-drop.log 2> %t.prebuilt-drop.err
+# RUN: filecheck --check-prefix CHECK-PREBUILT-DROP < %t.prebuilt-drop.err %s
+# CHECK-PREBUILT-DROP: Dropping first execution sample (iteration 0)
+# CHECK-PREBUILT-DROP: Kept 2 of 3 execution samples after --drop-exec filtering

@@ -1,0 +1,21 @@
+## With a lone cflag
+# RUN: rm -rf %t.SANDBOX
+# RUN: %{run-test-suite} \
+# RUN:     --sandbox %t.SANDBOX \
+# RUN:     --no-timestamp \
+# RUN:     --test-suite %S/Inputs/test-suite-cmake \
+# RUN:     --cc %S/Inputs/FakeCompilers/clang-r154331 \
+# RUN:     --use-cmake %S/Inputs/test-suite-cmake/fake-cmake \
+# RUN:     --use-make %S/Inputs/test-suite-cmake/fake-make \
+# RUN:     --use-lit %S/Inputs/test-suite-cmake/fake-lit \
+# RUN:     --cflag '-Wall' \
+# RUN:     > %t.log 2> %t.err
+# RUN: filecheck --check-prefix CHECK-CFLAG1 < %t.err %s
+# CHECK-CFLAG1: Inferred C++ compiler under test
+# CHECK-CFLAG1: CMAKE_C_FLAGS: '-Wall
+# Ensure that default c flags for build configurations are made empty to avoid
+# surprises:
+# CHECK-CFLAG1: CMAKE_C_FLAGS_DEBUG: ''
+# CHECK-CFLAG1: CMAKE_C_FLAGS_MINSIZEREL: ''
+# CHECK-CFLAG1: CMAKE_C_FLAGS_RELEASE: ''
+# CHECK-CFLAG1: CMAKE_C_FLAGS_RELWITHDEBINFO: ''

@@ -1,0 +1,3 @@
+#!/bin/bash
+cp fake-test fake-test.test
+exit 0
