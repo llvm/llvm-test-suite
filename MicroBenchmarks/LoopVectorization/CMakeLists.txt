@@ -13,6 +13,7 @@ llvm_test_executable(LoopVectorizationBenchmarks
   ConditionalScalarAssignment.cpp
   main.cpp
   MathFunctions.cpp
+  ReductionStartValue.cpp
   RuntimeChecks.cpp
   SmallLoopTripCount.cpp
   VectorOperations.cpp
