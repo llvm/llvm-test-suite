@@ -1,0 +1,5 @@
+ LGT('ONE','TWO') = F
+ LGT('ONE  ','ONE') = F
+ LGT('ONE','ONE  ') = F
+ LGT('', '') = F
+exit 0

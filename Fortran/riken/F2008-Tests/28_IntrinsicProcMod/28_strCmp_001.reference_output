@@ -1,0 +1,5 @@
+ LGE('ONE','TWO') = F
+ LGE('ONE  ','ONE') = T
+ LGE('ONE','ONE  ') = T
+ LGE('', '') = T
+exit 0
