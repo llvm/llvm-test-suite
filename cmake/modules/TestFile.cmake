@@ -124,9 +124,11 @@ endfunction()
 # the run stage:
 #   <name>.test.o.time.list    one <object>.time path per line
 #   <name>.test.link.time.list the <executable>.link.time path
-# Every compile and link command is wrapped in `timeit --summary <file>.time`
-# (see TEST_SUITE_COLLECT_COMPILE_TIME in the top-level CMakeLists.txt), so the
-# timing file of an object is its path with ".time" appended.
+# With TEST_SUITE_COLLECT_COMPILE_TIME, the top-level CMakeLists.txt wraps
+# compile and link commands in `timeit --summary <file>.time`, so the timing
+# file of such an object is its path with ".time" appended. Objects that are
+# created without the wrappers are listed but have no timing file; they are
+# skipped when the lists are read.
 #
 # Only the objects of `target` itself are listed. Libraries it links against are
 # currently not accounted for.
