@@ -4,6 +4,8 @@ configure_file(test_not.py test_not.py
   COPYONLY)
 configure_file(test_maxrss.py test_maxrss.py
   COPYONLY)
+configure_file(test_compile_time_lists.py test_compile_time_lists.py
+  COPYONLY)
 configure_file(fpcmp-input1 fpcmp-input1
   COPYONLY)
 configure_file(fpcmp-input2 fpcmp-input2
@@ -43,3 +45,11 @@ endif()
 # Check that fpcmp can handle decimal numbers ending with a period correctly.
 llvm_test_run(EXECUTABLE "$<TARGET_FILE:fpcmp-target>" "-a" "0.03" "-r" "0.03" "-i" "%b/test/fpcmp-input1" "%b/test/fpcmp-input2")
 llvm_add_test_for_target(fpcmp-target)
+
+# Check that the compile/link time path-list files read by compiletime.py are
+# written next to the .test file and point at existing timing files.
+if(TEST_SUITE_COLLECT_COMPILE_TIME)
+  llvm_test_executable_no_test(compile_time_lists ret0.c NO_PGO)
+  llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_compile_time_lists.py" "%s" "ret0.c.o")
+  llvm_add_test_for_target(compile_time_lists)
+endif()
