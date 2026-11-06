@@ -83,3 +83,10 @@ declare_catch_test_dir(unit math
   LINK_LIBS
     hiprtc
 )
+
+declare_catch_test_dir(unit launchBounds
+  SOURCES
+    launch_bounds.cc
+  LINK_LIBS
+    hiprtc
+)
