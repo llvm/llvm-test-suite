@@ -6,15 +6,14 @@
 #include <vector>
 
 #ifdef _WIN32
-#include <windows.h>
+#include "page-mapping-windows.h"
 #else
-#include <sys/mman.h>
-#include <unistd.h>
+#include "page-mapping-posix.h"
 #endif
 
 // A contiguous mapping with independently protected ranges of pages.
 class PageMapping {
-  enum class Access { None, ReadOnly, ReadWrite };
+  using Access = page_mapping::Access;
   struct Region {
     size_t Pages;
     Access Protection;
@@ -24,68 +23,16 @@ class PageMapping {
   size_t Size = 0;
   size_t PageSize = 0;
 
-#ifdef _WIN32
-  static size_t systemPageSize() {
-    SYSTEM_INFO Info;
-    GetSystemInfo(&Info);
-    return Info.dwPageSize;
-  }
-
-  static unsigned char *allocate(size_t Bytes) {
-    return static_cast<unsigned char *>(
-        VirtualAlloc(nullptr, Bytes, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
-  }
-
-  static void deallocate(unsigned char *Begin, size_t) {
-    VirtualFree(Begin, 0, MEM_RELEASE);
-  }
-
-  static bool protect(unsigned char *Begin, size_t Bytes, Access Protection) {
-    DWORD Flags = PAGE_NOACCESS;
-    if (Protection == Access::ReadOnly)
-      Flags = PAGE_READONLY;
-    else if (Protection == Access::ReadWrite)
-      Flags = PAGE_READWRITE;
-    DWORD OldProtect;
-    return VirtualProtect(Begin, Bytes, Flags, &OldProtect) != 0;
-  }
-#else
-  static size_t systemPageSize() {
-    long Size = sysconf(_SC_PAGESIZE);
-    return Size > 0 ? static_cast<size_t>(Size) : 0;
-  }
-
-  static unsigned char *allocate(size_t Bytes) {
-    void *Mapping = mmap(nullptr, Bytes, PROT_READ | PROT_WRITE,
-                         MAP_PRIVATE | MAP_ANON, -1, 0);
-    return Mapping == MAP_FAILED ? nullptr
-                                 : static_cast<unsigned char *>(Mapping);
-  }
-
-  static void deallocate(unsigned char *Begin, size_t Bytes) {
-    munmap(Begin, Bytes);
-  }
-
-  static bool protect(unsigned char *Begin, size_t Bytes, Access Protection) {
-    int Flags = PROT_NONE;
-    if (Protection == Access::ReadOnly)
-      Flags = PROT_READ;
-    else if (Protection == Access::ReadWrite)
-      Flags = PROT_READ | PROT_WRITE;
-    return mprotect(Begin, Bytes, Flags) == 0;
-  }
-#endif
-
   void release() {
     if (!Data)
       return;
-    deallocate(Data, Size);
+    page_mapping::deallocate(Data, Size);
     Data = nullptr;
     Size = 0;
   }
 
   explicit PageMapping(const std::vector<Region> &Regions)
-      : PageSize(systemPageSize()) {
+      : PageSize(page_mapping::systemPageSize()) {
     if (!PageSize || Regions.empty())
       return;
 
@@ -96,14 +43,14 @@ class PageMapping {
       TotalPages += R.Pages;
     }
     size_t AllocationSize = TotalPages * PageSize;
-    Data = allocate(AllocationSize);
+    Data = page_mapping::allocate(AllocationSize);
     if (!Data)
       return;
     Size = AllocationSize;
     unsigned char *Begin = Data;
     for (const Region &R : Regions) {
       size_t Bytes = R.Pages * PageSize;
-      if (!protect(Begin, Bytes, R.Protection)) {
+      if (!page_mapping::protect(Begin, Bytes, R.Protection)) {
         release();
         return;
       }
@@ -143,7 +90,8 @@ public:
     return *this;
   }
 
-  // C++17 constructs the result directly; ownership cannot be copied.
+  // C++17 constructs the returned mapping directly, without copying or moving
+  // it.
   PageMapping build() const { return PageMapping(Regions); }
 };
 
