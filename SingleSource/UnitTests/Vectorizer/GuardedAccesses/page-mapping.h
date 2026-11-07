@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #ifdef _WIN32
@@ -23,12 +24,19 @@ class PageMapping {
   size_t Size = 0;
   size_t PageSize = 0;
 
+  void swap(PageMapping &Other) noexcept {
+    std::swap(Data, Other.Data);
+    std::swap(Size, Other.Size);
+    std::swap(PageSize, Other.PageSize);
+  }
+
   void release() {
     if (!Data)
       return;
     page_mapping::deallocate(Data, Size);
     Data = nullptr;
     Size = 0;
+    PageSize = 0;
   }
 
   explicit PageMapping(const std::vector<Region> &Regions)
@@ -63,6 +71,16 @@ public:
 
   PageMapping(const PageMapping &) = delete;
   PageMapping &operator=(const PageMapping &) = delete;
+  PageMapping(PageMapping &&Other) noexcept { swap(Other); }
+
+  PageMapping &operator=(PageMapping &&Other) noexcept {
+    if (this == &Other)
+      return *this;
+    release();
+    swap(Other);
+    return *this;
+  }
+
   ~PageMapping() { release(); }
 
   explicit operator bool() const { return Data != nullptr; }
@@ -90,8 +108,6 @@ public:
     return *this;
   }
 
-  // C++17 constructs the returned mapping directly, without copying or moving
-  // it.
   PageMapping build() const { return PageMapping(Regions); }
 };
 
