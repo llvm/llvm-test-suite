@@ -1,4 +1,4 @@
-#include "guard-page.h"
+#include "page-mapping.h"
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -27,13 +27,18 @@ NOINLINE void conditional_load(const unsigned char *RESTRICT src,
 int main() {
   constexpr size_t Iterations = 16;
   constexpr size_t AccessibleBytes = Iterations;
-  GuardedPages Pages;
-  if (!Pages || Pages.size() < AccessibleBytes)
+  auto Pages = PageMapping::Builder()
+                   .inaccessiblePages(1)
+                   .readWritePages(2)
+                   .inaccessiblePages(1)
+                   .build();
+  if (!Pages || Pages.pageSize() < AccessibleBytes)
     return 1;
 
   // Only the guard byte of the last iteration is readable. Its value is zero,
   // so the conditional eight-byte load must not touch the protected page.
-  unsigned char *Src = Pages.data() + Pages.size() - AccessibleBytes;
+  unsigned char *Src =
+      Pages.data() + Pages.size() - Pages.pageSize() - AccessibleBytes;
   uint64_t Dst[Iterations];
   for (uint64_t &Value : Dst)
     Value = 1;
