@@ -24,8 +24,23 @@ class PageMapping {
   size_t Size = 0;
   size_t PageSize = 0;
 
-  bool protect(unsigned char *Begin, size_t Bytes, Access Protection) {
 #ifdef _WIN32
+  static size_t systemPageSize() {
+    SYSTEM_INFO Info;
+    GetSystemInfo(&Info);
+    return Info.dwPageSize;
+  }
+
+  static unsigned char *allocate(size_t Bytes) {
+    return static_cast<unsigned char *>(
+        VirtualAlloc(nullptr, Bytes, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
+  }
+
+  static void deallocate(unsigned char *Begin, size_t) {
+    VirtualFree(Begin, 0, MEM_RELEASE);
+  }
+
+  static bool protect(unsigned char *Begin, size_t Bytes, Access Protection) {
     DWORD Flags = PAGE_NOACCESS;
     if (Protection == Access::ReadOnly)
       Flags = PAGE_READONLY;
@@ -33,39 +48,44 @@ class PageMapping {
       Flags = PAGE_READWRITE;
     DWORD OldProtect;
     return VirtualProtect(Begin, Bytes, Flags, &OldProtect) != 0;
+  }
 #else
+  static size_t systemPageSize() {
+    long Size = sysconf(_SC_PAGESIZE);
+    return Size > 0 ? static_cast<size_t>(Size) : 0;
+  }
+
+  static unsigned char *allocate(size_t Bytes) {
+    void *Mapping = mmap(nullptr, Bytes, PROT_READ | PROT_WRITE,
+                         MAP_PRIVATE | MAP_ANON, -1, 0);
+    return Mapping == MAP_FAILED ? nullptr
+                                 : static_cast<unsigned char *>(Mapping);
+  }
+
+  static void deallocate(unsigned char *Begin, size_t Bytes) {
+    munmap(Begin, Bytes);
+  }
+
+  static bool protect(unsigned char *Begin, size_t Bytes, Access Protection) {
     int Flags = PROT_NONE;
     if (Protection == Access::ReadOnly)
       Flags = PROT_READ;
     else if (Protection == Access::ReadWrite)
       Flags = PROT_READ | PROT_WRITE;
     return mprotect(Begin, Bytes, Flags) == 0;
-#endif
   }
+#endif
 
   void release() {
     if (!Data)
       return;
-#ifdef _WIN32
-    VirtualFree(Data, 0, MEM_RELEASE);
-#else
-    munmap(Data, Size);
-#endif
+    deallocate(Data, Size);
     Data = nullptr;
     Size = 0;
   }
 
-  explicit PageMapping(const std::vector<Region> &Regions) {
-#ifdef _WIN32
-    SYSTEM_INFO Info;
-    GetSystemInfo(&Info);
-    PageSize = Info.dwPageSize;
-#else
-    long SystemPageSize = sysconf(_SC_PAGESIZE);
-    if (SystemPageSize <= 0)
-      return;
-    PageSize = static_cast<size_t>(SystemPageSize);
-#endif
+  explicit PageMapping(const std::vector<Region> &Regions)
+      : PageSize(systemPageSize()) {
     if (!PageSize || Regions.empty())
       return;
 
@@ -76,18 +96,9 @@ class PageMapping {
       TotalPages += R.Pages;
     }
     size_t AllocationSize = TotalPages * PageSize;
-#ifdef _WIN32
-    void *Mapping = VirtualAlloc(nullptr, AllocationSize,
-                                 MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-    if (!Mapping)
+    Data = allocate(AllocationSize);
+    if (!Data)
       return;
-#else
-    void *Mapping = mmap(nullptr, AllocationSize, PROT_READ | PROT_WRITE,
-                         MAP_PRIVATE | MAP_ANON, -1, 0);
-    if (Mapping == MAP_FAILED)
-      return;
-#endif
-    Data = static_cast<unsigned char *>(Mapping);
     Size = AllocationSize;
     unsigned char *Begin = Data;
     for (const Region &R : Regions) {
