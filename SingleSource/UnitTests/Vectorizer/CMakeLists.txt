@@ -1,5 +1,9 @@
 set(CMAKE_CXX_STANDARD 17)
 llvm_singlesource()
+if(TARGET_OS STREQUAL "Darwin" OR TARGET_OS STREQUAL "Linux"
+   OR TARGET_OS STREQUAL "Windows")
+  add_subdirectory(GuardedAccesses)
+endif()
 include(CheckCXXCompilerFlag)
 
 function(llvm_vectorizer_variant prefix)
