@@ -4,14 +4,14 @@
 
 #include "./LoopBenchHelper.h"
 
-#define DEF_COMPRESS_LOOP(name, paramTys, args, init, loop)                    \
-  DEF_LOOP_BENCH(name, paramTys, args, init, loop, ({ return; }))
+#define DEF_COMPRESS_LOOP(name, paramTys, args, init, loop, ret)                    \
+  DEF_LOOP_BENCH(name, paramTys, args, init, loop, ret)
 
-#define DEF_SIMPLE_COMPRESS(name, loop)                                        \
+#define DEF_SIMPLE_COMPRESS(name, loop, ret)                                        \
   DEF_COMPRESS_LOOP(                                                           \
       name, /*arrayTys=*/(T *, T *, T *), /*params=*/                          \
       (T *__restrict__ Src, T *__restrict__ Dst, T *__restrict__ Cmp),         \
-      INIT_BLOCK(uint64_t Idx = 0;), loop);
+      INIT_BLOCK(uint64_t Idx = 0;), loop, ret);
 
 /* ============= Define Benchmarks ============= */
 
@@ -19,13 +19,13 @@ DEF_SIMPLE_COMPRESS(compress_patterns_single_compress,
                     (for (unsigned i = 0; i < ITERATIONS; ++i) {
                       if (Cmp[i])
                         Dst[Idx++] = Src[i];
-                    }));
+                    }), RET_VOID);
 
 DEF_SIMPLE_COMPRESS(compress_patterns_single_expand,
                     (for (unsigned i = 0; i < ITERATIONS; ++i) {
                       if (Cmp[i])
                         Dst[i] = Src[Idx++];
-                    }));
+                    }), RET_VOID);
 
 DEF_COMPRESS_LOOP(compress_patterns_nested_compress,
                   /*arrayTys=*/(T *, T *, T *, T *),
@@ -37,7 +37,7 @@ DEF_COMPRESS_LOOP(compress_patterns_nested_compress,
                     if (CmpA[i])
                       if (CmpB[i])
                         Dst[Idx++] = Src[i];
-                  }));
+                  }), RET_VOID);
 
 DEF_COMPRESS_LOOP(compress_patterns_multiple_conditional_inductions,
                   /*arrayTys=*/(T *, T *, T *, T *, T *),
@@ -51,7 +51,7 @@ DEF_COMPRESS_LOOP(compress_patterns_multiple_conditional_inductions,
                       DstA[IdxA++] = Src[i];
                     if (CmpB[i])
                       DstB[IdxB++] = Src[i];
-                  }));
+                  }), RET_VOID);
 
 DEF_COMPRESS_LOOP(compress_patterns_compress_and_expand_many,
                   /*arrayTys=*/(T *, T *, T *, T *, T *, T *),
@@ -74,14 +74,22 @@ DEF_COMPRESS_LOOP(compress_patterns_compress_and_expand_many,
 
                       idx++;
                     }
-                  }));
+                  }), RET_VOID);
+
+DEF_SIMPLE_COMPRESS(compress_patterns_compress_liveout,
+               (for (unsigned i = 0; i < ITERATIONS; ++i) {
+                 if (Cmp[i])
+                   Dst[Idx++] = Src[i];
+               }),
+               ({ return Idx; }));
 
 #define ADD_BENCHMARK(ty)                                                      \
   BENCHMARK_CASE(compress_patterns_single_compress, ty);                       \
   BENCHMARK_CASE(compress_patterns_single_expand, ty);                         \
   BENCHMARK_CASE(compress_patterns_nested_compress, ty);                       \
   BENCHMARK_CASE(compress_patterns_multiple_conditional_inductions, ty);       \
-  BENCHMARK_CASE(compress_patterns_compress_and_expand_many, ty);
+  BENCHMARK_CASE(compress_patterns_compress_and_expand_many, ty);              \
+  BENCHMARK_CASE(compress_patterns_compress_liveout, ty);
 
 ADD_BENCHMARK(uint8_t);
 ADD_BENCHMARK(uint16_t);

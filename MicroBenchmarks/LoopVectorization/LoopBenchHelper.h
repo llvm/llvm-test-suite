@@ -37,6 +37,9 @@ template <typename Base, typename... ParamTys> class LoopBenchHelper {
   std::tuple<ParamTys...> Params;
 
 public:
+  LoopBenchHelper(const LoopBenchHelper &) = delete;
+  LoopBenchHelper &operator=(const LoopBenchHelper &) = delete;
+
   LoopBenchHelper() {
     std::mt19937 rng(12345);
     // TODO: Come up with a range based on the array type (Ty below).
@@ -97,8 +100,18 @@ void __attribute__((always_inline)) benchmark_loop(benchmark::State &state) {
   // Verify the vectorized and un-vectorized versions produce the same results.
   if (EnableVec) {
     Bench NoVec;
-    Loop.run_autovec();
-    NoVec.run_novec();
+    if constexpr (!std::is_void_v<decltype(NoVec.run_novec())>) {
+      auto ResultAutoVec = Loop.run_autovec();
+      auto ResultNoVec = NoVec.run_novec();
+      if (ResultAutoVec != ResultNoVec) {
+        std::cerr << "ERROR: autovec return different to scalar loop!\n";
+        exit(1);
+      }
+    } else {
+      Loop.run_autovec();
+      NoVec.run_novec();
+    }
+
     if (!Bench::verify_same(Loop, NoVec)) {
       std::cerr << "ERROR: autovec result different to scalar loop!\n";
       exit(1);
@@ -116,6 +129,7 @@ void __attribute__((always_inline)) benchmark_loop(benchmark::State &state) {
 
 #define INIT_BLOCK
 #define EXIT_BLOCK
+#define RET_VOID ({ return; })
 
 #define DEF_LOOP_BENCH(name, paramTys, args, init, loop, exit)                 \
   template <typename T>                                                        \
