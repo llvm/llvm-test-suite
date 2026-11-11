@@ -9,19 +9,26 @@ endif()
 set(CMAKE_CXX_STANDARD 23)
 
 include(CheckCXXSourceCompiles)
+# Check for std::atomic_ref, which thread_pool_backend.hpp also uses.
 check_cxx_source_compiles("
+#include <atomic>
 #include <concepts>
 #include <coroutine>
+#include <cstddef>
 #if __cplusplus < 202302L || !defined(__cpp_impl_coroutine)
 #error
 #endif
 #if !defined(__cpp_concepts) || __cpp_concepts < 202002L
 #error
 #endif
-int main() {}
-" BEMAN_EXECUTION_HAVE_CXX23)
-if(NOT BEMAN_EXECUTION_HAVE_CXX23)
-  message(STATUS "Skipping beman-execution: it needs C++23 with concepts and coroutines")
+int main() {
+  std::size_t n = 1;
+  std::atomic_ref<std::size_t> r{n};
+  return static_cast<int>(r.fetch_sub(1, std::memory_order_acq_rel));
+}
+" BEMAN_EXECUTION_HAVE_CXX23_ATOMIC_REF)
+if(NOT BEMAN_EXECUTION_HAVE_CXX23_ATOMIC_REF)
+  message(STATUS "Skipping beman-execution: it needs C++23 with concepts, coroutines and std::atomic_ref")
   return()
 endif()
 
