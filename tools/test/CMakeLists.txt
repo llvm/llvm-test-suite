@@ -48,7 +48,7 @@ llvm_add_test_for_target(fpcmp-target)
 
 # Check that the compile/link time path-list files read by compiletime.py are
 # written next to the .test file and point at existing timing files.
-if(TEST_SUITE_COLLECT_COMPILE_TIME)
+if(TEST_SUITE_COLLECT_COMPILE_TIME AND TEST_SUITE_COMPILE_TIME_LISTS)
   llvm_test_executable_no_test(compile_time_lists ret0.c NO_PGO)
   llvm_test_run(EXECUTABLE ${Python_EXECUTABLE} "%b/test/test_compile_time_lists.py" "%s" "ret0.c.o")
   llvm_add_test_for_target(compile_time_lists)

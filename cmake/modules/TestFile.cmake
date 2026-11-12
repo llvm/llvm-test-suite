@@ -120,8 +120,8 @@ function(llvm_test_file_for_target var target)
 endfunction()
 
 # Write the path-list files that litsupport/modules/compiletime.py reads at lit
-# run time, keyed by the .test file so that they survive from the build stage to
-# the run stage:
+# run time when TEST_SUITE_COMPILE_TIME_LISTS is ON, keyed by the .test file so
+# that they survive from the build stage to the run stage:
 #   <name>.test.o.time.list    one <object>.time path per line
 #   <name>.test.link.time.list the <executable>.link.time path
 # With TEST_SUITE_COLLECT_COMPILE_TIME, the top-level CMakeLists.txt wraps
@@ -137,7 +137,7 @@ endfunction()
 # repeated once after the closing ">" to terminate the last line. The
 # $<BOOL:...> guard avoids a bare ".time" line for targets without objects.
 function(llvm_test_write_time_lists target)
-  if(NOT TEST_SUITE_COLLECT_COMPILE_TIME)
+  if(NOT TEST_SUITE_COLLECT_COMPILE_TIME OR NOT TEST_SUITE_COMPILE_TIME_LISTS)
     return()
   endif()
   llvm_test_file_for_target(testfile ${target})
