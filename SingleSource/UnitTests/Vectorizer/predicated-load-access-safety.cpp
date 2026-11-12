@@ -66,34 +66,45 @@ NOINLINE void conditional_load(const unsigned char *RESTRICT src,
   }
 }
 
-int main() {
-  constexpr size_t Iterations = 16;
-  constexpr size_t AccessibleBytes = Iterations;
-  unsigned char *Src = allocateBeforeGuardPage(AccessibleBytes);
+static bool test(size_t Iterations) {
+  unsigned char *Src = allocateBeforeGuardPage(Iterations);
   if (!Src)
-    return 1;
+    return false;
 
-  // Only the guard byte of the last iteration is readable. Its value is zero,
-  // so the conditional eight-byte load must not touch the protected page.
-  uint64_t Dst[Iterations];
-  for (uint64_t &Value : Dst)
-    Value = 1;
-  conditional_load(Src, Dst, Iterations);
-  for (uint64_t Value : Dst)
-    if (Value != 0)
+  uint64_t Dst[17];
+  uint64_t Expected[17];
+  for (unsigned Pattern = 0; Pattern != 2; ++Pattern) {
+    // First disable all conditional loads, then enable alternating lanes whose
+    // eight-byte accesses fit. The last seven bytes must remain zero, so no
+    // active access crosses into the guard page.
+    if (Pattern)
+      for (size_t I = 0; I + sizeof(uint64_t) <= Iterations; I += 2)
+        Src[I] = 1;
+
+    // Compute the reference from padded storage, without conditional wide
+    // accesses to the protected mapping in the verification code itself.
+    unsigned char Copy[17 + sizeof(uint64_t)] = {};
+    memcpy(Copy, Src, Iterations);
+    for (size_t I = 0; I < Iterations; ++I) {
+      Dst[I] = 1;
+      Expected[I] = 0;
+      if (Copy[I])
+        memcpy(&Expected[I], Copy + I, sizeof(uint64_t));
+    }
+    conditional_load(Src, Dst, Iterations);
+    for (size_t I = 0; I < Iterations; ++I)
+      if (Dst[I] != Expected[I])
+        return false;
+  }
+  return true;
+}
+
+int main() {
+  // Exercise short loops, full vectors, and scalar or predicated tails at VF=4.
+  const size_t IterationCounts[] = {3, 4, 5, 16, 17};
+  for (size_t Iterations : IterationCounts)
+    if (!test(Iterations))
       return 1;
-
-  // Also exercise an active lane whose entire eight-byte access is valid.
-  Src[0] = 1;
-  uint64_t Expected;
-  memcpy(&Expected, Src, sizeof(Expected));
-  conditional_load(Src, Dst, Iterations);
-  if (Dst[0] != Expected)
-    return 1;
-  for (size_t I = 1; I < Iterations; ++I)
-    if (Dst[I] != 0)
-      return 1;
-
   puts("PASS");
   return 0;
 }
