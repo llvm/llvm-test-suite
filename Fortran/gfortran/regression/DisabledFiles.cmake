@@ -156,6 +156,10 @@ file(GLOB UNSUPPORTED_FILES CONFIGURE_DEPENDS
 
   # Function call via a PROCEDURE()
   proc_ptr_comp_46.f90
+
+  # Fortran 2018 changed the way association works with modules and USE,
+  # making this test invalid now; flang supports it, gfortran does not.
+  public_private_module.f90
 )
 
 # These tests are skipped because they hit a 'not yet implemented' assertion
