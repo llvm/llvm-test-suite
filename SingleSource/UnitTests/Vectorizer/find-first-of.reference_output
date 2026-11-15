@@ -1,0 +1,5 @@
+Checking find_first_of_u8
+Checking find_first_of_u16
+Checking find_first_of_u32
+Checking find_first_of_u64
+exit 0
