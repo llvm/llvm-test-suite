@@ -7,6 +7,7 @@
 !   3. Separate module function result bound inquiring a dummy, with the
 !      body redeclared in full
 !   4. Irreducible lower bound with a constant rank-1 upper bound
+!   5. Bounds from a reference to a pure module function
 program declaration_explicit_array_bounds_modfile
   use m_bounds_provider
   implicit none
@@ -20,6 +21,7 @@ program declaration_explicit_array_bounds_modfile
   call test_grandchild_call()
   call test_module_function()
   call test_reverse()
+  call test_function_bounds()
 
   print *, ""
   print *, "RESULTS:", pass_count, "passed,", fail_count, "failed"
@@ -70,14 +72,33 @@ contains
   end subroutine
 
   ! 4. reverse's d(merge(n, m, c) : [5, 5]) must be rank 2 with the
-  !    irreducible lower bounds and the constant upper bounds.
+  !    irreducible lower bounds and the constant upper bounds.  reverse
+  !    stores each element's subscripts in it, so the values show which
+  !    lower bounds its body received.
   subroutine test_reverse()
     real :: d(2:5, 3:5)
+    integer :: i, j
     ok = .true.
     d = 0.0
     call reverse([2, 3], [9, 9], [.true., .true.], d)
-    if (any(d /= 5.0)) ok = .false.
+    if (any(d /= reshape([((real(10*i + j), i = 2, 5), j = 3, 5)], &
+                         [4, 3]))) ok = .false.
     call report("reverse_orientation")
+  end subroutine
+
+  ! 5. sep_by_function's z(make_bounds(k)) and the b(size(z, 2)) that
+  !    inquires it: a bounds array that is irreducible by construction.
+  subroutine test_function_bounds()
+    real :: b(6), z(3, 6)
+    integer :: i, j
+    ok = .true.
+    b = 0.0
+    z = 0.0
+    call sep_by_function(3, b, z)
+    if (any(b /= [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])) ok = .false.
+    if (any(z /= reshape([((real(10*i + j), i = 1, 3), j = 1, 6)], &
+                         [3, 6]))) ok = .false.
+    call report("function_bounds")
   end subroutine
 
 end program declaration_explicit_array_bounds_modfile

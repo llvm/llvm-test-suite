@@ -1,11 +1,15 @@
 ! Executable tests for F2023 explicit-shape-bounds-spec (R818) in the cases
-! where the rank-1 bounds array cannot be reduced to a per-dimension scalar at
+! where the rank-1 bounds array is not reduced to a per-dimension scalar at
 ! compile time, and in the cases that interact with it.  These complement
-! declaration-explicit-array-bounds.f90, whose bounds are all reducible.
+! declaration-explicit-array-bounds.f90, most of whose bounds are reducible.
 !
-! An elemental MERGE with a LOGICAL array mask is the canonical irreducible
-! base: the compiler cannot distribute the element extraction into it, so each
-! dimension's bound is extracted from the array value at run time.
+! Most subtests use an elemental MERGE with a LOGICAL array mask as the
+! irreducible base.  Element i of merge(n, m, c) is merge(n(i), m(i), c(i)),
+! but flang currently does not distribute the element extraction into it, so
+! each dimension's bound is extracted from the array value at run time.  That
+! is a property of the compiler today, not of MERGE.  Subtest 13 uses a
+! reference to a pure function instead, which is irreducible by construction,
+! so that the run-time path stays covered if flang learns to reduce the MERGE.
 !
 !   1. Irreducible upper bound; irreducible lower and upper bounds
 !   2. Irreducible bound paired with a constant rank-1 bound, both orientations
@@ -19,6 +23,7 @@
 !  10. MAX/MIN of a repeated operand is not collapsed unless constant
 !  11. Empty dimension: LBOUND/UBOUND inquiries are 1/0, not the declared bounds
 !  12. Polymorphic explicit-shape dummies (descriptor lowering path)
+!  13. Pure function reference as the bounds array
 
 module irreducible_helpers
   implicit none
@@ -26,6 +31,19 @@ module irreducible_helpers
     integer :: c
   end type
 contains
+  ! Bounds arrays that exist only as function results.
+  pure function make_lower(k) result(r)
+    integer, intent(in) :: k
+    integer :: r(2)
+    r = [-k, k - 2]
+  end function
+
+  pure function make_upper(k) result(r)
+    integer, intent(in) :: k
+    integer :: r(2)
+    r = [k, k + 3]
+  end function
+
   ! Host dummy a and internal dummy b are both argument 1 of their procedure.
   ! The outer operand is the extremum in every declaration below, so dropping
   ! it (collapsing to the nested MAX/MIN) changes the declared size.
@@ -67,6 +85,7 @@ program declaration_explicit_array_bounds_irreducible
   call test_extremum_fold()
   call test_empty_dimension()
   call test_polymorphic_dummy()
+  call test_function_base()
 
   print *, ""
   print *, "RESULTS:", pass_count, "passed,", fail_count, "failed"
@@ -339,6 +358,38 @@ contains
     if (size(y) /= 15) ok = .false.
     x%c = 9
     y%c = 4
+  end subroutine
+
+  ! 13. A reference to a pure function as the bounds array.  No element of
+  !     the result exists until the function is called, so this base is
+  !     irreducible whatever the compiler can fold.  As upper bounds, as
+  !     both bounds, paired with a constant rank-1 bound in both
+  !     orientations, and through inquiries that become other arrays' bounds.
+  subroutine test_function_base()
+    ok = .true.
+    call check_function_base(3)
+    call report("function_base")
+  end subroutine
+
+  subroutine check_function_base(k)
+    integer, intent(in) :: k
+    real :: a(make_upper(k))                   ! (3, 6)
+    real :: b(make_lower(k) : make_upper(k))   ! (-3:3, 1:6)
+    real :: d(make_upper(k) : [9, 9])          ! (3:9, 6:9)
+    real :: e([0, 2] : make_upper(k))          ! (0:3, 2:6)
+    real :: f(ubound(a, 2))                    ! (6)
+    real :: g(lbound(b) : ubound(b))           ! (-3:3, 1:6)
+    if (any(shape(a) /= [3, 6]) .or. any(lbound(a) /= [1, 1])) ok = .false.
+    if (any(lbound(b) /= [-3, 1]) .or. any(ubound(b) /= [3, 6])) ok = .false.
+    if (rank(d) /= 2 .or. rank(e) /= 2) ok = .false.
+    if (any(lbound(d) /= [3, 6]) .or. any(ubound(d) /= [9, 9])) ok = .false.
+    if (any(lbound(e) /= [0, 2]) .or. any(ubound(e) /= [3, 6])) ok = .false.
+    if (size(f) /= 6) ok = .false.
+    if (any(lbound(g) /= [-3, 1]) .or. any(ubound(g) /= [3, 6])) ok = .false.
+    a = 1.0
+    b = 2.0
+    g = 3.0
+    if (sum(a) /= 18.0 .or. sum(b) /= 84.0 .or. sum(g) /= 126.0) ok = .false.
   end subroutine
 
 end program declaration_explicit_array_bounds_irreducible

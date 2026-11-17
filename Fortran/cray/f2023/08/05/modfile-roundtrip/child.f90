@@ -5,13 +5,24 @@
 ! redeclared in full, so its characteristics are compared against the ones
 ! read back from the module file.  This file's own module file,
 ! m_bounds_provider-child.mod, is read by the grandchild.
+!
+! The dummies are explicit shape, so a caller passes storage by sequence
+! association and cannot see the bounds a body received.  Each body
+! therefore stores every element's own subscripts in it, over the dummy's
+! own LBOUND/UBOUND, and the callers check the values: bounds that read
+! back permuted or shifted leave different values in the caller's array.
 submodule(m_bounds_provider) child
   implicit none
 contains
 
   module procedure sep
-    z = 2.0
-    b = 1.0
+    integer :: i, j
+    do j = lbound(z, 2), ubound(z, 2)
+      do i = lbound(z, 1), ubound(z, 1)
+        z(i, j) = 10*i + j
+      end do
+    end do
+    b = [(real(i), i = 1, size(b))]
   end procedure
 
   module function g(n, m, c, z) result(r)
@@ -23,7 +34,22 @@ contains
   end function
 
   module procedure reverse
-    d = 5.0
+    integer :: i, j
+    do j = lbound(d, 2), ubound(d, 2)
+      do i = lbound(d, 1), ubound(d, 1)
+        d(i, j) = 10*i + j
+      end do
+    end do
+  end procedure
+
+  module procedure sep_by_function
+    integer :: i, j
+    do j = lbound(z, 2), ubound(z, 2)
+      do i = lbound(z, 1), ubound(z, 1)
+        z(i, j) = 10*i + j
+      end do
+    end do
+    b = [(real(i), i = 1, size(b))]
   end procedure
 
 end submodule child
