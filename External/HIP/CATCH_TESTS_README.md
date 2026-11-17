@@ -786,6 +786,9 @@ External/HIP/catch/
 │   │   ├── memset.cc
 │   │   ├── memset_negative_kernels.cc      # hiprtc input, not a test
 │   │   └── memset_negative_kernels_rtc.hh
+│   ├── kernel/             # Kernel language features and ABI (compiler files only)
+│   │   ├── hip*.cc                         # 16 test files
+│   │   └── printf_common.h
 │   ├── launchBounds/       # __launch_bounds__ attribute
 │   │   ├── launch_bounds.cc
 │   │   ├── launch_bounds_compiler_error_kernels.cc  # currently unused, not a test
@@ -800,10 +803,12 @@ External/HIP/catch/
 │       └── *.hh                            # 25 shared headers
 ├── include/                # Common test headers
 │   ├── hip_array_common.hh
+│   ├── hip_test_checkers.hh
 │   ├── hip_test_common.hh
 │   ├── hip_test_context.hh
 │   ├── hip_test_features.hh
 │   ├── hip_test_filesystem.hh
+│   ├── hip_test_kernels.hh
 │   ├── hip_test_level.hh
 │   ├── hip_test_params.hh
 │   ├── cmd_options.hh

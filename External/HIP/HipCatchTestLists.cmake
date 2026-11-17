@@ -90,3 +90,29 @@ declare_catch_test_dir(unit launchBounds
   LINK_LIBS
     hiprtc
 )
+
+# Kernel language features and ABI. Only the compiler files are vendored; the
+# runtime launch API tests (hipConfigureCall, hipSetupArgument,
+# hipExtDynDataPrefetch, hipExtLaunchKernelGGLBasic, hipGridLaunch,
+# hipLaunchKernelEx) and the gfx1250/gfx1251-only hipKernelStackSize stay
+# upstream. The two test cases upstream disables for amd_linux are in those
+# files, so nothing is excluded here.
+declare_catch_test_dir(unit kernel
+  SOURCES
+    hipAutoThreadIdx.cc
+    hipBlockDim3DValidation.cc
+    hipDynamicShared.cc
+    hipDynamicShared2.cc
+    hipEmptyKernel.cc
+    hipLanguageExtensions.cc
+    hipLaunchBounds.cc
+    hipLaunchBoundsBasic.cc
+    hipLaunchParm.cc
+    hipLaunchParmFunctor.cc
+    hipMemFaultStackAllocation.cc
+    hipPrintfKernel.cc
+    hipTestConstant.cc
+    hipTestGlobalVariable.cc
+    hipTestMemKernel.cc
+    hipTestUserSgprIncrease.cc
+)
