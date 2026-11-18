@@ -44,6 +44,7 @@ FORMAT_OPTIONS = [
     ('output_v5', '--output-v5', 'v5'),
     ('commit', '--commit', 'v5'),
     ('commit_ordinal', '--commit-ordinal', 'v5'),
+    ('commit_branch', '--commit-branch', 'v5'),
 ]
 
 XML_REPORT_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
@@ -254,6 +255,13 @@ class TestSuiteTest(object):
             problem = report_v5.check_url_name(opts.commit, "--commit")
             if problem:
                 self._fatal(problem)
+            if opts.commit_branch is not None:
+                # Unlike the commit value, the branch never appears in URL
+                # paths, so it can contain '/' (e.g. release/19.x).
+                problem = report_v5.check_length(opts.commit_branch,
+                                                 "--commit-branch")
+                if problem:
+                    self._fatal(problem)
             if opts.exec_interleaved_builds:
                 self._fatal("--report-format v5 cannot be used with "
                             "--exec-interleaved-builds")
@@ -578,6 +586,7 @@ class TestSuiteTest(object):
             submission = report_v5.build_submission(
                 str(uuid.uuid4()), datetime.datetime.now(datetime.timezone.utc),
                 opts.label, opts.commit, opts.commit_ordinal,
+                opts.commit_branch,
                 self._get_cc_info(cmake_vars), list(zip(json_reports, builds)),
                 profiles)
             rendered = report_v5.render(submission)
@@ -1610,6 +1619,11 @@ class TestSuiteTest(object):
               type=click.IntRange(-2**31, 2**31 - 1), default=None,
               help="The commit's position in the order of commits, in the v5 "
                    "report. Without it, the commit has no ordinal")
+@click.option("--commit-branch", "commit_branch", metavar="NAME",
+              default=None,
+              help="The branch the commit is on, in the v5 report, e.g. main. "
+                   "Ordinals only order the commits of the same branch. "
+                   "Without it, the commit has no branch")
 @click.option("--succinct-compile-output", "succinct",
               help="run CMake without -v", is_flag=True)
 @click.option("-v", "--verbose", "verbose", is_flag=True, default=False,

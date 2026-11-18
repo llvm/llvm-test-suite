@@ -50,7 +50,8 @@ RUN_PARAMETERS = {
     'cc1_exec_hash': 'compiler_hash',
 }
 
-# The longest machine name, commit value or test name a v5 instance accepts.
+# The longest machine name, commit value, branch or test name a v5 instance
+# accepts.
 MAX_NAME_LENGTH = 256
 
 # The largest request a v5 instance accepts by default, in bytes. The limit is
@@ -58,12 +59,21 @@ MAX_NAME_LENGTH = 256
 DEFAULT_BODY_LIMIT = 128 * 1024 * 1024
 
 
-def check_url_name(name, what):
-    """Return why `name` cannot be a name that LNT v5 uses in URL paths, i.e.
-    a machine name or a commit value, or None if it can."""
+def check_length(name, what):
+    """Return why `name` is too short or too long to be a name in LNT v5, or
+    None if it is not."""
     if not name or len(name) > MAX_NAME_LENGTH:
         return '%s must be 1 to %d characters long' % (
             what, MAX_NAME_LENGTH)
+    return None
+
+
+def check_url_name(name, what):
+    """Return why `name` cannot be a name that LNT v5 uses in URL paths, i.e.
+    a machine name or a commit value, or None if it can."""
+    problem = check_length(name, what)
+    if problem:
+        return problem
     if '/' in name or '%' in name or name in ('.', '..'):
         return "%s cannot contain '/' or '%%', or be '.' or '..'" % what
     return None
@@ -131,8 +141,8 @@ def _version_line(cc_version):
     return lines[0] if lines else ''
 
 
-def build_submission(run_uuid, measured_at, machine, commit, ordinal, cc_info,
-                     lit_runs, profiles):
+def build_submission(run_uuid, measured_at, machine, commit, ordinal, branch,
+                     cc_info, lit_runs, profiles):
     """Build the run submission of the lit runs `lit_runs`, a list of
     `(report, build)` pairs: lit's JSON report, and the build it ran the
     tests of, which is the same for the lit runs that did not rebuild the
@@ -174,6 +184,8 @@ def build_submission(run_uuid, measured_at, machine, commit, ordinal, cc_info,
     commit_object = {'value': commit}
     if ordinal is not None:
         commit_object['ordinal'] = ordinal
+    if branch is not None:
+        commit_object['branch'] = branch
 
     return {
         'format_version': '5',
