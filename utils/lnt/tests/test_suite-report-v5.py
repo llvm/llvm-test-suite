@@ -45,7 +45,7 @@ cc_info = {
 submission = build_submission(
     '573af861-8303-4a5b-a643-b8321e0142c4',
     datetime.datetime(2026, 10, 27, 14, 2, 17, tzinfo=datetime.timezone.utc),
-    'my-machine', 'abc123', None, cc_info,
+    'my-machine', 'abc123', None, None, cc_info,
     [(first_build, 1), (second_run, 1), (rebuilt, 2)],
     {'B/b': 'cHJvZmlsZQ==', 'D/d': 'dW51c2Vk'})
 
@@ -98,12 +98,24 @@ rendered = render(submission)
 assert rendered.endswith('\n') and '\n' not in rendered[:-1], rendered
 assert json.loads(rendered) == EXPECTED
 
-# The ordinal is only there when it is given.
+# The ordinal and the branch are only there when they are given, and either can
+# be given without the other.
 with_ordinal = build_submission(
     '573af861-8303-4a5b-a643-b8321e0142c4', datetime.datetime.now(),
-    'my-machine', 'abc123', 42, {}, [], {})
+    'my-machine', 'abc123', 42, None, {}, [], {})
 assert with_ordinal['commit'] == {'value': 'abc123', 'ordinal': 42}
 assert with_ordinal['run_parameters'] == {} and with_ordinal['tests'] == []
+
+with_both = build_submission(
+    '573af861-8303-4a5b-a643-b8321e0142c4', datetime.datetime.now(),
+    'my-machine', 'abc123', 42, 'main', {}, [], {})
+assert with_both['commit'] == {'value': 'abc123', 'ordinal': 42,
+                               'branch': 'main'}
+
+with_branch = build_submission(
+    '573af861-8303-4a5b-a643-b8321e0142c4', datetime.datetime.now(),
+    'my-machine', 'abc123', None, 'release/19.x', {}, [], {})
+assert with_branch['commit'] == {'value': 'abc123', 'branch': 'release/19.x'}
 
 # The profiles of a lit run are found by the name of their test in the report.
 assert profile_paths({'tests': [

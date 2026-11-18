@@ -14,9 +14,11 @@
 
 # Only the v5 report is written, on a single line, and also to --output-v5.
 # With two lit runs and a single build, the build's measurements are only in
-# the first sample of each test.
+# the first sample of each test. Unlike the commit value, the branch can
+# contain '/'.
 # RUN: rm -rf %t.SANDBOX
 # RUN: %{runtest} --report-format v5 --commit abc123 --commit-ordinal 42 \
+# RUN:     --commit-branch release/19.x \
 # RUN:     --exec-multisample 2 --output-v5 %t.v5.json > %t.out 2> %t.err
 # RUN: not test -e %t.SANDBOX/build/report.json
 # RUN: diff %t.v5.json %t.SANDBOX/build/report.v5.json
@@ -33,7 +35,8 @@
 # CHECK-V5-NEXT:     },
 # CHECK-V5-NEXT:     "commit": {
 # CHECK-V5-NEXT:         "value": "abc123",
-# CHECK-V5-NEXT:         "ordinal": 42
+# CHECK-V5-NEXT:         "ordinal": 42,
+# CHECK-V5-NEXT:         "branch": "release/19.x"
 # CHECK-V5-NEXT:     },
 # CHECK-V5-NEXT:     "run_parameters": {
 # CHECK-V5-NEXT:         "compiler_version": "clang version 3.1 (trunk 154331) (llvm/trunk 154329)",
@@ -124,8 +127,8 @@
 # RUN:   | filecheck --check-prefix CHECK-DROPPED %s
 # CHECK-DROPPED: SingleSource/Benchmarks/Misc/pi [True, False]
 
-# Without --commit-ordinal, the commit has no ordinal. Both reports can be
-# written by the same run.
+# Without --commit-ordinal and --commit-branch, the commit has neither an
+# ordinal nor a branch. Both reports can be written by the same run.
 # RUN: rm -rf %t.SANDBOX
 # RUN: %{runtest} --report-format v1 --report-format v5 --commit abc123 \
 # RUN:     > %t.both.out 2> %t.both.err
@@ -157,6 +160,15 @@
 # RUN: not %{runtest} --commit-ordinal 1 2> %t.err
 # RUN: filecheck --check-prefix CHECK-ORDINAL-V1 < %t.err %s
 # CHECK-ORDINAL-V1: error: --commit-ordinal requires --report-format v5
+#
+# RUN: not %{runtest} --commit-branch main 2> %t.err
+# RUN: filecheck --check-prefix CHECK-BRANCH-V1 < %t.err %s
+# CHECK-BRANCH-V1: error: --commit-branch requires --report-format v5
+#
+# RUN: not %{runtest} --report-format v5 --commit abc123 --commit-branch "" \
+# RUN:     2> %t.err
+# RUN: filecheck --check-prefix CHECK-EMPTY-BRANCH < %t.err %s
+# CHECK-EMPTY-BRANCH: error: --commit-branch must be 1 to 256 characters long
 #
 # RUN: not %{runtest} --report-format v5 --commit abc123 \
 # RUN:     --submit http://lnt.example.com/db_default/submitRun 2> %t.err

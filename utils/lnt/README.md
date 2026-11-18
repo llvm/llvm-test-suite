@@ -38,10 +38,13 @@ The `--report-format` argument can be passed twice to write reports in both form
 Since LNT v5 does not infer the commit that a run is associated to, it must be passed
 with `--commit` (e.g. the git SHA of the compiler under test). If the commit should be
 ordered with other commits (e.g. it is a commit on `main`, as opposed to a throwaway
-commit like a PR), its position should be passed with `--commit-ordinal`:
+commit like a PR), its position should be passed with `--commit-ordinal`. Ordinals only
+order the commits of the same branch, so the branch the commit is on should also be passed
+with `--commit-branch`:
 
     utils/lnt/run-test-suite.py ... --report-format v5 \
-                                    --commit 0123abc --commit-ordinal 598181
+                                    --commit 0123abc --commit-ordinal 598181 \
+                                    --commit-branch main
 
 With `--use-perf profile` (or `all`), profiles gathered with Linux `perf` are added to the
 report. Note that this requires the LNT command-line tool to be installed and on the `PATH`,
