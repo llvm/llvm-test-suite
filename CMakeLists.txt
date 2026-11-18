@@ -383,6 +383,31 @@ if (TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_CXX_LINK_EXECUTABLE "${TIMEIT_CMD_PREFIX} --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
 endif()
 
+option(TEST_SUITE_COMPILE_TIME_LISTS
+       "Find the compile/link time files of a test through path-list files written at configure time instead of walking the build directory (requires TEST_SUITE_COLLECT_COMPILE_TIME)" ON)
+
+if (TEST_SUITE_COLLECT_COMPILE_TIME AND TEST_SUITE_COMPILE_TIME_LISTS)
+  set(_compile_time_lists ON)
+  set(TEST_SUITE_COMPILE_TIME_LISTS_PY "True")
+else()
+  set(_compile_time_lists OFF)
+  set(TEST_SUITE_COMPILE_TIME_LISTS_PY "False")
+endif()
+
+# file(GENERATE) never removes the files of an earlier configure. Delete the
+# path-list files when the feature is not in use so that stale lists are not
+# left behind. Only search when the previous state was not known to be OFF,
+# because searching a large build directory is slow.
+if (NOT _compile_time_lists AND NOT "${_TEST_SUITE_COMPILE_TIME_LISTS_PREVIOUS}" STREQUAL "OFF")
+  file(GLOB_RECURSE _stale_time_lists
+       "${CMAKE_BINARY_DIR}/*.test.o.time.list"
+       "${CMAKE_BINARY_DIR}/*.test.link.time.list")
+  if (_stale_time_lists)
+    file(REMOVE ${_stale_time_lists})
+  endif()
+endif()
+set(_TEST_SUITE_COMPILE_TIME_LISTS_PREVIOUS "${_compile_time_lists}" CACHE INTERNAL "")
+
 if (CMAKE_EXPORT_COMPILE_COMMANDS STREQUAL "")
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()

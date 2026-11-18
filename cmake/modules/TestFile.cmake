@@ -113,7 +113,47 @@ function(llvm_add_test testfile executable)
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
 
+# Sets `var` to the .test file of an executable target. This is the single place
+# that decides where a target's test lives.
+function(llvm_test_file_for_target var target)
+  set(${var} $<TARGET_FILE:${target}>.test PARENT_SCOPE)
+endfunction()
+
+# Write the path-list files that litsupport/modules/compiletime.py reads at lit
+# run time when TEST_SUITE_COMPILE_TIME_LISTS is ON, keyed by the .test file so
+# that they survive from the build stage to the run stage:
+#   <name>.test.o.time.list    one <object>.time path per line
+#   <name>.test.link.time.list the <executable>.link.time path
+# With TEST_SUITE_COLLECT_COMPILE_TIME, the top-level CMakeLists.txt wraps
+# compile and link commands in `timeit --summary <file>.time`, so the timing
+# file of such an object is its path with ".time" appended. Objects that are
+# created without the wrappers are listed but have no timing file; they are
+# skipped when the lists are read.
+#
+# Only the objects of `target` itself are listed. Libraries it links against are
+# currently not accounted for.
+#
+# $<JOIN:list,glue> places the glue between adjacent elements, so the glue is
+# repeated once after the closing ">" to terminate the last line. The
+# $<BOOL:...> guard avoids a bare ".time" line for targets without objects.
+function(llvm_test_write_time_lists target)
+  if(NOT TEST_SUITE_COLLECT_COMPILE_TIME OR NOT TEST_SUITE_COMPILE_TIME_LISTS)
+    return()
+  endif()
+  llvm_test_file_for_target(testfile ${target})
+  file(GENERATE
+    OUTPUT "${testfile}.o.time.list"
+    CONTENT "$<$<BOOL:$<TARGET_OBJECTS:${target}>>:$<JOIN:$<TARGET_OBJECTS:${target}>,.time\n>.time\n>"
+  )
+  file(GENERATE
+    OUTPUT "${testfile}.link.time.list"
+    CONTENT "$<TARGET_FILE:${target}>.link.time\n"
+  )
+endfunction()
+
 function(llvm_add_test_for_target target)
-  llvm_add_test($<TARGET_FILE:${target}>.test %S/$<TARGET_FILE_NAME:${target}>)
+  llvm_test_file_for_target(testfile ${target})
+  llvm_add_test(${testfile} %S/$<TARGET_FILE_NAME:${target}>)
+  llvm_test_write_time_lists(${target})
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()
