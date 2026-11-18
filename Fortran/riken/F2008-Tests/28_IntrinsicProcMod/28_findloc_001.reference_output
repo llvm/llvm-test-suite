@@ -1,0 +1,7 @@
+INTEGER:     2
+INTEGER(array(1)):     2
+REAL:     2
+COMPLEX:     2
+CHARACTER:     2
+LOGICAL:     2
+exit 0
