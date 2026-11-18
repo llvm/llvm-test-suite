@@ -18,6 +18,7 @@ llvm_test_executable(LoopVectorizationBenchmarks
   SmallLoopTripCount.cpp
   VectorOperations.cpp
   EarlyExit.cpp
+  CompressingPatterns.cpp
 )
 
 target_link_libraries(LoopVectorizationBenchmarks benchmark)
