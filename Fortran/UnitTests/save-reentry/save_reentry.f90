@@ -5,70 +5,58 @@
 module save_reentry_m
   implicit none
 contains
-  ! The loop reads the saved scalar after each call, and each call increments
-  ! it through another instance of count_calls.
-  recursive subroutine count_calls(nested, total)
+  ! Each call increments the saved scalar through another instance of
+  ! count_calls, so the loop must read it again after every call. The values
+  ! are printed after the loop: a call to the I/O runtime in the loop would
+  ! keep the reads in the loop by itself.
+  recursive subroutine count_calls(nested)
     logical, intent(in) :: nested
-    integer, intent(out) :: total
     integer, save :: counter
-    integer :: i
-    total = 0
+    integer :: i, seen(4)
     if (nested) then
       counter = counter + 1
-      return
+    else
+      counter = 0
+      do i = 1, 4
+        call nest_count_calls()
+        seen(i) = counter
+      end do
+      print '(*(I0,:,1X))', seen
     end if
-    counter = 0
-    do i = 1, 4
-      call nest_count_calls()
-      total = total + counter
-    end do
   end subroutine
 
   subroutine nest_count_calls()
-    integer :: unused
-    call count_calls(.true., unused)
+    call count_calls(.true.)
   end subroutine
 
   ! new_values defines its result before it reads the saved allocatable
   ! through another instance of replace_values, so the result must not be
   ! evaluated into the storage of the allocatable.
-  recursive subroutine replace_values(nested, checksum)
+  recursive subroutine replace_values(nested)
     logical, intent(in) :: nested
-    integer, intent(out) :: checksum
     integer, allocatable, save :: values(:)
     if (nested) then
-      checksum = sum(values)
-      return
+      print '(*(I0,:,1X))', values
+    else
+      values = [2, 4, 6]
+      values = new_values(3)
+      print '(*(I0,:,1X))', values
     end if
-    values = [2, 4, 6]
-    values = new_values(3)
-    checksum = sum(values)
   end subroutine
 
   function new_values(n) result(r)
     integer, intent(in) :: n
-    integer :: r(n), old_sum, i
+    integer :: r(n), i
     do i = 1, n
       r(i) = 10 * i
     end do
-    call replace_values(.true., old_sum)
-    r = r + old_sum
+    call replace_values(.true.)
   end function
 end module
 
 program save_reentry
   use save_reentry_m
   implicit none
-  integer :: result
-
-  ! counter is 1, 2, 3 and 4 after the calls.
-  call count_calls(.false., result)
-  if (result /= 10) error stop 1
-
-  ! values is [2, 4, 6] when new_values reads it, so the new values are
-  ! [22, 32, 42].
-  call replace_values(.false., result)
-  if (result /= 96) error stop 2
-
-  print '(A)', 'PASS'
+  call count_calls(.false.)
+  call replace_values(.false.)
 end program
